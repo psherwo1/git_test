@@ -1,0 +1,143 @@
+# ART BIBLE: "Fjord Village" hero buildings (geometry only)
+
+Owner: Art Director. Builders read this file before every round. If this file and a spec disagree, the spec wins for that building.
+
+Reference images (the source of truth):
+- `reference/ref1_hilltop_keep_windmill.jpg`: stone hilltop keep, stone/timber tower windmill, longhouse with a round end.
+- `reference/ref2_harbor_village_eye_level.jpg`: eye-level harbour village; the foreground round wattle hut is our hut.
+- `reference/ref3_fjord_village_aerial.jpg`: aerial view of the same village.
+- Upscaled detail crops are in `director/ref_crops/*.png`. Open them with the Read tool. They are the quickest way to check a detail.
+
+The renders are neutral clay on purpose. **We judge geometry only**: silhouette, proportion, massing, construction logic, detail density, age, and actor-scale correctness. A building that is only good once it has textures is not good.
+
+---------------------------------------------------------------------------------------------------
+
+## 1. What makes it THIS world and not "generic medieval"
+
+1. **Round and polygonal plans.** Halls are octagons, huts are circles and towers are round. Rectangles only appear in low annexes and harbour sheds. Gabled boxes are wrong for hero buildings.
+2. **Tall witch-hat cones.** Hut and tower roofs are steep cones of 48–55° whose height is 1.5–2.2× the wall height. The roofs dominate the walls: walls are short (2.3–3.6 m) and roofs are huge.
+3. **Stacked tiers (the signature).** A wide, moderately pitched polygonal skirt roof (~40°, flattening at the bell-cast eave) → a steep collar of long split shakes with a ragged comb top → a concave stone or shingle cone (a "candle-snuffer" or bottle profile) → a short lantern belt of vertical boards → a small bell-cast cap with a deep overhang → a tall turned finial. Every tier steps *inward and upward*, and every eave *overhangs* the tier below.
+4. **Bell-cast eaves.** Caps and skirt roofs kick outward and flatten over the last 0.5–1.0 m (sprocketed eaves). Hip lines are slightly concave. Big hut cones are straight to very slightly convex, and they get a small kick only at the eave.
+5. **Spike finials on a "lead hat".** The apex of every cone is covered by a smooth collar cone. That collar is shallower than the roof (about 44° against 51°), 1.2–1.5 m in diameter on huts, with a drip edge that overhangs the shingles. Above it sit stacked turned rings, a necked spindle and a tall sharp spike. Finial height above the collar is 0.9–1.3 m. Stone ball finials appear only on stone-roofed round ends (ref1 longhouse).
+6. **Chunky, oversized roofing.** Shingles are big and few: 0.35–0.55 m wide, 0.36–0.40 m exposure and 3–4 cm butts. Courses are clearly readable from 30 m. Shake collars are long (0.9–1.2 m) radiating split boards with uneven butts and jagged tops. Thatch is thick (0.35–0.5 m) and laid in visibly stepped layers of about 0.3 m.
+7. **Soft, mossy, organic age.** Nothing is crisp. Eave lines wave, cones sag slightly between rafters, finials lean, shingles curl and slip, and stones bulge out of the wall plane. It looks lived-in for 150 years without looking ruined.
+8. **Nordic and Slavic timber-church flavour** (bell-cast shingle caps, lantern belts of vertical boards, carved knee-braces) combined with **rough rubble masonry** and **wattle and daub**. Keep that blend and avoid pure Gothic, Tudor or fantasy-castle vocabulary. There are no crenellations, no Gothic pointed arches (arches are round or segmental) and no half-timbered black-and-white framing.
+
+## 2. Roof language (numbers)
+
+| element | pitch | overhang beyond wall face | notes |
+|---|---|---|---|
+| hut cone | 50–52° | 0.55–0.65 m horiz. | very slightly convex; small eave kick; 16–20 shingle courses eave→collar |
+| keep lower skirt roof (octagonal, hipped) | ~40° with bell-cast to ~25° in last 0.8 m | 1.1–1.4 m | horizontal courses of long boards/shingles, hip lines visible, eave fascia slightly upturned at hip corners |
+| shake collar | 55–65° | sits 0.3–0.5 m proud of the cone it wraps | 0.9–1.2 m long split shakes, radiating, ragged comb top, uneven butt line |
+| caps (keep, turret, mill apron) | 40–50° main, bell-cast to ~25° at eave | 0.45–0.7 m | octagonal pyramid with concave hips; carved eave beam visible underneath |
+| thatch (keep west wing) | 48–52° | 0.5–0.6 m | 0.4 m thick, stepped layers, rounded eave roll, comb ridge of splayed shakes |
+| mill shingle apron | 35–45° | 0.6–0.8 m beyond cornice | short skirt between stone base and timber tower |
+
+Roof construction must read from below (actor eye level): exposed rafter or pole ends, wall plate/ring beam, battens visible in the eave gap, drip edges, and real thickness at every eave lip (no single-sided planes anywhere).
+
+## 3. Stone language
+
+- **Masonry type:** flat-bedded, roughly coursed limestone/sandstone rubble. Course heights 8–25 cm (mostly 10–15), lengths 20–70 cm, with occasional through-stones up to 90 cm. Courses wander ±3 cm and pinch out. Small pinning stones fill gaps.
+- **Every stone is an individual mesh piece** with an irregular outline, 1–3 cm rounded or chamfered arrises, and a slightly pillowed face (proud by 0.5–2 cm). The faces are not coplanar: each one varies 0.5–2.5 cm in depth.
+- **Mortar:** a recessed mortar body behind the stones. Joints are 1–3 cm wide and recessed 1–3 cm. Some joints are raked deeper (5 cm) near the ground.
+- **Dressed stone** (larger, squarer, flatter faces, 1 cm chamfer) is used only for door and window surrounds, voussoirs, quoins, string courses, cornices and corbels. Voussoirs are irregular in width (no CG-perfect radial fan), and they are thicker at the crown.
+- **Walls batter** 2–4° (wider at the base), with footing stones that are larger and project 5–10 cm at ground level.
+- **Dry-stone plinths** (huts) are large rounded or sub-angular boulders 0.25–0.6 m across, with no mortar, stacked 1–2 high, and small chinking stones in the gaps.
+- **Ground contact:** every building meets the ground through larger footing stones, a few half-buried stones, scattered rubble and a flat threshold stone. No building simply sits on Z=0 as a clean extrusion.
+
+## 4. Timber language
+
+- **Members** are hand-hewn and weathered: square posts 0.22–0.30 m, wall plates 0.20×0.25 m, round poles for hut rafters (Ø 8–12 cm), and planks 25–40 mm thick.
+- **Edges:** every arris carries a 1.5–3 cm chamfer or rounded wear. End grain is slightly checked or split; at least some members show modelled splits or notches on hero faces.
+- **Irregularity:** posts are within ±1° of plumb, tapered or swelling ±1 cm, never perfectly straight. Planks vary in width (16–30 cm) and have small gaps (0.5–1.5 cm) between them.
+- **Joinery is visible:** mortise and tenon with protruding oak pegs (Ø 2.5–3 cm, proud 1–2 cm), curved or straight knee braces (Y-brackets) from posts to the eave beam, and lap joints at ring beams.
+- **Doors:** vertical plank doors with 3 horizontal ledges (or 2 ledges + 1 brace) on the inside, iron strap hinges (5–8 mm thick, 40–60 mm wide, ending in a spear or round terminal) with nail heads, a ring pull or latch, and a timber or stone threshold. Arched stone doorways get arch-topped plank doors that fit the arch.
+- **Windows** are small (0.5–0.8 m) and set deep in thick walls. They have a heavy timber frame, a cross mullion (2×2 lights), a projecting stone sill with a drip, and a lintel stone or timber lintel.
+
+## 5. Wattle and daub language (huts)
+
+- **Structure:** main posts on the plinth, plus vertical stakes (sails, Ø 4–6 cm) at 0.25–0.35 m spacing.
+- **Weave:** horizontal withies (rods, Ø 1.5–3.5 cm) woven alternately in and out of the stakes, with each row offset by one stake. Rods vary in diameter, bundle in pairs or triples in places and are not perfectly horizontal (±2 cm drift).
+- **Daub:** applied on some bays as a thick (3–6 cm), lumpy skin with soft bulges and a broken, eroded lower edge that exposes the wattle beneath (ref2: the bay left of the hut door).
+- **Visible top and bottom:** the weave tucks under a ring wall plate at the top and sits on the plinth at the bottom.
+
+## 6. Age, sag, irregularity: mandatory "lived-in" pass
+
+- **Deterministic seeds:** use `random.Random(seed)` with a fixed seed per component. The build must be bit-for-bit reproducible.
+- **Ridges and eave lines** deviate ±2–5 cm (smooth low-frequency noise, not jitter).
+- **Cones** sag 1–4 cm between rafters. Finials lean 0.5–2°. Caps can rotate a couple of degrees off-axis.
+- **Shingles:** rotation ±3–5°, lift ±1–2 cm, width ±25%, butt line ±2 cm. About 2–4% are slipped, missing (showing the shingle beneath) or split. Shingles near the eave curl slightly.
+- **Stones:** size, rotation and protrusion vary per stone. No stone shape may visibly repeat within 2 m of another. Use at least 24 base variants and then deform each placement.
+- **Moss:** moss is a texture job. Optional low-poly moss cushions (`M_moss_clump`) are allowed only at shingle butts, collar tops and eave lips. They are never required and never a substitute for detail.
+
+## 7. Proportion and scale rules (human-scale anchors)
+
+- **Human:** 1.80 m (render_review adds one). Eye height is 1.65 m.
+- **Clear openings:** stone arched doors are 1.00–1.10 m wide and 2.15–2.30 m tall to the crown (springing about 1.65 m). Timber door frames give 2.05–2.15 m clear height and 0.95–1.05 m width. Every eave lip directly over a doorway is at least 2.30 m.
+- **Steps:** risers 15–20 cm and treads ≥ 30 cm. Threshold stones are 8–15 cm above the outside ground. Window sills are 1.1–1.5 m above floor.
+- **Mass references:**
+  - Hut: wall 2.4 m and roof about 5 m (total ≈ 8.6 m with finial).
+  - Keep: total ≈ 14 m to the finial tip.
+  - Mill: hub about 11.5 m and top of the sails about 17 m.
+- **Forbidden:** doors that look 3 m tall (a toy-scale giveaway) and doors under 2.0 m (unusable). Detail scale must match reality: shingles that read as 1 m wide or stones that read as 1 m bricks immediately break the illusion next to an actor.
+
+## 8. Technical standards (non-negotiable)
+
+- **Environment:** Blender 5.1.2 as a Python module only: `/opt/bpyenv/bin/python build_<id>.py`. Start with `bpy.ops.wm.read_factory_settings(use_empty=True)`.
+- **Source and output:**
+  - The build script `buildings/<id>/build_<id>.py` is the single source of truth. It is deterministic, rerunnable and self-contained.
+  - It saves `buildings/<id>/<id>.blend` with `bpy.ops.wm.save_as_mainfile(filepath=..., compress=True)`.
+  - Never write outside your own building folder and your own renders folder. Do not run git.
+- **Units and orientation:**
+  - Metres, Z up, ground at Z=0, building base centred at the world origin, all transforms applied (location/rotation/scale identity on mesh objects).
+  - **The principal entrance faces −Y**, because render_review's "front" and "actor_closeup" cameras look from −Y.
+- **Collections and naming:** one top-level collection per building (`KEEP`, `MILL`, `HUT`), with sub-collections optional. Name objects `<PREFIX>_<part>`, for example `KEEP_wall_hall_stones`, `KEEP_roof_skirt_shingles`, `MILL_sail_A_bars` and `HUT_roof_shingles`.
+- **Material slots:** use named placeholder slots only, never textures. Use the shared names `M_stone`, `M_stone_dressed`, `M_mortar`, `M_timber`, `M_timber_weathered`, `M_roof_shingle`, `M_roof_shake`, `M_thatch`, `M_wattle`, `M_daub`, `M_iron`, `M_lead` (smooth cap collars), `M_glass` (if any), `M_rubble` and `M_moss_clump`. Assign them per face where one mesh mixes surfaces.
+- **UVs:** every mesh has a UV map (smart UV project or cube projection is fine). Shingles and planks should ideally have UVs running along the grain.
+- **Bevels:** no razor edges anywhere. Use real chamfer geometry or Bevel modifiers (angle-limited, 1–3 segments, 0.5–3 cm) plus weighted or auto smooth normals. Live modifiers are allowed because render_review counts the evaluated mesh, but keep viewport and render counts identical.
+- **Geometry hygiene:**
+  - No visible z-fighting and no gaps where parts should meet. Normals face outward.
+  - No floating parts; every piece is carried by something.
+  - Single-sided planes are not allowed for anything that can be seen edge-on. Roofing, boards and blades all have real thickness.
+- **Budget:**
+  - Up to about 1.5 M triangles per building (render_review `stats.json` is the authority), and the `.blend` under 80 MB.
+  - Spend triangles where the camera goes: the entrance (actor close-ups), eave undersides, silhouette, finials and sail lattice. Hidden faces (stone backs inside walls, shingle undersides fully covered) should be cheap.
+- **Instancing:** prefer real joined meshes, or linked-duplicate mesh objects (shared mesh data), for repeated parts. Collection-instance empties and pure geometry-nodes instances are **discouraged**: render_review only counts and frames MESH/CURVE objects, so instanced parts can be missing from stats and camera framing. If you use them, realize instances in the evaluated mesh.
+- **Performance:** a build must complete in under about 10 minutes on 4 shared cores. Generate with bmesh and numpy and avoid per-object operator loops over thousands of objects. Keep the object count sane (under about 400).
+- **Review renders:**
+  - Command: `/opt/bpyenv/bin/python tools/render_review.py buildings/<id>/<id>.blend renders/<id>/round_NN/ --samples 24`.
+  - Quick checks: `--views hero --samples 12`.
+  - Full deliverable per round: all 6 views (hero, front, side, back, aerial, actor_closeup) plus stats.json.
+  - The CPU is shared, so run one render at a time, with a Bash timeout of 600000 or in the background.
+- **Logging:** after every round, append to `director/log_<id>.md` the round number, what changed, the stats (tris, bbox, size_m, file size) and the render folder path.
+
+## 9. Grading rubric (Director grades every round against the references)
+
+Each round is scored on 6 axes. The overall grade is roughly the *lowest* axis rounded up by at most one, so a single weak axis caps the grade.
+
+1. **Silhouette and massing fidelity:** at thumbnail size, is it unmistakably the building in the concept art?
+2. **Proportion and actor scale:** are doors, eaves, steps and windows right next to the 1.8 m figure? Do the dimensions match the spec within ±10%?
+3. **Construction logic:** does every element look built and carried (plates, rafters, braces, lintels, corbels)? Are there no impossible joints?
+4. **Detail density and craft:** individual stones, shingles, withies and planks with thickness; bevels; joinery; ironwork; close-up worthiness at the entrance.
+5. **Age and organic irregularity:** controlled sag, lean, wobble and variation, with no CG repetition and no perfect circles or rulers.
+6. **Technical compliance:** naming, collections, material slots, UVs, budget, determinism, origin and orientation, and no artefacts.
+
+**What each grade looks like:**
+
+- **≤5, blockout.** Primitive cylinders and cones, flat planes for roofs, no individual units. The silhouette is only roughly right.
+- **6, good blockout plus some detail.** The silhouette is recognisable, but surfaces are mostly smooth primitives or displacement noise. Some components are missing (lantern, collar, braces, sails incomplete). Repetition is obvious. It is not usable near camera.
+- **8, solid game asset.** The correct silhouette and tiers, individually modelled shingles and stones, and every major component present. Several issues remain:
+  - It reads slightly CG: courses too regular, edges too clean, cones too perfect.
+  - Some construction details are missing under the eaves or at joints.
+  - The entrance is not yet close-up worthy.
+  - One or two proportions are off by 10–20%.
+- **9, near hero.** Everything in 8 is fixed. It survives a mid-shot. Proportions match the art within 10%. Only minor polish remains: a few repetitive patches, a missing peg or hinge detail, a slightly weak finial profile, small intersections visible only in close-up.
+- **10, approved hero asset.** A production designer would sign this off today for close-up shots with real actors, and placed beside the concept art it is unmistakably the same building.
+  - The silhouette overlays the art's at every tier.
+  - The actor close-up at the entrance holds up: real joinery, ironwork, worn stone, a threshold and plausible depth through the door.
+  - Construction logic is complete and the age pass is convincing.
+  - Technical compliance is 100%.
+  - **Nothing remains on the must-fix list.** If the Director can name any defect a production designer would flag, the grade is not 10.
+
+The Director keeps a must-fix list per building in `director/log_<id>.md`. A round may only be graded 10 when that list is empty and the newest full 6-view render set has been reviewed side by side with the reference crops.
