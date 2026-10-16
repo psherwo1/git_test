@@ -11,16 +11,16 @@ The session cannot do these, because they have to happen before it exists.
    - An up-to-date NVIDIA driver for the RTX 3060.
 2. **Clone to a short path.** In PowerShell or a terminal:
    ```
-   mkdir C:\work
-   cd C:\work
+   mkdir C:\GitHubDesktop
+   cd C:\GitHubDesktop
    git clone --depth 1 -b claude/blender-buildings-film-nfzv6a https://github.com/psherwo1/git_test.git
    ```
    - It is about 1 GB shallow, or 2.2 GB with full history.
    - Sign in to GitHub if asked, using an account that can push to psherwo1/git_test.
    - Leave 5 GB or more free.
-3. **Open Claude Code in `C:\work\git_test`.**
+3. **Open Claude Code in `C:\GitHubDesktop\git_test`.**
    - Desktop app: start a new session on that folder.
-   - Terminal: `cd C:\work\git_test` then `claude`.
+   - Terminal: `cd C:\GitHubDesktop\git_test` then `claude`.
    - Choose a permission mode that lets it run commands and edit files without asking each time (auto or accept edits). Otherwise the multi-hour run stalls while you are away.
 4. **Paste the fenced block below.**
 
@@ -53,14 +53,14 @@ Treat these files as the source of truth. Do not re-litigate decisions recorded 
 
 PREFLIGHT (check each item; fix what you can; ask me only for what needs me, such as an admin prompt or a GitHub sign-in)
 P1. Location.
-    - You should be running in C:\work\git_test, a clone of branch claude/blender-buildings-film-nfzv6a (possibly a shallow --depth 1 clone; that is fine).
+    - You should be running in C:\GitHubDesktop\git_test, a clone of branch claude/blender-buildings-film-nfzv6a (possibly a shallow --depth 1 clone; that is fine).
     - If the clone is elsewhere, continue there, but warn me if the path is long (more than about 40 characters).
     - If the repo is inside a OneDrive folder (for example C:\Users\parke\OneDrive\...), STOP and explain the risks:
       - sync locks files mid-write, breaking builds and renders;
       - Files On-Demand placeholders make reads fail;
       - syncing .git can corrupt the repository;
       - the path is too long.
-      Recommend re-cloning to C:\work\git_test. If I still choose OneDrive:
+      Recommend re-cloning to C:\GitHubDesktop\git_test. If I still choose OneDrive:
       - put the venv OUTSIDE OneDrive (C:\venvs\bpyenv) and use that python everywhere;
       - ask me to pause OneDrive sync for the whole run (OneDrive tray icon > Pause syncing; 24 hours max, so re-pause as needed);
       - ask me to set the repo folder to "Always keep on this device";
