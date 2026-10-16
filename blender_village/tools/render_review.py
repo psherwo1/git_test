@@ -8,12 +8,14 @@ Every building is judged with the same lighting, clay shader, camera set and a
 the file are overridden with a neutral clay; only geometry is evaluated.
 
 Writes <out_dir>/<view>.png for each view plus <out_dir>/stats.json
-(triangle count, object count, bounding box, material slot names).
+(triangle count, object count, bounding box, material slots, and the estimated
+share of hidden/buried triangles from hidden_tris.py, detailed in hidden.json).
 """
 import argparse
 import json
 import math
 import os
+import subprocess
 import sys
 
 import bpy
@@ -157,6 +159,21 @@ def main():
         cam.rotation_euler = (target - cam.location).to_track_quat("-Z", "Y").to_euler()
         scn.render.filepath = os.path.join(os.path.abspath(a.out_dir), f"{name}.png")
         bpy.ops.render.render(write_still=True)
+
+    # Hidden / buried triangle estimate on the untouched file (see hidden_tris.py)
+    hidden_json = os.path.join(os.path.abspath(a.out_dir), "hidden.json")
+    try:
+        subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "hidden_tris.py"),
+                        os.path.abspath(a.blend), "--samples", "8000", "--json", hidden_json],
+                       check=True, capture_output=True, timeout=900)
+        with open(hidden_json) as f:
+            h = json.load(f)
+        stats["est_hidden_pct"] = h["est_hidden_pct"]
+        stats["est_hidden_triangles"] = h["est_hidden_triangles"]
+    except Exception as e:  # never block the review on the estimate
+        stats["est_hidden_pct"] = None
+        print("hidden_tris failed:", e)
+    stats["material_slot_count"] = len(stats["materials"])
 
     with open(os.path.join(a.out_dir, "stats.json"), "w") as f:
         json.dump(stats, f, indent=2)

@@ -1021,7 +1021,9 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
 
         def relief(xy, rh):
             x, y = xy[:, 0], xy[:, 1]
-            pil = _g(S, "pillow", i, 0.004) * (1 - rh ** 2) * 0.8
+            ux_ = np.clip((x - cen[0]) / max(hx, 1e-3), -1, 1)
+            uy_ = np.clip((y - cen[1]) / max(hy, 1e-3), -1, 1)
+            pil = _g(S, "pillow", i, 0.004) * 0.7 * (1 - ux_ ** 2) * (1 - uy_ ** 2)
             tilt = _g(S, "tiltx", i) * x / max(hx, 1e-3) + _g(S, "tilty", i) * y / max(hy, 1e-3)
             nz = fbm(np.stack([x * 15.0 + sd, y * 15.0, np.full(len(x), sd * 0.37)], -1), 3)
             nz = nz + 0.5 * np.abs(fbm(np.stack([x * 34.0, y * 34.0 + sd, np.full(len(x), sd)], -1), 2)) - 0.25
@@ -1039,9 +1041,6 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
 
         def extra(xy):
             e = np.zeros(len(xy))
-            for dvec, c0, dep in chis:
-                ext = np.abs(poly @ dvec).max()
-                e -= dep * np.maximum((xy @ dvec) / ext - c0, 0) / (1 - c0)
             for cp_, cr_ in zip(chip_pts, chip_rad):
                 dd = np.linalg.norm(xy - cp_, axis=1)
                 e -= cr_ * 0.5 * np.clip(1 - dd / cr_, 0, 1) ** 1.3
@@ -2886,6 +2885,120 @@ def strap_hinge(acc, k, x_hinge, x_len, z, w_face, rng, nails_acc, a_ref=A_REF, 
     nail_heads(nails_acc, P, np.array([FN[k][0], FN[k][1], 0.0]), rad=0.0085, h=0.006)
 
 
+def plank_mesh(acc, mapfn, xl_fn, xr_fn, zb_fn, zt_fn, wf_fn, thick, rl_fn, rr_fn, nv, mat, rb=0.008, rt=0.004):
+    """one hand-made plank (or split part) as a closed mesh in local door coords (x along the leaf, z up, w out).
+    xl_fn/xr_fn(z): edges; zb_fn/zt_fn(x): bottom / top ends; wf_fn(x, z): front face height before arris wear;
+    rl_fn/rr_fn(z): arris radius at the left / right edge (0 = square, flush with a neighbour part)."""
+    v = np.linspace(0, 1, nv)
+    xm0 = 0.5 * (xl_fn(np.array([1.0]))[0] + xr_fn(np.array([1.0]))[0])
+    zb_m, zt_m = float(zb_fn(np.array([xm0]))[0]), float(zt_fn(np.array([xm0]))[0])
+    zr = zb_m + v * (zt_m - zb_m)
+    # extra rows for the rounded bottom and top arrises
+    zr = np.concatenate([[zb_m, zb_m + 0.3 * rb, zb_m + rb], zr[1:-1], [zt_m - rt, zt_m - 0.3 * rt, zt_m]])
+    zr = np.sort(zr)
+    nr = len(zr)
+    XL, XR = xl_fn(zr), xr_fn(zr)
+    RL, RR = rl_fn(zr), rr_fn(zr)
+    cl = np.array([0.0, 0.3, 1.0])
+    inner = np.linspace(0, 1, 6)[1:-1]
+    cols = []
+    for c in cl:
+        cols.append((XL + c * RL, RL - np.sqrt(np.maximum(RL ** 2 - (RL - c * RL) ** 2, 0))))
+    for f in inner:
+        cols.append(((XL + RL) + f * ((XR - RR) - (XL + RL)), np.zeros(nr)))
+    for c in cl[::-1]:
+        cols.append((XR - c * RR, RR - np.sqrt(np.maximum(RR ** 2 - (RR - c * RR) ** 2, 0))))
+    nc = len(cols)
+    X = np.stack([c[0] for c in cols], 1)          # (nr, nc)
+    DROP = np.stack([c[1] for c in cols], 1)
+    # re-map rows per column so the bottom / top follow the (uneven / arched) ends
+    zb = zb_fn(X[0])
+    zt = zt_fn(X[-1])
+    t = (zr - zb_m) / max(zt_m - zb_m, 1e-6)
+    tz = np.clip(t, 0, 1)[:, None]
+    # keep the small arris rows at a fixed metric distance from the ends
+    Z = zb[None, :] + tz * (zt - zb)[None, :]
+    Z[1] = zb + 0.3 * rb
+    Z[2] = zb + rb
+    Z[-2] = zt - 0.3 * rt
+    Z[-3] = zt - rt
+    # end-arris drops
+    endd = np.zeros_like(Z)
+    endd[0] = rb
+    endd[1] = rb - math.sqrt(rb * rb - (0.7 * rb) ** 2)
+    endd[-1] = rt
+    endd[-2] = rt - math.sqrt(rt * rt - (0.7 * rt) ** 2)
+    W = wf_fn(X, Z) - np.maximum(DROP, endd)
+    Vf = np.stack([X, Z, W], -1)
+    # back face: edges only
+    Wb = wf_fn(X[:, [0, -1]], Z[:, [0, -1]]) * 0 + (np.mean(wf_fn(X, Z)) - thick)
+    Vb = np.stack([X[:, [0, -1]], Z[:, [0, -1]], Wb], -1)
+    V = np.concatenate([Vf.reshape(-1, 3), Vb.reshape(-1, 3)])
+    fi = lambda r, c: r * nc + c
+    bi = lambda r, c: nr * nc + r * 2 + c
+    F = []
+    for r in range(nr - 1):
+        for c in range(nc - 1):
+            F.append((fi(r, c), fi(r, c + 1), fi(r + 1, c + 1), fi(r + 1, c)))
+        F.append((bi(r, 0), bi(r + 1, 0), bi(r + 1, 1), bi(r, 1)))
+        F.append((fi(r, 0), fi(r + 1, 0), bi(r + 1, 0), bi(r, 0)))
+        F.append((fi(r, nc - 1), bi(r, 1), bi(r + 1, 1), fi(r + 1, nc - 1)))
+    F = [np.array(F)]
+    F.append(np.array([[fi(0, c) for c in range(nc)] + [bi(0, 1), bi(0, 0)]]))
+    F.append(np.array([[fi(nr - 1, c) for c in range(nc)] + [bi(nr - 1, 1), bi(nr - 1, 0)]])[:, ::-1])
+    Wd = mapfn(V[:, 0], V[:, 1], V[:, 2])
+    acc.add(Wd, F, mat, uv=np.stack([V[:, 1], V[:, 0]], -1))
+
+
+def plank_leaf(acc, mapfn, x0, x1, zb0, zt_fn, w_front, thick, rng, widths, split=None, rot_corner=None, mat="M_timber",
+               nv=70, seed=0):
+    """vertical-plank door leaf: widths (m) left->right; split=(plank index, gap m, length m); rot_corner=('L'|'R',
+    depth m) rots back the bottom corner of the outermost plank on that side."""
+    xs = x0 + np.concatenate([[0], np.cumsum(widths)]) * (x1 - x0) / np.sum(widths)
+    n = len(widths)
+    offs = rng.uniform(0.001, 0.003, n) * np.where(rng.uniform(0, 1, n) < 0.5, -1, 1)
+
+    def zb_base(x, i):
+        z = zb0 + 0.011 + 0.009 * n1(x * 9.0, seed + 7 * i)
+        if rot_corner is not None:
+            side, dep = rot_corner
+            if (side == "L" and i == 0) or (side == "R" and i == n - 1):
+                xe = xs[0] if side == "L" else xs[-1]
+                d = np.abs(np.asarray(x) - xe)
+                z = z + dep * np.clip(1 - d / 0.11, 0, 1) ** 1.4 * (1 + 0.25 * n1(np.asarray(x) * 40, seed + 3))
+        return z
+    for i in range(n):
+        a, b = xs[i] + 0.0006, xs[i + 1] - 0.0006
+        cup = rng.uniform(0.002, 0.004)
+        rp = rng.uniform(0.003, 0.006)
+        wo = offs[i]
+        sd = seed * 10 + i
+
+        def wf(x, z, a=a, b=b, cup=cup, wo=wo, sd=sd):
+            u = (np.asarray(x) - a) / (b - a)
+            grain = 0.0011 * fbm(np.stack([np.asarray(x) * 14.0, np.asarray(z) * 2.2, np.full(np.shape(x), sd * 1.7)], -1), 2)
+            adze = 0.0006 * np.sin(np.asarray(z) * 23.0 + sd) * np.cos(np.asarray(x) * 31.0)
+            return w_front + wo - cup * (1 - (2 * np.clip(u, 0, 1) - 1) ** 2) + grain + adze
+
+        def rr_z(z, rp=rp):
+            return rp + (0.0095 - rp) * np.clip(1 - (np.asarray(z) - zb0) / 0.3, 0, 1)
+        zb_f = lambda x, i=i: zb_base(x, i)
+        if split is not None and split[0] == i:
+            _, g0, Ls = split
+            xsp = a + (b - a) * rng.uniform(0.38, 0.5)
+            gap = lambda z: g0 * np.clip(1 - (np.asarray(z) - zb0) / Ls, 0, 1) ** 0.8
+            wig = lambda z: 0.003 * n1(np.asarray(z) * 6.0, sd + 5)
+            rs = lambda z: np.where(gap(z) > 0.0004, 0.0018, 0.0)
+            plank_mesh(acc, mapfn, lambda z: np.full(np.shape(z), a), lambda z: xsp + wig(z) - 0.5 * gap(z) + 0.0003,
+                       zb_f, zt_fn, wf, thick, rr_z, rs, nv, mat)
+            plank_mesh(acc, mapfn, lambda z: xsp + wig(z) + 0.5 * gap(z) - 0.0003, lambda z: np.full(np.shape(z), b),
+                       zb_f, zt_fn, wf, thick, rs, rr_z, nv, mat)
+        else:
+            plank_mesh(acc, mapfn, lambda z: np.full(np.shape(z), a), lambda z: np.full(np.shape(z), b), zb_f, zt_fn,
+                       wf, thick, rr_z, rr_z, nv, mat)
+    return xs
+
+
 def build_main_door(coll):
     rng = np.random.default_rng(808)
     op = OPENINGS[0]
@@ -2896,39 +3009,16 @@ def build_main_door(coll):
     w_front = -op["depth"]
     w_back = w_front - 0.04
     zb0 = op["z0"] + 0.006
-    widths = rng.uniform(0.13, 0.18, 7)
-    widths = widths / widths.sum() * (2 * R)
-    xs = xc - R + np.concatenate([[0], np.cumsum(widths)])
-    planks = []
-    for i in range(7):
-        a, b = xs[i] + 0.0015, xs[i + 1] - 0.0015
-        if i == 2:   # split plank: two pieces with a thin crack
-            m = a + (b - a) * 0.42
-            planks += [(a, m - 0.002, 0.0), (m + 0.002, b, -0.002)]
-        else:
-            planks.append((a, b, rng.uniform(-0.0015, 0.0015)))
-    for a, b, dw in planks:
-        zb = zb0 + rng.uniform(-0.006, 0.008)
-
-        def dfm(P, a=a, b=b, zb=zb):
-            P = P.copy()
-            x = P[:, 0]
-            dx = np.clip(np.abs(x - xc), 0, R - 1e-4)
-            ztop = zs + np.sqrt(R * R - dx * dx) - 0.004
-            v = (P[:, 1] - zb) / (1.0)
-            P[:, 1] = zb + v * (ztop - zb)
-            # weathering: slight cupping and wear at the bottom
-            xr = (x - 0.5 * (a + b)) / (0.5 * (b - a))
-            P[:, 2] += 0.002 * (1 - xr ** 2) - 0.003 * np.clip(1 - v * 6, 0, 1)
-            return P
-        facet_obox(acc, k, a, b, zb, zb + 1.0, w_back, w_front + dw, 0.007, "M_timber", nx=5, ny=12, nz=3,
-                   deform=dfm)
+    widths = rng.permutation(np.array([0.13, 0.18, 0.145, 0.172, 0.135, 0.16, 0.176]))
+    zt_fn = lambda x: zs + np.sqrt(np.maximum(R * R - (np.asarray(x) - xc) ** 2, 0.0)) - 0.004
+    xs = plank_leaf(acc, lambda x, z, w: fmap(k, x, z, w), xc - R, xc + R, zb0 - 0.006, zt_fn, w_front, 0.04, rng,
+                    widths, split=(2, 0.0048, 0.62), rot_corner=("L", 0.042), mat="M_timber", nv=72, seed=11)
     # ledges on the back
     for zl, half in ((0.42, R - 0.06), (1.12, R - 0.06), (1.78, R - 0.12)):
         facet_obox(acc, k, xc - half, xc + half, zl - 0.07, zl + 0.07, w_back - 0.04, w_back, 0.01, "M_timber", nx=6)
     # strap hinges (hinge side = +x edge)
     for zh, ln in ((0.42, 0.78), (1.12, 0.78), (1.80, 0.62)):
-        strap_hinge(acci, k, xc + R - 0.005, ln, zh, w_front, rng, acci)
+        strap_hinge(acci, k, xc + R - 0.005, ln, zh, w_front + 0.0032, rng, acci)
     # clinch nails along ledge lines (one per plank, two rows offset)
     pts = []
     for zl in (0.42, 1.12):
@@ -2943,11 +3033,11 @@ def build_main_door(coll):
             xm = 0.5 * (xs[i] + xs[i + 1])
             pts.append((xm + rng.normal(0, 0.008), zl + rng.normal(0, 0.004)))
     pts = np.array(pts)
-    P = fmap(k, pts[:, 0], pts[:, 1], np.full(len(pts), w_front + 0.001))
+    P = fmap(k, pts[:, 0], pts[:, 1], np.full(len(pts), w_front + 0.0025))
     nail_heads(acci, P, np.array([FN[k][0], FN[k][1], 0.0]), rad=0.008, h=0.006)
     # ring pull with backplate, keyhole escutcheon
     hx_ = xc - R + 0.17
-    bp = fmap(k, np.array([hx_]), np.array([1.02]), np.array([w_front]))[0]
+    bp = fmap(k, np.array([hx_]), np.array([1.02]), np.array([w_front + 0.003]))[0]
     nrm = np.array([FN[k][0], FN[k][1], 0.0])
     tan = np.array([FT[k][0], FT[k][1], 0.0])
     V, F = lathe([(0.055, 0.0), (0.055, 0.004), (0.045, 0.007), (0.02, 0.009), (0.012, 0.022), (0.0, 0.024)], 20)
@@ -2963,8 +3053,8 @@ def build_main_door(coll):
     kz = 0.90
     for (xa, xb, za, zb2) in ((-0.025, 0.025, kz + 0.025, kz + 0.06), (-0.025, 0.025, kz - 0.06, kz - 0.022),
                               (-0.025, -0.006, kz - 0.022, kz + 0.025), (0.006, 0.025, kz - 0.022, kz + 0.025)):
-        facet_obox(acci, k, hx_ + xa, hx_ + xb, za, zb2, w_front, w_front + 0.004, 0.0015, "M_iron", nx=4, ny=4, nz=3)
-    nail_heads(acci, fmap(k, np.array([hx_, hx_]), np.array([kz + 0.048, kz - 0.048]), np.array([w_front + 0.004] * 2)),
+        facet_obox(acci, k, hx_ + xa, hx_ + xb, za, zb2, w_front, w_front + 0.0065, 0.0015, "M_iron", nx=4, ny=4, nz=3)
+    nail_heads(acci, fmap(k, np.array([hx_, hx_]), np.array([kz + 0.048, kz - 0.048]), np.array([w_front + 0.0065] * 2)),
                nrm, rad=0.005, h=0.004)
     finalize(acc, coll)
     finalize(acci, coll)
@@ -3290,13 +3380,10 @@ def build_wing_door_window(coll):
         deform=lambda P: P + np.stack([np.zeros(len(P)), -0.01 * (1 - ((P[:, 0] - xc) / 0.7) ** 2) * (P[:, 1] > 0.0), np.zeros(len(P))], 1))
     # plank leaf (7 planks) set in the frame
     lw0, lw1 = wf0 + 0.06, wf0 + 0.10
-    widths = rng.uniform(0.13, 0.17, 7)
-    widths = widths / widths.sum() * (2 * hw + 0.03)
-    xs = xc - hw - 0.015 + np.concatenate([[0], np.cumsum(widths)])
-    for i in range(7):
-        zb = z0 + 0.008 + rng.uniform(-0.005, 0.006)
-        box(acc, xs[i] + 0.0015, xs[i + 1] - 0.0015, zb, z1 + 0.02, lw0, lw1 + rng.uniform(-0.002, 0.002), 0.006,
-            "M_timber_weathered", nx=4, ny=8, nz=3)
+    widths = rng.permutation(np.array([0.135, 0.17, 0.15, 0.13, 0.165, 0.142, 0.158]))
+    plank_leaf(acc, wl, xc - hw - 0.015, xc + hw + 0.015, z0 - 0.003, lambda x: np.full(np.shape(x), z1 + 0.02), lw1,
+               lw1 - lw0, rng, widths, split=(4, 0.0042, 0.48), rot_corner=("R", 0.036), mat="M_timber_weathered",
+               nv=60, seed=23)
     for zl in (0.42, 1.15, 1.92):
         box(acc, xc - hw + 0.03, xc + hw - 0.03, zl - 0.07, zl + 0.07, lw0 - 0.04, lw0, 0.01, "M_timber_weathered")
     # three strap hinges (hinge on the west side = -x), latch on +x
@@ -3306,14 +3393,14 @@ def build_wing_door_window(coll):
         xsx = xc - hw + 0.01 + us * 0.70
         wd = strap_widths(us, 0.048, 0.036, 0.074) * (1 + 0.04 * n1(us * 6, int(zh * 50)))
         tk = 0.006 * (1 - 0.15 * us)
-        path = wl(xsx, zh + 0.002 * n1(us * 5, int(zh * 31)), lw1 + 0.5 * tk)
+        path = wl(xsx, zh + 0.002 * n1(us * 5, int(zh * 31)), lw1 + 0.0032 + 0.5 * tk)
         # profile: right = vertical strap width, up = outward normal (thickness) -> lies flat on the planks
         profs = np.stack([prof_rect(w_, t_, 0.0015) for w_, t_ in zip(wd, tk)])
         V, F = sweep(path, (0, -1, 0), profs)
         acci.add(V, F, "M_iron")
         ui = np.array([0.08, 0.28, 0.48, 0.66, 0.9])
         nail_heads(acci, wl(xc - hw + 0.01 + ui * 0.70, zh + np.array([0.008, -0.008, 0.008, -0.008, 0.0]),
-                            lw1 + 0.006 * (1 - 0.15 * ui)), np.array([0, -1.0, 0]), rad=0.008)
+                            lw1 + 0.0032 + 0.006 * (1 - 0.15 * ui)), np.array([0, -1.0, 0]), rad=0.008)
         kp = wl(np.array([xc - hw + 0.005]), np.array([zh]), np.array([lw1]))[0]
         Vk, Fk = lathe([(0.015, -0.03), (0.015, 0.03)], 10, cx=kp[0], cy=kp[1], z0=zh)
         acci.add(Vk, Fk, "M_iron")
@@ -3524,7 +3611,7 @@ def rib_stations(L, rng, sp=(0.01, 0.04), dep=(0.003, 0.015)):
 
 
 def d_roll(acc, path, prof, vis, seed, rng, up=(0.0, 0.0, 1.0), var=0.03, sp=(0.01, 0.04), dep=(0.003, 0.015),
-           taper=(0.0, 0.0), mat="M_thatch", z_wave=0.012):
+           taper=(0.0, 0.0), mat="M_thatch", z_wave=0.012, tmin=(0.45, 0.45)):
     """sweep a (D / dome) section along a path with irregular strand ribs (no regular binding), +-var section
     swelling over 0.5-1 m, and optional rounded tapers at the ends (taper lengths in m)."""
     path = np.asarray(path, float)
@@ -3549,9 +3636,9 @@ def d_roll(acc, path, prof, vis, seed, rng, up=(0.0, 0.0, 1.0), var=0.03, sp=(0.
         pr = prof + N2 * ((sw - gr) * vis)[:, None]
         tf = 1.0
         if taper[0] > 0 and s < taper[0]:
-            tf = 0.45 + 0.55 * math.sqrt(max(0.0, 1 - (1 - s / taper[0]) ** 2))
+            tf = tmin[0] + (1 - tmin[0]) * math.sqrt(max(0.0, 1 - (1 - s / taper[0]) ** 2))
         if taper[1] > 0 and L - s < taper[1]:
-            tf = min(tf, 0.45 + 0.55 * math.sqrt(max(0.0, 1 - (1 - (L - s) / taper[1]) ** 2)))
+            tf = min(tf, tmin[1] + (1 - tmin[1]) * math.sqrt(max(0.0, 1 - (1 - (L - s) / taper[1]) ** 2)))
         if tf < 1.0:
             pr = cen + (pr - cen) * tf
         profs.append(pr)
@@ -3948,7 +4035,7 @@ def build_wing_ridge(coll):
         hp = hp[:i_end]
         if len(hp) > 4:
             d_roll(acct, hp, HIP_DOME, HIP_VIS, 61 + sy, rng, up=nb_, var=0.02, sp=(0.012, 0.04),
-                   dep=(0.003, 0.012), taper=(0.32, 0.28))
+                   dep=(0.003, 0.012), taper=(0.32, 0.28), tmin=(0.7, 0.45))
             HIP_ENDS.append((hp[-1], (hp[-1] - hp[-2]) / np.linalg.norm(hp[-1] - hp[-2]), nb_))
     finalize(acc, coll)
     finalize(acct, coll, smooth_deg=70.0)

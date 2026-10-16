@@ -171,3 +171,51 @@ The Director keeps a must-fix list per building in `director/log_<id>.md`. A rou
    - typical shots are actors right outside one building's entrance, and walk-throughs past many buildings.
    - Close-up quality matters most at entrances, ground contact and eye-level walls. Roof tops are seen mainly from the aerial and mid distance.
 5. These notes do NOT lower the 10/10 bar. They govern how the geometry is structured.
+
+### Producer note 6: hidden / buried triangles (client requirement; applies from the next round on)
+
+Remove or minimise geometry that can never be seen from outside the building, wherever that is practical.
+
+**How it is measured.** `tools/render_review.py` now runs `tools/hidden_tris.py`.
+- The script ray-casts sampled triangles from eye-level, crane and aerial viewpoints.
+- It writes `est_hidden_pct` into `stats.json`, with a per-object breakdown in `hidden.json`.
+- You can also run it on its own: `/opt/bpyenv/bin/python tools/hidden_tris.py <file.blend>` (about 10 s).
+- **Target: est_hidden_pct ≤ 15%.** The round-2 roundhut measured about 46% (about 680k of 1.47M triangles).
+
+**Typical fixes:**
+- **Masonry:** each stone keeps only its exposed face, plus its sides down to the mortar recess depth and a few mm more. Delete the back faces and the buried sides. Delete the wall core behind full stone cover.
+- **Shingles, shakes and thatch courses:** model the exposed part plus only enough hidden overlap to read correctly where edges ARE visible (eaves, hips, verges, ridge, holes). Delete the rest of each covered unit.
+- **Wattle:** do not model rod halves buried inside daub, or rod backs facing a solid wall.
+- **Roof structure:** battens, purlins and rafters only where they can be seen: under the eaves from eye level, and through doors and windows. Delete the rest.
+- **Below ground:** nothing deeper than 5 cm.
+- **Interiors:** only the depth visible through openings, about 1.5 m. Close the rest off with simple dark blocker surfaces.
+- **Mill rotor:** keep the backs of sails and blades. They are visible from behind.
+
+**Reinvesting the savings.** Triangles saved should go into visible close-up detail: entrances, ground contact and eye-level walls. Never cut anything that affects the silhouette or a visible edge.
+
+### Producer note 7: material slots (client requirement; applies from the next round on)
+
+**At most 10 material slots per building AND across the whole kit.** Every building and kit component uses only this shared palette:
+
+| Slot | What goes on it |
+|---|---|
+| `M_stone` | all stone: rubble, dressed, plinth, scatter |
+| `M_mortar` | mortar, chinking |
+| `M_daub` | daub, plaster |
+| `M_timber` | all structural and joinery timber, weathered or not |
+| `M_roof_wood` | shingles and shakes |
+| `M_thatch` | thatch |
+| `M_wattle` | wattle rods |
+| `M_metal` | iron and lead |
+| `M_ground` | earth, apron, path |
+| `M_moss` | moss clumps, if modelled |
+
+**Rules:**
+- Slots named in earlier rounds (`M_rubble`, `M_stone_dressed`, `M_timber_weathered`, `M_roof_shingle`, `M_roof_shake`, `M_iron`, `M_lead`, `M_earth`) must be remapped onto this palette.
+- To keep sub-type information for texturing, write a per-face colour attribute named `Mask`, using these channels:
+  - **R:** sub-type: 0 = default, 1 = dressed / weathered / shake / lead.
+  - **G:** wear amount 0–1.
+  - **B:** random per-piece value 0–1.
+  - **A:** reserved, 1.
+- Unreal material instances will read the `Mask` attribute.
+- `stats.json` reports `material_slot_count`. The director treats more than 10 slots, or any slot outside the palette, as a must-fix.

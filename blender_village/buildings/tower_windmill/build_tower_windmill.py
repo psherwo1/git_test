@@ -2059,23 +2059,66 @@ def build_buttress(parts):
                      np.stack([-hwb, 0.015 + 0 * hwb], 1), np.stack([-hwb, -0.03 + 0 * hwb], 1)], 1)
     Pb, Tb = sweep(pts[None], prof[None], up=ndir)
     P_b.add(Pb, Tb, mat="M_mortar", smooth="none")
-    # dressed coping slabs bedded on the mortar: lengths 0.5-0.9 m, tight joints, no stair-stepping
+    # dressed coping slabs bedded on the mortar: lengths 0.5-0.9 m, tops flush (+-3 mm) at the joints,
+    # weathered dished tops (+-1 cm), 1-2 spalls on the top arrises, upper arrises worn more than the lower,
+    # two cracked slabs, one slab turned 1.5 deg in plan
     Ltot = (x1 - x0) / sdir[0]
     Ls = []
     while sum(Ls) < Ltot:
         Ls.append(rng.uniform(0.5, 0.9))
     Ls = np.array(Ls) * Ltot / sum(Ls)
     cuts = np.concatenate([[0], np.cumsum(Ls)])
-    for i in range(len(Ls)):
-        L = cuts[i + 1] - cuts[i] - 0.012
+    nsl = len(Ls)
+    cracked = set(int(v) for v in rng.choice(np.arange(1, nsl - 1), 2, replace=False))
+    turned = int(rng.choice([i for i in range(1, nsl - 1) if i not in cracked]))
+    th = 0.172
+    R0 = frame_mats(sdir[None], ndir[None], unit(np.cross(sdir, ndir))[None])
+    for i in range(nsl):
+        L = cuts[i + 1] - cuts[i] - 0.010
         sc = (cuts[i] + cuts[i + 1]) / 2
         p = np.array([x0, 0, bt_slope_z(x0)]) + sdir * sc
-        w = 2 * float(butt_halfwidth(np.clip(p[2], 0, 3.6))) + 0.13 + rng.uniform(-0.02, 0.02)
-        th = 0.172 + rng.uniform(-0.003, 0.003)
-        P, T = stone_local(rng, [L], [w], [th], "hero", rot_deg=(0.25, 0.3, 0.15))
-        R = frame_mats(sdir[None], ndir[None], unit(np.cross(sdir, ndir))[None])
-        c = p + ndir * (th + 0.004) + np.array([0, rng.uniform(-0.015, 0.015), 0])
-        P_b.add(xform(P, R, c[None]), T, Pl=P, mat="M_stone_dressed", smooth="bevel")
+        w = 2 * float(butt_halfwidth(np.clip(p[2], 0, 3.6))) + 0.13 + rng.uniform(-0.01, 0.01)
+        P, T = stone_local(rng, [L], [w], [th], "hero", rot_deg=(0.0, 0.0, 0.0), spall=(0, 0))
+        hx, hz_ = L / 2, w / 2
+        ux = P[:, :, 0] / hx
+        uz = P[:, :, 2] / hz_
+        top = np.clip((P[:, :, 1] + 0.03) / 0.03, 0, 1)            # 1 on the top face (local y = 0)
+        # dished, weathered top (+-1 cm) - zero at the ends so joints stay flush
+        P[:, :, 1] -= top * (0.008 * np.clip(1 - ux ** 2, 0, 1) * np.clip(1 - 0.6 * uz ** 2, 0, 1)
+                             + 0.002 * noise_field(np.stack([ux, uz, ux * uz], -1), rng)[..., None][..., 0] *
+                             np.clip(1 - ux ** 2, 0, 1))
+        # the long top arrises are worn round (upper edges more than lower)
+        P[:, :, 1] -= top * 0.014 * np.clip((np.abs(uz) - 0.82) / 0.18, 0, 1) ** 2
+        P[:, :, 2] -= np.sign(uz) * top * 0.006 * np.clip((np.abs(uz) - 0.82) / 0.18, 0, 1)
+        # 1-2 spalls on the top long arrises
+        for _ in range(int(rng.integers(1, 3))):
+            sz = rng.choice([-1, 1])
+            ca = rng.uniform(-0.7, 0.7) * hx
+            hl = rng.uniform(0.04, 0.09)
+            dep = rng.uniform(0.012, 0.022)
+            nrm_ = unit(np.array([0, 1.0, sz * rng.uniform(0.8, 1.3)]))
+            edge = np.array([0, 0.0, sz * hz_])
+            o = edge @ nrm_ - dep
+            win = np.clip((hl - np.abs(P[:, :, 0] - ca)) / 0.012, 0, 1)
+            exc = np.clip(P @ nrm_ - o, 0, None) * win
+            P -= exc[..., None] * nrm_
+        Rl = R0
+        if i == turned:
+            Rl = R0 @ rotm([0, 1, 0], [1.5 * D2R])[0]
+        c = p + ndir * (th + 0.004) + np.array([0, rng.uniform(-0.008, 0.008), 0])
+        if i in cracked:
+            # an irregular crack across the slab: two pieces, 4 mm apart, matching fracture faces
+            a_c = rng.uniform(-0.35, 0.35)
+            nc = unit(np.array([math.cos(a_c), 0, math.sin(a_c)]))
+            off = rng.uniform(-0.15, 0.15) * hx
+            wob = 0.008 * np.sin(P[:, :, 2] * 23 + rng.uniform(0, 6)) + 0.004 * np.sin(P[:, :, 2] * 61)
+            dd = P @ nc - off - wob
+            for sg in (-1, 1):
+                Q = P - (np.clip(sg * dd + 0.002, 0, None) * sg)[..., None] * nc
+                P_b.add(xform(Q, Rl, c[None]), T, Pl=Q, mat="M_stone_dressed", smooth="bevel")
+        else:
+            P_b.add(xform(P, Rl, c[None]), T, Pl=P, mat="M_stone_dressed", smooth="bevel")
+    log("buttress coping: %d slabs, cracked %s, turned %d" % (nsl, sorted(cracked), turned))
     # toe footing stones
     N = 4
     P, T = stone_local(rng, rng.uniform(0.4, 0.6, N), rng.uniform(0.18, 0.26, N), rng.uniform(0.3, 0.4, N), "footing")
@@ -3436,15 +3479,33 @@ def build_rotor(parts):
         sw = stock_w(i)
         # stock half (tapering 0.30 -> 0.16 for A, 0.30 -> 0.20 for the bare arms), from inside the poll end
         r0, r1 = -0.15, (SAIL_R1 + 0.05 if i == 0 else ARM_R1)
-        h = np.array([[(r1 - r0) / 2, 0.15, 0.15]])
-        P = rbox(T_PLK, h, np.array([[0.02, 0.018, 0.018]]))
+        # hewn stock: adze scallops, worn chamfers (2-4 cm before the taper -> 1.5-3 cm), 1-2 long checks,
+        # split end grain at the tip
+        P, Th = hewn_beam(rng, r1 - r0, 0.30, 0.30, chamfer=(0.02, 0.04), adze=(0.005, 0.008),
+                          checks=(1, 2), check_len=(0.6, 1.5), end_split=1, faces_check=(1, 2))
         r = (r0 + r1) / 2 + P[:, :, 0]
         sc = stock_depth(r, i) / 0.30
         Q = np.stack([r, P[:, :, 1] * sc, P[:, :, 2] * sc + sw], -1)
         Q[..., 1] += rng.uniform(-0.012, 0.012) * (r / r1) ** 2
         Q[..., 2] += rng.uniform(-0.008, 0.008) * (r / r1) ** 2
-        P_st.add(rotw(loc3(er, t, Q[..., 0], Q[..., 1], Q[..., 2])), T_PLK, Pl=P, mat="M_timber_weathered",
+        P_st.add(rotw(loc3(er, t, Q[..., 0], Q[..., 1], Q[..., 2])), Th, Pl=P[0], mat="M_timber_weathered",
                  smooth="bevel")
+        # two iron bands (50 x 6 mm) round the stock near the poll end, each with a through-bolt
+        for rb_ in (0.47 + rng.uniform(-0.02, 0.02), 0.80 + rng.uniform(-0.02, 0.02)):
+            hs_ = float(stock_depth(rb_, i)) / 2 + 0.003
+            cr = 0.012
+            loop = []
+            for (cl, cw) in ((1, 1), (-1, 1), (-1, -1), (1, -1)):
+                for a_ in np.linspace(0, PI / 2, 4):
+                    base_a = math.atan2(cw, cl) - PI / 4
+                    aa_ = base_a + a_
+                    loop.append((cl * (hs_ - cr) + cr * math.cos(aa_), sw + cw * (hs_ - cr) + cr * math.sin(aa_)))
+            loop = np.array(loop)
+            path = rotw(loc3(er, t, np.full(len(loop), rb_), loop[:, 0], loop[:, 1]))
+            Pb_, Tb_ = sweep(path[None], rect_prof(0.006, 0.05, 0.0015), up=rotw(er[None])[0] - HUB, closed=True)
+            P_ri.add(Pb_, Tb_, mat="M_iron", smooth="bevel")
+            hex_heads(P_ri, np.array([loc3(er, t, rb_, 0.0, sw + hs_ + 0.003), loc3(er, t, rb_, 0.0, sw - hs_ - 0.003)]),
+                      np.array([Z3, -Z3]), rad=0.02, hgt=0.014)
         # strap to the outer rim: a foot plate bolted (2 bolts) to the stock's back face, a flat iron drop
         # strap on the stock's centre line down to the rim, and a clip plate behind the rim
         hs = float(stock_depth(RING_OUT, i)) / 2
@@ -3494,12 +3555,12 @@ def build_rotor(parts):
     P_stA = parts["sail_A_stock"]
     # whip bolted to the stock face
     r0, r1 = 1.2, SAIL_R1 + 0.02
-    h = np.array([[(r1 - r0) / 2, 0.08, 0.08]])
-    P = rbox(T_PLK, h, np.array([[0.015, 0.014, 0.014]]))
+    P, Th = hewn_beam(rng, r1 - r0, 0.16, 0.16, chamfer=(0.015, 0.025), adze=(0.003, 0.005), checks=(1, 1),
+                      check_len=(0.5, 1.0), end_split=1, faces_check=(2,))
     r = (r0 + r1) / 2 + P[:, :, 0]
     sc = whip_depth(r) / 0.16
     Q = np.stack([r, P[:, :, 1] * sc, P[:, :, 2] * sc], -1)
-    P_wh.add(rotw(sail_map(Q, use_twist=False)), T_PLK, Pl=P, mat="M_timber_weathered", smooth="bevel")
+    P_wh.add(rotw(sail_map(Q, use_twist=False)), Th, Pl=P[0], mat="M_timber_weathered", smooth="bevel")
     # U-clamps whip -> stock: front/back straps lie flat on the faces (normal = shaft axis), side straps
     # flat on the side faces (normal = t)
     for rc in (1.45, 2.6, 3.8, 5.0):
@@ -3762,7 +3823,9 @@ def build_props(parts):
             - upv * (sag * np.sin(np.clip(t, 0, 1) * PI))[:, None]
         rad = 0.075 + 0.025 * np.clip(t, 0, 1) + 0.003 * np.sin(t * 13 + idx) + 0.002 * np.sin(t * 31 + 2 * idx)
         nck = int(rng.integers(2, 4))
-        ck_a = rng.uniform(0, 2 * PI) + np.arange(nck) * 2 * PI / nck + rng.uniform(-0.4, 0.4, nck)
+        # first check on the face seen from the front / hero cameras (-side), the second on the upper face
+        ck_a = np.array([PI + rng.uniform(-0.4, 0.4), PI / 2 + rng.uniform(-0.4, 0.4),
+                         rng.uniform(-PI / 2, 0.2)])[:nck]
         base_a = np.linspace(0, 2 * PI, 24, endpoint=False)
         extra = np.concatenate([[a - 0.115, a, a + 0.115] for a in ck_a]) % (2 * PI)
         keep_b = np.array([np.min(np.abs((b - extra + PI) % (2 * PI) - PI)) > 0.06 for b in base_a])
@@ -3771,14 +3834,17 @@ def build_props(parts):
         ell = 1 + rng.uniform(-0.04, 0.04) * np.cos(2 * ang + rng.uniform(0, PI))
         R = rad[:, None] * ell[None, :]
         sdist = (1 - t) * Lp                                    # distance from the foot (m)
+        # low-frequency undulation of the trunk (+-3 mm)
+        R += 0.003 * np.sin(sdist[:, None] * rng.uniform(2, 4) + ang[None, :] * 2 + rng.uniform(0, 6)) * \
+            np.sin(sdist[:, None] * rng.uniform(0.7, 1.4) + rng.uniform(0, 6))
         # adze flats (+-1 cm) and a bark-strip remnant (proud 7 mm, ragged edges)
-        for _ in range(2):
-            af = rng.uniform(0, 2 * PI)
-            lf = rng.uniform(0.8, 1.4)
-            s0 = rng.uniform(1.0, Lp - lf - 0.5)
+        for q in range(3):
+            af = (PI + rng.uniform(-0.5, 0.5)) if q == 0 else rng.uniform(0, 2 * PI)
+            lf = rng.uniform(0.8, 1.6)
+            s0 = rng.uniform(0.6, 3.5) if q == 0 else rng.uniform(1.0, Lp - lf - 0.5)
             win = np.clip(np.minimum(sdist - s0, s0 + lf - sdist) / 0.15, 0, 1)
             da = (ang[None, :] - af + PI) % (2 * PI) - PI
-            dep = rng.uniform(0.008, 0.012) * win
+            dep = rng.uniform(0.010, 0.014) * win
             flat = (rad[:, None] - dep[:, None]) / np.maximum(np.cos(da), 0.3)
             R = np.where(np.abs(da) < 1.2, np.minimum(R, flat), R)
         ab = rng.uniform(0, 2 * PI)
@@ -3787,13 +3853,13 @@ def build_props(parts):
         inb = (sdist > s0) & (sdist < s0 + lb)
         hw_b = 0.3 + 0.08 * np.sin(sdist * 17 + idx) + 0.05 * np.sin(sdist * 41)
         da = np.abs((ang[None, :] - ab + PI) % (2 * PI) - PI)
-        R += 0.007 * (inb[:, None] & (da < hw_b[:, None]))
+        R += 0.010 * (inb[:, None] & (da < hw_b[:, None]))
         # V checks: 2.3 cm wide (lips at +-1.15 cm), 1.5-2.5 cm deep, 0.8-2 m long
         checks = []
         for a in ck_a:
             j = int(np.argmin(np.abs((ang - a % (2 * PI) + PI) % (2 * PI) - PI)))
             lc = rng.uniform(0.8, 2.0)
-            s0 = rng.uniform(0.8, Lp - lc - 0.8)
+            s0 = rng.uniform(0.5, 4.5 - lc) if len(checks) == 0 else rng.uniform(0.8, Lp - lc - 0.8)
             u = np.clip((sdist - s0) / lc, 0, 1)
             dep = rng.uniform(0.015, 0.025) * np.sqrt(np.sin(u * PI))
             R[:, j] -= dep
@@ -3808,7 +3874,7 @@ def build_props(parts):
             dk = rng.uniform(0.04, 0.07)
             knots.append((tk, ak, dk))
             dda = np.abs((ang - ak + PI) % (2 * PI) - PI)
-            R += 0.010 * np.exp(-(dda / 0.45) ** 2)[None, :] * np.exp(-((sdist - sk) / 0.07) ** 2)[:, None]
+            R += 0.016 * np.exp(-(dda / 0.5) ** 2)[None, :] * np.exp(-((sdist - sk) / 0.09) ** 2)[:, None]
         ex = side
         ey = upv
         prof = np.stack([R * np.cos(ang)[None], R * np.sin(ang)[None]], -1)
@@ -3837,11 +3903,14 @@ def build_props(parts):
         for tk, ak, dk in knots:
             jt = np.argmin(np.abs(t - tk))
             dirr = math.cos(ak) * ex + math.sin(ak) * ey
-            base = cen[jt] + dirr * (rad[jt] - 0.015)
+            base = cen[jt] + dirr * (rad[jt] - 0.01)
             out = unit(dirr * 0.85 - ax * 0.35)
-            ln = 0.015 + rng.uniform(0.02, 0.04) / max(out @ dirr, 0.5)
-            path = base + out * np.linspace(0, ln, 4)[:, None]
-            prof_k = np.array([circle_prof(dk / 2 * f, 10) for f in (1.25, 1.05, 1.0, 0.96)])
+            ln = 0.012 + rng.uniform(0.02, 0.04) / max(out @ dirr, 0.5)
+            path = base + out * np.array([0.0, 0.25, 0.55, 0.85, 1.0])[:, None] * ln
+            # flared boss -> broken stub with a ragged, slightly domed end
+            rag = 1 + rng.uniform(-0.12, 0.12, 12)
+            prof_k = np.array([circle_prof(dk / 2 * f, 12) * (rag[:, None] if f < 1.0 else 1.0)
+                               for f in (1.7, 1.25, 1.02, 0.95, 0.75)])
             Pk, Tk = sweep(path[None], prof_k[None], up=ax)
             P_p.add(Pk, Tk, mat="M_timber_weathered", smooth="all")
         nknot_foot = int(sum(1 for sk in kd if sk <= 2.5))
