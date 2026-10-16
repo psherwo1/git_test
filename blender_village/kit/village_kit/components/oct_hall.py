@@ -111,7 +111,7 @@ def hall_excl(z0, z1, zm):
     return out
 
 
-def build_door_dressing(acc_d, op, rng):
+def build_door_dressing(acc_d, op, rng, crisp=False):
     k, xc, hw, zs = op["k"], op["xc"], op["hw"], op["zs"]
     leaf_apo = FR.A_REF - op["depth"]
     recs = []
@@ -151,7 +151,29 @@ def build_door_dressing(acc_d, op, rng):
                   [r["zc"] for r in recs], rng)
     dress_irregular(S, rng)
     wear = np.clip(1.1 - S["zc"] / 0.9, 0, 1)
-    _lay(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(30, 32), wear=wear)
+    ckw = {}
+    if crisp:
+        # kit 1.5.0 (keep r8 must-fix 1): flat faces (dome <= 3 mm), true 45 deg chamfers of 1.0-1.5 cm (S['r']),
+        # and 1-3 planar arris spalls of 2-5 cm on every jamb block (entrance zone: relief >= 1 cm is geometry);
+        # a separate generator, so the masonry layout and every other stone are unchanged
+        rs_ = np.random.default_rng(int(op.get("xc", 0) * 1000) + 4242)
+        S["pillow"] = np.minimum(S["pillow"], 0.002)
+        sp_all = []
+        for i_, r_ in enumerate(recs):
+            side_ = -1 if r_["x"] < xc else 1
+            inner_e = 1 if side_ < 0 else 3            # the reveal arris (toward the opening)
+            outer_e = 3 if side_ < 0 else 1
+            sp_ = []
+            for _ in range(int(rs_.integers(1, 4))):
+                u_ = rs_.uniform()
+                ed_ = inner_e if u_ < 0.5 else (2 if u_ < 0.75 else (0 if u_ < 0.85 else outer_e))
+                hl_ = rs_.uniform(0.018, 0.026)
+                along = S["hy"][i_] if ed_ in (1, 3) else S["hx"][i_]
+                s0_ = rs_.uniform(-1, 1) * max(along - hl_ - 0.01, 0.0)
+                sp_.append((ed_, s0_, hl_, rs_.uniform(0.024, 0.035), rs_.uniform(0.02, 0.03)))
+            sp_all.append(sp_)
+        ckw = dict(chamfer=True, spalls=sp_all, nz_side=4)
+    _lay(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(30, 32), wear=wear, **ckw)
     # voussoirs: irregular widths, thicker at the crown
     nv = 13
     wts = rng.permutation(np.linspace(0.78, 1.24, nv))
@@ -203,7 +225,22 @@ def build_door_dressing(acc_d, op, rng):
         zf = zs + R * np.sin(t)
         return facet_s(k, xf, SS["zcrs"][:, None]), zf
 
-    _lay(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, premap=premap, dressed=True, grid=(22, 24))
+    vkw = {}
+    if crisp:
+        S["pillow"] = np.minimum(S["pillow"], 0.002)
+        rs_ = np.random.default_rng(4343)
+        sp_v = []
+        for i_ in range(nv):
+            sp_ = []
+            # the two lowest voussoirs each side are in reach: 1-2 spalls on their intrados / face arrises
+            if i_ < 2 or i_ >= nv - 2:
+                for _ in range(int(rs_.integers(1, 3))):
+                    hl_ = rs_.uniform(0.01, 0.025)
+                    s0_ = rs_.uniform(-1, 1) * max(S["hx"][i_] - hl_ - 0.01, 0.0)
+                    sp_.append((0, s0_, hl_, rs_.uniform(0.012, 0.02), rs_.uniform(0.012, 0.018)))
+            sp_v.append(sp_)
+        vkw = dict(chamfer=True, spalls=sp_v, nz_side=4)
+    _lay(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, premap=premap, dressed=True, grid=(22, 24), **vkw)
 
 
 def build_rect_dressing(acc_d, op, rng, sill_acc):
@@ -297,19 +334,68 @@ def build_sill(sill_acc, op, rng):
     FR.DRESSED_POLYS[k].append([(xc - sw, ztop - st), (xc + sw, ztop - st), (xc + sw, ztop), (xc - sw, ztop)])
 
 
+def footing_blocks(acc, S, mapfn, rng, mat="M_stone", relief=None):
+    """kit 1.5.0 (keep round 9, director r8 must-fix 2): footing-course stones of record S (the 'foot' stones of a
+    coursed layout) laid as split field stone instead of kerb boxes -- gridded blocks (stones.coursed_batch) with
+    2-3 planar split facets per face stepped 2-4 cm (facet lines at 0-25 deg off the vertical), the whole face
+    yawed 5-10 deg off the wall line, 1-2 planar top-arris spalls 3-6 cm long, 1.2-2.2 cm 45 deg chamfers, no
+    pillow dome (the field-stone lean / bed slopes of rough_footing are kept).  Returns the number of stones."""
+    M = len(S["sc"])
+    if M == 0:
+        return 0
+    S = {k: (np.array(v, float).copy() if np.ndim(v) else v) for k, v in S.items()}
+    S["pillow"] = rng.uniform(0.002, 0.006, M)
+    S["r"] = rng.uniform(0.012, 0.022, M)
+    yaw = np.tan(np.radians(rng.uniform(5.0, 10.0, M))) * np.where(rng.uniform(size=M) < 0.5, -1.0, 1.0)
+    # keep the receding end in front of the wall: shift the face out by what the yaw takes back at that end
+    S["f"] = S["f"] + 0.5 * np.abs(yaw) * S["hx"]
+    steps, spalls = [], []
+    for i in range(M):
+        hx = float(S["hx"][i])
+        nl = 1 if hx < 0.3 else int(rng.integers(1, 3))
+        cs = np.sort(rng.uniform(-0.55, 0.55, nl)) if nl > 1 else rng.uniform(-0.35, 0.35, 1)
+        st = []
+        sg = 1.0 if rng.uniform() < 0.5 else -1.0
+        for c in cs:
+            a = np.radians(rng.uniform(-25.0, 25.0))
+            # the facet beyond the line (on side sg) steps back 2-4 cm and lies in its own plane (5-12 deg off the
+            # neighbouring facet about both axes), so each split face catches the light differently
+            gx = math.tan(math.radians(rng.uniform(5.0, 12.0))) * rng.choice([-1.0, 1.0])
+            gy = math.tan(math.radians(rng.uniform(4.0, 10.0))) * rng.choice([-1.0, 1.0])
+            # (split lines run plumb, along the grid columns: a slanted step on the grid would read as a staircase)
+            st.append((sg * 1.0, 0.0 * a, sg * c, rng.uniform(0.02, 0.04), 0.0, gx, gy))
+        steps.append(st)
+        # the base facet is itself off the wall plane (4-9 deg about the vertical axis comes from the yaw; 3-7 deg
+        # about the horizontal one here)
+        S["tiltx"][i] = 0.0
+        S["tilty"][i] = math.tan(math.radians(rng.uniform(3.0, 7.0))) * float(S["hy"][i]) * rng.choice([-1.0, 1.0])
+        S["f"][i] += 0.5 * sum(s_[3] for s_ in st) + 0.5 * abs(S["tilty"][i]) + \
+            0.3 * sum(abs(s_[5]) * hx + abs(s_[6]) * float(S["hy"][i]) for s_ in st)
+        sp = []
+        for _ in range(int(rng.integers(1, 3))):
+            hl = rng.uniform(0.015, 0.03)
+            sp.append((2, rng.uniform(-1, 1) * max(hx - hl - 0.02, 0.0), hl, rng.uniform(0.018, 0.03),
+                       rng.uniform(0.02, 0.035)))
+        spalls.append(sp)
+    lay_stones(acc, S, mapfn, mat, rng, relief=relief if relief is not None else FR.min_relief, rough=1.0,
+               grid=(50, 20), side_depth=0.018, chamfer=True, yaw=yaw, steps=steps, spalls=spalls,
+               noise_amp=0.006)
+    return M
+
+
 def hall_cull(S):
     P = hall_map(S["sc"], S["zc"], np.zeros_like(S["sc"]), S["zcrs"])
     return ~in_wing(P, margin=0.12, zpad=0.12)
 
 
-def build_hall_masonry(coll, seed=101):
+def build_hall_masonry(coll, seed=101, crisp=False):
     rng = np.random.default_rng(seed)
     acc = Acc(FR.prefix + "_hall_wall_stones")
     accd = Acc(FR.prefix + "_hall_dressed_stones")
     FR.JOINT_ACC = Acc(FR.prefix + "_hall_dressed_joint_mortar")
     for op in FR.OPENINGS:
         if op["kind"] == "arch":
-            build_door_dressing(accd, op, rng)
+            build_door_dressing(accd, op, rng, crisp=crisp)
         else:
             build_rect_dressing(accd, op, rng, accd)
     cfg = dict(seed=7 + (seed - 101), footing=0.33, ch=(0.085, 0.18), p_tall=0.08, len=(0.18, 0.62), foot_len=(0.40, 1.10),
@@ -342,8 +428,23 @@ def build_hall_masonry(coll, seed=101):
                     abs(S["sbt"][i] - S["sbb"][i]) > 0.06 or abs(S["shl"][i] - S["shr"][i]) > 0.12))
     log(f"  hall hero stones {int(poly_n.sum())} (non-rectangular {npoly}), other {int((~hero & ~small).sum())}, "
         f"pins {int(small.sum())}")
-    _lay_poly(acc, filt(S, poly_n), hall_map, "M_stone", np.random.default_rng(seed + 1919), side_depth=0.018,
+    if crisp:
+        # kit 1.5.0 (keep r8 must-fix 2): the footing course as split field stone, not kerbs.  The hero poly stones
+        # are laid exactly as before (the footing stones' draws are still made, into a scratch accumulator, so every
+        # other stone is unchanged); the footing stones are then laid as gridded blocks with 2-3 planar split facets
+        # stepped 2-4 cm, the face yawed 5-10 deg off the wall line, 1-2 top-arris spalls of 3-6 cm, 1.2-2.2 cm
+        # chamfered arrises and no pillow dome
+        rng_p = np.random.default_rng(seed + 1919)
+        scratch = Acc(FR.prefix + "_scratch_unused")
+        for i_ in np.flatnonzero(poly_n):
+            one = np.zeros(len(poly_n), bool)
+            one[i_] = True
+            _lay_poly(scratch if foot[i_] else acc, filt(S, one), hall_map, "M_stone", rng_p, side_depth=0.018,
                       rings=(0.8, 0.58, 0.33))
+        footing_blocks(acc, filt(S, foot & ~small), hall_map, np.random.default_rng(seed + 2929))
+    else:
+        _lay_poly(acc, filt(S, poly_n), hall_map, "M_stone", np.random.default_rng(seed + 1919), side_depth=0.018,
+                  rings=(0.8, 0.58, 0.33))
     # non-hero facets: N / NE / E / NW thinned (single side segment + chamfer band)
     _lay(acc, filt(S, ~hero & ~small), hall_map, "M_stone", rng, rough=1.0, nxy=5, noise_amp=0.008, nz2=True,
                  side_depth=0.018)
@@ -646,10 +747,13 @@ def build_threshold(coll, seed=1010):
 # =================================================================================================================
 # public components
 # =================================================================================================================
-def oct_hall_walls(g, seed=101):
-    """KIT COMPONENT: the hall's rubble wall with its dressed surrounds, mortar body and opening reveals."""
+def oct_hall_walls(g, seed=101, crisp_entrance=False):
+    """KIT COMPONENT: the hall's rubble wall with its dressed surrounds, mortar body and opening reveals.
+    kit 1.5.0: crisp_entrance=True -> the arched door's jamb and voussoir blocks get flat faces, true 45 deg
+    chamfers and planar arris spalls, and the footing course is laid as stepped, yawed, spalled split field stone
+    (footing_blocks); the rest of the masonry is unchanged."""
     coll = g.sub("hall")
-    build_hall_masonry(coll, seed=seed)
+    build_hall_masonry(coll, seed=seed, crisp=crisp_entrance)
     build_hall_mortar(coll)
     build_hall_interior(coll)
 

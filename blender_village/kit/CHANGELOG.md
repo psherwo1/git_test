@@ -12,9 +12,173 @@
 
 | Building | Imports village_kit since | Triangles at last check |
 |---|---|---|
-| wattle_roundhut | 1.0.0 (round 8) | 827,563 after 1.3.0 hut part (round 9; round 8: 744,105) |
-| hilltop_keep | 1.1.0 (round 7) | 1,159,180 after 1.3.0 keep part (round 7: 1,123,849; variant 1,025,777) |
+| wattle_roundhut | 1.0.0 (round 8) | 876,619 after 1.6.0 hut part (round 11; round 10: 837,924; round 9: 827,563; round 8: 744,105) |
+| hilltop_keep | 1.1.0 (round 7) | 1,166,874 after 1.5.0 keep part (round 9; round 8: 1,159,180; round 7: 1,123,849; variant 1,025,777) |
 | tower_windmill | 1.2.0 (round 7) | 1,146,243 (round 8, kit 1.4.0; round 7: 1,134,993, variant 865,123) |
+
+---
+
+## 1.6.0, hut part (2026-10-16): strict decal-anchor gate, crisp door-bay break, split-facet plinth stones, fine-relief gates (HUT builder, round 11)
+
+Fixes the sign-off audit of hut round 10 (director 8.8).  Every change is a new function / constant or an optional
+parameter whose default reproduces kit 1.5.0 exactly; only the hut passes the new options.
+
+### New functions / constants
+
+- **`anchor_validate.STRICT_R11`**, **`anchor_validate.strict_footprint(probe, pos, normal, up, size, surface, ...)`**
+  and the private `_strict_place()`: the director's anchor inspection as a gate -- 3 x 3 rays at +-0.45 x size from
+  15 cm in front, first hit of ANY mesh; >= 7 of 9 on the declared slot within 4 cm of the plane (every slot, shingles
+  included); footprint-mean RAW face normal . anchor normal >= 0.97; wall slots (M_daub / M_timber*, generator
+  |n.z| < 0.6) get |n.z| <= 0.15.  The normal is the footprint-mean normal (wall: z clamped), re-snapped; a failing
+  anchor is retried over 13 small shifts (<= 12 cm) x 3 sizes (1.0 / 0.8 / 0.65), else dropped.
+- **`components.daub.WALL_FINISH_R11` / `wall_finish_r11()`** and **`components.daub.door_break_r11(g)`**: the
+  door-bay break in the patches' `_ragged_margin` language (8-25 cm runs <= 12 deg, 1-2 rod-row diagonal steps, no U
+  notch, line tilted 1.5-3.5 deg), a slope-normalised (mitred) field so tab corners stay crisp, a steep 3 cm edge face
+  ending on the snapped contour, coat 7.4 cm thick at the arris, no feathering.
+- **`stones._split_scar()`**: a hand-split scar as a planar facet pocket (tilted floor + step / side / exit break
+  planes; crisp plane-plane creases, no smooth window).
+
+### New optional parameters (defaults = 1.5.0 behaviour)
+
+- `anchor_validate.validate_anchors(..., strict=None)`; `_cast()` also returns `normal_raw`.
+- `components.round_decals.round_building_decals(layout=4)`: one damp_rise per bay (width capped 0.12 m clear of each
+  post flank), door-head soot on the lintel front clipped above the opening, patch-corner cracks starting 3 cm out,
+  settlement cracks ending >= 5 cm under the plate, plaster / repair patches only >= 5 cm inside intact coat (daub
+  field) with a strict footprint.
+- `components.daub.clump_mesh(..., style=None)` ("slab": flat-fronted broken slab); wall_finish keys `door_break`,
+  `door_edge_w`, `door_edge_T`, `clump_style` (w:depth 1.6-2.4, <= 1 clump at a corner), `ent_gate="feature"`
+  (entrance dents / dabs kept whole or not at all by `g.detail.min_at(centre)`: no 0-1 cm fade band), `gate_fine`,
+  `stone_style="split"`, `stone_scars_ent`.
+- `stones.stone_skin(..., split=False, scar_keep_ent=None)`, `stones.plinth_kind_stone(..., split, scar_keep_ent)`,
+  `components.plinth.plinth_stone(..., split, scar_keep_ent, dense=1.0)`; `build_plinth` (when `stone_style="split"`):
+  no 1-1.4 cm skin lumps, entrance stones meshed 1.6x denser, flat bed (below z 0.5 cm no vertex > 1 cm proud of the
+  face just above the ground).
+- `stones.spall_stone(..., lump=0.0012, pit=0.0006)`, `stones.chink_stone(rng, half=None, min_relief=0.0)`;
+  `components.doors` (when `gate_fine`): the cheek spalls' lumps / pits and the 9 mm step dish gated by
+  `g.detail.min_at`; `components.plinth` chinking gated at the entrance threshold (1 cm).
+
+### Other buildings re-run (to scratch, `KEEP_OUT` / `MILL_OUT`)
+
+- **hilltop_keep:** 1,166,874 triangles = its 1.5.0 record; built without errors; 116 anchors (report-only gate).
+- **tower_windmill:** 1,146,243 triangles = its record; built without errors; 106 anchors, audit 0 failing.
+  (A first mill run on an intermediate edit dropped 20 anchors because `validate_anchors` re-binds the name `strict`
+  per anchor; fixed by reading the option into `strict_cfg` -- the re-run above is on the final kit.)
+
+---
+
+## 1.5.0, keep part (2026-10-16): door walking-zone decal gate, tapered cap saddles, layered thatch, crisp entrance masonry (KEEP builder, round 9)
+
+Fixes the sign-off audit of keep round 8 (director 8.5, audit ~8.0).  Every change is a new function or an optional
+parameter whose default reproduces kit 1.4.0 exactly; only the keep passes the new options.
+
+### New functions
+
+- **`decal_gate.door_walk_zone(center, outward, along, half_width, depth=1.5, inset=0.35, z_max=0.6)`** and
+  **`decal_gate.in_walk_zone(item, zones)`**: the trodden zone in front of a door (plan rectangle, door clear
+  width / 2 + margin either side, from 0.35 m inside the threshold to 1.5 m out, up to 0.6 m high).
+- **`components.thatch.tuft_skirt(acc, P, rng, ...)`**: the eave fringe as one ragged straw skirt under the roll
+  (rooted inside the roll's underside, leaning 40 deg in under it, a chain of 3-7 cm tufts hanging 2.5-6 cm below a
+  1.2 cm continuous butt): a dark ragged eave edge instead of pale pins / blades.
+- **`components.thatch.tuft_droop(...)`**: short, thick, rounded drooping tufts (kept as an alternative; unused).
+- **`components.oct_hall.footing_blocks(acc, S, mapfn, rng)`**: footing-course stones as split field stone (gridded
+  blocks with 2-3 plumb-split planar facets stepped 2-4 cm and 4-12 deg apart, face yawed 5-10 deg off the wall
+  line, 1-2 top-arris spalls 3-6 cm, 1.2-2.2 cm chamfers, no pillow dome).
+
+### New optional parameters (defaults = 1.4.0 behaviour)
+
+- `decal_gate.snap_anchors(..., walk_zones=None, walk_types=("lichen", "moss"))`: a lichen / moss anchor whose decal
+  rectangle overlaps a walking zone is rejected.
+- `components.oct_decals.oct_building_decals(g, ..., walk_gate=False)`: True moves the threshold / step lichen to
+  the step ends (outside the walking width) and the N / NE footing tops, and gates both doors' walking zones.
+- `geom.rbox_v(..., chamfer=False)`: True gives planar 45 deg chamfers (L1 corner offset) instead of round-overs.
+- `stones.coursed_batch(..., chamfer=False, spalls=None, yaw=None, steps=None, nz_side=None)`: chamfered arrises,
+  planar arris spalls, face yaw, stepped split facets with their own planes, extra side rows.
+- `components.oct_roof.cap_shingles(..., hip_clip=None)`, `hip_saddles(..., w_fn=None, raise_frac=0.4)`,
+  `build_cap(..., saddle_taper=None)`; `stone_cone.cone_cap(..., saddle_taper=None)`,
+  `turret.side_turret(..., saddle_taper=None)`: tapered saddle boards (each <= max_frac of the facet width), 1.8-2.4
+  cm thick, side 1 raised 0.2 t; shingles laid as whole units between the boards and clipped cleanly 1.5 cm under
+  them, no unit with a visible butt under 4 cm.
+- `components.thatch.thatch_wing_roof(..., layered=False)` (-> `build_wing_roof`, `thatch_courses(..., layered)`):
+  ref1's layered thatch -- clumps 0.14-0.55 m (log-uniform) with joints pushed >= 30 % of a clump width off the course
+  below, 0.8-1.4 cm flat crowns, 0.4-0.8 cm creases, ragged lobe butts (+-1-2 cm), 6 % slips; the first course's
+  butt kept smooth and seated in the roll; course ends feathered out 0.14 m before the turret; short live remnants
+  between dead stretches sunk whole; a smooth roll (0.45-0.9 m bundles bound 0.8-1.4 cm); the tuft skirt.
+- `components.thatch.d_roll(..., calm_taper=False)`: smoothed station path (no folded sections at tight polyline
+  corners), swelling / binding faded in the end tapers, the buried tail folded into the dome there (closed end cap).
+- `components.thatch.mortar_fillet(..., bury=0.012)`, `flaunch_loop(..., bury=0.012)`,
+  `build_wing_structure(..., band_bury=0.012)`, `thatch_junctions(..., band_bury=0.012)`: the band's buried back
+  runs `bury` m into the stone (the keep uses 0.035).
+- `components.oct_hall.oct_hall_walls(g, ..., crisp_entrance=False)` (-> `build_hall_masonry(..., crisp)`,
+  `build_door_dressing(..., crisp)`): arched-door jamb and voussoir blocks with flat faces (dome <= 2 mm), true
+  45 deg 1.0-1.5 cm chamfers and planar arris spalls; the footing course via `footing_blocks` (the hero rubble's
+  random draws are unchanged: the footing stones' old draws are still made, into a scratch accumulator).
+
+### Re-runs
+
+All shared-module edits (geom, stones, decal_gate, oct_roof) were finished before these re-runs; the later edits
+touched keep-family modules only (thatch, oct_hall).  Builds went to scratch (`MILL_OUT` / `HUT_OUT`), so the other
+builders' deliverables were not overwritten.
+
+- `tower_windmill`: builds without errors, 1,146,243 tris (record 1,146,243: identical).
+- `wattle_roundhut`: builds without errors, 837,924 tris, identical to the hut builder's own round-10 file built at
+  16:18 (837,924); the table's 827,563 predates the hut's own round-10 changes.
+- `hilltop_keep` round 9: see the keep log (round 9 builder entry).
+
+---
+
+## 1.5.0, hut part (2026-10-16): ragged patch outlines, clinging clumps, plinth spalls, starter-course under-lap, footprint-normal anchor gate (HUT builder, round 10)
+
+Fixes the sign-off audit of hut round 9 (director 8.6).  Every change is a new function / constant or an optional
+parameter / opt-in switch whose default keeps the old build.
+
+### New functions / constants
+
+- **`components/daub.WALL_FINISH_R10`, `wall_finish_r10(**kw)`**: `WALL_FINISH_R9` plus `patch_style="r10"`,
+  `edge_w`, `spall_w`, `rag`, `clumps`, `clump_n`, `clump_proud`, `clump_w`, `clump_h`, `stone_scars`.
+- **`components/daub.fracture_patch_r10(g, c_s, c_z, h_s, h_z, seed, open_below=False)`**: the fallen-out patch
+  outline: sides leaning 8-14 / 16-25 deg in opposite senses (2-3 segments each, +-9 deg), margins of sloping
+  5-30 cm runs stepping 1-2 rod rows on 2-5.5 cm diagonal breaks (`_ragged_margin`, no up/down pair within 12 cm)
+  and tilted 4-9 deg overall, principal corners under 100 deg chamfered with a broken 3-point cut (>= 2 per patch),
+  2-3 conchoidal spall scallops (6-16 cm, 1.5-3 cm into the coat) on ~15-25 % of the perimeter.  `open_below`
+  runs a `low` patch down to the stones.  Returns (polygon, spalls).
+- **`components/daub.clump_mesh(rs, w, h, depth)`, `daub_clumps(g, acc, bay, field, store, s0, s1, wf)`**: 2-3 clinging
+  clumps per break (3 in the door-bay band): faceted convex lumps 6-11 x 5-8.5 cm, 2.2-3.4 cm proud of the rod
+  fronts, back bedded at the rod centre line (the rods run into them), rim at the fracture edge, preferably under
+  the top margin.  Own random stream (8800 + bay).  `g.DAUB_CLUMPS` lists them.
+- **`components/cone.AGE_R10`** = `AGE_R9` + `underlap_k0=True`.
+- **`anchor_validate.footprint_normal(probe, pos, normal, up, size, tol, exclude_objects)`**: the surface normal
+  averaged over a decal's 3 x 3 footprint.
+
+### Optional parameters / opt-in switches (defaults = old behaviour)
+
+- `daub.make_daub_fields` / `build_daub`: read `wall_finish["patch_style"] == "r10"` (outline above, +-5 mm
+  mid-frequency rag, fracture-face width 1.5-5 cm varying round the patch and ~5.5 cm at the spalls, `g.PATCH_POLYS`
+  / `g.PATCH_SPALLS` published) and `wall_finish["clumps"]`.  The door-bay break keeps its r9 profile.
+- `conical_roof.build_shingles`: `cone_age["underlap_k0"]` puts the 8 cm under-lap strips under the side joints of
+  the first course too (over the doubled starter); inner `underlap(..., wedge=)`.
+- `stones.stone_skin(..., scar_keep=None)`, `stones.plinth_kind_stone(..., scar_keep=None)`,
+  `plinth.plinth_stone(..., scar_keep=None)`; `plinth.build_plinth` reads `g.wall_finish["stone_scars"]`: flake scars at
+  least `scar_keep` deep that note 11 would drop are kept as spalls deepened to the local threshold (2-2.5 cm, 1-1.25 cm
+  in the entrance zone) and widened by sqrt(depth ratio) (<= 1.6x).  No random draw changes.
+- `anchor_validate.validate_anchors(..., normal_fp_dot=None, fp_ntol=0.10, fp_skip_need=None, no_tops=None)`:
+  `normal_fp_dot` judges each anchor's normal against the footprint-mean surface normal (keeps the generator's
+  normal when it agrees, else takes the mean normal if that is self-consistent, else drops); `fp_skip_need` gives
+  the shingle anchors (`fp_skip_surfaces`) a looser footprint test (>= N of 9 within `fp_ntol`); `no_tops` =
+  {decal type: object-name substrings} it may not sit on (lichen on the trodden step).  The footprint failure
+  message now lists what each footprint ray hit.
+- `round_decals.round_building_decals(layout=3)`: collar soot on the cone's macro normal, 0.15 m below the drip,
+  on the first spot whose face agrees (dot >= 0.9), never on the under-lap; the step lichen moved to the plinth
+  weather top right of the door; patch-corner cracks from the sharpest convex corners of the actual outline; the
+  settlement cracks 0.30 m off the posts with z +-8 cm.
+
+### Verification
+
+- `wattle_roundhut` round 10: 837,924 triangles, 7.3 % hidden, 10 slots, Mask complete, 93 anchors (gate applied),
+  bbox unchanged; lintel sun-streak scan 26 -> 0 lit points.
+- Other buildings re-run after the edits (to scratch, `KEEP_OUT` / `MILL_OUT`), both build without errors:
+  - `tower_windmill`: **1,146,243** triangles = its 1.4.0 record; 106 anchors.
+  - `hilltop_keep`: **1,160,238** (record 1,159,180, +0.09 %, within +-0.5 %).  The keep builder was editing its own
+    1.5.0 modules concurrently; no hut option is on by default, so no keep code path changed through this edit.
 
 ---
 

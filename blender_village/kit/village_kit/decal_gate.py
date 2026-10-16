@@ -42,10 +42,45 @@ def _fib_dirs(n, axis, max_deg):
     return ct[:, None] * axis + st[:, None] * (np.cos(ph)[:, None] * t + np.sin(ph)[:, None] * b)
 
 
+WALK_TYPES = ("lichen", "moss")
+
+
+def door_walk_zone(center, outward, along, half_width, depth=1.5, inset=0.35, z_max=0.6):
+    """kit 1.5.0 (keep round 9, director r8 must-fix 5): the trodden walking zone in front of a door -- a plan
+    rectangle `half_width` either side of the door centre line (door clear width / 2 + 0.1 m), from `inset` m inside
+    the threshold line to `depth` m out from it, up to z_max m above the ground (thresholds, steps, pavings)."""
+    o = np.asarray(outward, float)[:2]
+    o = o / max(np.linalg.norm(o), 1e-9)
+    a = np.asarray(along, float)[:2]
+    a = a / max(np.linalg.norm(a), 1e-9)
+    return dict(c=np.asarray(center, float)[:2], o=o, a=a, hw=float(half_width), d0=-float(inset),
+                d1=float(depth), z_max=float(z_max))
+
+
+def in_walk_zone(it, zones, n_s=5):
+    """True when any point of anchor `it`'s decal rectangle (size along right / up, sampled n_s x n_s) lies inside
+    one of the walk zones (door_walk_zone)."""
+    if not zones:
+        return False
+    n = _unit(it.get("macro", it["normal"]))
+    r, u, n = decal_frame(n, it["up"])
+    w, h = it["size"]
+    f = np.linspace(-0.5, 0.5, n_s)
+    P = np.asarray(it["pos"], float)[None, None, :] + f[:, None, None] * w * r[None, None, :] + \
+        f[None, :, None] * h * u[None, None, :]
+    P = P.reshape(-1, 3)
+    for zn in zones:
+        d = (P[:, :2] - zn["c"][None]) @ zn["o"]
+        s = (P[:, :2] - zn["c"][None]) @ zn["a"]
+        if np.any((np.abs(s) <= zn["hw"]) & (d >= zn["d0"]) & (d <= zn["d1"]) & (P[:, 2] <= zn["z_max"])):
+            return True
+    return False
+
+
 def snap_anchors(da, probe, max_offset=0.015, min_align=0.85, dedupe=0.3, lift=0.004, reach=0.25,
                  search=(0.0, 0.03, 0.06, 0.10, 0.15), reject=REJECT_OBJECTS, exposure_dist=12.0, exposure_rays=24,
                  min_escape=2, log=None, clear=0.15, footprint_fn="auto", shrink=(0.75, 0.55),
-                 fp_skip=("M_roof_shingle",)):
+                 fp_skip=("M_roof_shingle",), walk_zones=None, walk_types=WALK_TYPES):
     """Every anchor is ray-snapped to the FIRST surface along its intended normal: a ray from `reach` m outside the
     anchor back along -normal.  The hit is accepted only if
       * the face's own normal agrees with the intended normal (dot >= min_align; back faces / reversed shells and
@@ -59,6 +94,8 @@ def snap_anchors(da, probe, max_offset=0.015, min_align=0.85, dedupe=0.3, lift=0
       * nothing stands within `clear` m in front of the spot (not tucked under / behind another part),
       * the decal rectangle lies on the surface: footprint_fn (default: anchor_validate.footprint_ok, 3 x 3 rays
         within 8 cm of the decal plane) at full size or one of the `shrink` factors (slots in fp_skip are exempt).
+      * kit 1.5.0: walk_zones (list of door_walk_zone) -- a `walk_types` anchor (lichen, moss) whose decal
+        rectangle overlaps a door's walking zone is rejected (default None: no zone test, the 1.3.0 gate).
     Returns (kept, dropped) counts; da.items is replaced in place."""
     assert lift <= max_offset
     if footprint_fn == "auto":
@@ -123,6 +160,10 @@ def snap_anchors(da, probe, max_offset=0.015, min_align=0.85, dedupe=0.3, lift=0
         it.pop("macro", None)
         it["pos"], it["normal"], it["up"], it["right"] = q, n, u, r
         it["size"] = (float(size[0]), float(size[1]))
+        if walk_zones and it["type"] in walk_types and in_walk_zone(it, walk_zones):
+            # kit 1.5.0: lichen / moss never grow on the trodden line in front of a door
+            dropped.append((it["type"], np.round(q, 2).tolist(), "door walking zone"))
+            continue
         if h["surface"]:
             it["surface"] = h["surface"]
         kept.append(it)

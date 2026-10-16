@@ -1,6 +1,8 @@
-"""Hilltop Keep (KEEP) -- a thin declarative assembly on the shared village kit (phase 2, round 8: decal gate,
-flat cap saddles + ~12 cap courses, bound thatch roll / clumped butts / tuft fringe, continuous turret flaunching,
-dense ridge comb, bulbous cushion, drum backing).
+"""Hilltop Keep (KEEP) -- a thin declarative assembly on the shared village kit (phase 2, round 9: door walking-zone
+decal gate, tapered cap saddles with cleanly clipped shingles, layered thatch (smooth roll, offset flat clumps with
+ragged butts, drooping tufts), calm roll-end caps and a deeper turret band, chamfered + spalled door dressings and a
+split field-stone footing course; round 8: decal gate, ~12 cap courses, dense ridge comb, bulbous cushion, drum
+backing).
 
 Run:  /opt/bpyenv/bin/python build_hilltop_keep.py
           -> hilltop_keep.blend + decal_anchors.json (next to this script)
@@ -66,6 +68,20 @@ KEEP_KIT_VARIANT = dict(WX_W=-8.3, WY_N=4.4, W_PITCH_DEG=52.0, TUR_C=(-7.14, 2.2
 
 # round 8: the bell caps keep the chunky 0.35-0.55 m shingle widths but lay ~12 courses (ref1) at 0.24-0.28 m
 CAP_EXPOSURE = (0.24, 0.28)
+# round 9 (director r8 must-fix 3): tapered hip saddles -- each board <= 14 % of the facet width (a hip's pair
+# <= 28 %), 1.8-2.4 cm thick (<= 3 cm proud), shingles clipped cleanly under the board edges, no sliver < 4 cm
+LANTERN_SADDLES = dict(w_eave=(0.13, 0.15), w_top=(0.06, 0.08), max_frac=0.14, t=(0.018, 0.024), raise_frac=0.2)
+TURRET_SADDLES = dict(w_eave=(0.10, 0.12), w_top=(0.05, 0.06), max_frac=0.14, t=(0.018, 0.022), raise_frac=0.2)
+# round 10 (sign-off audit, producer note 11): wing thatch with no sub-2-cm modelled relief -- flat-topped clumps
+# whose butts step 2-3 cm (up to 6 cm) clump to clump, the first course lowered to the lip, a slim ~0.35 m eave roll
+# laid as 0.14-0.55 m bundle butts stepping 2-3 cm, round domed roll ends, course remnants < 1.8 m sunk
+WING_CRISP = dict(roll=(0.75, 0.80), m0=0.48, butts=((0.14, 0.55), (0.02, 0.03)), butt_step=(0.02, 0.03),
+                  remnant_min=1.8)
+
+
+def decals(g):
+    """producer note 11 anchors; round 9: lichen / moss are gated out of both doors' walking zones."""
+    return oct_building_decals(g, walk_gate=True)
 
 
 def kit_set(**kw):
@@ -76,17 +92,17 @@ def kit_set(**kw):
 def steps(off=0):
     """the components in build order (later components read what earlier ones built: the skirt scribes into the
     thatch outline, the junction fillets ray-cast the built thatch, the cull runs last)."""
-    return [(oct_hall_walls, dict(seed=101 + off)), (oct_hall_frame, dict(seed=202 + off)), (arched_door, {}),
-            (hall_windows, {}), (door_threshold, {}),
+    return [(oct_hall_walls, dict(seed=101 + off, crisp_entrance=True)), (oct_hall_frame, dict(seed=202 + off)),
+            (arched_door, {}), (hall_windows, {}), (door_threshold, {}),
             (skirt_roof, dict(seed=303 + off)),
             (shake_collar, dict(seed=505 + off)), (stone_cone, dict(seed=404 + off)), (lantern, dict(seed=606 + off)),
-            (cone_cap, dict(seed=707 + off, saddles=True, cap_exposure=CAP_EXPOSURE)),
+            (cone_cap, dict(seed=707 + off, saddles=True, cap_exposure=CAP_EXPOSURE, saddle_taper=LANTERN_SADDLES)),
             (annex_walls, dict(seed=1111 + off)), (plank_door, {}), (annex_window, {}),
-            (thatch_wing_roof, dict(rng_seed=1313 + off, bundled=True)),
+            (thatch_wing_roof, dict(rng_seed=1313 + off, layered=True, crisp=WING_CRISP)),
             (ridge_comb, dict(seed=1414 + off, dense=True)),
-            (thatch_junctions, dict(continuous_fillet=True)),
+            (thatch_junctions, dict(continuous_fillet=True, band_bury=0.035, point_roll_ends=True)),
             (side_turret, dict(seed=1616 + off, saddles=True, cap_exposure=CAP_EXPOSURE, bulb_cushion=True,
-                               drum_backing=True)),
+                               drum_backing=True, saddle_taper=TURRET_SADDLES)),
             oct_hidden_cull]                 # producer note 6
 
 
@@ -102,7 +118,7 @@ def main():
         prefix="KEEP", collection="KEEP", building_id="hilltop_keep" + ("_kit_variant" if variant else ""),
         frame=OctFrame, params=KIT,
         steps=steps(KIT["seed_offset"]),
-        decals=oct_building_decals,         # producer note 11
+        decals=decals,                      # producer note 11 (+ the round-9 door walking-zone gate)
         out=out,
         decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
         decal_meta=dict(kit_params={k: (v if not hasattr(v, "tolist") else v.tolist()) for k, v in KIT.items()}),

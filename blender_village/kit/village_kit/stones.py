@@ -418,8 +418,33 @@ def dir_grid(n_front=80, n_back=16, n_up=34, n_low=8, front=(-0.45, np.pi + 0.45
     return th, np.concatenate([ph_l, ph_u])
 
 
+def _split_scar(P, VN, pc, nc, t1, t2, d, R, el, tl, rng_vals):
+    """kit 1.6.0: one hand-split scar as a PLANAR facet pocket -- a floor plane tilted `tl` (tan) off the local
+    surface, `d` deep at the impact point, bounded by four steep planar break walls (the step face 30-55 deg off the
+    surface at the impact side, two side breaks and a far exit); the cut is the depth under the lowest of the five
+    planes (the removed volume is their intersection), so every rim is a crisp plane-plane crease -- no smooth
+    window, no dish.  Returns the inward cut per vertex (along VN)."""
+    tb, tc, te, wb, we = rng_vals
+    p0 = pc - nc * d
+    planes = [(nrm(nc + t1 * tl), p0)]                                       # floor (rises toward -t1)
+    planes.append((nrm(nc - t1 * tb), p0 + t1 * wb * R))                     # impact step (steep)
+    planes.append((nrm(nc - t2 * tc), p0 + t2 * el * R))                     # side breaks
+    planes.append((nrm(nc + t2 * tc), p0 - t2 * el * R))
+    planes.append((nrm(nc + t1 * te), p0 - t1 * we * R))                     # far exit
+    q = P - pc
+    near = np.linalg.norm(q, axis=1) < 1.2 * R + 6.0 * d + 0.02        # beyond the pocket's own extent
+    cut = np.full(len(P), np.inf)
+    for (n_, o_) in planes:
+        above = (P - o_) @ n_
+        den = np.maximum(VN @ n_, 0.3)
+        cut = np.minimum(cut, above / den)
+    cut = np.where(near & (VN @ nc > -0.1), np.clip(cut, 0.0, d * 1.6), 0.0)
+    return cut
+
+
 def stone_skin(P, faces, rng, n_scoop=(6, 12), scoop_r=(0.04, 0.10), scoop_d=(0.004, 0.010), lump_a=0.010,
-               lump_f=8.0, pit_a=0.0025, vis=None, size=1.0, min_relief=0.0):
+               lump_f=8.0, pit_a=0.0025, vis=None, size=1.0, min_relief=0.0, scar_keep=None, split=False,
+               scar_keep_ent=None):
     """hand-split stone surface (director r4 #2b): shallow CONCHOIDAL flake scars -- dish-shaped, deepest
     near the impact side, ending in a crisp crease (profile (1 - r/R)^0.6 -> steep at the rim; where
     scars overlap the deeper one wins, leaving a sharp ridge between them), 1-2 cm lumps at a 10-15 cm
@@ -429,7 +454,8 @@ def stone_skin(P, faces, rng, n_scoop=(6, 12), scoop_r=(0.04, 0.10), scoop_d=(0.
     VN = vert_normals(P, faces)
     w_vis = np.ones(len(P)) if vis is None else vis(P, VN)
     off = rng.uniform(-50, 50, 3)
-    lump = lump_a * size * (lump_a * size >= min_relief) * (fbm(P * lump_f + off, 2) + 0.35 * vnoise(P * lump_f * 2.3 + off * 0.7))
+    # kit 1.6.0 split: no 1-1.4 cm fbm skin lumps (they are the soft 'pillow' + the flared foot); no draw changes
+    lump = lump_a * size * (lump_a * size >= min_relief) * (not split) * (fbm(P * lump_f + off, 2) + 0.35 * vnoise(P * lump_f * 2.3 + off * 0.7))
     P = P + VN * lump[:, None]
     cand = np.where(w_vis > 0.5)[0]
     n_s = rng.randint(n_scoop[0], n_scoop[1] + 1) if len(cand) else 0
@@ -440,6 +466,32 @@ def stone_skin(P, faces, rng, n_scoop=(6, 12), scoop_r=(0.04, 0.10), scoop_d=(0.
         pc, nc = P[c], VN[c]
         R = rng.uniform(*scoop_r) * size
         d = rng.uniform(*scoop_d)
+        if split and min_relief > 0:
+            # kit 1.6.0 (hut r11, audit r10): the scar is kept as a PLANAR split facet pocket (crisp creases, not a
+            # soft dish) where its depth draw is >= scar_keep (>= scar_keep_ent in the entrance zone), deepened to
+            # the local note-11 threshold (+0-25 %), NOT widened; else it goes to the material.  Same main draws.
+            keep_ = scar_keep_ent if (scar_keep_ent is not None and min_relief < 0.015) else scar_keep
+            t1 = nrm(np.cross(nc, rng.normal(size=3)))
+            t2 = np.cross(nc, t1)
+            tl = math.tan(math.radians(rng.uniform(6, 16)))
+            el = rng.uniform(0.55, 1.0)
+            if keep_ is None or d < keep_:
+                continue
+            d_eff = max(d, min_relief * (1.0 + 0.25 * (d - keep_) / max(scoop_d[1] - keep_, 1e-6)))
+            rs2 = np.random.RandomState(int(abs(float(pc @ np.array([1e5, 3.1e5, 7.3e5])))) % 2147483647)
+            # step wall 35-50 deg, side breaks 18-32 deg (they feather out: no slot), far exit 12-22 deg
+            vals = (math.tan(math.radians(rs2.uniform(35, 50))), math.tan(math.radians(rs2.uniform(18, 32))),
+                    math.tan(math.radians(rs2.uniform(12, 22))), rs2.uniform(0.15, 0.4), rs2.uniform(0.5, 0.9))
+            cutd = _split_scar(P, VN, pc, nc, t1, t2, d_eff, R, max(el, 0.75), tl, vals) * np.clip(w_vis * 1.5, 0, 1)
+            P = P - VN * cutd[:, None]
+            continue
+        if scar_keep is not None and min_relief > 0 and scar_keep <= d < min_relief:
+            # kit 1.5.0 (opt-in, hut r10: crisper, less pillowy plinth stones under note 11): the deepest scars are
+            # kept as SPALLS deepened to the local threshold (>= 2 cm, >= 1 cm in the entrance zone) and widened
+            # with it; the shallower ones still go to the material.  No random draw changes.
+            d_eff = min_relief * (1.0 + 0.25 * (d - scar_keep) / max(scoop_d[1] - scar_keep, 1e-6))
+            R = R * min(1.6, math.sqrt(d_eff / d))
+            d = d_eff
         t1 = nrm(np.cross(nc, rng.normal(size=3)))
         t2 = np.cross(nc, t1)
         tl = math.tan(math.radians(rng.uniform(6, 16)))
@@ -459,7 +511,8 @@ def stone_skin(P, faces, rng, n_scoop=(6, 12), scoop_r=(0.04, 0.10), scoop_d=(0.
     return P
 
 
-def plinth_kind_stone(kind, half, rng, fracture=True, frac_side=None, n_front=80, n_up=34, min_relief=0.0):
+def plinth_kind_stone(kind, half, rng, fracture=True, frac_side=None, n_front=80, n_up=34, min_relief=0.0,
+                      scar_keep=None, split=False, scar_keep_ent=None):
     """plinth stone of a given kind (director r4 #2b), local x along, y out (face), z up, centred on 0:
     'slab'    flat bedded slab (h:L <= 0.45), near-planar top and battered front, tight 1-2 cm arrises
     'block'   blocky split stone, planar faces meeting at 1-3 cm arrises, corner facets
@@ -520,7 +573,8 @@ def plinth_kind_stone(kind, half, rng, fracture=True, frac_side=None, n_front=80
             + np.clip(VN[:, 2] * 1.5, 0, 1) * (P[:, 1] > -0.2 * b)
     V = stone_skin(V, F, rng, n_scoop=(6, 12), scoop_r=(0.04, 0.10), scoop_d=(0.004, 0.010),
                    lump_a=0.010 if kind != "boulder" else 0.014, lump_f=8.0, pit_a=0.003,
-                   vis=lambda P, VN: np.clip(vis(P, VN), 0, 1), min_relief=min_relief)
+                   vis=lambda P, VN: np.clip(vis(P, VN), 0, 1), min_relief=min_relief, scar_keep=scar_keep,
+                   split=split, scar_keep_ent=scar_keep_ent)
     return V, F
 
 
@@ -570,7 +624,7 @@ def pad_stone(rng, plan=(0.23, 0.18), vis_h=0.18, bury=0.05, tilt_deg=(1.0, 3.0)
     return V, F
 
 
-def spall_stone(rng, half, n_planes=(5, 8), k_round=0.0025):
+def spall_stone(rng, half, n_planes=(5, 8), k_round=0.0025, lump=0.0012, pit=0.0006):
     """small split spall / rubble piece (director r4 #2f): a polyhedron of 5-8 planar fracture faces with
     tight arrises (they read at 2 m), a faint lumpy skin."""
     a, b, c = (float(v) for v in half)
@@ -586,7 +640,8 @@ def spall_stone(rng, half, n_planes=(5, 8), k_round=0.0025):
             S.append((n_, n_ * half[ax] * 1.0, 0.0))
     th = np.linspace(0, 2 * np.pi, 28, endpoint=False)
     ph = np.linspace(-np.pi / 2, np.pi / 2, 16)[1:-1]
-    V, F = facet_stone(half, rng, S, k_round=k_round, lump=0.0012, lump_f=12.0, pit=0.0006, th=th, ph=ph)
+    # kit 1.6.0: lump / pit optional (default = 1.5.0); pass 0 for the note-11 gate (no draw changes)
+    V, F = facet_stone(half, rng, S, k_round=k_round, lump=lump, lump_f=12.0, pit=pit, th=th, ph=ph)
     return V, F
 
 
@@ -785,14 +840,18 @@ def add_shell(acc, V, faces, mode, R, t, mat):
     acc.add(xf(P, R, t), faces, mat)
 
 
-def chink_stone(rng, half=None):
+def chink_stone(rng, half=None, min_relief=0.0):
     """flat wedge chinking stone for an open dry-stone joint (hut round 4): local x along the joint, y into the
-    wall (thins toward the back), z up.  half=None draws the hut's 3-5 cm x 0.8-1.4 cm size."""
+    wall (thins toward the back), z up.  half=None draws the hut's 3-5 cm x 0.8-1.4 cm size.
+    min_relief (kit 1.6.0, producer note 11): the 1.5 mm surface noise and 0.6 mm pits are dropped when below it
+    (no draw changes)."""
     if half is None:
         hx, hz = rng.uniform(0.03, 0.05), rng.uniform(0.008, 0.014)
         half = (hx, 0.035, hz)
+    amp_, pit_ = 0.0015, 0.0006
     V, F = boulder(half, rng, p_h=3.4, p_v=3.0, crown=0.0, bulge=0.0, n_frac=2, frac_k=0.002,
-                   frac_cut=(0.08, 0.2), warp=0.12, amp=0.0015, freq=25.0, pit=0.0006, taper=0.05, nu=14, nv=6)
+                   frac_cut=(0.08, 0.2), warp=0.12, amp=amp_ * (amp_ >= min_relief), freq=25.0,
+                   pit=pit_ * (pit_ >= min_relief), taper=0.05, nu=14, nv=6)
     V[:, 2] *= 1 - 0.55 * np.clip(-V[:, 1] / half[1], 0, 1)        # wedge: thins toward the back
     return V, F
 
@@ -957,9 +1016,20 @@ def stone_outline(S, i):
 
 
 def coursed_batch(half, rng, S=None, rough=1.0, nxy=5, grid=None, dressed=False, wear=None, front_min=0.003,
-                  nz2=False, side_depth=None, noise_amp=0.006, min_relief=0.0):
+                  nz2=False, side_depth=None, noise_amp=0.006, min_relief=0.0, chamfer=False, spalls=None, yaw=None,
+                  steps=None, nz_side=None):
     """style 'coursed' (see the section comment).  `half` is unused (the sizes come from the record S); rng is a
-    numpy Generator; min_relief: scalar or per-stone array (producer note 11)."""
+    numpy Generator; min_relief: scalar or per-stone array (producer note 11).
+    kit 1.5.0 (keep round 9) options, all off by default:
+      chamfer=True   true planar 45 deg arris chamfers of leg S['r'] (geom.rbox_v chamfer) instead of round-overs
+      yaw            per-stone tan(yaw): the face is turned off the wall line (w += yaw * u)
+      steps          per-stone list of (du, dv, c, depth, tilt): planar split facets -- beyond the line
+                     du * ux + dv * uy = c (unit-square coords) the face steps back `depth` m (1.5 cm transition)
+                     and tilts `tilt` m per unit
+      spalls         per-stone list of (edge, s0, half_len, du, dq): planar arris spalls (edge 0 bottom, 1 right,
+                     2 top, 3 left; s0 = position along the edge in m from its centre; du = width into the face,
+                     dq = depth into the side) -- vertices inside the spall wedge are moved onto its two facets
+      nz_side        number of depth rows on the sides (default 3; more rows let spalls cut the side faces)"""
     from .geom import ax4, ax5, axn, axr, fbm90, rbox_v, rot2
     M = len(S["sc"])
     hx, hy, f, back, r = [np.asarray(S[k], float) for k in ("hx", "hy", "f", "back", "r")]
@@ -980,7 +1050,11 @@ def coursed_batch(half, rng, S=None, rough=1.0, nxy=5, grid=None, dressed=False,
     Z = np.stack([-back, f - r, f], 1)
     if nz2:
         Z = np.stack([-back, f], 1)
-    P, quads = rbox_v(X, Y, Z, r, skip_back=True, round_back=False)
+    if nz_side is not None and nz_side > 3:
+        fz = np.linspace(0, 1, nz_side - 1)[:-1]
+        zs_ = [-back + (f - r + back) * fz_ for fz_ in fz] + [f - r, f]
+        Z = np.stack(zs_, 1)
+    P, quads = rbox_v(X, Y, Z, r, skip_back=True, round_back=False, chamfer=chamfer)
     x, y, z = P[..., 0], P[..., 1], P[..., 2]
     ux = np.clip(x / hx[:, None], -1, 1)
     uy = np.clip(y / hy[:, None], -1, 1)
@@ -1072,12 +1146,44 @@ def coursed_batch(half, rng, S=None, rough=1.0, nxy=5, grid=None, dressed=False,
         d = np.sqrt((x0_ - px) ** 2 + (y0_ - py) ** 2)
         chips = np.minimum(chips, -np.where(act, dep * np.clip(1 - d / rad, 0, 1) ** 1.3, 0.0))
     dz = relief + nzv + facets + chips
+    if yaw is not None:
+        dz = dz + np.asarray(yaw, float)[:, None] * x0_
+    if steps is not None:
+        for i_, st_ in enumerate(steps):
+            for e_ in (st_ or ()):
+                du_, dv_, c_, dep_, tl_ = e_[:5]
+                pr_ = du_ * ux[i_] + dv_ * uy[i_] - c_
+                sm_ = np.clip(pr_ * HX[i_, 0] / 0.015 + 0.5, 0, 1)
+                sm_ = sm_ * sm_ * (3 - 2 * sm_)
+                dz[i_] = dz[i_] - sm_ * (dep_ + tl_ * np.maximum(pr_, 0.0))
+                if len(e_) >= 7:            # the facet's own plane: extra slopes (m / m) along u and v
+                    dz[i_] = dz[i_] + sm_ * (e_[5] * x0_[i_] + e_[6] * y0_[i_])
     zf = z + fw * dz
     zf = np.where(fw > 0.3, np.maximum(zf, front_min - (1 - fw) * 0.01), zf)      # never behind the mortar body
     pull = np.clip(-chips, 0, 0.03) * 0.5 * fw                                    # chips nibble the outline
     x = x - np.sign(x0_) * pull * (np.abs(ux) > 0.6)
     y = y - np.sign(y0_) * pull * (np.abs(uy) > 0.6)
     z = zf
+    if spalls is not None:
+        fz_ = f[:, None] + np.zeros_like(z)
+        for i_, sp_ in enumerate(spalls):
+            for (ed_, s0_, hl_, du_, dq_) in (sp_ or ()):
+                if ed_ in (0, 2):
+                    sgn_ = -1.0 if ed_ == 0 else 1.0
+                    u_ = HY[i_, 0] - sgn_ * y0_[i_]
+                    s_ = x0_[i_]
+                else:
+                    sgn_ = 1.0 if ed_ == 1 else -1.0
+                    u_ = HX[i_, 0] - sgn_ * x0_[i_]
+                    s_ = y0_[i_]
+                q_ = fz_[i_] - z[i_]
+                g_ = np.maximum(u_, 0.0) / du_ + np.maximum(q_, 0.0) / dq_ + np.abs(s_ - s0_) / hl_
+                t_ = np.clip((1.0 - g_) / 2.0, 0.0, None) * (q_ < 0.6 * (fz_[i_] + back[i_]))
+                if ed_ in (0, 2):
+                    y[i_] = y[i_] - sgn_ * du_ * t_
+                else:
+                    x[i_] = x[i_] - sgn_ * du_ * t_
+                z[i_] = z[i_] - dq_ * t_
     if wear is not None:
         # worn stones: 1.5 mm rim dip (note 11: below every threshold, materials carry it)
         wv = np.asarray(wear, float)[:, None]

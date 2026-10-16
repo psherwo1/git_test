@@ -106,9 +106,11 @@ def rbox_topo(nx, ny, nz, skip_back=False, skip_front=False):
     return res
 
 
-def rbox_v(X, Y, Z, r, skip_back=False, skip_front=False, round_back=True):
+def rbox_v(X, Y, Z, r, skip_back=False, skip_front=False, round_back=True, chamfer=False):
     """rounded boxes from per-instance axis coordinate arrays X (M, nx), Y (M, ny), Z (M, nz) and radii r (M,).
-    Returns P (M, V, 3) and the shared quads (Q, 4) (per-instance local indices; see inst_faces)."""
+    Returns P (M, V, 3) and the shared quads (Q, 4) (per-instance local indices; see inst_faces).
+    kit 1.5.0: chamfer=True -> true planar 45 deg chamfers of leg r instead of round-overs (L1 instead of L2
+    normalisation of the corner offset)."""
     X, Y, Z = np.atleast_2d(X), np.atleast_2d(Y), np.atleast_2d(Z)
     gi, quads = rbox_topo(X.shape[1], Y.shape[1], Z.shape[1], skip_back, skip_front)
     P = np.stack([X[:, gi[:, 0]], Y[:, gi[:, 1]], Z[:, gi[:, 2]]], -1)
@@ -117,7 +119,7 @@ def rbox_v(X, Y, Z, r, skip_back=False, skip_front=False, round_back=True):
     hi = np.stack([X[:, -1] - r, Y[:, -1] - r, Z[:, -1] - r], -1)[:, None, :]
     C = np.clip(P, lo, hi)
     D = P - C
-    n = np.linalg.norm(D, axis=-1, keepdims=True)
+    n = np.abs(D).sum(-1, keepdims=True) if chamfer else np.linalg.norm(D, axis=-1, keepdims=True)
     P = np.where(n > 1e-9, C + D / np.maximum(n, 1e-9) * r[:, None, None], P)
     return P, quads
 

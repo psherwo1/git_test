@@ -45,6 +45,11 @@ shingle (this half-width, m) is kept under every side joint of the course above,
 object <PREFIX>_roof_underlap; max_joint: side-joint gaps capped at this width (m)."""
 
 
+AGE_R10 = dict(AGE_R9, underlap_k0=True)
+"""kit 1.5.0 (director r9 #3, the eave light leak over the door): AGE_R9 + under-lap strips also under the side
+joints of the FIRST course (over the doubled starter), so no starter / course-1 joint pair is ever unbacked."""
+
+
 def age_defaults(**kw):
     d = dict(AGE_DEFAULTS)
     d.update(kw)

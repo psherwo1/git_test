@@ -36,7 +36,7 @@ def _hewn(*a, **k):
 
 
 def cap_shingles(roof, acc, rng, p_top, m0=-0.03, rot_sd=0.027, frac_missing=0.02, frac_slip=0.03, overlap=0.065,
-                 exposure=None, hip_bed=None):
+                 exposure=None, hip_bed=None, hip_clip=None):
     """chunky shingle courses on all 8 facets of a bell cap (see the module doc), from the eave up to the course
     whose facet is narrower than the apex unit at p_top (the lead hat covers the rest).  Each shingle keeps its
     exposed part + `overlap` of covered length (producer note 6; the sarking deck backs every gap) except the eave
@@ -46,7 +46,11 @@ def cap_shingles(roof, acc, rng, p_top, m0=-0.03, rot_sd=0.027, frac_missing=0.0
     kit 1.3.0 (keep round 8): exposure=(lo, hi) overrides the SIZE_TABLE exposure (the keep's caps use 0.24-0.28 so
     ~12 courses read as in ref1, the unit widths stay chunky); hip_bed=(h_bed, w_pos[8], w_neg[8]) seats flat hip
     saddles: inside each facet's hip strips (w_pos at +x, w_neg at -x) the shingles are pressed down to just under
-    h_bed (a 3 cm ramp outside), so the saddle board beds with no shadow gap and no butt pokes through it."""
+    h_bed (a 3 cm ramp outside), so the saddle board beds with no shadow gap and no butt pokes through it.
+    kit 1.5.0 (keep round 9): hip_clip=dict(wpos=fn(k, p), wneg=fn(k, p), tuck, min_w) for TAPERED saddles -- every
+    course is laid only across the facet width between the two boards (whole units, no torn slivers), each shingle
+    is clipped cleanly `tuck` m under the board edge (pressed under the board bed there, no ramp outside it), and a
+    unit whose visible butt would be narrower than min_w is not laid."""
     T = SIZE_TABLE["shingle"]
     expo_rng = T["exposure"] if exposure is None else exposure
     TA = SIZE_TABLE["shingle_apex"]
@@ -67,7 +71,25 @@ def cap_shingles(roof, acc, rng, p_top, m0=-0.03, rot_sd=0.027, frac_missing=0.0
         xh = p * TAN22 + 0.004
         xr = np.clip(xr, -xh, xh)
         h = base_fn(v) + z + lift * (1 - v)
-        if hip_bed is not None:
+        if hip_clip is not None:
+            edge = p * TAN22
+            tk = hip_clip["tuck"]
+            wp_v = hip_clip["wpos"](k, p)
+            wn_v = hip_clip["wneg"](k, p)
+            hi_ = edge - wp_v + tk
+            lo_ = -(edge - wn_v + tk)
+            xr = np.clip(xr, lo_, hi_)
+            # visible butt width (outside the boards) -- no sliver under min_w
+            bt = v < 0.08
+            if bt.any():
+                xv = np.clip(xr[bt], (lo_ + tk)[bt], (hi_ - tk)[bt])
+                if xv.max() - xv.min() < hip_clip["min_w"]:
+                    return False
+            hb = hip_bed[0] if hip_bed is not None else 0.07
+            o_ = np.minimum((edge - wp_v) - xr, xr + (edge - wn_v))     # < 0: under a board
+            cap_h = hb - 0.004 + np.clip((o_ + 0.004) / 0.004, 0, 1) * 0.2
+            h = np.minimum(h, cap_h)
+        elif hip_bed is not None:
             hb, wp_, wn_ = hip_bed
             edge = p * TAN22
             out_p = (edge - wp_[k] - 0.01) - xr          # > 0: inward of the +x saddle's footprint
@@ -77,6 +99,7 @@ def cap_shingles(roof, acc, rng, p_top, m0=-0.03, rot_sd=0.027, frac_missing=0.0
             h = np.minimum(h, cap_h)
         W3 = roof.world(np.full(len(xr), k), xr, p, h)
         acc.add(W3, F, "M_roof_shingle", uv, wear=wear)
+        return True
 
     # ---- course layout: exposure 0.30-0.40 per course, up to the apex
     m_stop = float(roof.m_of_p(p_top))
@@ -97,8 +120,17 @@ def cap_shingles(roof, acc, rng, p_top, m0=-0.03, rot_sd=0.027, frac_missing=0.0
         tw = TA["target_w"] if apex else T["target_w"]
         n_u = max(1, int(round(2 * xh / tw)))
         for k in range(8):
-            w, gaps = course_widths(rng, 2 * xh, n_u, T["w_jitter"], T["gap"])
-            x = -xh + rng.uniform(-0.5, 0.5) * w[0] * 0.5          # staggered joints course to course
+            if hip_clip is not None:
+                # tapered saddles: whole units laid between the two boards of this facet at mid-course
+                pm_ = np.array([p_mid])
+                xa_ = -(p_mid * TAN22 - float(hip_clip["wneg"](k, pm_)[0])) - 0.5 * hip_clip["tuck"]
+                xb_ = p_mid * TAN22 - float(hip_clip["wpos"](k, pm_)[0]) + 0.5 * hip_clip["tuck"]
+                n_u = max(1, int(round((xb_ - xa_) / tw)))
+                w, gaps = course_widths(rng, xb_ - xa_, n_u, T["w_jitter"], T["gap"])
+                x = xa_ + rng.uniform(-0.5, 0.5) * w[0] * 0.25
+            else:
+                w, gaps = course_widths(rng, 2 * xh, n_u, T["w_jitter"], T["gap"])
+                x = -xh + rng.uniform(-0.5, 0.5) * w[0] * 0.5          # staggered joints course to course
             for i in range(n_u):
                 x0, x1 = x, x + w[i]
                 x += w[i] + gaps[i]
@@ -358,12 +390,16 @@ def hip_boards(roof, acc, mat, rng, p_lo, p_hi, w, t, h0, piece=(0.8, 1.3), cull
             uv=np.stack([P[..., 0], P[..., 1]], -1).reshape(-1, 2))
 
 
-def hip_saddles(roof, acc, mat, p_lo, p_hi, W, T, h_bed, lap=0.03, chamfer=0.01, bed=0.02, n_st=40):
+def hip_saddles(roof, acc, mat, p_lo, p_hi, W, T, h_bed, lap=0.03, chamfer=0.01, bed=0.02, n_st=40, w_fn=None,
+                raise_frac=0.4):
     """kit 1.3.0 (keep round 8, director r7 must-fix 3): exactly ONE saddle pair per hip -- two flat continuous
     boards of rectangular section (W[k, side] wide, T[k, side] thick, `chamfer` arrises), bedded at h_bed over the
     roof surface on their own `bed`-deep packing (the board solid runs down into the pressed shingles, so no shadow
     gap opens under it).  Side 0 lies on facet k and laps `lap` past the hip line; side 1 (facet k+1) closes
-    against it, set 0.4 T higher.  The boards follow the bell curve with n_st stations."""
+    against it, set 0.4 T higher.  The boards follow the bell curve with n_st stations.
+    kit 1.5.0 (keep round 9): w_fn(k, side, p) -> board width at slope position p (TAPERED boards: the cross-section
+    is scaled per station so the pair stays a small share of the narrowing facet); raise_frac sets how much higher
+    side 1 sits (0.4 = the 1.3.0 boards)."""
     recs = []
     for k in range(8):
         for side in (0, 1):
@@ -381,8 +417,13 @@ def hip_saddles(roof, acc, mat, p_lo, p_hi, W, T, h_bed, lap=0.03, chamfer=0.01,
     sgn = np.where(side == 0, 1.0, -1.0)[:, None]
     kk = np.where(side == 0, k, (k + 1) % 8)[:, None]
     e = np.where(side == 0, lap, 0.004)[:, None]
+    if w_fn is not None:
+        # scale the board's cross-section (a = 0 at the lapped edge) to the station's tapered width
+        wt = np.stack([w_fn(int(k[i]), int(side[i]), p[i]) for i in range(M)])
+        full = ww[:, None] + e
+        a = a * (wt + e) / full
     x = sgn * (p * TAN22 + e - a)
-    hh = h_bed + h + np.where(side == 1, 0.4 * tt, 0.0)[:, None]
+    hh = h_bed + h + np.where(side == 1, raise_frac * tt, 0.0)[:, None]
     W3 = roof.world(np.broadcast_to(kk, x.shape), x, np.maximum(p, 0.02), hh)
     acc.add(W3.reshape(-1, 3), inst_faces(quads, M, P.shape[1]), mat,
             uv=np.stack([P[..., 0], P[..., 1]], -1).reshape(-1, 2))
@@ -544,18 +585,43 @@ def _rafter(roof, acc, rng, k, xj, p0, p1, p_wall, z_plate, sheath_t, rw, rd_tip
 
 
 def build_cap(coll, roof, prefix, rng, p_wall, z_plate, n_raft, p_top, expo, W, t, lens, bracket_z0, chunky=True,
-              saddles=False, cap_exposure=None):
+              saddles=False, cap_exposure=None, saddle_taper=None):
     """bell cap on an OctRoof: covering, hip boards, eave structure (rafters, soffit, fascia), sarking deck, carved
     ring beam with pegged laps and curved corner brackets.  chunky=True: the village's chunky shingles
     (cap_shingles, SIZE_TABLE 'shingle' / 'shingle_apex' / 'starter'; ensemble review 1); chunky=False: the phase-1
     fine board courses (expo / W / t / lens).  Returns the covering's vertices (for fitting the lead hat).
     kit 1.3.0: saddles=True (with chunky) lays ONE flat saddle pair per hip (hip_saddles, 14-18 cm x 2.5-3.5 cm,
     1 cm chamfers) bedded into pressed shingles instead of the hip_boards runs; cap_exposure=(lo, hi) sets the
-    cap's course exposure."""
+    cap's course exposure.
+    kit 1.5.0 (keep round 9): saddle_taper=dict(w_eave=(lo, hi), w_top=(lo, hi), max_frac, t=(lo, hi), raise_frac,
+    tuck, min_w) -> TAPERED saddle boards (w_eave at the lip to w_top under the lead hat, never wider than max_frac
+    of the facet width each, so a hip's pair covers <= 2 * max_frac of a facet), t thick, side 1 raise_frac * t
+    higher, and the shingles clipped cleanly `tuck` under the board edges with no sliver under min_w."""
     acc = Acc(f"{prefix}_shingles")
     acch = Acc(f"{prefix}_hips")
     accs = Acc(f"{prefix}_structure")
-    if chunky and saddles:
+    if chunky and saddles and saddle_taper is not None:
+        st_ = dict(dict(w_eave=(0.13, 0.15), w_top=(0.06, 0.08), max_frac=0.14, t=(0.018, 0.024), raise_frac=0.2,
+                        tuck=0.015, min_w=0.04, h_bed=0.062, chamfer=0.006), **saddle_taper)
+        rs = np.random.default_rng(int(rng.integers(1 << 30)))
+        We = rs.uniform(*st_["w_eave"], (8, 2))
+        Wt = rs.uniform(*st_["w_top"], (8, 2))
+        Tsd = rs.uniform(*st_["t"], (8, 2))
+        p_lo, p_hi = roof.p_lip + 0.02, p_top
+        mf = st_["max_frac"]
+
+        def wfun(k, side, p):
+            p = np.asarray(p, float)
+            t_ = np.clip((p_lo - p) / max(p_lo - p_hi, 1e-6), 0, 1)
+            w_ = We[k, side] * (1 - t_) + Wt[k, side] * t_
+            return np.minimum(w_, mf * 2 * np.maximum(p, 0.02) * TAN22)
+        clip_ = dict(wpos=lambda k, p: wfun(k, 0, p), wneg=lambda k, p: wfun((k - 1) % 8, 1, p), tuck=st_["tuck"],
+                     min_w=st_["min_w"])
+        n, h_top = cap_shingles(roof, acc, rng, p_top, exposure=cap_exposure, hip_bed=(st_["h_bed"], None, None),
+                                hip_clip=clip_)
+        hip_saddles(roof, acch, "M_roof_shingle", p_lo, p_hi, We, Tsd, st_["h_bed"], w_fn=wfun,
+                    raise_frac=st_["raise_frac"], chamfer=st_["chamfer"])
+    elif chunky and saddles:
         rs = np.random.default_rng(int(rng.integers(1 << 30)))
         Wsd = rs.uniform(0.14, 0.18, (8, 2))
         Tsd = rs.uniform(0.025, 0.035, (8, 2))

@@ -32,10 +32,16 @@ def build_step(g, coll):
     for fl in g.FLAGS:
         rng = np.random.RandomState(fl["seed"])
         if fl["kind"] == "step":
+            # kit 1.6.0 (wall_finish gate_fine, audit r10 (3)): the 9 mm trodden dish is below the 1 cm entrance
+            # threshold -> gated by g.detail.min_at (dropped); no draw changes
+            dish_ = 0.009
+            if (getattr(g, "wall_finish", None) or {}).get("gate_fine") and \
+                    dish_ < g.detail.min_at((fl["c"][0], fl["c"][1], 0.1)) - 1e-9:
+                dish_ = 0.0
             V, F = shell_stone(fl["hu"], fl["hv"], rng, "flag", fl["th"], rr=(0.006, 0.018), rr_var=0.8, dome=0.0,
                                tilt=0.01, n_frac=0, frac_depth=(0.008, 0.015), frac_k=(0.003, 0.005), n_th=128,
                                noise=0.012, freq=4.5, side_bulge=0.0, side_slope=0.12, thick_var=0.12,
-                               dish=0.009, chips=3, chip_w=(0.04, 0.08), chip_d=(0.012, 0.022), Rf=fl["R"],
+                               dish=dish_, chips=3, chip_w=(0.04, 0.08), chip_d=(0.012, 0.022), Rf=fl["R"],
                                spalls=3, face_fr=tuple(np.linspace(0.0, 0.95, 15)),
                                fine_scale=0.0 if g.detail.active else 1.0, spall_scale=0.0 if g.detail.active else 1.0)
             wear = 0.8
@@ -91,7 +97,11 @@ def build_door(g, coll, seed=1212):
         for kf, tf in enumerate((0.28, 0.6)):
             frs = np.random.RandomState(5170 + 10 * side + kf)
             hf = np.array([frs.uniform(0.10, 0.13), frs.uniform(0.08, 0.10), 0.5 * (z_bot_r + 0.03)])
-            Vf, Ff = spall_stone(frs, hf, n_planes=(6, 8), k_round=0.003)
+            # kit 1.6.0 (wall_finish gate_fine, audit r10 (2)): 1.2 mm lumps / 0.6 mm pits gated by g.detail.min_at
+            mr_f = g.detail.min_at((q0[0], q0[1], 0.1)) if (getattr(g, "wall_finish", None) or {}).get("gate_fine") \
+                else 0.0
+            Vf, Ff = spall_stone(frs, hf, n_planes=(6, 8), k_round=0.003, lump=0.0012 * (0.0012 >= mr_f),
+                                 pit=0.0006 * (0.0006 >= mr_f))
             pf = q0 + (wp0 - q0) * tf + np.array([0, 0, 0]) - np.array([side * 0.0, 0.0, 0.0])
             Vf = xf(Vf, rotz(math.atan2(wp0[1] - q0[1], wp0[0] - q0[0]) + frs.uniform(-0.3, 0.3)), (0, 0, 0))
             Vf[:, 2] += (z_bot_r - 0.004) - Vf[:, 2].max()

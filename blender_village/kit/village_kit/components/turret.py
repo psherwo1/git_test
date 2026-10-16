@@ -368,7 +368,8 @@ def turret_cull(C, wing_margin=0.0):
     return bad
 
 
-def build_turret(coll, seed=1616, saddles=False, cap_exposure=None, bulb_cushion=False, drum_backing=False):
+def build_turret(coll, seed=1616, saddles=False, cap_exposure=None, bulb_cushion=False, drum_backing=False,
+                 saddle_taper=None):
     rng = np.random.default_rng(seed)
     if bulb_cushion:
         FR.CUSH["bulb"] = True
@@ -433,7 +434,7 @@ def build_turret(coll, seed=1616, saddles=False, cap_exposure=None, bulb_cushion
     chunky = FR.units == "kit"
     Vsh = build_cap(coll, FR.TUR_CAP, FR.prefix + "_turret_cap", rng, p_wall=1.17 * TS, z_plate=7.02, n_raft=4,
                     p_top=0.28 if chunky else 0.12, expo=0.14, W=0.32, t=0.022, lens=(0.12, 0.17), bracket_z0=6.72,
-                    chunky=chunky, saddles=saddles, cap_exposure=cap_exposure)
+                    chunky=chunky, saddles=saddles, cap_exposure=cap_exposure, saddle_taper=saddle_taper)
     accf = Acc(FR.prefix + "_finial_turret")
     apex = float(FR.TUR_CAP.zb(0.02))
     if chunky:
@@ -446,10 +447,11 @@ def build_turret(coll, seed=1616, saddles=False, cap_exposure=None, bulb_cushion
 
 
 
-def side_turret(g, seed=1616, saddles=False, cap_exposure=None, bulb_cushion=False, drum_backing=False):
+def side_turret(g, seed=1616, saddles=False, cap_exposure=None, bulb_cushion=False, drum_backing=False,
+                saddle_taper=None):
     """KIT COMPONENT: the engaged side turret (see the module doc).  kit 1.3.0 options (defaults = kit 1.1.0):
     saddles / cap_exposure as oct_roof.build_cap; bulb_cushion=True crowns ~80 % of the cushion's upper stones 3-6 cm
     and rounds their outer top arris over 6-10 cm (ref1's bulbous lip); drum_backing=True closes the board drum with
     a dark backing ring."""
     build_turret(g.sub("turret"), seed=seed, saddles=saddles, cap_exposure=cap_exposure, bulb_cushion=bulb_cushion,
-                 drum_backing=drum_backing)
+                 drum_backing=drum_backing, saddle_taper=saddle_taper)   # kit 1.5.0: tapered saddles

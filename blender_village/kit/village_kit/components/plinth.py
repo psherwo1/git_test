@@ -13,13 +13,17 @@ from ..stones import chink_stone, plinth_kind_stone
 from .frame import cull_below_ground, plinth_face_r
 
 
-def plinth_stone(rng, L, z_bot, z_top, depth, fracture, kind="block", upper=False, min_relief=0.0):
-    """one plinth stone (local frame, see plinth_kind_stone()); bottom at z_bot, high point ~z_top."""
+def plinth_stone(rng, L, z_bot, z_top, depth, fracture, kind="block", upper=False, min_relief=0.0, scar_keep=None,
+                 split=False, scar_keep_ent=None, dense=1.0):
+    """one plinth stone (local frame, see plinth_kind_stone()); bottom at z_bot, high point ~z_top.
+    kit 1.6.0 (optional): split (planar split-facet scars, no skin lumps), scar_keep_ent, dense (mesh density factor
+    -- crisp facet creases need vertices on them)."""
     c = max(0.05, (z_top - z_bot) / 2)
     b = depth / 2
     V, F = plinth_kind_stone(kind, (L / 2, b, c), rng, fracture=fracture,
-                             n_front=72 if not upper else 56, n_up=30 if not upper else 24,
-                             min_relief=min_relief)
+                             n_front=int(round((72 if not upper else 56) * dense)),
+                             n_up=int(round((30 if not upper else 24) * dense)),
+                             min_relief=min_relief, scar_keep=scar_keep, split=split, scar_keep_ent=scar_keep_ent)
     V[:, 2] += z_bot - V[:, 2].min()
     return V, F
 
@@ -68,9 +72,43 @@ def build_plinth(g, coll, seed=9191):
     ground_face = 0.045
     vis_rng = {"slab": (0.17, 0.22), "block": (0.22, 0.30), "boulder": (0.27, 0.35)}
     n_kind = {"slab": 0, "block": 0, "boulder": 0}
+    # kit 1.5.0 (opt-in g.wall_finish["stone_scars"]): the deepest hand-split scars are kept as note-11 spalls
+    wf_ = getattr(g, "wall_finish", None) or {}
+    sk_ = wf_.get("stone_scars")
+    split_ = wf_.get("stone_style") == "split"
+    ske_ = wf_.get("stone_scars_ent") if split_ else None
+
+    def flat_feet(Pw, ac_, skirt=0.01):
+        """kit 1.6.0 (audit r10): a flat bed at the ground -- below z 0.5 cm no vertex stands more than `skirt`
+        proud (radially) of the stone's own face just above the ground (z 0.5-6 cm) at the same arc position."""
+        if not split_ or Pw[:, 2].min() > 0.005:
+            return Pw
+        r_ = np.hypot(Pw[:, 0], Pw[:, 1])
+        s_ = np.angle(np.exp(1j * (np.arctan2(Pw[:, 0], -Pw[:, 1]) - ac_))) * r_c
+        bw = 0.015
+        k_ = np.floor(s_ / bw).astype(int)
+        k0 = k_.min()
+        k_ -= k0
+        ref = (Pw[:, 2] >= 0.005) & (Pw[:, 2] <= 0.06)
+        rr = np.full(k_.max() + 1, np.nan)
+        for kk in np.unique(k_[ref]):
+            rr[kk] = r_[ref & (k_ == kk)].max()
+        if np.isnan(rr).all():
+            return Pw
+        idx = np.arange(len(rr))
+        good = ~np.isnan(rr)
+        rr = np.interp(idx, idx[good], rr[good])
+        low = Pw[:, 2] < 0.005
+        lim = rr[k_] + skirt
+        sc = np.where(low & (r_ > lim), lim / np.maximum(r_, 1e-9), 1.0)
+        Pw = Pw.copy()
+        Pw[:, 0] *= sc
+        Pw[:, 1] *= sc
+        return Pw
     for i, (ac, L) in enumerate(stones):
         kind = kinds[i]
         mr = g.detail.min_at(az_pt(ac, r_c, 0.2))           # producer note 11 (1 cm near the door)
+        st_kw = dict(split=split_, scar_keep_ent=ske_, dense=(1.6 if (split_ and mr < 0.015) else 1.0))
         n_kind[kind] += 1
         near_post = min(abs(np.angle(np.exp(1j * (ac - pa)))) for pa in post_az) * r_c < L / 2 + 0.02
         # visible heights by kind, neighbours >= 4 cm apart
@@ -89,25 +127,27 @@ def build_plinth(g, coll, seed=9191):
         two = (not near_post) and kind != "slab" and L > 0.5 and rng.rand() < 0.22
         z_b = -0.06 if kind == "slab" else -0.11
         if not two:
-            V, F = plinth_stone(rng, L, z_b, zt, depth, fr_, kind, min_relief=mr)
+            V, F = plinth_stone(rng, L, z_b, zt, depth, fr_, kind, min_relief=mr, scar_keep=sk_, **st_kw)
             Pw = xf(V, R)
             u = np.array([math.sin(ac), -math.cos(ac), 0.0])
             Pw += u * (face - float((Pw @ u).max()))
+            Pw = flat_feet(Pw, ac)
             acc.add(Pw, F, "M_stone", wear=rng.uniform(0.2, 0.5) + 0.3 * fr_)
             placed.append((ac, zt, L))
         else:
             n_two += 1
             lo_top = ground_face + rng.uniform(0.11, 0.15)
-            V, F = plinth_stone(rng, L, -0.07, lo_top, depth, fr_, "slab", min_relief=mr)
+            V, F = plinth_stone(rng, L, -0.07, lo_top, depth, fr_, "slab", min_relief=mr, scar_keep=sk_, **st_kw)
             Pw = xf(V, R)
             u = np.array([math.sin(ac), -math.cos(ac), 0.0])
             Pw += u * (face - float((Pw @ u).max()))
+            Pw = flat_feet(Pw, ac)
             acc.add(Pw, F, "M_stone", wear=rng.uniform(0.2, 0.5))
             Lu = L * rng.uniform(0.55, 0.72)
             xo = rng.uniform(-0.15, 0.15) * L
             zu = max(zt, lo_top + 0.12)
             Vu, Fu = plinth_stone(rng, Lu, lo_top - 0.03, zu, depth - 0.05, rng.rand() < 0.6, kind, upper=True,
-                                  min_relief=mr)
+                                  min_relief=mr, scar_keep=sk_, **st_kw)
             acu = ac + xo / r_c
             Ru = frame_wall(acu) @ rotz(rng.uniform(-0.1, 0.1)) @ roty(rng.uniform(-0.06, 0.06))
             Pu = xf(Vu, Ru)
@@ -144,7 +184,10 @@ def build_plinth(g, coll, seed=9191):
 
     def make_chink(acc_, k):
         rs = np.random.RandomState(7300 + k)
-        V, F = chink_stone(rs)
+        # kit 1.6.0 (wall_finish gate_fine): the pooled chinking's 1.5 mm noise / 0.6 mm pits are below every note-11
+        # threshold (entrance 1 cm) -> dropped
+        V, F = chink_stone(rs, min_relief=(g.detail.entrance_relief if (wf_.get("gate_fine") and g.detail.active)
+                                           else 0.0))
         acc_.add(V, F, "M_mortar")            # producer note 7: chinking is on M_mortar
 
     n_ch = n_try = 0

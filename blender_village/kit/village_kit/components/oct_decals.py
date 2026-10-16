@@ -24,7 +24,7 @@ import numpy as np
 
 from ..core import log
 from .. import decals as D
-from .oct_frame import FN, cush_lip_z, cush_out_r, fmap
+from .oct_frame import FN, FT, cush_lip_z, cush_out_r, fmap
 
 
 def _fac_hit(probe, k, x, z, surfaces=None, reach=1.6):
@@ -44,10 +44,12 @@ def _ray(probe, o, d, dist=4.0, surfaces=None):
     return hit
 
 
-def oct_building_decals(g, seed=9900, snap=True):
+def oct_building_decals(g, seed=9900, snap=True, walk_gate=False):
     """snap=True (kit 1.3.0, keep round 8): every anchor carries its wall / slope normal ('macro') and goes through
     decals.snap_anchors (first exterior surface, |offset| <= 1.5 cm, alignment >= 0.85, no interior / blocker,
-    same-type de-duplication at 0.3 m); moss is added on the wing thatch (N slope, eave roll) and the cushion top."""
+    same-type de-duplication at 0.3 m); moss is added on the wing thatch (N slope, eave roll) and the cushion top.
+    walk_gate=True (kit 1.5.0, keep round 9): the threshold / step lichen move to the step ends and the N / NE
+    footing tops, and the gate rejects lichen / moss inside both doors' walking zones (decal_gate.door_walk_zone)."""
     rng = np.random.RandomState(seed)
     da = g.decals
     obs = [o for o in g.coll.all_objects if o.type == "MESH"]
@@ -169,11 +171,27 @@ def oct_building_decals(g, seed=9900, snap=True):
         hit = _ray(probe, p, (0, 0, -1), 0.6, {"M_stone_dressed"})
         if hit is not None and hit["normal"][2] > 0.5:
             mac(da.add_hit("lichen", hit, (0.2, 0.12), probability=0.5, seed=S()), hit["normal"])
-    for x, w in ((door["xc"] - 0.4, 0.55), (door["xc"] + 0.45, 0.7), (door["xc"] + 0.1, 0.0)):
-        p = fmap(kd, np.array([x]), np.array([0.6]), np.array([w]))[0]
-        hit = _ray(probe, p, (0, 0, -1), 1.0, {"M_stone", "M_stone_dressed"})
-        if hit is not None:
-            mac(da.add_hit("lichen", hit, (0.22, 0.18), probability=0.45, seed=S()), hit["normal"])
+    if walk_gate:
+        # kit 1.5.0 (keep r8 must-fix 5): no lichen on the trodden line -- only the outer ends of the built-in step
+        # (outside the door's walking width) and the N / NE footing tops between the moss patches
+        for x in (door["xc"] - 0.62, door["xc"] + 0.62):
+            p = fmap(kd, np.array([x]), np.array([0.6]), np.array([0.55]))[0]
+            hit = _ray(probe, p, (0, 0, -1), 1.0, {"M_stone", "M_stone_dressed"})
+            if hit is not None and hit["normal"][2] > 0.5:
+                mac(da.add_hit("lichen", hit, (0.12, 0.10), probability=0.45, seed=S(),
+                               up=(FN[kd][0], FN[kd][1], 0.0)), UPZ)
+        for k, x in ((7, -0.5), (6, 0.5)):
+            p = fmap(k, np.array([x]), np.array([0.6]), np.array([0.06]))[0]
+            hit = _ray(probe, p, (0, 0, -1), 0.8, {"M_stone"})
+            if hit is not None and hit["normal"][2] > 0.4:
+                mac(da.add_hit("lichen", hit, (0.22, 0.16), probability=0.45, seed=S(),
+                               up=(FN[k][0], FN[k][1], 0.0)), UPZ)
+    else:
+        for x, w in ((door["xc"] - 0.4, 0.55), (door["xc"] + 0.45, 0.7), (door["xc"] + 0.1, 0.0)):
+            p = fmap(kd, np.array([x]), np.array([0.6]), np.array([w]))[0]
+            hit = _ray(probe, p, (0, 0, -1), 1.0, {"M_stone", "M_stone_dressed"})
+            if hit is not None:
+                mac(da.add_hit("lichen", hit, (0.22, 0.18), probability=0.45, seed=S()), hit["normal"])
     for a in np.radians((15, 95, 175, 255, 335)):
         r = float(np.interp(g.COLLAR_TOP_Z + 0.12, g.CONE_ZF, g.CONE_RF)) + 0.12
         hit = _ray(probe, (r * math.cos(a), r * math.sin(a), 7.5), (0, 0, -1), 2.0, {"M_stone"})
@@ -327,8 +345,13 @@ def oct_building_decals(g, seed=9900, snap=True):
             mac(da.add_hit("plaster_patch", hit, (0.4, 0.12), probability=0.45, seed=S()), (0, -1, 0))
     n_raw = len(da) - n0
     if snap:
-        from ..decal_gate import snap_anchors
-        kept, n_drop = snap_anchors(da, probe, log=log)
+        from ..decal_gate import door_walk_zone, snap_anchors
+        zones = None
+        if walk_gate:
+            dc = fmap(kd, np.array([door["xc"]]), np.array([0.0]), np.array([0.0]))[0]
+            zones = [door_walk_zone(dc, FN[kd], FT[kd], door["hw"] + 0.03),
+                     door_walk_zone((wd["xc"], g.WY_S, 0.0), (0.0, -1.0), (1.0, 0.0), wd["hw"] + 0.05)]
+        kept, n_drop = snap_anchors(da, probe, log=log, walk_zones=zones)
         log(f"  decal anchors: {n_raw} generated, {n_drop} rejected by the plausibility gate")
     else:
         for it in da.items:

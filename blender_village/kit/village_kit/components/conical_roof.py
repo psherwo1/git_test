@@ -251,7 +251,7 @@ def build_shingles(g, coll, seed=606):
         V = P0 + tt * xr[:, None] + n * off[:, None]
         acc_.add(V, F, "M_roof_shingle", uv, smooth=True, wear=wear_)
 
-    def underlap(acc_, k, th_j, depth, s_b):
+    def underlap(acc_, k, th_j, depth, s_b, wedge=B_WEDGE):
         """a strip of covered shingle under one side joint of course k (stand-in for the hidden upper part of the
         course below): 2 * ul_hw wide, from just above the butt line to under the next course, its top 4 mm under
         the deeper of the two neighbours' undersides; top face + butt end only (never seen edge-on)."""
@@ -267,7 +267,7 @@ def build_shingles(g, coll, seed=606):
             rcur = np.hypot(P0[:, 0], P0[:, 1])
             xx = xs_ * np.clip(rcur / rb_, 0.3, 1.0)
             vv = (yy - s_b) / 0.72
-            top = B_WEDGE * (1 - vv) - 0.004 - depth
+            top = wedge * (1 - vv) - 0.004 - depth
             Pt.append(np.stack([P0 + tt * xx[:, None] + n * top, P0 + tt * xx[:, None] + n * (top - 0.012)], 0))
         Pt = np.array(Pt)                               # (row, layer, col, 3)
         V = np.concatenate([Pt[:, 0].reshape(-1, 3), Pt[0, 1]])           # top grid 3x3 + butt bottom edge
@@ -400,8 +400,9 @@ def build_shingles(g, coll, seed=606):
         # object outside round_hidden_cull's targets so it is never culled
         ul_acc = g.acc("roof_underlap", 45)
         n_ul = 0
+        k_first = 0 if age.get("underlap_k0") else 1        # kit 1.5.0: course 1 over the starter too (opt-in)
         for k in sorted(pieces):
-            if k < 1:
+            if k < k_first:
                 continue
             pc = sorted(pieces[k], key=lambda p_: p_[0] % (2 * math.pi))
             rb = float(np.hypot(*surf(g, 0.0, k * g.SH_EXPOSE, sag=False)[:2]))
@@ -413,7 +414,8 @@ def build_shingles(g, coll, seed=606):
                 if gap * rb > 0.05 or gap * rb < -0.10:      # a missing shingle / not neighbours: no joint
                     continue
                 th_j = ea + 0.5 * gap
-                n_ul += underlap(ul_acc, k, th_j, max(a_[3], b_[2]) + 0.002, max(a_[4], b_[4]))
+                n_ul += underlap(ul_acc, k, th_j, max(a_[3], b_[2]) + 0.002, max(a_[4], b_[4]),
+                                 wedge=0.037 if k == 0 else B_WEDGE)
         log("underlap strips:", n_ul)
         if n_ul:
             ul_acc.build(coll)
