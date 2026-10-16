@@ -6,10 +6,11 @@ Run:  /opt/bpyenv/bin/python build_wattle_roundhut.py
 Saves wattle_roundhut.blend next to this script.
 
 Layout (metres, Z up, hut centred on the world origin, door centred on -Y):
-  * dry-stone boulder plinth ring (outer dia ~7.5 m, top ~0.38 m), chinking, rubble, earth apron
-    with a drip-line trench, flat stepping-stone path to the door
-  * 14 round-hewn posts, woven wattle (stakes + tapered rods, real in/out weave), daubed bays
-    (big eroded bay left of the door, full bay back right, partial patch on the +X side)
+  * dry-stone boulder plinth ring (outer dia ~7.5 m, top ~0.38 m) with chinking, standing on a flat
+    Z = 0 datum with a <= 4 cm buried skirt (producer note 10: no apron / path / rubble / flags)
+  * 14 round-hewn posts; MOSTLY INTACT DAUB on every bay (client r6) over woven wattle that is modelled
+    only where it shows: the ref2 eroded band left of the door, 3 small broken-away patches (+X side,
+    back-right foot, back-left under the eave), the weathered foot and the door rope panels
   * curved, scarf-jointed and pegged wall plate
   * projecting flat-fronted door frame (jambs, lintel on door posts, wattle side panels,
     cheek panels), worn timber sill on a threshold stone, step stone, ledged & braced plank
@@ -30,6 +31,9 @@ varied arrises, 35 % fracture facets) with the weave bedded onto the stone tops,
 pads, split 3-slab threshold, dished step, paving flags laid from their real outlines with partial
 earth lips, sub-angular rubble, eroded back-bay daub carried to the plinth, horizontal-only daub
 ridging with palm dents, V-section timber checks and diagonal adze lanes, post heads inside the plate.
+Round 6 (client correction): daub on all 13 bays (graded tensor grid, hand-applied dabs, sag belly,
+splash-eroded foot, shrinkage cracks), fracture-polygon exposed patches stepped along the rod rows,
+rods / stakes / post flanks / plinth tops buried in the coat deleted, ground dressing removed.
 All randomness is seeded; the script is reproducible bit-for-bit.
 """
 import math
@@ -178,7 +182,7 @@ def az_pt(az, r, z=0.0):
 class Acc:
     """numpy mesh accumulator. cull(V) -> bool per vertex 'never visible'; faces whose vertices are all
     culled are dropped (producer note 6). By default everything more than 1.2 cm below the local ground
-    (apron / interior floor) is culled."""
+    (skirt depth outside / interior floor) is culled."""
 
     def __init__(self, name, sharp_angle=40.0, cull="ground", moss=None):
         self.name = name
@@ -248,7 +252,7 @@ class Acc:
 
     def build_mesh(self, name=None, clamp=True):
         V = np.concatenate(self.V)
-        if clamp and self.name != "HUT_ground_apron":
+        if clamp:
             V[:, 2] = np.maximum(V[:, 2], Z_MIN + 0.004)
         UVv = np.concatenate(self.UV)
         MR = np.concatenate(self.MR)
@@ -352,7 +356,7 @@ INST_COLL = {}
 N_INST = [0]
 
 
-POOL_MOSS = {"rubble": 0.75, "chink": 0.6}
+POOL_MOSS = {"chink": 0.6}
 
 
 def pool_mesh(pool, k, make, sharp=40.0):
@@ -1039,7 +1043,7 @@ def plinth_kind_stone(kind, half, rng, fracture=True, frac_side=None, n_front=80
     return V, F
 
 
-def pad_stone(rng, plan=(0.23, 0.18), vis_h=0.18, bury=0.05, tilt_deg=(1.0, 3.0), n_corner=(6, 8)):
+def pad_stone(rng, plan=(0.23, 0.18), vis_h=0.18, bury=0.05, tilt_deg=(1.0, 3.0), n_corner=(6, 8), batter=(16, 36)):
     """door-post pad stone (director r4 #2a): low and wide (visible width:height >= 2.2), an irregular
     6-9-corner plan, battered planar sides, 2-3 planar split faces meeting at 0.5-1.5 cm arrises, and a
     flat bearing bed ~0.25 m across tilted 1-3 deg.  No rotationally symmetric profile.  Local: top bed
@@ -1063,7 +1067,7 @@ def pad_stone(rng, plan=(0.23, 0.18), vis_h=0.18, bury=0.05, tilt_deg=(1.0, 3.0)
         nh = nrm(np.array([e[1], -e[0], 0.0]))
         if np.dot(nh[:2], (p0 + p1) / 2) < 0:
             nh = -nh
-        bat = math.radians(rng.uniform(16, 36))                                     # battered side
+        bat = math.radians(rng.uniform(*batter))                                    # battered side
         n_ = nrm(nh * math.cos(bat) + np.array([0, 0, math.sin(bat)]))
         S.append((n_, np.array([(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2, -c * 0.4]), rng.uniform(0.0, 0.3)))
     S.append((np.array([0.0, 0.0, -1.0]), np.array([0.0, 0.0, -c]), 0.0))
@@ -1246,7 +1250,7 @@ def frame_R(x_axis, z_hint):
 # =============================================================================================
 # global dimensions
 # =============================================================================================
-Z_MIN = -0.045               # lowest point (apron outer band); nothing deeper than 5 cm (note 6)
+Z_MIN = -0.045               # lowest point (buried footing skirt); nothing deeper than 5 cm (note 6)
 R_WALL = 3.50                 # wattle centre line / post centre line
 WALL_POST_AZ_DOOR = math.radians(21.0)
 N_POSTS = 14
@@ -1712,8 +1716,74 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
     acc.add(Vw, Fl + ([cap0, fan0] if caps[0] else []) + ([cap1, fan1] if caps[1] else []), mat, wear=wear)
 
 
+def post_cull(V):
+    """producer note 6 / client r6: the post flanks buried in the intact daub coat (the coat meets each
+    post ~6 cm proud of the wattle line) and the post backs behind the wattle line are never seen.
+    Door-side flanks of the two door-bay wall posts stay whole (seen through the doorway)."""
+    hid = cull_below_ground(V)
+    X, Y, Zv = V[:, 0], V[:, 1], V[:, 2]
+    az = np.mod(np.arctan2(X, -Y), 2 * np.pi)
+    dr = np.hypot(X, Y) - R_WALL
+    ip = np.argmin(np.abs(np.angle(np.exp(1j * (az[:, None] - POST_AZ[None, :])))), axis=1)
+    dt = np.angle(np.exp(1j * (az - POST_AZ[ip])))
+    nb = len(POST_AZ) - 1
+    bay = np.where(dt > 0, ip, ip - 1)
+    door_side = (bay < 0) | (bay >= nb)
+    intact = np.zeros(len(V), bool)
+    for b in range(nb):
+        m = bay == b
+        if m.any():
+            s_side = (POST_AZ[ip[m]] + np.sign(dt[m]) * 0.12 / R_WALL) * R_WALL
+            intact[m] = DAUB_BAYS[b](s_side, Zv[m]) > 0.07
+    intact &= (Zv > 0.3) & (Zv < PLATE_BOT - 0.12)
+    thr = np.where(intact, 0.02, -0.015)
+    return hid | (~door_side & (Zv > 0.3) & (dr < thr))
+
+
+def plinth_under_coat(V):
+    """client r6: where the intact daub foot comes down onto the stones, the stone top behind the wattle
+    centre line (under the bottom rod row and the coat) is never seen."""
+    r_ = np.hypot(V[:, 0], V[:, 1])
+    cand = (r_ < R_WALL + 0.005) & (V[:, 2] > 0.18)
+    hid = np.zeros(len(V), bool)
+    if not cand.any():
+        return hid
+    az = np.mod(np.arctan2(V[cand, 0], -V[cand, 1]), 2 * np.pi)
+    sw = az * R_WALL
+    cover = np.zeros(len(az), bool)
+    for b in range(len(POST_AZ) - 1):
+        sb0, sb1 = bay_s(b)
+        m = (sw > sb0 + 0.10) & (sw < sb1 - 0.10)
+        if m.any():
+            cover[m] = DAUB_BAYS[b](sw[m], wall_floor(sw[m]) + 0.045) > 0.0
+    hid[np.where(cand)[0][cover]] = True
+    return hid
+
+
+def cull_object(ob, fn):
+    """drop the faces of a built object whose vertices are all flagged by fn(V) (keeps UVs / Mask)."""
+    import bmesh
+    me = ob.data
+    V = np.zeros(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", V)
+    flag = fn(V.reshape(-1, 3))
+    if not flag.any():
+        return 0
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bm.verts.ensure_lookup_table()
+    dead = [f for f in bm.faces if all(flag[v.index] for v in f.verts)]
+    bmesh.ops.delete(bm, geom=dead, context="FACES_ONLY")
+    loose = [v for v in bm.verts if not v.link_faces]
+    bmesh.ops.delete(bm, geom=loose, context="VERTS")
+    bm.to_mesh(me)
+    bm.free()
+    me.update()
+    return len(dead)
+
+
 def build_posts(coll):
-    acc = Acc("HUT_posts", 15)          # low angle: adze-flat edges crisp, 48-gon stays smooth
+    acc = Acc("HUT_posts", 15, cull=post_cull)   # low angle: adze-flat edges crisp, 48-gon stays smooth
     rng = np.random.RandomState(202)
     for i, az in enumerate(POST_AZ):
         # stand on the crowned stone under the post: lowest stone point under the footprint (no float)
@@ -2155,7 +2225,12 @@ def bay_s(i):
 
 DAUB_BAYS = {}   # bay index -> function(s, z) -> thickness above wattle centre (m), <=0 => none
 DAUB_COVER = {}  # bay index -> field value above which the rods are buried in the daub coat
-DAUB_SIDE = [None]
+DAUB_HIDE = {}   # bay index -> hide(s, z) for the rods (overrides DAUB_COVER)
+
+
+def CLUMP_BAYS():
+    """bays with exposed wattle (clinging daub clumps wrap their rods)."""
+    return sorted({len(POST_AZ) - 2} | {p[0] for p in DAUB_PATCHES})
 
 
 def _knot_curve(seed, s_lo, s_hi, spacing, amp):
@@ -2195,14 +2270,110 @@ def daub_edge_door_bay(s):
     return np.clip(e, 0.62, 1.02)
 
 
+DAUB_KEEP_UNDER = 0.07     # client r6: wattle is kept only in the exposed patches + ~7-10 cm under their edges
+ROD_ROW_P = 0.036          # nominal rod row pitch: patch margins break along the rows
+# client correction r6: the exterior is MOSTLY INTACT DAUB; exposed wattle only in 4 small patches where
+# the coat has fallen away (bay, kind, centre fraction along the bay, centre z, half width, half height, seed)
+DAUB_PATCHES = [
+    (2, "hole", 0.50, 1.30, 0.47, 0.30, 9310),      # +X side, mid height (side view)
+    (5, "low", 0.45, 0.55, 0.50, 0.18, 9320),       # back right, broken out above the plinth (back view)
+    (10, "hole", 0.42, 1.86, 0.42, 0.28, 9330),     # back left, under the eave (hero / aerial)
+]
+
+
+def stepped_curve(seed_, lo_s, hi_s, lo, hi, run=(0.06, 0.22), soft=0.008):
+    """piecewise-constant offsets (in rod rows, lo..hi) with 6-22 cm runs, softened by ~1 cm: a daub
+    margin that breaks along the rod rows, with no grid comb."""
+    rs = np.random.RandomState(seed_)
+    ks = [lo_s - 0.3]
+    while ks[-1] < hi_s + 0.3:
+        ks.append(ks[-1] + rs.uniform(*run))
+    lv = rs.randint(lo, hi + 1, len(ks)) * ROD_ROW_P
+    fine = np.linspace(ks[0], ks[-1], 1500)
+    v = lv[np.clip(np.searchsorted(ks, fine) - 1, 0, len(ks) - 1)].astype(float)
+    sig = soft / (fine[1] - fine[0])
+    kk = np.arange(-int(3 * sig), int(3 * sig) + 1)
+    ker = np.exp(-0.5 * (kk / sig) ** 2)
+    ker /= ker.sum()
+    v = np.convolve(np.pad(v, len(kk) // 2, mode="edge"), ker, mode="valid")
+    return fine, v
+
+
+def poly_sdf(s, z, P):
+    """signed distance (m) from points to a closed polygon P (k, 2): positive inside."""
+    s = np.asarray(s, float)
+    z = np.asarray(z, float)
+    d = np.full(s.shape, np.inf)
+    inside = np.zeros(s.shape, bool)
+    k = len(P)
+    for i in range(k):
+        a, b = P[i], P[(i + 1) % k]
+        e = b - a
+        t = np.clip(((s - a[0]) * e[0] + (z - a[1]) * e[1]) / max(float(e @ e), 1e-12), 0, 1)
+        d = np.minimum(d, np.hypot(s - a[0] - t * e[0], z - a[1] - t * e[1]))
+        cr = ((a[1] > z) != (b[1] > z)) & (s < a[0] + (z - a[1]) * e[0] / (b[1] - a[1] + 1e-12))
+        inside ^= cr
+    return np.where(inside, d, -d)
+
+
+def daub_hole(c_s, c_z, h_s, h_z, seed, floor=None):
+    """field of one exposed-wattle patch: NEGATIVE inside the hole (~ -distance to its broken margin),
+    positive in the intact coat.  The outline is a FRACTURE polygon (9-14 straight-ish breaks meeting
+    at sharp corners, 2-3 deep re-entrant notches where a chunk fell), never a rounded blob; its top and
+    bottom margins are shifted in 6-22 cm runs by whole rod rows (the coat breaks along the rows); fine
+    ragged noise.
+    floor(s): a "low" patch is open down to the stone tops (the coat broken away above the plinth)."""
+    st_top = stepped_curve(seed + 1, c_s - h_s, c_s + h_s, 0, 1)
+    st_bot = stepped_curve(seed + 2, c_s - h_s, c_s + h_s, 0, 1)
+    rs = np.random.RandomState(seed + 3)
+    nk = rs.randint(9, 15)
+    th = np.sort(rs.uniform(0, 2 * np.pi, nk) * 0.0 + (np.arange(nk) + rs.uniform(-0.3, 0.3, nk)) * 2 * np.pi / nk)
+    th = th + rs.uniform(0, 2 * np.pi)
+    rr = rs.uniform(0.72, 1.12, nk)
+    notch = rs.choice(nk, rs.randint(2, 4), replace=False)
+    rr[notch] *= rs.uniform(0.55, 0.75, len(notch))
+    P = np.stack([c_s + h_s * rr * np.cos(th), c_z + h_z * rr * np.sin(th)], -1)
+    if floor is not None:                                      # open to the stones: drop the lower half
+        P = P[P[:, 1] >= c_z - 0.2 * h_z]
+        P = P[np.argsort(np.arctan2(P[:, 1] - c_z, P[:, 0] - c_s))]
+        lo_s, hi_s = P[:, 0].min(), P[:, 0].max()
+        P = np.vstack([[[hi_s + rs.uniform(-0.03, 0.03), c_z - 1.0]], P, [[lo_s + rs.uniform(-0.03, 0.03), c_z - 1.0]]])
+        P = P[np.argsort(np.arctan2(P[:, 1] - c_z, P[:, 0] - c_s))]
+
+    def f(s, z):
+        s = np.asarray(s, float)
+        z = np.asarray(z, float)
+        ze = z - np.where(z > c_z, -np.interp(s, *st_top), np.interp(s, *st_bot))
+        inside = poly_sdf(s, ze, P)
+        if floor is not None:
+            inside = np.minimum(inside, z - (floor(s) - 0.06))
+        # (the clinging daub is modelled as torn sleeves wrapped round the exposed rods, see build_daub)
+        return -inside + 0.005 * n2(s * 18.0, z * 18.0, seed + 6)
+    return f
+
+
+def low_margin(bay, seed, bite_amp=0.07, bite_max=0.10):
+    """weathered lower margin of an intact bay: the coat stops 2-4 cm over the stone tops (the bottom rod
+    shows), with occasional splash-eroded bites up to ~10 cm, rounding up into the posts."""
+    bs0, bs1 = bay_s(bay)
+    fs, fv = _knot_curve(seed, bs0 - 0.3, bs1 + 0.3, 0.17, bite_amp)
+
+    def e(s):
+        s = np.asarray(s, float)
+        fl = wall_floor(s)
+        bite = np.clip(np.interp(s, fs, fv) - 0.015, 0.0, bite_max)
+        out = (fl + 0.028 + bite + 0.012 * n2(s * 9.0, 2.7, seed + 1) * (bite > 0.01) + 0.008 * n2(s * 23.0, 4.1, seed + 2))
+        sp = np.minimum(s - bs0, bs1 - s)
+        out = out + 0.05 * (1 - smoothstep(0.05, 0.24, sp)) ** 2
+        return np.clip(out, fl + 0.02, 0.62)
+    return e
+
+
 def make_daub_fields():
+    """every bay is daubed (client r6); field(s, z) ~ distance inside the intact coat (m), negative in the
+    exposed patches.  Door bay: the ref2 eroded lower band (post to post, edge at z 0.62-1.0)."""
     nb = len(POST_AZ) - 1
     door_bay = nb - 1                      # between POST_AZ[-2] and POST_AZ[-1] (az -45..-21)
-    back_bay = 5
-    side_bay = 2
-    s0, s1 = bay_s(side_bay)
-    pc_s = s0 + 0.55 * (s1 - s0)
-    pc_z = 1.75
 
     def door_field(s, z):
         f = z - daub_edge_door_bay(s)
@@ -2211,88 +2382,51 @@ def make_daub_fields():
         f = np.where(f < 0, np.maximum(f, f + isl * (1 - smoothstep(0.0, 0.10, -f)) * 1.5), f)
         # a few pock holes where daub has fallen out higher up
         hole = np.clip(n2(s * 6.0, z * 6.0, 906) * 2.2 - 1.5, 0, 1)
-        return f - hole * 0.6
+        return np.minimum(f - hole * 0.6, 1.0)
 
-    bs0, bs1 = bay_s(back_bay)
-    _EDGE_CURVE["back"] = _knot_curve(9111, bs0 - 0.3, bs1 + 0.3, 0.19, 0.14)
+    patches = {}
+    for (bay, kind, cf, cz, hs, hz, seed) in DAUB_PATCHES:
+        s0, s1 = bay_s(bay)
+        patches.setdefault(bay, []).append(
+            daub_hole(s0 + cf * (s1 - s0), cz, hs, hz, seed, floor=wall_floor if kind == "low" else None))
+    for bay in range(nb):
+        if bay == door_bay:
+            DAUB_BAYS[bay] = door_field
+            continue
+        lm = low_margin(bay, 9500 + 13 * bay)
+        holes = patches.get(bay, [])
 
-    def back_edge(s):
-        """eroded lower margin of the back bay (director r3 #5a): wanders 0.35-0.60 m at a 0.3-0.6 m
-        wavelength with crumbled bites, rises round into the posts (no square corners), never
-        below the stone tops."""
-        fs, fv = _EDGE_CURVE["back"]
-        s = np.asarray(s, float)
-        fl = wall_floor(s)
-        bite = np.clip(np.interp(s, fs, fv) + 0.03, 0.0, 0.26)            # eroded bites up to ~0.6 m
-        e = (fl + 0.03 + bite + 0.018 * n2(s * 9.0, 2.7, 912) * (bite > 0.01) + 0.01 * n2(s * 23.0, 4.1, 913)
-             + 0.005 * n2(s * 57.0, 6.3, 914))
-        sp = np.minimum(s - bs0, bs1 - s)
-        e = e + 0.09 * (1 - smoothstep(0.05, 0.28, sp)) ** 2              # rounds up into the posts
-        return np.clip(e, fl + 0.025, 0.62)
+        def field(s, z, _lm=lm, _holes=holes):
+            f = np.asarray(z, float) - _lm(s)
+            for h_ in _holes:
+                f = np.minimum(f, h_(s, z))
+            return np.minimum(f, 1.0)
 
-    def back_field(s, z):
-        f = z - back_edge(s)
-        isl = np.clip(n2(s * 9.0, z * 9.0, 915) * 1.6 - 0.45, 0, 1) * 0.07
-        f = np.where(f < 0, np.maximum(f, f + isl * (1 - smoothstep(0.0, 0.16, -f)) * 1.5), f)
-        return np.minimum(f, 1.0)
-
-    # side patch (director r4 #5b): an old coat remnant 0.5-0.9 x 0.3-0.5 m, elongated horizontally; its
-    # top and bottom margins break ALONG the rod rows (horizontal runs 6-22 cm long stepping by one or
-    # two rows), its ends are ragged; no round lobes
-    srng = np.random.RandomState(9210)
-    c_s, c_z = s0 + 0.47 * (s1 - s0), 0.98
-    h_s, h_z = 0.37, 0.21
-    ROW_P = 0.036
-
-    def stepped(seed_, lo, hi):
-        rs = np.random.RandomState(seed_)
-        ks = [c_s - h_s - 0.3]
-        while ks[-1] < c_s + h_s + 0.3:
-            ks.append(ks[-1] + rs.uniform(0.06, 0.22))
-        lv = rs.randint(lo, hi + 1, len(ks)) * ROW_P
-        fine = np.linspace(ks[0], ks[-1], 1200)
-        v = lv[np.clip(np.searchsorted(ks, fine) - 1, 0, len(ks) - 1)]
-        sig = 0.008 / (fine[1] - fine[0])                         # ~1 cm soft step (no grid comb)
-        kk = np.arange(-int(3 * sig), int(3 * sig) + 1)
-        ker = np.exp(-0.5 * (kk / sig) ** 2)
-        ker /= ker.sum()
-        v = np.convolve(np.pad(v, len(kk) // 2, mode="edge"), ker, mode="valid")
-        return fine, v
-    st_top = stepped(9211, -1, 1)
-    st_bot = stepped(9212, -1, 2)
-
-    def side_field(s, z):
-        """value ~ distance inside the patch outline (m)."""
-        s = np.asarray(s, float)
-        z = np.asarray(z, float)
-        sc = np.clip(np.abs(s - c_s) / h_s, 0, 1.5)
-        top = c_z + h_z - np.interp(s, *st_top) - 0.05 * sc ** 3
-        bot = c_z - h_z + np.interp(s, *st_bot) + 0.04 * sc ** 3
-        ends = h_s * (1 + 0.10 * n2(z * 7.0, 0.7, 921) + 0.04 * n2(z * 19.0, 1.9, 922)) - np.abs(s - c_s)
-        G = np.stack([top - z, z - bot, ends], 0)
-        k = 0.012
-        f = -k * np.log(np.sum(np.exp(-G / k), 0))                      # smooth min (rounded corners)
-        return f + 0.006 * n2(s * 25.0, z * 25.0, 923)
-
-    DAUB_BAYS[door_bay] = door_field
-    DAUB_BAYS[back_bay] = back_field
-    DAUB_BAYS[side_bay] = side_field
-    DAUB_COVER[side_bay] = 0.13
-    DAUB_COVER[door_bay] = 0.04
-    DAUB_COVER[back_bay] = 0.04
-    DAUB_SIDE[0] = side_bay
+        def hide(s, z, _lm=lm, _holes=holes):
+            # rods buried in the intact coat are not modelled: kept ~7 cm under a patch margin, but only
+            # ~3.5 cm (the bottom row) under the weathered foot
+            hb = (np.asarray(z, float) - _lm(s)) > 0.035
+            for h_ in _holes:
+                hb &= h_(s, z) > DAUB_KEEP_UNDER
+            return hb
+        DAUB_BAYS[bay] = field
+        DAUB_HIDE[bay] = hide
+    for bay in DAUB_BAYS:
+        DAUB_COVER[bay] = DAUB_KEEP_UNDER
 
 
 def daub_hides(bay):
     f = DAUB_BAYS.get(bay)
     if f is None:
         return None
+    if bay in DAUB_HIDE:
+        return DAUB_HIDE[bay]
 
-    thr = DAUB_COVER.get(bay, 0.04)
+    thr = DAUB_COVER.get(bay, DAUB_KEEP_UNDER)
 
     def hide(s, z):
-        # the daub stops >= 2 cm under the plate: the top rods stay, tucking under the plate
-        return (f(s, z) > thr) & (np.asarray(z) < PLATE_BOT - 0.075)
+        # the daub stops >= 4 cm under the plate: the top rods stay, tucking under the plate
+        return f(s, z) > thr
     return hide
 
 
@@ -2304,7 +2438,8 @@ def build_wattle(coll):
     pathf = arc_path(R_WALL)
     nb = len(POST_AZ) - 1
     nr = 0
-    ROD_STORE[1000 + (nb - 1) * 17] = []
+    for bay in CLUMP_BAYS():
+        ROD_STORE[1000 + bay * 17] = []
     for i in range(nb):
         s0, s1 = bay_s(i)
         z0 = max(0.22, float(wall_floor(np.linspace(s0, s1, 60)).min()) - 0.01)
@@ -2363,18 +2498,21 @@ def _seg_dist(Sx, Zx, segs):
 
 
 def build_daub(coll):
-    """front daub sheets: 2.5-4 cm bulges (0.4-0.8 m), faint horizontal ridging over the rods,
-    palm / trowel smears, 3-6 shrinkage cracks per bay, chipped edges against the posts, eroded
-    ragged lower edge, detached clumps clinging to the rods. Every boundary tucks behind the
-    wattle / into the posts / under the plate, so no clean cut edge is exposed."""
+    """front daub coat on every bay (client r6): 2.5-4 cm bulges (0.4-0.8 m), hand-applied dabs, a sag
+    belly, palm dents, 2-4 shrinkage cracks per bay, ridging over the rods only where the coat thins at
+    a patch margin, chipped edges against the posts, a splash-eroded foot, thick broken margins round
+    the exposed patches, torn clumps wrapped round the exposed rods. Every boundary tucks behind the
+    wattle / into the posts / into the plate, so no clean cut edge is exposed."""
     acc = Acc("HUT_daub", 70)
-    h = 0.0075
+    h = 0.0075                     # fine grid: patch margins, cracks, the weathered foot
+    H_S, H_Z = 0.016, 0.013        # intact coat away from them (hand-applied dabs and bulges)
+    H_CR = 0.0105                  # crack boxes and the weathered foot
     n_cr = 0
     for bay, field in DAUB_BAYS.items():
         rng = np.random.RandomState(4400 + bay)
         sb0, sb1 = bay_s(bay)
         s0, s1 = sb0 + 0.04, sb1 - 0.04
-        zlo, zhi = 0.30, PLATE_BOT - 0.045           # director r4 #5d: >= 4 cm clear of the plate underside
+        zlo, zhi = 0.30, PLATE_BOT + 0.012           # client r6: the intact coat runs up INTO the plate (no gap)
         # crop to where the daub exists
         Sc, Zc = np.meshgrid(np.linspace(s0, s1, 120), np.linspace(zlo, zhi, 160), indexing="ij")
         fc = field(Sc, Zc)
@@ -2383,20 +2521,14 @@ def build_daub(coll):
         zz_live = Zc[live]
         cs0, cs1 = max(s0, ss_live.min() - 0.03), min(s1, ss_live.max() + 0.03)
         cz0, cz1 = max(zlo, zz_live.min() - 0.03), min(zhi, zz_live.max() + 0.03)
-        nu = int((cs1 - cs0) / h) + 1
-        zr = np.linspace(cz0, min(cz1, EAVE_SHADOW_Z - 0.06), int((min(cz1, EAVE_SHADOW_Z - 0.06) - cz0) / h) + 1)
-        if cz1 > EAVE_SHADOW_Z - 0.06:
-            zr = np.concatenate([zr, np.linspace(zr[-1], cz1, int((cz1 - zr[-1]) / 0.02) + 2)[1:]])
-        nv = len(zr)
-        S, Z = np.meshgrid(np.linspace(cs0, cs1, nu), zr, indexing="ij")
-        # ---- shrinkage cracks: random-walk polylines; snap grid lines into narrow V grooves
+        # ---- shrinkage cracks first (their boxes are refined): random-walk polylines in intact coat
         cracks = []
-        ncr = 0 if bay == DAUB_SIDE[0] else rng.randint(2, 5)
+        ncr = rng.randint(2, 5)
         tries = 0
         while len(cracks) < ncr and tries < 200:
             tries += 1
             ps = rng.uniform(cs0 + 0.12, cs1 - 0.12)
-            pz = rng.uniform(cz0 + 0.12, cz1 - 0.1)
+            pz = rng.uniform(cz0 + 0.18, cz1 - 0.12)
             if field(np.array([ps]), np.array([pz]))[0] < 0.15:
                 continue
             Lc = rng.uniform(0.12, 0.35)
@@ -2422,13 +2554,52 @@ def build_daub(coll):
                     bz += math.sin(ang2) * 0.04
                     bp.append((bs, bz))
                 cracks.append((bp, rng.uniform(0.004, 0.007), rng.uniform(0.01, 0.015)))
+        # ---- graded tensor grid: fine (7.5 mm) rows / columns through the patch margins, the cracks and
+        # the weathered foot; 1.3-1.6 cm over the intact coat
+        fine_s, fine_z = [], [(zlo, float(wall_floor(np.linspace(sb0, sb1, 40)).max()) + 0.22, H_CR)]
+        edge_m = (fc > -0.06) & (fc < 0.12)
+        if edge_m.any():
+            # rows / columns that cross a patch margin (not the lower margin, which is z-refined above)
+            em = edge_m & (Zc > fine_z[0][1] - 0.05)
+            if em.any():
+                cols = np.where(em.any(axis=1))[0]
+                rows = np.where(em.any(axis=0))[0]
+                for (a_, b_) in _runs(np.isin(np.arange(Sc.shape[0]), cols)):
+                    fine_s.append((Sc[a_, 0] - 0.03, Sc[b_ - 1, 0] + 0.03, h))
+                for (a_, b_) in _runs(np.isin(np.arange(Zc.shape[1]), rows)):
+                    fine_z.append((Zc[0, a_] - 0.03, Zc[0, b_ - 1] + 0.03, h))
+        for (pts, wd, dp) in cracks:
+            pa = np.asarray(pts)
+            fine_s.append((pa[:, 0].min() - 0.03, pa[:, 0].max() + 0.03, h))
+            fine_z.append((pa[:, 1].min() - 0.03, pa[:, 1].max() + 0.03, h))
+
+        def graded(lo, hi, hc, rngs):
+            xs = [lo]
+            while xs[-1] < hi - 1e-6:
+                x = xs[-1]
+                hh = min([hr for (a, b, hr) in rngs if a <= x + 0.5 * hr and x - 0.5 * hr <= b] + [hc])
+                xs.append(min(hi, x + hh))
+            if len(xs) > 2 and xs[-1] - xs[-2] < 0.3 * h:
+                xs.pop(-2)
+            return np.array(xs)
+        su = graded(cs0, cs1, H_S, fine_s)
+        zt_ = min(cz1, EAVE_SHADOW_Z - 0.06)
+        zr = graded(cz0, zt_, H_Z, fine_z)
+        if cz1 > zt_ + 0.005:
+            zr = np.concatenate([zr, np.linspace(zr[-1], cz1, int((cz1 - zr[-1]) / 0.02) + 2)[1:]])
+        nu, nv = len(su), len(zr)
+        log(f"  daub bay {bay}: grid {nu} x {nv}, cracks {len(cracks)}")
+        S, Z = np.meshgrid(su, zr, indexing="ij")
+        dsu = np.gradient(su) if nu > 1 else np.full(nu, H_S)
+        dzr = np.gradient(zr) if nv > 1 else np.full(nv, H_Z)
+        HL = np.maximum(dsu[:, None], dzr[None, :])         # local grid spacing per vertex
         crack_d = np.zeros(S.shape)
         for (pts, wd, dp) in cracks:
             dist, cs_, cz_, ct = _seg_dist(S, Z, pts)
             prof = np.sin(np.pi * np.clip(ct, 0, 1)) ** 0.5
             ww = wd * 0.5 * (0.3 + 0.7 * prof)
-            core = dist < 0.55 * h
-            band = (dist >= 0.55 * h) & (dist < 1.8 * h)
+            core = dist < 0.55 * HL
+            band = (dist >= 0.55 * HL) & (dist < 1.8 * HL)
             # core vertices snap onto the crack centre line (groove bottom)
             S = np.where(core, cs_, S)
             Z = np.where(core, cz_, Z)
@@ -2436,7 +2607,7 @@ def build_daub(coll):
             with np.errstate(invalid="ignore", divide="ignore"):
                 ux = (S - cs_) / np.maximum(dist, 1e-9)
                 uz = (Z - cz_) / np.maximum(dist, 1e-9)
-            dn = ww + (dist - 0.55 * h) * (1.8 * h - ww) / (1.25 * h)
+            dn = ww + (dist - 0.55 * HL) * (1.8 * HL - ww) / (1.25 * HL)
             S = np.where(band, cs_ + ux * dn, S)
             Z = np.where(band, cz_ + uz * dn, Z)
             crack_d = np.minimum(crack_d, np.where(core, -dp * (0.2 + 0.8 * prof), 0.0))
@@ -2453,14 +2624,15 @@ def build_daub(coll):
         mv = (used & (f.ravel() < -0.03) & (sp0.ravel() >= 0.085)).reshape(S.shape)
         if mv.any():
             ps, pz = S[mv].copy(), Z[mv].copy()
+            hm = HL[mv]
             for _ in range(4):
                 e_ = 1e-3
                 f0 = field(ps, pz) + 0.03
                 gs = (field(ps + e_, pz) - field(ps - e_, pz)) / (2 * e_)
                 gz = (field(ps, pz + e_) - field(ps, pz - e_)) / (2 * e_)
                 g2 = np.maximum(gs * gs + gz * gz, 0.05)
-                ds_ = np.clip(-f0 * gs / g2, -h, h)
-                dz_ = np.clip(-f0 * gz / g2, -h, h)
+                ds_ = np.clip(-f0 * gs / g2, -hm, hm)
+                dz_ = np.clip(-f0 * gz / g2, -hm, hm)
                 ps, pz = ps + ds_, pz + dz_
             S = S.copy()
             Z = Z.copy()
@@ -2480,8 +2652,23 @@ def build_daub(coll):
         rid = np.cos(2 * np.pi * (Z + drift) / pitch)
         thin = 1 - smoothstep(-0.9, 0.4, bul)
         patchy = np.clip(n2(S * 2.5, Z * 7.0, 4511 + bay) * 2.4 - 0.5, 0, 1)
-        r_amp = 0.003 + 0.003 * np.clip(n2(S * 2.0, Z * 5.0, 4512 + bay) + 0.5, 0, 1)
-        ridge = r_amp * rid * (0.35 + 0.65 * thin) * patchy
+        r_amp = 0.0018 + 0.0022 * np.clip(n2(S * 2.0, Z * 5.0, 4512 + bay) + 0.5, 0, 1)
+        ridge = r_amp * rid * (0.35 + 0.65 * thin) * patchy * (1 - smoothstep(0.05, 0.22, field(S, Z)))
+        # ---- client r6: hand-applied dabs over the intact coat (handful pats 6-11 cm, 2-5 mm proud, a
+        # slightly sharper lower lip where each was pushed upward)
+        dabs = np.zeros(S.shape)
+        for _ in range(int((cs1 - cs0) * (cz1 - cz0) * 30)):
+            c_s = rng.uniform(cs0, cs1)
+            c_z = rng.uniform(cz0, cz1)
+            R_ = rng.uniform(0.06, 0.11)
+            ds_ = (S - c_s) / (R_ * rng.uniform(0.9, 1.4))
+            dz_ = (Z - c_z) / R_
+            r2 = ds_ ** 2 + dz_ ** 2
+            m = r2 < 4.0
+            if not m.any():
+                continue
+            lip = np.where(dz_ < 0, np.exp(-r2 * 2.2), np.exp(-r2 * 1.1))
+            dabs += rng.uniform(0.002, 0.005) * lip * m
         # ---- palm-press dents (director r3 #5c): round 7-12 cm dents 0.8-1.8 cm deep with a slight
         # squeezed-up rim; they break the long undulations (no strokes, no folds)
         smear = np.zeros(S.shape)
@@ -2508,22 +2695,24 @@ def build_daub(coll):
         chip = (1 - smoothstep(reach - 0.025, reach + 0.004, sp)) * smoothstep(0.06, 0.08, sp)
         chip = chip * np.clip(0.55 + 0.6 * n2(S * 9, Z * 9, 4522 + bay), 0.25, 1.0)
         nearp = 1 - smoothstep(0.08, 0.22, sp)
-        T_full = 0.088 + bulge * (0.3 + 0.7 * smoothstep(0.07, 0.25, sp)) + ridge * (1 - nearp) + smear + fine
+        T_full = 0.088 + bulge * (0.3 + 0.7 * smoothstep(0.07, 0.25, sp)) + ridge * (1 - nearp) + smear + fine + dabs
         T_full = T_full - 0.024 * chip - 0.008 * nearp
         # thickness envelope: tucks behind the rods where the field ends (eroded / patch edges)
-        if bay == DAUB_SIDE[0]:       # old coat patch: 2-4 cm proud of the rods at the centre with lumps,
-            # feathered into the rods over 8-12 cm (the rod ridges show through the thin margin)
-            lumps_ = 0.008 * np.clip(n2(S * 8.0, Z * 8.0, 4530), -1, 1) + 0.004 * n2(S * 17.0, Z * 17.0, 4531)
-            # pressed into the weave: only ~0-1 cm proud of the rod fronts, rod ridges kept in the coat
-            T_full = 0.056 + 0.6 * (T_full - 0.088) + 0.6 * lumps_ + 0.006 * smoothstep(0.1, 0.2, f)
-            edge = smoothstep(-0.004, 0.11, f)
-        else:
-            edge = smoothstep(-0.004, 0.045, f)
+        # ---- client r6: slight sag (a soft belly where the wet coat slumped, 0.5-1.0 m up) and a
+        # weathered foot (splash-eroded: thinner, pitted, rougher over the bottom ~25 cm)
+        z_sag = 0.62 + 0.3 * ((bay * 0.618) % 1.0)
+        sag = (0.010 + 0.005 * n2(S * 1.3, np.full(S.shape, 0.5), 4540 + bay)) * np.exp(-((Z - z_sag) / 0.28) ** 2)
+        sag = sag * (1 - smoothstep(0.42, 0.62, np.abs(Z - z_sag) / 0.6))
+        foot = 1 - smoothstep(0.0, 0.26, Z - wall_floor(S))
+        foot_n = np.clip(n2(S * 14.0, Z * 30.0, 4541 + bay) * 1.4 + 0.3, 0, 1)
+        T_full = (T_full + sag - foot * (0.010 + 0.012 * foot_n)
+                  + foot * (0.0045 * n2(S * 22.0, Z * 45.0, 4542 + bay) - 0.004 * np.clip(n2(S * 35, Z * 55, 4543 + bay) * 2 - 0.6, 0, 1)))
+        edge = smoothstep(-0.004, 0.045, f)
         pit = 0.01 * np.clip(n2(S * 25, Z * 25, bay + 77), 0, 1) * (1 - smoothstep(0.04, 0.16, f))
         T = -0.036 + (T_full + 0.036 - pit) * edge + crack_d * edge
         # tuck into the posts at the very ends of the sheet, and back under the plate at the top
         T = T - 0.04 * (1 - smoothstep(0.045, 0.095, sp)) * edge
-        T = T - 0.045 * smoothstep(zhi - 0.07, zhi, Z)
+        T = T - 0.032 * smoothstep(zhi - 0.09, zhi, Z)
         a = S / R_WALL
         rad = R_WALL + T
         P = np.stack([np.sin(a) * rad, -np.cos(a) * rad, Z], -1)
@@ -2533,19 +2722,21 @@ def build_daub(coll):
         # ---- detached clumps (director r4 #2e): 2-3 flattened, torn daub blobs 4-8 cm long WRAPPED round
         # real rods just below the break (a sleeve on the rod path, thickest on the top / front, ragged
         # ends), never a free-floating lump
-        if bay == len(POST_AZ) - 2:
+        if 1000 + bay * 17 in ROD_STORE:
             store = ROD_STORE.get(1000 + bay * 17, [])
             cand = []
             for (ss_r, pth, rad_r) in store:
                 for ic in range(3, len(ss_r) - 4, 3):
                     if not (s0 + 0.15 < ss_r[ic] < s1 - 0.15):
                         continue
-                    e_ = float(daub_edge_door_bay(np.array([ss_r[ic]]))[0])
-                    if e_ - 0.24 < pth[ic, 2] < e_ - 0.05:
+                    if pth[ic, 2] < float(wall_floor(np.array([ss_r[ic]]))[0]) + 0.12:
+                        continue
+                    fc_ = float(field(np.array([ss_r[ic]]), np.array([pth[ic, 2]]))[0])
+                    if -0.22 < fc_ < -0.05:
                         cand.append((ss_r, pth, rad_r, ic))
             picks = []
             for _ in range(60):
-                if len(picks) >= 3 or not cand:
+                if len(picks) >= (3 if bay == len(POST_AZ) - 2 else 2) or not cand:
                     break
                 c_ = cand[rng.randint(len(cand))]
                 if all(abs(c_[0][c_[3]] - q[0][q[3]]) > 0.25 for q in picks):
@@ -3177,13 +3368,12 @@ def build_collar_finial(coll):
 
 
 # =============================================================================================
-# plinth, rubble, apron, path
+# plinth, door step (producer note 10: no ground dressing)
 # =============================================================================================
 R_PL_FACE = 3.76            # plinth outer face line (rough wall line, +-4 cm)
 PLINTH_TOP = 0.33
 PAD_TOP = 0.225             # door-post pad stones: bearing bed height (~0.17 visible)
 STEP_C = (0.04, FRONT_Y - 0.58)       # step stone centre (x, y)
-APRON_RIM = 4.62
 R_FLOOR_EDGE = 3.36         # inside this radius the ground is the interior earth floor
 
 
@@ -3397,154 +3587,50 @@ def floor_z(X, Y):
     return z - 0.024 * door
 
 
-FLAGS = []          # planned path flags + step stone (dicts), used by the apron lips and the geometry
-
-
-def _mound(X, Y):
-    r = np.hypot(X, Y)
-    th = np.arctan2(Y, X)
-    rim = APRON_RIM + 0.10 * ring_noise(th, 1111, 5, 1.0)
-    m = 1 - smoothstep(rim - 0.85, rim, r)
-    h = Z_MIN + (0.0 - Z_MIN) * m
-    lumps = 0.010 * fbm(np.stack([X * 0.9, Y * 0.9, np.zeros_like(X)], -1), 3) * m
-    dr = r - (4.17 + 0.03 * ring_noise(th, 1112, 5, 1.0))
-    trench = -0.028 * np.exp(-(dr / 0.13) ** 2) * (1 - (np.abs(X) < 1.1) * (Y < 0))
-    bank = (0.05 + 0.015 * ring_noise(th, 1116, 9, 1.0)) * (1 - smoothstep(3.80, 4.05, r)) \
-        * (1 - np.exp(-(X / 0.9) ** 2) * (Y < 0))
-    pads = sum(0.05 * np.exp(-((X - sx * 1.04) ** 2 + (Y + 3.61) ** 2) / 0.32 ** 2) for sx in (-1, 1))
-    return h + (lumps + trench) * m + bank + pads
-
-
-def _path_mound(X, Y):
-    """earth of the trodden path running out from the door, beyond the apron mound."""
-    w = 0.95 + 0.12 * n2(Y * 1.3, 0.5, 1130)
-    core = (1 - smoothstep(w * 0.75, w * 1.2, np.abs(X - 0.06 * np.sin(Y * 1.1)))) * \
-        (1 - smoothstep(-6.55, -7.05, Y)) * (Y < -3.6)
-    hz = -0.006 + 0.008 * fbm(np.stack([X * 2.0, Y * 2.0, np.full(X.shape, 4.0)], -1), 2)
-    hz = hz - 0.012 * np.exp(-(X / 0.5) ** 2)                  # wear hollow along the path
-    return Z_MIN + (hz - Z_MIN) * core
+FLAGS = []          # the built-in door step (dict)
 
 
 def earth_base(X, Y):
+    """producer note 10: no apron / mound / path -- the terrain is built separately in Unreal; the
+    building stands on a flat Z = 0 datum and its own footing carries a <= 4 cm buried skirt."""
     X = np.asarray(X, float)
-    Y = np.asarray(Y, float)
-    return np.maximum(_mound(X, Y), _path_mound(X, Y))
+    return np.zeros(np.shape(X))
 
 
-def flag_local(fl, X, Y):
-    c, s = math.cos(fl["rot"]), math.sin(fl["rot"])
-    dx, dy = X - fl["c"][0], Y - fl["c"][1]
-    u = dx * c + dy * s
-    v = -dx * s + dy * c
-    th = np.arctan2(v / fl["hv"], u / fl["hu"])
-    rn = fl["R"](th)
-    rabs = np.hypot(fl["hu"] * rn * np.cos(th), fl["hv"] * rn * np.sin(th))
-    return np.hypot(u, v), rabs, th
-
-
-def apron_height(X, Y):
-    X = np.asarray(X, float)
-    Y = np.asarray(Y, float)
-    base = earth_base(X, Y)
-    out = base
-    for fl in FLAGS:
-        if np.all((np.abs(X - fl["c"][0]) > fl["ext"] + 0.12) | (np.abs(Y - fl["c"][1]) > fl["ext"] + 0.12)):
-            continue
-        rho, rabs, th = flag_local(fl, X, Y)
-        dout = rho - rabs
-        # soft earth lip banked against the edge -- only on part of the perimeter (lip_m(th) in 0..1,
-        # director r3 #4: 30-50 %); elsewhere the flag's edge stands clean of the earth
-        lm = fl["lip_m"](th) if "lip_m" in fl else 1.0
-        lip_top = fl["top"] - fl["lip"]
-        lip = lip_top - (lip_top - base) * smoothstep(0.004, fl["lip_w"], dout)
-        lip = base + (lip - base) * lm + 0.0012 * n2(X * 12, Y * 12, 1140) * lm
-        out = np.where(dout < fl["lip_w"], np.maximum(out, lip), out)
-    return out
+GROUND_SKIRT = 0.04          # buried skirt depth below Z = 0 kept on the footing (producer note 10: <= 5 cm)
 
 
 def ground_z(X, Y):
     X = np.asarray(X, float)
     Y = np.asarray(Y, float)
     r = np.hypot(X, Y)
-    return np.where(r < R_FLOOR_EDGE, floor_z(X, Y), apron_height(X, Y))
+    return np.where(r < R_FLOOR_EDGE, floor_z(X, Y), earth_base(X, Y))
 
 
 def cull_below_ground(V):
-    """vertex is never visible: more than 1.2 cm under the local ground (apron or floor)."""
+    """vertex is never visible: deeper than the buried skirt outside (flat Z = 0 datum), or more than
+    1.2 cm under the interior earth floor."""
     hid = np.zeros(len(V), bool)
     low = V[:, 2] < 0.26
     if low.any():
-        g = ground_z(V[low, 0], V[low, 1])
-        hid[low] = V[low, 2] < g - 0.012
+        X, Y = V[low, 0], V[low, 1]
+        inside = np.hypot(X, Y) < R_FLOOR_EDGE
+        g = np.where(inside, floor_z(X, Y) - 0.012, earth_base(X, Y) - GROUND_SKIRT)
+        hid[low] = V[low, 2] < g
     return hid
 
 
-def _lip_mask(rng, cover):
-    """angular mask round a flag outline: ~`cover` of the perimeter carries an earth lip."""
-    seed = rng.randint(1, 10 ** 6)
-    tt = np.linspace(0, 2 * np.pi, 360, endpoint=False)
-    rn = ring_noise(tt, seed, 3, 1.0, 0.6)
-    q = float(np.quantile(rn, 1 - cover))
-    return lambda th: smoothstep(q - 0.08, q + 0.08, ring_noise(np.asarray(th, float), seed, 3, 1.0, 0.6))
-
-
 def plan_path():
-    """lay out the step stone and the paved path BEFORE the apron is built (the apron grows partial
-    earth lips round the flags).  Director r3 #4: flags 0.5-0.9 m, joints 5-15 cm, laid in staggered
-    rows of two (sometimes one big + one small), so the path reads as paving (hut_door.png)."""
+    """the built-in door step only (producer note 10: no path flags / stepping stones)."""
     rng = np.random.RandomState(1414)
-    # step stone (top ~0.095, the earth banked round about 40 % of it)
     FLAGS.append(dict(kind="step", c=(STEP_C[0], STEP_C[1]), rot=0.05, hu=0.62, hv=0.34, ext=0.7,
-                      R=outline_radius(rng, "flag"), top=0.095, th=0.16, lip=0.035, lip_w=0.05, seed=77,
-                      lip_m=_lip_mask(rng, 0.55)))
-    def extents(Rf, hu, hv, rot):
-        t_ = np.linspace(0, 2 * np.pi, 180, endpoint=False)
-        r_ = Rf(t_)
-        P = np.stack([hu * r_ * np.cos(t_), hv * r_ * np.sin(t_)], -1) @ rotz(rot)[:2, :2].T
-        return P[:, 0].min(), P[:, 0].max(), P[:, 1].min(), P[:, 1].max()
-
-    st_ = FLAGS[0]
-    ys = STEP_C[1] + extents(st_["R"], st_["hu"], st_["hv"], st_["rot"])[2] - rng.uniform(0.05, 0.09)
-    k = 0
-    while ys > -6.75:
-        hv = rng.uniform(0.25, 0.34)
-        xc = 0.06 * math.sin(k * 1.7) + rng.uniform(-0.05, 0.05)
-        if rng.rand() < 0.8:
-            sizes = [rng.uniform(0.29, 0.42), rng.uniform(0.28, 0.42)]
-        else:
-            sizes = [rng.uniform(0.42, 0.46), rng.uniform(0.21, 0.26)]
-        shift = (0.12 if k % 2 == 0 else -0.12) + rng.uniform(-0.06, 0.06)      # staggered joints
-        xm = xc + shift
-        y_low = 0.0
-        for side_, lx in zip((-1, 1), sizes):
-            hvv = hv * rng.uniform(0.88, 1.0)
-            Rf = outline_radius(rng, "flag")
-            rot = rng.uniform(-0.25, 0.25)
-            x0e, x1e, y0e, y1e = extents(Rf, lx, hvv, rot)
-            jx = rng.uniform(0.05, 0.11)
-            xo = xm - jx / 2 - x1e if side_ < 0 else xm + jx / 2 - x0e
-            yo = ys - y1e - rng.uniform(0.0, 0.03)
-            y_low = min(y_low, yo + y0e) if y_low else yo + y0e
-            b = float(earth_base(np.array([xo]), np.array([yo]))[0])
-            FLAGS.append(dict(kind="flag", c=(xo, yo), rot=rot, hu=lx, hv=hvv,
-                              ext=max(lx, hvv) * 1.15, R=Rf,
-                              top=b + rng.uniform(0.047, 0.062), th=rng.uniform(0.10, 0.13),
-                              lip=rng.uniform(0.008, 0.014), lip_w=rng.uniform(0.03, 0.04),
-                              seed=rng.randint(10 ** 5), lip_m=_lip_mask(rng, rng.uniform(0.3, 0.5))))
-        ys = y_low - rng.uniform(0.05, 0.11)
-        k += 1
-    log("path flags planned:", len(FLAGS) - 1)
+                      R=outline_radius(rng, "flag"), top=0.095, th=0.16, seed=77))
 
 
-def build_path(coll):
-    """step stone + flags: non-convex 10-16 corner outlines with edge noise, 0.8-1.5 cm arris with 2-3
-    chipped breaks per flag, sides sloping in, tops tilted 1-3 deg and 3.5-5 cm proud; the step stone
-    is a flat slightly dished slab (1-1.5 cm arris, sloping sides, 1-2 edge chips)."""
-    def cull_path(V):
-        # cull only below the bare earth (not below the raised lips: the stone's side runs down behind
-        # the lip, so no zig-zag of half-culled side faces shows along a lip)
-        return V[:, 2] < earth_base(V[:, 0], V[:, 1]) - 0.015
-    acc = Acc("HUT_path_stones", 30, cull=cull_path)
+def build_step(coll):
+    """the door step built into the entrance (kept per producer note 10): a flat slightly dished slab
+    (1-1.5 cm arris, sloping sides, 1-2 edge chips) bedded to the skirt depth."""
+    acc = Acc("HUT_step_stone", 30)
     for fl in FLAGS:
         rng = np.random.RandomState(fl["seed"])
         if fl["kind"] == "step":
@@ -3554,14 +3640,6 @@ def build_path(coll):
                                dish=0.009, chips=3, chip_w=(0.04, 0.08), chip_d=(0.012, 0.022), Rf=fl["R"],
                                spalls=3, face_fr=tuple(np.linspace(0.0, 0.95, 15)))
             wear = 0.8
-        else:
-            V, F = shell_stone(fl["hu"], fl["hv"], rng, "flag", fl["th"], rr=(0.005, 0.02), rr_var=0.8, dome=0.006,
-                               tilt=math.tan(math.radians(rng.uniform(1, 3))) / 1.4, n_frac=0,
-                               frac_depth=(0.008, 0.02), frac_k=(0.003, 0.006), n_facet=0, n_th=96, noise=0.012,
-                               freq=4.8, side_bulge=0.0, side_slope=0.08, thick_var=0.2, sm_scale=0.6,
-                               chips=rng.randint(2, 4), chip_w=(0.04, 0.08), chip_d=(0.006, 0.012), Rf=fl["R"],
-                               spalls=rng.randint(2, 4), face_fr=tuple(np.linspace(0.0, 0.94, 11)))
-            wear = rng.uniform(0.3, 0.7)
         V[:, 2] += fl["top"] - V[0, 2]
         P, _ = map_uvw(V, "plan")
         acc.add(xf(P, rotz(fl["rot"]), (fl["c"][0], fl["c"][1], 0.0)), F, "M_stone", wear=wear)
@@ -3750,126 +3828,6 @@ def build_plinth(coll):
     log("chinking:", n_ch, "of", n_try, "candidate joints")
 
 
-def make_rubble_variant(acc, k):
-    """half-buried spall (director r3 #3e): sub-angular, 3-5 crisp fracture facets, thickness 0.4-0.6 x
-    length, buried 30-50 % (only the part above the bedding cut, local z 0, is modelled)."""
-    rs = np.random.RandomState(8100 + k)
-    hx = rs.uniform(0.085, 0.115)
-    half = np.array([hx, hx * rs.uniform(0.6, 0.85), hx * rs.uniform(0.4, 0.6)])
-    P, F = spall_stone(rs, half)
-    zmin, zmax = P[:, 2].min(), P[:, 2].max()
-    P[:, 2] -= zmin + (zmax - zmin) * rs.uniform(0.3, 0.5)     # bury 30-50 % of the thickness
-    P[:, 2] = np.maximum(P[:, 2], -0.01)
-    keep = [Fx[(P[Fx, 2] > -0.0099).any(axis=1)] for Fx in F]
-    acc.add(P, keep, "M_rubble")
-
-
-def build_rubble(coll):
-    """25-50 spalls / pebbles round the plinth foot and the door, linked duplicates of 10 variants."""
-    rng = np.random.RandomState(1011)
-    pts = []
-    for i in range(26):
-        az = rng.uniform(0.35, 2 * math.pi - 0.35)
-        r = rng.choice([rng.uniform(3.84, 4.0), rng.uniform(4.05, 4.45)])
-        pts.append((math.sin(az) * r, -math.cos(az) * r, rng.uniform(0.4, 1.4)))
-    for i in range(12):
-        x = rng.choice([-1, 1]) * rng.uniform(0.95, 1.7)
-        y = rng.uniform(-4.6, -3.9)
-        pts.append((x, y, rng.uniform(0.4, 1.1)))
-    for (x_, y_, sc) in pts:
-        k = rng.randint(10)
-        on_flag = False
-        for fl in FLAGS:
-            rho, rabs, _ = flag_local(fl, np.array([x_]), np.array([y_]))
-            on_flag |= bool(rho[0] < rabs[0] + 0.08)
-        if on_flag:
-            continue
-        mesh = pool_mesh("rubble", k, make_rubble_variant, 30)
-        g = float(apron_height(np.array([x_]), np.array([y_]))[0])
-        R = rotz(rng.uniform(0, 6.28)) @ rotx(rng.uniform(-0.15, 0.15)) @ roty(rng.uniform(-0.15, 0.15))
-        co = np.zeros(len(mesh.vertices) * 3)
-        mesh.vertices.foreach_get("co", co)
-        co = co.reshape(-1, 3)
-        lo_, hi_ = co.min(0), co.max(0)                     # review tools bound the local AABB corners
-        corners = np.array([[x, y, z] for x in (lo_[0], hi_[0]) for y in (lo_[1], hi_[1]) for z in (lo_[2], hi_[2])])
-        zmin_l = float(((corners @ R.T)[:, 2]).min()) * sc
-        place_instance(mesh, "ground_rubble", R, (x_, y_, max(g - 0.004, Z_MIN - zmin_l + 0.0005)), scale=sc)
-    log("rubble instances:", len(pts))
-
-
-def apron_phi(X, Y):
-    """signed 'inside' field of the earth apron's outer margin (> 0 inside, ~metres)."""
-    r = np.hypot(X, Y)
-    th = np.arctan2(Y, X)
-    edge_r = (5.1 + 0.12 * ring_noise(th, 1113, 9, 1.0, 0.6) + 0.05 * ring_noise(th, 1114, 45, 1.0, 0.2))
-    phi_ring = edge_r - r
-    wx = 1.45 + 0.28 * n2(Y * 0.9, 0.3, 1131) + 0.08 * n2(Y * 3.1, 1.3, 1133) - np.abs(X + 0.15 * n2(Y * 0.5, 2.1, 1134))
-    wy = Y + 7.35 - 0.18 * n2(X * 1.2, 0.7, 1132)
-    phi_path = np.where(Y < -3.0, smin(wx, wy, 0.6), -1.0)
-    return np.maximum(phi_ring, phi_path)
-
-
-def build_apron(coll):
-    """earth apron: one heightfield (4.5 cm grid) from under the plinth face out to an irregular soil
-    margin, extended out along the path; outermost >= 0.4 m flat band at Z_MIN; soft lips round the
-    flags; nothing below -5 cm.  Margin vertices are snapped onto the smooth margin curve (no grid
-    stair-steps)."""
-    acc = Acc("HUT_ground_apron", 30, cull=None)
-    hs = 0.045
-    hf = 0.02            # director r4 #2d: 2 cm grid over the paved path / step so the flag lips stay narrow
-    xs = np.unique(np.round(np.concatenate([np.arange(-5.5, -1.45, hs), np.arange(-1.45, 1.45, hf),
-                                            np.arange(1.45, 5.5 + hs, hs)]), 5))
-    ys = np.unique(np.round(np.concatenate([np.arange(-7.7, -7.25, hs), np.arange(-7.25, -3.3, hf),
-                                            np.arange(-3.3, 5.5 + hs, hs)]), 5))
-    X, Y = np.meshgrid(xs, ys, indexing="ij")
-    r = np.hypot(X, Y)
-    r_in = np.where((np.abs(X) < 1.35) & (Y < 0), 3.42, 3.64)
-    phi = apron_phi(X, Y)
-    inside = (phi > 0) & (r >= r_in)
-    nx, ny = X.shape
-    cell = inside[:-1, :-1] | inside[1:, :-1] | inside[:-1, 1:] | inside[1:, 1:]
-    i = np.arange(nx - 1)[:, None]
-    j = np.arange(ny - 1)[None, :]
-    F = np.stack([i * ny + j, (i + 1) * ny + j, (i + 1) * ny + j + 1, i * ny + j + 1], -1)[cell]
-    # snap outside corners of margin cells onto the phi = 0 curve (two Newton steps)
-    Xf, Yf = X.ravel().copy(), Y.ravel().copy()
-    used = np.zeros(len(Xf), bool)
-    used[F.ravel()] = True
-    mv = used & (phi.ravel() <= 0) & (r.ravel() > 4.0)
-    for _ in range(3):
-        px, py = Xf[mv], Yf[mv]
-        f0 = apron_phi(px, py)
-        e = 1e-3
-        gx = (apron_phi(px + e, py) - apron_phi(px - e, py)) / (2 * e)
-        gy = (apron_phi(px, py + e) - apron_phi(px, py - e)) / (2 * e)
-        g2 = np.maximum(gx * gx + gy * gy, 1e-6)
-        Xf[mv] = px - f0 * gx / g2
-        Yf[mv] = py - f0 * gy / g2
-    # director r4 #2d: apron vertices next to a flag / step outline are snapped onto the outline (4 mm
-    # outside it), so the earth meets the stone along a smooth line instead of grid triangles poking
-    # through the stone's vertical edge
-    under = np.zeros(len(Xf), bool)
-    for fl in FLAGS:
-        near = (np.abs(Xf - fl["c"][0]) < fl["ext"] + 0.1) & (np.abs(Yf - fl["c"][1]) < fl["ext"] + 0.1)
-        idx = np.where(near)[0]
-        if not len(idx):
-            continue
-        rho, rabs, th = flag_local(fl, Xf[idx], Yf[idx])
-        d = rho - rabs
-        under[idx[d < -0.03]] = True          # well under the stone: never visible (producer note 6)
-        snap = np.abs(d) < 0.7 * hf
-        c, s_ = math.cos(fl["rot"]), math.sin(fl["rot"])
-        dx, dy = Xf[idx] - fl["c"][0], Yf[idx] - fl["c"][1]
-        k_ = np.where(snap, (rabs + 0.004) / np.maximum(rho, 1e-6), 1.0)
-        Xf[idx] = fl["c"][0] + dx * k_
-        Yf[idx] = fl["c"][1] + dy * k_
-    Z = np.maximum(apron_height(Xf, Yf), Z_MIN)
-    P = np.stack([Xf, Yf, Z], -1)
-    F = F[~under[F].all(axis=1)]
-    acc.add(P, F, "M_earth")
-    acc.build(coll)
-
-
 # =============================================================================================
 # door assembly
 # =============================================================================================
@@ -3974,7 +3932,8 @@ def build_door(coll):
         prs = np.random.RandomState(5150 + side)
         pc = np.array([side * 1.04, -3.61])
         g_pad = float(earth_base(pc[:1], pc[1:])[0])
-        V, F = pad_stone(prs, plan=(0.23, 0.18), vis_h=POST_BASE - g_pad, bury=0.06)
+        # stands on the flat Z = 0 datum (producer note 10): nearly upright sides, no flared foot
+        V, F = pad_stone(prs, plan=(0.23, 0.18), vis_h=POST_BASE - g_pad, bury=0.06, batter=(5, 13))
         V[:, 2] += POST_BASE
         thr.add(xf(V, rotz(side * 0.25 + prs.uniform(-0.1, 0.1)), (pc[0], pc[1], 0.0)), F, "M_stone", wear=0.45)
         # cheek-panel sole rail: door post -> wall post, on the pad and the first plinth stone
@@ -4246,10 +4205,11 @@ def main():
     e = surf(np.array([az2th(0.0)]), np.array([0.0]))[0]
     log(f"eave ref surface at door: r={math.hypot(e[0], e[1]):.3f} z={e[2]:.3f}")
     build_plinth(coll)
-    build_posts(coll)
-    log("plinth + posts")
     build_wattle(coll)
     log("wattle")
+    build_posts(coll)                 # after the daub fields: post flanks buried in the coat are culled
+    log("plinth tops under the daub foot culled:", cull_object(bpy.data.objects["HUT_plinth_stones"], plinth_under_coat))
+    log("plinth + posts")
     build_daub(coll)
     build_inner_skin(coll)
     log("daub")
@@ -4263,10 +4223,8 @@ def main():
     log("shingles")
     zz = build_collar_finial(coll)
     log("collar drip %.3f fascia top %.3f lower top %.3f upper top %.3f spindle top %.3f tip %.3f" % zz)
-    build_rubble(coll)
-    build_apron(coll)
-    build_path(coll)
-    log("ground")
+    build_step(coll)
+    log("step")
     build_door(coll)
     build_interior(coll)
     log("door + interior")

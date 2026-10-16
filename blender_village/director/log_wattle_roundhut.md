@@ -592,3 +592,38 @@ The client says there is too much exposed wattle.
 - **Daub surface.** Keep a hand-applied, slightly bulging coat with shrinkage cracks, a weathered lower margin and slight sag. Avoid flat board-like daub.
 - **Hidden geometry.** Rods behind intact daub become hidden geometry. **Delete them.** Keep wattle only inside the exposed patches, plus about 10 cm under the patch edges. Re-check est_hidden_pct ≤ 15%.
 - **Ground dressing.** Per producer note 10, delete all path flags, stepping stones, ground rubble and the ground apron. Keep the stone plinth, the door-post pad stones and the threshold.
+
+## Round 6 — builder entry
+- Script `buildings/wattle_roundhut/build_wattle_roundhut.py` (seeded, ~27 s build), saves `wattle_roundhut.blend` (28.6 MB). Renders: `renders/wattle_roundhut/round_06/` (6 views, 32 spp, stats.json, hidden.json).
+- **Stats:** 1,333,964 tris. **est_hidden_pct 12.9 %.** **material_slot_count 10**, all from the palette. `mask_attribute_missing` is empty. 123 objects (99 linked duplicates from 22 pools). bbox min (-4.19, -4.59, -0.041), max (4.19, 4.20, 8.73).
+- **Client correction: mostly intact daub.**
+  - Every one of the 13 bays now carries the daub coat (`make_daub_fields`, `low_margin`, `daub_hole`, `poly_sdf`).
+  - Coverage was ray-measured with horizontal rays at z 0.45-2.6 all round. Daub is the first hit on **86 %** of the wall face; posts are 11 %, exposed rods 2 % and stakes 0.1 %. Leaving out the posts, the coat covers 97 % of the infill.
+  - **Exposed wattle: 4 patches.**
+    - (1) The ref2 eroded band left of the door, kept as approved: post to post, edge at z 0.62-1.0, about 0.7 m² (front, hero, actor_closeup).
+    - (2) A break at mid-height on the +X side, about 0.4 m² (side view).
+    - (3) A low break above the plinth, back-right, about 0.35 m² (back view).
+    - (4) A break under the eave, back-left, about 0.3 m² (hero, aerial).
+  - **Patch outlines.** Patches 2-4 are fracture polygons: 9-14 straight breaks with sharp corners and 2-3 re-entrant notches, so no oval ports. Their top and bottom margins step along the rod rows. The thick broken edge is the existing erosion ramp (behind the rods, up to 8.8 cm proud in about 4.5 cm). Two torn daub sleeves are wrapped round the exposed rods in each patch, and three in the door bay.
+  - **Coat surface.**
+    - Hand-applied dabs (handful pats 6-11 cm) and a sag belly 0.6-0.9 m up.
+    - Palm dents, bulges, and 2-4 shrinkage cracks per bay.
+    - A splash-eroded foot: thinner and pitted over the bottom 25 cm, with occasional bites that show the bottom rod row.
+    - Rod ridging only where the coat thins at a patch margin.
+  - **Coat top.** The coat now runs up into the wall plate. There is no gap, so there are no rods and no pale chips under the plate.
+  - **Mesh.** A graded tensor grid: 7.5 mm at patch margins and cracks, 1.05 cm at the foot, 1.6 × 1.3 cm on the intact coat.
+- **Hidden geometry.**
+  - Rods and stakes buried in the coat are deleted. Rods are kept only in the patches, plus 7 cm under their margins and about 3.5 cm (the bottom row) under the foot. `HUT_wattle_rods` went from 404k to about 80k tris, about half of it the door rope panels.
+  - The post flanks buried in the coat and the post backs are culled (`post_cull`). The two door-bay wall posts are kept whole on their door side.
+  - The plinth tops under the daub foot are culled (`plinth_under_coat` / `cull_object`).
+- **Producer note 10.**
+  - Deleted: `HUT_ground_apron`, all path flags, ground rubble and the earth mound, drip trench and bank, with their code (`build_apron`, `build_rubble`, `_mound`, `_path_mound`, `apron_phi`, flag lips).
+  - The building stands on a flat Z = 0 datum. Footing, pads, step and threshold keep a buried skirt of at most 4 cm (`GROUND_SKIRT`).
+  - Kept: plinth and chinking, door-post pads, cheek packing stones, threshold slabs and sill, and the built-in step (`HUT_step_stone`).
+  - The pad stones now have near-upright sides (batter 5-13°), so no flared foot shows on bare ground.
+- **Unchanged from round 5:** door rope side panels (they read as intentional framing, so they are kept), entrance timber (stroke-aligned adze), plinth stones, roof, apex.
+- **Known gaps:**
+  - A few plinth stones show small stair-stepped flake-scar edges at about 1 m (pre-existing `stone_skin`).
+  - Crack groove lips can zigzag slightly at under 1 m.
+  - The drying-check crease on the left door post from round 5 is still there.
+  - Moss cushions are not modelled.

@@ -839,3 +839,41 @@ None of these breaks the silhouette, but a production designer would flag each o
 ## CLIENT CORRECTION — producer note 10
 
 Delete all loose ground stones, rubble scatter, path flags, stepping stones and ground aprons that are not part of the building. Do not score them. See producer note 10 in the art bible.
+
+## Round 6 — builder entry
+
+**Renders:** renders/tower_windmill/round_06 (all six views, 32 samples, plus stats.json and hidden.json). Builder close-ups are in round_06/builder_extra (c_prop_feet, c_prop_foot0, c_door, c_door_in, c_step, c_wheel).
+**Stats:**
+- 1,212,256 tris across 211 objects; bbox 10.77 x 9.13 x 16.21 m; .blend 30.3 MB.
+- **10 palette slots** (M_rubble has dropped out with the rubble). **est_hidden_pct 14.4**, and mask_attribute_missing is empty.
+- Every mesh reports 0 slivers with altitude < 0.1 mm and 0 polygons with area < 1e-8 m².
+- The clearance check passes. The kit variant (MILL_KIT_VARIANT=1) still builds: 909k tris, clearance PASS.
+
+**Verified from the interrupted earlier session (already in the script):**
+- `nanite_clean` runs on every mesh (bmesh remove_doubles + dissolve_degenerate), with the altitude and area test.
+- Jamb, arcade and pier spalls are cut as 3-plane conchoidal scoops clamped never to push outward.
+- `arcade_piers` lays coursed long-and-short blocks matched to the spandrel courses, with a different layout per pier.
+- The footing joints take 0-2 irregular wedge pinners each, and the footing stones have flat beds.
+
+**Producer note 10 (client):**
+- **Deleted:**
+  - all ground rubble clusters, the shared soil collars, the path flags and their gravel chips;
+  - the soil fillets and pebbles round the prop pads;
+  - the code that existed only for them (`settled_stones`, `soil_collar`, `path_flags`, `cluster_collar`, `hull_sdist`, and the gravel and ground_big styles).
+- **Kept:** the door step, which is built against the footing under the threshold. It is now its own component, `door_step` → MILL_door_step, with:
+  - a split front of 2-3 planar facets that meet on a soft kink;
+  - 1-2 crisp spalls and ±5 mm top undulation;
+  - a 3 cm buried skirt and no soil fillet.
+- The pads, chocks and dogs stay as part of the props.
+
+**Prop feet (audit item):**
+- **Chock:** a hewn wedge whose top is 2-3 cm narrower than its base, with a heel taper of 3-5 cm and adze facets 6-12 mm deep. The notch is cut to the chock's footprint +3 mm and packed with soil, so there is no dark slot.
+- **Dogs:** flat bars lying on the pole, with a gap of 2 mm or less.
+- **Pole checks:** they taper in both width and depth, are 0.3-0.8 m long with no two lengths alike, and drift about ±5° across the check columns. The foot checks sit within the bottom 1.2 m. Each butt also has one radial end-grain split, 2.5-3.5 cm deep and closing over 0.15-0.25 m.
+
+**Secondary:**
+- **Interior depth:** a worn oak floor sill now runs across the inner end of the passage, as the visible floor edge. A ladder (2 stiles, 10 rungs, 72° lean) has its foot 1.30 m inside the door face, right of the leaf. It reads through the gap of the ajar door (c_door, c_door_in, actor_closeup).
+- **Wheel blades:** the board gap is now 5 mm, with a thinner edge rounding, so it reads as about 0.5-1 cm. The blades read as solid paddles (c_wheel, front).
+
+**Not done (time-box):** the cap-shingle width jitter and the course-to-course joint break.
+**Known gap:** without its soil fillet, each prop pad shows its own split side 4-5 cm above Z = 0, and its slightly wider lower body reads as a low ledge from close up. It will sit into the Unreal terrain.

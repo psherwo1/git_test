@@ -2982,7 +2982,7 @@ def door_step(part, rng, cx, cy, Lf, Wf, ztop):
     bat = np.zeros(mm)
     for q in range(int(sid.max()) + 1):
         bat[sid == q] = rng.uniform(0.004, 0.016)
-    bat = circ_smooth(circ_smooth(bat, 3), 3)        # facets meet on a kink, never a crack
+    bat = circ_smooth(circ_smooth(circ_smooth(bat, 7), 7), 5)   # facets meet on a soft kink, never a crack
     jag *= 1 - circ_smooth((sid >= 0).astype(float))
     zmid = ztf - dz_ar - rng.uniform(0.008, 0.015)
     fmid = np.clip((ztf - dz_ar - zmid) / np.maximum(ztf - dz_ar + 0.03, 0.01), 0, 1)

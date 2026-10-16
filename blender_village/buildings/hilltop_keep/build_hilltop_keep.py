@@ -213,6 +213,54 @@ def write_mask(me, seed=0.0, ground=True):
     me.color_attributes.default_color_name = "Mask"
 
 
+def _needle_tris(bm, h_min):
+    """faces (as BMFace) whose triangulation holds a triangle with altitude < h_min (needle / sliver)."""
+    bm.verts.index_update()
+    tris = bm.calc_loop_triangles()
+    if not tris:
+        return [], tris, np.zeros(0, bool)
+    co = np.array([v.co[:] for v in bm.verts])
+    I = np.array([[l.vert.index for l in t] for t in tris])
+    A, B, C = co[I[:, 0]], co[I[:, 1]], co[I[:, 2]]
+    ar2 = np.linalg.norm(np.cross(B - A, C - A), axis=1)
+    L = np.max(np.stack([np.linalg.norm(B - A, axis=1), np.linalg.norm(C - B, axis=1),
+                         np.linalg.norm(A - C, axis=1)]), axis=0)
+    bad = ar2 / np.maximum(L, 1e-12) < h_min
+    return list({tris[i][0].face for i in np.flatnonzero(bad)}), tris, bad
+
+
+def fix_needles(bm, h_min=1e-4, iters=5):
+    """Nanite hygiene (round 6): no needle triangles. Bad n-gons are re-triangulated (beauty); remaining slivers
+    lose their short edge (< 1 mm, collapsed) or get their long edge flipped against the neighbour; whatever is
+    still a sliver after that is deleted (it is < 0.1 mm wide)."""
+    for it in range(iters):
+        bad_f, tris, bad = _needle_tris(bm, h_min)
+        if not bad_f:
+            return
+        ngon = [f for f in bad_f if len(f.verts) > 3]
+        if ngon:
+            bmesh.ops.triangulate(bm, faces=ngon, quad_method="BEAUTY", ngon_method="BEAUTY")
+            bad_f, tris, bad = _needle_tris(bm, h_min)
+            if not bad_f:
+                return
+        if it == iters - 1:
+            bmesh.ops.delete(bm, geom=[f for f in bad_f if f.is_valid], context="FACES")
+            return
+        short, longe = set(), set()
+        for f in bad_f:
+            if len(f.verts) != 3:
+                continue
+            es = sorted(f.edges, key=lambda e: e.calc_length())
+            if es[0].calc_length() < 1e-3:
+                short.add(es[0])
+            elif es[-1].is_manifold:
+                longe.add(es[-1])
+        if longe:
+            bmesh.ops.rotate_edges(bm, edges=[e for e in longe if e.is_valid and e not in short], use_ccw=False)
+        if short:
+            bmesh.ops.collapse(bm, edges=[e for e in short if e.is_valid], uvs=True)
+
+
 def clean_mesh(me, clip_z=CLIP_Z, recalc=True):
     """hygiene: clip at -5 cm, merge by distance (0.1 mm), dissolve degenerates, delete remaining zero-area faces."""
     bm = bmesh.new()
@@ -226,6 +274,7 @@ def clean_mesh(me, clip_z=CLIP_Z, recalc=True):
             bmesh.ops.delete(bm, geom=flat, context="FACES")
     bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-4)
     bmesh.ops.dissolve_degenerate(bm, edges=bm.edges, dist=1e-4)
+    fix_needles(bm)
     zero = [f for f in bm.faces if f.calc_area() < 5e-8]
     if zero:
         bmesh.ops.delete(bm, geom=zero, context="FACES")
@@ -237,6 +286,41 @@ def clean_mesh(me, clip_z=CLIP_Z, recalc=True):
     bm.to_mesh(me)
     bm.free()
     me.update()
+    # the mesh tessellation can differ from the bmesh one on n-gons: triangulate any polygon whose mesh
+    # triangulation still holds a needle, then fix again
+    for _ in range(2):
+        bad_p = mesh_needle_polys(me)
+        if not len(bad_p):
+            break
+        bm = bmesh.new()
+        bm.from_mesh(me)
+        bm.faces.ensure_lookup_table()
+        bmesh.ops.triangulate(bm, faces=[bm.faces[int(i)] for i in bad_p], quad_method="BEAUTY",
+                              ngon_method="BEAUTY")
+        fix_needles(bm)
+        bm.to_mesh(me)
+        bm.free()
+        me.update()
+
+
+def mesh_needle_polys(me, h_min=1e-4):
+    me.calc_loop_triangles()
+    n = len(me.loop_triangles)
+    if n == 0:
+        return np.zeros(0, int)
+    t = np.zeros(n * 3, np.int64)
+    me.loop_triangles.foreach_get("vertices", t)
+    t = t.reshape(-1, 3)
+    pi = np.zeros(n, np.int64)
+    me.loop_triangles.foreach_get("polygon_index", pi)
+    co = np.zeros(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    A, B, C = co[t[:, 0]], co[t[:, 1]], co[t[:, 2]]
+    ar2 = np.linalg.norm(np.cross(B - A, C - A), axis=1)
+    L = np.max(np.stack([np.linalg.norm(B - A, axis=1), np.linalg.norm(C - B, axis=1),
+                         np.linalg.norm(A - C, axis=1)]), axis=0)
+    return np.unique(pi[ar2 / np.maximum(L, 1e-12) < h_min])
 
 
 def build_mesh(acc, smooth_deg=38.0, recalc=True, clip_z=CLIP_Z, mask_seed=None, mask_ground=True):
@@ -1225,12 +1309,12 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
             c0 = (rng.uniform(-0.25, 0.25) if ip == 0 else rng.uniform(0.3, 0.6)) * ext
             ang = rng.uniform(5.0, 12.0) if ip == 0 else rng.uniform(8.0, 15.0)
             if _g(S, "footx", i) > 0.5:
-                ang = rng.uniform(9.0, 16.0)
+                ang = rng.uniform(13.0, 22.0)
             planes.append((dvec, c0, math.tan(math.radians(ang))))
         maxdep = sum(t * max(0.0, np.abs(poly @ d).max() - c) for d, c, t in planes)
-        if fx and maxdep > 0.7 * f + 0.02:
+        if fx and maxdep > 1.0 * f + 0.045:
             # footing: keep every split plane inside the projection (never flattened back onto front_min)
-            sc_ = (0.7 * f + 0.02) / maxdep
+            sc_ = (1.0 * f + 0.045) / maxdep
             planes = [(d, c, t * sc_) for d, c, t in planes]
             maxdep *= sc_
         f_eff = f + (min(0.5 * maxdep, 0.05) if fx else min(0.55 * maxdep, 0.03))
@@ -1254,14 +1338,15 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
             tilt = _g(S, "tiltx", i) * x / max(hx, 1e-3) + _g(S, "tilty", i) * y / max(hy, 1e-3)
             # low-frequency face undulation only: the coarse ring topology must not show 'spokes'
             nz = fbm(np.stack([x * 7.0 + sd, y * 7.0, np.full(len(x), sd * 0.37)], -1), 2)
+            lump = 0.0
             if fx:
-                # footing: broad 1-1.5 cm lumps and hollows (weathered field stone), plus the shoulder rolling off
-                nz = nz + 1.8 * fbm(np.stack([x * 3.2 + sd * 1.7, y * 3.2, np.full(len(x), sd * 0.11)], -1), 2)
+                # footing: broad +-1.5-2 cm lumps and hollows (weathered field stone, absolute amplitude)
+                lump = 0.03 * fbm(np.stack([x * 5.0 + sd * 1.7, y * 5.0, np.full(len(x), sd * 0.11)], -1), 2)
             fac = np.zeros(len(x))
             for dvec, c0, tn in planes:
                 fac -= tn * np.maximum(xy @ dvec - c0, 0.0)
             # two small chisel facets near the edge
-            return pil + tilt + noise_amp * rough * nz + fac
+            return pil + tilt + noise_amp * rough * nz + fac + lump
         # chisel facets & chips (shared between rings via position)
         chis = [(np.array([math.cos(a_), math.sin(a_)]), rng.uniform(0.55, 0.85), rng.uniform(0.004, 0.012))
                 for a_ in rng.uniform(0, 2 * np.pi, 2)]
@@ -4263,7 +4348,7 @@ def rib_stations(L, rng, sp=(0.01, 0.04), dep=(0.003, 0.015)):
 
 
 def d_roll(acc, path, prof, vis, seed, rng, up=(0.0, 0.0, 1.0), var=0.03, sp=(0.01, 0.04), dep=(0.003, 0.015),
-           taper=(0.0, 0.0), mat="M_thatch", z_wave=0.012, tmin=(0.45, 0.45), drop_hidden=False):
+           taper=(0.0, 0.0), mat="M_thatch", z_wave=0.012, tmin=(0.45, 0.45), drop_hidden=False, keep_back_fn=None):
     """sweep a (D / dome) section along a path with irregular strand ribs (no regular binding), +-var section
     swelling over 0.5-1 m, and optional rounded tapers at the ends (taper lengths in m)."""
     path = np.asarray(path, float)
@@ -4300,6 +4385,11 @@ def d_roll(acc, path, prof, vis, seed, rng, up=(0.0, 0.0, 1.0), var=0.03, sp=(0.
         m_ = len(prof)
         jj = np.tile(np.arange(m_), len(st) - 1)
         hid = (vis[jj] < 0.5) & (vis[(jj + 1) % m_] < 0.5)
+        if keep_back_fn is not None:
+            # round 6: keep the roll's back where nothing else closes it (e.g. at the turret, where the core and
+            # the turret stones are both cut away): no view into the open roll section
+            kb = np.asarray(keep_back_fn(P), bool)
+            hid &= ~np.repeat(kb[:-1] | kb[1:], m_)
         F = [F[0][~hid]] + list(F[1:])
     acc.add(V, F, mat)
     return P
@@ -4772,9 +4862,13 @@ def build_wing_roof(coll, seed=3):
     global EAVE_RUNS
     EAVE_RUNS = []
     for r_ in runs_of(path, ok, min_len=4):
-        tp = (0.0, 0.0)
+        # round 6: a run end that dies into the turret tapers (rounded, 0.45 m) instead of stopping as a cut section
+        r_a = np.asarray(r_, float)
+        near_t = tur_dist(r_a[[0, -1], 0], r_a[[0, -1], 1], r_a[[0, -1], 2] + 0.3) < 0.6
+        tp = (0.45 if near_t[0] else 0.0, 0.45 if near_t[1] else 0.0)
         EAVE_RUNS.append(d_roll(acc, r_, ROLL_P, ROLL_VIS, 5 + len(r_), rng, var=0.03, taper=tp, tmin=(0.3, 0.3),
-                                drop_hidden=True, sp=(0.022, 0.05)))
+                                drop_hidden=True, sp=(0.022, 0.05),
+                                keep_back_fn=lambda P_: tur_dist(P_[:, 0], P_[:, 1], P_[:, 2]) < 1.3))
     nt = 0
     for P in EAVE_RUNS:
         if P is not None:
