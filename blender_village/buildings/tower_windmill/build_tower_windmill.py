@@ -1962,23 +1962,110 @@ def build_ground(parts):
     R = euler(rng.normal(0, 0.1, N), rng.normal(0, 0.1, N), rng.uniform(0, 2 * PI, N))
     W = xform(P, R, np.stack([pts[:, 0], pts[:, 1], H * rng.uniform(0.05, 0.3, N)], 1))
     P_r.add(W, T, Pl=P, mat="M_rubble", smooth="all")
-    # worn path flags and the step stone in front of the door
-    # (x, y, length, width, top z, thickness): 8-12 cm slabs sunk 3-5 cm, worn soft edges
-    fl = [(0.0, -2.95, 1.25, 0.6, 0.075, 0.12), (0.15, -3.62, 0.95, 0.62, 0.062, 0.10),
-          (-0.2, -4.3, 0.85, 0.6, 0.055, 0.095), (0.45, -4.85, 0.6, 0.45, 0.048, 0.085)]
-    fl = np.array(fl)
-    N = len(fl)
-    P, T = stone_local(rng, fl[:, 2], fl[:, 3], fl[:, 5], "flag", rot_deg=(0.5, 0.5, 4))
-    # worn: the top edge rounds over more than the bottom
-    topf = np.clip((P[:, :, 1] + 0.03) / 0.03, 0, 1)
-    ux = np.abs(P[:, :, 0]) / (fl[:, 2:3] / 2)
-    uz = np.abs(P[:, :, 2]) / (fl[:, 3:4] / 2)
-    P[:, :, 1] -= 0.012 * topf * np.clip((np.maximum(ux, uz) - 0.82) / 0.18, 0, 1) ** 2
-    # wear: dish the top centre of the step
-    P[:, :, 1] -= 0.008 * np.exp(-(P[:, :, 0] / 0.3) ** 2 - (P[:, :, 2] / 0.2) ** 2) * (P[:, :, 1] > -0.02)
-    Rm = frame_mats(np.repeat([[1.0, 0, 0]], N, 0), np.repeat([[0, 0, 1.0]], N, 0), np.repeat([[0, -1.0, 0]], N, 0))
-    W = xform(P, Rm, np.stack([fl[:, 0], fl[:, 1], fl[:, 4]], 1))
-    P_r.add(W, T, Pl=P, mat="M_stone", smooth="all")
+    # worn path flags and the step stone in front of the door: irregular 5-7 sided slabs (+-4 cm), 1-2 straight
+    # broken edges, undulating tops (+-1 cm), 2-3 edge chips each, set in a ring of half-buried gravel; the
+    # step's front arris is worn into a 2-3 cm hollow at the centre
+    rf = RNG("path_flags")
+    fl = [(0.0, -2.95, 1.25, 0.60, 0.075, 0.12), (0.15, -3.62, 0.95, 0.62, 0.062, 0.10),
+          (-0.2, -4.30, 0.85, 0.60, 0.055, 0.095), (0.45, -4.85, 0.60, 0.45, 0.048, 0.085)]
+    m = 56
+    prof_f = [0.3, 0.6, 0.82, 0.93, 0.985, 1.0, 1.0, 0.97]
+    gravel = []
+    for fi_, (cx, cy, Lf, Wf, ztop, thk) in enumerate(fl):
+        # rectangle with jittered corners (+-4 cm), 1-3 corners knocked off by straight broken edges -> 5-7 sides
+        rc = np.array([[Lf / 2, Wf / 2], [-Lf / 2, Wf / 2], [-Lf / 2, -Wf / 2], [Lf / 2, -Wf / 2]])
+        rc = rc + rf.uniform(-0.04, 0.04, (4, 2))
+        ncut = int(rf.integers(1, 4))
+        cutc = set(int(v) for v in rf.choice(4, ncut, replace=False))
+        corners, straight = [], set()
+        for j in range(4):
+            c0, cp, cn = rc[j], rc[j - 1], rc[(j + 1) % 4]
+            if j in cutc:
+                a_ = rf.uniform(0.08, 0.2)
+                b_ = rf.uniform(0.08, 0.2)
+                corners.append(c0 + (cp - c0) / np.linalg.norm(cp - c0) * a_)
+                straight.add(len(corners) - 1)
+                corners.append(c0 + (cn - c0) / np.linalg.norm(cn - c0) * b_)
+            else:
+                corners.append(c0)
+        corners = np.array(corners)
+        nside = len(corners)
+        if rf.random() < 0.6:          # one long side broken straight as well
+            straight.add(int(rf.integers(0, nside)))
+        # resample the polygon by arc length; non-broken edges wander +-1 cm
+        segs = [np.linalg.norm(corners[(j + 1) % nside] - corners[j]) for j in range(nside)]
+        tot = sum(segs)
+        pts = []
+        for j in range(nside):
+            nseg = max(2, int(round(m * segs[j] / tot)))
+            a, b = corners[j], corners[(j + 1) % nside]
+            nrm_e = np.array([b[1] - a[1], a[0] - b[0]]) / max(segs[j], 1e-6)
+            for q in range(nseg):
+                u = q / nseg
+                wob = 0.0 if j in straight else 0.01 * math.sin(u * PI) * math.sin(u * 7 + j) + \
+                    rf.uniform(-0.004, 0.004) * math.sin(u * PI)
+                pts.append(a + (b - a) * u + nrm_e * wob)
+        O = np.array(pts)
+        mm = len(O)
+        rings = []
+        for k, f in enumerate(prof_f):
+            xy = O * f
+            if k <= 4:
+                z = ztop - (0.0 if f < 0.95 else (0.003 if k == 4 else 0.0))
+                if k == 4:
+                    z = ztop - 0.004
+            elif k == 5:
+                z = ztop - 0.016
+            elif k == 6:
+                z = ztop - thk + 0.012
+            else:
+                z = ztop - thk
+            zz = np.full(mm, z)
+            rings.append(np.stack([xy[:, 0], xy[:, 1], zz], 1))
+        Pf = np.array(rings)                                    # (rings, mm, 3) local around (cx, cy)
+        topm = np.arange(len(prof_f)) <= 4
+        # top undulation (+-1 cm) and a rounded-over top arris
+        un = 0.008 * np.sin(Pf[..., 0] * 5.1 + fi_) * np.sin(Pf[..., 1] * 6.3 + 2 * fi_) + \
+            0.004 * np.sin(Pf[..., 0] * 11 - Pf[..., 1] * 9 + fi_)
+        Pf[..., 2] += un * topm[:, None]
+        # 2-3 edge chips
+        for _ in range(int(rf.integers(2, 4))):
+            j0 = int(rf.integers(0, mm))
+            dj = np.abs((np.arange(mm) - j0 + mm // 2) % mm - mm // 2)
+            w_ = np.clip(1 - dj / rf.uniform(2.0, 3.5), 0, 1)
+            dep = rf.uniform(0.015, 0.028)
+            for k in (3, 4, 5):
+                Pf[k, :, 2] -= w_ * dep * (0.35 if k == 3 else 1.0)
+                Pf[k, :, :2] *= (1 - w_ * (0.02 if k >= 4 else 0.0))[:, None]
+        if fi_ == 0:
+            # the step's front arris (toward -Y) worn into a hollow at the centre
+            front = np.clip(-Pf[..., 1] / (Wf / 2), 0, 1) ** 3
+            hol = 0.026 * np.exp(-(Pf[..., 0] / 0.2) ** 2) * front
+            Pf[..., 2] -= hol * (np.arange(len(prof_f)) <= 5)[:, None]
+        Pf[..., 0] += cx
+        Pf[..., 1] += cy
+        V = Pf.reshape(1, -1, 3)
+        Tf = tmpl_rings(len(prof_f), mm, cap0=True, cap1=True)
+        V = add_caps(V, Tf)
+        Tf = orient(Tf, V[0])
+        P_r.add(V, Tf, mat="M_stone", smooth="bevel")
+        # gravel / small stones half-buried round the flag
+        ng = int(rf.integers(9, 15))
+        jj = rf.integers(0, mm, ng)
+        out = O[jj] / np.linalg.norm(O[jj], axis=1, keepdims=True)
+        gp = O[jj] + out * rf.uniform(0.03, 0.07, ng)[:, None] + np.array([cx, cy])
+        gravel.append(gp)
+    gp = np.concatenate(gravel)
+    gp = gp[np.hypot(gp[:, 0], gp[:, 1]) > R_BASE0 + 0.08]
+    Ng = len(gp)
+    sz = np.exp(rf.uniform(np.log(0.03), np.log(0.08), Ng))
+    Pg, Tg = stone_local(rf, sz * rf.uniform(1.0, 1.4, Ng), sz * rf.uniform(0.6, 0.9, Ng), sz * rf.uniform(0.7, 1.0, Ng),
+                         "boulder", rot_deg=(10, 10, 15))
+    Pg[:, :, 1] += (sz * 0.45)[:, None]
+    Rg = euler(rf.normal(0, 0.2, Ng), rf.normal(0, 0.2, Ng), rf.uniform(0, 2 * PI, Ng))
+    P_r.add(xform(Pg, Rg, np.stack([gp[:, 0], gp[:, 1], sz * rf.uniform(-0.1, 0.15, Ng)], 1)), Tg, Pl=Pg,
+            mat="M_rubble", smooth="all")
+    log("path flags %d, gravel %d" % (len(fl), Ng))
     log("ground rubble", len(pts))
 
 
@@ -2085,7 +2172,7 @@ def build_buttress(parts):
         top = np.clip((P[:, :, 1] + 0.03) / 0.03, 0, 1)            # 1 on the top face (local y = 0)
         # dished, weathered top (+-1 cm) - zero at the ends so joints stay flush
         P[:, :, 1] -= top * (0.008 * np.clip(1 - ux ** 2, 0, 1) * np.clip(1 - 0.6 * uz ** 2, 0, 1)
-                             + 0.002 * noise_field(np.stack([ux, uz, ux * uz], -1), rng)[..., None][..., 0] *
+                             + 0.004 * noise_field(np.stack([ux, uz, ux * uz], -1), rng)[..., None][..., 0] *
                              np.clip(1 - ux ** 2, 0, 1))
         # the long top arrises are worn round (upper edges more than lower)
         P[:, :, 1] -= top * 0.014 * np.clip((np.abs(uz) - 0.82) / 0.18, 0, 1) ** 2
@@ -2094,8 +2181,8 @@ def build_buttress(parts):
         for _ in range(int(rng.integers(1, 3))):
             sz = rng.choice([-1, 1])
             ca = rng.uniform(-0.7, 0.7) * hx
-            hl = rng.uniform(0.04, 0.09)
-            dep = rng.uniform(0.012, 0.022)
+            hl = rng.uniform(0.06, 0.12)
+            dep = rng.uniform(0.02, 0.03)
             nrm_ = unit(np.array([0, 1.0, sz * rng.uniform(0.8, 1.3)]))
             edge = np.array([0, 0.0, sz * hz_])
             o = edge @ nrm_ - dep

@@ -1456,10 +1456,12 @@ def build_door_dressing(acc_d, op, rng):
     zb = -0.06
     hs = hs / hs.sum() * (zs - zb)
     zz = zb + np.concatenate([[0], np.cumsum(hs)])
+    jwd = {}
     for side in (-1, 1):
         for i in range(5):
             long_ = (i % 2 == 0) == (side < 0)
             wd = (0.39 if long_ else 0.27) + rng.uniform(-0.03, 0.03)
+            jwd[(side, i)] = wd
             z0_, z1_ = zz[i] + 0.006, zz[i + 1] - 0.006
             x_in = xc + side * hw
             x_out = x_in + side * wd
@@ -1474,7 +1476,8 @@ def build_door_dressing(acc_d, op, rng):
         for i in range(1, 5):
             zj = zz[i]
             x_in = xc + side * hw
-            xa, xb = sorted([x_in + side * 0.012, x_in + side * 0.40])
+            wj = min(jwd[(side, i - 1)], jwd[(side, i)]) - 0.012
+            xa, xb = sorted([x_in + side * 0.012, x_in + side * wj])
             wf_ = float(face_apo(k, x_in, zj)) - A_REF + 0.05 - 0.012
             facet_obox(JOINT_ACC, k, xa, xb, zj - 0.0095, zj + 0.0095, leaf_apo - A_REF, wf_, 0.003, "M_mortar",
                        nx=4, ny=3, nz=3)
@@ -1508,7 +1511,8 @@ def build_door_dressing(acc_d, op, rng):
     # radial joints between voussoirs: mortar wedges recessed 1.2 cm from the face and the intrados
     for i in range(1, nv):
         tj = th[i]
-        r0_, r1_ = hw + 0.012, hw + 0.36
+        r0_ = hw + 0.012
+        r1_ = min(vs[i - 1][1] + vs[i - 1][3], vs[i][1] + vs[i][3]) - 0.008
         cs, sn = math.cos(tj), math.sin(tj)
         tx, tz = -sn, cs
         wf_ = float(face_apo(k, xc + 0.5 * (r0_ + r1_) * cs, zs + 0.5 * (r0_ + r1_) * sn)) - A_REF + 0.055 - 0.012
@@ -2583,33 +2587,76 @@ def build_collar(coll):
     E = np.stack([-np.sin(thc), np.cos(thc), np.zeros(M)], 1)
     N = np.cross(E, D)
     N /= np.linalg.norm(N, axis=1, keepdims=True)
-    rr = np.full(M, 0.008)
-    X = ax5(w / 2, rr)
-    Y = axn(np.zeros(M), L, rr, 9)
-    Z = np.stack([np.zeros(M), tb - rr, tb], 1)
-    P, quads = rbox(X, Y, Z, rr, skip_back=True, round_back=False)
-    x, u, h = P[..., 0], P[..., 1], P[..., 2]
-    fu = u / L[:, None]
-    # taper toward the top (converging circumference) + wedge thickness
-    x = x * (1 - 0.22 * fu)
-    h = h * (1 - 0.5 * fu) + tb[:, None] * 0.5 * (1 - fu)
-    # blunt broken / split ends (never pointed): 0 square-broken, 1 diagonal break 20-40 deg,
-    # 2 split (notch 3-7 cm down the middle, leaving two blunt prongs >=3 cm wide), 3 ragged square break
-    tipz = np.clip((u - (L[:, None] - 0.10)) / 0.10, 0, 1)
-    xn = x / (w[:, None] / 2)
-    wl_ = w[:, None] * (1 - 0.22)
     rs = np.random.default_rng(5051)
     cang = np.radians(rs.uniform(20, 40, M)) * np.where(rs.uniform(0, 1, M) < 0.5, -1, 1)
     notch = rs.uniform(0.03, 0.07, M)
-    u = u - np.where((kind == 1)[:, None], np.tan(np.abs(cang))[:, None] * (0.5 + 0.5 * np.sign(cang)[:, None] * xn)
-                     * wl_ * tipz, 0.0)
-    u = u - np.where((kind == 2)[:, None] & (np.abs(xn) < 0.22), notch[:, None] * tipz, 0.0)
-    u = u - np.where((kind == 3)[:, None] | (kind == 0)[:, None],
-                     0.012 * tipz * np.abs(np.sin(xn * 4.0 + thc[:, None] * 30)), 0.0)
-    x = x + twist[:, None] * u * (u / L[:, None])
-    W = B[:, None, :] + u[..., None] * D[:, None, :] + x[..., None] * E[:, None, :] + h[..., None] * N[:, None, :]
-    acc.add(W.reshape(-1, 3), inst_faces(quads, M, P.shape[1]), "M_roof_shake",
-            uv=np.stack([x, u], -1).reshape(-1, 2))
+    taper = rs.uniform(0.10, 0.20, M)
+    tb = rs.uniform(0.037, 0.044, M)
+    # riven faces: 2-4 longitudinal ridges / hollows of 2-5 mm, drifting a little along the shake
+    nrid = rs.integers(2, 5, M)
+    rc = rs.uniform(-0.8, 0.8, (M, 4))
+    ra = rs.uniform(0.002, 0.005, (M, 4)) * np.where(rs.uniform(0, 1, (M, 4)) < 0.3, -1, 1)
+    rsig = rs.uniform(0.12, 0.25, (M, 4))
+    # 5-8 % of the shakes are split down 20-40 % of their length (built as two halves that open at the top)
+    split = (rs.uniform(0, 1, M) < 0.065) & (layer > 0.5)
+    sl = rs.uniform(0.2, 0.4, M)
+
+    def build(sel, ncol, halves=0):
+        idx = np.flatnonzero(sel)
+        if len(idx) == 0:
+            return 0
+        Mi = len(idx)
+        wi = w[idx] if halves == 0 else w[idx] * 0.5 - 0.002
+        rr = np.full(Mi, 0.0095)
+        X = axn(-wi / 2, wi / 2, rr, ncol)
+        Y = axn(np.zeros(Mi), L[idx], rr, 9)
+        Z = np.stack([np.zeros(Mi), tb[idx] - rr, tb[idx]], 1)
+        P, quads = rbox(X, Y, Z, rr, skip_back=True, round_back=False)
+        x, u, h = P[..., 0], P[..., 1], P[..., 2]
+        Li = L[idx][:, None]
+        fu = u / Li
+        # full-shake lateral coordinate (for ridges / taper) even for split halves
+        xc_off = 0.0 if halves == 0 else (halves * (w[idx] * 0.25))[:, None]
+        xf = x + xc_off
+        xn_full = xf / (w[idx][:, None] / 2)
+        # thickness 4 -> 2 cm along the shake (wedge-riven), riven ridges on the face
+        h = h * (1 - 0.5 * fu)
+        rid = np.zeros_like(h)
+        for k_ in range(4):
+            on = (k_ < nrid[idx])[:, None]
+            c_ = rc[idx, k_][:, None] + 0.12 * np.sin(fu * 3.0 + k_ + idx[:, None])
+            rid += np.where(on, ra[idx, k_][:, None] * np.exp(-((xn_full - c_) / rsig[idx, k_][:, None]) ** 2), 0.0)
+        h = h + rid * np.clip(h / np.maximum(tb[idx][:, None] * (1 - 0.5 * fu), 1e-4), 0, 1) ** 4
+        # width taper 10-20 % toward the top, edges wave +-5 mm
+        x = xf * (1 - taper[idx][:, None] * fu)
+        edge = np.clip(np.abs(xn_full) - 0.6, 0, 1) / 0.4
+        x = x + np.sign(xf) * edge * 0.005 * n1(fu * 6.0 + idx[:, None] * 0.37 + np.sign(xf) * 3.1, 77)
+        if halves != 0:
+            # the split opens toward the top: halves splay apart and twist slightly
+            sp_ = np.clip((fu - (1 - sl[idx][:, None])) / sl[idx][:, None], 0, 1) ** 1.3
+            x = x + halves * sp_ * 0.012
+            h = h + halves * sp_ * 0.004
+        # blunt broken / split ends (never pointed)
+        tipz = np.clip((u - (Li - 0.10)) / 0.10, 0, 1)
+        xn = x / (w[idx][:, None] / 2)
+        wl_ = w[idx][:, None] * 0.82
+        k_i = kind[idx][:, None]
+        u = u - np.where(k_i == 1, np.tan(np.abs(cang[idx]))[:, None] * (0.5 + 0.5 * np.sign(cang[idx])[:, None] * xn)
+                         * wl_ * tipz, 0.0)
+        if halves == 0:
+            u = u - np.where((k_i == 2) & (np.abs(xn) < 0.22), notch[idx][:, None] * tipz, 0.0)
+        u = u - np.where((k_i == 3) | (k_i == 0), 0.012 * tipz * np.abs(np.sin(xn * 4.0 + thc[idx][:, None] * 30)), 0.0)
+        x = x + twist[idx][:, None] * u * (u / Li)
+        Wv = B[idx][:, None, :] + u[..., None] * D[idx][:, None, :] + x[..., None] * E[idx][:, None, :] + \
+            h[..., None] * N[idx][:, None, :]
+        acc.add(Wv.reshape(-1, 3), inst_faces(quads, Mi, P.shape[1]), "M_roof_shake",
+                uv=np.stack([x, u], -1).reshape(-1, 2))
+        return Mi
+    build((layer > 0.5) & ~split, 11)
+    build(layer < 0.5, 7)
+    build(split, 7, halves=-1)
+    build(split, 7, halves=1)
+    log(f"  collar shakes split: {int(split.sum())}")
     log("  collar shakes", M)
     # backing frustum + ledge to the cone
     prof = [(COLLAR_P - 0.06, 4.70), (COLLAR_TOP_R - 0.05, COLLAR_TOP_Z - 0.02), (COLLAR_TOP_R - 0.12, COLLAR_TOP_Z + 0.02),
