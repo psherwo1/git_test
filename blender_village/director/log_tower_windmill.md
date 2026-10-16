@@ -293,3 +293,128 @@ Axis scores:
 - Hidden triangles are at 15.2%, just over the 15% target. The largest remaining hidden share is base mortar (30.7%, ~21k), and the base stones and dressed stone still carry back and side faces. This is planned for round 4.
 - Moss is not modelled.
 - Diagonal rim ties have been dropped (accepted in round 2).
+
+## Round 3 — score 8/10
+
+**Reviewed:** renders/tower_windmill/round_03 (hero, front, side, back, aerial, actor_closeup, stats.json, hidden.json), plus director close-ups in renders/tower_windmill/round_03/director_extra (u01–u14, v01–v06, w01–w02). Compared side by side with ref1 and the crops mill_overall, mill_sails_wheel, mill_stone_base, style_mill_lattice_sails and style_aerial_village. Stats: 1,110,929 tris, 34 objects, bbox 12.96 x 9.05 x 16.19 m, .blend 28.0 MB, 11 material slots (all palette), **est_hidden_pct 15.2% (over the 15% limit)**. Director measurements on the .blend: sail A board panel spans r 2.51 → 5.82 m, ≈2.3 m wide at the heel → ≈2.7 m at the tip (target met). Wind-wheel gaps from area sampling: 16 clean inter-blade gaps of 0.22 m at r 2.5, 0.27 at r 3.0, 0.38 at r 3.8; no intra-blade board gap over 1.2 cm, so the wheel reads as 16 distinct paddles (target met).
+
+**Verdict:** A clear step up and now an upper 8. Every round-2 silhouette item landed:
+- Sail A is ref1's broad, near-square board paddle.
+- The wheel reads as a dense 16-blade sunflower.
+- The timber tower is tall enough (5.95 → 11.45 m) and the apron is steep enough (about 41 deg).
+- The cap is a tidy low hipped cap with continuous ridge and hip capping.
+- The rubble is now tight, coursed split stone with pinning stones.
+
+At thumbnail and mid-shot it is unmistakably ref1's mill. It is not yet a 9 for four reasons:
+- **The cap roof is see-through.** Missing shingles show a black void and battens, and sky leaks through between courses.
+- **The entrance ground still reads CG.** The path flags look like cushions sitting on the ground. The rubble looks like rounded boxes on top of the ground. The prop feet look like stacked soap bars on a melted-wax disc.
+- **The door leaf is brand-new joinery** in the actor close-up.
+- **Producer notes are not met:**
+  - hidden triangles are at 15.2% (note 6)
+  - repeated parts share no mesh data (note 3)
+  - the build code is not a parameterised kit (note 2)
+
+Axis scores:
+| Axis | Score |
+|---|---|
+| Silhouette | 9 |
+| Proportion and scale | 9 |
+| Construction | 8.5 |
+| Detail | 8 |
+| Age | 8 |
+| Technical | 7.5 |
+
+**Strengths:**
+- **Silhouette matches ref1:**
+  - stout arcaded drum, steep shake apron, tall tapering boarded smock tower and low hipped cap
+  - the 16-blade annulus with one broad board sail at 9 o'clock, plus bare stocks strapped to the rim
+  - two long near-parallel props plus a shorter one on the left, and the sloping buttress on the right
+  - the tower reads below the wheel in the front and hero views
+- **Sail A (u02, v04)** has fanned full-length radial boards, the bars hidden behind with only their ends showing, 2 nailed cleats, a ragged tip, a broken board and butt joints. It is exactly the ref read.
+- **Rubble (actor_closeup, u05, u10, v06)** is now tight, flat-bedded split stone with pinning stones, recessed and raked mortar, and varied depth and tilt. The plaster-appliqué look is gone.
+- **Cap (v01, v02)** has continuous V ridge capping, lapped bell-cast hip boards, a knob on a plinth, notched valance boards and no slivers at the hood.
+- **Timber tower (u13, back)** has staggered horizontal butt joints with drip gaps, cupped and loose boards, split ends, rails with drip boards and a propped hatch.
+- **Base band (u14)** has varied stubby balusters (eroded and plain blocks), irregular voussoirs, rubble-backed tall arcade recesses and a dentil cornice, matching mill_stone_base.
+- **Rotor hardware (u03, w02)** has hewn stocks with iron bands, a bolted poll end, U-clamps and riveted rings. Clearances pass, with the lowest rotating point at 8.43 m.
+- **Technical:** an 11-slot palette, deterministic 12 s build, 1.11 M tris and a 28 MB file.
+
+**MUST-FIX (priority order):**
+1. **Cap roof is see-through (v02, w01, w02).**
+   - At least 2 "missing" shingles on the +X roof face open onto a black void with battens visible behind. One is mid-face about 0.45 m above the eave, the other about 0.3 m below the ridge.
+   - Thin sky-coloured slits show between courses all over the cap.
+   - Cause: culling covered shingle heads left nothing under the gaps.
+   - Fix: lay a continuous sarking deck under every cap face, hip and hood: boards 2 cm thick and 15–25 cm wide, top face plus eave and verge edges only. Alternatively, put a full shingle of the course below under every missing or slipped shingle.
+   - Also trim the shingle and hip-board shards that stick 5–10 cm past the hip-board ends at the eave corners (v02 lower right and lower left). Nothing may project more than 2 cm beyond the hip capping or the eave line.
+   - Acceptance: zero black or sky pixels inside the roof outline from any exterior camera, checked at camera (9, 1.5, 12.5) → (0, 0, 12.2) at 70 mm and from the rear (−3.5, 5.5, 14.5).
+2. **Path flags and step read as cushions on the ground (u11, actor_closeup).**
+   - The flag tops sit 4.8–6.2 cm above the ground (fl z = 0.048–0.062). The full vertical sides are exposed and cast shadows, and the top arris is a continuous 1.6 cm roll.
+   - Fix:
+     - Set the flag tops 1.0–2.5 cm proud on the high side and 0–1 cm on the low side (tilt 0.5–1 deg). Keep the step at its current height (riser OK).
+     - Replace the continuous roll with a 0.5–1.0 cm arris broken by the existing chips plus 1–2 crisp straight fracture edges per flag.
+     - Add an `M_earth` soil fillet 3–6 cm wide around every flag edge, rising to the flag top.
+     - Move the gravel (currently loose "sugar cubes" on top at the flag edges) into the joints between flags. Bury 40–70% of each stone, so that at least half sit 1 cm proud or less.
+3. **Ground rubble and prop feet look placed, not settled (v03, u06, hero).**
+   - (a) **Ground rubble.** The "boulder" pieces are rounded boxes buried only 20–45% (z centre = H·0.05–0.3).
+     - Bury 45–65% of their height.
+     - Switch them to the split-stone style used on the drum: 3–4 fracture planes and 0.8–1.5 cm arrises.
+     - Give each cluster a soil collar 2–4 cm high.
+   - (b) **Prop feet.** The chock, the slab under it and the two cheeks read as 3–4 stacked soap bars, and the soil lip is a flat plate of constant thickness with a wavy outline (melted wax).
+     - Make the chock one hewn block using hewn_beam (adze facets ±5 mm, 1.5–2.5 cm worn chamfers, an end check).
+     - Drop the intermediate slab, so the chock sits directly in a notch cut into the rough stone pad.
+     - Model the soil lip as a mound that is 3–5 cm high at the pad and tapers to 0 at an irregular outer edge 0.25–0.4 m out, with 3–6 embedded pebbles.
+4. **Door leaf is pristine in the actor close-up (u04, v06).** It has 6 planks of identical 4.2 cm thickness with 6 mm arrises, a dead-straight bottom end at Z_TH + 0.01, no checks and no wear. Per art bible §4:
+   - Wear the outer arrises to 1.5–2.5 cm, with more wear at the bottom 0.4 m and on the lock stile.
+   - Make the bottom end ragged and rotted (±2–4 cm), with 1–2 planks 3–5 cm short.
+   - Add 2–3 face checks (3–5 mm wide, 0.3–0.9 m long) and 1 split at the arched head.
+   - Vary plank proudness ±3 mm and the gaps 4–10 mm.
+   - Let the free edge sag 5–8 mm.
+5. **Apron eave fascia is one perfect smooth ring (u12, actor_closeup top edge, hero).** Bent timber cannot do this; it reads as a plastic rim.
+   - Rebuild it as 14–18 straight fascia boards (0.9–1.3 m chords, 2.5–3.5 cm thick, 14–18 cm deep) with butt joints, 3–6 mm gaps and ends cut to the polygon.
+   - Vary each board ±5 mm in height and ±3 mm out of plane, and wear the lower arris.
+   - Add a low-frequency eave wave of ±2–3 cm (art bible §6).
+   - The smooth plain ring at the apron top or tower foot (u12 top) gets the same treatment: one flashing board per octagon face, with lapped ends.
+6. **Producer note 6: hidden triangles at 15.2% (must be ≤ 15%; aim for ≤ 13% so the round-4 additions fit).** Main offenders, from hidden.json:
+   - MILL_base_mortar: 31% hidden, ≈20k. Delete the mortar body behind full stone cover and keep only a 2–3 cm skirt around each joint.
+   - MILL_base_stones: 13.5%, ≈59k. Cut the buried side faces below the mortar recess depth + 5 mm.
+   - MILL_buttress_stones: 16%, ≈22k. Same fix as the base stones.
+   - MILL_base_dressed: 16%, ≈15k. Remove the baluster, corbel and voussoir faces against the wall or band.
+   - MILL_cap_shingles: 23%, ≈11k. Cull covered heads once the sarking from item 1 is in.
+   - MILL_tower_boards: 26%, ≈7k. Remove the back faces against the frame.
+   - MILL_cap_iron: 39%. The truck wheels are invisible inside the valance; keep only what shows below its lip.
+   Do not cut anything on a silhouette or a visible edge.
+7. **Eye-level rubble arrises are uniform (u05).** Every rubble and pinning stone has the same continuous chamfer band all round its face, which reads as a moulded lip at 1–2 m.
+   - Vary the arris per edge between 0.3 and 1.5 cm, with 1–2 crisp (≤ 3 mm) broken edges per stone.
+   - Add a shallow conchoidal facet or step (3–8 mm) on 30% of the faces in the bottom 2.2 m of the drum and on the buttress sides.
+8. **Producer note 3: repeated parts share no mesh data.** Everything is unique geometry merged into large meshes; MILL_base_stones alone is 437k tris.
+   - Build variant pools and place them as linked-duplicate mesh objects (shared mesh data):
+     - balusters: 61 placements from 8 variants, including the eroded and plain-block ones
+     - dentil corbels: 6 variants
+     - cap truck wheels: 1 mesh
+     - hex bolt heads and ring-rivets: one pool of about 6 for the rotor, merged per component if the object count would pass about 250
+   - Keep the per-placement jitter in the object transform (rotation ±, lean).
+   - Report in the log: object count, unique-mesh count and shared-mesh count.
+9. **Producer note 2: the build code is not a modular kit.**
+   - Today the components are `build_base(parts)`, `build_cap(parts)` and so on, reading module constants (R_out, ARCH, DZ, AP_*, TW_*, CAP_*, HUB_*).
+   - Expose parameterised component functions, each producing its own named object(s):
+     - `round_stone_drum(r_base, r_top, height, zones, seed)`
+     - `blind_arcade(n, clear_w, clear_h, z_sill, seed)`
+     - `arched_door(width, height, reveal, seed)`
+     - `shake_apron(r_eave, z_eave, r_top, z_top, courses, seed)`
+     - `smock_tower(af_bottom, af_top, z0, z1, rails, seed)`
+     - `mill_cap(length, width, rise, ridge_len, yaw, seed)`
+     - `board_sail(r0, r1, w_heel, w_tip, seed)` / `stock_arm(...)`
+     - `wind_wheel(r_in, r_rim, r_tip, n_blades, pitch, seed)`
+     - `raking_prop(foot_xy, head_xyz, dia, seed)`
+   - `main()` only calls them with this mill's numbers.
+   - Prove it works: build a variant (drum r 2.0 m, tower 4.0 m, 12 blades) to a scratch .blend without errors, and save a hero thumbnail as renders/tower_windmill/round_04/director_extra/kit_test.png.
+   - If the round time-box (note 8) is exhausted, item 9 may slip to round 5, but it must be done before a 10.
+
+**Accepted / no action:**
+- Moss not modelled (optional by the art bible).
+- Diagonal rim ties dropped.
+- The cap reads only through the wheel eye in the front view. The rotor must physically be in front of the cap; ref1's cap-over-wheel overlap is a painterly cheat.
+
+**Nice to have:**
+- Buttress coping (u10): the dishing and spalls barely read at mid range. Deepen 2–3 spalls to 1.5–2.5 cm and break one slab end.
+- Door jamb and arcade pier blocks (u04, u14) still have softly waved outlines. Straighten the large edges and keep the wear to chips.
+- Props at mid range (v05) still read smooth. Increase the bow to 8–12 cm and make the 2 lower knots 5–7 cm.

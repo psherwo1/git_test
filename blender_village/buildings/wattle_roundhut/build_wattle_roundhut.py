@@ -49,8 +49,12 @@ MAT_COL = {
     "M_timber": (0.33, 0.24, 0.16), "M_timber_weathered": (0.42, 0.39, 0.35),
     "M_roof_shingle": (0.36, 0.38, 0.27), "M_wattle": (0.30, 0.24, 0.17), "M_daub": (0.70, 0.66, 0.58),
     "M_lead": (0.30, 0.31, 0.33), "M_iron": (0.10, 0.10, 0.11), "M_earth": (0.36, 0.31, 0.24),
-    "M_moss_clump": (0.25, 0.35, 0.15),
+    "M_moss": (0.25, 0.35, 0.15),
 }
+# producer note 7: the shared 15-slot kit palette -- nothing else may be used
+PALETTE = ("M_stone", "M_stone_dressed", "M_rubble", "M_mortar", "M_daub", "M_wattle", "M_timber",
+           "M_timber_weathered", "M_roof_shingle", "M_roof_shake", "M_thatch", "M_iron", "M_lead",
+           "M_earth", "M_moss")
 MATS = {}
 
 
@@ -164,15 +168,21 @@ def az_pt(az, r, z=0.0):
 # mesh accumulator
 # =============================================================================================
 class Acc:
-    def __init__(self, name, sharp_angle=40.0):
+    """numpy mesh accumulator. cull(V) -> bool per vertex 'never visible'; faces whose vertices are all
+    culled are dropped (producer note 6). By default everything more than 1.2 cm below the local ground
+    (apron / interior floor) is culled."""
+
+    def __init__(self, name, sharp_angle=40.0, cull="ground"):
         self.name = name
         self.V, self.UV = [], []
         self.Fidx, self.Fsz, self.Fmat, self.Fsm, self.Fwrap = [], [], [], [], []
         self.n = 0
         self.mats = []
         self.sharp_angle = sharp_angle
+        self.cull = cull
 
     def mi(self, m):
+        assert m in PALETTE, m
         if m not in self.mats:
             self.mats.append(m)
         return self.mats.index(m)
@@ -207,9 +217,9 @@ class Acc:
         self.add(part[0], part[1], mat, part[2] if len(part) > 2 else None,
                  wrap=part[3] if len(part) > 3 else False, smooth=smooth)
 
-    def build(self, coll):
+    def build_mesh(self, name=None, clamp=True):
         V = np.concatenate(self.V)
-        if self.name != "HUT_ground_apron":
+        if clamp and self.name != "HUT_ground_apron":
             V[:, 2] = np.maximum(V[:, 2], Z_MIN + 0.004)
         UVv = np.concatenate(self.UV)
         fidx = np.concatenate(self.Fidx)
@@ -217,7 +227,24 @@ class Acc:
         fmat = np.concatenate(self.Fmat)
         fsm = np.concatenate(self.Fsm)
         fwrap = np.concatenate(self.Fwrap)
-        me = bpy.data.meshes.new(self.name)
+        # ---- cull never-visible faces (all vertices culled)
+        cull = self.cull
+        if cull == "ground":
+            cull = cull_below_ground
+        if cull is not None:
+            vh = cull(V)
+            starts0 = np.concatenate([[0], np.cumsum(fsz)[:-1]])
+            allh = np.minimum.reduceat(vh[fidx].astype(np.int8), starts0).astype(bool)
+            keep = ~allh
+            if not keep.all():
+                lk = np.repeat(keep, fsz)
+                fidx, fsz, fmat, fsm, fwrap = fidx[lk], fsz[keep], fmat[keep], fsm[keep], fwrap[keep]
+        # ---- drop unused vertices
+        used = np.zeros(len(V), bool)
+        used[fidx] = True
+        remap = np.cumsum(used) - 1
+        V, UVv, fidx = V[used], UVv[used], remap[fidx]
+        me = bpy.data.meshes.new(name or self.name)
         me.vertices.add(len(V))
         me.vertices.foreach_set("co", V.astype(np.float32).ravel())
         me.loops.add(len(fidx))
@@ -256,10 +283,45 @@ class Acc:
         uvl.data.foreach_set("uv", luv.astype(np.float32).ravel())
         me.set_sharp_from_angle(angle=math.radians(self.sharp_angle))
         me.validate(clean_customdata=False)
+        return me
+
+    def build(self, coll):
+        me = self.build_mesh()
         ob = bpy.data.objects.new(self.name, me)
         coll.objects.link(ob)
-        log(f"  {self.name}: {len(V)} verts, {len(fsz)} faces")
+        log(f"  {self.name}: {len(me.vertices)} verts, {len(me.polygons)} faces")
         return ob
+
+
+# ---------------------------------------------------------------------------------------------
+# shared-mesh variant pools (producer note 3): linked duplicates of a few base meshes
+# ---------------------------------------------------------------------------------------------
+POOLS = {}
+INST_COLL = {}
+N_INST = [0]
+
+
+def pool_mesh(pool, k, make, sharp=40.0):
+    """k-th variant of a pool; make(acc, k) fills an Acc in local coords. Built once, reused."""
+    key = (pool, k)
+    if key not in POOLS:
+        acc = Acc(f"HUT_{pool}_v{k:02d}", sharp, cull=None)
+        make(acc, k)
+        POOLS[key] = acc.build_mesh(clamp=False)
+    return POOLS[key]
+
+
+def place_instance(mesh, part, R=None, t=(0, 0, 0), scale=1.0):
+    """linked duplicate (shared mesh data) placed with a rigid transform (+ uniform scale)."""
+    from mathutils import Matrix
+    M = np.eye(4)
+    M[:3, :3] = (np.eye(3) if R is None else np.asarray(R, float)) * scale
+    M[:3, 3] = t
+    N_INST[0] += 1
+    ob = bpy.data.objects.new(f"HUT_{part}_{N_INST[0]:03d}", mesh)
+    ob.matrix_world = Matrix(M.tolist())
+    INST_COLL["c"].objects.link(ob)
+    return ob
 
 
 # =============================================================================================
@@ -635,7 +697,7 @@ def frame_R(x_axis, z_hint):
 # =============================================================================================
 # global dimensions
 # =============================================================================================
-Z_MIN = -0.095               # lowest point (apron rim); everything else sits above
+Z_MIN = -0.045               # lowest point (apron outer band); nothing deeper than 5 cm (note 6)
 R_WALL = 3.50                 # wattle centre line / post centre line
 WALL_POST_AZ_DOOR = math.radians(21.0)
 N_POSTS = 14
@@ -760,6 +822,9 @@ WATTLE_TOP = PLATE_BOT
 def make_collection():
     coll = bpy.data.collections.new("HUT")
     bpy.context.scene.collection.children.link(coll)
+    sub = bpy.data.collections.new("HUT_kit_instances")      # linked duplicates of pooled parts
+    coll.children.link(sub)
+    INST_COLL["c"] = sub
     return coll
 
 
@@ -847,11 +912,17 @@ def round_post(acc, base, top, rad, rng, sides=48, check=False, n_knots=None):
 
 
 def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_faces=(0, 1, 2, 3),
-                end_checks=0, sag=0.0, adze=True, mat="M_timber", ds=0.012, ns=7, nc=6, swell=0.008):
+                end_checks=0, sag=0.0, adze=True, mat="M_timber", ds=0.013, ns=7, nc=6, swell=0.008,
+                hero=(), hidden=(), deform=None, stride=7):
     """hand-hewn squared timber along local +X (half = (L/2, a, b)); R columns = local axes in world.
-    adze facets 4-8 cm wide x 3-6 mm deep on every face, +-8 mm swell along the length, rounded
-    arrises, wane (bark-edge rounding) on chosen corners (0:+y+z 1:-y+z 2:-y-z 3:+y-z), narrow
-    drying checks on chosen faces (0:+z 1:-y 2:-z 3:+y), end-grain checks at both ends."""
+    Faces: 0:+z 1:-y 2:-z 3:+y.  Corners: 0:+y+z 1:-y+z 2:-y-z 3:+y-z.
+    * adze scallops on every face: 3-6.5 mm deep, 4-8 cm long; on `hero` faces 6-12 mm deep, 5-9 cm
+    * +-8 mm swell along the length; arris rounding varies 1.5-3 cm along the member
+    * wane (bark-edge rounding) on chosen corners that comes and goes along the length
+    * drying checks 6-10 mm wide at the mouth, tapering in width and depth, wandering +-3 mm, some
+      with a short parallel / branch check; end-grain checks at both ends
+    * `hidden` faces (against the wall / interior / under the roof) are closed with coarse quads only
+    * deform(V_local) -> V_local runs before the world transform"""
     hl, a0, b0 = (float(v) for v in half)
     L = 2 * hl
     nl = max(6, int(L / ds) + 1)
@@ -862,56 +933,52 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
     seed = rng.randint(100000)
     sw_a = a0 + swell * n2(tt * 3.0, np.full(n, 0.5), seed)
     sw_b = b0 + swell * n2(tt * 3.0, np.full(n, 2.5), seed + 1)
-    rc = np.full((n, 4), ch)
+    rc = np.zeros((n, 4))
+    for c in range(4):
+        rc[:, c] = np.clip(ch * (1.1 + 0.5 * n2(tt * 3.0 * max(1.0, L / 1.5), np.full(n, c * 1.7), seed + 9)),
+                           0.75 * ch, 1.5 * ch)
     for cw in wane:
-        rc[:, cw] = np.clip(0.045 + 0.02 * n2(tt * 4.0, np.full(n, cw * 3.1), seed + 5 + cw), 0.025, 0.065)
-    # build the profile rings: corners c0..c3, CCW in (y,z); each side has ns interior points
+        wv = smoothstep(-0.25, 0.25, n2(tt * 2.4 * max(1.0, L / 1.5), np.full(n, cw * 3.1), seed + 25 + cw))
+        wr = np.clip(0.045 + 0.02 * n2(tt * 4.0, np.full(n, cw * 3.1), seed + 5 + cw), 0.025, 0.065)
+        rc[:, cw] = rc[:, cw] * (1 - wv) + wr * wv
     M = 4 * (ns + nc)
     Y = np.zeros((n, M))
     Zp = np.zeros((n, M))
     face = np.full(M, -1)
     across = np.zeros(M)
     corner_sign = [(1, 1), (-1, 1), (-1, -1), (1, -1)]
-    for i in range(n):
-        a, b = sw_a[i], sw_b[i]
-        pts = []
-        for c in range(4):
-            sy, sz = corner_sign[c]
-            r = min(rc[i, c], a * 0.6, b * 0.6)
-            cy, cz = sy * (a - r), sz * (b - r)
-            a_start = math.atan2(0, sy) if c in (0, 2) else math.atan2(sz, 0)
-            # corner arcs CCW: c0 from +y dir (0) to +z (90); c1 from +z(90) to -y(180); etc.
-            a_beg = [0.0, 0.5 * np.pi, np.pi, 1.5 * np.pi][c]
-            arc = a_beg + np.linspace(0, 0.5 * np.pi, nc)
-            for k_ in range(nc):
-                pts.append((cy + r * math.cos(arc[k_]), cz + r * math.sin(arc[k_])))
-            # side after corner c -> corner c+1
-            cn = (c + 1) % 4
-            sy2, sz2 = corner_sign[cn]
-            r2 = min(rc[i, cn], a * 0.6, b * 0.6)
-            p_from = np.array([cy + r * math.cos(arc[-1]), cz + r * math.sin(arc[-1])])
-            p_to_c = np.array([sy2 * (a - r2), sz2 * (b - r2)])
-            a_beg2 = [0.0, 0.5 * np.pi, np.pi, 1.5 * np.pi][cn]
-            p_to = p_to_c + r2 * np.array([math.cos(a_beg2), math.sin(a_beg2)])
-            for k_ in range(ns):
-                u = (k_ + 1) / (ns + 1)
-                pts.append(tuple(p_from + (p_to - p_from) * u))
-        pts = np.array(pts)
-        Y[i] = pts[:, 0]
-        Zp[i] = pts[:, 1]
+    a_beg_l = [0.0, 0.5 * np.pi, np.pi, 1.5 * np.pi]
+    arcs = np.linspace(0, 0.5 * np.pi, nc)
     for c in range(4):
+        sy, sz = corner_sign[c]
+        cn = (c + 1) % 4
+        sy2, sz2 = corner_sign[cn]
+        r = np.minimum(rc[:, c], np.minimum(sw_a, sw_b) * 0.6)
+        r2 = np.minimum(rc[:, cn], np.minimum(sw_a, sw_b) * 0.6)
+        cy, cz = sy * (sw_a - r), sz * (sw_b - r)
+        base_j = c * (ns + nc)
+        for k_ in range(nc):
+            ang = a_beg_l[c] + arcs[k_]
+            Y[:, base_j + k_] = cy + r * math.cos(ang)
+            Zp[:, base_j + k_] = cz + r * math.sin(ang)
+        pf_y, pf_z = Y[:, base_j + nc - 1], Zp[:, base_j + nc - 1]
+        pt_y = sy2 * (sw_a - r2) + r2 * math.cos(a_beg_l[cn])
+        pt_z = sz2 * (sw_b - r2) + r2 * math.sin(a_beg_l[cn])
         for k_ in range(ns):
-            j = c * (ns + nc) + nc + k_
+            u = (k_ + 1) / (ns + 1)
+            j = base_j + nc + k_
+            Y[:, j] = pf_y + (pt_y - pf_y) * u
+            Zp[:, j] = pf_z + (pt_z - pf_z) * u
             face[j] = c
-            across[j] = (k_ + 1) / (ns + 1) * 2 - 1
-    # face outward normals in (y,z): side after c0 is the +z face, etc.
+            across[j] = u * 2 - 1
     fn = {0: (0, 1), 1: (-1, 0), 2: (0, -1), 3: (1, 0)}
     disp = np.zeros((n, M))
     if adze:
-        # adze strokes: each face is worked in 2-3 overlapping lanes; every stroke leaves a shallow
-        # scoop 4-8 cm long, 2-6 mm deep, skewed across the lane, ending in a small ridge
         for c in range(4):
+            if c in hidden:
+                continue
             js = np.where(face == c)[0]
+            hero_f = c in hero
             nlane = rng.randint(2, 4)
             edges = np.sort(np.concatenate([[-1.01, 1.01], rng.uniform(-0.5, 0.5, nlane - 1)]))
             lane_scoop_mid = np.zeros(n)
@@ -922,20 +989,24 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
                 jl = js[inl]
                 bnd = [-hl - rng.uniform(0, 0.06)]
                 while bnd[-1] < hl + 0.1:
-                    bnd.append(bnd[-1] + rng.uniform(0.04, 0.08))
+                    bnd.append(bnd[-1] + (rng.uniform(0.05, 0.09) if hero_f else rng.uniform(0.04, 0.08)))
                 bnd = np.array(bnd)
-                dep = rng.uniform(0.003, 0.0065, len(bnd)) * (rng.rand(len(bnd)) > 0.1)
+                if hero_f:
+                    dep = rng.uniform(0.006, 0.012, len(bnd)) * (rng.rand(len(bnd)) > 0.06)
+                else:
+                    dep = rng.uniform(0.003, 0.0065, len(bnd)) * (rng.rand(len(bnd)) > 0.1)
                 skew = rng.uniform(-0.03, 0.03, len(bnd))
                 xe = xs[:, None] + skew[np.clip(np.searchsorted(bnd, xs) - 1, 0, len(bnd) - 2)][:, None] * across[jl][None, :]
                 k = np.clip(np.searchsorted(bnd, xe.ravel()) - 1, 0, len(bnd) - 2).reshape(xe.shape)
                 tl = np.clip((xe - bnd[k]) / (bnd[k + 1] - bnd[k]), 0, 1)
-                sc = dep[k] * (1 - (2 * tl - 1) ** 2) ** 0.5 * (0.6 + 0.4 * (1 - tl))
+                # scoop: deepest early in the stroke, ends in a small ridge; fades toward lane edges
+                ac_ = np.abs(across[jl])[None, :]
+                fade = 1 - 0.35 * smoothstep(0.7, 1.0, ac_)
+                sc = dep[k] * (1 - (2 * tl - 1) ** 2) ** 0.5 * (0.6 + 0.4 * (1 - tl)) * fade
                 disp[:, jl] += sc
                 lane_scoop_mid += sc.mean(1) / nlane
-            # corner points get part of the adjacent face scoop
             for jc in range(c * (ns + nc), c * (ns + nc) + nc):
-                disp[:, jc] += 0.35 * lane_scoop_mid
-    # apply face displacement (inward along the face normal)
+                disp[:, jc] += 0.3 * lane_scoop_mid
     for c in range(4):
         js = np.where(face == c)[0]
         ny, nz = fn[c]
@@ -945,25 +1016,30 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
     rad_ = np.hypot(Y[:, cj], Zp[:, cj])
     Y[:, cj] *= 1 - disp[:, cj] / np.maximum(rad_, 1e-3)
     Zp[:, cj] *= 1 - disp[:, cj] / np.maximum(rad_, 1e-3)
-    # drying checks (narrow V split: centre line sinks, neighbours pulled in)
 
-    def apply_check(c, j_off, i0, i1, depth, width, from_end=0):
+    def apply_check(c, j_off, i0, i1, depth, width, from_end=0, wander=0.003):
         j = c * (ns + nc) + nc + j_off
         ny, nz = fn[c]
         ii = np.arange(i0, i1)
+        if len(ii) < 3:
+            return
         tl = (ii - i0) / max(1, (i1 - i0 - 1))
         if from_end < 0:
             m = (1 - tl) ** 0.7
         elif from_end > 0:
             m = tl ** 0.7
         else:
-            m = smoothstep(0.0, 0.18, tl) * (1 - smoothstep(0.82, 1.0, tl))
-        tyz = np.array([-nz, ny], float)       # across-face direction (toward increasing j)
-        hw = width / 2 * (0.35 + 0.65 * np.sqrt(np.clip(m, 0, 1)))
+            m = smoothstep(0.0, 0.25, tl) * (1 - smoothstep(0.6, 1.0, tl))     # tapers both ways
+        tyz = np.array([-nz, ny], float)
+        wv = wander * n2(xs[ii] * 9.0, np.full(len(ii), j * 0.37), seed + 11 + j)
+        # wander: the crack line and its lips drift sideways together
+        for jj in (j - 1, j, j + 1):
+            Y[ii, jj] += tyz[0] * wv * smoothstep(0.0, 0.2, m)
+            Zp[ii, jj] += tyz[1] * wv * smoothstep(0.0, 0.2, m)
+        hw = width / 2 * (0.25 + 0.75 * np.sqrt(np.clip(m, 0, 1)))
         for jn, sg in ((j - 1, 1), (j + 1, -1)):
-            # pull the neighbour line in to the crack lip using the REAL spacing on this ring
             dist = np.abs((Y[ii, jn] - Y[ii, j]) * tyz[0] + (Zp[ii, jn] - Zp[ii, j]) * tyz[1])
-            pull = np.clip(dist - hw, 0, None) * smoothstep(0.0, 0.35, m)
+            pull = np.clip(dist - hw, 0, None) * smoothstep(0.0, 0.3, m)
             Y[ii, jn] += sg * tyz[0] * pull
             Zp[ii, jn] += sg * tyz[1] * pull
         Y[ii, j] -= ny * depth * m
@@ -971,31 +1047,41 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
 
     for _ in range(n_checks):
         c = int(rng.choice(check_faces))
+        if c in hidden:
+            continue
         j_off = rng.randint(2, ns - 2)
         lc = rng.uniform(0.15, 0.4)
         x0 = rng.uniform(-hl + 0.15, hl - 0.15 - lc)
         i0 = int(np.searchsorted(xs, x0))
         i1 = int(np.searchsorted(xs, x0 + lc))
-        apply_check(c, j_off, i0, i1, rng.uniform(0.012, 0.02), rng.uniform(0.004, 0.006))
+        apply_check(c, j_off, i0, i1, rng.uniform(0.014, 0.022), rng.uniform(0.006, 0.010))
+        if rng.rand() < 0.6:          # short parallel / branch check off the main one
+            jb = j_off + rng.choice([-2, 2])
+            if 1 <= jb <= ns - 2:
+                lb = rng.uniform(0.05, 0.12)
+                xb = x0 + rng.uniform(0.2, 0.7) * lc
+                ib0 = int(np.searchsorted(xs, xb))
+                ib1 = int(np.searchsorted(xs, min(xb + lb, hl - 0.05)))
+                apply_check(c, jb, ib0, ib1, rng.uniform(0.006, 0.01), rng.uniform(0.003, 0.005))
     for _ in range(end_checks):
         for side_ in (-1, 1):
             c = rng.randint(4)
+            if c in hidden:
+                c = (c + 1) % 4
             j_off = rng.randint(1, ns - 1)
             lc = rng.uniform(0.06, 0.16)
             if side_ < 0:
                 i0, i1 = 0, int(np.searchsorted(xs, -hl + lc))
             else:
                 i0, i1 = int(np.searchsorted(xs, hl - lc)), n
-            apply_check(c, j_off, i0, i1, rng.uniform(0.012, 0.022), rng.uniform(0.003, 0.006), from_end=side_)
-    # end chamfer rings
-    for i_e, f_e in ((0, 1), (n - 1, 1)):
+            apply_check(c, j_off, i0, i1, rng.uniform(0.012, 0.022), rng.uniform(0.004, 0.007), from_end=side_)
+    for i_e in (0, n - 1):
         Y[i_e] *= 1 - che / max(a0, 1e-3)
         Zp[i_e] *= 1 - che / max(b0, 1e-3)
     X = np.broadcast_to(xs[:, None], (n, M)).copy()
     if sag:
         X_t = xs / hl
         Zp += (-sag * (1 - X_t ** 2))[:, None]
-    # end faces: inner ring + centre; end checks also notch into the end face
     V = np.stack([X, Y, Zp], -1).reshape(-1, 3)
     inner0 = np.stack([X[0] + 0.002, Y[0] * 0.55, Zp[0] * 0.55], -1)
     inner1 = np.stack([X[-1] - 0.002, Y[-1] * 0.55, Zp[-1] * 0.55], -1)
@@ -1003,19 +1089,37 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
     V = np.concatenate([V, inner0, inner1, cen])
     j = np.arange(M)
     j1 = (j + 1) % M
+    # profile segments belonging to hidden faces (from the last arc point of corner c to the first of c+1)
+    hseg = np.zeros(M, bool)
+    for c in hidden:
+        js0 = c * (ns + nc) + nc - 1
+        for q in range(ns + 1):
+            hseg[(js0 + q) % M] = True
     i = np.arange(n - 1)[:, None]
-    Fs = np.stack([i * M + j, i * M + j1, (i + 1) * M + j1, (i + 1) * M + j], -1).reshape(-1, 4)
+    jk = j[~hseg][None, :]
+    jk1 = j1[~hseg][None, :]
+    Fs = np.stack([i * M + jk, i * M + jk1, (i + 1) * M + jk1, (i + 1) * M + jk], -1).reshape(-1, 4)
+    Fl = [Fs]
+    if hseg.any():
+        ir = np.unique(np.concatenate([np.arange(0, n - 1, stride), [n - 1]]))
+        a_ = ir[:-1][:, None]
+        b_ = ir[1:][:, None]
+        jh = j[hseg][None, :]
+        jh1 = j1[hseg][None, :]
+        Fl.append(np.stack([a_ * M + jh, a_ * M + jh1, b_ * M + jh1, b_ * M + jh], -1).reshape(-1, 4))
     o_in0 = n * M
     o_in1 = n * M + M
     c0i = n * M + 2 * M
     c1i = c0i + 1
     last = (n - 1) * M
-    cap0 = np.stack([o_in0 + j, o_in0 + j1, j1, j], -1)                       # faces -X
-    cap1 = np.stack([last + j, last + j1, o_in1 + j1, o_in1 + j], -1)         # faces +X
+    cap0 = np.stack([o_in0 + j, o_in0 + j1, j1, j], -1)
+    cap1 = np.stack([last + j, last + j1, o_in1 + j1, o_in1 + j], -1)
     fan0 = np.stack([np.full(M, c0i), o_in0 + j1, o_in0 + j], -1)
     fan1 = np.stack([np.full(M, c1i), o_in1 + j, o_in1 + j1], -1)
+    if deform is not None:
+        V = deform(V)
     Vw = xf(V, R, center)
-    acc.add(Vw, [Fs, cap0, cap1, fan0, fan1], mat)
+    acc.add(Vw, Fl + [cap0, cap1, fan0, fan1], mat)
 
 
 def build_posts(coll):
@@ -1940,249 +2044,510 @@ def build_collar_finial(coll):
 
 
 # =============================================================================================
-# plinth, rubble, apron
+# plinth, rubble, apron, path
 # =============================================================================================
 R_PL_FACE = 3.76            # plinth outer face line (rough wall line, +-4 cm)
+STEP_C = (0.04, FRONT_Y - 0.44)       # step stone centre (x, y)
+APRON_RIM = 4.62
+R_FLOOR_EDGE = 3.36         # inside this radius the ground is the interior earth floor
+
+
+def outline_radius(rng, kind, n_out=720):
+    """irregular closed outline, returned as a normalised radius function R(theta) (callable).
+    kind 'flag': non-convex, 10-16 corners; 'trap' rounded trapezoid; 'D' D-shape; 'tri' rounded
+    triangle; 'pad' rounded lump.  Corners are softened, then 3-8 cm-scale edge noise and 1-2
+    notches are added, so no two outlines share a straight run or a parallel pair of sides."""
+    if kind == "flag":
+        k = rng.randint(10, 17)
+        ang = np.sort(np.mod(np.linspace(0, 2 * np.pi, k, endpoint=False) + rng.uniform(-0.18, 0.18, k)
+                             + rng.uniform(0, 6.3), 2 * np.pi))
+        rad = rng.uniform(0.80, 1.06, k)
+        rad[rng.randint(k)] *= rng.uniform(0.82, 0.9)              # one deep re-entrant corner
+        poly = np.stack([np.cos(ang) * rad, np.sin(ang) * rad], -1)
+        sm, noise_a, notch_n = 0.05, 0.022, rng.randint(1, 3)
+    else:
+        sk = rng.uniform(-0.25, 0.25)
+        if kind == "trap":
+            top_l, top_r = -rng.uniform(0.45, 0.8), rng.uniform(0.5, 0.85)
+            pts = [(-1.0, -1.0), (1.0, -1.0), (rng.uniform(0.9, 1.0), rng.uniform(-0.3, 0.2)),
+                   (top_r + sk * 0.3, 1.0), (top_l + sk * 0.3, rng.uniform(0.9, 1.0)),
+                   (-rng.uniform(0.88, 1.0), rng.uniform(-0.1, 0.4))]
+        elif kind == "D":
+            pts = [(-1.0, -1.0), (1.0, -1.0), (1.0, rng.uniform(-0.2, 0.25)),
+                   (rng.uniform(0.6, 0.75), rng.uniform(0.75, 0.9)), (sk * 0.4, 1.0),
+                   (-rng.uniform(0.55, 0.75), rng.uniform(0.7, 0.9)), (-1.0, rng.uniform(-0.15, 0.3))]
+        elif kind == "tri":
+            pk = rng.uniform(-0.35, 0.35)
+            pts = [(-1.0, -1.0), (1.0, -1.0), (rng.uniform(0.85, 1.0), rng.uniform(-0.6, -0.2)),
+                   (pk + rng.uniform(0.35, 0.5), rng.uniform(0.75, 0.9)), (pk, 1.0),
+                   (pk - rng.uniform(0.4, 0.55), rng.uniform(0.7, 0.85)),
+                   (-rng.uniform(0.85, 1.0), rng.uniform(-0.55, -0.1))]
+        else:   # pad / lump
+            k = rng.randint(6, 9)
+            ang = np.sort(np.mod(np.linspace(0, 2 * np.pi, k, endpoint=False) + rng.uniform(-0.2, 0.2, k), 2 * np.pi))
+            rad = rng.uniform(0.85, 1.05, k)
+            pts = list(zip(np.cos(ang) * rad, np.sin(ang) * rad))
+        poly = np.asarray(pts, float)
+        sm, noise_a, notch_n = 0.09, 0.016, rng.randint(1, 3)
+    kp = len(poly)
+    t = 2 * np.pi * np.arange(n_out) / n_out
+    d = np.stack([np.cos(t), np.sin(t)], -1)
+    best = np.full(n_out, 10.0)
+    for i in range(kp):
+        a, b = poly[i], poly[(i + 1) % kp]
+        e = b - a
+        den = d[:, 0] * (-e[1]) - d[:, 1] * (-e[0])
+        with np.errstate(divide="ignore", invalid="ignore"):
+            tt = (a[0] * (-e[1]) - a[1] * (-e[0])) / den
+            u = (d[:, 0] * a[1] - d[:, 1] * a[0]) / den
+        ok = (tt > 0) & (u >= -1e-6) & (u <= 1 + 1e-6)
+        best = np.where(ok & (tt < best), tt, best)
+    R = np.where(best > 5, 1.0, best)
+    # soften the corners (circular gaussian smoothing of the radius function)
+    sig = max(2, int(sm / (2 * np.pi) * n_out))
+    ker = np.exp(-0.5 * (np.arange(-3 * sig, 3 * sig + 1) / sig) ** 2)
+    ker /= ker.sum()
+    R = np.convolve(np.concatenate([R[-3 * sig:], R, R[:3 * sig]]), ker, mode="valid")
+    seed = rng.randint(1, 10 ** 6)
+    R = R * (1 + noise_a * ring_noise(t, seed, 16, 1.0, 0.45) + 0.006 * ring_noise(t, seed + 1, 40, 1.0, 0.0))
+    for _ in range(notch_n):
+        c = rng.uniform(0, 2 * np.pi)
+        dd = np.angle(np.exp(1j * (t - c)))
+        R = R * (1 - rng.uniform(0.04, 0.08) * np.exp(-(dd / rng.uniform(0.06, 0.12)) ** 2))
+    tt_ = np.concatenate([t, [2 * np.pi]])
+    RR = np.concatenate([R, R[:1]])
+    return lambda th: np.interp(np.mod(th, 2 * np.pi), tt_, RR)
+
+
+def shell_stone(hu, hv, rng, kind, depth, rr=(0.02, 0.04), dome=0.03, tilt=0.15, n_frac=1, frac_depth=(0.03, 0.08),
+                n_th=44, noise=0.005, freq=7.0, side_bulge=0.012, thick_var=0.0, dish=0.0, flat_face=None,
+                face_fr=(0.0, 0.34, 0.6, 0.8, 0.93)):
+    """irregular stone as an open SHELL: an exposed face (domed, tilted, crossed by 1-2 fracture planes
+    with 3-8 cm edge breaks, faint pitting), a rounded arris whose radius varies round the outline, and
+    sides running back `depth` -- no back face (it is never visible: producer note 6).
+    Local frame: outline in (u, v), face normal +w.  Returns V (u, v, w), faces."""
+    Rf = outline_radius(rng, kind)
+    th = 2 * np.pi * np.arange(n_th) / n_th + rng.uniform(0, 0.1)
+    Rn = Rf(th)
+    ou, ov = hu * Rn * np.cos(th), hv * Rn * np.sin(th)
+    Rabs = np.hypot(ou, ov)
+    seed = rng.randint(1, 10 ** 6)
+    rr_t = np.clip(rng.uniform(*rr) * (1 + 0.45 * ring_noise(th, seed + 3, 4, 1.0)), 0.004, 0.07)
+    rr_t = np.minimum(rr_t, Rabs * 0.4)
+    off = rng.uniform(-50, 50, 3)
+    ta, tb = (rng.normal(size=2) * tilt)
+    fr = []
+    for _ in range(n_frac):
+        psi = rng.uniform(0, 2 * np.pi)
+        ext = float(np.max(ou * math.cos(psi) + ov * math.sin(psi)))
+        u0 = ext * rng.uniform(0.25, 0.6)
+        fr.append((psi, u0, rng.uniform(*frac_depth) / max(ext - u0, 0.02), rng.uniform(0.004, 0.01)))
+
+    def yf(u, v):
+        q = np.clip((u / hu) ** 2 + (v / hv) ** 2, 0, 1.4)
+        w = dome * (1 - q) + ta * u / max(hu, hv) * max(hu, hv) * 1.0 + tb * v
+        w = w + noise * fbm(np.stack([u * freq + off[0], v * freq + off[1], np.full(np.shape(u), off[2])], -1), 3)
+        w = w + noise * 0.35 * vnoise(np.stack([u * freq * 4.1, v * freq * 4.1, np.full(np.shape(u), off[2] + 3)], -1))
+        for (psi, u0, slope, k) in fr:
+            uu = u * math.cos(psi) + v * math.sin(psi)
+            wref = dome * 0.5
+            plane = wref - (uu - u0) * slope
+            w = smin(w, plane, k)
+        if dish:
+            w = w - dish * np.clip(1 - q * 1.3, 0, 1) ** 0.8
+        if flat_face is not None:
+            w = np.where(w > flat_face, flat_face + (w - flat_face) * 0.15, w)
+        return w
+
+    rings = []
+    inner = (Rabs - rr_t) / np.maximum(Rabs, 1e-6)
+    for f in face_fr[1:]:
+        s_ = f * inner
+        u, v = ou * s_, ov * s_
+        rings.append(np.stack([u, v, yf(u, v)], -1))
+    u_e, v_e = ou * inner, ov * inner
+    w_e = yf(u_e, v_e)
+    rings.append(np.stack([u_e, v_e, w_e], -1))
+    for phi in (np.pi / 5, 2 * np.pi / 5, np.pi / 2):
+        ins = rr_t * (1 - math.sin(phi))
+        sc = (Rabs - ins) / np.maximum(Rabs, 1e-6)
+        rings.append(np.stack([ou * sc, ov * sc, w_e - rr_t + rr_t * math.cos(phi)], -1))
+    w_back = -depth * (1 + thick_var * ring_noise(th, seed + 7, 5, 1.0))
+    for tt in (0.3, 0.65, 1.0):
+        bul = side_bulge * math.sin(math.pi * min(tt, 0.85))
+        sc = (Rabs + bul) / np.maximum(Rabs, 1e-6)
+        ww = (w_e - rr_t) + tt * (w_back - (w_e - rr_t))
+        rings.append(np.stack([ou * sc, ov * sc, ww], -1))
+    pole = np.array([[0.0, 0.0, float(yf(np.array([0.0]), np.array([0.0]))[0])]])
+    V = np.concatenate([pole] + rings)
+    n = n_th
+    j = np.arange(n)
+    j1 = (j + 1) % n
+    faces = [np.stack([np.zeros(n, int), 1 + j, 1 + j1], -1)]       # fan, normal +w
+    for k in range(len(rings) - 1):
+        a = 1 + k * n
+        b = 1 + (k + 1) * n
+        faces.append(np.stack([a + j, b + j, b + j1, a + j1], -1))
+    return V, faces
+
+
+def map_uvw(V, mode):
+    """'wall': u->x (along the ring), v->z (up), w->-y (outward).  'plan': u->x, v->y, w->z (up)."""
+    if mode == "wall":
+        return np.stack([V[:, 0], -V[:, 2], V[:, 1]], -1), False    # local -y is radial-out after rotz(az)
+    return V.copy(), False
+
+
+def add_shell(acc, V, faces, mode, R, t, mat):
+    P, flip = map_uvw(V, mode)
+    if flip:
+        faces = [f[:, ::-1] for f in faces]
+    acc.add(xf(P, R, t), faces, mat)
 
 
 def plinth_face_r(az):
     return R_PL_FACE + 0.018 * ring_noise(np.asarray(az, float), 9091, 6, 1.0)
 
 
-def build_plinth(coll):
-    """dry-stone plinth: sub-angular split boulders in contact along a rough face line.
-    ~45% single tall stones, ~40% two-high (flat lower stone + flatter upper slab), a few low
-    stones carrying pinning slabs, 2-3 long through-stones. Wedge chinking recessed in joints."""
-    acc = Acc("HUT_plinth_stones", 70)
-    chink = Acc("HUT_plinth_chinking", 70)
-    rng = np.random.RandomState(9090)
-    r_c = 3.53
-    a_start = math.asin(1.30 / 3.78)
-    a_end = 2 * math.pi - a_start
-    a = a_start
-    stones = []
-    through_at = set(rng.choice(np.arange(6, 34), 3, replace=False).tolist())
-    k = 0
-    while a < a_end - 0.02:
-        kind = rng.choice(["single", "double", "low"], p=[0.45, 0.40, 0.15])
-        if k in through_at:
-            kind = "through"
-            L = rng.uniform(0.76, 0.86)
-        elif kind == "double":
-            L = rng.uniform(0.45, 0.85)
-        else:
-            L = rng.choice([rng.uniform(0.25, 0.42), rng.uniform(0.38, 0.65)], p=[0.35, 0.65])
-        if a + L / r_c > a_end:
-            L = (a_end - a) * r_c
-            if L < 0.2:
-                break
-            if kind == "through":
-                kind = "single"
-        g = rng.uniform(-0.03, 0.0)              # in contact (rounded corners leave a V joint)
-        stones.append([a + (L / 2) / r_c, L, kind])
-        a += (L + g) / r_c
-        k += 1
-    post_az = list(POST_AZ)
-    n_up = n_pin = n_ch = 0
-    tops = []
-
-    def put(Pl, Fl, az, z_bot, depth, rot_jit=0.04, tilt=(0.02, 0.02), mat="M_stone", tgt=None, face_off=0.0):
-        """place a local stone (x along the ring, y radial-in, z up) with its outer face on the line."""
-        rf = float(plinth_face_r(az)) - face_off
-        R = rotz(az + rng.uniform(-rot_jit, rot_jit)) @ rotx(rng.uniform(-tilt[0], tilt[0])) @ \
-            roty(rng.uniform(-tilt[1], tilt[1]))
-        Vw = xf(Pl, R, (0, 0, 0))
-        # shift so the outermost point of the stone face sits on the face line
-        u = np.array([math.sin(az), -math.cos(az), 0.0])
-        out_ext = float((Vw @ u).max())
-        c = u * (rf - out_ext)
-        c[2] = z_bot - float(Vw[:, 2].min())
-        (tgt or acc).add(Vw + c, Fl, mat)
-        return c
-
-    for i, (ac, L, kind) in enumerate(stones):
-        near_post = min(abs(np.angle(np.exp(1j * (ac - pa)))) for pa in post_az) * r_c < L / 2 + 0.05
-        top = rng.uniform(0.355, 0.41)
-        if near_post:
-            top = rng.uniform(0.365, 0.385)
-        bot = -rng.uniform(0.05, 0.10)
-        D = rng.uniform(0.36, 0.52)
-        rr = rng.uniform(0.02, 0.04)
-        if kind == "single" or (kind == "low" and near_post):
-            H = top - bot
-            P, F = rock((L / 2, D / 2, H / 2), rng, round_r=rr, facets=(4, 7), segs=(10, 6, 7),
-                        warp=0.04, amp=rng.uniform(0.006, 0.009), freq=3.0, face_bias=(0, -1, 0),
-                        bias_p=0.2, face_cuts=rng.randint(2, 4), fillet=0.012, flat_top=H / 2 - rng.uniform(0.01, 0.03), flat_bot=-H / 2 + 0.02,
-                        batter=rng.uniform(0.015, 0.05))
-            put(P, F, ac, bot, D, tilt=(0.05, 0.05))
-            tops.append(top)
-        elif kind == "through":
-            lo_top = rng.uniform(0.17, 0.24)
-            H = lo_top - bot
-            Dt = rng.uniform(0.62, 0.72)
-            P, F = rock((L / 2, Dt / 2, H / 2), rng, round_r=rr, facets=(3, 5), segs=(12, 7, 5),
-                        warp=0.04, amp=0.007, freq=3.0, face_bias=(0, -1, 0), bias_p=0.2, face_cuts=2,
-                        fillet=0.012, flat_top=H / 2 - 0.012,
-                        flat_bot=-H / 2 + 0.02)
-            put(P, F, ac, bot, Dt, face_off=-rng.uniform(0.02, 0.05))   # projects slightly
-            # two upper stones on the through-stone
-            xs_ = [-L * 0.24, L * 0.26]
-            for xo in xs_:
-                Lu = L * rng.uniform(0.42, 0.5)
-                Hu = top - lo_top + 0.01
-                Pu, Fu = rock((Lu / 2, D * 0.45, Hu / 2), rng, round_r=min(rr, Hu * 0.3), facets=(3, 5),
-                              segs=(7, 5, 5), warp=0.04, amp=0.007, freq=3.5, face_bias=(0, -1, 0), bias_p=0.2,
-                              face_cuts=rng.randint(1, 3), fillet=0.012,
-                              flat_top=Hu / 2 - 0.01, flat_bot=-Hu / 2 + 0.012)
-                put(Pu, Fu, ac + xo / r_c, lo_top - 0.008, D * 0.9, face_off=rng.uniform(0.01, 0.04))
-                n_up += 1
-            tops.append(top)
-        elif kind == "double":
-            lo_top = rng.uniform(0.15, 0.25)
-            H = lo_top - bot
-            b_lo = rng.uniform(0.0, 0.025)
-            P, F = rock((L / 2, D / 2, H / 2), rng, round_r=rr, facets=(3, 6), segs=(10, 6, 5),
-                        warp=0.04, amp=0.007, freq=3.0, face_bias=(0, -1, 0), bias_p=0.2, face_cuts=rng.randint(1, 4),
-                        fillet=0.012, flat_top=H / 2 - 0.012,
-                        flat_bot=-H / 2 + 0.02, batter=b_lo)
-            put(P, F, ac, bot, D, tilt=(0.04, 0.04))
-            # one or two flatter upper slabs, offset (break the joint)
-            nu_ = 2 if (L > 0.62 and rng.rand() < 0.55) else 1
-            span = L * rng.uniform(0.85, 1.05)
-            for j in range(nu_):
-                Lu = span / nu_ * rng.uniform(0.85, 1.0)
-                xo = (j - (nu_ - 1) / 2) * span / nu_ + rng.uniform(-0.06, 0.06)
-                Hu = top - lo_top + 0.008
-                Pu, Fu = rock((Lu / 2, D * rng.uniform(0.38, 0.48), Hu / 2), rng,
-                              round_r=min(rng.uniform(0.018, 0.032), Hu * 0.3), facets=(3, 5), segs=(8, 5, 4),
-                              warp=0.04, amp=0.007, freq=3.5, face_bias=(0, -1, 0), bias_p=0.2,
-                              face_cuts=rng.randint(1, 3), fillet=0.012, flat_top=Hu / 2 - 0.008, flat_bot=-Hu / 2 + 0.01, batter=rng.uniform(0.0, 0.03))
-                put(Pu, Fu, ac + xo / r_c, lo_top - 0.006, D * 0.85, face_off=b_lo + rng.uniform(-0.005, 0.03),
-                    tilt=(0.05, 0.05))
-                n_up += 1
-            # wedge chinking in the course joint
-            for _ in range(rng.randint(1, 3)):
-                xo = rng.uniform(-L / 2, L / 2) * 0.8
-                hs = np.array([rng.uniform(0.035, 0.07), rng.uniform(0.05, 0.07), rng.uniform(0.012, 0.022)])
-                Pc, Fc = rock(hs, rng, round_r=0.006, facets=(2, 3), segs=(2, 1, 1), warp=0.08, amp=0.002)
-                Pc[:, 2] *= (1.0 - 0.6 * (Pc[:, 1] / hs[1] + 1) / 2)            # wedge: thin inward end
-                put(Pc, Fc, ac + xo / r_c, lo_top - 0.012, 0.1, tilt=(0.05, 0.05), mat="M_rubble",
-                    tgt=chink, face_off=b_lo + rng.uniform(0.035, 0.06))
-                n_ch += 1
-            tops.append(top)
-        else:   # low stone + pinning slabs to bring the bed up to the wattle
-            lo_top = rng.uniform(0.22, 0.28)
-            H = lo_top - bot
-            P, F = rock((L / 2, D / 2, H / 2), rng, round_r=rr, facets=(3, 6), segs=(9, 6, 5),
-                        warp=0.04, amp=0.007, freq=3.0, face_bias=(0, -1, 0), bias_p=0.2, face_cuts=rng.randint(1, 4),
-                        fillet=0.012, flat_top=H / 2 - 0.015,
-                        flat_bot=-H / 2 + 0.02)
-            put(P, F, ac, bot, D)
-            kk = 2 if L > 0.45 else 1
-            for j in range(kk):
-                pl = L / kk * rng.uniform(0.6, 0.85)
-                hp = np.array([pl / 2, rng.uniform(0.12, 0.17), (top - lo_top) / 2 + 0.004])
-                Pp, Fp = rock(hp, rng, round_r=min(0.015, hp[2] * 0.5), facets=(2, 4), segs=(5, 4, 3),
-                              warp=0.06, amp=0.003, flat_top=hp[2] * 0.8)
-                xo = (j - (kk - 1) / 2) * L / kk + rng.uniform(-0.03, 0.03)
-                put(Pp, Fp, ac + xo / r_c, lo_top - 0.004, 0.3, face_off=rng.uniform(0.04, 0.08))
-                n_pin += 1
-            tops.append(top)
-        # wedge chinking driven into the vertical joint after this stone (recessed 2-5 cm)
-        if i < len(stones) - 1:
-            ga = ac + (L / 2) / r_c
-            for zc in rng.choice([0.04, 0.12, 0.2, 0.3], rng.randint(1, 3), replace=False):
-                hs = np.array([rng.uniform(0.018, 0.03), rng.uniform(0.05, 0.08), rng.uniform(0.03, 0.055)])
-                Pc, Fc = rock(hs, rng, round_r=0.006, facets=(2, 3), segs=(1, 2, 2), warp=0.08, amp=0.002)
-                Pc[:, 0] *= (1.0 - 0.65 * (Pc[:, 1] / hs[1] + 1) / 2)            # wedge: thin inward end
-                put(Pc, Fc, ga + rng.uniform(-0.004, 0.004), zc + rng.uniform(-0.02, 0.02), 0.1,
-                    rot_jit=0.15, tilt=(0.1, 0.25), mat="M_rubble", tgt=chink, face_off=rng.uniform(0.02, 0.05))
-                n_ch += 1
-    log("plinth stones:", len(stones), "upper:", n_up, "pinning:", n_pin, "chinking:", n_ch,
-        "kinds:", {kk_: sum(1 for st in stones if st[2] == kk_) for kk_ in ("single", "double", "low", "through")})
-    acc.build(coll)
-    chink.build(coll)
+def floor_z(X, Y):
+    X = np.asarray(X, float)
+    Y = np.asarray(Y, float)
+    R_ = np.hypot(X, Y)
+    z = (SILL_TOP - 0.004 + 0.008 * fbm(np.stack([X * 1.2, Y * 1.2, np.zeros_like(X)], -1), 3)
+         - 0.015 * np.exp(-(R_ / 0.9) ** 2))
+    # trodden hollow just inside the sill: the floor steps down ~2.5 cm from the sill top
+    door = np.exp(-(X / 0.9) ** 2) * (1 - smoothstep(-3.45, -2.4, Y))
+    return z - 0.024 * door
 
 
-def build_rubble(coll):
-    acc = Acc("HUT_ground_rubble", 70)
-    rng = np.random.RandomState(1011)
-    pts = []
-    # drip-line / plinth foot scatter (spalls fallen from the plinth, pebbles in the drip trench)
-    for i in range(30):
-        az = rng.uniform(0.35, 2 * math.pi - 0.35)
-        r = rng.choice([rng.uniform(3.84, 4.0), rng.uniform(4.05, 4.45)])
-        pts.append((az, r, rng.uniform(0.04, 0.15)))
-    # cluster by the door, avoiding the path
-    for i in range(14):
-        x = rng.choice([-1, 1]) * rng.uniform(0.85, 1.7)
-        y = rng.uniform(-4.6, -3.88)
-        pts.append((math.atan2(x, -y), math.hypot(x, y), rng.uniform(0.04, 0.12)))
-    for (az, r, sz) in pts:
-        half = np.array([sz * rng.uniform(0.8, 1.2), sz * rng.uniform(0.65, 1.0), sz * rng.uniform(0.5, 0.8)])
-        P, F = rock(half, rng, round_r=float(half.min()) * rng.uniform(0.35, 0.6), facets=(2, 4), segs=(4, 3, 3),
-                    warp=0.12, amp=sz * 0.04, freq=2.0 / sz, fillet=sz * 0.25)
-        R = rotz(rng.uniform(0, 6.28)) @ rotx(rng.uniform(-0.3, 0.3)) @ roty(rng.uniform(-0.3, 0.3))
-        x_, y_ = math.sin(az) * r, -math.cos(az) * r
-        g = float(apron_height(np.array([x_]), np.array([y_]))[0])
-        c = (x_, y_, g + half[2] * rng.uniform(-0.45, 0.05))          # half-buried
-        acc.add(xf(P, R, c), F, "M_rubble")
-    acc.build(coll)
+FLAGS = []          # planned path flags + step stone (dicts), used by the apron lips and the geometry
 
 
-STEP_C = (0.04, FRONT_Y - 0.44)       # step stone centre (x, y)
-APRON_RIM = 4.62
+def _mound(X, Y):
+    r = np.hypot(X, Y)
+    th = np.arctan2(Y, X)
+    rim = APRON_RIM + 0.10 * ring_noise(th, 1111, 5, 1.0)
+    m = 1 - smoothstep(rim - 0.85, rim, r)
+    h = Z_MIN + (0.0 - Z_MIN) * m
+    lumps = 0.010 * fbm(np.stack([X * 0.9, Y * 0.9, np.zeros_like(X)], -1), 3) * m
+    dr = r - (4.17 + 0.03 * ring_noise(th, 1112, 5, 1.0))
+    trench = -0.028 * np.exp(-(dr / 0.13) ** 2) * (1 - (np.abs(X) < 1.1) * (Y < 0))
+    bank = (0.05 + 0.015 * ring_noise(th, 1116, 9, 1.0)) * (1 - smoothstep(3.80, 4.05, r)) \
+        * (1 - np.exp(-(X / 0.9) ** 2) * (Y < 0))
+    return h + (lumps + trench) * m + bank
+
+
+def _path_mound(X, Y):
+    """earth of the trodden path running out from the door, beyond the apron mound."""
+    w = 0.95 + 0.12 * n2(Y * 1.3, 0.5, 1130)
+    core = (1 - smoothstep(w * 0.75, w * 1.2, np.abs(X - 0.06 * np.sin(Y * 1.1)))) * \
+        (1 - smoothstep(-6.55, -7.05, Y)) * (Y < -3.6)
+    hz = -0.006 + 0.008 * fbm(np.stack([X * 2.0, Y * 2.0, np.full(X.shape, 4.0)], -1), 2)
+    hz = hz - 0.012 * np.exp(-(X / 0.5) ** 2)                  # wear hollow along the path
+    return Z_MIN + (hz - Z_MIN) * core
+
+
+def earth_base(X, Y):
+    X = np.asarray(X, float)
+    Y = np.asarray(Y, float)
+    return np.maximum(_mound(X, Y), _path_mound(X, Y))
+
+
+def flag_local(fl, X, Y):
+    c, s = math.cos(fl["rot"]), math.sin(fl["rot"])
+    dx, dy = X - fl["c"][0], Y - fl["c"][1]
+    u = dx * c + dy * s
+    v = -dx * s + dy * c
+    th = np.arctan2(v / fl["hv"], u / fl["hu"])
+    rn = fl["R"](th)
+    rabs = np.hypot(fl["hu"] * rn * np.cos(th), fl["hv"] * rn * np.sin(th))
+    return np.hypot(u, v), rabs
 
 
 def apron_height(X, Y):
     X = np.asarray(X, float)
     Y = np.asarray(Y, float)
+    base = earth_base(X, Y)
+    out = base
+    for fl in FLAGS:
+        if np.all((np.abs(X - fl["c"][0]) > fl["ext"] + 0.12) | (np.abs(Y - fl["c"][1]) > fl["ext"] + 0.12)):
+            continue
+        rho, rabs = flag_local(fl, X, Y)
+        dout = rho - rabs
+        # soft earth lip wrapping the edge: rises to 1-1.5 cm under the top at the outline, gone 7 cm out
+        lip_top = fl["top"] - fl["lip"]
+        lip = lip_top - (lip_top - base) * smoothstep(0.0, fl["lip_w"], dout)
+        lip = lip + 0.003 * n2(X * 30, Y * 30, 1140)
+        out = np.where(dout < fl["lip_w"], np.maximum(out, lip), out)
+    return out
+
+
+def ground_z(X, Y):
+    X = np.asarray(X, float)
+    Y = np.asarray(Y, float)
     r = np.hypot(X, Y)
-    th = np.arctan2(Y, X)
-    # mound: flat inside ~4.45 m, falls to Z_MIN at the rim, then a flat band at exactly Z_MIN
-    rim = APRON_RIM + 0.10 * ring_noise(th, 1111, 5, 1.0)
-    m = 1 - smoothstep(rim - 0.85, rim, r)
-    h = Z_MIN + (0.0 - Z_MIN) * m
-    lumps = 0.012 * fbm(np.stack([X * 0.9, Y * 0.9, np.zeros_like(X)], -1), 3) * m
-    # drip-line trench under the eave (not across the path)
-    dr = r - (4.17 + 0.03 * ring_noise(th, 1112, 5, 1.0))
-    trench = -0.032 * np.exp(-(dr / 0.13) ** 2) * (1 - (np.abs(X) < 1.1) * (Y < 0))
-    # gentle wear hollow along the path
-    wear = -0.012 * np.exp(-(X / 0.5) ** 2) * (Y < -3.8) * (Y > -6.2)
-    base = h + (lumps + trench + wear) * m
-    # earth banked round the step stone: its top stands ~5 cm proud, the foot is buried
-    ex = (X - STEP_C[0]) / 0.66
-    ey = (Y - STEP_C[1]) / 0.39
-    e = np.sqrt(ex ** 2 + ey ** 2)
-    bank = 0.045 + 0.006 * n2(X * 6, Y * 6, 1120)
-    w_ = 1 - smoothstep(1.0, 1.9, e)
-    return np.where(e < 1.9, np.maximum(base, base * (1 - w_) + bank * w_), base)
+    return np.where(r < R_FLOOR_EDGE, floor_z(X, Y), apron_height(X, Y))
+
+
+def cull_below_ground(V):
+    """vertex is never visible: more than 1.2 cm under the local ground (apron or floor)."""
+    hid = np.zeros(len(V), bool)
+    low = V[:, 2] < 0.26
+    if low.any():
+        g = ground_z(V[low, 0], V[low, 1])
+        hid[low] = V[low, 2] < g - 0.012
+    return hid
+
+
+def plan_path():
+    """lay out the step stone and the stepping-stone path BEFORE the apron is built (the apron grows a
+    soft earth lip round every flag)."""
+    rng = np.random.RandomState(1414)
+    # step stone (top ~0.09-0.10, the earth banked round it)
+    FLAGS.append(dict(kind="step", c=(STEP_C[0], STEP_C[1]), rot=0.05, hu=0.62, hv=0.36, ext=0.7,
+                      R=outline_radius(rng, "flag"), top=0.095, th=0.13, lip=0.035, lip_w=0.11, seed=77))
+    ys = -4.62
+    k = 0
+    while ys > -6.55:
+        ly = rng.uniform(0.17, 0.24)
+        two = rng.rand() < 0.6
+        xc = 0.07 * math.sin(k * 1.7) + rng.uniform(-0.1, 0.1)
+        if two:
+            lxa, lxb = rng.uniform(0.2, 0.3), rng.uniform(0.18, 0.28)
+            gap = rng.uniform(0.05, 0.1)
+            xs_ = [(xc - gap / 2 - lxa, lxa), (xc + gap / 2 + lxb, lxb)]
+        else:
+            lx = rng.uniform(0.3, 0.42)
+            xs_ = [(xc + rng.uniform(-0.08, 0.08), lx)]
+        for (xo, lx) in xs_:
+            lyy = ly * rng.uniform(0.85, 1.1)
+            yo = ys - ly + rng.uniform(-0.04, 0.04)
+            b = float(earth_base(np.array([xo]), np.array([yo]))[0])
+            FLAGS.append(dict(kind="flag", c=(xo, yo), rot=rng.uniform(-0.4, 0.4), hu=lx, hv=lyy,
+                              ext=max(lx, lyy) * 1.15, R=outline_radius(rng, "flag"),
+                              top=b + rng.uniform(0.012, 0.028), th=rng.uniform(0.085, 0.11),
+                              lip=rng.uniform(0.008, 0.014), lip_w=rng.uniform(0.05, 0.08),
+                              seed=rng.randint(10 ** 5)))
+        ys -= 2 * ly + rng.uniform(0.07, 0.13)
+        k += 1
+    log("path flags planned:", len(FLAGS) - 1)
+
+
+def build_path(coll):
+    """step stone + flags: non-convex 10-16 corner outlines with edge noise and notches, thickness
+    +-2 cm, tops tilted 1-3 deg, arris rounding 0.5-3 cm varying round the outline, bases buried."""
+    acc = Acc("HUT_path_stones", 40)
+    for fl in FLAGS:
+        rng = np.random.RandomState(fl["seed"])
+        if fl["kind"] == "step":
+            V, F = shell_stone(fl["hu"], fl["hv"], rng, "flag", fl["th"], rr=(0.008, 0.028), dome=0.004,
+                               tilt=0.01, n_frac=2, frac_depth=(0.015, 0.03), n_th=72, noise=0.003, freq=5.0,
+                               side_bulge=0.006, thick_var=0.12, dish=0.016,
+                               face_fr=(0.0, 0.18, 0.36, 0.54, 0.7, 0.84, 0.94))
+        else:
+            V, F = shell_stone(fl["hu"], fl["hv"], rng, "flag", fl["th"], rr=(0.005, 0.03), dome=0.006,
+                               tilt=math.tan(math.radians(rng.uniform(1, 3))) / 1.4, n_frac=1,
+                               frac_depth=(0.01, 0.025), n_th=56, noise=0.003, freq=5.0, side_bulge=0.005,
+                               thick_var=0.2)
+        V[:, 2] += fl["top"] - V[0, 2]
+        add_shell(acc, V, F, "plan", rotz(fl["rot"]), (fl["c"][0], fl["c"][1], 0.0), "M_stone")
+    acc.build(coll)
+
+
+def build_plinth(coll):
+    """dry-stone plinth after ref2: mostly ONE course of low rounded boulders (0.4-0.7 m long),
+    irregular elevation outlines (rounded trapezoid / D / rounded triangle, no parallel sides), domed
+    and tilted faces crossed by fracture planes, arris rounding 1-6 cm per stone, ~22 % two-high with a
+    clearly smaller upper.  Stones are open shells (face + sides back to the wattle line).  Chinking
+    wedges are ray-tested so every one sits >= 2 cm behind both neighbouring faces and is visible."""
+    from mathutils import Vector
+    from mathutils.bvhtree import BVHTree
+    acc = Acc("HUT_plinth_stones", 60)
+    rng = np.random.RandomState(9191)
+    r_c = 3.62
+    a_start = math.asin(1.30 / 3.78)
+    a_end = 2 * math.pi - a_start
+    post_az = list(POST_AZ)
+    a = a_start
+    stones = []
+    while a < a_end - 0.02:
+        L = rng.uniform(0.40, 0.70)
+        if rng.rand() < 0.12:
+            L = rng.uniform(0.72, 0.85)         # long through-stone
+        if a + L / r_c > a_end:
+            L = (a_end - a) * r_c
+            if L < 0.25:
+                stones[-1][1] += L * 0.6
+                break
+        stones.append([a + (L / 2) / r_c, L])
+        a += (L - rng.uniform(0.0, 0.04)) / r_c
+    kinds = ["trap", "D", "trap", "tri", "D", "trap"]
+    n_two = 0
+    placed = []          # (az, z_top, L) for chinking
+
+    def place(V, F, az, z_bot, face_off=0.0, rot=(0.0, 0.0, 0.0)):
+        P, flip = map_uvw(V, "wall")
+        Ff = [f[:, ::-1] for f in F] if flip else F
+        R = rotz(az) @ rotx(rot[0]) @ roty(rot[1]) @ rotz(rot[2])
+        Pw = xf(P, R)
+        u = np.array([math.sin(az), -math.cos(az), 0.0])
+        rf = float(plinth_face_r(az)) + face_off
+        c = u * (rf - float((Pw @ u).max()))
+        c[2] = z_bot - float(Pw[:, 2].min())
+        acc.add(Pw + c, Ff, "M_stone")
+        return c
+
+    for i, (ac, L) in enumerate(stones):
+        near_post = min(abs(np.angle(np.exp(1j * (ac - pa)))) for pa in post_az) * r_c < L / 2 + 0.05
+        top = rng.uniform(0.37, 0.41) if not near_post else rng.uniform(0.375, 0.39)
+        bot = -0.035
+        two = (rng.rand() < 0.24) and L > 0.5 and not near_post
+        kind = kinds[rng.randint(len(kinds))] if not near_post else "trap"
+        depth_face = plinth_face_r(ac) - (R_WALL - 0.06)            # face -> just behind the wattle line
+        rr = (rng.uniform(0.01, 0.045), rng.uniform(0.02, 0.06))
+        rr = (min(rr), max(rr))
+        if not two:
+            H = top - bot
+            V, F = shell_stone(L / 2, H / 2, rng, kind, depth_face, rr=rr, dome=rng.uniform(0.02, 0.05),
+                               tilt=math.tan(math.radians(rng.uniform(5, 15))) / 1.4, n_frac=rng.randint(1, 3),
+                               noise=0.006, freq=6.0, side_bulge=rng.uniform(0.008, 0.02),
+                               flat_face=None)
+            V[:, 1] *= 1.0
+            place(V, F, ac, bot, face_off=rng.uniform(-0.015, 0.02),
+                  rot=(rng.uniform(-0.04, 0.04), rng.uniform(-0.05, 0.05), 0.0))
+            placed.append((ac, top, L, None))
+        else:
+            n_two += 1
+            lo_top = rng.uniform(0.18, 0.25)
+            H = lo_top - bot
+            V, F = shell_stone(L / 2, H / 2, rng, rng.choice(["trap", "D"]), depth_face, rr=rr,
+                               dome=rng.uniform(0.02, 0.045), tilt=math.tan(math.radians(rng.uniform(5, 12))) / 1.4,
+                               n_frac=rng.randint(1, 3), noise=0.006, freq=6.0, side_bulge=0.012)
+            place(V, F, ac, bot, face_off=rng.uniform(0.0, 0.02), rot=(rng.uniform(-0.03, 0.03), 0.0, 0.0))
+            Lu = L * rng.uniform(0.55, 0.75)
+            Hu = top - lo_top + 0.006
+            xo = rng.uniform(-0.12, 0.12) * L
+            Vu, Fu = shell_stone(Lu / 2, Hu / 2, rng, rng.choice(["D", "tri", "trap"]), depth_face - 0.03,
+                                 rr=(0.01, min(0.04, Hu * 0.3)), dome=rng.uniform(0.015, 0.035),
+                                 tilt=math.tan(math.radians(rng.uniform(5, 15))) / 1.4, n_frac=1, n_th=36,
+                                 noise=0.005, freq=7.0, side_bulge=0.01)
+            place(Vu, Fu, ac + xo / r_c, lo_top - 0.008, face_off=-rng.uniform(0.02, 0.05),
+                  rot=(rng.uniform(-0.05, 0.05), rng.uniform(-0.06, 0.06), 0.0))
+            placed.append((ac, top, L, (ac + xo / r_c, lo_top, Lu)))
+    log("plinth stones:", len(stones), "two-high:", n_two, f"({100 * n_two / len(stones):.0f} %)")
+    stones_ob = acc.build(coll)
+    # ---------------- chinking: pooled wedge variants, ray-tested recess + visibility
+    me = stones_ob.data
+    bvh = BVHTree.FromPolygons([v.co[:] for v in me.vertices], [p.vertices[:] for p in me.polygons])
+
+    def face_r(az, z):
+        u = np.array([math.sin(az), -math.cos(az), 0.0])
+        o = u * 4.6 + np.array([0, 0, z])
+        hit = bvh.ray_cast(Vector(o), Vector(-u), 2.0)
+        if hit[0] is None:
+            return None
+        return 4.6 - hit[3]
+
+    def make_chink(acc_, k):
+        rs = np.random.RandomState(7300 + k)
+        hu_, hv_ = rs.uniform(0.022, 0.045), rs.uniform(0.016, 0.03)
+        V, F = shell_stone(hu_, hv_, rs, "pad", 0.05, rr=(0.004, 0.008), dome=0.006, tilt=0.12, n_frac=1,
+                           frac_depth=(0.004, 0.01), n_th=12, noise=0.002, freq=25.0, side_bulge=0.0,
+                           face_fr=(0.0, 0.6))
+        # wedge: the sides converge toward the back (driven in, thin end inward)
+        bk = V[:, 2] < -0.004
+        sc = 1 + V[bk, 2] / 0.05 * 0.7
+        V[bk, 0] *= sc
+        V[bk, 1] *= sc
+        P, _ = map_uvw(V, "wall")
+        acc_.add(P, F, "M_rubble")
+
+    n_ch = n_try = 0
+    ch_rng = np.random.RandomState(9393)
+    cands = []
+    for i in range(len(placed) - 1):
+        ac, top, L, up = placed[i]
+        ga = ac + (L / 2) / r_c
+        for zc in (0.05, 0.13, 0.22, 0.31):
+            cands.append((ga + ch_rng.uniform(-0.004, 0.004), zc + ch_rng.uniform(-0.03, 0.03)))
+        if up is not None:
+            for _ in range(2):
+                cands.append((up[0] + ch_rng.uniform(-0.4, 0.4) * up[2] / r_c, up[1] + 0.003))
+    for (az, zc) in cands:
+        n_try += 1
+        rL = face_r(az - 0.06 / R_PL_FACE, zc)
+        rR = face_r(az + 0.06 / R_PL_FACE, zc)
+        rC = face_r(az, zc)
+        if rL is None or rR is None:
+            continue
+        front = min(rL, rR) - 0.02 - ch_rng.uniform(0.0, 0.015)
+        if rC is not None and rC > front - 0.008:
+            continue                     # no open joint here (stones touch) -> no chink needed / visible
+        k = ch_rng.randint(8)
+        mesh = pool_mesh("chink", k, make_chink)
+        R = rotz(az) @ rotx(ch_rng.uniform(-0.25, 0.25)) @ roty(ch_rng.uniform(-0.4, 0.4))
+        u = np.array([math.sin(az), -math.cos(az), 0.0])
+        place_instance(mesh, "plinth_chink", R, u * front + np.array([0, 0, zc]))
+        n_ch += 1
+    log("chinking:", n_ch, "of", n_try, "candidate joints")
+
+
+def make_rubble_variant(acc, k):
+    """half-buried spall / pebble: the part above the bedding cut only (cut plane = local z 0)."""
+    rs = np.random.RandomState(8100 + k)
+    half = np.array([rs.uniform(0.85, 1.15), rs.uniform(0.6, 0.95), rs.uniform(0.45, 0.75)]) * 0.1
+    P, F = rock(half, rs, round_r=float(half.min()) * rs.uniform(0.3, 0.55), facets=(2, 4), segs=(5, 4, 4),
+                warp=0.12, amp=0.004, freq=20.0, fillet=0.025, chips=rs.randint(0, 3))
+    P[:, 2] += half[2] * (1 - 2 * rs.uniform(0.25, 0.45))   # bury 25-45 % of the height
+    keep_v = P[:, 2] > -0.012
+    keep_f = keep_v[F].any(axis=1)
+    acc.add(P, F[keep_f], "M_rubble")
+
+
+def build_rubble(coll):
+    """25-50 spalls / pebbles round the plinth foot and the door, linked duplicates of 10 variants."""
+    rng = np.random.RandomState(1011)
+    pts = []
+    for i in range(26):
+        az = rng.uniform(0.35, 2 * math.pi - 0.35)
+        r = rng.choice([rng.uniform(3.84, 4.0), rng.uniform(4.05, 4.45)])
+        pts.append((math.sin(az) * r, -math.cos(az) * r, rng.uniform(0.4, 1.4)))
+    for i in range(12):
+        x = rng.choice([-1, 1]) * rng.uniform(0.95, 1.7)
+        y = rng.uniform(-4.6, -3.9)
+        pts.append((x, y, rng.uniform(0.4, 1.1)))
+    for (x_, y_, sc) in pts:
+        k = rng.randint(10)
+        mesh = pool_mesh("rubble", k, make_rubble_variant)
+        g = float(apron_height(np.array([x_]), np.array([y_]))[0])
+        R = rotz(rng.uniform(0, 6.28)) @ rotx(rng.uniform(-0.15, 0.15)) @ roty(rng.uniform(-0.15, 0.15))
+        place_instance(mesh, "ground_rubble", R, (x_, y_, g - 0.006), scale=sc)
+    log("rubble instances:", len(pts))
 
 
 def build_apron(coll):
-    acc = Acc("HUT_ground_apron", 30)
-    r_in, r_out = 3.15, 5.25
-    rr = np.concatenate([np.arange(r_in, 4.95, 0.045), np.linspace(4.95, r_out, 4)])
-    nt = 500
-    th = 2 * np.pi * np.arange(nt) / nt
-    R_, T_ = np.meshgrid(rr, th, indexing="ij")
-    # irregular soil margin (no CG ring): the outer rows wander +-0.18 m
-    edge_r = (5.1 + 0.12 * ring_noise(th, 1113, 9, 1.0, 0.6) + 0.05 * ring_noise(th, 1114, 45, 1.0, 0.2)
-              + 0.02 * ring_noise(th, 1115, 120, 1.0, 0.0))
-    over = np.clip((R_ - 4.95) / (r_out - 4.95), 0, 1)
-    R_ = np.where(R_ > 4.95, 4.95 + over * (edge_r[None, :] - 4.95), R_)
-    X = R_ * np.cos(T_)
-    Y = R_ * np.sin(T_)
+    """earth apron: one heightfield (4.5 cm grid) from under the plinth face out to an irregular soil
+    margin, extended out along the path; outermost >= 0.4 m flat band at Z_MIN; soft lips round the
+    flags; nothing below -5 cm."""
+    acc = Acc("HUT_ground_apron", 30, cull=None)
+    hs = 0.045
+    xs = np.arange(-5.5, 5.5 + hs, hs)
+    ys = np.arange(-7.6, 5.5 + hs, hs)
+    X, Y = np.meshgrid(xs, ys, indexing="ij")
+    r = np.hypot(X, Y)
+    th = np.arctan2(Y, X)
+    edge_r = (5.1 + 0.12 * ring_noise(th, 1113, 9, 1.0, 0.6) + 0.05 * ring_noise(th, 1114, 45, 1.0, 0.2))
+    path_m = (np.abs(X) < 1.5 + 0.12 * n2(Y * 1.5, 0.3, 1131)) & (Y > -7.45 + 0.1 * n2(X * 2, 0.7, 1132)) & (Y < -3.0)
+    r_in = np.where((np.abs(X) < 1.35) & (Y < 0), 3.42, 3.64)
+    inside = ((r >= r_in) & (r <= edge_r)) | (path_m & (r >= r_in))
     Z = apron_height(X, Y)
-    outer = R_ > (APRON_RIM + 0.10 * ring_noise(T_, 1111, 5, 1.0))
-    Z = np.where(outer, Z_MIN, np.maximum(Z, Z_MIN))
-    Z[-4:, :] = Z_MIN                 # >= 0.4 m flat band exactly at the bbox-min level
+    Z = np.maximum(Z, Z_MIN)
     P = np.stack([X, Y, Z], -1).reshape(-1, 3)
-    nr = len(rr)
-    i = np.arange(nr - 1)[:, None]
-    j = np.arange(nt)[None, :]
-    j1 = (j + 1) % nt
-    F = np.stack([i * nt + j, (i + 1) * nt + j, (i + 1) * nt + j1, i * nt + j1], -1).reshape(-1, 4)   # normals up
+    nx, ny = X.shape
+    i = np.arange(nx - 1)[:, None]
+    j = np.arange(ny - 1)[None, :]
+    cell = inside[:-1, :-1] | inside[1:, :-1] | inside[:-1, 1:] | inside[1:, 1:]
+    F = np.stack([i * ny + j, (i + 1) * ny + j, (i + 1) * ny + j + 1, i * ny + j + 1], -1)[cell]
     acc.add(P, F, "M_earth")
     acc.build(coll)
 
