@@ -1163,6 +1163,7 @@ def line_path(p0, p1, nout):
 
 
 EAVE_SHADOW_Z = 2.36           # above this the wall is in the deep eave shadow (lighter geometry)
+ROD_SHADOW_Z = 2.28
 ROD_ARC = np.radians(np.array([-108.0, -65.0, -22.0, 22.0, 65.0, 108.0]))   # open-backed front shell
 STAKE_ARC = np.radians(np.array([-105.0, -52.0, 0.0, 52.0, 105.0]))
 
@@ -1341,7 +1342,7 @@ def weave_panel(rods, stakes_acc, pathf, s0, s1, z0, z1, seed, hide=None, n_stak
                 while kp < b - 0.03:
                     kpos.append(kp)
                     kp += rng.uniform(0.3, 0.6)
-                if z > EAVE_SHADOW_Z:
+                if z > ROD_SHADOW_Z:
                     dense = (st[:, None] + np.array([-0.045, 0.0, 0.045])[None, :]).ravel()
                     extra = []
                     step_ = 0.1
@@ -1412,13 +1413,15 @@ def weave_panel(rods, stakes_acc, pathf, s0, s1, z0, z1, seed, hide=None, n_stak
                     proud = np.maximum(proud, 0.5)
                 if steep:                        # recessed rope-weave door panels
                     lo_a, hi_a = np.full(n, 58.0), np.full(n, 80.0)
-                elif z > EAVE_SHADOW_Z:          # deep in the eave shadow: lighter section
+                elif z > ROD_SHADOW_Z:           # deep in the eave shadow: lighter section
                     lo_a, hi_a = 50.0 + 20.0 * proud, 62.0 + 22.0 * proud
                 elif z < 1.55:                   # below eye level: undersides face away from every viewer
                     lo_a, hi_a = 46.0 + 30.0 * proud, 78.0 + 30.0 * proud
                 else:                            # above eye level: tops face away from most viewers
                     lo_a, hi_a = 62.0 + 34.0 * proud, 68.0 + 30.0 * proud
-                arc_n = -np.radians(lo_a)[:, None] + (np.radians(lo_a + hi_a))[:, None] * np.linspace(0, 1, len(ROD_ARC))[None, :]
+                m_arc = 4 if (z > ROD_SHADOW_Z and not steep) else len(ROD_ARC)
+                arc_n = -np.radians(lo_a)[:, None] + (np.radians(lo_a + hi_a))[:, None] * np.linspace(0, 1, m_arc)[None, :]
+                kn = kn[:, :m_arc]
                 for (ra, rb) in _runs(vis):
                     if rb - ra < 3:
                         continue
@@ -2418,8 +2421,8 @@ def shell_stone(hu, hv, rng, kind, depth, rr=(0.02, 0.04), dome=0.03, tilt=0.15,
     for _ in range(n_facet):                 # gentle split facets: the face reads as flat planes, not a dome
         psi = rng.uniform(0, 2 * np.pi)
         ext = float(np.max(ou * math.cos(psi) + ov * math.sin(psi)))
-        u0 = ext * rng.uniform(0.0, 0.35)
-        fr.append((psi, u0, rng.uniform(0.12, 0.3), rng.uniform(0.003, 0.007), dome * rng.uniform(0.6, 0.9)))
+        u0 = ext * rng.uniform(0.05, 0.4)
+        fr.append((psi, u0, rng.uniform(0.15, 0.38), rng.uniform(0.002, 0.005), dome * rng.uniform(0.55, 0.9)))
 
     def yf(u, v):
         q = np.clip((u / hu) ** 2 + (v / hv) ** 2, 0, 1.4)
@@ -2686,9 +2689,9 @@ def build_plinth(coll):
         rr = (min(rr), max(rr))
         if not two:
             H = top - bot
-            V, F = shell_stone(L / 2, H / 2, rng, kind, depth_face, rr=rr, dome=rng.uniform(0.02, 0.045),
+            V, F = shell_stone(L / 2, H / 2, rng, kind, depth_face, rr=rr, dome=rng.uniform(0.02, 0.035),
                                tilt=math.tan(math.radians(rng.uniform(5, 15))) / 1.4, n_frac=rng.randint(1, 3),
-                               frac_depth=(0.04, 0.08), frac_k=(0.003, 0.006), n_facet=rng.randint(2, 4),
+                               frac_depth=(0.045, 0.08), frac_k=(0.002, 0.004), n_facet=rng.randint(3, 5),
                                noise=0.006, freq=6.0, side_bulge=0.0, sm_scale=0.25, n_th=56,
                                face_fr=(0.0, 0.25, 0.45, 0.62, 0.78, 0.9))
             V[:, 1] *= 1.0

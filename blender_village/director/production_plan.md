@@ -34,7 +34,7 @@ Target: populate a village of 40-50 buildings.
 - **The kit works:** proceed with the kit, variant generator and Unreal export.
 - **The kit does NOT break apart into a usable kit (or only partly):** build **3 new custom hero buildings**. Client permission was given on 2026-10-16. They go through the same director-led loop and the same producer notes, and reuse any kit parts that do work.
 
-**Candidate new buildings**, chosen to widen the village's vocabulary and taken from the concept art:
+**Approved new buildings**, chosen to widen the village's vocabulary and taken from the concept art (client-confirmed on 2026-10-16):
 1. the stone longhouse ending in a round building with a mossy conical shingle roof (ref1, lower middle);
 2. the tall tiered great hall with stacked conical roofs and dormer turrets (ref2 centre);
 3. a timber harbour house or boathouse on the waterfront (ref2 / ref3 right side).

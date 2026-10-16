@@ -4280,6 +4280,36 @@ def turret_outer(x, y, z):
     return r - rr
 
 
+COMB_LEN = np.array([0.24, 0.27, 0.30, 0.33, 0.36, 0.39, 0.42, 0.46, 0.50, 0.55])
+
+
+def _comb_builder(acc, i):
+    """riven ridge-comb shake variant i (local: x across, y along the shake from the butt, z thickness)."""
+    rr = np.random.default_rng(7100 + i)
+    L = float(COMB_LEN[i])
+    wd = rr.uniform(0.06, 0.11)
+    th = rr.uniform(0.02, 0.035)
+    r_ = 0.006
+    X = axn(np.array([-wd / 2]), np.array([wd / 2]), np.array([r_]), 6)
+    Y = axn(np.array([0.0]), np.array([L]), np.array([r_]), 8)
+    Z = ax4(np.array([th / 2]), np.array([r_]))
+    P, qd = rbox(X, Y, Z, np.array([r_]))
+    P = P[0]
+    x_, u, h = P[:, 0], P[:, 1], P[:, 2]
+    xn = x_ / (wd / 2)
+    tip = np.clip((u - (L - 0.08)) / 0.08, 0, 1)
+    kind = i % 3
+    cang = math.radians(rr.uniform(20, 40)) * rr.choice([-1, 1])
+    if kind == 1:
+        u = u - math.tan(abs(cang)) * (0.5 + 0.5 * math.copysign(1, cang) * xn) * wd * tip * 0.6
+    elif kind == 2:
+        u = u - np.where(np.abs(xn) < 0.3, rr.uniform(0.02, 0.045) * tip, 0.0)
+    u = u - 0.008 * tip * np.abs(np.sin(xn * 4.0 + L * 37.0))
+    h = h * (1 - 0.3 * u / L) + 0.002 * np.cos(xn * np.pi * 1.5 + L * 11) * (h > 0)
+    x_ = x_ * (1 - 0.12 * u / L) + 0.004 * np.sin(u * 9 + i)
+    acc.add(np.stack([x_, u, h], 1), qd, "M_roof_shake", uv=np.stack([x_, u], 1))
+
+
 def build_wing_ridge(coll):
     rng = np.random.default_rng(1414)
     acc = Acc("KEEP_wing_ridge_comb")
@@ -4311,10 +4341,12 @@ def build_wing_ridge(coll):
     LOG_R = 0.07
     V, F = sweep(lp, (0, 0, 1), prof_circle(LOG_R, 12))
     acc.add(V, F, "M_timber_weathered")
-    # comb: stubby, dense crossed split shakes (V/X pairs) pinned by the log; butts end >= 4 cm inside the dome
+    # comb: short, stubby, dense crossed split shakes (V/X pairs) pinned by the log (ref1: a crest 0.15-0.30 m
+    # tall); the shakes are a pool of 10 riven variants placed as linked duplicates, butts buried in the dome
+    get_pool("comb", _comb_builder, len(COMB_LEN))
     x = lp[0, 0] + rng.uniform(0.08, 0.14)
     x_end = lp[-1, 0] - 0.06
-    recs = []
+    ncomb = 0
     while x < x_end:
         psi = math.radians(rng.choice([-1, 1]) * rng.uniform(10, 36))
         hdir = np.array([math.sin(psi), math.cos(psi), 0.0])
@@ -4323,97 +4355,42 @@ def build_wing_ridge(coll):
         u = rng.uniform()
         sides = (-1, 1) if u > 0.12 else ((rng.choice([-1, 1]),))
         for side in sides:
-            lean = math.radians(rng.uniform(18, 36))
+            lean = math.radians(rng.uniform(18, 34))
             D = side * math.sin(lean) * hdir + math.cos(lean) * np.array([0, 0, 1.0])
             D += np.array([rng.normal(0, 0.06), 0, 0])
             D /= np.linalg.norm(D)
-            Lup = rng.uniform(0.12, 0.36) if rng.uniform() < 0.75 else rng.uniform(0.30, 0.42)
+            Lup = rng.uniform(0.07, 0.20) if rng.uniform() < 0.8 else rng.uniform(0.18, 0.25)
             cross = np.array([x + rng.normal(0, 0.012), WY_R + rng.normal(0, 0.01), zc + rng.normal(0, 0.01)])
-            # walk down the shake axis until the butt is >= 4.5 cm inside the dome (or near the log axis)
+            # pick the shortest variant that still buries its butt >= 4.5 cm in the dome (or in the rider log)
             Ldn = 0.06
-            buried = False
             while Ldn < 0.32:
                 pb = cross - D * Ldn
                 lat = pb[1] - WY_R
                 zd = float(np.interp(pb[0], path[:, 0], path[:, 2])) + float(ridge_dome_top(lat)) - 0.015
-                dl = math.hypot(lat, pb[2] - zl)
-                if pb[2] < zd - 0.045 or dl < LOG_R - 0.025:
-                    buried = True
+                if pb[2] < zd - 0.045 or math.hypot(lat, pb[2] - zl) < LOG_R - 0.025:
                     break
                 Ldn += 0.01
-            if not buried:
-                # steep leaners: stand them more upright and end the butt inside the rider log
-                lean = min(lean, math.atan(0.035 / (zc - zl)))
-                D = side * math.sin(lean) * hdir + math.cos(lean) * np.array([0, 0, 1.0])
-                D /= np.linalg.norm(D)
-                Ldn = (zc - zl) / max(D[2], 0.5)
-            recs.append((cross - D * Ldn, D, Lup + Ldn, rng.uniform(0.06, 0.12), rng.uniform(0.02, 0.04),
-                         int(rng.integers(0, 3)), math.radians(rng.uniform(20, 40)) * rng.choice([-1, 1]),
-                         rng.uniform(0.02, 0.05), Ldn))
-        x += rng.uniform(0.10, 0.22)
-    M = len(recs)
-    base = np.array([r[0] for r in recs])
-    D = np.array([r[1] for r in recs])
-    L = np.array([r[2] for r in recs])
-    wd = np.array([r[3] for r in recs])
-    th = np.array([r[4] for r in recs])
-    kind = np.array([r[5] for r in recs])
-    cang = np.array([r[6] for r in recs])
-    notch = np.array([r[7] for r in recs])
-    E = np.cross(D, np.stack([np.zeros(M), np.zeros(M), np.ones(M)], 1))
-    En = np.linalg.norm(E, axis=1, keepdims=True)
-    E = np.where(En > 1e-3, E / np.maximum(En, 1e-6), np.array([[1.0, 0, 0]]))
-    Nn = np.cross(E, D)
-    rr = np.full(M, 0.006)
-    X = axn(-wd / 2, wd / 2, rr, 6)
-    Y = axn(np.zeros(M), L, rr, 8)
-    Z = ax4(th / 2, rr)
-    P, qd = rbox(X, Y, Z, rr)
-    x_, u, h = P[..., 0], P[..., 1], P[..., 2]
-    xn = x_ / (wd[:, None] / 2)
-    tip = np.clip((u - (L[:, None] - 0.10)) / 0.10, 0, 1)
-    u = u - np.where((kind == 1)[:, None], np.tan(np.abs(cang))[:, None] * (0.5 + 0.5 * np.sign(cang)[:, None] * xn)
-                     * wd[:, None] * tip * 0.6, 0.0)
-    u = u - np.where((kind == 2)[:, None] & (np.abs(xn) < 0.3), notch[:, None] * tip, 0.0)
-    u = u - 0.008 * tip * np.abs(np.sin(xn * 4.0 + L[:, None] * 37.0))
-    h = h * (1 - 0.3 * u / L[:, None])
-    # riven faces: 2 shallow longitudinal ridges
-    h = h + 0.002 * np.cos(xn * np.pi * 1.5 + L[:, None] * 11) * (h > 0)
-    Wc = base[:, None, :] + u[..., None] * D[:, None, :] + x_[..., None] * E[:, None, :] + h[..., None] * Nn[:, None, :]
-    acc.add(Wc.reshape(-1, 3), inst_faces(qd, M, P.shape[1]), "M_roof_shake", uv=np.stack([x_, u], -1).reshape(-1, 2))
-    ldn = np.array([r[8] for r in recs])
-    log("  ridge comb shakes", M, "butt depth below crossing: min %.2f mean %.2f max %.2f" % (ldn.min(), ldn.mean(), ldn.max()))
+            need = Lup + Ldn
+            vi = int(np.argmin(np.where(COMB_LEN >= need, COMB_LEN, 9.0)))
+            if COMB_LEN[vi] < need:
+                vi = int(np.argmax(COMB_LEN))
+            base = cross + D * Lup - D * COMB_LEN[vi]
+            E = np.cross(D, np.array([0, 0, 1.0]))
+            E = E / np.linalg.norm(E) if np.linalg.norm(E) > 1e-3 else np.array([1.0, 0, 0])
+            roll = rng.normal(0, 0.25)
+            Nn = np.cross(E, D)
+            E2 = E * math.cos(roll) + Nn * math.sin(roll)
+            place("comb", vi, frame_matrix(base, E2, D, np.cross(E2, D)), "KEEP_ridge_comb_shake")
+            ncomb += 1
+        x += rng.uniform(0.09, 0.19)
+    log("  ridge comb shakes", ncomb)
     for xx in np.arange(lp[0, 0] + 0.3, lp[-1, 0], 0.9):
         zz = np.interp(xx, lp[:, 0], lp[:, 2])
         peg(acc, np.array([xx, WY_R, zz + LOG_R]), np.array([0, 0, 1.0]), rad=0.016, proud=0.03)
-    # west hip rolls (dome section on the hip line), from the eave roll at the corner up to the turret fillet
+    # (round 4) the west hips are no longer separate roll tubes: the thatch courses themselves swell round the
+    # hips (see thatch_courses), dying into the turret on the fillet
     global HIP_ENDS
     HIP_ENDS = []
-    for sy in (-1, 1):
-        off = EAVE_RC * (1 - 1 / math.sqrt(2))
-        corner = np.array([WX_W - W_OVH + off, (WY_S - W_OVH + off) if sy < 0 else (WY_N + W_OVH - off)])
-        apex = np.array([x_apex, WY_R])
-        t = np.linspace(0, 1, 200)[:, None]
-        xy = corner * (1 - t) + apex * t
-        z = np.minimum(plane_under("W", xy[:, 0], xy[:, 1]),
-                       plane_under("S" if sy < 0 else "N", xy[:, 0], xy[:, 1]))
-        nS = PLANES["S" if sy < 0 else "N"]["n"]
-        nW = PLANES["W"]["n"]
-        nb_ = nS + nW
-        nb_ /= np.linalg.norm(nb_)
-        hp = np.column_stack([xy, z + (TH_BASE + 0.05) / CP_])
-        hp[:, 2] -= 0.36 * np.clip(1 - t[:, 0] / 0.16, 0, 1) ** 1.6
-        hp = hp[t[:, 0] >= 0.02]
-        # stop where the dome meets the fillet against the turret stone
-        dt = tur_dist(hp[:, 0], hp[:, 1], hp[:, 2])
-        stop = np.flatnonzero(dt < 0.10)
-        t = t[t[:, 0] >= 0.02]
-        i_end = int(stop[0]) if len(stop) else len(hp)
-        hp = hp[:i_end]
-        if len(hp) > 4:
-            d_roll(acct, hp, HIP_DOME, HIP_VIS, 61 + sy, rng, up=nb_, var=0.02, sp=(0.012, 0.04),
-                   dep=(0.003, 0.012), taper=(0.32, 0.28), tmin=(0.7, 0.45))
-            HIP_ENDS.append((hp[-1], (hp[-1] - hp[-2]) / np.linalg.norm(hp[-1] - hp[-2]), nb_))
     finalize(acc, coll)
     finalize(acct, coll, smooth_deg=70.0)
 
@@ -4831,169 +4808,170 @@ def tur_map(s, z, w, zc):
 CUSH_E = math.radians(-25.0)        # the cushion leans out / droops toward E-SE (ref1)
 
 
+CUSH = dict(r_body=1.25, z_base=5.92, r_drum=1.15, z_top_drum=6.575, droop_dir=CUSH_E, droop=0.12,
+            proj_lo=(0.12, 0.23), proj_up=(0.15, 0.43), h_lo=(0.25, 0.29), stone_len=(0.40, 0.60), joint=0.025,
+            weather_deg=10.0, lip_droop=0.15, seed=2323)
+
+
+def _cush_f(th, spec=CUSH):
+    """0 on the W/NW side .. 1 on the E/SE side (the lopsided overhang of ref1)."""
+    return 0.5 * (1 + np.cos(np.asarray(th, float) - spec["droop_dir"]))
+
+
 def cush_out_r(th):
-    """outer radius of the cushion about the turret axis: 0.40-0.45 m proud of the body on E/SE, 0.12-0.18 on W/NW."""
-    return TUR_R_TOP + 0.285 + 0.145 * np.cos(np.asarray(th, float) - CUSH_E)
+    """outer radius of the cushion's upper corbel course about the turret axis."""
+    f = _cush_f(th)
+    return CUSH["r_body"] + CUSH["proj_up"][0] + (CUSH["proj_up"][1] - CUSH["proj_up"][0]) * f
 
 
 def cush_lip_z(th):
-    return 5.80 - 0.065 * (1 + np.cos(np.asarray(th, float) - CUSH_E))
+    """underside of the lower corbel course (droops toward E/SE)."""
+    return CUSH["z_base"] - CUSH["droop"] * _cush_f(th)
 
 
 TUR_R_TOP = 1.25
 
 
-TUR_CAP = OctRoof(TUR_C[0], TUR_C[1], p_lip=1.5, z_lip=7.10, d_pts=[0, 0.25, 0.45, 1.5], a_pts=[22, 32, 46, 47],
+TUR_CAP = OctRoof(TUR_C[0], TUR_C[1], p_lip=1.65, z_lip=7.10, d_pts=[0, 0.25, 0.45, 1.65], a_pts=[22, 32, 46, 47],
                   p_min=0.02, kick=0.03, kick_len=0.45, wave=0.008, sag=0.012, seed=13, rot_deg=8.0)
 
 
-def build_cushion(coll, rng):
-    """lopsided, drooping stone cushion under the turret cap (ref1): 13 irregular weathered boulders (one split
-    into two), offset toward E/SE, top tilted down ~10 deg more on that side, lower lip drooping ~0.13 m lower there;
-    creased joints, +-6 cm height variation round the ring, cleaved flat facets on ~40 % of the boulders."""
-    acc = Acc("KEEP_turret_corbel_collar")
-    NT, NR = 340, 34
-    th = np.linspace(0, 2 * np.pi, NT, endpoint=False)
-    e = np.cos(th - CUSH_E)
-    r_out = cush_out_r(th)
-    z_lip = cush_lip_z(th)
-    z_in = 6.62
-    slope = np.radians(14.0 + 10.0 * (1 + e) / 2)
-    # boulders: partition of the ring (arc lengths 0.55-0.95 m on the outer face), per-boulder height offsets
-    nb = 13
-    w = rng.uniform(0.7, 1.3, nb)
-    bnd = np.concatenate([[0], np.cumsum(w) / w.sum() * 2 * np.pi]) + rng.uniform(0, 0.5)
-    dzb = rng.uniform(-0.06, 0.06, nb)
-    bulge = rng.uniform(0.03, 0.05, nb)
-    drb = rng.uniform(-0.022, 0.03, nb)                  # boulders sit proud / back of their neighbours
-    bedj = {int(b): (rng.uniform(0.36, 0.58), rng.uniform(-0.12, 0.12), rng.uniform(-0.03, 0.025))
-            for b in rng.choice(nb, 4, replace=False)}   # 4 boulders are two slabs (bed joint, stepped)
-    cen = 0.5 * (bnd[:-1] + bnd[1:])
+def _softplus(d, k):
+    return k * np.logaddexp(0.0, d / k)
 
-    def part(thx):
-        tt_ = np.mod(thx - bnd[0], 2 * np.pi) + bnd[0]
-        b_ = np.clip(np.searchsorted(bnd, tt_) - 1, 0, nb - 1)
-        return tt_, b_, (tt_ - bnd[b_]) / (bnd[b_ + 1] - bnd[b_])
-    tt, bid, u = part(th)
-    win = np.sin(np.pi * u) ** 0.8
-    dz_th = dzb[bid] * (0.45 + 0.55 * win)
-    z_sh = z_in - (r_out - 0.10 - 1.12) * np.tan(slope) + dz_th
-    z_lp = z_lip + 0.6 * dz_th
-    # cross-section control points (r, z) per angle, from inside the body (bottom) round the lip to the drum (top)
-    rb = float(tur_r(5.84))
-    ctrl = [(np.full(NT, rb - 0.06), np.full(NT, 5.84)),
-            (np.full(NT, rb + 0.004), np.full(NT, 5.885)),
-            (0.5 * (rb + r_out - 0.12), 0.45 * 5.885 + 0.55 * (z_lp + 0.035)),
-            (r_out - 0.10, z_lp + 0.012),
-            (r_out - 0.03, z_lp + 0.06),
-            (r_out, z_lp + 0.22 * (z_sh - z_lp)),
-            (r_out - 0.006, z_lp + 0.52 * (z_sh - z_lp)),
-            (r_out - 0.03, z_lp + 0.84 * (z_sh - z_lp)),
-            (r_out - 0.10, z_sh + 0.012),
-            (0.5 * (r_out - 0.10) + 0.5 * 1.16, 0.5 * (z_sh + 0.012) + 0.5 * z_in - 0.004),
-            (np.full(NT, 1.16), np.full(NT, z_in)),
-            (np.full(NT, 1.08), np.full(NT, z_in + 0.04))]
-    CR = np.stack([c[0] for c in ctrl], 1)
-    CZ = np.stack([c[1] for c in ctrl], 1)
-    nc_ = len(ctrl)
-    tq = np.linspace(0, 1, NR)
-    seg = np.clip((tq * (nc_ - 1)).astype(int), 0, nc_ - 2)
-    lt = tq * (nc_ - 1) - seg
 
-    def cr(Cx):
-        p0 = Cx[:, np.clip(seg - 1, 0, nc_ - 1)]
-        p1 = Cx[:, seg]
-        p2 = Cx[:, seg + 1]
-        p3 = Cx[:, np.clip(seg + 2, 0, nc_ - 1)]
-        t = lt[None, :]
-        return 0.5 * (2 * p1 + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t ** 2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t ** 3)
-    R = cr(CR)
-    Z = cr(CZ)
-    dR = np.gradient(R, axis=1)
-    dZ = np.gradient(Z, axis=1)
-    nn = np.sqrt(dR ** 2 + dZ ** 2) + 1e-9
-    nr, nz = dZ / nn, -dR / nn
-    vis = np.clip((tq - 0.08) / 0.1, 0, 1) * np.clip((0.92 - tq) / 0.08, 0, 1)
-    # 2-D boulder map: joints meander and lean (not a pumpkin of vertical ribs); per-boulder pillow (flat middle,
-    # rounded toward the joints), radial step against the neighbours, creased joints 1-2 cm deep
-    TQ = np.broadcast_to(tq[None, :], (NT, NR))
-    dth = 0.05 * vnoise(np.stack([np.cos(th)[:, None] * 2.2 + TQ * 2.6, np.sin(th)[:, None] * 2.2 + 0 * TQ,
-                                  TQ * 1.7 + 4.4], -1)) + 0.03 * (TQ - 0.5)
-    tt2, bid2, u2 = part(th[:, None] + dth)
-    Rm = R
-    s_arc = u2 * (bnd[bid2 + 1] - bnd[bid2]) * Rm
-    s_len = (bnd[bid2 + 1] - bnd[bid2]) * Rm
-    dj = np.minimum(s_arc, s_len - s_arc)
-    cdep = rng.uniform(0.011, 0.02, nb)[bid2]
-    crease = np.clip(1 - dj / 0.04, 0, 1) ** 1.6 * cdep
-    # each boulder is a rounded polytope: 4-6 facet planes sloping 12-35 deg down toward its edges, soft-min blended
-    # (flat-ish weathered faces with rounded arrises, not pillows)
-    sec_len = np.concatenate([np.zeros((NT, 1)), np.cumsum(np.hypot(np.diff(R, axis=1), np.diff(Z, axis=1)), 1)], 1)
-    pil = np.full(R.shape, -1.0)
-    for b in range(nb):
-        m = bid2 == b
-        if not m.any():
-            continue
-        sa = (s_arc - 0.5 * s_len)[m]
-        tc = rng.uniform(0.42, 0.6)
-        jc = int(tc * (NR - 1))
-        ta = (sec_len - sec_len[:, jc:jc + 1])[m]
-        nf = int(rng.integers(4, 7))
-        a0 = rng.uniform(0, 2 * np.pi)
+def corbel_cushion(acc, accm, center, spec=CUSH):
+    """Corbelled stone cushion under a turret cap (kit component): two rough corbel courses of individual
+    stones (0.40-0.60 m long, 0.20-0.30 m tall) in 2-3 cm joints recessed 4 cm in a mortar body. The lower course
+    projects proj_lo, the upper proj_up beyond the body, both growing toward droop_dir, where the lip also sits
+    'droop' lower. Each stone is a rounded block (2-2.5 cm arrises) cut by 2-3 planar cleaved facets; only the
+    upper course's top outer lip is rounded 6-8 cm; the top weathering falls weather_deg outward."""
+    rng = np.random.default_rng(spec["seed"])
+    cx, cy = center
+    rb, rd = spec["r_body"], spec["r_drum"]
+    tw = math.tan(math.radians(spec["weather_deg"]))
+    courses = []
+    for c in (0, 1):
+        r_ref = rb + (0.18 if c == 0 else 0.3)
+        th = rng.uniform(0, 2 * np.pi)
+        th0 = th
+        st = []
+        while th < th0 + 2 * np.pi - 1e-6:
+            L = rng.uniform(*spec["stone_len"])
+            dth = (L + spec["joint"]) / r_ref
+            if th0 + 2 * np.pi - (th + dth) < spec["stone_len"][0] / r_ref * 0.8:
+                dth = th0 + 2 * np.pi - th
+            st.append((th, th + dth))
+            th += dth
+        courses.append(st)
+    # lower course tops as a function of angle (the upper course beds on the highest one under it)
+    lo_top = []
+    stones = []
+    for c, st in enumerate(courses):
+        for (ta, tb) in st:
+            tm = 0.5 * (ta + tb)
+            f = float(_cush_f(tm, spec))
+            jt = spec["joint"] * rng.uniform(0.85, 1.2)
+            dj = jt / (rb + 0.3)
+            ta_, tb_ = ta + 0.5 * dj, tb - 0.5 * dj
+            if c == 0:
+                proj = spec["proj_lo"][0] + (spec["proj_lo"][1] - spec["proj_lo"][0]) * f + rng.uniform(-0.015, 0.015)
+                zb = spec["z_base"] - spec["droop"] * f + rng.uniform(-0.012, 0.012)
+                h = rng.uniform(*spec["h_lo"]) - 0.04 * f
+                r_in = rb - 0.10
+                lo_top.append((ta, tb, zb + h))
+            else:
+                proj = spec["proj_up"][0] + (spec["proj_up"][1] - spec["proj_up"][0]) * f + rng.uniform(-0.015, 0.015)
+                tt = np.linspace(ta, tb, 9)
+                zb = -1e9
+                for (a_, b_, z_) in lo_top:
+                    for t_ in tt:
+                        d_ = np.mod(t_ - a_, 2 * np.pi)
+                        if d_ <= np.mod(b_ - a_, 2 * np.pi):
+                            zb = max(zb, z_)
+                zb = zb + spec["joint"] * rng.uniform(0.85, 1.15)
+                r_in = rd - 0.12
+                h = spec["z_top_drum"] + rng.uniform(-0.01, 0.01) - zb       # top meets the drum; sheared below
+            stones.append(dict(c=c, ta=ta_, tb=tb_, r_in=r_in, r_out=rb + proj, zb=zb, h=h, f=f,
+                               slope=tw + (spec["lip_droop"] * f / max(proj + rb - rd, 0.1) if c == 1 else 0.0)))
+    nlo = sum(1 for s_ in stones if s_["c"] == 0)
+    log(f"  cushion stones: {nlo} lower + {len(stones) - nlo} upper")
+    for sd in stones:
+        r_out, r_in, h = sd["r_out"], sd["r_in"], sd["h"]
+        hx = 0.5 * (sd["tb"] - sd["ta"]) * r_out
+        dep = r_out - r_in
+        ra = rng.uniform(0.02, 0.025)
+        X = axn(np.array([-hx]), np.array([hx]), np.array([ra]), 12)
+        Y = axn(np.array([0.0]), np.array([h]), np.array([ra]), 8)
+        Zc = axn(np.array([0.0]), np.array([dep]), np.array([ra]), 8)
+        P, quads = rbox(X, Y, Zc, np.array([ra]), skip_back=True)
+        P = P[0]
+        a_, b_, c_ = P[:, 0].copy(), P[:, 1].copy(), P[:, 2].copy()
+        Q = np.stack([a_, b_, c_], 1)
+        # 2-3 planar cleaved facets (soft-clamped: crisp planes, 2-4 cm arrises where they meet the block)
         planes = []
-        for kf in range(nf):
-            a_ = a0 + kf * 2 * np.pi / nf + rng.uniform(-0.35, 0.35)
-            planes.append(bulge[b] * rng.uniform(0.7, 1.1) - math.tan(math.radians(rng.uniform(12, 35))) *
-                          (np.cos(a_) * sa + np.sin(a_) * ta * 0.8))
-        Pm = np.stack(planes, 0)
-        ksm = 0.012
-        soft = -ksm * np.log(np.sum(np.exp(-Pm / ksm), 0))
-        pil[m] = np.maximum(soft, -0.03)
-    pil = pil * np.sin(np.pi * np.clip((TQ - 0.1) / 0.8, 0, 1)) ** 0.35
-    step = drb[bid2] * np.clip(dj / 0.03, 0, 1)
-    for b, (tb, inc, dru) in bedj.items():
-        m = bid2 == b
-        tj = tb + inc * (u2 - 0.5)
-        dtb = np.abs(TQ - tj)
-        crease = np.maximum(crease, np.where(m, np.clip(1 - dtb / 0.035, 0, 1) ** 1.6 * 0.016, 0.0))
-        step = step + np.where(m & (TQ > tj), dru * np.clip((TQ - tj) / 0.03, 0, 1), 0.0)
-    fine = 0.004 * fbm(np.stack([np.cos(th)[:, None] * 14 + 0 * R, np.sin(th)[:, None] * 14 + 0 * R, Z * 14], -1), 3)
-    off = (pil + step - crease + fine) * vis[None, :]
-    Rf = R + off * nr
-    Zf = Z + off * nz
-    X = TUR_C[0] + Rf * np.cos(th)[:, None]
-    Y = TUR_C[1] + Rf * np.sin(th)[:, None]
-    V = np.stack([X, Y, Zf], -1)
-    bid = bid2
-    # cleaved facets: flat planes cutting ~40 % of the boulders across part of their outer face
-    for b in range(nb):
-        if rng.uniform() > 0.42 and b != 2:
-            continue
-        m = (bid == b) & (np.clip(dj / 0.05, 0, 1) > 0.99)
-        tc = cen[b] + rng.uniform(-0.15, 0.15) * (bnd[b + 1] - bnd[b])
-        j0 = int(rng.uniform(0.38, 0.62) * NR)
-        ic = int(np.argmin(np.abs(np.angle(np.exp(1j * (th - tc))))))
-        p0 = V[ic, j0]
-        n0 = np.array([math.cos(th[ic]) * nr[ic, j0], math.sin(th[ic]) * nr[ic, j0], nz[ic, j0]])
-        tilt_ax = np.cross(n0, np.array([0, 0, 1.0]))
-        tilt_ax /= np.linalg.norm(tilt_ax) + 1e-9
-        a = math.radians(rng.uniform(10, 25)) * rng.choice([-1, 1])
-        b2 = math.radians(rng.uniform(-15, 15))
-        n1_ = n0 * math.cos(a) + np.cross(tilt_ax, n0) * math.sin(a)
-        n1_ = n1_ + np.array([0, 0, 1.0]) * math.sin(b2)
-        n1_ /= np.linalg.norm(n1_)
-        p0 = p0 - n1_ * rng.uniform(0.01, 0.025)
-        d = (V - p0) @ n1_
-        cut = m & (d > 0) & (vis[None, :] > 0.5)
-        V = V - np.where(cut[..., None], d[..., None] * n1_[None, None, :], 0.0)
-    # quads (wrap in theta)
+        for _ in range(int(rng.integers(2, 4))):
+            ta_ = math.tan(math.radians(rng.uniform(10, 26))) * rng.choice([-1, 1])
+            tb_ = math.tan(math.radians(rng.uniform(4, 18))) * rng.choice([-1, 1])
+            n_ = np.array([ta_, tb_, 1.0])
+            n_ /= np.linalg.norm(n_)
+            # pass through the outer face so that the deepest cut at the outline is 1.5-2.5 cm
+            corner = np.array([np.sign(n_[0]) * hx, (h if n_[1] > 0 else 0.0), dep])
+            d_corner = corner @ n_
+            planes.append((n_, d_corner - rng.uniform(0.015, 0.025) / max(n_[2], 0.5)))
+        # underside cleave on the projecting edge (seen from below)
+        n_ = np.array([rng.uniform(-0.2, 0.2), -1.0, rng.uniform(0.6, 1.1)])
+        n_ /= np.linalg.norm(n_)
+        planes.append((n_, np.array([0.0, 0.0, dep]) @ n_ - rng.uniform(0.03, 0.05)))
+        for n_, d0 in planes:
+            d = Q @ n_ - d0
+            Q = Q - n_[None, :] * _softplus(d, 0.006)[:, None]
+        if sd["c"] == 1:
+            # moss-soft top outer lip, rounded 6-8 cm
+            n_ = np.array([0.0, 1.0, 1.0]) / math.sqrt(2)
+            d0 = np.array([0.0, h, dep]) @ n_ - rng.uniform(0.035, 0.045)
+            d = Q @ n_ - d0
+            Q = Q - n_[None, :] * _softplus(d, 0.022)[:, None]
+        # top weathering falls outward (upper course), slight random set of each stone
+        r = r_in + Q[:, 2]
+        bb = Q[:, 1]
+        if sd["c"] == 1:
+            bb = bb - sd["slope"] * np.clip(r - rd, 0, None) * np.clip(bb / max(h, 1e-3), 0, 1)
+        bb = bb + rng.normal(0, 0.01) * Q[:, 0] / max(hx, 1e-3) + rng.normal(0, 0.008) * Q[:, 2] / dep
+        thv = 0.5 * (sd["ta"] + sd["tb"]) + Q[:, 0] / r_out
+        W = np.stack([cx + r * np.cos(thv), cy + r * np.sin(thv), sd["zb"] + bb], 1)
+        acc.add(W, quads, "M_stone", uv=np.stack([Q[:, 0] + Q[:, 2], Q[:, 1]], 1))
+    # mortar body: 4 cm behind the outer faces, 3.5 cm under the top, closing every head and bed joint
+    NT = 144
+    th = np.linspace(0, 2 * np.pi, NT, endpoint=False)
+    f = _cush_f(th, spec)
+    plo = spec["proj_lo"][0] + (spec["proj_lo"][1] - spec["proj_lo"][0]) * f
+    pup = spec["proj_up"][0] + (spec["proj_up"][1] - spec["proj_up"][0]) * f
+    zlo = spec["z_base"] - spec["droop"] * f
+    zlt = zlo + 0.5 * (spec["h_lo"][0] + spec["h_lo"][1]) - 0.04 * f
+    ztd = spec["z_top_drum"]
+    zto = ztd - tw * (rb + pup - rd) - spec["lip_droop"] * f
+    prof = [(np.full(NT, rb - 0.03), zlo - 0.05), (rb + plo - 0.04, zlo + 0.035), (rb + plo - 0.04, zlt + 0.01),
+            (rb + pup - 0.04, zlt + 0.035), (rb + pup - 0.04, zto - 0.06), (rb + pup - 0.07, zto - 0.035),
+            (np.full(NT, rd - 0.01), np.full(NT, ztd - 0.035))]
+    R_ = np.stack([np.broadcast_to(p_[0], (NT,)) for p_ in prof], 1)
+    Z_ = np.stack([np.broadcast_to(p_[1], (NT,)) for p_ in prof], 1)
+    npf = R_.shape[1]
+    V = np.stack([cx + R_ * np.cos(th)[:, None], cy + R_ * np.sin(th)[:, None], Z_], -1).reshape(-1, 3)
     i = np.arange(NT)[:, None]
-    j = np.arange(NR - 1)[None, :]
-    a_ = i * NR + j
-    b_ = ((i + 1) % NT) * NR + j
-    quads = np.stack([a_, a_ + 1, b_ + 1, b_], -1).reshape(-1, 4)
-    acc.add(V.reshape(-1, 3), quads, "M_stone")
-    finalize(acc, coll, smooth_deg=40.0)
+    j = np.arange(npf - 1)[None, :]
+    a0 = i * npf + j
+    b0 = ((i + 1) % NT) * npf + j
+    accm.add(V, np.stack([a0, a0 + 1, b0 + 1, b0], -1).reshape(-1, 4), "M_mortar")
+    return stones
+
+
+def build_cushion(coll, rng):
+    acc = Acc("KEEP_turret_corbel_collar")
+    accm = Acc("KEEP_turret_corbel_mortar")
+    corbel_cushion(acc, accm, (float(TUR_C[0]), float(TUR_C[1])), CUSH)
+    finalize(acc, coll, smooth_deg=34.0)
+    finalize(accm, coll)
 
 
 def turret_cull(C, wing_margin=0.0):
