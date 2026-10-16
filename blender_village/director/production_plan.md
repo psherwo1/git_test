@@ -1,6 +1,6 @@
 # Production plan: village buildings
 
-## Phase 1: hero buildings (all three signed off on 2026-10-16; ensemble review in progress)
+## Phase 1: hero buildings (COMPLETE: all three signed off, ensemble approved at 8.4 on 2026-10-16)
 
 **Buildings:**
 - hilltop keep
@@ -54,3 +54,9 @@ Target: populate a village of 40-50 buildings.
 | wattle_roundhut | 7 | 8.5 | upheld (round 6 at 8.3 was rejected) | 2026-10-16 |
 
 Sign-off rules in force: pass mark 8.2 (client, "for now"), producer notes 1-10, and all client corrections.
+
+Ensemble review 1: 8.4/10, APPROVED. These non-blocking consistency items carry into phase 2:
+- **Shared shingle size table.** The keep's turret and lantern caps go up to the chunky 0.35-0.55 m scale.
+- **Age passes.** Roughen the windmill's drum masonry and balusters. Add an age pass to the roundhut cone.
+- **Shared module.** Merge the stone, shingle and Mask code into one module.
+- **Roundhut kit entry point.** Add one to the roundhut.
