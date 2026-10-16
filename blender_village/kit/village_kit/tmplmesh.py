@@ -574,7 +574,7 @@ def hewn_tmpl(nx, drop=()):
 
 
 def hewn_beam(rng, L, w, d, nx=None, chamfer=(0.015, 0.03), adze=(0.003, 0.005), n_scallop=(2, 3),
-              checks=(1, 2), check_len=(0.5, 1.5), end_split=1, faces_check=(2, 1), drop=()):
+              checks=(1, 2), check_len=(0.5, 1.5), end_split=1, faces_check=(2, 1), drop=(), min_relief=0.0):
     """One hewn timber, local x = length (centred), y = width, z = depth. Returns (P (1,nv,3), T).
     - chamfer radius varies along the length within `chamfer` (worn arrises),
     - every long face carries 2-3 shallow concave adze scallops (`adze` deep),
@@ -622,6 +622,7 @@ def hewn_beam(rng, L, w, d, nx=None, chamfer=(0.015, 0.03), adze=(0.003, 0.005),
                 x0 = rng.uniform(-0.8, 0.8) * L / 2
                 hl = rng.uniform(0.15, 0.4) * min(1.0, L / 1.2)
                 dp = rng.uniform(*adze)
+                dp = dp if dp >= min_relief else 0.0           # producer note 11: adze marks -> material
                 b = 3 - a
                 lat = P[:, b] / h[b]
                 dep = np.maximum(dep, dp * np.clip(1 - ((P[:, 0] - x0) / hl) ** 2, 0, 1) *
@@ -637,7 +638,8 @@ def hewn_beam(rng, L, w, d, nx=None, chamfer=(0.015, 0.03), adze=(0.003, 0.005),
         lc = min(rng.uniform(*check_len), 0.8 * L)
         x0 = rng.uniform(-L / 2 + lc / 2 + 0.05, L / 2 - lc / 2 - 0.05) if L > lc + 0.1 else 0.0
         s_ = np.clip(1 - np.abs(P[:, 0] - x0) / (lc / 2), 0, 1)
-        P[:, a] -= sgn * on * rng.uniform(0.01, 0.015) * np.sqrt(s_)
+        ck = rng.uniform(0.01, 0.015)
+        P[:, a] -= sgn * on * (ck if ck >= min_relief else 0.0) * np.sqrt(s_)       # checks: note 11
     # split end grain
     if end_split:
         e = idx[:, 0] == (n[0] - 1 if end_split > 0 else 0)
@@ -645,12 +647,12 @@ def hewn_beam(rng, L, w, d, nx=None, chamfer=(0.015, 0.03), adze=(0.003, 0.005),
         up = np.clip(P[:, 2] / h[2] + 0.3, 0, 1)
         P[:, 0] -= end_split * (e & mid) * (0.012 + 0.03 * up)
         mid2 = idx[:, 2] == 3
-        P[:, 0] -= end_split * (e & mid2) * 0.012 * np.clip(P[:, 1] / h[1], 0, 1)
+        P[:, 0] -= end_split * (e & mid2) * (0.012 if 0.012 >= min_relief else 0.0) * np.clip(P[:, 1] / h[1], 0, 1)
     return P[None], T
 
 
 def hewn_between(part, mat, a, b, w, d, up, rng, chamfer=(0.012, 0.022), adze=(0.003, 0.005), checks=(0, 1),
-                 check_len=(0.3, 0.8), end_split=1, bow=0.0, nx=None, drop=()):
+                 check_len=(0.3, 0.8), end_split=1, bow=0.0, nx=None, drop=(), min_relief=0.0):
     """Hewn timber (hewn_beam) from point a to b (world): w across (normal to `up`), d along `up`."""
     a, b = np.asarray(a, float), np.asarray(b, float)
     L = float(np.linalg.norm(b - a))
@@ -659,7 +661,7 @@ def hewn_between(part, mat, a, b, w, d, up, rng, chamfer=(0.012, 0.022), adze=(0
     ya /= np.linalg.norm(ya)
     za = np.cross(xa, ya)
     P, T = hewn_beam(rng, L, w, d, nx=nx, chamfer=chamfer, adze=adze, checks=checks, check_len=check_len,
-                     end_split=end_split, drop=drop)
+                     end_split=end_split, drop=drop, min_relief=min_relief)
     if bow:
         u = P[:, :, 0] / (L / 2)
         bw = rng.uniform(-bow, bow, 2)
@@ -874,9 +876,10 @@ def bolt_heads(part, centers, normals, rad=0.02, hgt=0.012, sides=6):
 T_PAD = tmpl_box(25, 4, 25, drop={(1, 0)})       # prop pad stone: dense top so the chock notch has crisp walls
 
 
-def facet_shave(P, rng, faces, n=(1, 2), dep=(0.003, 0.006), tilt=0.12):
+def facet_shave(P, rng, faces, n=(1, 2), dep=(0.003, 0.006), tilt=0.12, min_relief=0.0):
     """Planar adze / split facets: each listed face (axis, sign) of a centred block P (nv,3) is shaved by 1-2
-    slightly tilted planes 3-6 mm deep (crisp facet edges, not a rounded box)."""
+    slightly tilted planes 3-6 mm deep (crisp facet edges, not a rounded box).  Facets shallower than
+    min_relief are not cut (producer note 11); the draws are made all the same."""
     for (ax_, sg) in faces:
         for _ in range(int(rng.integers(n[0], n[1] + 1))):
             nrm = np.zeros(3)
@@ -884,7 +887,8 @@ def facet_shave(P, rng, faces, n=(1, 2), dep=(0.003, 0.006), tilt=0.12):
             nrm += rng.normal(0, tilt, 3) * (np.arange(3) != ax_)
             nrm /= np.linalg.norm(nrm)
             pr = P @ nrm
-            o = pr.max() - rng.uniform(*dep)
+            dd = rng.uniform(*dep)
+            o = pr.max() - (dd if dd >= min_relief else 0.0)
             P -= np.clip(pr - o, 0, None)[:, None] * nrm[None]
     return P
 

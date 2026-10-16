@@ -671,3 +671,28 @@ def drum_finish(g, checks=True):
         % (n_obj, g.pools.n_inst, len(g.pools), ", ".join("%s x%d" % kv for kv in sorted(used.items()))))
     bpy.context.view_layer.update()
     return total
+
+
+# =============================================================================================
+# producer note 11: the modelled-relief threshold at a place on the building
+# =============================================================================================
+def relief_min(g, P):
+    """per-point relief threshold (m) of the frame's DetailRule: 2 cm, 1 cm in the entrance zone (3 m round the
+    door, 0-2.5 m high), 0 when the rule is off.  P (N, 3) or (3,) world points."""
+    r = g.rule
+    P = np.atleast_2d(np.asarray(P, float))
+    if not r.active:
+        return np.zeros(len(P))
+    d = np.hypot(P[:, 0] - r.entrance[0], P[:, 1] - r.entrance[1])
+    ent = (d <= r.entrance_r) & (P[:, 2] >= -0.05) & (P[:, 2] <= r.entrance_h)
+    return np.where(ent, r.entrance_relief, r.min_relief)
+
+
+def relief_far(g):
+    """the threshold away from the entrance (2 cm; 0 when the rule is off)."""
+    return g.rule.min_relief if g.rule.active else 0.0
+
+
+def relief_door(g):
+    """the entrance-zone threshold (1 cm; 0 when the rule is off)."""
+    return g.rule.entrance_relief if g.rule.active else 0.0

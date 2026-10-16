@@ -84,7 +84,15 @@ Tested target: Windows 10/11, AMD Ryzen 5 5600X, RTX 3060 12 GB.
 - 5.1.2 files open fine in 5.2.
 - Moving the pipeline to 5.2 later is a separate, deliberate task: rebuild everything and diff the results.
 
-1. **Install Git, and Python 3.13 (64-bit).** `bpy` 5.1 wheels require Python 3.13.
+1. **Install Git, and Python 3.13 (64-bit).** `bpy` 5.1 is built only for Python 3.13; Python 3.11 will not work. 3.13 installs side by side with any existing 3.11.
+   - Either run `winget install Python.Python.3.13`, or use the python.org installer. Afterwards `py -0` lists the installed versions.
+   - Or use `uv`, which avoids touching the system Python:
+     ```
+     winget install astral-sh.uv
+     uv venv .bpyenv --python 3.13
+     uv pip install --python .bpyenv\Scripts\python.exe bpy==5.1.2
+     ```
+     This replaces step 3.
 2. **Clone the branch:**
    ```
    git clone -b claude/blender-buildings-film-nfzv6a https://github.com/psherwo1/git_test.git

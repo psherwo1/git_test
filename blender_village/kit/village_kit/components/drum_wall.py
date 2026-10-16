@@ -46,8 +46,10 @@ def wall_stone_tmpl(zc, H, base_T):
     return out
 
 
-def stones_by_tmpl(rng, L, H, D, style, tmpls):
-    """stone_local for groups of stones sharing a template. Returns list of (index array, P, T)."""
+def stones_by_tmpl(rng, L, H, D, style, tmpls, min_relief=0.0):
+    """stone_local for groups of stones sharing a template. Returns list of (index array, P, T).
+    min_relief: scalar or per stone (producer note 11)."""
+    mr = np.broadcast_to(np.asarray(min_relief, float), (len(L),))
     groups = []
     ids = {}
     for i, T in enumerate(tmpls):
@@ -55,15 +57,26 @@ def stones_by_tmpl(rng, L, H, D, style, tmpls):
     for key in sorted(ids, key=lambda k: ids[k][1][0]):
         T, ix = ids[key]
         ix = np.array(ix)
-        P, _ = stone_local(rng, L[ix], H[ix], D[ix], style, T=T)
+        P, _ = stone_local(rng, L[ix], H[ix], D[ix], style, T=T, min_relief=mr[ix])
         groups.append((ix, P, T))
     return groups
 
 
 def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0.22, 0.62), joint=(0.006, 0.013),
-             wob=0.018, p_tall=0.05, p_pin=0.12, fix_ends=True, Dr=(0.18, 0.30), lmin=0.12):
+             wob=0.018, p_tall=0.05, p_pin=0.12, fix_ends=True, Dr=(0.18, 0.30), lmin=0.12, wob_cap=0.28, wob2=0.0,
+             pinch=0.0, pinch_w=(0.45, 1.0), h_min=0.0, p_long=0.15):
     """Generic coursed walling in (u, z). free_fn(zb, zt) -> list of (ua, ub) free spans.
-    Returns dict of arrays uc, zc, L, H, D for each stone."""
+    Returns dict of arrays uc, zc, L, H, D for each stone, plus sb / st: the slopes du/dz of its bottom and top bed
+    at its centre (emit_drum_stones shears each stone to follow them).
+
+    Ensemble review (kit 1.2.0) -- rough rubble rather than near-ashlar:
+      wob, wob_cap, wob2  bed lines wander (a low sine of up to wob, capped at wob_cap x the adjacent course height,
+                          plus a second shorter wave of amplitude wob2): courses visibly undulate +-2-4 cm
+      pinch               chance per course of a PINCH-OUT: over a 0.9-2 m window the course thins to nothing (its
+                          top bed sinks onto its bottom bed); the course above thickens to fill and stones thinner
+                          than h_min are not laid
+      p_tall, p_long      through-stones spanning two courses; long stones up to 1.45 x lr[1]
+    Defaults reproduce the phase-1 layout (no pinch, no second wave)."""
     zs = [z0]
     while zs[-1] < z1 - 1e-6:
         zs.append(zs[-1] + (rng.uniform(*hr) if rng.random() > p_big else rng.uniform(hr[1], hbig)))
@@ -75,17 +88,34 @@ def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0
     ch = np.diff(zs)
     wa = np.zeros(nb)
     for k in range(1, nb - 1):
-        wa[k] = rng.uniform(0.3, 1.0) * min(wob, 0.28 * min(ch[k - 1], ch[k]))
+        wa[k] = rng.uniform(0.3, 1.0) * min(wob, wob_cap * min(ch[k - 1], ch[k]))
     if not fix_ends:
         wa[0] = wa[-1] = 0
     wf = rng.uniform(0.25, 0.9, nb)
     wp = rng.uniform(0, 2 * PI, nb)
+    if wob2 > 0:
+        wa2 = np.array([0.0] + [rng.uniform(0.3, 1.0) * min(wob2, 0.15 * min(ch[k - 1], ch[k]))
+                                for k in range(1, nb - 1)] + [0.0])
+        wf2 = rng.uniform(1.8, 4.0, nb)
+        wp2 = rng.uniform(0, 2 * PI, nb)
+    else:
+        wa2 = np.zeros(nb)
+        wf2 = wp2 = np.zeros(nb)
+    pinches = {k: [] for k in range(nb)}          # bed line -> [(u centre, half width, depth)]
 
     def B(k, u):
-        return zs[k] + wa[k] * np.sin(u * wf[k] + wp[k])
+        z = zs[k] + wa[k] * np.sin(u * wf[k] + wp[k]) + wa2[k] * np.sin(u * wf2[k] + wp2[k])
+        for (uc_, hw_, dp_) in pinches[k]:
+            x_ = np.clip(np.abs(u - uc_) / hw_, 0, 1)
+            z = z - dp_ * (0.5 + 0.5 * np.cos(PI * x_))
+        return z
 
-    out = {k: [] for k in ("uc", "zc", "L", "H", "D")}
+    def dB(k, u):
+        return (B(k, u + 0.01) - B(k, u - 0.01)) / 0.02
+
+    out = {k: [] for k in ("uc", "zc", "L", "H", "D", "sb", "st")}
     carry = []  # spans blocked by tall stones for the next course
+    n_pinch = 0
     for k in range(nb - 1):
         spans = free_fn(zs[k], zs[k + 1])
         new_carry = []
@@ -100,6 +130,13 @@ def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0
                 cur = max(cur, cb)
             if b > cur:
                 sp2.append((cur, b))
+        if pinch > 0 and 0 < k < nb - 2 and sp2 and rng.random() < pinch:
+            a_, b_ = max(sp2, key=lambda ab: ab[1] - ab[0])
+            hw_ = rng.uniform(*pinch_w)
+            if b_ - a_ > 2.2 * hw_:
+                u_c = rng.uniform(a_ + hw_, b_ - hw_)
+                pinches[k + 1].append((u_c, hw_, (zs[k + 1] - zs[k]) * rng.uniform(0.8, 1.0)))
+                n_pinch += 1
         for a, b in sp2:
             S = b - a
             if S < 0.06:
@@ -107,7 +144,7 @@ def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0
             Ls, Js = [], []
             tot = 0.0
             while tot < S:
-                Lr = rng.uniform(*lr) if rng.random() > 0.15 else rng.uniform(lr[1], lr[1] * 1.45)
+                Lr = rng.uniform(*lr) if rng.random() > p_long else rng.uniform(lr[1], lr[1] * 1.45)
                 j = rng.uniform(*joint)
                 Ls.append(Lr)
                 Js.append(j)
@@ -130,6 +167,9 @@ def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0
                 Hs = (zt - zb) - jv - rng.uniform(0, 0.003)
                 zc = (zb + zt) / 2 + rng.uniform(-0.004, 0.004)
                 Ds = rng.uniform(*Dr)
+                sb, st = dB(k, uc), dB(kt, uc)
+                if Hs < h_min:
+                    continue                    # pinched out: the course above fills the space
                 if tall:
                     new_carry.append((uc - Lr / 2 - j / 2, uc + Lr / 2 + j / 2))
                 if (not tall) and rng.random() < p_pin and Hs > 0.13 and Lr > 0.25:
@@ -141,20 +181,36 @@ def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0
                     Hm = Hs - Hp - jv * 0.6
                     zm = zc - Hs / 2 + Hm / 2 if not top else zc + Hs / 2 - Hm / 2
                     zp = zc + Hs / 2 - Hp / 2 if not top else zc - Hs / 2 + Hp / 2
-                    for kk, v in zip(("uc", "zc", "L", "H", "D"), (uc, zm, Lr, Hm, Ds)):
+                    for kk, v in zip(("uc", "zc", "L", "H", "D", "sb", "st"), (uc, zm, Lr, Hm, Ds, sb, st)):
                         out[kk].append(v)
                     npin = 1 if Lr < 0.4 else 2
                     seg = Lr / npin
                     for q in range(npin):
                         lp = seg * rng.uniform(0.55, 0.85)
                         up = uc - Lr / 2 + seg * (q + 0.5) + rng.uniform(-0.03, 0.03)
-                        for kk, v in zip(("uc", "zc", "L", "H", "D"), (up, zp, lp, Hp, Ds * 0.7)):
+                        for kk, v in zip(("uc", "zc", "L", "H", "D", "sb", "st"), (up, zp, lp, Hp, Ds * 0.7, st, st)):
                             out[kk].append(v)
                     continue
-                for kk, v in zip(("uc", "zc", "L", "H", "D"), (uc, zc, Lr, Hs, Ds)):
+                for kk, v in zip(("uc", "zc", "L", "H", "D", "sb", "st"), (uc, zc, Lr, Hs, Ds, sb, st)):
                     out[kk].append(v)
         carry = new_carry
-    return {k: np.array(v) for k, v in out.items()}
+    res = {k: np.array(v) for k, v in out.items()}
+    res["n_pinch"] = n_pinch
+    return res
+
+
+def follow_beds(P, S, ix, k=1.0):
+    """shear / taper local stones (x along the wall, z up) so their bottom and top follow the wandering bed lines
+    (slopes S['sb'] / S['st'] at each centre): a stone in a sloping or pinching course becomes a wedge."""
+    if "sb" not in S or k == 0:
+        return P
+    sb = np.clip(S["sb"][ix], -0.45, 0.45)[:, None] * k
+    st = np.clip(S["st"][ix], -0.45, 0.45)[:, None] * k
+    H = np.maximum(S["H"][ix], 0.02)[:, None]
+    x, z = P[:, :, 0], P[:, :, 2]
+    P = P.copy()
+    P[:, :, 2] = z * (1 + (st - sb) * x / H) + 0.5 * (sb + st) * x
+    return P
 
 
 _TPB = {}
@@ -220,8 +276,9 @@ class Wall:
     registry = []
 
     def __init__(self, name, to_world, to_wall, mortar_d, u0, u1, z0, z1, blocked, period=None, metric_z=None,
-                 cell=0.01, flip=False, registry=None):
+                 cell=0.01, flip=False, registry=None, min_relief=0.0):
         self.name, self.to_world, self.to_wall, self.mortar_d = name, to_world, to_wall, mortar_d
+        self.min_relief = min_relief            # producer note 11: skin of the pinning stones
         self.u0, self.z0, self.cell, self.period = u0, z0, cell, period
         self.nu = int(math.ceil((u1 - u0) / cell))
         self.nz = int(math.ceil((z1 - z0) / cell))
@@ -479,7 +536,8 @@ class Wall:
                 fb = np.array(fb)
                 Nf = len(fb)
                 yq = rng.uniform(*yo, Nf)
-                Pq, Tq = stone_local(rng, fb[:, 2], fb[:, 3], yq + 0.008, "pin", rot_deg=(1, 1, 3))
+                Pq, Tq = stone_local(rng, fb[:, 2], fb[:, 3], yq + 0.008, "pin", rot_deg=(1, 1, 3),
+                                     min_relief=self.min_relief)
                 yo_ = self.mortar_d(fb[:, 0], fb[:, 1]) + yq
                 Wq = self.to_world(fb[:, 0, None] + Pq[:, :, 0], fb[:, 1, None] + Pq[:, :, 2],
                                    yo_[:, None] + Pq[:, :, 1])
@@ -509,7 +567,7 @@ class Wall:
             L = float(np.clip(ext[0] * rng.uniform(0.55, 0.9), 0.03, 0.08))
             Hh = float(np.clip(ext[1] * rng.uniform(0.75, 1.05), 0.012, 0.045))
             yq = rng.uniform(0.010, 0.022)
-            P, T = stone_local(rng, [L], [Hh], [yq + 0.012], "pin", rot_deg=(1.5, 1.5, 0.0))
+            P, T = stone_local(rng, [L], [Hh], [yq + 0.012], "pin", rot_deg=(1.5, 1.5, 0.0), min_relief=self.min_relief)
             x, z = P[0, :, 0].copy(), P[0, :, 2].copy()
             # wedge: one end 35-60 % thinner, the thin edge slightly skewed
             tw = rng.uniform(0.35, 0.6) * rng.choice([-1, 1])
@@ -597,11 +655,11 @@ class Wall:
         log(msg)
 
 
-def depth_tilt_params(rng, N, p_tilt=0.18):
+def depth_tilt_params(rng, N, p_tilt=0.18, dy=(-0.006, 0.012), yaw=(2.0, 4.0)):
     """Per-stone face depth (2 cm range) and a 2-4 deg yaw on ~18% of stones so one end stands proud."""
     tilt = rng.random(N) < p_tilt
-    ang = np.where(tilt, rng.uniform(2.0, 4.0, N) * rng.choice([-1, 1], N), 0.0) * D2R
-    return ang, rng.uniform(-0.006, 0.012, N)
+    ang = np.where(tilt, rng.uniform(*yaw, N) * rng.choice([-1, 1], N), 0.0) * D2R
+    return ang, rng.uniform(*dy, N)
 
 
 def wall_depth(face_d, mortar_d, L, ang, margin=0.008):

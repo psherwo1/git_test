@@ -327,7 +327,7 @@ def _interp_rows(mq, M5, H5):
 def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), m0=0.64, m_max=3.95,
                    drift=(0.085, 0.055), expo_lim=(0.24, 0.36), straw_pitch=(0.015, 0.03), straw_depth=(0.005, 0.015),
                    straw_patch=(0.2, 0.5), straw_skew_deg=5.0, end_feather=0.4, relief_min=0.0,
-                   clump_cols=(0.07, 0.15)):
+                   clump_cols=(0.05, 0.10)):
     """Kit component: stepped thatch courses laid as continuous strips round the whole hipped roof (N side, rounded
     NW hip, W end, rounded SW hip, S side), so the hips are a swell of the courses themselves.
     Round 5:
@@ -342,8 +342,8 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
       * the exposed course top carries an extra crowned row (soft, lumpy, not a flat slab).
     Producer note 11 (relief_min > straw_depth): the straw ridges are not modelled (striation is a material job);
     the courses are laid as discrete thatch CLUMPS instead -- one column pair per clump (clump_cols wide), each clump
-    crowned 0.8-1.6 cm and standing +-2-3 cm proud of its neighbours with a 1.2-2 cm crease between them, so the
-    bundles read at actor and crane distance with a fraction of the straw's triangles."""
+    crowned 1.4-2.8 cm, its butt standing +-3-4 cm proud of its neighbours, with a 2.4-3.2 cm crease between
+    clumps, so the bundles read at actor and crane distance with a fraction of the straw's triangles."""
     from mathutils.kdtree import KDTree
     straw_on = straw_depth[1] >= relief_min
     ms = []
@@ -412,9 +412,11 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
         bflag[0::2] = flags
         crease = np.where(bflag, rng.uniform(0.0015, 0.002, ncol), rng.uniform(0.0005, 0.001, ncol))
         if not straw_on:
-            prot_l = prot_l * 1.6
-            crown = crown * 4.0
-            crease = crease * 10.0
+            # discrete clumps: ragged butts +-3-4 cm along the slope, each clump crowned 1.4-2.8 cm, 2.4-3.2 cm
+            # creases between clumps (joints that cast real shadows)
+            prot_l = prot_l * 2.2 + rng.normal(0, 0.01, nl)
+            crown = crown * 7.0
+            crease = crease * 16.0
         p_col = np.where(isb, np.minimum(prot_l[lprev], prot_l[lid]) - 0.002, prot_l[lid])
         cr_ = np.where(isb, -crease, crown[lid])
         # straw relief: patches of 0.2-0.5 m with their own depth and skew
@@ -500,7 +502,7 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
                 return _interp_rows(mg, pM[idx], pH[idx])
             Qb = plan(mb)
             sw_b = thatch_swell(Qb[:, 0], Qb[:, 1]) + hip_swell(Qb[:, 0], Qb[:, 1])
-            top = FR.TH_BASE + stp + sw_b + np.where(isb, 0.45, 1.0) * crr
+            top = FR.TH_BASE + stp + sw_b + np.where(isb, 0.45 if straw_on else 1.0, 1.0) * crr
             low_b = low_at(mb)
             dh = np.maximum(top - low_b, 0.012) * fe - 0.008 * (1 - fe)
             run = np.maximum(np.abs(dh), 0.004) / np.tan(beta)
@@ -577,6 +579,9 @@ def build_wing_roof(coll, seed=3, rng_seed=1313):
     rng = np.random.default_rng(rng_seed)
     thr = float(FR.min_relief(np.array([[FR.WX_W, FR.WY_S, 3.0]]))[0])
     ribs = 0.015 >= thr
+    # note 11: strand ribs (0.3-1.5 cm) go to the material; the roll keeps its bound BUNDLES (2-3 cm constrictions
+    # every 0.10-0.18 m: discrete pieces)
+    rib_sp, rib_dep = ((0.022, 0.05), (0.003, 0.015)) if ribs else ((0.10, 0.18), (0.02, 0.03))
     acc = Acc(FR.prefix + "_wing_roof_thatch")
     # --- continuous stepped courses round the rounded hips (built first: the core is trimmed under them)
     accc = Acc(FR.prefix + "_wing_roof_thatch_courses")
@@ -672,7 +677,7 @@ def build_wing_roof(coll, seed=3, rng_seed=1313):
         near_t = tur_dist(r_a[[0, -1], 0], r_a[[0, -1], 1], r_a[[0, -1], 2] + 0.3) < 0.6
         tp = (0.45 if near_t[0] else 0.0, 0.45 if near_t[1] else 0.0)
         FR.EAVE_RUNS.append(d_roll(acc, r_, ROLL_P, ROLL_VIS, 5 + len(r_), rng, var=0.03, taper=tp, tmin=(0.3, 0.3),
-                                drop_hidden=True, sp=(0.022, 0.05), ribs=ribs,
+                                drop_hidden=True, sp=rib_sp, dep=rib_dep,
                                 keep_back_fn=lambda P_: tur_dist(P_[:, 0], P_[:, 1], P_[:, 2]) < 1.3))
     nt = 0
     for P in FR.EAVE_RUNS:
@@ -803,8 +808,8 @@ def build_wing_ridge(coll, seed=1414):
             cur = 0
     path = path[best[0]:best[1]]
     FR.RIDGE_PATH = path
-    d_roll(acct, path, RIDGE_DOME, RIDGE_VIS, 71, rng, var=0.02, sp=(0.012, 0.04), dep=(0.003, 0.012), drop_hidden=True,
-           ribs=0.012 >= thr)
+    sp_, dep_ = ((0.012, 0.04), (0.003, 0.012)) if 0.012 >= thr else ((0.08, 0.15), (0.02, 0.03))
+    d_roll(acct, path, RIDGE_DOME, RIDGE_VIS, 71, rng, var=0.02, sp=sp_, dep=dep_, drop_hidden=True)
     # ridge-rider log, seated 3 cm into the dome; starts clear of the cushion
     lp = path + np.array([0, 0, 0.115 + 0.07 - 0.03])
     okl = turret_outer(lp[:, 0], lp[:, 1], lp[:, 2]) > -0.08

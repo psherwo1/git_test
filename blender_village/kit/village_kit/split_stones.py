@@ -16,8 +16,9 @@ SPLIT_STYLES (rounding, outline noise, face noise, pillow, taper, shear, cuts / 
   ashlar    band / frieze ashlar above the actor zone
   flag      floor flags, ground  bedded pad stones (local y up)
 
-Producer note 11 (min_relief): split facets, spalls and conchoidal scoops shallower than min_relief are not cut
-(their random draws are still made, so the layout and the kept shape do not change); pass DetailRule thresholds.
+Producer note 11 (min_relief): the face skin (low / fine face noise), spalls and conchoidal scoops shallower than
+min_relief are not cut (their random draws are still made, so the layout and the kept shape do not change); the
+outline cuts, split facets, pillow and arris wear are stone SHAPE and always modelled.  Pass DetailRule thresholds.
 """
 import math
 
@@ -102,8 +103,9 @@ def edge_radii(rng, T, N, rmin, rmax, ry_k, D, ncrisp=(1, 2)):
     return np.stack([rx, ry, rz], 2)
 
 
-def conchoidal(rng, P, T, frac=0.3, dep=(0.003, 0.008)):
-    """Shallow conchoidal scoop (3-8 mm, crisp rim) on the front face of ~30 % of the stones (in place)."""
+def conchoidal(rng, P, T, frac=0.3, dep=(0.003, 0.008), min_relief=0.0):
+    """Shallow conchoidal scoop (3-8 mm, crisp rim) on the front face of ~30 % of the stones (in place).  Scoops
+    shallower than min_relief (producer note 11) are not cut; the random draws are made all the same."""
     N = len(P)
     front = T["idx"][:, 1] == T["n"][1] - 1
     sel = np.nonzero(rng.random(N) < frac)[0]
@@ -113,15 +115,20 @@ def conchoidal(rng, P, T, frac=0.3, dep=(0.003, 0.008)):
         c = lo + (hi - lo) * rng.uniform(0.2, 0.8, 2)
         R = min(rng.uniform(0.04, 0.10), 0.6 * float((hi - lo).min()))
         rho = np.hypot(F[:, 0] - c[0], F[:, 2] - c[1]) / max(R, 1e-3)
-        d = rng.uniform(*dep) * np.clip(1 - rho ** 2, 0, 1)
+        dd = rng.uniform(*dep)
+        d = (dd if dd >= min_relief else 0.0) * np.clip(1 - rho ** 2, 0, 1)
         P[i, np.nonzero(front)[0], 1] -= d
     return len(sel)
 
 
-def stone_local(rng, L, H, D, style, rot_deg=(2.0, 0.8, 1.1), spall=None, T=None):
+def stone_local(rng, L, H, D, style, rot_deg=(2.0, 0.8, 1.1), spall=None, T=None, min_relief=0.0):
     """Irregular stone, local x = length, y = outward (front face at y=0), z = up. (N,nv,3).
     Split-stone language: angular outline from straight fracture cuts, a flat bed face with 1-2 tilted
-    facets (pillow <= 1 cm), small arris radius. Dressed work: flat faces, 1 cm chamfer, edge spalls."""
+    facets (pillow <= 1 cm), small arris radius. Dressed work: flat faces, 1 cm chamfer, edge spalls.
+    min_relief (scalar or per stone, producer note 11): the face skin (low face noise `ny`, fine noise `hf`) and the
+    spalls shallower than it are not modelled; every random draw is still made, so outline, facets, pillow and
+    the kept spalls are unchanged."""
+    mr = np.broadcast_to(np.asarray(min_relief, float), (len(np.atleast_1d(L)),))
     st = STYLE[style]
     T = st["T"] if T is None else T
     L, H, D = (np.asarray(v, float) for v in (L, H, D))
@@ -145,9 +152,11 @@ def stone_local(rng, L, H, D, style, rot_deg=(2.0, 0.8, 1.1), spall=None, T=None
     P[:, :, 0] += st["nxz"] * h[:, None, 0] * 0.6 * noise_field(u, rng)
     P[:, :, 2] += st["nxz"] * h[:, None, 2] * noise_field(u, rng)
     front = np.clip(u[:, :, 1], 0, 1)
-    P[:, :, 1] += st["ny"] * noise_field(u * 1.6, rng, fmin=1.5, fmax=3.5) * (0.4 + 0.6 * front)
+    P[:, :, 1] += (st["ny"] * (st["ny"] >= mr))[:, None] * noise_field(u * 1.6, rng, fmin=1.5, fmax=3.5) * \
+        (0.4 + 0.6 * front)
     if st.get("hf", 0):
-        P[:, :, 1] += st["hf"] * noise_field(u * 3.0, rng, nterms=4, fmin=2.0, fmax=5.0) * (0.3 + 0.7 * front)
+        P[:, :, 1] += (st["hf"] * (st["hf"] >= mr))[:, None] * noise_field(u * 3.0, rng, nterms=4, fmin=2.0, fmax=5.0) \
+            * (0.3 + 0.7 * front)
     pil = rng.uniform(*st["pil"], N)
     P[:, :, 1] += pil[:, None] * front * np.clip(1 - u[:, :, 0] ** 2, 0, 1) * np.clip(1 - u[:, :, 2] ** 2, 0, 1)
     if st.get("cuts"):
@@ -210,7 +219,7 @@ def stone_local(rng, L, H, D, style, rot_deg=(2.0, 0.8, 1.1), spall=None, T=None
             n2 = unit(nrm - avec * (dep / hl2)[:, None])
             n3 = unit(nrm + bvec * rng.uniform(-0.45, 0.45, N)[:, None] + avec * rng.uniform(-0.15, 0.15, N)[:, None])
             c3 = c0 - nrm * (rng.uniform(-0.25, 0.1, N) * dep)[:, None]
-            on = (k < nsp)[:, None]
+            on = ((k < nsp) & (dep >= mr))[:, None]
             ds = np.abs(hd[:, None] - sgn[:, None] * np.take_along_axis(P, dax[:, None, None].repeat(P.shape[1], 1), 2)[:, :, 0])
             df = np.abs(h[:, 1:2] - P[:, :, 1])
             ws, wf = 1.0 / (ds + 0.002), 1.0 / (df + 0.002)
@@ -244,11 +253,12 @@ def _as_generator(rng):
 
 
 def _single(style):
-    def make(half, rng, rot_deg=(2.0, 0.8, 1.1), spall=None, T=None):
+    def make(half, rng, rot_deg=(2.0, 0.8, 1.1), spall=None, T=None, min_relief=0.0):
         """one split stone (village_kit.stones.make_stone entry): half = (along, out, up) half extents.
         Returns (V, faces) in local coords, x along, y out (face at +y), z up, centred."""
         a, b, c = (float(v) for v in half)
-        P, Tq = stone_local(_as_generator(rng), [2 * a], [2 * c], [2 * b], style, rot_deg=rot_deg, spall=spall, T=T)
+        P, Tq = stone_local(_as_generator(rng), [2 * a], [2 * c], [2 * b], style, rot_deg=rot_deg, spall=spall, T=T,
+                            min_relief=min_relief)
         V = P[0] + np.array([0.0, b, 0.0])
         faces = [f for f in (Tq["quads"], Tq["tris"]) if len(f)]
         return V, faces
