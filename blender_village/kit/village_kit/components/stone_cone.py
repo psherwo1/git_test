@@ -189,7 +189,7 @@ def build_collar(coll, seed=505):
 
 def build_lantern(coll, seed=606):
     rng = np.random.default_rng(seed)
-    bw = SIZE_TABLE["board"]["width"] if FR.units == "kit" else (0.14, 0.24)
+    bwr = SIZE_TABLE["board"]["width"] if FR.units == "kit" else (0.14, 0.24)
     accb = Acc(FR.prefix + "_lantern_boards")
     accf = Acc(FR.prefix + "_lantern_frame")
     up = np.array([0, 0, 1.0])
@@ -216,7 +216,7 @@ def build_lantern(coll, seed=606):
         half = FR.LANT_APO * TAN22
         x = -half + 0.03
         while x < half - 0.06:
-            wd = min(rng.uniform(*bw), half - 0.03 - x)
+            wd = min(rng.uniform(*bwr), half - 0.03 - x)
             if wd < 0.07:
                 break
             zb = FR.LANT_Z0 - 0.08 + rng.uniform(-0.02, 0.02)

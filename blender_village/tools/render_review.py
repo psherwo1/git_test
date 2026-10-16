@@ -1,7 +1,9 @@
 """Standard review renders for a building .blend (geometry-only clay renders).
 
 Usage:
-    /opt/bpyenv/bin/python blender_village/tools/render_review.py <building.blend> <out_dir> [--samples N] [--res W H] [--views hero,front,...]
+    <python-with-bpy> blender_village/tools/render_review.py <building.blend> <out_dir> [--samples N] [--res W H] [--views hero,front,...] [--device GPU]
+
+(<python-with-bpy> is /opt/bpyenv/bin/python in the cloud container, or the desktop venv's python.)
 
 Every building is judged with the same lighting, clay shader, camera set and a
 1.8 m human scale figure so the director compares like with like. Materials in
@@ -41,6 +43,9 @@ def parse():
     p.add_argument("--samples", type=int, default=32)
     p.add_argument("--res", type=int, nargs=2, default=[1280, 720])
     p.add_argument("--views", default=",".join(VIEWS))
+    p.add_argument("--device", choices=["CPU", "GPU"], default="CPU",
+                   help="Cycles device. GPU uses --gpu-backend (OPTIX for NVIDIA RTX) and falls back to CPU.")
+    p.add_argument("--gpu-backend", default="OPTIX", choices=["OPTIX", "CUDA", "HIP", "METAL", "ONEAPI"])
     return p.parse_args(argv)
 
 
@@ -129,6 +134,19 @@ def main():
 
     scn.render.engine = "CYCLES"
     scn.cycles.device = "CPU"
+    if a.device == "GPU":
+        try:
+            prefs = bpy.context.preferences.addons["cycles"].preferences
+            prefs.compute_device_type = a.gpu_backend
+            prefs.get_devices()
+            for d in prefs.devices:
+                d.use = d.type == a.gpu_backend
+            if any(d.use for d in prefs.devices):
+                scn.cycles.device = "GPU"
+            else:
+                print(f"render_review: no {a.gpu_backend} device found, rendering on CPU")
+        except Exception as e:  # never block a review on device setup
+            print("render_review: GPU setup failed, rendering on CPU:", e)
     scn.cycles.samples = a.samples
     scn.cycles.use_denoising = True
     scn.render.resolution_x, scn.render.resolution_y = a.res

@@ -177,6 +177,8 @@ class OctFrame(Building):
         self.WWIN = dict(self.WWIN or dict(xc=-7.4, hw=0.225, z0=1.30, z1=1.85, depth=0.16, fw=0.07))
         self.CUSH = dict(CUSH0)
         self.hygiene = False
+        from ..geom import pool_hygiene
+        self.pools.hygiene = pool_hygiene()      # pooled variants get the strict hook too
         self.subs = {}
         # state the components publish to each other while the building is built
         self.DRESSED_POLYS = {k: [] for k in range(8)}
@@ -657,11 +659,7 @@ def get_pool(key, builder, n_var):
 
 def place(key, var, M, part):
     """linked duplicate of variant `var` of pool `key` with the 4x4 matrix M; object <PREFIX>_<part>_<nnn>."""
-    from ..geom import pool_hygiene
     builder, n = FR.POOL_SPECS[key]
-    pools = FR.pools
-    if not callable(pools.hygiene):
-        pools.hygiene = pool_hygiene()
-    me = pools.mesh(key, int(var) % n, builder, sharp=40.0)
+    me = FR.pools.mesh(key, int(var) % n, builder, sharp=40.0)
     M = np.asarray(M, float)
-    return pools.place(me, part, R=M[:3, :3], t=M[:3, 3])
+    return FR.pools.place(me, part, R=M[:3, :3], t=M[:3, 3])

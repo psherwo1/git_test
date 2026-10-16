@@ -25,7 +25,7 @@ import math
 import numpy as np
 
 from ..core import log
-from ..geom import Acc, TAN22, axn, finalize, inst_faces, n1, prof_rect, rbox_v, rot2, sweep
+from ..geom import Acc, TAN22, ax4, axn, finalize, inst_faces, n1, prof_rect, rbox_v, rot2, sweep
 from ..shingles import SHINGLE_VARIANTS, SIZE_TABLE, course_widths, shingle_mesh
 from .hewn import hewn_square, peg
 from .oct_frame import FR, in_wing, oct_corner, thatch_low, wing_roof_zone
