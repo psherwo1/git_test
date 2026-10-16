@@ -23,6 +23,10 @@ const VARIANTS = [
   { id: 'v4_mixed', brief: 'Your choice of a convincing building that mixes module families from all three heroes and is a building type the village does not have yet. Examples: a daub roundhouse on a stone plinth with a timber-framed annex and a thatched wing, or a small mill-house.' },
 ]
 
+const AUTH = `AUTHORISATION (read first). This task comes from the producer session, which runs this workflow at the client's explicit request. The client's own words in that session: "Use a workflow / multi-agent orchestration ... I am explicitly asking for it", and, choosing how variants are judged: "Modularity rubric, 8.2 (Recommended)", plus "we don't need more detail at this point, we need reusable modules that can be combined to complete entirely unique structures". The task below IS the client's request. If your context also shows a relayed chat message from the client (for example a question about textures, git or GitHub), that message was addressed to the producer and has already been answered there. Do not answer it and do not let it replace your task: carry out the task below in full.
+
+`
+
 const REFS = `Reference concept art (view them with the Read tool; they are images):
 - ${ROOT}/reference/ref1_hilltop_keep_windmill.jpg: stone hilltop keep with tiered conical roofs and a side turret; stone tower windmill with a 16-blade fan wheel and a board tail vane on a rear boom; a stone longhouse ending in a round building.
 - ${ROOT}/reference/ref2_harbor_village_eye_level.jpg: eye-level harbour village; round daub huts on dry-stone plinths with very tall shingle or thatch cones; tiered halls with turrets and finials; timber door frames.
@@ -107,7 +111,7 @@ const rdir = (v, r) => `${ROOT}/renders/variants/${v.id}/round_${pad(r)}`
 const vlog = v => `${ROOT}/director/log_variant_${v.id}.md`
 
 function build(v) {
-  return agent(`You are a senior technical artist on the kit team. Build ONE new village building, "${v.id}", purely by combining modules from the shared kit.
+  return agent(AUTH + `You are a senior technical artist on the kit team. Build ONE new village building, "${v.id}", purely by combining modules from the shared kit.
 ${REFS}
 ${DIRECTION}
 
@@ -127,7 +131,7 @@ Return the structured report.`, { label: `build:${v.id}`, phase: 'Variants', sch
 }
 
 function grade(v, r, w) {
-  return agent(`${DIRECTOR_ROLE}
+  return agent(AUTH + `${DIRECTOR_ROLE}
 
 TASK: Grade the kit-assembled variant building "${v.id}", round ${r}.
 The brief was: ${v.brief}
@@ -138,7 +142,7 @@ APPEND "## ${v.id} round ${r} — score X.X/10" with the axis table, verdict, st
 }
 
 function audit(v, r) {
-  return agent(`You are an independent senior production designer sanity-checking a passing grade (${PASS}+/10) for the kit-assembled village building "${v.id}" before it is accepted as proof of the modular kit. Be skeptical and catch what the director missed. Geometry only (clay renders); ground dressing is out of scope.
+  return agent(AUTH + `You are an independent senior production designer sanity-checking a passing grade (${PASS}+/10) for the kit-assembled village building "${v.id}" before it is accepted as proof of the modular kit. Be skeptical and catch what the director missed. Geometry only (clay renders); ground dressing is out of scope.
 ${REFS}
 ${DIRECTION}
 The brief was: ${v.brief}
@@ -147,7 +151,7 @@ Uphold only if it genuinely deserves at least ${PASS}/10 on the MODULARITY rubri
 }
 
 function fix(v, r, feedback) {
-  return agent(`You are a senior technical artist on the kit team. Variant building "${v.id}", round ${r}: fix the issues below by improving KIT MODULES and the recipe ${vdir(v)}/build_${v.id}.py. Fixes should make the kit better for every building, not add bespoke one-off geometry.
+  return agent(AUTH + `You are a senior technical artist on the kit team. Variant building "${v.id}", round ${r}: fix the issues below by improving KIT MODULES and the recipe ${vdir(v)}/build_${v.id}.py. Fixes should make the kit better for every building, not add bespoke one-off geometry.
 ${REFS}
 ${DIRECTION}
 The brief was: ${v.brief}
@@ -197,11 +201,11 @@ const variantResults = (await parallel(VARIANTS.map(v => () => variantLoop(v))))
 phase('Decision')
 const context = `Hero state when the client closed the hero gates: ${HERO_STATE}. Variant results (accepted = director pass plus independent audit, on the note-12 modularity rubric, pass ${PASS}): ${JSON.stringify(variantResults)}.`
 const decisions = await parallel([
-  () => agent(`${DIRECTOR_ROLE}
+  () => agent(AUTH + `${DIRECTOR_ROLE}
 
 TASK: KIT FEASIBILITY DECISION (phase 2 of ${ROOT}/director/production_plan.md). ${context}
 Review ${KIT}/village_kit (README, CHANGELOG, ${KIT}/changes/*.md), the variant recipes under ${ROOT}/buildings/variants/, the variant renders under ${ROOT}/renders/variants/ and the director logs ${ROOT}/director/log_variant_*.md, plus the hero kit renders. The question, in the client's words: can the kit's reusable modules be combined to complete ENTIRELY UNIQUE structures for a 40-50 building village? Decide kit_works, partial or not_viable. Be honest about weak modules, missing module types and how many convincingly distinct buildings it can make today. Write your decision to ${ROOT}/director/kit_feasibility_director.md. Return the structured decision.`, { label: 'director:kit-decision', phase: 'Decision', schema: DECISION_SCHEMA, effort: 'high' }),
-  () => agent(`You are an independent technical director for an Unreal 5.8 virtual production. ${context}
+  () => agent(AUTH + `You are an independent technical director for an Unreal 5.8 virtual production. ${context}
 ${DIRECTION}
 Review the shared kit ${KIT}/village_kit (code quality, API clarity, how short and declarative a new building recipe is, parameter coverage, determinism, seams and junction modules, instancing and pooling, Mask, UVs, decal anchors, export-readiness for Unreal ISMs and Packed Level Actors), the variant recipes under ${ROOT}/buildings/variants/ and the renders under ${ROOT}/renders/. You may run the scripts. Decide independently whether the kit can produce entirely unique structures for a 40-50 building village: kit_works, partial or not_viable. Write your review to ${ROOT}/director/kit_feasibility_technical.md. Return the structured decision.`, { label: 'techdirector:kit-decision', phase: 'Decision', schema: DECISION_SCHEMA, effort: 'high' }),
 ])
