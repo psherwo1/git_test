@@ -697,3 +697,134 @@ Delete all loose ground stones, rubble scatter, path flags, stepping stones and 
 - The kit still shares one module dimension table (`kit_set`).
 - Some open board and shingle shells have mixed normals.
 - A small grey ledge remains where the SW roll meets the turret (no longer a void).
+
+## Round 6 — score 8.4/10
+
+**Reviewed:** renders/hilltop_keep/round_06/: all 6 views (hero, front, side, back, aerial, actor_closeup) plus stats.json and hidden.json, the builder's 8 off-ring checks in round_06/builder_checks/, and 21 Director close-ups at 12 spp in renders/hilltop_keep/round_06/director_extra/:
+- door, hinge_graze, eave_under, ground_contact_sw, footing_ne, footing_wing_n, sw_window, wing_door, wing_south
+- turret_cushion, cushion_far, wing_turret, wing_west_end, turret_n, wing_hall_n, back_wing, thatch_eye
+- low_crane_w, odd_aerial_se, collar_comb, lantern_cap
+
+Compared side by side with ref1 (keep_overall, keep_hall_door_window, keep_west_wing_turret, keep_cone_lantern_cap) and style_thatch_and_tiered_tower. The Director also audited the .blend: 289 mesh objects, 92 unique meshes, 0 zero-area faces, 0 needle triangles (altitude < 0.1 mm), UVs and Mask on every mesh, z-min −0.050, and no ground, rubble, path or apron objects left.
+
+There was no Director grade for round 5, so this review checks the round 5 and round 6 work together against the round-4 must-fix list. The client correction (producer note 10) is applied: ground dressing is not scored, and its absence is not penalised.
+
+**Stats:**
+- 289 objects and 1,296,876 tris (86% of budget).
+- **est_hidden_pct 13.9% (pass).** 11 slots, all from the palette (pass). `mask_attribute_missing` is empty (pass).
+- bbox 16.41 × 10.60 × 14.05 m. The finial tip is at 14.00 m. The .blend is 31.9 MB.
+
+**Verdict:** a real step up from round 4, and the first round with no see-through holes.
+- **Holes fixed:** all four round-4 holes are closed: the W skirt facet (low_crane_w), the NW skirt eave staircase (wing_hall_n), the hall rubble pinholes (ground_contact_sw, off_base_s) and the black SW roll-end void. odd_aerial_se, low_crane_w and odd_aerial_nw show no sky or interior through the building.
+- **Other fixes that landed:**
+  - The cone masonry is dense again and the plaster read is gone (collar_comb).
+  - The fillet is now a flat planar flaunching band, not a rope (turret_n, wing_turret).
+  - The cushion is two irregular corbel courses and reads as stone at cushion_far distance.
+  - The footing reads as large bedded field stones rather than kerb boxes.
+  - Hygiene is now clean: 0 degenerate faces, 0 needles, and every producer note passes.
+- **Silhouette:** at thumbnail size it is unmistakably ref1's keep in every tier.
+- **What holds it under 9:** close-up surface softness and a few junction tells.
+  - The dressed jambs and quoins still read as soft soap blocks.
+  - At actor distance the footing stones read as melted, sandbag-soft lumps.
+  - Torn stone shards and flat course tongues remain where the W eave-roll ends die into the turret.
+  - The N thatch slope is still smooth fondant, and the straw relief on the S slope reads as regular barcode scratches.
+  - The eave fringe reads as a row of eyelash pins.
+  - The ridge comb is thin and sparse next to ref1's chunky crest.
+
+Score by axis:
+
+| Axis | Score |
+|---|---|
+| Silhouette | 8.5 (cushion is a thin flat brim, not ref1's bulbous lip; sparse ridge crest) |
+| Proportion and scale | 9 |
+| Construction | 8.5 (holes closed; roll-end shards, course stubs at the valley) |
+| Detail and craft | 8.3 (soap-block dressed stone, soft footing, barcode straw, N-slope fondant, pin fringe) |
+| Age | 8.5 |
+| Technical | 9 (all producer notes pass; only the partial kit context and mixed normals on open shells remain) |
+| **Overall** | **8.4** |
+
+**Strengths:**
+- **No see-through holes from any off-ring camera.** The sarking decks, the closed thatch core and the scribed NW and SW skirt boards all hold.
+- **Producer notes:**
+  - Hidden 13.9%, 11 palette slots, Mask on every mesh.
+  - 0 zero-area faces and 0 needle triangles.
+  - 49 pooled meshes with 238 linked duplicates.
+  - Ground dressing is fully removed, while the building's own footing, pedestals, threshold and step are kept.
+- **Eave underside is still film-grade** (eave_under): curved sprockets, soffit, a pegged plate, Y knee braces, and checked posts.
+- **Cone masonry** is dense with tight joints, and the candle-snuffer flare matches keep_cone_lantern_cap.
+- **Fillet** is a flat flaunching band that follows the true intersection.
+- **Main door** has a 7-plank arched leaf, tapered strap hinges with spear terminals, a ring pull, and correct scale and headroom (actor_closeup, door).
+- **Hall rubble** (sw_window, wing_south, actor_closeup) is flat-bedded polygonal stone with pinch-outs and holds up at eye level.
+
+### Must-fix (priority order)
+1. **Torn shards and flat course tongues at both W eave-roll ends, where they die into the turret** (`d_roll` ends, turret stone clip, `thatch_courses` ends; see director_extra/wing_west_end.png, builder_checks/rollend_sw.png, director_extra/wing_turret.png).
+   - **SW end, about (−10.2, 0.5, 2.9–3.4):**
+     - A stepped stack of thin clipped turret stones sticks out of the roll top (wing_west_end x 595–650 / y 270–420).
+     - A torn flap with a dark slit sits at the roll crown (rollend_sw x 130–330 / y 180–320; slit at x 150 / y 270–300).
+     - A dark wedge sits under the roll end (wing_turret x 200–255 / y 340–365).
+   - **NW end, about (−10.2, 4.5, 2.9–3.4):** the same stair-stepped stone splinters appear (wing_west_end x 110–200 / y 250–370).
+   - **SW hip:** two course ends stop as flat horizontal tongues about 1.2 m long that project past the roll (wing_west_end x 670–890 / y 270–320).
+   - **Fix:**
+     - Wherever thatch clips a turret stone, delete the stone or replace it with a whole stone that the thatch buries at least 3 cm. No stone fragment thinner than 4 cm may show.
+     - Taper each roll end over 0.4–0.6 m into the mortar fillet with a closed, rounded end cap.
+     - Feather the course tongues to zero thickness, as on the S slope.
+     - No dark pixel may remain at either junction in wing_west_end, rollend_sw or wing_turret.
+2. **Dressed stone still reads as soft soap blocks** (`KEEP_hall_dressed_stones`, `KEEP_wing_dressed_stones`; see director_extra/door.png, hinge_graze.png, wing_south.png x 800–890, wing_door.png).
+   - **What is wrong:**
+     - The door jambs, wing quoins and wing window jambs show domed faces with 2–3 cm round-overs and no tool marks or chips.
+     - On the main-door right jamb, the big upper block (hinge_graze x 330–700) has a 3–4 cm rounded arris all round.
+   - **Fix:**
+     - Faces are flat with a dome ≤ 3 mm. Arrises use a true 45° chamfer of 1.0–1.5 cm with split normals, not a smoothed round-over.
+     - On the hero blocks (door jambs, 6 lowest each side), add a 1–2 mm tooled drafted margin 3 cm wide and 1–3 tooling score lines at 15–25 mm pitch.
+     - Add 1–3 arris spalls of 2–5 cm per block, with crisp conchoidal edges.
+3. **At actor distance the footing reads as soft sandbags or melted clay** (`rough_footing`, footing `build_poly_stones`; see director_extra/ground_contact_sw.png, builder_checks/ground_contact.png, off_base_s.png right half).
+   - **What is wrong:**
+     - The ±1.5–2 cm lumps and the 2.5 cm pillow under smooth shading give wobbly, bulging faces.
+     - The 3.5 cm "weathered shoulders" round every top arris, so no edge reads as split stone.
+     - The SW pedestal also reads as a soft-cornered box.
+   - **Fix:**
+     - Cut the low-frequency lumps to ±0.6 cm. Cap the pillow at 1.2 cm.
+     - Keep 1–2 split planes, but make them planar facets with crisp 0.8–1.5 cm arrises, and split normals between the facets (auto-smooth ≤ 30°).
+     - Keep the soft weathered shoulder on at most 1 top arris per stone.
+     - Pedestals: 1.0–1.5 cm chamfers and 1–2 spalls each, plus the splayed foot already there.
+4. **Thatch surface reads.**
+   - **(a) N slope is still smooth fondant** (director_extra/back_wing.png, back.png). Give the N slope the same fall-line straw relief as the S slope, at least 0.5–1.0 cm deep (the 2.8–4.2 cm straw claimed in round 5 does not read at 6 m). Pay for it from `KEEP_wing_roof_thatch` core (88k, 22% hidden).
+   - **(b) S slope straw reads as regular barcode scratches** (wing_turret, thatch_eye). Break the relief into clumps:
+     - vary groove depth per groove from 0.3 to 1.5 cm;
+     - let 20–30% of grooves end mid-course;
+     - add a 1–2 cm low-frequency lumpiness across 0.3–0.6 m patches, so grooves are not equal-length parallel strokes.
+   - **(c) Eave fringe reads as a row of eyelash pins** (thatch_eye y 375–390, wing_south top edge). Replace the uniform bristles with 4–10 cm clumped tufts:
+     - 3–8 strands per tuft, 1.5–3 cm thick at the root;
+     - gaps of 2–8 cm between tufts;
+     - tips drooping 10–30°.
+   - **(d) Seam and stubs.**
+     - A vertical seam crosses the eave roll at about (−6.9, 0.0, 2.6) (thatch_eye x 350 / y 300–345); close it.
+     - A dark pinhole at the course end near the hall valley, about (−4.0, 0.9, 3.9) (thatch_eye x 633 / y 197), needs closing.
+     - A vertical course stub near the valley (builder_checks/wing_turret x 1085 / y 460–600) must feather to zero over 0.4 m.
+5. **Wing ridge comb is thin and sparse compared with ref1** (`KEEP_wing_ridge_comb`; see director_extra/low_crane_w.png, cushion_far.png, front.png).
+   - ref1 shows a dense, chunky crest of crossed shakes whose top line reads clearly in silhouette. Ours reads as scattered thin sticks over a smooth rider log.
+   - **Fix:**
+     - Spacing 0.08–0.15 m.
+     - Visible height 0.18–0.35 m.
+     - Shake width 6–10 cm and thickness 3–5 cm.
+     - About 70% of the shakes paired in V/X tufts.
+   - The rider log needs ±2 cm low-frequency wobble and pegs every 0.6–0.9 m.
+6. **Cushion upper course reads as a brim of flat paving slabs** (`corbel_cushion`; see director_extra/turret_cushion.png, cushion_e.png).
+   - **What is wrong:**
+     - The upper stones are about 0.2 m thick with dead-flat sloping tops and crisp planar edges. They read like a slate hat-brim, not ref1's bulbous mossy lip (keep_west_wing_turret.png).
+     - A cluster of jagged slivers sits where the cushion meets the ridge log on the E side, about (−7.0, 2.6, 6.0) (turret_cushion x 560–640 / y 470–540).
+     - A thin spike pokes out at turret_cushion x 410–440 / y 250–270.
+   - **Fix:**
+     - Crown each upper stone's top by 3–6 cm and round the outer top arris over 6–10 cm on at least 70% of stones. Keep the cleaved faces on the vertical outer face only.
+     - Delete any fragment under 4 cm thick at the ridge junction, and end the ridge log on a mortar bed against the cushion.
+
+**Nice-to-have:**
+- **Lantern cap shingles:** the jitter in rotation and lift is so strong that the horizontal courses (spec G) barely read (lantern_cap). Halve the rotation jitter so the courses read at 15 m.
+- **Small dark notch at the collar/wing-ridge junction,** about (−3.4, 1.6, 5.8) (collar_comb x 80–150 / y 380–440). Check it from an off-ring camera and close it if it is a void.
+- **Kit refactor:** pass a context object instead of the module `kit_set` table (known gap).
+- **Mixed normals on open board and shingle shells:** fix the 1–30 back-face pixels per view.
+
+**Rulings:**
+- Producer note 10 is applied. Ground dressing is neither scored nor requested, and the building-owned footing, pedestals, threshold and step are correctly kept.
+- The round 4 to 5 must-fix items 1(a), 1(c), 1(d), 2, 7 and 8(a) are closed.
+- Items 1(b), 4 and 5 are improved, but their residue is carried into must-fix 1, 6 and 3 above.
