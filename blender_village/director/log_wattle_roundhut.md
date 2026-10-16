@@ -1,0 +1,29 @@
+
+## Round 1 (builder report): full asset built from scratch
+- Script: `buildings/wattle_roundhut/build_wattle_roundhut.py` (deterministic: the geometry hash is identical across reruns; the build takes about 6 s). Output: `buildings/wattle_roundhut/wattle_roundhut.blend` (23.8 MB, compressed).
+- Renders: `renders/wattle_roundhut/round_01/` (all 6 views at 32 samples, plus stats.json).
+- Stats: 1,215,014 tris, 23 objects in collection `HUT`. bbox min (-4.55, -6.16, -0.094), max (4.62, 4.72, 8.60). size_m 9.17 x 10.88 x 8.69. Materials: M_daub, M_earth, M_iron, M_lead, M_roof_shingle, M_rubble, M_stone, M_timber, M_timber_weathered, M_wattle.
+- Built:
+  - Plinth: 40 sub-angular plinth boulders, plus pinning stones and chinking.
+  - Posts: 14 round-hewn posts with lean, taper and adze flats, some with drying checks.
+  - Wattle: real woven rods around stakes, about 580k tris, with taper, pairs, split rows with flicked stub tips and a drifting field.
+  - Daub: an eroded bay left of the door, a full bay at the back right and a partial patch on the +X side. There is also a daubed inner skin.
+  - Wall plate: 7 half-lapped segments with pegs.
+  - Door frame: projecting, flat-fronted frame with jambs, lintel on the door posts, wattle side and cheek panels, tie beams, pegs and a boarded tympanum.
+  - Threshold and path: a worn sill on a threshold stone, a step stone (top 0.09) and 7 flagstones.
+  - Door leaf: 6 boards with ledges, a brace, latch and keeper, open 75 deg inward. Ironwork: strap hinges with spear ends, nails, pintles and a ring pull.
+  - Roof structure: 28 pole rafters, with every 5th end split and the tips uneven. Also purlin rings, batten rings and a hub.
+  - Shingles: 17 courses of individually modelled shingles with a doubled starter. They are tapered to the cone and include slipped, split and missing ones.
+  - Apex: lead-hat collar with 10 standing seams and a drip roll, an upper collar, and a turned finial with a spike tip at 8.60.
+  - Ground: earth apron with a drip-line trench, plus rubble.
+  - Interior: floor and hearth.
+- Key dimensions:
+  - Eave lip about 2.42 (2.40 or more over the door).
+  - Plate 2.66-2.86.
+  - Door clear opening 1.00 x 2.08 from the sill (sill top 0.20, head 2.28).
+  - Collar base dia 1.46 at z 6.72.
+- Deviations from the spec numbers, and why:
+  - Course exposure is 0.318 m. The spec's 17-19 courses at 0.36-0.40 do not fit the 5.4 m slope between the eave (r 4.13) and the collar (r 0.73) at 51 deg.
+  - The collar sits 0.17 m higher than the spec says (drip at 6.72, not 6.55). A 44 deg collar has to clear a 51 deg shingle cone.
+  - The lintel is 2.3 m long so that it sits on the door posts with 0.21 m side panels.
+  - Plate top is 2.86, not 3.05, because the rafters seat on the plate with the eave lip held at 2.42.
