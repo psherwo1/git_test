@@ -276,3 +276,28 @@ Score by axis:
 **Rulings:**
 - The turret centre (−8.45, 3.0) is accepted. It may move per must-fix 2(a).
 - The 1.46M-triangle total is accepted, but round 3 must stay at or under 1.5M.
+
+## Round 3 — builder entry
+
+**Renders:** renders/hilltop_keep/round_03/ (hero, front, side, back, aerial, actor_closeup at 32 samples, plus stats.json).
+**Stats:** 47 objects, 1,475,381 tris; bbox x −11.39..5.30, y −5.30..5.54, z −0.20..14.00 (16.69 × 10.84 × 14.20 m; x-min is scattered rubble at the turret foot); .blend 32.8 MB (compressed). Deterministic (identical geometry hash on two rebuilds), ~55 s build.
+
+**Must-fix items:**
+1. **Thatch course butts** (`thatch_courses()`): rebuilt. Each butt is a bevelled face cut back 31–39° from the roof plane, 6–10 cm deep, made of convex strand lobes 2.5–4 cm wide (3 columns per lobe, crowned 5–10 mm, creases 2–5 mm fading up the bevel). The tip rounds over a tucked row, so there is no lamina; the thinnest section is the full butt. Protrusion is clumped and capped at ±2 cm. ±2.5 cm swelling over ~1.1 m; exposure 0.26–0.34 m per course; 1–2 courses per plane pinch out (step falls to ~14 %). `KEEP_wing_roof_thatch_courses` 108.9k tris.
+2. **(a) Turret flare:** new profile 2.6:2.35, 3.5:1.95, 4.5:1.55, 5.4:1.32, 5.9:1.25. The base below 2.6 m is Ø4.7 m. Centre moved to (−8.55, 2.70). The stone meets the W eave (proud ~0.3 m) and the S/W hips pass in front. A south clip keeps the base behind the S wall face. **(b) Cushion:** offset toward ESE (−25°), proud 0.43 m on E/SE and 0.14 m on W/NW. The top falls 24° on E against 14° on W, and the lip droops 0.13 m lower on E. It is made of 13 boulders (4 split by stepped bed joints) shaped as rounded polytopes with 4–6 facets, joints that meander and are creased 1–2 cm, ±6 cm height variation, and planar cleaved facets on ~40 % of the boulders. The fbm lumps are gone.
+3. **(a)** Turret/wall junctions on the N and W walls are bonded with 10 toothing stones that wrap the re-entrant corner every 2–3 courses. Both layouts build round them. The mortar bodies run 0.18 m past each other, so nothing shows through. **(b)** A new D-section eave roll is the seat for the first course, whose tuck sinks 3.5 cm into it. Every later course tucks 3.5 cm under the course below. The core is thinned 10 cm toward the eaves so its edge sits 6+ cm inside the roll. **(c)** Jamb bed joints and voussoir radial joints are filled with `M_mortar`, recessed 1.2 cm from the face and the reveal (`KEEP_hall_dressed_joint_mortar`). **(d)** Every ridge-comb butt is buried at least 4.5 cm inside the ridge dome or ends inside the rider log; steep leaners are stood up.
+4. **Fillet:** a lime-mortar wedge (8–12 cm up the stone, 5–8 cm out, irregular) runs along the whole S/W/N thatch–stone intersection. It is ray-cast onto the built thatch. Course butts turn up 2–3 cm into it. Mortar collars close the roll-entry curves, and both W hip rolls taper onto mortar saddles at the fillet.
+5. **Rolls:** the eave roll is a sheared D about 0.43 m high × 0.57 m deep, round 0.5 m-radius hipped corners, with ±3 cm swelling over 0.45–0.75 m. Ribs sit at irregular 1–4 cm spacing and 0.3–1.5 cm depth. No crease and no flaps. The hip rolls and the ridge use dome sections with the same ribs. The N eave returns round the wing's NE corner under the skirt into the hall's N wall. The hip-line flaps are gone: course culling is tightened to 5 cm and the hip foot is bedded into the eave roll.
+6. **Doors:** new plank generator. Widths are 13–18 cm and visibly varied. Faces are cupped 2–4 mm; neighbours sit 1–3 mm proud or back; arrises are worn to r 3–6 mm, rising to 9.5 mm in the bottom 0.3 m. The bottom edge varies ±1 cm with a rotted corner (4.2 cm main, 3.6 cm wing). The split plank opens 4.8 mm over 0.62 m (wing 4.2 mm over 0.48 m), with 1–2 mm riven/adzed undulation. `KEEP_door_leaf` 15.0k tris, `KEEP_wing_door` 20.4k.
+7. **Collar shakes:** 2–4 riven ridges or hollows of 2–5 mm per shake. Width tapers 10–20 % and thickness 4 → 2 cm. Edges wave ±5 mm with a ~1 cm arris. 10 of ~131 outer shakes (7.6 %) are split down 20–40 % and open at the top.
+8. **Hero rubble** (hall SW/S/SE and wing S wall): built from true polygon outlines. 361 of 700 hall hero stones are non-rectangular: knocked corners give 5–6 sides, kinked beds give 6–7, ~16 % are tapered with one long bed at 5–14°, and shared joint slants give trapezoids. Each face has one dominant split plane at 5–12° and an optional non-opposing 8–15° facet, with chipped arrises and a low pillow. Course heights are a mixture over 8–25 cm, with pinch-out ramps in the bed lines. Budget: `KEEP_cone_stones` 196.6k → 130.9k; non-hero hall facets use a chamfer-band stone; `KEEP_hall_wall_stones` 204.7k.
+
+**Nice-to-haves:**
+- **Ridge comb:** stubbier and denser (spacing 0.10–0.22 m, visible 0.12–0.42 m, 2–4 cm thick).
+- **Voussoirs:** face widths spread 0.78–1.24 with a varied extrados.
+- **Rafter pole feet:** project 2–5 cm, with chamfered, axe-cut, checked ends. They now sit behind the deeper roll, so they are hard to see from outside.
+
+**Known gaps:**
+- Mid-shot, the lobe creases still read slightly as vertical pleats rather than a fully felted mass.
+- The valley lead apron dresses over the course steps, so some stepping still shows through it.
+- The cushion is faceted stone but still soft at very close range.

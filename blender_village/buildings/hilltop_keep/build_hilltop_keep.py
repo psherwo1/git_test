@@ -980,7 +980,7 @@ def rounded_outline(poly, rc, spacing):
     return Q, N
 
 
-def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0.62, 0.3), noise_amp=0.009,
+def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0.62, 0.3), noise_amp=0.006,
                       front_min=0.003):
     """Hero rubble: every stone built from its true (polygonal) outline with a rounded front arris, a split / cleaved
     face (1-2 large planes at 5-15 deg), chisel facets, chipped arrises and a low pillow. Rings: outline at the back,
@@ -1023,10 +1023,10 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
             x, y = xy[:, 0], xy[:, 1]
             ux_ = np.clip((x - cen[0]) / max(hx, 1e-3), -1, 1)
             uy_ = np.clip((y - cen[1]) / max(hy, 1e-3), -1, 1)
-            pil = _g(S, "pillow", i, 0.004) * 0.7 * (1 - ux_ ** 2) * (1 - uy_ ** 2)
+            pil = _g(S, "pillow", i, 0.004) * 0.25 * (1 - ux_ ** 2) * (1 - uy_ ** 2)
             tilt = _g(S, "tiltx", i) * x / max(hx, 1e-3) + _g(S, "tilty", i) * y / max(hy, 1e-3)
-            nz = fbm(np.stack([x * 15.0 + sd, y * 15.0, np.full(len(x), sd * 0.37)], -1), 3)
-            nz = nz + 0.5 * np.abs(fbm(np.stack([x * 34.0, y * 34.0 + sd, np.full(len(x), sd)], -1), 2)) - 0.25
+            # low-frequency face undulation only: the coarse ring topology must not show 'spokes'
+            nz = fbm(np.stack([x * 7.0 + sd, y * 7.0, np.full(len(x), sd * 0.37)], -1), 2)
             fac = np.zeros(len(x))
             for dvec, c0, tn in planes:
                 fac -= tn * np.maximum(xy @ dvec - c0, 0.0)
@@ -3729,13 +3729,26 @@ def d_roll(acc, path, prof, vis, seed, rng, up=(0.0, 0.0, 1.0), var=0.03, sp=(0.
 EAVE_RC = 0.5
 
 
+def oct_pp(x, y):
+    """exact octagon support distance of plan points (max over the 8 facet normals)."""
+    x = np.asarray(x, float)
+    y = np.asarray(y, float)
+    return np.max(np.stack([x * math.cos(k * math.pi / 4) + y * math.sin(k * math.pi / 4) for k in range(8)], 0), 0)
+
+
 def eave_path():
     """plan path of the eave line N -> W -> S with rounded hipped corners (radius EAVE_RC), at the 2.40 lip."""
     yS, yN, xW = WY_S - W_OVH, WY_N + W_OVH, WX_W - W_OVH
-    xe = WX_E + W_OVH
+    xe = 0.4
     rc = EAVE_RC
     pts = []
-    for x in np.arange(xe, xW + rc, -0.02):
+    # NE return: the N eave turns the wing's NE corner under the hall skirt and runs south into the hall's N wall
+    xr_ = WX_E + W_OVH
+    for y in np.arange(3.5, yN - rc, 0.02):
+        pts.append((xr_, y))
+    for a in np.linspace(0.0, np.pi / 2, 12)[1:-1]:
+        pts.append((xr_ - rc + rc * np.cos(a), yN - rc + rc * np.sin(a)))
+    for x in np.arange(xr_ - rc, xW + rc, -0.02):
         pts.append((x, yN))
     for a in np.linspace(np.pi / 2, np.pi, 12)[1:-1]:
         pts.append((xW + rc + rc * np.cos(a), yN - rc + rc * np.sin(a)))
@@ -3937,22 +3950,24 @@ def build_wing_roof(coll):
     finalize(accc, coll, smooth_deg=60.0, recalc=False)
     # --- eave roll: one continuous D-section roll N -> W -> S round the hipped corners
     path = eave_path()
-    x, y = path[:, 0], path[:, 1]
-    hall_in = thatch_cull(path + np.array([0, 0, 0.3]), tol_skirt=False) & (np.hypot(x, y) < 6.0)
-    # cut where the whole section is buried in the turret stone (W eave)
+    # cut where the whole section is buried in the turret stone (W eave) or inside the hall walls (E ends)
     T = np.gradient(path, axis=0)
     T /= np.linalg.norm(T, axis=1, keepdims=True)
     Rv = np.cross(np.array([0, 0, 1.0]), T)
     probes = [(-0.135, 0.22), (-0.06, 0.43), (0.0, 0.52), (0.43, 0.44), (0.07, 0.0), (0.25, 0.81)]
     inside_all = np.ones(len(path), bool)
+    hall_all = np.ones(len(path), bool)
     for qq, vv in probes:
         Pp = path + Rv * qq + np.array([0, 0, vv])
         inside_all &= tur_dist(Pp[:, 0], Pp[:, 1], Pp[:, 2]) < -0.03
-    ok = ~hall_in & ~inside_all
+        hall_all &= oct_pp(Pp[:, 0], Pp[:, 1]) < apo(Pp[:, 2]) - 0.05
+    # the N eave passes outside the hall's N face: it ends under the skirt with a rounded, tucked-up taper
+    ok = ~hall_all & ~inside_all
     global EAVE_RUNS
     EAVE_RUNS = []
     for r_ in runs_of(path, ok, min_len=4):
-        EAVE_RUNS.append(d_roll(acc, r_, ROLL_P, ROLL_VIS, 5 + len(r_), rng, var=0.03))
+        tp = (0.0, 0.0)
+        EAVE_RUNS.append(d_roll(acc, r_, ROLL_P, ROLL_VIS, 5 + len(r_), rng, var=0.03, taper=tp, tmin=(0.3, 0.3)))
     finalize(acc, coll, smooth_deg=70.0)
 
 
@@ -4197,8 +4212,8 @@ def build_wing_structure(coll):
         if len(pts) < 3:
             return
         prof = ell * np.array([rx, ry])
-        d_roll(accf, pts, prof, np.ones(len(prof)), seed, frng, up=ups, var=0.016, sp=(0.03, 0.08),
-               dep=(0.0, 0.004), taper=(0.04, 0.04), mat="M_mortar", z_wave=0.0)
+        d_roll(accf, pts, prof, np.ones(len(prof)), seed, frng, up=ups, var=0.007, sp=(0.06, 0.12),
+               dep=(0.0, 0.0015), taper=(0.04, 0.04), mat="M_mortar", z_wave=0.0)
     # find the real outer thatch surface next to the stone by ray-casting down onto the built thatch meshes
     from mathutils import Vector
     from mathutils.bvhtree import BVHTree
@@ -4238,6 +4253,35 @@ def build_wing_structure(coll):
         w_ = w_[~np.isnan(w_)]
         pts[i_] = pts[i_].copy()
         pts[i_][2] = max(float(np.median(w_)), pts[i_][2] - 0.02)
+    # gaussian-smooth the heights, then break the loop where the line plunges (roll fronts / hip flanks):
+    # those joints are closed by the roll-entry collars and hip saddles instead
+    n_all = len(pts)
+    zsm = np.array([p_[2] if p_ is not None else np.nan for p_ in pts])
+    zs2 = zsm.copy()
+    for i_ in range(n_all):
+        if pts[i_] is None:
+            continue
+        ww, vv = 0.0, 0.0
+        for k_ in range(-6, 7):
+            z_ = zsm[(i_ + k_) % n_all]
+            if not np.isnan(z_):
+                g_ = math.exp(-(k_ / 3.0) ** 2)
+                ww += g_
+                vv += g_ * z_
+        zs2[i_] = vv / ww
+    for i_ in range(n_all):
+        if pts[i_] is not None:
+            pts[i_] = pts[i_].copy()
+            pts[i_][2] = zs2[i_]
+    steep = []
+    for i_ in range(n_all):
+        a_, b_ = pts[i_], pts[(i_ + 1) % n_all]
+        if a_ is not None and b_ is not None:
+            ds_ = np.linalg.norm(a_[:2] - b_[:2]) + 1e-6
+            if abs(a_[2] - b_[2]) / ds_ > 4.0:
+                steep.append(i_)
+    for i_ in steep:
+        pts[i_] = None
     first_none = next((i for i, p_ in enumerate(pts) if p_ is None), 0)
     pts = pts[first_none:] + pts[:first_none]
     wedge = np.array([(0.13, -0.035), (0.118, 0.003), (0.09, 0.011), (0.058, 0.024), (0.03, 0.043), (0.008, 0.06),
@@ -4251,24 +4295,44 @@ def build_wing_structure(coll):
             r_[1:-1] = 0.25 * r_[:-2] + 0.5 * r_[1:-1] + 0.25 * r_[2:]
         if len(r_) < 4:
             continue
-        ups = np.column_stack([r_[:, 0] - TUR_C[0], r_[:, 1] - TUR_C[1], np.zeros(len(r_))])
-        ups /= np.linalg.norm(ups, axis=1, keepdims=True)
+        nrm_ = np.column_stack([r_[:, 0] - TUR_C[0], r_[:, 1] - TUR_C[1], np.zeros(len(r_))])
+        nrm_ /= np.linalg.norm(nrm_, axis=1, keepdims=True)
         T_ = np.gradient(r_, axis=0)
-        Rz = np.cross(ups, T_)[:, 2].mean()
-        prof = wedge * np.array([1.0 if Rz > 0 else -1.0, 1.0])
-        # irregular: top edge height and toe reach vary along the run, small lumps
+        T_ /= np.linalg.norm(T_, axis=1, keepdims=True)
+        # per-station frame: u = 'up the stone' (perpendicular to the run, on the stone face), n = out of the stone
+        zz_ = np.array([0, 0, 1.0])
+        U_ = zz_[None, :] - (T_ @ zz_)[:, None] * T_ - (nrm_ @ zz_)[:, None] * nrm_
+        un_ = np.linalg.norm(U_, axis=1)
+        U_ /= un_[:, None] + 1e-9
+        # where the run is near-vertical the 'up' direction degenerates: carry the neighbour's frame over
+        good = un_ > 0.35
+        if good.any():
+            gi = np.flatnonzero(good)
+            for i_ in np.flatnonzero(~good):
+                U_[i_] = U_[gi[np.argmin(np.abs(gi - i_))]]
+        for _ in range(3):
+            U_[1:-1] = U_[:-2] + 2 * U_[1:-1] + U_[2:]
+            U_ -= (U_ * T_).sum(1, keepdims=True) * T_
+            U_ -= (U_ * nrm_).sum(1, keepdims=True) * nrm_
+            U_ /= np.linalg.norm(U_, axis=1, keepdims=True) + 1e-9
         n_ = len(r_)
         sc_top = 1 + 0.22 * n1(ss_[:n_] / 0.55, 400 + n_)
         sc_out = 1 + 0.25 * n1(ss_[:n_] / 0.45, 410 + n_)
-        profs = []
+        npf = len(wedge)
+        V = np.zeros((n_, npf, 3))
         for i_ in range(n_):
-            pr = prof.copy()
-            pr[:, 0] = np.where(pr[:, 0] * np.sign(prof[0, 0]) > 0, pr[:, 0] * sc_top[i_], pr[:, 0])
+            pr = wedge.copy()
+            pr[:, 0] = np.where(pr[:, 0] > 0, pr[:, 0] * sc_top[i_], pr[:, 0])
             pr[:, 1] = np.where(pr[:, 1] > 0, pr[:, 1] * sc_out[i_], pr[:, 1])
-            pr = pr + 0.004 * n1(np.arange(len(pr)) * 1.3 + i_ * 0.7, 420)[:, None]
-            profs.append(pr)
-        V, F = sweep(r_, ups, np.stack(profs))
-        accf.add(V, F, "M_mortar")
+            pr = pr + 0.004 * n1(np.arange(npf) * 1.3 + i_ * 0.7, 420)[:, None]
+            V[i_] = r_[i_] + pr[:, 0:1] * U_[i_] + pr[:, 1:2] * nrm_[i_]
+        ii = np.arange(n_ - 1)[:, None]
+        jj = np.arange(npf)[None, :]
+        a_ = ii * npf + jj
+        b_ = ii * npf + (jj + 1) % npf
+        quads = np.stack([a_, b_, b_ + npf, a_ + npf], -1).reshape(-1, 4)
+        caps = [np.arange(npf)[::-1][None, :], ((n_ - 1) * npf + np.arange(npf))[None, :]]
+        accf.add(V.reshape(-1, 3), [quads] + caps, "M_mortar")
     # collars where the eave roll dives into the stone (W eave): trace the roll section's entry curve
     for P in EAVE_RUNS:
         if P is None or len(P) < 5:
@@ -4296,7 +4360,7 @@ def build_wing_structure(coll):
                 ups /= np.linalg.norm(ups, axis=1, keepdims=True)
                 tg = np.gradient(C, axis=0)
                 ups = ups - (ups * tg).sum(1, keepdims=True) * tg / np.maximum((tg * tg).sum(1, keepdims=True), 1e-9)
-                mortar_tube(C, ups, 0.085, 0.045, 77 + len(cur))
+                mortar_tube(C, ups, 0.09, 0.035, 77 + len(cur))
     # hip-roll ends bedded on the fillet: a mortar saddle joining the tapered roll end to the stone
     for pe, de, nb_ in HIP_ENDS:
         cen = pe + de * 0.05 - nb_ * 0.02
@@ -4332,34 +4396,108 @@ def build_wing_structure(coll):
     if len(pts) > 3:
         pts = np.array(pts)
         thatch_roll(accf, pts - np.array([0, 0, 0.03]), 0.06, 53, flat=0.75, seg=10, mat="M_mortar")
-    # lead flashing in the valley where the hall skirt roof and the wing thatch intersect
+    # lead valley apron where the hall skirt roof and the wing thatch meet: a 0.32 m lead sheet dressed over the
+    # real course steps (ray-cast onto the built thatch) and tucked under the skirt boards
+    def thatch_z(x, y, z0):
+        best = None
+        for tr in trees:
+            hit = tr.ray_cast(Vector((float(x), float(y), float(z0))), Vector((0, 0, -1.0)), 1.5)
+            if hit[0] is not None and (best is None or hit[0].z > best):
+                best = hit[0].z
+        return best
     for k in range(1, 8):
-        P_ = []
-        for x in np.linspace(-SKIRT.p_lip * TAN22, SKIRT.p_lip * TAN22, 160):
-            ps = np.linspace(SKIRT.p_lip + 0.02, max(abs(x) / TAN22 + 0.05, 3.0), 120)
-            Sp = SKIRT.surf(np.full(len(ps), k), np.full(len(ps), x), ps)
-            xx, yy = Sp[:, 0], Sp[:, 1]
-            inside = (xx > WX_W - W_OVH) & (xx < WX_E + W_OVH) & (yy > WY_S - W_OVH) & (yy < WY_N + W_OVH)
-            zt = np.where(inside, wing_under(xx, yy) + TH_V_MIN + 0.03, -10.0)
-            d = Sp[:, 2] + SKIRT_SHEATH - zt
-            hit = np.flatnonzero((d[:-1] > 0) & (d[1:] <= 0))
-            if len(hit) == 0 or not inside[hit[0]]:
-                P_.append(None)
+        # d(x, p) = skirt sheathing top - thatch reference on a grid over the facet; the apron follows d = 0
+        xg = np.linspace(-SKIRT.p_lip * TAN22, SKIRT.p_lip * TAN22, 140)
+        pg = np.linspace(SKIRT.p_lip + 0.02, 3.4, 110)
+        XG, PG = np.meshgrid(xg, pg, indexing="ij")
+        Sg = SKIRT.surf(np.full(XG.shape, k), XG, PG)
+        xx, yy = Sg[..., 0], Sg[..., 1]
+        inside = (xx > WX_W - W_OVH + 0.05) & (xx < WX_E + W_OVH) & (yy > WY_S - W_OVH + 0.05) & \
+            (yy < WY_N + W_OVH - 0.05) & (np.abs(XG) < PG * TAN22 - 0.02)
+        dG = Sg[..., 2] + SKIRT_SHEATH - (wing_under(xx, yy) + TH_V_MIN + 0.03)
+        dG = np.where(inside, dG, np.nan)
+        pts_ = []
+        for i_ in range(len(xg)):
+            for j_ in range(len(pg)):
+                for di, dj in ((1, 0), (0, 1)):
+                    if i_ + di >= len(xg) or j_ + dj >= len(pg):
+                        continue
+                    a_, b_ = dG[i_, j_], dG[i_ + di, j_ + dj]
+                    if np.isnan(a_) or np.isnan(b_) or (a_ > 0) == (b_ > 0):
+                        continue
+                    f_ = a_ / (a_ - b_)
+                    pts_.append((xg[i_] + di * f_ * (xg[1] - xg[0]), pg[j_] + dj * f_ * (pg[1] - pg[0])))
+        if len(pts_) < 6:
+            continue
+        pts_ = np.array(pts_)
+        # chain the crossing points by nearest-neighbour walking, splitting at jumps
+        used = np.zeros(len(pts_), bool)
+        chains = []
+        while not used.all():
+            i_ = int(np.flatnonzero(~used)[np.argmin(pts_[~used, 1])])
+            ch = [i_]
+            used[i_] = True
+            while True:
+                dd = np.hypot(pts_[:, 0] - pts_[ch[-1], 0], pts_[:, 1] - pts_[ch[-1], 1])
+                dd[used] = 1e9
+                j_ = int(np.argmin(dd))
+                if dd[j_] > 0.12:
+                    break
+                ch.append(j_)
+                used[j_] = True
+            if len(ch) >= 6:
+                chains.append(pts_[ch])
+        for C in chains:
+            # resample evenly and smooth
+            dl = np.concatenate([[0], np.cumsum(np.hypot(np.diff(C[:, 0]), np.diff(C[:, 1])))])
+            ss = np.arange(0, dl[-1], 0.05)
+            if len(ss) < 4:
                 continue
-            i = hit[0]
-            f = d[i] / (d[i] - d[i + 1])
-            q = Sp[i] * (1 - f) + Sp[i + 1] * f
-            P_.append(q + np.array([0, 0, 0.035]))
-        runs, cur = [], []
-        for q in P_ + [None]:
-            if q is None:
-                if len(cur) > 4:
-                    runs.append(np.array(cur))
-                cur = []
-            else:
-                cur.append(q)
-        for r_ in runs:
-            thatch_roll(accf, r_, 0.12, 57 + k, flat=0.28, seg=10, mat="M_lead", bind=0.0)
+            C = np.stack([np.interp(ss, dl, C[:, 0]), np.interp(ss, dl, C[:, 1])], 1)
+            for _ in range(4):
+                C[1:-1] = 0.25 * C[:-2] + 0.5 * C[1:-1] + 0.25 * C[2:]
+            # cross direction: toward the skirt-on-top side (d > 0)
+            Tn = np.gradient(C, axis=0)
+            Tn /= np.linalg.norm(Tn, axis=1, keepdims=True) + 1e-9
+            Nn = np.stack([-Tn[:, 1], Tn[:, 0]], 1)
+            probe = C + Nn * 0.1
+            Sp_ = SKIRT.surf(np.full(len(C), k), probe[:, 0], probe[:, 1])
+            dp_ = Sp_[:, 2] + SKIRT_SHEATH - (wing_under(Sp_[:, 0], Sp_[:, 1]) + TH_V_MIN + 0.03)
+            Nn = Nn * np.where(np.median(dp_) > 0, 1.0, -1.0)
+            offs = np.array([0.17, 0.09, 0.02, -0.06, -0.15])
+            n_ = len(C)
+            G = np.zeros((n_, len(offs), 3))
+            for i_ in range(n_):
+                for j_, o_ in enumerate(offs):
+                    q_ = C[i_] + Nn[i_] * o_
+                    S3 = SKIRT.surf(np.array([k]), np.array([q_[0]]), np.array([q_[1]]))[0]
+                    zt_ = thatch_z(S3[0], S3[1], S3[2] + 0.6)
+                    if zt_ is None:
+                        zt_ = S3[2] - 0.05
+                    z_ = zt_ + 0.012
+                    if o_ > 0:
+                        z_ = min(z_, S3[2] - 0.012)
+                    G[i_, j_] = (S3[0], S3[1], z_)
+            G[1:-1] = 0.25 * G[:-2] + 0.5 * G[1:-1] + 0.25 * G[2:]
+            Gb = G - np.array([0, 0, 0.009])
+            nc_ = len(offs)
+            V = np.concatenate([G.reshape(-1, 3), Gb.reshape(-1, 3)])
+            off_b = n_ * nc_
+            F = []
+            for i_ in range(n_ - 1):
+                for j_ in range(nc_ - 1):
+                    a_ = i_ * nc_ + j_
+                    F.append((a_, a_ + 1, a_ + nc_ + 1, a_ + nc_))
+                    F.append((off_b + a_, off_b + a_ + nc_, off_b + a_ + nc_ + 1, off_b + a_ + 1))
+                for j_ in (0, nc_ - 1):
+                    a_ = i_ * nc_ + j_
+                    F.append((a_, a_ + nc_, off_b + a_ + nc_, off_b + a_))
+            for i_ in (0, n_ - 1):
+                for j_ in range(nc_ - 1):
+                    a_ = i_ * nc_ + j_
+                    F.append((a_, off_b + a_, off_b + a_ + 1, a_ + 1))
+            accf.add(V, np.array(F), "M_lead")
+            log(f"  valley apron facet {k}: {n_} stations")
     # lead flashing where the wing thatch dies into the shake collar (collar surface line butt -> top)
     P_ = []
     for th in np.linspace(0, 2 * np.pi, 720, endpoint=False):
@@ -4443,7 +4581,7 @@ def build_cushion(coll, rng):
     w = rng.uniform(0.7, 1.3, nb)
     bnd = np.concatenate([[0], np.cumsum(w) / w.sum() * 2 * np.pi]) + rng.uniform(0, 0.5)
     dzb = rng.uniform(-0.06, 0.06, nb)
-    bulge = rng.uniform(0.018, 0.04, nb)
+    bulge = rng.uniform(0.03, 0.05, nb)
     drb = rng.uniform(-0.022, 0.03, nb)                  # boulders sit proud / back of their neighbours
     bedj = {int(b): (rng.uniform(0.36, 0.58), rng.uniform(-0.12, 0.12), rng.uniform(-0.03, 0.025))
             for b in rng.choice(nb, 4, replace=False)}   # 4 boulders are two slabs (bed joint, stepped)
@@ -4505,8 +4643,30 @@ def build_cushion(coll, rng):
     dj = np.minimum(s_arc, s_len - s_arc)
     cdep = rng.uniform(0.011, 0.02, nb)[bid2]
     crease = np.clip(1 - dj / 0.04, 0, 1) ** 1.6 * cdep
-    fl = np.clip(dj / 0.16, 0, 1)
-    pil = bulge[bid2] * (1 - (1 - fl) ** 2.2) * np.sin(np.pi * np.clip((TQ - 0.1) / 0.8, 0, 1)) ** 0.5
+    # each boulder is a rounded polytope: 4-6 facet planes sloping 12-35 deg down toward its edges, soft-min blended
+    # (flat-ish weathered faces with rounded arrises, not pillows)
+    sec_len = np.concatenate([np.zeros((NT, 1)), np.cumsum(np.hypot(np.diff(R, axis=1), np.diff(Z, axis=1)), 1)], 1)
+    pil = np.full(R.shape, -1.0)
+    for b in range(nb):
+        m = bid2 == b
+        if not m.any():
+            continue
+        sa = (s_arc - 0.5 * s_len)[m]
+        tc = rng.uniform(0.42, 0.6)
+        jc = int(tc * (NR - 1))
+        ta = (sec_len - sec_len[:, jc:jc + 1])[m]
+        nf = int(rng.integers(4, 7))
+        a0 = rng.uniform(0, 2 * np.pi)
+        planes = []
+        for kf in range(nf):
+            a_ = a0 + kf * 2 * np.pi / nf + rng.uniform(-0.35, 0.35)
+            planes.append(bulge[b] * rng.uniform(0.7, 1.1) - math.tan(math.radians(rng.uniform(12, 35))) *
+                          (np.cos(a_) * sa + np.sin(a_) * ta * 0.8))
+        Pm = np.stack(planes, 0)
+        ksm = 0.012
+        soft = -ksm * np.log(np.sum(np.exp(-Pm / ksm), 0))
+        pil[m] = np.maximum(soft, -0.03)
+    pil = pil * np.sin(np.pi * np.clip((TQ - 0.1) / 0.8, 0, 1)) ** 0.35
     step = drb[bid2] * np.clip(dj / 0.03, 0, 1)
     for b, (tb, inc, dru) in bedj.items():
         m = bid2 == b
@@ -4514,7 +4674,7 @@ def build_cushion(coll, rng):
         dtb = np.abs(TQ - tj)
         crease = np.maximum(crease, np.where(m, np.clip(1 - dtb / 0.035, 0, 1) ** 1.6 * 0.016, 0.0))
         step = step + np.where(m & (TQ > tj), dru * np.clip((TQ - tj) / 0.03, 0, 1), 0.0)
-    fine = 0.003 * fbm(np.stack([np.cos(th)[:, None] * 11 + 0 * R, np.sin(th)[:, None] * 11 + 0 * R, Z * 11], -1), 2)
+    fine = 0.004 * fbm(np.stack([np.cos(th)[:, None] * 14 + 0 * R, np.sin(th)[:, None] * 14 + 0 * R, Z * 14], -1), 3)
     off = (pil + step - crease + fine) * vis[None, :]
     Rf = R + off * nr
     Zf = Z + off * nz

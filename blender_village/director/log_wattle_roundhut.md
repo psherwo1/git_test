@@ -136,3 +136,136 @@ Axes:
   7. Apron: polar mesh with a >= 0.4 m flat outer band at exactly the bbox-min level (Z -0.095), irregular soil margin (no grid stair-steps). A hairline remains where the band edge sits 2 mm above the review plane (the review plane is always 2 mm below bbox min, so no edge can be coplanar).
 - Nice-to-haves: folded seams done; shingle butts ragged (per-column offsets, 2-3 notches, skew +-1.2 cm) plus extra split shingles in the 4 eave courses on the door side; flags bedded 0.6-2 cm proud; hinge straps 52 mm x 7 mm. Moss cushions not added (optional).
 - Deviation: lead-hat drip is 6.70 not 6.60 and tip 8.71 not 8.60 (+1.3 %), because a 53 deg collar must clear the 17th-course shingle stack (accepted roof geometry). Roof+finial / wall ratio rises toward ref's 2.4.
+
+## Round 2 — score 8/10
+
+**What I reviewed.**
+- All 6 views and stats.json in `renders/wattle_roundhut/round_02/`, side by side with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` (plus a 2x zoom of its open bay) and `hut_cap_finial`.
+- 14 Director close-ups at 16 spp in `round_02/director_extra/`: apex, apex_eye, profile, door_front, daub_bay, wattle_macro, wattle_mid, plinth, eave_under, side_wall, flags, threshold, frame_raking and plinth_back.
+- `tools/hidden_tris.py` on the round-2 .blend, which gives est_hidden_pct 46.0%.
+- I read `weave_panel()`, `flagstone()`, `build_collar_finial()` and the plinth chinking code.
+
+**Verdict.** This is a clear step up from round 1.
+- The apex now reads at every distance.
+- The daub bay beside the door is now convincing.
+- The door side panels match ref2.
+
+It is now a solid game asset (rubric 8), but it is not yet close-up worthy:
+- The open wattle, which is the hut's identity, still reads as a garden trellis or grid at every distance.
+- The plinth still reads as stacked rounded cuboids.
+- The path flags are polygon "cookies".
+- The entrance timber is still CG-clean at actor distance.
+
+**Axes:**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 8 | The apex is fixed. The walls read as a regular grid, not ref2's dark woven band. |
+| Proportion and scale | 9 | |
+| Construction | 8 | Rods pass through the stakes. Flags have contact gaps. |
+| Detail and craft | 7 | |
+| Age and irregularity | 7 | Regular stake grid, cuboid stones, polygon flags. |
+| Technical | 8 | Clean this round. Producer notes 3 and 6 become binding from round 3. |
+
+**Strengths**
+- **Apex fixed.** The 53° lead hat, Ø1.49 with a 6.5 cm drip fascia, now casts a hard shadow line and reads as ref2's second signature feature in hero, front, side and apex_eye. The folded seams, upper collar drip, spindle and spike all read. The +0.1 m on the apex heights (tip 8.71) is ACCEPTED.
+- **Daub bay is close to ref2.** The thick, bulging coat, branched shrinkage cracks, chipped post margins and eroded, ragged lower edge exposing the rods (with clinging clumps) all match `hut_wattle_daub_plinth`.
+- **Door side panels.** The diagonal rope-like weave with dark slots now matches `hut_door.png`.
+- **Roof is still hero quality.** Ragged butts and split eave shingles add age. The eave underside reads from eye level, with rafter ends, battens, plate and real lip thickness.
+- **Round posts.** The 48-sided posts with adze flats and knots no longer read as smooth tubes.
+- **Scale is correct.** Door 1.00 × 2.08, eave lip ≥ 2.40 over the door, and the figure reads right.
+- **Technical work is clean.** The build is deterministic and takes about 6 s. It has 1.466 M tris, 29.3 MB, identity transforms, UVs, and 10 slots, all in the producer palette.
+
+**Closed or accepted**
+- Round-1 items 1, 3 (partly), 4, 5 (partly) and 6 are done.
+- Item 7, the apron hairline, is WAIVED. It is a review-plane artefact: the plane sits 2 mm under the bbox minimum. The new polar flat band removed the dashed z-fighting.
+- Moss stays optional.
+
+**Spec amendment (supersedes spec §C and art bible §5 stake spacing for this hut).** I re-measured the 2x zoom of ref2's open bay:
+- **Stakes:** thin (Ø3–4 cm), only about 3 per 1.57 m bay (spacing 0.38–0.50 m), and mostly hidden behind the rods.
+- **Rods:** continuous across several stakes, wavy, and visibly bending round each stake.
+- **Gaps:** narrow (0.5–2.5 cm) and dark.
+- My round-1 call of "2–4 cm gaps" over-opened the weave. Use the numbers below.
+
+### Must-fix (priority order)
+
+1. **WATTLE READS AS A TRELLIS OR GRID** (`HUT_wattle_rods`, `HUT_wattle_stakes`; every open bay). See profile.png, side_wall.png, wattle_macro.png, wattle_mid.png, side and back.
+   - **(a) Rods run through the stakes.** In `weave_panel()` the in/out amplitude is A = 2.5–3 cm. Stake radius (2.0–2.7 cm) plus rod radius (1.35–1.8 cm) is 3.4–4.5 cm, so every rod intersects every stake it should wrap. No rod visibly bends round a stake, and each row looks laid in front of a fence.
+   - **(b) Stakes form a vertical grid.** About 5 stakes per bay at Ø4–5.4 cm and 0.29 m spacing make a regular grid that dominates the walls at 30 m.
+   - **(c) Gaps show a lit wall.** The 2–4 cm gaps show the sunlit inner skin 8 cm behind, with rod shadows, so it reads as "sticks in front of a wall", not a dark woven wall.
+   - **Fix, stakes:** Ø3–4 cm at 0.38–0.50 m spacing (3 per bay). Jitter them ±4 cm and lean them ±1.5°.
+   - **Fix, weave offset:** set it per rod to stake_r + rod_r + 3–5 mm (about ±3.5–4.5 cm), so the bend round each stake is visible. Keep the cosine path, but give it a tighter wrap at the stake: 60% of the swing within ±6 cm of it.
+   - **Fix, rows:** pitch 4.5–6.5 cm with rods Ø2.5–3.8 cm, so gaps are 0.5–2.5 cm and the open area is ≤ 20% in front view. Use per-rod drift of ±1 rod diameter at 0.5–1 m wavelength, so neighbouring rows occasionally touch or cross.
+   - **Fix, rod lengths:** rods 1.2–2.5 m long, not post-to-post. Taper butt to tip 1.0 → 0.55, staggering the ends at least 0.3 m between consecutive rows, and flick the tips 2–5 cm outward.
+   - **Fix, inner skin:** move it at least 0.15 m behind the rod centreline, or delete it behind the open bays and close the interior with a dark blocker about 0.6 m inside (see producer note 6).
+   - **Acceptance:** in profile and side, the open bays read as horizontal woven texture with no vertical grid. In wattle_macro, every rod visibly wraps its stakes with zero rod/stake intersection (verify with a BVH overlap test). The gaps read dark.
+
+2. **PLINTH STILL READS AS ROUNDED CUBOIDS** (`HUT_plinth_stones`, `HUT_plinth_chinking`, door-post pad stones). See plinth.png, plinth_back.png, actor_closeup.
+   - **Problem, stones:** in elevation the stones are rectangles, with parallel vertical sides, planar faces and uniform edge rounding. The `rock()` fracture facets do not read. The two-high stacks form tidy courses, like bricks or soap bars.
+   - **Problem, pad stones:** the two door pad stones are about 0.55 m near-cubes that read as concrete blocks.
+   - **Problem, chinking:** many chinking pieces stick OUT 1–4 cm as flat rectangular tabs. In plinth_back.png see the joints right of centre and the pinning slabs under the post stone.
+   - **Fix, outlines:** use irregular elevation outlines (rounded trapezoid, D-shape, rounded triangle; 5–8 corners) with no two parallel vertical sides.
+   - **Fix, faces:** dome the outer faces 2–5 cm and tilt them 5–15° in random directions. Run 1–2 fracture planes visibly across the face, with edge breaks of 3–8 cm.
+   - **Fix, rounding:** vary arris rounding per stone from 1 to 6 cm.
+   - **Fix, courses:** follow ref2, which is mostly one course of low rounded stones 0.2–0.3 m tall and 0.4–0.7 m long. Cut the two-high stacks to about 20–25%, with uppers clearly smaller than the stone below.
+   - **Fix, pad stones:** rough boulders about 0.45 × 0.35 × 0.25 with an irregular plan and a flat bed for the post.
+   - **Fix, chinking:** measure the recess locally, so each chink sits at least 2 cm behind BOTH adjacent stone faces (ray-test against the stones and push back any that fail). Make them wedge-pointed, with a visible face of no more than 6 × 10 cm.
+
+3. **PATH FLAGS AND STEP STONE ARE POLYGON COOKIES** (`HUT_threshold`; see flags.png, actor_closeup, threshold.png).
+   - **Problem:** `flagstone()` lathes a convex 5–7-corner polygon. The flags read as hexagons and octagons with uniform chamfers. The outer flags show black contact hairlines (they sit on the review plane beyond the apron band). The step stone is a flat slab with straight facet edges.
+   - **Fix, outlines:** non-convex, 10–16 corners, plus 3–8 cm-scale edge noise and 1–2 notches.
+   - **Fix, shape:** thickness varying ±2 cm, tops tilted 1–3°, edge rounding varying 0.5–3 cm around the outline.
+   - **Fix, bedding:** tops 1–3 cm above the surrounding earth, bases buried at least 3 cm, with a soft earth lip (apron) wrapping each edge. Keep every flag inside the apron's flat band, with none past its edge.
+   - **Fix, step stone:** the same outline treatment, with a visibly dished wear hollow (1–2 cm) where feet land.
+
+4. **ENTRANCE TIMBER STILL CG-CLEAN AT ACTOR DISTANCE** (`HUT_door_frame`, `HUT_threshold` sill, `HUT_door_leaf`; see frame_raking.png, door_front.png, threshold.png).
+   - **Problem:** the 3–6.5 mm adze strokes vanish except under grazing light. The drying checks are single uniform knife slits with pointed ends. The sill reads as a rounded extrusion. The leaf boards are near-uniform width with ruler-straight gaps.
+   - **Fix, adze:** on the outward faces of the door posts, jambs and lintel, use scallops 6–12 mm deep and 5–9 cm wide.
+   - **Fix, checks:** 6–10 mm wide at the mouth, tapering in both width and depth, wandering ±3 mm, and some with a short parallel or branch check.
+   - **Fix, arrises:** vary the chamfer 1.5–3 cm along each member, and let the wane come and go.
+   - **Fix, sill:** a 1.5–2.5 cm worn dip over the middle 0.6 m, a worn outer arris, and end checks.
+   - **Fix, leaf:** board widths 16–30 cm, gaps 0.5–1.5 cm varying along the length, board ends uneven ±1 cm, and 1–2 boards cupped 3–5 mm.
+
+5. **DAUB PATCH AND RIDGING** (`HUT_daub`).
+   - **Patch:** the +X partial patch (side_wall.png) is a rectangle pasted onto the wattle, with straight vertical left and right edges and uniform thickness. Give it an irregular outline with no straight run over 15 cm. Feather the thickness 0 → 4 cm at the edge, expose some rods through thin spots, and add a crumbled lower margin.
+   - **Ridging:** in the large bay, the upper-third ridging over the rods reads as regular corrugation (daub_bay.png). Break it into patches of 0.3 m or less with varying pitch and amplitude, only where the coat is thin.
+
+6. **INTERIOR FLOOR SEAM** (`HUT_floor` / `HUT_threshold`). A dark curved seam line crosses the earthen floor about 0.1–0.3 m inside the sill (threshold.png, door_front.png). Close the gap or overlap, and make the floor meet the sill and the inner skin without a visible line.
+
+7. **APEX POLISH** (`HUT_finial`). See apex.png, compared with hut_cap_finial.
+   - **Upper collar:** its profile is a concave trumpet (`(1-f)**1.9`), which reads as a vase foot. Ref2's is a straight-to-slightly-convex cone. Make it straight at about 54°, r 0.285 → 0.07 over 0.30 m, keeping the drip bead with 1.5 cm projection.
+   - **Spindle:** simplify the double-bulb baluster, which reads as furniture, to ref2's stack: bead ring → tapered spindle → ring.
+   - **Spike:** base Ø 0.18–0.20, with a knop ring (+3 cm Ø, 3 cm tall) about 0.2 m up, then a straight taper to the point.
+
+8. **TECHNICAL: producer notes 3 and 6 are binding from round 3.**
+   - **Hidden triangles:** est_hidden_pct is 46.0% (674,887 of 1,465,554); the target is ≤ 15%. Hidden share and count per object:
+
+     | Object | Hidden share | Hidden tris |
+     |---|---|---|
+     | rods | 50.5% | 206k |
+     | shingles | 55.8% | 124k |
+     | door frame | 41% | 49k |
+     | plinth stones | 55% | 48k |
+     | daub | 14% | 38k |
+     | apron | 76% | 34k |
+     | battens | 83% | 33k |
+     | posts | 40% | 27k |
+     | rubble | 65% | 18k |
+     | purlins | 92% | 16k |
+     | rafters | 75% | 15k |
+     | chinking | 51% | 14k |
+     | starter | 60% | 12k |
+     | wall plate | 97% | 6k |
+
+   - **Cuts:**
+     - Drop rod backs facing the daub and inner skin, and every rod section buried under daub.
+     - Trim covered shingle bodies to the exposed part plus about 5 cm of overlap.
+     - Delete stone backs and sides behind the face line, and anything more than 5 cm below ground.
+     - Keep battens, purlins and rafters only where they are visible under the eave or through the door.
+   - **Reinvest** the saved triangles in item 1 (wattle) and items 2–4.
+   - **Sharing:** build variant pools for pegs, nails, hinge parts, chinking and rubble (6–12 each) as linked-duplicate (shared mesh data) objects, staying under the 400-object limit. Shingles may stay joined, but generate them from a pool of 12–20 variant base meshes.
+   - **Stats:** report est_hidden_pct and material_slot_count from the new render_review.
+
+**Nice to have**
+- Low-poly moss cushions at the collar drip and a few door-side eave butts.
+- Slightly irregular rafter-end cuts: more saw/axe facets on 4–6 ends.
