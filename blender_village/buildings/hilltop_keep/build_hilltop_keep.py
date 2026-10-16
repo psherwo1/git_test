@@ -1458,7 +1458,7 @@ def build_tooth_stones(acc, rng):
         build_stones(acc, S, tooth_map_factory(name), "M_stone", rng, rough=1.1, grid=(16, 8), noise_amp=0.009)
 
 
-HIP_RC = 0.42          # plan radius of the rounded thatch hips (every contour of the roof keeps this corner radius)
+HIP_RC = 0.55          # plan radius of the rounded thatch hips (every contour of the roof keeps this corner radius)
 
 
 def q_rr(x, y, rc=HIP_RC):
@@ -1911,7 +1911,8 @@ def build_hall_masonry(coll):
                     abs(S["sbt"][i] - S["sbb"][i]) > 0.06 or abs(S["shl"][i] - S["shr"][i]) > 0.12))
     log(f"  hall hero stones {int(poly_n.sum())} (non-rectangular {npoly}), other {int((~hero & ~small).sum())}, "
         f"pins {int(small.sum())}")
-    build_poly_stones(acc, filt(S, poly_n), hall_map, "M_stone", np.random.default_rng(2020), side_depth=0.018)
+    build_poly_stones(acc, filt(S, poly_n), hall_map, "M_stone", np.random.default_rng(2020), side_depth=0.018,
+                      rings=(0.8, 0.58, 0.33))
     # non-hero facets: N / NE / E / NW thinned (single side segment + chamfer band)
     build_stones(acc, filt(S, ~hero & ~small), hall_map, "M_stone", rng, rough=1.0, nxy=5, noise_amp=0.008, nz2=True,
                  side_depth=0.018)
@@ -2434,7 +2435,7 @@ def eave_structure(roof, acc_r, acc_s, acc_f, rng, p_wall, z_plate_top, sheath_t
     m0, wd = R[:, 1], R[:, 2]
     rr = np.full(M, 0.004)
     xh = pl * TAN22 + 0.05
-    X = axn(np.full(M, -xh), np.full(M, xh), rr, 12)
+    X = axn(np.full(M, -xh), np.full(M, xh), rr, 9)
     Y = axn(m0, m0 + wd, rr, 4)
     Z = axn(np.full(M, -sheath_t), np.zeros(M), rr, 3)
     P, quads = rbox(X, Y, Z, rr, skip_front=True)               # top face is under the covering
@@ -2817,7 +2818,7 @@ def build_cone(coll):
     log("  cone stones:", len(S["sc"]))
     small = (S["hx"] < 0.045) & (S["hy"] < 0.045)
     # budget: one side segment + chamfer band (the cone is never seen closer than ~6 m)
-    build_stones(acc, filt(S, ~small), cone_map_factory(), "M_stone", rng, rough=1.35, noise_amp=0.009, nz2=True,
+    build_stones(acc, filt(S, ~small), cone_map_factory(), "M_stone", rng, rough=1.35, noise_amp=0.009, nz2=True, nxy=7,
                  side_depth=0.022)
     build_stones(acc, filt(S, small), cone_map_factory(), "M_stone", rng, rough=0.9, nxy=4, noise_amp=0.005, nz2=True,
                  side_depth=0.022)
@@ -3663,7 +3664,8 @@ def build_wing_walls(coll):
     # hero zone: the wing's south wall below 3.5 m (seen in the hero/front/actor shots)
     hero = (((S["sc"] > S_SOUTH0 - 0.05) & (S["zc"] < 3.5)) | (S["foot"] > 0.5)) & ~small
     log(f"  wing hero stones {int(hero.sum())}, other {int((~hero & ~small).sum())}, pins {int(small.sum())}")
-    build_poly_stones(acc, filt(S, hero), wing_map, "M_stone", np.random.default_rng(2021), rough=1.1, side_depth=0.018)
+    build_poly_stones(acc, filt(S, hero), wing_map, "M_stone", np.random.default_rng(2021), rough=1.1, side_depth=0.018,
+                      rings=(0.8, 0.58, 0.33))
     build_stones(acc, filt(S, ~hero & ~small), wing_map, "M_stone", rng, rough=1.1, nxy=5, noise_amp=0.008, side_depth=0.018)
     build_stones(acc, filt(S, small), wing_map, "M_stone", rng, rough=0.8, nxy=5, noise_amp=0.005, side_depth=0.018)
     finalize(acc, coll, smooth_deg=28.0)
@@ -4258,7 +4260,7 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
         Nc /= np.linalg.norm(Nc, axis=1, keepdims=True)
         wave = 0.035 * n1(A / 1.6, seed * 100 + ci) + 0.01 * n1(A / 0.45, seed * 100 + ci + 7)
         mi = m_i + wave
-        stp = (0.045 + 0.022 * n1(A / 0.7, seed * 100 + ci + 50)) * pinch
+        stp = (0.05 + 0.02 * n1(A / 0.7, seed * 100 + ci + 50)) * pinch
         # valley fade toward the hall skirt (the steps die out; the courses sweep into a rounded valley)
         Pb = Pc + Nc * ((mi - m_i) * CP_)[:, None]
         Db, _ = deck_point(Pb)
@@ -4293,13 +4295,16 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
         low_b = low_at(mb)
         dh = np.maximum(top - low_b, 0.012)
         run = dh / np.tan(beta)
-        rows_m = np.stack([mb - F, mb - 0.45 * F, mb - 0.06 * F, mb + run, m_far], 1)
+        # concave fillet foot (F long) -> steep butt face -> rounded crown -> flat tail under the next course
+        rows_m = np.stack([mb - F, mb - 0.45 * F, mb - 0.12 * F, mb - 0.01, mb + run, m_far], 1)
         Qf = plan(m_far)
         h_far = TH_BASE - 0.004 + thatch_swell(Qf[:, 0], Qf[:, 1]) + hip_swell(Qf[:, 0], Qf[:, 1]) + 0.3 * cr_
-        rows_h = np.stack([low_at(mb - F) - 0.004, low_at(mb - 0.45 * F) + 0.16 * dh, low_b + 0.66 * dh, top, h_far], 1)
+        rows_h = np.stack([low_at(mb - F) - 0.004, low_at(mb - 0.45 * F) + 0.05 * dh, low_at(mb - 0.12 * F) + 0.22 * dh,
+                           low_b + 0.72 * dh, top, h_far], 1)
+        NR = rows_m.shape[1]
         # 3-D
-        Am = np.repeat(A[:, None], 5, 1)
-        Q = np.stack([plan(rows_m[:, j]) for j in range(5)], 1)            # (ncol, 5, 2)
+        Am = np.repeat(A[:, None], NR, 1)
+        Q = np.stack([plan(rows_m[:, j]) for j in range(NR)], 1)            # (ncol, NR, 2)
         D, Nd = deck_point(Q)
         W = D + rows_h[..., None] * Nd
         # under the hall skirt eave: soft clamp below the skirt sheathing near the valley line
@@ -4310,7 +4315,7 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
         zl = zs_ - 0.05
         zc_ = zl - 0.05 * np.logaddexp(0.0, (zl - W[..., 2]) / 0.05)
         W[..., 2] = W[..., 2] * (1 - wv) + np.minimum(zc_, W[..., 2]) * wv
-        idx = np.arange(ncol * 5).reshape(ncol, 5)
+        idx = np.arange(ncol * NR).reshape(ncol, NR)
         q = np.stack([idx[:-1, :-1], idx[1:, :-1], idx[1:, 1:], idx[:-1, 1:]], -1).reshape(-1, 4)
         Wf = W.reshape(-1, 3)
         # orient outward
@@ -4328,7 +4333,7 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
         q = q[~bad]
         if len(q):
             used = np.unique(q)
-            remap = -np.ones(ncol * 5, np.int64)
+            remap = -np.ones(ncol * NR, np.int64)
             remap[used] = np.arange(len(used))
             acc.add(Wf[used], remap[q], "M_thatch", uv=np.stack([Am.ravel(), rows_m.ravel()], -1)[used])
             nq_tot += len(q)
@@ -5068,27 +5073,27 @@ def corbel_cushion(acc, accm, center, spec=CUSH):
         # 2-3 planar cleaved facets (soft-clamped: crisp planes, 2-4 cm arrises where they meet the block)
         planes = []
         for _ in range(int(rng.integers(2, 4))):
-            ta_ = math.tan(math.radians(rng.uniform(10, 26))) * rng.choice([-1, 1])
-            tb_ = math.tan(math.radians(rng.uniform(4, 18))) * rng.choice([-1, 1])
+            ta_ = math.tan(math.radians(rng.uniform(14, 32))) * rng.choice([-1, 1])
+            tb_ = math.tan(math.radians(rng.uniform(6, 22))) * rng.choice([-1, 1])
             n_ = np.array([ta_, tb_, 1.0])
             n_ /= np.linalg.norm(n_)
             # pass through the outer face so that the deepest cut at the outline is 1.5-2.5 cm
             corner = np.array([np.sign(n_[0]) * hx, (h if n_[1] > 0 else 0.0), dep])
             d_corner = corner @ n_
-            planes.append((n_, d_corner - rng.uniform(0.015, 0.025) / max(n_[2], 0.5)))
+            planes.append((n_, d_corner - rng.uniform(0.022, 0.032) / max(n_[2], 0.5)))
         # underside cleave on the projecting edge (seen from below)
         n_ = np.array([rng.uniform(-0.2, 0.2), -1.0, rng.uniform(0.6, 1.1)])
         n_ /= np.linalg.norm(n_)
         planes.append((n_, np.array([0.0, 0.0, dep]) @ n_ - rng.uniform(0.03, 0.05)))
         for n_, d0 in planes:
             d = Q @ n_ - d0
-            Q = Q - n_[None, :] * _softplus(d, 0.006)[:, None]
+            Q = Q - n_[None, :] * _softplus(d, 0.004)[:, None]
         if sd["c"] == 1:
             # moss-soft top outer lip, rounded 6-8 cm
             n_ = np.array([0.0, 1.0, 1.0]) / math.sqrt(2)
             d0 = np.array([0.0, h, dep]) @ n_ - rng.uniform(0.035, 0.045)
             d = Q @ n_ - d0
-            Q = Q - n_[None, :] * _softplus(d, 0.022)[:, None]
+            Q = Q - n_[None, :] * _softplus(d, 0.016)[:, None]
         # top weathering falls outward (upper course), slight random set of each stone
         r = r_in + Q[:, 2]
         bb = Q[:, 1]
@@ -5140,46 +5145,84 @@ def turret_cull(C, wing_margin=0.0):
     return bad
 
 
+def round_map_factory(center, r_nom_fn, r_eff_fn):
+    """surface map for a round (optionally clipped) battered wall: s = arc length at the course's nominal radius,
+    z up, w outward along the surface normal."""
+    cx, cy = float(center[0]), float(center[1])
+
+    def mapfn(s, z, w, zc):
+        th = np.asarray(s, float) / r_nom_fn(zc)
+        z = np.asarray(z, float)
+        r = r_eff_fn(th, z)
+        e = 1e-3
+        drdz = (r_nom_fn(z + e) - r_nom_fn(z - e)) / (2 * e)
+        nr = 1 / np.sqrt(1 + drdz ** 2)
+        R = r + np.asarray(w) * nr
+        return np.stack([cx + R * np.cos(th), cy + R * np.sin(th), z - np.asarray(w) * drdz * nr], -1)
+    return mapfn
+
+
+def round_stone_wall(name, coll, center, radius_fn, z0, z1, seed, cfg, eff_radius_fn=None, excl_fn=None,
+                     cull_fn=None, extra_fn=None, mortar_cull_fn=None, side_depth=0.018):
+    """Kit component: a round coursed-rubble wall / tower body. radius_fn(z) is the nominal (battered / flared)
+    profile, eff_radius_fn(theta, z) an optional clipped version (engaged in other walls). Stepped polygonal footing,
+    pinned voids, shallow stone sides (no buried geometry) and a recessed mortar body. Returns the stone record."""
+    rng = np.random.default_rng(seed)
+    eff = eff_radius_fn if eff_radius_fn is not None else (lambda th, z: radius_fn(z))
+    mapfn = round_map_factory(center, radius_fn, eff)
+    excl = excl_fn if excl_fn is not None else (lambda a_, b_, c_: [])
+    acc = Acc(f"{name}_stones")
+    srange = lambda zm: [(0.0, 2 * math.pi * float(radius_fn(zm)))]
+    S = layout_wall(rng, srange, z0, z1, excl, cfg)
+    S = polygonize(S, S["foot"] > 0.5, np.random.default_rng(seed + 305))
+    pins, _, _ = fill_voids(S, srange, excl, z0, z1, rng, cfg, label=name)
+    S = cat_stones(S, pins)
+    if cull_fn is not None:
+        P = mapfn(S["sc"], S["zc"], np.zeros_like(S["sc"]), S["zcrs"])
+        S = filt(S, ~cull_fn(P))
+    log(f"  {name} stones", len(S["sc"]))
+    small = (S["hx"] < 0.05) & (S["hy"] < 0.05)
+    foot = (S["foot"] > 0.5) & ~small
+    build_poly_stones(acc, filt(S, foot), mapfn, "M_stone", np.random.default_rng(seed + 406), rough=1.15,
+                      side_depth=side_depth)
+    small &= ~foot
+    low = (S["zc"] < 3.6) & ~foot
+    build_stones(acc, filt(S, ~small & low), mapfn, "M_stone", rng, rough=1.15, nxy=5, noise_amp=0.009,
+                 side_depth=side_depth)
+    build_stones(acc, filt(S, ~small & ~low & ~foot), mapfn, "M_stone", rng, rough=1.15, nxy=5, noise_amp=0.009,
+                 nz2=True, side_depth=side_depth)
+    build_stones(acc, filt(S, small), mapfn, "M_stone", rng, rough=0.8, nxy=4, noise_amp=0.005, nz2=True,
+                 side_depth=side_depth)
+    if extra_fn is not None:
+        extra_fn(acc)
+    finalize(acc, coll, smooth_deg=28.0)
+    accm = Acc(f"{name}_mortar")
+    zs = np.linspace(max(z0, CLIP_Z), z1 + 0.02, 26)
+    cx, cy = float(center[0]), float(center[1])
+    V, F = lathe(np.stack([radius_fn(zs) - 0.004, zs], 1), 120, cx=cx, cy=cy, cap_bottom=False, cap_top=False)
+    thv = np.arctan2(V[:, 1] - cy, V[:, 0] - cx)
+    rv = eff(thv, V[:, 2]) - 0.004
+    V[:, 0] = cx + rv * np.cos(thv)
+    V[:, 1] = cy + rv * np.sin(thv)
+    Vg = V.reshape(len(zs), 120, 3)
+    Cq = 0.25 * (Vg[:-1] + np.roll(Vg[:-1], -1, 1) + Vg[1:] + np.roll(Vg[1:], -1, 1))
+    keep = np.ones(len(F[0]), bool) if mortar_cull_fn is None else ~mortar_cull_fn(Cq.reshape(-1, 3))
+    accm.add(V, F[0][keep], "M_mortar")
+    finalize(accm, coll)
+    return S
+
+
 def build_turret(coll):
     rng = np.random.default_rng(1616)
-    acc = Acc("KEEP_turret_stones")
     cfg = dict(seed=23, footing=0.31, ch=(0.09, 0.17), p_tall=0.07, len=(0.18, 0.52), foot_len=(0.40, 1.10),
                foot_lvl=(-0.09, 0.10), joint=(0.009, 0.018), front=(0.005, 0.034), foot_proj=(0.035, 0.095),
                bevel=(0.005, 0.03),
                pillow=(0.003, 0.012), tilt=0.008, rot=0.016, p_double=0.07, p_long=0.04, back=0.09, bed_amp=0.03)
-    srange = lambda zm: [(0.0, 2 * math.pi * float(tur_r(zm)))]
-    S = layout_wall(rng, srange, -0.10, TUR_Z_TOP, tooth_excl_tur, cfg)
-    S = polygonize(S, S["foot"] > 0.5, np.random.default_rng(1921))
-    pins, _, _ = fill_voids(S, srange, tooth_excl_tur, -0.10, TUR_Z_TOP, rng, cfg, label="turret")
-    S = cat_stones(S, pins)
-    P = tur_map(S["sc"], S["zc"], np.zeros_like(S["sc"]), S["zcrs"])
-    # stones straddling the wall faces are kept (the wall stones do the same): the junction interlocks
-    S = filt(S, ~turret_cull(P, wing_margin=0.04))
-    log("  turret stones", len(S["sc"]))
-    small = (S["hx"] < 0.05) & (S["hy"] < 0.05)
-    foot = (S["foot"] > 0.5) & ~small
-    build_poly_stones(acc, filt(S, foot), tur_map, "M_stone", np.random.default_rng(2022), rough=1.15, side_depth=0.018)
-    small &= ~foot
-    low = (S["zc"] < 3.6) & ~foot
-    build_stones(acc, filt(S, ~small & low), tur_map, "M_stone", rng, rough=1.15, nxy=5, noise_amp=0.009, side_depth=0.018)
-    build_stones(acc, filt(S, ~small & ~low & ~foot), tur_map, "M_stone", rng, rough=1.15, nxy=5, noise_amp=0.009, nz2=True,
-                 side_depth=0.018)
-    build_stones(acc, filt(S, small), tur_map, "M_stone", rng, rough=0.8, nxy=4, noise_amp=0.005, nz2=True, side_depth=0.018)
-    build_tooth_stones(acc, np.random.default_rng(1819))
-    finalize(acc, coll, smooth_deg=28.0)
-    accm = Acc("KEEP_turret_mortar")
-    zs = np.linspace(-0.05, TUR_Z_TOP + 0.02, 26)
-    V, F = lathe(np.stack([tur_r(zs) - 0.004, zs], 1), 120, cx=TUR_C[0], cy=TUR_C[1], cap_bottom=False, cap_top=False)
-    thv = np.arctan2(V[:, 1] - TUR_C[1], V[:, 0] - TUR_C[0])
-    rv = tur_reff(thv, V[:, 2]) - 0.004
-    V[:, 0] = TUR_C[0] + rv * np.cos(thv)
-    V[:, 1] = TUR_C[1] + rv * np.sin(thv)
-    Vg = V.reshape(len(zs), 120, 3)
-    Cq = 0.25 * (Vg[:-1] + np.roll(Vg[:-1], -1, 1) + Vg[1:] + np.roll(Vg[1:], -1, 1))
-    # mortar body runs on 0.18 m into the wing walls so the junction can never show through
-    keep = ~turret_cull(Cq.reshape(-1, 3), wing_margin=0.18)
-    accm.add(V, F[0][keep], "M_mortar")
-    finalize(accm, coll)
+    # engaged in the wing's N and W walls (bonded with toothing stones), clipped behind the S wall face
+    round_stone_wall("KEEP_turret", coll, TUR_C, tur_r, -0.10, TUR_Z_TOP, 1616, cfg, eff_radius_fn=tur_reff,
+                     excl_fn=tooth_excl_tur, cull_fn=lambda P: turret_cull(P, wing_margin=0.04),
+                     extra_fn=lambda acc: build_tooth_stones(acc, np.random.default_rng(1819)),
+                     mortar_cull_fn=lambda C: turret_cull(C, wing_margin=0.06))
     build_cushion(coll, rng)
     # board drum with sill & head rings
     accd = Acc("KEEP_turret_drum")
@@ -5208,7 +5251,7 @@ def build_turret(coll):
             half = apo_r * TAN22
             o = np.array([TUR_C[0], TUR_C[1], zz + rng.uniform(-0.006, 0.006)]) + n3 * apo_r - t3 * (half - 0.004)
             hewn_member(accd, o, t3, n3, np.array([0, 0, 1.0]), 2 * half + sz * 0.45, sz, sz, rng, chamfer=0.014,
-                        nf=2, st_len=0.08, adze=0.003, wave=0.003, seed=300 + k + 10 * ri)
+                        nf=2, st_len=0.16, adze=0.003, wave=0.003, seed=300 + k + 10 * ri, drop=(2,))
             peg(accd, o + t3 * (2 * half + sz * 0.2) + n3 * (sz / 2), n3, rad=0.01, proud=0.01)
     V = np.stack([TUR_C[0] + 1.1 * np.cos(np.linspace(0, 2 * np.pi, 24, endpoint=False)),
                   TUR_C[1] + 1.1 * np.sin(np.linspace(0, 2 * np.pi, 24, endpoint=False)), np.full(24, z1)], 1)
@@ -5334,7 +5377,8 @@ _VIS = {}
 
 def _vis_worker(chunk):
     from mathutils import Vector
-    bvh, views, Vw, T, own = _VIS["bvh"], _VIS["views"], _VIS["V"], _VIS["T"], _VIS["own"]
+    bvh, Vw, T, own = _VIS["bvh"], _VIS["V"], _VIS["T"], _VIS["own"]
+    views, VN = _VIS["views"], _VIS["views_np"]
     hidden = []
     for pid, tri_ids in chunk:
         vis = False
@@ -5344,10 +5388,12 @@ def _vis_worker(chunk):
             nrm = (p1 - p0).cross(p2 - p0)
             nrm = nrm.normalized() if nrm.length > 1e-12 else Vector((0, 0, 1))
             pts = [cen] + [cen + (p - cen) * 0.8 for p in (p0, p1, p2)]
+            dv = VN - np.array(cen)
+            fac = (dv @ np.array(nrm)) / np.maximum(np.linalg.norm(dv, axis=1), 1e-9)
             for side in (1, -1):
                 ns = nrm * side
                 # most frontal viewpoints first (early exit for visible faces)
-                order = sorted(views, key=lambda v: -(v - cen).normalized().dot(ns))
+                order = [views[i] for i in np.argsort(-fac * side)]
                 for pt in pts:
                     probe = pt + ns * 0.002
                     for v in order:
@@ -5396,7 +5442,23 @@ CULL_TARGETS = ["KEEP_roof_collar_shakes", "KEEP_cap_structure", "KEEP_turret_ca
                 "KEEP_cap_shingles", "KEEP_turret_cap_shingles", "KEEP_roof_skirt_boards", "KEEP_roof_skirt_structure",
                 "KEEP_hall_eave_plate", "KEEP_hall_wall_mortar", "KEEP_wing_wall_mortar", "KEEP_turret_mortar",
                 "KEEP_cap_hips", "KEEP_turret_cap_hips", "KEEP_roof_skirt_hips", "KEEP_lantern_boards",
-                "KEEP_lantern_frame", "KEEP_cone_ledge_slabs", "KEEP_wing_roof_structure"]
+                "KEEP_lantern_frame", "KEEP_cone_ledge_slabs", "KEEP_wing_roof_structure", "KEEP_wing_flashing",
+                "KEEP_wing_roof_rolls", "KEEP_wing_roof_thatch_courses", "KEEP_wing_roof_thatch", "KEEP_hall_posts",
+                "KEEP_hall_post_bases", "KEEP_hall_knee_braces", "KEEP_door_leaf", "KEEP_wing_door",
+                "KEEP_wing_window", "KEEP_threshold", "KEEP_hall_window_frames", "KEEP_wing_ridge_comb",
+                "KEEP_turret_stones"]
+
+
+def door_views():
+    """close-up positions in front of both doors (0.5-2 m out, knee to above head height, either side)."""
+    V = []
+    k = 3
+    for dist in (0.5, 1.0, 2.0):
+        for z in (0.4, 1.1, 1.7, 2.3):
+            for x in (-0.9, 0.0, 0.9):
+                V.append(fmap(k, np.array([OPENINGS[0]["xc"] + x]), np.array([z]), np.array([dist]))[0])
+                V.append((WDOOR["xc"] + x, WY_S - dist, z))
+    return np.array(V)
 
 
 def near_views():
@@ -5404,17 +5466,17 @@ def near_views():
     eaves is ever removed): rings round the hall under and outside the skirt eave, low ground views, along the
     wing walls and round the turret, plus close crane views of the upper tiers."""
     V = []
-    for r, z, n in ((4.75, 1.65, 40), (6.0, 1.65, 32), (5.0, 0.6, 24), (7.5, 3.0, 24), (6.5, 9.0, 16), (3.5, 13.5, 8)):
+    for r, z, n in ((4.75, 1.65, 28), (6.2, 1.65, 20), (5.0, 0.6, 14), (7.5, 3.0, 14), (6.5, 9.0, 10), (3.5, 13.5, 6)):
         for k in range(n):
             a = 2 * math.pi * (k + 0.37) / n
             V.append((r * math.cos(a), r * math.sin(a), z))
-    for x in np.arange(-10.6, -1.2, 0.9):
-        for y in (WY_S - 0.35, WY_S - 1.5, WY_N + 0.35, WY_N + 1.5):
+    for x in np.arange(-10.6, -1.2, 1.3):
+        for y in (WY_S - 0.35, WY_S - 1.6, WY_N + 0.35, WY_N + 1.6):
             V.append((x, y, 1.65))
-    for y in np.arange(-0.8, 6.0, 0.9):
+    for y in np.arange(-0.8, 6.0, 1.3):
         V += [(WX_W - 0.35, y, 1.65), (WX_W - 1.6, y, 1.65)]
-    for k in range(12):
-        a = 2 * math.pi * k / 12
+    for k in range(10):
+        a = 2 * math.pi * k / 10
         V.append((TUR_C[0] + 3.6 * math.cos(a), TUR_C[1] + 3.6 * math.sin(a), 6.0))
     P = np.array(V)
     inside = (oct_pp(P[:, 0], P[:, 1]) < A0 + 0.1) | ((P[:, 0] > WX_W - 0.1) & (P[:, 0] < WX_E + 0.1) &
@@ -5422,7 +5484,7 @@ def near_views():
     return P[~inside]
 
 
-def visibility_cull(targets, extra_views, procs=3):
+def visibility_cull(targets, extra_views, procs=3, extra_by_target=None):
     """delete the polygons of the target objects that no exterior / near-field viewpoint can see (sampled at each
     triangle's centroid and near its corners, both sides; the same test the review tool applies)."""
     from mathutils.bvhtree import BVHTree
@@ -5456,16 +5518,20 @@ def visibility_cull(targets, extra_views, procs=3):
     T = np.concatenate(Ts)
     own = np.concatenate(owns)
     lo, hi = Vw.min(0), Vw.max(0)
-    views = exterior_views(lo, hi, extra_views)
+    base_views = exterior_views(lo, hi, extra_views)
     bvh = BVHTree.FromPolygons(Vw.tolist(), T.tolist(), all_triangles=True, epsilon=0.0)
-    _VIS.update(bvh=bvh, views=views, V=Vw, T=T, own=own)
-    log(f"  visibility: {nt} tris, {len(views)} viewpoints")
+    _VIS.update(bvh=bvh, V=Vw, T=T, own=own)
+    log(f"  visibility: {nt} tris, {len(base_views)} viewpoints")
     total_del = 0
     for name in targets:
         if name not in tri_base:
             continue
         t0, lp = tri_base[name]
         ob = bpy.data.objects[name]
+        from mathutils import Vector
+        views = base_views + [Vector(tuple(map(float, e))) for e in (extra_by_target or {}).get(name, ())]
+        _VIS["views"] = views
+        _VIS["views_np"] = np.array([tuple(v) for v in views])
         order = np.argsort(lp, kind="stable")
         bounds = np.flatnonzero(np.diff(lp[order])) + 1
         groups = np.split(order + t0, bounds)
@@ -5545,7 +5611,12 @@ def main():
     root.children.link(pc)
     realize_placements(pc)
     log("hidden-surface clean-up")
-    visibility_cull(CULL_TARGETS, near_views())
+    dv = door_views()
+    if os.environ.get("KEEP_FAST"):
+        CULL_TARGETS.clear()
+    visibility_cull(CULL_TARGETS, near_views(), extra_by_target={"KEEP_door_leaf": dv, "KEEP_wing_door": dv,
+                                                                 "KEEP_threshold": dv, "KEEP_hall_posts": dv,
+                                                                 "KEEP_hall_post_bases": dv})
     tot = 0
     for ob in bpy.data.objects:
         if ob.type == "MESH":

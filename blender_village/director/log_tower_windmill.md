@@ -463,3 +463,84 @@ The client has clarified that the sloping stone shape to the RIGHT of the mill i
 - **Do not** replace it with any other structure.
 - **Rebalance the composition** using the props on the left and the tail vane. The mill must still read as ref1's mill from the reference camera, and the right side of the drum is now simply the arcaded drum wall.
 - **Spend** the triangles freed on the round-3/4 must-fix items. The entrance ground and the cap sarking come first.
+
+## Round 4 — builder entry
+
+**Renders:** renders/tower_windmill/round_04: all 6 views at 32 samples, plus stats.json and hidden.json.
+
+**Stats:**
+
+| Measure | Value |
+|---|---|
+| Triangles | 1,001,818 |
+| Objects | 204 = 31 unique merged meshes + 173 linked duplicates of 20 shared variant meshes |
+| Bbox | -6.85..4.12 x -5.13..6.02 x -0.005..16.20 m |
+| .blend | 25.3 MB, compressed |
+| Build | ~20 s, deterministic |
+| est_hidden_pct | **12.8%** |
+| material_slot_count | 11, all from the palette |
+| mask_attribute_missing | none (`[]`) |
+
+**Client corrections (spec):**
+- **Buttress deleted.** The drum courses, band, string courses, balusters and footing now run the full circle with no scar. The ground rubble clusters near the old buttress toe were moved around the drum.
+- **Sail A removed.** Sail A, its whip, bars, hemlaths, boards and the counterweight are gone. The four arms (`MILL_wheel_arm_A..D`) taper 0.30 → 0.17 m, sit on an "X" and end just past the rim with bolted straps, so they read as the wheel's arms.
+- **Tail boom and vane added:** `tail_boom()` / `tail_vane()` → `MILL_tail_boom`, `MILL_tail_vane`, `MILL_tail_iron`. The parts turn with the cap.
+  - Two hewn rails, 0.10 x 0.12 m, pass out under the rear eave through a valance notch, from cap-local x' -1.13 to -6.08 (4.6 m beyond the cap).
+  - Spacer blocks, 5 iron bands and through-bolts.
+  - A hanger that clasps the rails, with iron stays back to the sheer ends.
+  - A lower brace from the hanger foot and an upper brace from the rear ridge end, both with iron shoes.
+  - Vane: 14 fanned boards, 1.40 → 2.20 m tall, with a ragged outer edge and a broken corner, plus 1 cracked board, 1 replaced board, 4 cleats and nails.
+- **Cap yaw is 12 deg** (was 3). This is so the vane reads left of the tower from the front-left, as in ref1 / hero, and is near edge-on behind the wheel in front. The hub is now 0.4 m right of the axis.
+- **Clearances:** wheel vs apron, props and tail ≥ 0.30 m PASS, and the lowest rotating point is 8.43 m. At any cap yaw, the tail clears the tower boards by 0.26 m and the props by more than 1 m. The rails run 3 cm over the curb.
+
+**Must-fix 1–9:**
+
+1. **Cap sarking.** A continuous board deck now runs under all 4 cap faces between the hip lines. Boards are 15–25 cm with 4 mm joints. The cap shingles are clamped so nothing projects more than 4.5 cm past the eave or hip corners. Checked from (9,1.5,12.5) and (-3.5,5.5,14.5): no void or sky shows through.
+2. **Path flags.**
+   - They are now set into the ground: tops 1.7–2.1 cm on the high side with a 0.6–1.0 deg tilt; the step is unchanged.
+   - Arris 0.5–1.0 cm, broken by chips, with 1–2 crisp straight fracture edges per flag. The bed is not modelled.
+   - Each flag has an `M_earth` soil fillet 3–6 cm wide.
+   - 44 gravel stones are bedded in the joints between flags, 40–70% buried.
+3. **Ground rubble and prop feet.**
+   - (a) 46 settled split stones (`settled_stones()`): 3–4 fracture cuts, 0.8–1.5 cm arrises, buried 45–65% of their height, with soil collars 2–4 cm high.
+   - (b) `prop_foot()`: one `hewn_beam` chock with a bird's-mouth step, seated in a notch cut into a split-stone pad. Two iron dogs run onto the pole. The soil mound is 3–5 cm high and tapers to 0 at an irregular edge 0.25–0.42 m out, with 3–6 embedded pebbles.
+   - Soil feathers 4 mm into the ground, so there is no crease line.
+4. **Door leaf** (`door_planks()`):
+   - Worn arrises of 1.5–2.2 cm, more in the bottom 0.4 m and on the lock stile.
+   - A ragged, rotted bottom end, with 2 planks 3–5 cm short.
+   - 3 face checks and a split at the head.
+   - Plank proudness ±3 mm, gaps 4–10 mm and a free-edge sag of 5.1 mm.
+5. **Eave fascia and tower foot.**
+   - `eave_fascia()`: 16 straight boards with butt joints of 3–6 mm, ends cut to the polygon, ±5 mm height, ±3 mm out of plane, a worn lower arris and the eave wave.
+   - The sarking now stops at the fascia's inner face, and the first shake course overhangs the fascia.
+   - `tower_foot_flashing()`: one vertical board per octagon face over the sill, scribed to the shakes, with lapped ends.
+6. **Hidden triangles: 15.2% → 12.8%.**
+   - Mortar skirt quads tucked under neighbouring stones are culled.
+   - Recess mortar panels behind full stone cover are culled.
+   - String-course and cornice profiles stop 1.2 cm inside the wall, with no in-wall faces.
+   - Lead undersides and backs of battens, patches and door ledges are removed.
+   - Shingle laps are shorter now that the deck is in.
+   - Stone soffits below 1.55 m are not modelled.
+   - Every face lying on the ground cut is dropped.
+   - Corbel and baluster variants are cut at the wall.
+   - **Also fixed:** the drum and opening placement maps were mirror maps, so `MILL_base_stones` and `MILL_base_dressed` faced inward. Every solid piece is now checked and re-wound outward.
+7. **Rubble arrises.** Rubble, footing and pinning stones now get a per-edge arris of 0.3–1.5 cm, with 1–2 crisp (≤ 3 mm) broken edges per stone. A 3–8 mm conchoidal scoop is added on about 30% of faces below 2.2 m.
+8. **Shared meshes:**
+   - Balusters: 8 variants (5 turned, 2 eroded, 1 plain block) → 71 placements.
+   - Dentil corbels: 6 variants → 40 placements.
+   - Hex bolt heads: 6 variants → 62 placements on the wheel arms, poll end and tail.
+   - Pitch, yaw and lean jitter live in the object transforms. Objects sit in the `MILL_instances` sub-collection under `MILL`.
+   - There are no truck wheels to instance, because they were dropped inside the valance in round 2 (accepted).
+   - Wheel rivets and nail heads stay merged per component.
+9. **Kit refactor: NOT DONE, slips to round 5** (allowed under the note-8 time-box).
+   - The new round-4 parts are parameterised functions that make their own objects: `tail_boom`, `tail_vane`, `settled_stones`, `path_flags`, `prop_foot`, `door_planks`, `eave_fascia`, `tower_foot_flashing`, `baluster_row`, `dentil_corbels`, `rbox_pv`/`edge_radii`/`conchoidal`.
+   - The drum, arcade, apron, tower, cap and wheel builders still read module constants.
+   - No `kit_test.png` was produced.
+
+**Producer note 9:** every mesh carries a CORNER BYTE_COLOR `Mask`, set as both active and default. R is a per-piece random (per variant for shared meshes). G is per-piece wear: higher on eroded, cracked, short or replaced pieces and lower on fresh ones. B is moss/damp from height, up-facing and north-facing faces. A = 1.
+
+**Known gaps:**
+- Item 9 (kit) is outstanding.
+- The tower-foot flashing boards have a curved scribed lower edge where the octagon meets the conical apron.
+- Shared variant meshes carry one Mask R per variant; Unreal would supply the per-instance random.
+- Nice-to-haves not done: pier and jamb outline straightening, moss.
