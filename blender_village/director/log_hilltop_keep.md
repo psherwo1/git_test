@@ -667,3 +667,33 @@ Score by axis:
 ## CLIENT CORRECTION — producer note 10
 
 Delete all loose ground stones, rubble scatter, path flags, stepping stones and ground aprons that are not part of the building. Do not score them. See producer note 10 in the art bible.
+
+## Round 6 — builder entry
+
+**Renders:** renders/hilltop_keep/round_06/ (all 6 views at 32 spp, stats.json, hidden.json) and `builder_checks/` (16 spp: ground_contact, off_base_s, turret_cushion, cushion_e, rollend_sw, wing_turret, odd_aerial_nw, off_crane_sw).
+**Stats:** 289 objects (238 linked duplicates of 49 pooled meshes), 1,296,876 tris, **est_hidden_pct 13.9 %**, **11 material slots** (all from the palette; M_rubble is gone with the rubble), `mask_attribute_missing` is empty, **0 faces under 1e-8 m², 0 needle triangles** (altitude < 0.1 mm), zmin −0.050. bbox x −11.11..5.30, y −5.30..5.30, z −0.05..14.00 (16.41 × 10.60 × 14.05 m). .blend 31.9 MB. The build takes about 7 min.
+
+**Changes:**
+1. **Producer note 10 / client correction.** `build_ground()`, `_rubble_builder()`, the rubble/boulder pool (16 variants, 80 placements), the `KEEP_ground` collection and the rubble special case in `get_pool()` are all deleted. Nothing loose remains on the ground. The building's own parts stay: the footing course, the corner-post pedestals, the main-door threshold, the built-in step stone, and the wing-door threshold.
+2. **Footing (round-4 must-fix 5, still kerb-like in round 5).** `rough_footing()` and `build_poly_stones()` for footing stones:
+   - faces lean back 1.5–3.5 cm toward the top;
+   - absolute ±1.5–2 cm low-frequency lumps;
+   - 2.5–2.75 cm pillow;
+   - split planes at 13–22°, allowed to cut down to the full projection;
+   - 3.5 cm weathered shoulders;
+   - 5 extra face rings so the relief resolves.
+   They now read as bedded field stone (off_base_s, ground_contact).
+3. **Cushion upper course (round-4 must-fix 4).** The upper course has a wider length spread (0.30–0.76 m), outer face ±6 cm and tops −7.5/+3 cm. Each stone is also yawed 4–10° in plan, so one end stands proud of its neighbour, and about 55 % of stones get a 2–4 cm bellied face. The even "tyre tread" ring is broken up (turret_cushion, cushion_e).
+4. **See-through at the SW eave-roll / turret junction (round-4 must-fix 1b).** The black crescent in odd_aerial_nw at about (−9.9, 0.0, 3.0) was the open back of the D-roll, where both the thatch core and the turret stones are cut away. The roll now keeps its back faces within 1.3 m of the turret (`d_roll(keep_back_fn=...)`), and a roll end that dies into the turret tapers. The ray-grid see-through audit over the 10 off-ring cameras shows no interior or sky through any wall or roof. The only residual back-face hits are on open board shells (1–30 px per view) and on the real door and window openings.
+5. **Nanite hygiene.** `clean_mesh()` gained `fix_needles()`:
+   - bad n-gons are re-triangulated (beauty);
+   - slivers have their < 1 mm edge collapsed or their long edge flipped;
+   - leftover slivers under 0.1 mm wide are deleted;
+   - a mesh-tessellation recheck then catches anything left.
+   Result: 1,024 needle triangles → 0.
+
+**Known gaps:**
+- A few thatch course stubs remain where the courses pass under the hall skirt valley.
+- The kit still shares one module dimension table (`kit_set`).
+- Some open board and shingle shells have mixed normals.
+- A small grey ledge remains where the SW roll meets the turret (no longer a void).

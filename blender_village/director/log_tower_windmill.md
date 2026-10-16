@@ -877,3 +877,106 @@ Delete all loose ground stones, rubble scatter, path flags, stepping stones and 
 
 **Not done (time-box):** the cap-shingle width jitter and the course-to-course joint break.
 **Known gap:** without its soil fillet, each prop pad shows its own split side 4-5 cm above Z = 0, and its slightly wider lower body reads as a low ledge from close up. It will sit into the Unreal terrain.
+
+## Round 6 — score 9.1/10
+
+**Reviewed:** renders/tower_windmill/round_06 (hero, front, side, back, aerial, actor_closeup, stats.json, hidden.json), the builder's builder_extra close-ups (c_door, c_door_in, c_step, c_prop_feet, c_prop_foot0, c_wheel), and director close-ups in renders/tower_windmill/round_06/director_extra (x01 ref angle, x02 door, x03 threshold, x04 prop feet, x05 footing, x06 cap, x07 arcade, x08 jambs, x09 passage from above, x10 left jamb). Compared side by side with ref1 and the crops mill_overall, mill_sails_wheel, mill_stone_base, style_mill_lattice_sails and style_aerial_village. Ground dressing (loose stones, rubble, paths, aprons) was not scored, per producer note 10.
+
+**Stats:** 1,212,256 tris; 211 objects; bbox 10.77 x 9.13 x 16.21 m; .blend 30.3 MB; 10 palette slots (M_earth now only on the prop-foot notch packing); **est_hidden_pct 14.4%** (passes note 6, but only 0.6 points of headroom); mask_attribute_missing empty; every mesh has UVs.
+- **Director hygiene check (independent):** 0 triangles with altitude < 0.1 mm and 0 polygons with area < 1e-8 m² on every mesh datablock. Round-5 must-fix 7 is closed.
+
+**Verdict:** a clear step up from round 5, and the best the mill has been. Producer note 10 is applied cleanly: the rubble, collars, flags and gravel and their code are gone, and only the built-in door step remains. The round-5 must-fixes are closed, apart from the remaining close-up issues below:
+- the arcade piers are now coursed long-and-short work that continues the spandrel courses (x07, actor_closeup);
+- the slivers are gone;
+- the wheel blades read as solid paddles, as in mill_sails_wheel (front, c_wheel);
+- the ladder and floor sill give real depth through the ajar door (c_door, x10).
+
+From the ref camera (x01) it is unmistakably ref1's mill: drum, arcade band, ragged shake apron, tall boarded smock tower, small cap, a 16-blade wheel on rings, and the fanned tail vane standing clear to the left over three raking props.
+
+It is not a 10, because a production designer would still flag these in an actor close-up:
+- the dressed spalls still leave proud tabs and stair-stepped notches on the door jambs;
+- the threshold nose reads as a cast concrete kerb;
+- the prop feet read as machined parts: stacked plate pads, gusset-bracket dogs and smooth lozenge "checks";
+- the cap shingles are still a near-regular grid.
+
+**Axis scores:**
+
+| Axis | Score |
+|---|---|
+| Silhouette | 9.3 |
+| Proportion and scale | 9.2 |
+| Construction | 9.0 |
+| Detail | 8.8 |
+| Age | 8.7 |
+| Technical | 9.5 |
+
+**Strengths:**
+- **Silhouette and composition (x01, hero, front, side, back):** matches mill_overall tier for tier. The wheel/drum width ratio is about 1.5 in the front view, against about 1.5 in the ref. The vane sits left of the tower from the ref angle and edge-on behind the wheel from the front.
+- **Arcade band (x07, actor_closeup):**
+  - The piers are coursed dressed blocks, alternating long and short, with offset vertical joints and a different layout per pier.
+  - The 9–11-voussoir rings are irregular, the rubble backs are recessed, and each recess has a sill.
+  - The balusters and the dentil cornice are separate chamfered pieces.
+- **Entrance (x02, c_door_in, x10):**
+  - The plank leaf has checks, a rotted foot and varied plank widths.
+  - The spear-ended strap hinges have nails, and there is a ring pull with a latch plate.
+  - The door stands ajar onto a ladder and floor sill 1.3 m inside, so there is real depth instead of a black slot.
+  - Headroom and step rise are correct next to the 1.8 m figure.
+- **Rotor (c_wheel, front):** the paddles are solid, with 5 mm board gaps. Riveted ring attachments, spokes and diagonal ties, and bolted arm straps make it mechanically believable.
+- **Drum rubble (x05):** flat-bedded split stones with wandering courses, varied lengths and sparse irregular pinners. The footing course projects and has flat beds.
+- **Technical:**
+  - 1.21 M tris, 10 palette slots, Mask on every mesh.
+  - Verified clean Nanite hygiene.
+  - The kit variant still builds with clearance PASS.
+
+**MUST-FIX (priority order):**
+1. **Door-surround spalls still make proud tabs and stair-stepped notches (x08, x10, c_door_in, actor_closeup). This is the actor close-up priority.**
+   - **Where:**
+     - Left jamb, bed joint at z ≈ 1.00 m: a stair-stepped notch about 25 cm long with 3–4 grid-aligned steps (x10, upper left).
+     - Left jamb outer arris at z ≈ 1.20 m and 1.45 m: small rectangular flaps 1–2 cm proud of the face (x08, left block).
+     - Right jamb, lower-middle block, outer arris at z ≈ 1.0–1.3 m: two rectangular tabs sticking out (x08, right edge).
+     - Right jamb top block, lower-left corner at z ≈ 1.75 m: a triangular flap (c_door_in).
+   - **Fix:**
+     - After cutting each spall, clamp every vertex so that it lies on or inside the pre-spall block. The signed distance to the original block must be ≤ 0 everywhere, with an outward excess ≤ 0.5 mm, and the build should print the per-block maximum.
+     - Each spall outline is a smooth irregular loop with at least 8 points and no straight segment longer than 3 cm along a grid axis.
+   - **Also:** the dark grey smears on the arcade pier faces (x07, piers left and centre at z ≈ 3.3–3.6 m) are spall shading artefacts. Recompute or flat-shade the spall normals there.
+2. **Threshold nose reads as a cast concrete kerb (x03, x09, c_step).**
+   - The front of the threshold is one 1.3 m curved stone that follows the drum arc exactly. It has a constant height and a uniform rounded nose with a radius of about 4 cm.
+   - Rebuild it as 2 dressed stones, each 0.55–0.75 m long, with a visible joint.
+     - Each front is 2–3 near-straight chord facets, not a perfect arc.
+     - The arris is 0.5–1 cm with 1–2 crisp spalls of 1–2 cm per stone.
+     - The nose height varies ±5 mm, and the worn dip (1–2 cm) at the centre carries through the nose.
+   - Keep the top at Z_TH = 0.14 and the step rise at 6–7 cm.
+   - Inside the passage, the right-hand floor flag stands 3–4 cm proud of its neighbour (x09). Level the passage flags to within ±1 cm of each other.
+3. **Prop pads read as two stacked plates (x04, c_prop_feet, c_prop_foot0; the builder's known gap).**
+   - Each pad shows a flat top slab over a wider lower ledge, with a 4–5 cm vertical step above Z = 0. Producer note 10 says the building's own footing must meet Z = 0 convincingly on any terrain.
+   - Make each pad one split stone:
+     - one continuous irregular side face, 3–5 cm exposed above Z = 0, with no ledge or second tier;
+     - the lower body no wider than the top outline + 1 cm;
+     - a domed top (±1 cm) with 1–2 fracture facets;
+     - a buried skirt of 5 cm or less.
+4. **Chock and iron dogs read as machined brackets (x04, c_prop_foot0).**
+   - **Dogs:** each foot shows two flat diagonal bars from the chock top to the pole, forming a triangle on each side. They read as welded gusset plates.
+     - Replace them with 1–2 true iron dogs (staples) per foot, of 15–20 mm square bar.
+     - Each dog spans 20–25 cm across the chock/pole joint, stands 12–18 mm proud, and has two legs bent 90° that vanish into the timber.
+   - **Chock:** at 2–4 m it is still a clean box with flat faces.
+     - Raise the facet amplitude on the 3 exposed faces to 10–15 mm.
+     - Break the top edges with 2 hewn bevels of 2–3 cm.
+     - Skew the plan 4–6° so it is not a rectangle.
+5. **Pole checks read as carved lozenge scoops (x04 near pole, c_prop_feet, c_prop_foot0).**
+   - Each pole shows a single smooth, soft-walled, diamond-shaped groove about 0.5 m long and about 3 cm wide.
+   - Real seasoning checks are narrow V cracks, with sharp walls and no rounded floor:
+     - 3–5 per pole in the bottom 1.5 m, each 4–12 mm wide at the widest and 2–4 cm deep, closing to 0 at both ends;
+     - plus 2–3 hairline checks 2–4 mm wide.
+   - Keep the end-grain split.
+6. **Cap shingles are a near-regular grid (x06; nice-to-have since round 4, now must-fix before a 10).**
+   - Add ±15% width variation.
+   - Offset the vertical joints by at least 1/3 of a shingle width from course to course, so that no joint aligns over 3 consecutive courses.
+   - Add ±3° rotation on 20% of the shingles.
+   - Keep est_hidden_pct ≤ 15%: you have only 0.6 points of headroom, so cull covered shingle overlap if the count rises.
+
+**Nice to have:**
+- Tail vane height: 0.32 × the wheel diameter against about 0.4 in mill_overall. Take the outer edge to 2.5–2.7 m if the client agrees.
+- Footing stones (x05): several still have soap-bar rounded ends. Give 1 in 3 a straight fracture end.
+- Kit: pass a context or dimension object down to the helpers instead of the module table.
+
+**Workflow note:** the user has lowered the pass criterion to 8.2 for now. This round's 9.1 clears it. The must-fix list above still stands for the eventual 10. The user's round-hut daub/wattle correction belongs to the HUT log and was not applied here.
