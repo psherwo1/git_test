@@ -327,7 +327,7 @@ def _interp_rows(mq, M5, H5):
 def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), m0=0.64, m_max=3.95,
                    drift=(0.085, 0.055), expo_lim=(0.24, 0.36), straw_pitch=(0.015, 0.03), straw_depth=(0.005, 0.015),
                    straw_patch=(0.2, 0.5), straw_skew_deg=5.0, end_feather=0.4, relief_min=0.0,
-                   clump_cols=(0.05, 0.10)):
+                   clump_cols=(0.06, 0.12)):
     """Kit component: stepped thatch courses laid as continuous strips round the whole hipped roof (N side, rounded
     NW hip, W end, rounded SW hip, S side), so the hips are a swell of the courses themselves.
     Round 5:
@@ -342,7 +342,7 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
       * the exposed course top carries an extra crowned row (soft, lumpy, not a flat slab).
     Producer note 11 (relief_min > straw_depth): the straw ridges are not modelled (striation is a material job);
     the courses are laid as discrete thatch CLUMPS instead -- one column pair per clump (clump_cols wide), each clump
-    crowned 1.4-2.8 cm, its butt standing +-3-4 cm proud of its neighbours, with a 2.4-3.2 cm crease between
+    crowned 1.0-2.0 cm, its butt standing +-1.5-2 cm proud of its neighbours, with a 1.5-2 cm crease between
     clumps, so the bundles read at actor and crane distance with a fraction of the straw's triangles."""
     from mathutils.kdtree import KDTree
     straw_on = straw_depth[1] >= relief_min
@@ -412,11 +412,11 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
         bflag[0::2] = flags
         crease = np.where(bflag, rng.uniform(0.0015, 0.002, ncol), rng.uniform(0.0005, 0.001, ncol))
         if not straw_on:
-            # discrete clumps: ragged butts +-3-4 cm along the slope, each clump crowned 1.4-2.8 cm, 2.4-3.2 cm
-            # creases between clumps (joints that cast real shadows)
-            prot_l = prot_l * 2.2 + rng.normal(0, 0.01, nl)
-            crown = crown * 7.0
-            crease = crease * 16.0
+            # discrete clumps: ragged butts +-1.5-2 cm along the slope, each clump crowned 1.0-2.0 cm, 1.5-2 cm
+            # soft creases between clumps (joints that cast real shadows)
+            prot_l = prot_l * 1.3 + rng.normal(0, 0.004, nl)
+            crown = crown * 5.0
+            crease = crease * 10.0
         p_col = np.where(isb, np.minimum(prot_l[lprev], prot_l[lid]) - 0.002, prot_l[lid])
         cr_ = np.where(isb, -crease, crown[lid])
         # straw relief: patches of 0.2-0.5 m with their own depth and skew

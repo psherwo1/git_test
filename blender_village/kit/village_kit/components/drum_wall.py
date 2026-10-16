@@ -16,7 +16,7 @@ import numpy as np
 
 from .drum_band import (baluster_row, dentil_corbels)  # noqa: F401
 from .drum_door import (arched_door)  # noqa: F401
-from .drum_frame import (FOOT_PIN_Z, MORTAR_RECESS, R_out, arcade_params, arch_set, cyl_place, door_params,
+from .drum_frame import (relief_door, relief_far, relief_min, FOOT_PIN_Z, MORTAR_RECESS, R_out, arcade_params, arch_set, cyl_place, door_params,
     drum_mortar_d, drum_to_wall, drum_to_world, free_fn_drum, free_on_circle, inside_clear, kpart, open_place,
     wall_relief)  # noqa: F401
 from ..split_stones import (STYLE, conchoidal, stone_local)  # noqa: F401
@@ -46,7 +46,7 @@ def wall_stone_tmpl(zc, H, base_T):
     return out
 
 
-def stones_by_tmpl(rng, L, H, D, style, tmpls, min_relief=0.0):
+def stones_by_tmpl(rng, L, H, D, style, tmpls, min_relief=0.0, roll=0.8):
     """stone_local for groups of stones sharing a template. Returns list of (index array, P, T).
     min_relief: scalar or per stone (producer note 11)."""
     mr = np.broadcast_to(np.asarray(min_relief, float), (len(L),))
@@ -57,7 +57,7 @@ def stones_by_tmpl(rng, L, H, D, style, tmpls, min_relief=0.0):
     for key in sorted(ids, key=lambda k: ids[k][1][0]):
         T, ix = ids[key]
         ix = np.array(ix)
-        P, _ = stone_local(rng, L[ix], H[ix], D[ix], style, T=T, min_relief=mr[ix])
+        P, _ = stone_local(rng, L[ix], H[ix], D[ix], style, T=T, min_relief=mr[ix], rot_deg=(2.0, roll, 1.1))
         groups.append((ix, P, T))
     return groups
 
@@ -672,26 +672,34 @@ def apply_tilt(P, ang):
     return xform(P, rotm([0, 0, 1], ang), np.zeros(3))
 
 
-def emit_drum_stones(g, part, mat, rng, S, style, yoff_base, bulge=True, wall=None, tilt=True):
+def emit_drum_stones(g, part, mat, rng, S, style, yoff_base, bulge=True, wall=None, tilt=True, p_tilt=0.18,
+                     dy=(-0.006, 0.012), follow=1.0, roll=0.8):
+    """Lay the coursed stones S (coursing()) on the drum: per-stone face depth and yaw (one end proud), a
+    low-frequency bulge in and out of the wall plane, each stone sheared to follow its wandering / pinching beds
+    (follow_beds), an in-plane roll of +-`roll` deg; producer note 11 per stone (relief_min)."""
     if len(S["uc"]) == 0:
         return 0
     zc = S["zc"]
     th = S["uc"] / R_out(g, zc)
     N = len(zc)
     if tilt:
-        ang, dy = depth_tilt_params(rng, N)
+        ang, dy_ = depth_tilt_params(rng, N, p_tilt=p_tilt, dy=dy)
     else:
-        ang, dy = np.zeros(N), rng.uniform(-0.003, 0.004, N)
-    yo = yoff_base + dy
+        ang, dy_ = np.zeros(N), rng.uniform(-0.003, 0.004, N)
+    yo = yoff_base + dy_
     D = wall_depth(yo, drum_mortar_d(g, S["uc"], zc), S["L"], ang)
     if bulge:  # stones bulge in and out of the wall plane (low-frequency)
         yo += 0.004 * np.sin(th * 3 + 1.3) * np.sin(zc * 2.1 + 0.4) + 0.003 * np.sin(th * 7 + zc * 3)
-    for ix, P, Tq in stones_by_tmpl(rng, S["L"], S["H"], D, style, wall_stone_tmpl(zc, S["H"], STYLE[style]["T"])):
+    R0 = R_out(g, zc)
+    mr = relief_min(g, np.stack([R0 * np.sin(th), -R0 * np.cos(th), zc], 1))
+    tm = wall_stone_tmpl(zc, S["H"], STYLE[style]["T"])
+    for ix, P, Tq in stones_by_tmpl(rng, S["L"], S["H"], D, style, tm, min_relief=mr, roll=roll):
         low = zc[ix] < 2.2
-        if low.any():          # conchoidal scoops on ~30 % of the faces in the bottom 2.2 m
+        if low.any():          # conchoidal scoops on ~30 % of the faces in the bottom 2.2 m (note 11: < 1 cm -> skin)
             Pl_ = P[low]
-            conchoidal(rng, Pl_, Tq)
+            conchoidal(rng, Pl_, Tq, min_relief=float(mr[ix][low].max()))
             P[low] = Pl_
+        P = follow_beds(P, S, ix, follow)
         P = apply_tilt(P, ang[ix])
         W = cyl_place(g, P, th[ix], zc[ix], yo[ix])
         part.add(W, Tq, Pl=P, mat=mat, smooth="all")
@@ -714,23 +722,24 @@ def build_base(g, parts):
         return b
     WD = Wall("drum", partial(drum_to_world, g), partial(drum_to_wall, g), partial(drum_mortar_d, g), -PI * g.RREF, PI * g.RREF, 0.0, g.Z_CORN0, drum_blocked,
               period=2 * PI * g.RREF, metric_z=(0.40, g.Z_BAND0), registry=g.walls)
+    R = g.rubble
     # 1. footing course (big stones projecting ~7 cm, bottoms cut at the ground)
     S = coursing(rng, -0.04, 0.40, free_fn_drum(g, rng), hr=(0.18, 0.24), hbig=0.26, p_big=0.0, lr=(0.42, 0.85),
-                 p_tall=0.0, p_pin=0.0, Dr=(0.3, 0.4), wob=0.015)
-    n += emit_drum_stones(g, P_st, "M_stone", rng, S, "footing", 0.065, wall=WD)
-    # 2. plain rubble 0.40 - 2.55
-    S = coursing(rng, 0.40, g.Z_BAND0, free_fn_drum(g, rng), hr=(0.095, 0.15), hbig=0.22, p_big=0.1, lr=(0.2, 0.6),
-                 p_tall=0.05, p_pin=0.14)
-    n += emit_drum_stones(g, P_st, "M_stone", rng, S, "rubble", 0.0, wall=WD)
+                 p_tall=0.0, p_pin=0.0, Dr=(0.3, 0.4), wob=0.015 + 0.01 * R["rough"])
+    n += emit_drum_stones(g, P_st, "M_stone", rng, S, "footing", 0.065, wall=WD, roll=0.8 + 0.7 * R["rough"])
+    # 2. plain rubble 0.40 - band: ensemble review -> rough rubble like the keep / hut neighbours (wandering beds,
+    #    pinch-outs, through-stones, more pinners, a wider spread of lengths and heights, more stones proud)
+    S = coursing(rng, 0.40, g.Z_BAND0, free_fn_drum(g, rng), **R["plain"])
+    n += emit_drum_stones(g, P_st, "M_stone", rng, S, "rubble", 0.0, wall=WD, **R["emit"])
+    log("plain rubble: %d stones, %d pinch-outs" % (len(S["uc"]), S["n_pinch"]))
     # 4. arcade zone: round 6 - the piers are laid by blind_arcade() as coursed long-and-short dressed blocks
     # (arcade_piers); without an arcade the zone is plain coursed ashlar
     if not g.ARCH_AZ:
         S = coursing(rng, g.Z_BAND1, g.ARCH["zs"], free_fn_drum(g, rng), hr=(0.2, 0.25), hbig=0.25, p_big=0.0,
                      lr=(0.24, 0.45), p_tall=0.0, p_pin=0.0, wob=0.0, joint=(0.01, 0.016))
         n += emit_drum_stones(g, P_st, "M_stone", rng, S, "ashlar", 0.012, bulge=False, wall=WD, tilt=False)
-    S = coursing(rng, g.ARCH["zs"], g.Z_CORN0, free_fn_drum(g, rng), hr=(0.09, 0.14), hbig=0.18, p_big=0.1,
-                 lr=(0.18, 0.5), p_tall=0.03, p_pin=0.1, wob=0.012)
-    n += emit_drum_stones(g, P_st, "M_stone", rng, S, "rubble", 0.0, wall=WD)
+    S = coursing(rng, g.ARCH["zs"], g.Z_CORN0, free_fn_drum(g, rng), **R["spandrel"])
+    n += emit_drum_stones(g, P_st, "M_stone", rng, S, "rubble", 0.0, wall=WD, **R["emit"])
     log("drum rubble stones", n)
 
     # ---- door, slit windows and blind arcade (kit components set into this drum) ----
