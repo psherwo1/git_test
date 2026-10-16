@@ -1,4 +1,6 @@
-"""Hilltop Keep (KEEP) -- a thin declarative assembly on the shared village kit (phase 2, round 7).
+"""Hilltop Keep (KEEP) -- a thin declarative assembly on the shared village kit (phase 2, round 8: decal gate,
+flat cap saddles + ~12 cap courses, bound thatch roll / clumped butts / tuft fringe, continuous turret flaunching,
+dense ridge comb, bulbous cushion, drum backing).
 
 Run:  /opt/bpyenv/bin/python build_hilltop_keep.py
           -> hilltop_keep.blend + decal_anchors.json (next to this script)
@@ -62,6 +64,10 @@ KEEP_KIT_VARIANT = dict(WX_W=-8.3, WY_N=4.4, W_PITCH_DEG=52.0, TUR_C=(-7.14, 2.2
                         WDOOR=door_spec(xc=-4.85), WWIN=window_spec(xc=-6.05), seed_offset=17)
 
 
+# round 8: the bell caps keep the chunky 0.35-0.55 m shingle widths but lay ~12 courses (ref1) at 0.24-0.28 m
+CAP_EXPOSURE = (0.24, 0.28)
+
+
 def kit_set(**kw):
     """publish component parameters to the keep's dimension table (unknown keys raise)."""
     KIT.set(**kw)
@@ -74,11 +80,13 @@ def steps(off=0):
             (hall_windows, {}), (door_threshold, {}),
             (skirt_roof, dict(seed=303 + off)),
             (shake_collar, dict(seed=505 + off)), (stone_cone, dict(seed=404 + off)), (lantern, dict(seed=606 + off)),
-            (cone_cap, dict(seed=707 + off)),
+            (cone_cap, dict(seed=707 + off, saddles=True, cap_exposure=CAP_EXPOSURE)),
             (annex_walls, dict(seed=1111 + off)), (plank_door, {}), (annex_window, {}),
-            (thatch_wing_roof, dict(rng_seed=1313 + off)), (ridge_comb, dict(seed=1414 + off)),
-            (thatch_junctions, {}),
-            (side_turret, dict(seed=1616 + off)),
+            (thatch_wing_roof, dict(rng_seed=1313 + off, bundled=True)),
+            (ridge_comb, dict(seed=1414 + off, dense=True)),
+            (thatch_junctions, dict(continuous_fillet=True)),
+            (side_turret, dict(seed=1616 + off, saddles=True, cap_exposure=CAP_EXPOSURE, bulb_cushion=True,
+                               drum_backing=True)),
             oct_hidden_cull]                 # producer note 6
 
 

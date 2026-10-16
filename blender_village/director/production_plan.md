@@ -59,6 +59,14 @@ Target: populate a village of 40-50 buildings.
 
 Sign-off rules in force: pass mark 8.2 (client, "for now"), producer notes 1-10, and all client corrections.
 
+### Phase 2 kit sign-offs (the kit version replaces the phase-1 deliverable)
+
+| Building | Kit round | Director score | Sign-off audit | Date | Snapshot |
+|---|---|---|---|---|---|
+| tower_windmill | 8 | 9.0 | upheld (round 7 at 8.8 was rejected) | 2026-10-16 | `buildings/tower_windmill/signoff_kit_r08/` (1,146,243 tris, 13.3 % hidden, 106 anchors) |
+
+Rules in force for phase-2 sign-offs: pass mark 8.2, producer notes 1-11, all client corrections.
+
 Ensemble review 1: 8.4/10, APPROVED. These non-blocking consistency items carry into phase 2:
 - **Shared shingle size table.** The keep's turret and lantern caps go up to the chunky 0.35-0.55 m scale.
 - **Age passes.** Roughen the windmill's drum masonry and balusters. Add an age pass to the roundhut cone.

@@ -35,14 +35,20 @@ def _hewn(*a, **k):
     return hewn_square(*a, relief=FR.min_relief, dropped=FR.dropped_checks, **k)
 
 
-def cap_shingles(roof, acc, rng, p_top, m0=-0.03, rot_sd=0.027, frac_missing=0.02, frac_slip=0.03, overlap=0.065):
+def cap_shingles(roof, acc, rng, p_top, m0=-0.03, rot_sd=0.027, frac_missing=0.02, frac_slip=0.03, overlap=0.065,
+                 exposure=None, hip_bed=None):
     """chunky shingle courses on all 8 facets of a bell cap (see the module doc), from the eave up to the course
     whose facet is narrower than the apex unit at p_top (the lead hat covers the rest).  Each shingle keeps its
     exposed part + `overlap` of covered length (producer note 6; the sarking deck backs every gap) except the eave
     courses and the ones under a missing / slipped shingle.  rot_sd: course-line jitter (director round 6: halved so
     the horizontal courses read at 15 m).  Returns (number of shingles, height of the covering top over the roof
-    surface: where the hip boards sit)."""
+    surface: where the hip boards sit).
+    kit 1.3.0 (keep round 8): exposure=(lo, hi) overrides the SIZE_TABLE exposure (the keep's caps use 0.24-0.28 so
+    ~12 courses read as in ref1, the unit widths stay chunky); hip_bed=(h_bed, w_pos[8], w_neg[8]) seats flat hip
+    saddles: inside each facet's hip strips (w_pos at +x, w_neg at -x) the shingles are pressed down to just under
+    h_bed (a 3 cm ramp outside), so the saddle board beds with no shadow gap and no butt pokes through it."""
     T = SIZE_TABLE["shingle"]
+    expo_rng = T["exposure"] if exposure is None else exposure
     TA = SIZE_TABLE["shingle_apex"]
     ST = SIZE_TABLE["starter"]
     L_full = T["length"]
@@ -61,6 +67,14 @@ def cap_shingles(roof, acc, rng, p_top, m0=-0.03, rot_sd=0.027, frac_missing=0.0
         xh = p * TAN22 + 0.004
         xr = np.clip(xr, -xh, xh)
         h = base_fn(v) + z + lift * (1 - v)
+        if hip_bed is not None:
+            hb, wp_, wn_ = hip_bed
+            edge = p * TAN22
+            out_p = (edge - wp_[k] - 0.01) - xr          # > 0: inward of the +x saddle's footprint
+            out_n = xr + (edge - wn_[k] - 0.01)          # > 0: inward of the -x saddle's footprint
+            o_ = np.minimum(out_p, out_n)
+            cap_h = hb - 0.004 + np.clip(o_ / 0.03, 0, 1) * 0.08
+            h = np.minimum(h, cap_h)
         W3 = roof.world(np.full(len(xr), k), xr, p, h)
         acc.add(W3, F, "M_roof_shingle", uv, wear=wear)
 
@@ -69,7 +83,7 @@ def cap_shingles(roof, acc, rng, p_top, m0=-0.03, rot_sd=0.027, frac_missing=0.0
     courses = []
     mb = m0
     while mb < m_stop:
-        e_ = rng.uniform(*T["exposure"])
+        e_ = rng.uniform(*expo_rng)
         courses.append((mb, e_))
         mb += e_
     nC = len(courses)
@@ -344,6 +358,36 @@ def hip_boards(roof, acc, mat, rng, p_lo, p_hi, w, t, h0, piece=(0.8, 1.3), cull
             uv=np.stack([P[..., 0], P[..., 1]], -1).reshape(-1, 2))
 
 
+def hip_saddles(roof, acc, mat, p_lo, p_hi, W, T, h_bed, lap=0.03, chamfer=0.01, bed=0.02, n_st=40):
+    """kit 1.3.0 (keep round 8, director r7 must-fix 3): exactly ONE saddle pair per hip -- two flat continuous
+    boards of rectangular section (W[k, side] wide, T[k, side] thick, `chamfer` arrises), bedded at h_bed over the
+    roof surface on their own `bed`-deep packing (the board solid runs down into the pressed shingles, so no shadow
+    gap opens under it).  Side 0 lies on facet k and laps `lap` past the hip line; side 1 (facet k+1) closes
+    against it, set 0.4 T higher.  The boards follow the bell curve with n_st stations."""
+    recs = []
+    for k in range(8):
+        for side in (0, 1):
+            recs.append((k, side, W[k, side], T[k, side]))
+    R = np.array(recs)
+    M = len(R)
+    k, side = R[:, 0].astype(int), R[:, 1].astype(int)
+    ww, tt = R[:, 2], R[:, 3]
+    rr = np.full(M, chamfer)
+    X = axn(np.full(M, p_hi), np.full(M, p_lo), rr * 0.5, n_st)
+    Y = axn(np.zeros(M), ww + np.where(side == 0, lap, 0.004), rr, 4)
+    Z = axn(np.full(M, -bed), tt, rr, 4)
+    P, quads = rbox_v(X, Y, Z, rr)
+    p, a, h = P[..., 0], P[..., 1], P[..., 2]
+    sgn = np.where(side == 0, 1.0, -1.0)[:, None]
+    kk = np.where(side == 0, k, (k + 1) % 8)[:, None]
+    e = np.where(side == 0, lap, 0.004)[:, None]
+    x = sgn * (p * TAN22 + e - a)
+    hh = h_bed + h + np.where(side == 1, 0.4 * tt, 0.0)[:, None]
+    W3 = roof.world(np.broadcast_to(kk, x.shape), x, np.maximum(p, 0.02), hh)
+    acc.add(W3.reshape(-1, 3), inst_faces(quads, M, P.shape[1]), mat,
+            uv=np.stack([P[..., 0], P[..., 1]], -1).reshape(-1, 2))
+
+
 def eave_structure(roof, acc_r, acc_s, acc_f, rng, p_wall, z_plate_top, sheath_t, n_raft, rw, rd_tip,
                    cull=None, fascia_h=0.18, fascia_t=0.04, soffit_w=(0.17, 0.24), mat_r="M_timber", scribe=None,
                    fascia_joint=(2.5, 4.0), fascia_wave=0.0):
@@ -499,15 +543,28 @@ def _rafter(roof, acc, rng, k, xj, p0, p1, p_wall, z_plate, sheath_t, rw, rd_tip
     acc.add(W, quads, mat, uv=np.stack([u * (p1 - p0), a + v * 0.1], -1))
 
 
-def build_cap(coll, roof, prefix, rng, p_wall, z_plate, n_raft, p_top, expo, W, t, lens, bracket_z0, chunky=True):
+def build_cap(coll, roof, prefix, rng, p_wall, z_plate, n_raft, p_top, expo, W, t, lens, bracket_z0, chunky=True,
+              saddles=False, cap_exposure=None):
     """bell cap on an OctRoof: covering, hip boards, eave structure (rafters, soffit, fascia), sarking deck, carved
     ring beam with pegged laps and curved corner brackets.  chunky=True: the village's chunky shingles
     (cap_shingles, SIZE_TABLE 'shingle' / 'shingle_apex' / 'starter'; ensemble review 1); chunky=False: the phase-1
-    fine board courses (expo / W / t / lens).  Returns the covering's vertices (for fitting the lead hat)."""
+    fine board courses (expo / W / t / lens).  Returns the covering's vertices (for fitting the lead hat).
+    kit 1.3.0: saddles=True (with chunky) lays ONE flat saddle pair per hip (hip_saddles, 14-18 cm x 2.5-3.5 cm,
+    1 cm chamfers) bedded into pressed shingles instead of the hip_boards runs; cap_exposure=(lo, hi) sets the
+    cap's course exposure."""
     acc = Acc(f"{prefix}_shingles")
     acch = Acc(f"{prefix}_hips")
     accs = Acc(f"{prefix}_structure")
-    if chunky:
+    if chunky and saddles:
+        rs = np.random.default_rng(int(rng.integers(1 << 30)))
+        Wsd = rs.uniform(0.14, 0.18, (8, 2))
+        Tsd = rs.uniform(0.025, 0.035, (8, 2))
+        h_bed = 0.072
+        w_pos = Wsd[:, 0] + 0.03                         # side 0 of hip k lies on facet k (+x), lapping 3 cm
+        w_neg = Wsd[(np.arange(8) - 1) % 8, 1]           # side 1 of hip k-1 lies on facet k (-x)
+        n, h_top = cap_shingles(roof, acc, rng, p_top, exposure=cap_exposure, hip_bed=(h_bed, w_pos, w_neg))
+        hip_saddles(roof, acch, "M_roof_shingle", roof.p_lip + 0.02, p_top, Wsd, Tsd, h_bed)
+    elif chunky:
         n, h_top = cap_shingles(roof, acc, rng, p_top)
         hw, ht = SIZE_TABLE["hip_board"]["cap"]
         hip_boards(roof, acch, "M_roof_shingle", rng, roof.p_lip + 0.02, p_top, hw, ht, h_top, piece=(0.5, 0.8))

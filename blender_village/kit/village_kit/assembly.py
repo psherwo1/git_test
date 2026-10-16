@@ -83,11 +83,37 @@ class Building:
         return core.count_triangles(self.coll.all_objects)
 
 
+def _validate_decals(g, opt):
+    """kit 1.3.0: the decal-anchor gate (village_kit.anchor_validate).  opt True / dict -> applied (snap, drop,
+    outward normals, de-duplicate); None / False -> report only (anchors unchanged, counts in the build log)."""
+    if not g.decals.items:
+        return None
+    from .anchor_validate import validate_anchors
+    from .decals import SurfaceProbe
+    kw = dict(opt) if isinstance(opt, dict) else {}
+    apply = bool(opt)
+    try:
+        probe = SurfaceProbe([o for o in g.coll.all_objects if o.type == "MESH"])
+        rep = validate_anchors(g.decals, probe, apply=apply, **kw)
+    except Exception as e:                             # report mode must never break a build
+        if apply:
+            raise
+        core.log(f"decal anchor check skipped: {e!r}")
+        return None
+    core.log(f"decal anchor check ({'applied' if apply else 'report only'}): " +
+             ", ".join(f"{k} {v:.3f}" if isinstance(v, float) else f"{k} {v}" for k, v in rep.items() if k != "bad"))
+    for nm, why in rep["bad"]:
+        core.log(f"    {nm}: {why}")
+    return rep
+
+
 def build_building(spec):
     """run a declarative building spec:
         prefix, frame (Building subclass, called with **params), params (KitParams),
         steps: [(component(g, **kw), kw), ...]   in order (components publish what later ones need on g),
-        decals: optional fn(g) adding decal anchors, out: .blend path, decal_json: optional path.
+        decals: optional fn(g) adding decal anchors, out: .blend path, decal_json: optional path,
+        decal_validate: optional (kit 1.3.0) True / dict of anchor_validate.validate_anchors keywords -> the anchors
+            are snapped and validated; absent -> the check only reports in the log.
     Returns the frame g.  Starts from an empty factory scene, saves compressed."""
     core.reset_scene()
     g = spec["frame"](spec["prefix"], **dict(spec.get("params", {})))
@@ -98,12 +124,16 @@ def build_building(spec):
         fn(g, **kw)
     if spec.get("decals"):
         spec["decals"](g)
+    _validate_decals(g, spec.get("decal_validate"))
     n = g.decals.build_collection()
     core.log(f"decal anchors: {n}")
     if spec.get("decal_json"):
         os.makedirs(os.path.dirname(os.path.abspath(spec["decal_json"])), exist_ok=True)
+        extra = dict(spec.get("decal_meta") or {})
+        if getattr(g.decals, "validation", None):      # kit 1.3.0: the anchor gate's counts (decal_validate)
+            extra["validation"] = g.decals.validation
         g.decals.export_json(spec["decal_json"], building=spec.get("building_id", spec["prefix"]),
-                             extra=spec.get("decal_meta"))
+                             extra=extra or spec.get("decal_meta"))
     tris = g.triangles()
     core.log(f"objects {len(g.coll.all_objects)} (instances {g.pools.n_inst}, pooled meshes {len(g.pools)}) "
              f"triangles {tris}")

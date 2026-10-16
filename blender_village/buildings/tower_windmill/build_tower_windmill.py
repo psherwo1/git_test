@@ -1,4 +1,4 @@
-"""Stone-and-timber tower windmill (MILL) -- a declarative assembly on the shared village kit (phase 2, round 7).
+"""Stone-and-timber tower windmill (MILL) -- a declarative assembly on the shared village kit (phase 2, round 8).
 
 Run:  /opt/bpyenv/bin/python build_tower_windmill.py
           -> tower_windmill.blend + decal_anchors.json (next to this script)
@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 from village_kit.assembly import KitParams, build_building  # noqa: E402
 from village_kit.components.drum_frame import DrumFrame, drum_finish, drum_hidden_cull  # noqa: E402
-from village_kit.components.drum_wall import round_stone_drum  # noqa: E402
+from village_kit.components.drum_wall import drum_wall_core, round_stone_drum  # noqa: E402
 from village_kit.components.drum_door import entrance_step  # noqa: E402
 from village_kit.components.smock_tower import smock_tower  # noqa: E402
 from village_kit.components.shake_apron import shake_apron  # noqa: E402
@@ -34,7 +34,7 @@ from village_kit.components.mill_cap import mill_cap  # noqa: E402
 from village_kit.components.fan_wheel import fan_wheel  # noqa: E402
 from village_kit.components.tail_vane import rear_tail_vane  # noqa: E402
 from village_kit.components.raking_props import raking_props  # noqa: E402
-from village_kit.components.drum_decals import drum_tower_decals  # noqa: E402
+from village_kit.components.drum_decals import drum_tower_decals_gated  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -43,6 +43,7 @@ KIT = KitParams(
     drum=dict(r_base=2.60, r_top=2.45, height=4.62, zones=dict(band=(2.55, 2.65, 2.82, 2.92)), windows=(70, -130),
               door=dict(width=1.05, spring=1.65, reveal=0.30),
               arcade=dict(n=10, clear_w=0.72, clear_h=1.08, z_sill=2.92, az0=18.0)),
+    core=dict(),
     step=dict(),
     tower=dict(af_bottom=3.10, af_top=1.90, z0=5.95, z1=11.45),
     apron=dict(r_eave=3.17, z_eave=4.62, r_top=1.60, z_top=6.00, courses=3),
@@ -57,6 +58,7 @@ MILL_KIT_VARIANT = dict(
     drum=dict(r_base=2.00, r_top=1.88, height=4.20, zones=dict(band=(2.25, 2.35, 2.52, 2.62)), windows=(65, -125),
               door=dict(width=1.0, spring=1.62, reveal=0.30),
               arcade=dict(n=8, clear_w=0.66, clear_h=0.95, z_sill=2.62, az0=22.5), seed="kit"),
+    core=dict(),
     step=dict(),
     tower=dict(af_bottom=2.70, af_top=1.90, z0=5.30, z1=9.30, seed="kit"),
     apron=dict(r_eave=2.50, z_eave=4.20, r_top=1.42, z_top=5.35, courses=3, seed="kit"),
@@ -77,6 +79,13 @@ def variant_props(g):
     from village_kit.components.drum_frame import TZ
     zc = g.Z_COLLAR - 0.11
     return ((6, 0.32, zc, (-5.2, -1.0)), (6, -0.32, zc, (-5.0, 0.8)), (6, 0.58, float(TZ(g, 7.30)), (-5.0, -2.6)))
+
+
+def _entrance_r8(g):
+    """round 8 (director r6/r7 must-fixes 3-6, opt-in kit 1.4.0 switches): door jambs without the tab-forming
+    edge spalls, the threshold as two straight dressed stones, single-stone prop pads, hewn-bevelled skewed chocks
+    and iron staples instead of the flat-bar dogs."""
+    g.ENTRANCE_R8 = True
 
 
 def _props_step(g, props=None, seed=None):
@@ -114,7 +123,9 @@ def main():
     build_building(dict(
         prefix="MILL", collection="MILL", building_id="tower_windmill" + ("_kit_variant" if variant else ""),
         frame=DrumFrame, params=dict(detail_rule=True),
-        steps=[(round_stone_drum, KIT["drum"]),     # drum, band, arcade, cornice, door, windows
+        steps=[_entrance_r8,                       # round 8 entrance / ground-contact switches
+               (round_stone_drum, KIT["drum"]),     # drum, band, arcade, cornice, door, windows
+               (drum_wall_core, KIT["core"]),      # kit 1.4.0: continuous wall core (note 6)
                (entrance_step, KIT["step"]),
                (smock_tower, KIT["tower"]),
                (shake_apron, KIT["apron"]),
@@ -125,7 +136,7 @@ def main():
                _dump_parts,
                drum_finish,                        # parts -> objects, pools, clearance checks
                drum_hidden_cull],                  # producer note 6
-        decals=drum_tower_decals,                  # producer note 11
+        decals=drum_tower_decals_gated,            # producer note 11: placed, snapped, validated, audited
         out=out,
         decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
         decal_meta=dict(kit_params={k: v for k, v in KIT.items()}),

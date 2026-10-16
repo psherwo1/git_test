@@ -15,7 +15,7 @@ from ..tmplmesh import (D2R, PI, R_UPRIGHT, T_PAD, add_caps, add_grid, bolt_head
     frame_mats, hewn_beam, lathe, log, member, orient, rect_prof, rotm, sweep, tmpl_rings, unit, xform)  # noqa: F401
 
 
-def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10, min_relief=0.0):
+def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10, min_relief=0.0, r8=False):
     """Raking-prop foot (kit component, round 5): a split-stone pad bedded in the soil with only its domed,
     irregular top showing (3-6 cm on the high side, 0-2 cm on the low side, no vertical side over 4 cm); a
     hewn chock with planar adze facets sunk >= 40 % of its height into a notch cut in the pad, a bird's-mouth
@@ -36,6 +36,26 @@ def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10, min_relief=0.0):
     ww = Pst[0, :, 2] / (Wpad / 2)
     up_w = np.clip((Pst[0, :, 1] + Hpad) / Hpad, 0, 1)
     Pst[0, :, 1] += rng.uniform(0.016, 0.022) * np.clip(1 - uu ** 2, 0, 1) * np.clip(1 - ww ** 2, 0, 1) * up_w
+    if r8:
+        # kit 1.4.0 (mill director r6/r7 'two stacked plates'): ONE stone with one continuous side face -- the
+        # body below the top's rim is pulled in to the top outline + <= 1 cm (no wider lower plate, no ledge once
+        # the buried part is cut at the ground)
+        ax_, az_ = Pst[0, :, 0], Pst[0, :, 2]
+        rad_ = np.hypot(ax_ / Lpad, az_ / Wpad)
+        ang_ = np.arctan2(az_ / Wpad, ax_ / Lpad)
+        topm = Pst[0, :, 1] > Pst[0, :, 1].max() - 0.03
+        nb = 24
+        b_ = ((ang_ + PI) / (2 * PI) * nb).astype(int) % nb
+        rt_ = np.full(nb, rad_[topm].max())
+        for q in range(nb):
+            s_ = topm & (b_ == q)
+            if s_.any():
+                rt_[q] = rad_[s_].max()
+        rt_ = np.maximum.reduce([np.roll(rt_, -1), rt_, np.roll(rt_, 1)])
+        lim = rt_[b_] + 0.01 / max(Lpad, Wpad)
+        sc = np.where(~topm & (rad_ > lim), lim / np.maximum(rad_, 1e-6), 1.0)
+        Pst[0, :, 0] *= sc
+        Pst[0, :, 2] *= sc
     Wp = xform(Pst, Rg @ R_UPRIGHT @ rotm([0, 1, 0], [rng.uniform(-0.15, 0.15)])[0], base - hz * 0.10)
     td = rng.uniform(0, 2 * PI)
     tdir = np.array([math.cos(td), math.sin(td), 0.0])
@@ -66,6 +86,17 @@ def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10, min_relief=0.0):
     Pc[0, :, 1] += rng.uniform(-0.006, 0.006) * zr_ * np.sign(Pc[0, :, 1])  # the two cheeks not parallel
     Pc[0] = facet_shave(Pc[0], rng, ((1, 1), (1, -1), (2, 1), (0, 1), (0, -1)), n=(2, 3), dep=(0.006, 0.012), min_relief=min_relief,
                         tilt=0.18)
+    if r8:
+        # kit 1.4.0 (mill director r6/r7 'machined box'): the plan skewed 4-6 deg (not a rectangle) and the two
+        # top long edges broken by hewn bevels 2-3 cm wide (>= 2 cm: geometry under note 11)
+        r8g = np.random.default_rng(9100 + idx)
+        Pc[0, :, 0] += math.tan(r8g.uniform(4.0, 6.0) * D2R * r8g.choice([-1, 1])) * Pc[0, :, 1]
+        for s_ in (-1.0, 1.0):
+            nb_ = np.array([0.0, s_, 1.0]) + np.array([r8g.normal(0, 0.08), 0.0, 0.0])
+            nb_ /= np.linalg.norm(nb_)
+            pr_ = Pc[0] @ nb_
+            o_ = pr_.max() - r8g.uniform(0.02, 0.03) / math.sqrt(2)
+            Pc[0] -= np.clip(pr_ - o_, 0, None)[:, None] * nb_[None]
     xs_ = Pc[0, :, 0] + (al0 + al1) / 2                       # along
     zl = Pc[0, :, 2] + Hc / 2                                  # 0 .. Hc above the notch floor
     seat = xs_ < -0.003
@@ -104,7 +135,29 @@ def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10, min_relief=0.0):
     add_grid(P_a, "M_earth", G, wrap=True, flip=bool(nrm_[2] < 0))
     # iron dogs (round 6): a flat bar driven into the chock's top, bent, and lying FLAT on the pole's side
     # (gap <= 2 mm) for 14-18 cm, spike heads at both ends
-    for sg in (-1, 1):
+    if r8:
+        # kit 1.4.0 (mill director r6/r7 'welded gusset plates'): ONE iron staple per side of 18 mm square bar
+        # spanning ~20-25 cm across the chock / pole joint, its bridge 12-18 mm proud, both legs bent 90 deg
+        # into the timber (3 cm).  The old dogs' random draws are still made (same sequence downstream).
+        r8g = np.random.default_rng(9200 + idx)
+        for sg in (-1, 1):
+            rng.uniform(0.12, 0.16)
+            za_ = Zf - r8g.uniform(0.03, 0.045)
+            hwa = hwc - nw_ * (za_ - z_n) / Hc
+            a_s = place(np.zeros((1, 1, 3)), -0.10 + r8g.uniform(-0.02, 0.02), sg * hwa, za_)[0, 0]
+            zb_ = Zf + r8g.uniform(0.135, 0.17)
+            pc_, pr_ = pole_at(zb_)
+            b_s = pc_ + sv * sg * pr_
+            pr_out = r8g.uniform(0.012, 0.018)
+            o_ = sv * sg
+            a_o, b_o = a_s + o_ * (pr_out + 0.009), b_s + o_ * (pr_out + 0.009)
+            a_i, b_i = a_s - o_ * 0.03, b_s - o_ * 0.03
+            for p0_, p1_ in ((a_i, a_o), (a_o, b_o), (b_o, b_i)):
+                member(P_a, "M_iron", p0_[None], p1_[None], 0.018, 0.018, up=o_ if p1_ is b_o else (0, 0, 1),
+                       c=0.002)
+            log("prop foot %d staple: span %.3f m, %.0f mm proud" % (idx, float(np.linalg.norm(b_o - a_o)),
+                                                                      pr_out * 1000))
+    for sg in ((-1, 1) if not r8 else ()):
         za_, zb_ = Zf - 0.07, Zf - 0.012
         hwa = hwc - nw_ * (za_ - z_n) / Hc + 0.0035
         hwb = hwc - nw_ * (zb_ - z_n) / Hc + 0.0035
@@ -326,7 +379,7 @@ def raking_prop(g, parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None
     def pole_at(z, top=top, axis=axis, side=side, bow=bow):
         tq = (top[2] - z) / (top[2] - bot[2])
         return top + axis * tq + side * bow * math.sin(min(tq, 1.0) * PI), 0.075 + 0.025 * min(tq, 1.0)
-    prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, min_relief=mr)
+    prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, min_relief=mr, r8=bool(getattr(g, "ENTRANCE_R8", False)))
     return top, bot
 
 

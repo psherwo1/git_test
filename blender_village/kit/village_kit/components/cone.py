@@ -37,6 +37,14 @@ between every pair of rafters (sin^1.5 across the bay, its own amplitude per bay
 `sag_eave_fade` slope metres and out under the collar), and the finial's ~1 deg lean (components.finial)."""
 
 
+AGE_R9 = dict(rigid_sag=True, rigid_tilt_deg=1.5, underlap=0.08, max_joint=0.015)
+"""kit 1.3.0 (director r8 #2): opt-in keys of the cone age pass (age_defaults(**AGE_R9)).  rigid_sag: each shingle
+takes the sag as a RIGID offset (evaluated at its centre, translated along the cone normal, tilted about its own
+axis by <= rigid_tilt_deg), so the per-vertex shear no longer opens the side joints; underlap: a strip of covered
+shingle (this half-width, m) is kept under every side joint of the course above, as the separate never-culled
+object <PREFIX>_roof_underlap; max_joint: side-joint gaps capped at this width (m)."""
+
+
 def age_defaults(**kw):
     d = dict(AGE_DEFAULTS)
     d.update(kw)
@@ -89,8 +97,9 @@ def sag_at(g, theta, s):
     return g._sag_amp[k] * along * np.clip(span / 0.8, 0.0, 1.0) * np.sin(np.pi * u) ** 1.5 * env
 
 
-def surf(g, theta, s):
-    """theta: math angle (x=cos, y=sin). s: slope distance from the eave."""
+def surf(g, theta, s, sag=True):
+    """theta: math angle (x=cos, y=sin). s: slope distance from the eave.  sag=False: without the age-pass sag
+    between the rafters (kit 1.3.0: rigid_sag shingles take it as a per-shingle offset, see conical_roof)."""
     theta, s = np.broadcast_arrays(np.asarray(theta, float), np.asarray(s, float))
     R = np.interp(s, g.PS, g.PR)
     Z = np.interp(s, g.PS, g.PZ)
@@ -101,7 +110,7 @@ def surf(g, theta, s):
     a0 = g.PA[0]
     R = R - ext * math.cos(a0)
     Z = Z + ext * math.sin(a0) + wave_z(theta, g) * fade
-    if getattr(g, "cone_age", None):
+    if sag and getattr(g, "cone_age", None):
         sg = sag_at(g, theta, s)
         al = np.interp(s, g.PS, g.PA)
         R = R - sg * np.sin(al)
@@ -109,11 +118,11 @@ def surf(g, theta, s):
     return np.stack([R * np.cos(theta), R * np.sin(theta), Z], -1)
 
 
-def surf_frame(g, theta, s):
-    P = surf(g, theta, s)
+def surf_frame(g, theta, s, sag=True):
+    P = surf(g, theta, s, sag)
     eps_s, eps_t = 2e-3, 2e-4
-    ts = nrm(surf(g, theta, s + eps_s) - surf(g, theta, s - eps_s))
-    tt = nrm(surf(g, theta + eps_t, s) - surf(g, theta - eps_t, s))
+    ts = nrm(surf(g, theta, s + eps_s, sag) - surf(g, theta, s - eps_s, sag))
+    tt = nrm(surf(g, theta + eps_t, s, sag) - surf(g, theta - eps_t, s, sag))
     n = nrm(np.cross(tt, ts))
     return P, ts, tt, n
 

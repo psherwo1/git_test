@@ -208,3 +208,109 @@ def drum_tower_decals(g, seed=7310):
     n = len(da) - n0
     log(f"decal anchors placed: {n}  {da.counts()}")
     return n
+
+
+# =================================================================================================================
+# kit 1.4.0: the gated version (mill director r7 must-fix 2 / sign-off audit): snap + validate + audit, assert 0
+# =================================================================================================================
+def wheel_end_streaks(g, da, n=4, size=(0.12, 0.45), seed=7311):
+    """water_streak anchors on the OUTER ENDS of the wheel blades (note 11: 'the ends of the wheel'): the largest
+    front-facing blade faces within 0.35 m of the tip radius, one per blade spread round the wheel; the decal's top
+    edge sits at the blade tip (up = radially outward)."""
+    obs = [o for o in g.coll.all_objects if o.type == "MESH" and o.name == g.prefix + "_wheel_blades"]
+    if not obs:
+        return 0
+    ob = obs[0]
+    M = np.array(ob.matrix_world)
+    me = ob.data
+    hub = lean(g, g.HUB[None])[0]
+    ax = lean(g, (g.HUB + g.S_AX)[None])[0] - hub
+    ax /= np.linalg.norm(ax)
+    rows = []
+    for p in me.polygons:
+        c = M[:3, :3] @ np.array(p.center) + M[:3, 3]
+        nrm = M[:3, :3] @ np.array(p.normal)
+        nrm /= max(np.linalg.norm(nrm), 1e-9)
+        v = c - hub
+        rad = v - np.dot(v, ax) * ax
+        rows.append((c, nrm, np.linalg.norm(rad), rad, p.area, p.material_index))
+    rmax = max(r[2] for r in rows)
+    slots = [m.name if m else "M_timber" for m in me.materials] or ["M_timber"]
+    rng = np.random.RandomState(seed)
+    e1 = np.cross(ax, (0, 0, 1.0))
+    e1 /= np.linalg.norm(e1)
+    e2 = np.cross(ax, e1)
+    added = 0
+    for k in range(n):
+        want = 2 * math.pi * (k + 0.25) / n
+        best = None
+        for (c, nrm, r, rad, area, mi) in rows:
+            if r < rmax - 0.35 or r > rmax - 0.06 or abs(float(np.dot(nrm, ax))) < 0.85 or area < 0.004:
+                continue
+            a = math.atan2(float(np.dot(rad, e2)), float(np.dot(rad, e1)))
+            da_ = abs(math.atan2(math.sin(a - want), math.cos(a - want)))
+            score = da_ - 0.5 * area
+            if best is None or score < best[0]:
+                best = (score, c, nrm, rad, mi)
+        if best is None:
+            continue
+        _, c, nrm, rad, mi = best
+        up = rad / np.linalg.norm(rad)
+        h = size[1] * rng.uniform(0.85, 1.15)
+        da.add("water_streak", c, nrm, (size[0], h), slots[min(mi, len(slots) - 1)], probability=0.55,
+               seed=int(rng.randint(1 << 30)), up=up)
+        added += 1
+    log(f"wheel-end water streaks: {added} on the outer blade ends (tip radius {rmax:.2f} m from the shaft)")
+    return added
+
+
+def _macro_normals(g):
+    """the normal each anchor should project along: horizontal-radial on the drum walls (cracks on voussoirs, soot
+    over the door, streaks under the sills -- never tilted by a chamfer or a bed), +Z on stone tops, else its own."""
+    for it in g.decals.items:
+        p, n = np.asarray(it["pos"], float), np.asarray(it["normal"], float)
+        rxy = math.hypot(p[0], p[1])
+        if p[2] < g.Z_CORN0 + 0.5 and rxy > 0.3 and rxy < float(R_out(g, max(p[2], 0.0))) + 0.45:
+            radial = np.array([p[0] / rxy, p[1] / rxy, 0.0])
+            if abs(n[2]) < 0.75 and float(np.dot(n, radial)) > 0.6:
+                it["macro"] = radial
+            elif n[2] >= 0.75:
+                it["macro"] = np.array([0.0, 0.0, 1.0])
+
+
+def drum_tower_decals_gated(g, seed=7310, max_offset=0.015, min_dot=0.85, count=(40, 120)):
+    """drum_tower_decals + the wheel-end streaks, then the producer-note-11 gates and an audit that asserts:
+      1. decal_gate.snap_anchors (macro normals, first-surface snap, front faces only, exposure, de-dup);
+      2. anchor_validate.validate_anchors (surface slot, outward, not buried, 3x3 footprint);
+      3. decal_gate.audit_anchors -- the director's test: a ray from 0.25 m out along each anchor's -Z hits a front
+         face within +-1.5 cm, face normal . anchor Z >= 0.85, `surface` == the material hit.  Failures are dropped
+         and the audit re-run; the build asserts 0 failures and a count in `count`."""
+    from ..anchor_validate import validate_anchors
+    from ..anchor_audit import audit_anchors
+    from ..decal_gate import snap_anchors
+    drum_tower_decals(g, seed=seed)
+    wheel_end_streaks(g, g.decals)
+    probe = D.SurfaceProbe([o for o in g.coll.all_objects if o.type == "MESH"])
+    n_in = len(g.decals)
+    _macro_normals(g)
+    kept, dropped = snap_anchors(g.decals, probe, max_offset=max_offset, min_align=0.9, log=log)
+    log(f"decal gate 1 (snap_anchors): {kept} kept, {dropped} dropped of {n_in}")
+    rep = validate_anchors(g.decals, probe, apply=True, reach=0.03, offset=0.004, clear=0.10, min_sep=0.25,
+                           fp_tol=0.06, fp_any=7, fp_mat=4, shrink=(0.75, 0.55), normal_min_dot=min_dot)
+    log("decal gate 2 (anchor_validate): " + ", ".join(f"{k} {v}" for k, v in rep.items() if k != "bad"))
+    for nm, why in rep["bad"]:
+        log(f"    {nm}: {why}")
+    bad = audit_anchors(g.decals, probe, max_offset=max_offset, min_dot=min_dot, drop=True)
+    for b in bad:
+        log(f"    audit drop: {b}")
+    bad2 = audit_anchors(g.decals, probe, max_offset=max_offset, min_dot=min_dot, drop=False)
+    n = len(g.decals)
+    log(f"decal gate 3 (audit, director test): {len(bad)} dropped, {len(bad2)} failing after, {n} anchors "
+        f"{g.decals.counts()}")
+    assert not bad2, bad2
+    assert count[0] <= n <= count[1], n
+    g.decals.validation = dict(gates="decal_gate.snap_anchors + anchor_validate.validate_anchors + "
+                                     "decal_gate.audit_anchors", placed=n_in, kept=n,
+                               audit=f"ray from +0.25 m along -Z: |offset| <= {max_offset} m, dot >= {min_dot}, "
+                                     "front face, surface == material hit", audit_failures=0)
+    return n

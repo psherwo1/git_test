@@ -1119,3 +1119,133 @@ def blind_arcade(g, n=None, clear_w=None, clear_h=None, z_sill=None, az0=18.0, s
         arcade_params(g, n, clear_w, clear_h, z_sill, az0)
     with g.seeded(seed):
         blind_arcade_build(g, g.parts)
+
+
+# =============================================================================================
+# kit 1.4.0: continuous wall-core ring behind the whole drum (producer note 6, mill director r7 must-fix 1)
+# =============================================================================================
+def _drum_openings(g, margin):
+    """the clear openings of a drum as (th0, R_ref, half-width, z_bottom, z_spring, arched) in an (X, z) frame
+    where X = R_ref * sin(th - th0); half-width / spring include `margin`.  R_ref = R_out at the opening top, so
+    the hole covers the clear at every height of the battered face."""
+    out = []
+    top = g.ZS_DOOR + g.DOOR_CW
+    out.append((0.0, float(R_out(g, top)), g.DOOR_CW + margin, -1e9, g.ZS_DOOR, True))
+    for a in g.WIN_AZ:
+        out.append((float(a), float(R_out(g, g.WIN["z1"])), g.WIN["cw"] + margin, g.WIN["z0"] - margin,
+                    g.WIN["z1"] + margin, False))
+    for a in g.ARCH_AZ:
+        out.append((float(a), float(R_out(g, g.ARCH["zs"] + g.ARCH["cw"])), g.ARCH["cw"] + margin,
+                    g.ARCH["z0"] - margin, g.ARCH["zs"], True))
+    return out
+
+
+def drum_wall_core(g, z0=-0.05, z1=None, gap=0.006, margin=0.006, n_th=160, n_arc=8, r_inner=0.79,
+                   r_inner_face=1.30, seed=None):
+    """KIT COMPONENT (kit 1.4.0): one cheap, continuous, closed wall-core ring behind ALL the drum masonry
+    (object <PREFIX>_wall_core, palette slot M_mortar) so no joint, culled stone back or gap between the mortar
+    skin and a stone can ever show daylight or a back face (producer note 6: never open holes).
+
+    * outer face `gap` m behind the mortar skin (drum_mortar_d - gap: 0.6 cm behind the 2.2 cm recess, 4.5 cm raked
+      foot, the footing ledge and the recessed balustrade band), on the skin's own z rows so the two stay
+      parallel; from z0 (5 cm below ground) to z1 (default: 5 cm into the cornice);
+    * cut exactly for the clear openings (door, slit windows, arcade recesses) + `margin`: grid lines on every
+      opening edge, so the rectangular part is a clean hole, and the round heads are closed by an arc patch
+      between the head's bounding box and its circle (n_arc segments per quarter) -- no cell intrudes into an
+      opening and no notch is left open beside an arch;
+    * closed to the interior wall radius (R_out - r_inner) by a bottom annulus (faces down) and a top annulus
+      (faces up), the door passage left open; an inward-facing inner face at that radius (z 0-3.45) everywhere
+      except the interior's own modelled inner-wall arc (r_inner_face rad round +Y; 0 = none) and the passage.
+    Costs ~12-16k triangles; it is hidden behind stone everywhere except where a gap would otherwise be a hole."""
+    from ..tmplmesh import add_grid
+    with g.seeded(seed):
+        part = kpart(g, g.parts, "wall_core", ["M_mortar"])
+        z1 = g.Z_CORN0 + 0.05 if z1 is None else z1
+        gap_e = gap + (0.0 if g.rule.active else 0.0055)          # the +-5 mm body relief when note 11 is off
+
+        def dcore(z):
+            return drum_mortar_d(g, np.zeros_like(np.asarray(z, float)), z) - gap_e
+
+        ops = _drum_openings(g, margin)
+        # ---- z rows: the mortar skin's own rows + every opening edge + arch-head rows ----
+        zr = [z0, 0.0, 0.08, 0.16, 0.24, 0.32, 0.40, 0.41, 0.4825, 0.555, 0.6275, 0.70, 0.78,
+              g.Z_BAND0, g.Z_BAND0 + 0.005, g.Z_BAND1 - 0.005, g.Z_BAND1, z1]
+        zr += list(np.arange(1.0, g.Z_BAND0 - 0.1, 0.30)) + list(np.arange(g.Z_BAND1 + 0.3, z1 - 0.1, 0.30))
+        for (th0, Rr, w, zb, zs, arched) in ops:
+            zr += [zb, zs] + ([zs + w] if arched else [])
+        zr = np.unique(np.round([z for z in zr if z0 <= z <= z1], 5))
+        # ---- theta columns: uniform + every opening edge ----
+        ths = list(np.linspace(-PI, PI, n_th, endpoint=False))
+        for (th0, Rr, w, zb, zs, arched) in ops:
+            for s in (-1, 1):
+                ths.append(th0 + s * math.asin(min(w / Rr, 0.99)))
+        ths = np.sort(np.unique(np.round((np.asarray(ths) + PI) % (2 * PI) - PI, 7)))
+        nth, nz = len(ths), len(zr)
+        TH, Z = np.meshgrid(ths, zr, indexing="ij")
+        Rg = R_out(g, Z) + dcore(Z)
+        G = np.stack([Rg * np.sin(TH), -Rg * np.cos(TH), Z], -1)
+        # cells: removed when their centre is inside an opening's bounding box (rect + head box)
+        thc = np.concatenate([(ths[:-1] + ths[1:]) / 2, [(ths[-1] + ths[0] + 2 * PI) / 2]])
+        zc = (zr[:-1] + zr[1:]) / 2
+        keep = np.ones((nth, nz - 1), bool)
+        for (th0, Rr, w, zb, zs, arched) in ops:
+            dth = (thc - th0 + PI) % (2 * PI) - PI
+            X = Rr * np.sin(dth)
+            inx = (np.abs(X) < w) & (np.abs(dth) < PI / 2)
+            ztop = zs + w if arched else zs
+            inz = (zc > zb) & (zc < ztop)
+            keep &= ~(inx[:, None] & inz[None, :])
+        add_grid(part, "M_mortar", G, keep=keep, wrap=True, flip=False)
+        n_q = int(keep.sum())
+        # ---- arch heads: patch between the head box and the circle (two quarter fans per arch) ----
+        n_p = 0
+        for (th0, Rr, w, zb, zs, arched) in ops:
+            if not arched:
+                continue
+            for s in (-1, 1):
+                ph = np.linspace(0.0, PI / 2, n_arc + 1)
+                arc = np.stack([s * w * np.cos(ph), zs + w * np.sin(ph)], 1)
+                k = 1.0 / np.maximum(np.maximum(np.abs(np.cos(ph)), np.abs(np.sin(ph))), 1e-6)
+                box = np.stack([s * w * np.cos(ph) * k, zs + w * np.sin(ph) * k], 1)
+                rows = [arc + (box - arc) * f for f in (0.0, 0.5, 1.0)]
+                XZ = np.stack(rows, 1)                                   # (n_arc+1, 3, 2)
+                th = th0 + np.arcsin(np.clip(XZ[..., 0] / Rr, -0.99, 0.99))
+                zz = XZ[..., 1]
+                rr = R_out(g, zz) + dcore(zz)
+                P = np.stack([rr * np.sin(th), -rr * np.cos(th), zz], -1)
+                add_grid(part, "M_mortar", P, flip=(s > 0))
+                n_p += n_arc * 2
+        # ---- top / bottom annuli to the interior wall radius (door passage open) ----
+        sub = ths[::4]
+        door_w = 0.80
+        for zq, fl in ((float(zr[0]), True), (float(zr[-1]), False)):
+            Ro = R_out(g, zq) + float(dcore(zq))
+            Ri = R_out(g, zq) - r_inner
+            A = np.stack([np.stack([Ro * np.sin(sub), -Ro * np.cos(sub), np.full_like(sub, zq)], -1),
+                          np.stack([Ri * np.sin(sub), -Ri * np.cos(sub), np.full_like(sub, zq)], -1)], 1)
+            kp = np.ones((len(sub), 1), bool)
+            if zq < 1.0:
+                mid = np.concatenate([(sub[:-1] + sub[1:]) / 2, [(sub[-1] + sub[0] + 2 * PI) / 2]])
+                mid = (mid + PI) % (2 * PI) - PI
+                kp[:, 0] = np.abs(Ro * np.sin(mid)) > door_w / 2 + 0.25
+                kp[:, 0] |= np.abs(mid) > PI / 2
+            add_grid(part, "M_mortar", A, keep=kp, wrap=True, flip=fl)
+        # ---- inner face (faces the axis) where the interior's own inner wall is not modelled, so a look through
+        # the door across the hollow drum meets a front face, never the core's back; the passage stays open ----
+        n_in = 0
+        if r_inner_face:
+            zi = np.array([0.0, 1.2, 2.4, 3.45])
+            THi, Zi = np.meshgrid(sub, zi, indexing="ij")
+            Ri = R_out(g, Zi) - (r_inner - 0.02)
+            Gi = np.stack([Ri * np.sin(THi), -Ri * np.cos(THi), Zi], -1)
+            mid = np.concatenate([(sub[:-1] + sub[1:]) / 2, [(sub[-1] + sub[0] + 2 * PI) / 2]])
+            mid = (mid + PI) % (2 * PI) - PI
+            far = (PI - np.abs(mid)) < r_inner_face          # the interior's modelled inner-wall arc
+            pas = (np.abs(mid) < PI / 2) & (np.abs(float(R_out(g, 1.0) - r_inner) * np.sin(mid)) < door_w)
+            ki = np.repeat((~far & ~pas)[:, None], len(zi) - 1, 1)
+            add_grid(part, "M_mortar", Gi, keep=ki, wrap=True, flip=True)
+            n_in = int(ki.sum())
+        log("wall core inner face: %d quads" % n_in)
+        log("wall core ring z %.2f..%.2f, %.3f gap behind the skin: %d cells (%d x %d grid), %d arch-head quads, "
+            "%d openings cut" % (z0, z1, gap_e, n_q, nth, nz, n_p, len(ops)))
+        return n_q + n_p

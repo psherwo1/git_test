@@ -228,9 +228,10 @@ def corbel_cushion(acc, accm, center, spec=None):
         hx = 0.5 * (sd["tb"] - sd["ta"]) * r_out
         dep = r_out - r_in
         ra = rng.uniform(0.012, 0.02)
+        fine = bool(spec.get("bulb", False)) and sd["c"] == 1
         X = axn(np.array([-hx]), np.array([hx]), np.array([ra]), 11)
-        Y = axn(np.array([0.0]), np.array([h]), np.array([ra]), 7)
-        Zc = axn(np.array([0.0]), np.array([dep]), np.array([ra]), 6 if sd["c"] == 0 else 7)
+        Y = axn(np.array([0.0]), np.array([h]), np.array([ra]), 11 if fine else 7)
+        Zc = axn(np.array([0.0]), np.array([dep]), np.array([ra]), 6 if sd["c"] == 0 else (11 if fine else 7))
         P, quads = rbox_v(X, Y, Zc, np.array([ra]), skip_back=True)
         P = P[0]
         Q = P.copy()
@@ -246,7 +247,9 @@ def corbel_cushion(acc, accm, center, spec=None):
         n_ = np.array([rng.uniform(-0.2, 0.2), -1.0, rng.uniform(0.6, 1.1)])
         n_ /= np.linalg.norm(n_)
         planes.append((n_, np.array([0.0, 0.0, dep]) @ n_ - rng.uniform(0.03, 0.06)))
-        if sd["c"] == 1:
+        bulb = bool(spec.get("bulb", False)) and sd["c"] == 1
+        bulb_on = bulb and rng.uniform() < 0.8
+        if sd["c"] == 1 and not bulb_on:
             # 1-2 cleaved facets across the top / outer top edge (no upholstered top)
             for _ in range(int(rng.integers(1, 3))):
                 n_ = np.array([rng.uniform(-0.5, 0.5), 1.0, rng.uniform(0.3, 0.9)])
@@ -256,7 +259,23 @@ def corbel_cushion(acc, accm, center, spec=None):
         for n_, d0 in planes:
             d = Q @ n_ - d0
             Q = Q - n_[None, :] * softplus(d, 0.003)[:, None]
-        if sd["c"] == 1 and rng.uniform() < 0.5:
+        if bulb_on:
+            # kit 1.3.0 (keep r8 must-fix 8, ref1's bulbous 'mossy rounded ring'): the top crowned 3-6 cm over the
+            # stone's length and depth, and the outer top arris rounded over 6-10 cm (a quarter-round, not a cleave)
+            crown = rng.uniform(0.03, 0.06)
+            ux = np.clip(Q[:, 0] / max(hx, 1e-3), -1, 1)
+            uz = np.clip(Q[:, 2] / max(dep, 1e-3), 0, 1)
+            vb = np.clip(Q[:, 1] / max(h, 1e-3), 0, 1)
+            Q[:, 1] = Q[:, 1] + crown * (1 - ux ** 2) * np.sin(np.pi * np.clip(0.15 + 0.85 * uz, 0, 1)) ** 0.7 * vb ** 2
+            rl = rng.uniform(0.06, 0.10)
+            yc, zc = h + 0.5 * crown - rl, dep - rl
+            dy, dz = Q[:, 1] - yc, Q[:, 2] - zc
+            m_ = (dy > 0) & (dz > 0)
+            rr_ = np.hypot(dy, dz)
+            s_ = np.where(m_ & (rr_ > rl), rl / np.maximum(rr_, 1e-9), 1.0)
+            Q[:, 1] = np.where(m_, yc + dy * s_, Q[:, 1])
+            Q[:, 2] = np.where(m_, zc + dz * s_, Q[:, 2])
+        elif sd["c"] == 1 and rng.uniform() < 0.5:
             # rounded top outer lip on about half of the upper stones (3-8 cm)
             rl = rng.uniform(0.03, 0.08)
             n_ = np.array([0.0, 1.0, 1.0]) / math.sqrt(2)
@@ -349,8 +368,10 @@ def turret_cull(C, wing_margin=0.0):
     return bad
 
 
-def build_turret(coll, seed=1616):
+def build_turret(coll, seed=1616, saddles=False, cap_exposure=None, bulb_cushion=False, drum_backing=False):
     rng = np.random.default_rng(seed)
+    if bulb_cushion:
+        FR.CUSH["bulb"] = True
     cfg = dict(seed=23 + (seed - 1616), footing=0.31, ch=(0.09, 0.17), p_tall=0.07, len=(0.18, 0.52), foot_len=(0.40, 1.10),
                foot_lvl=(-0.09, 0.10), joint=(0.009, 0.018), front=(0.005, 0.034), foot_proj=(0.035, 0.095),
                bevel=(0.005, 0.03),
@@ -380,6 +401,19 @@ def build_turret(coll, seed=1616):
         obox(accd, o[None], ex / np.linalg.norm(ex), t3, n3, z1 - z0 + 0.08, wd - 0.012, 0.028, 0.006,
              "M_timber_weathered", nx=4, ny=4, nz=3, skip_back=True)
         th += dth
+    if drum_backing:
+        # kit 1.3.0 (keep r7 nice-to-have): a closed dark backing drum 2 cm behind the boards, so the 1-1.5 cm
+        # joints between them show timber, never a black void
+        nb_ = 48
+        a_ = np.linspace(0, 2 * np.pi, nb_, endpoint=False)
+        rb_ = rD - 0.014 - 0.02
+        ring = np.stack([FR.TUR_C[0] + rb_ * np.cos(a_), FR.TUR_C[1] + rb_ * np.sin(a_)], 1)
+        Vb_ = np.concatenate([np.column_stack([ring, np.full(nb_, z0 - 0.07)]),
+                              np.column_stack([ring, np.full(nb_, z1 + 0.01)])])
+        i_ = np.arange(nb_)
+        accb = Acc(FR.prefix + "_turret_drum_backing")      # its own object: a backing is never a cull target
+        accb.add(Vb_, np.stack([i_, (i_ + 1) % nb_, (i_ + 1) % nb_ + nb_, i_ + nb_], 1), "M_timber_weathered")
+        finalize(accb, coll)
     # sill & head rings: 8 hewn straight pieces each, butt-jointed at every facet corner, pegged
     for ri, (zz, rr_, sz) in enumerate(((z0 + 0.04, 1.08 * TS, 0.12), (z1 - 0.05, 1.08 * TS, 0.1))):
         apo_r = rr_ * math.cos(math.radians(22.5)) + 0.03
@@ -399,7 +433,7 @@ def build_turret(coll, seed=1616):
     chunky = FR.units == "kit"
     Vsh = build_cap(coll, FR.TUR_CAP, FR.prefix + "_turret_cap", rng, p_wall=1.17 * TS, z_plate=7.02, n_raft=4,
                     p_top=0.28 if chunky else 0.12, expo=0.14, W=0.32, t=0.022, lens=(0.12, 0.17), bracket_z0=6.72,
-                    chunky=chunky)
+                    chunky=chunky, saddles=saddles, cap_exposure=cap_exposure)
     accf = Acc(FR.prefix + "_finial_turret")
     apex = float(FR.TUR_CAP.zb(0.02))
     if chunky:
@@ -412,6 +446,10 @@ def build_turret(coll, seed=1616):
 
 
 
-def side_turret(g, seed=1616):
-    """KIT COMPONENT: the engaged side turret (see the module doc)."""
-    build_turret(g.sub("turret"), seed=seed)
+def side_turret(g, seed=1616, saddles=False, cap_exposure=None, bulb_cushion=False, drum_backing=False):
+    """KIT COMPONENT: the engaged side turret (see the module doc).  kit 1.3.0 options (defaults = kit 1.1.0):
+    saddles / cap_exposure as oct_roof.build_cap; bulb_cushion=True crowns ~80 % of the cushion's upper stones 3-6 cm
+    and rounds their outer top arris over 6-10 cm (ref1's bulbous lip); drum_backing=True closes the board drum with
+    a dark backing ring."""
+    build_turret(g.sub("turret"), seed=seed, saddles=saddles, cap_exposure=cap_exposure, bulb_cushion=bulb_cushion,
+                 drum_backing=drum_backing)

@@ -410,13 +410,16 @@ def drum_mortar_d(g, u, z):
 
 
 def arch_set(g, P_dr, rng, th0, ri, zs, nv, ring, Dv, jambs, Rfun, yfront=0.03, vert=False, style="dressed",
-             min_relief=None):
+             min_relief=None, jamb_min_relief=None):
     """Dressed voussoir ring + jamb blocks for an arch at azimuth th0.
     jambs: dict side -> list of (z0, z1, face_width).  min_relief (producer note 11) defaults to the frame's
-    threshold at the springing (1 cm for the entrance arch, 2 cm elsewhere)."""
+    threshold at the springing (1 cm for the entrance arch, 2 cm elsewhere).  jamb_min_relief (kit 1.4.0,
+    optional): a separate threshold for the jamb blocks only (e.g. 0.035 drops their edge spalls -- the mill's
+    round-7 'proud tabs' -- with every random draw unchanged); None = min_relief (old behaviour)."""
     if min_relief is None:
         R_ = float(R_out(g, zs))
         min_relief = float(relief_min(g, [R_ * math.sin(th0), -R_ * math.cos(th0), zs])[0])
+    jmr = min_relief if jamb_min_relief is None else jamb_min_relief
     # voussoirs: widths vary +-25 %, key stone wider
     w = rng.uniform(0.75, 1.25, nv)
     w[nv // 2] = max(w[nv // 2], 1.0) * 1.15
@@ -438,7 +441,7 @@ def arch_set(g, P_dr, rng, th0, ri, zs, nv, ring, Dv, jambs, Rfun, yfront=0.03, 
         for (z0, z1, fw) in blocks:
             H = z1 - z0 - 0.012
             # more wear on the lower jambs (scuffed by carts / feet): 3-4 crisp spalls
-            P, T = stone_local(rng, [fw], [H], [Dv], style, rot_deg=(0.1, 0.1, 0.15), min_relief=min_relief,
+            P, T = stone_local(rng, [fw], [H], [Dv], style, rot_deg=(0.1, 0.1, 0.15), min_relief=jmr,
                                spall=(3, 4) if z0 < 1.0 else None)
             W = open_place(g, P, np.array([th0]), np.array([s * (ri + fw / 2)]), np.array([(z0 + z1) / 2]),
                            np.array([yfront]), Rfun)

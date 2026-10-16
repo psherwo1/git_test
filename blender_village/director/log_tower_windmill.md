@@ -1110,3 +1110,320 @@ It is not a 10, because a production designer would still flag these in an actor
 - The visibility cull is the slow part of the build (about 2.5-3.5 min on the shared CPU).
 - Round-6 must-fixes 1-5 (door-surround spall clamp check, two-stone threshold, single-stone prop pads, iron
   staples, V checks) were not reworked this round; note 11 now hands the pole checks and sub-2 cm spalls to decals.
+
+## Round 7 — score 8.8/10
+
+**Reviewed:** renders/tower_windmill/round_07 (hero, front, side, back, aerial, actor_closeup, stats.json, hidden.json), round_07/kit_variant (all 6 views + stats), every builder close-up and r06/r07 comparison in round_07/builder_extra, `buildings/tower_windmill/decal_anchors.json` and the `DECAL_ANCHORS` collection in the .blend (checked by ray cast, see below). Director close-ups in renders/tower_windmill/round_07/director_extra: x01 ref angle, x02 door, x03 threshold, x04 prop feet, x05 cap, x06 band and arcade, x07 west wall, x08 jambs, x09 apron eave, x10 wheel, x11 north wall, x12_pinholes_west / x12_pinholes_north (exterior dark, one point light inside the drum), x13 pole, x14 prop foot, z_c_wall_left_passage_crop. Compared with ref1, mill_overall, mill_sails_wheel, mill_stone_base and with the round-6 sign-off set. Ground dressing not scored (producer note 10); sub-2 cm surface relief that note 11 moves to materials/decals not penalised.
+
+**Stats:** 1,134,993 tris (round 6: 1,212,256); 209 objects (175 linked duplicates of 24 pooled meshes); bbox 10.77 x 9.13 x 16.21 m (unchanged); 10 palette slots; est_hidden_pct 12.1 %; mask_attribute_missing empty; 107 decal anchors. Kit variant: 865,123 tris, 13.2 % hidden, 10 slots, Mask complete, 108 anchors.
+
+**Verdict: PASS (above the 8.2 mark), but lower than the round-6 sign-off.** The migration is clean: the silhouette, rotor, tail vane, props and every phase-1 component are where they were, and the kit build is parameterised and deterministic. The ensemble items are done well. The drum is now real coursed rubble, with wandering beds, pinch-outs, wedge stones and unequal pinners (x07, x11, c_wall_left). The balustrade is aged, with 5 profile families, stumps, a lost baluster and ±1° lean (x06, c_balusters). The cap shingles moved to the shared chunky scale with staggered joints and turned units, which closes round-6 must-fix 6. Note 11 is applied: the pole checks and plank checks are gone, the 2.7 cm head split and the entrance-zone spalls remain.
+
+The grade drops for three reasons:
+1. My independent checks found through-wall light leaks in the drum masonry. They are inherited from phase 1, so this is not a migration regression, but they break producer note 6.
+2. About a third of the decal anchors are buried, floating or misaligned.
+3. Round-6 must-fixes 1-4 were not touched.
+
+**Director checks (bpy ray casts on tower_windmill.blend):**
+- **See-through drum wall.** I cast rays from 22 eye-level cameras at 5 m round the drum (z 0.4 and 1.65), aimed at the wall between z 0 and 2.5 m, excluding the door sector (±17°) and the two slit windows.
+  - 4,308 of 391,000 rays (1.1 %) pass through the masonry and hit the back of MILL_interior or the inner side of MILL_base_mortar.
+  - In x12 the joints glow everywhere when the interior is lit. In x08 and in the builder's own c_wall_left (crop z_c_wall_left_passage_crop), daylight shows as bright horizontal streaks on the dark passage wall seen through the ajar door, at actor distance.
+  - signoff_phase1 measures the same (1.3 %), so this is a pre-existing defect.
+  - Back-facing first hits from 90 exterior viewpoints are 0.74 % of all hits: MILL_base_mortar 4.7 %, MILL_interior 18.5 %, MILL_cap_iron 7.1 %, MILL_apron_rafters 2.3 %. With Unreal's backface culling these pixels become holes.
+- **Decal anchors.** 107 empties, all `EMPTY`, all six custom properties present, and they match the json exactly. I ray-cast each one along −Z (from +0.25 m, 0.6 m reach). 38 fail the plausibility test (|offset| > 1.5 cm, normal·surface < 0.85, wrong side, or no surface). The list is in must-fix 2.
+
+**Axis scores:**
+
+| Axis | Score | Note |
+|---|---|---|
+| Silhouette | 9.3 | identical to sign-off from every review camera |
+| Proportion and scale | 9.2 | unchanged; door, step, band heights correct |
+| Construction | 8.8 | prop feet still machined; drum wall not closed behind the joints |
+| Detail | 8.8 | rubble and balustrade up; entrance spall tabs and threshold kerb still there |
+| Age | 9.0 | rubble wander, aged balusters, varied cap shingles; corbel chip repeats |
+| Technical | 8.6 | palette, Mask, budget, hidden % all pass; through-wall leaks (note 6) and implausible anchors (note 11) |
+
+**Strengths:**
+- **Kit migration:** a thin declarative assembly on `kit/village_kit` (round_stone_drum, blind_arcade, arched_door, smock_tower, shake_apron, mill_cap, fan_wheel, rear_tail_vane, raking_props). Before the intentional changes the kit build was bit-identical to phase 1. A real variant builds with clearance PASS. 175 of 209 objects are linked duplicates (note 3).
+- **Drum rubble (x07, x11, c_wall_left):** it now matches the keep. Beds wander, courses pinch out, long and through stones mix with small pinners, and it no longer reads near-ashlar. The ensemble item is closed.
+- **Balustrade (x06, c_balusters, actor_closeup):** varied turned profiles, eroded and chipped units, square replacement blocks, stumps and one gap. It reads 150 years old, not new.
+- **Cap (c_cap_rear, x05):** chunky staggered shingles with turned units, bell-cast hips and a fish-scale hood. Round-6 must-fix 6 is closed.
+- **Note 11 applied with judgement:** the pole and plank checks went to decals, and silhouette and discrete pieces are untouched. Triangles fell by 77k, and hidden fell to 12.1 %.
+- **Rotor and tail (x10, front, side):** unchanged sign-off quality. Solid paddles with board gaps, riveted rings, bolted arm straps, and the fanned vane on its doubled, braced boom.
+
+**MUST-FIX (priority order):**
+1. **Close the drum wall: no see-through joints (producer note 6). This is visible at the entrance.**
+   - **Where:** MILL_base_stones / MILL_base_mortar, the whole plain-rubble zone z 0.0-2.55 m and the spandrel rubble z 3.6-4.05 m. Daylight leaks onto MILL_interior and reads as bright streaks through the ajar door (x08, z_c_wall_left_passage_crop).
+   - **Fix:** add one cheap continuous closed wall-core ring behind the stones (`drum_wall_core(g)` in the kit, a few thousand tris):
+     - outer face at the mortar-recess depth (r_face(z) − 0.035 m), from z −0.05 to 4.05 m;
+     - cut only for the door, the 2 slit windows and the 10 arcade recesses;
+     - closed to MILL_interior's inner face by top and bottom annuli, normals outward, palette slot `M_mortar`.
+   - **Target:** with the director test (22 eye-level cameras, 391k rays) through-wall rays ≤ 0.01 %, and exterior back-face first hits ≤ 0.1 % on every object. No streaks in x08 or x12 when re-rendered.
+   - This is a kit fix. The keep and the hut use the same stone/mortar pattern, so run the same test on them.
+2. **Fix the 38 implausible decal anchors (producer note 11) and add a build-time snap check.**
+   - **The rule:** every anchor sits within ±1.5 cm of the surface it decorates (ray along −Z), its +Z within 25° of that face's normal (dot ≥ 0.9), on a front face, and `surface` equals the material actually hit. The build prints the failures and asserts 0.
+   - **damp_rise_001-014:** they float 5.5-14.8 cm proud of the wall at z 0.46. Snap them to the rubble face. If the box must also cover the footing, say so in the json as a projection depth (≥ 0.12 m), not as a position offset.
+   - **crack_009, 011, 013, 015 (arcade crowns, z 3.64):**
+     - Problem: buried 4.3-4.9 cm inside the voussoirs, with normals tilted 37-43° upward, tagged `M_mortar` but sitting on `M_stone_dressed`.
+     - Fix: put them on the outer voussoir face at the crown, normal horizontal-radial, surface `M_stone_dressed`.
+   - **crack_017 (z 0.55, az 158):** buried 2.8 cm, with the normal pointing 55° down. Move it onto the wall face.
+   - **moss_002, moss_004 (z 0.18, az 153 / −152):** no stone behind within 0.35 m (the ray reaches the interior at 0.79-0.86 m). Snap them onto a footing stone face.
+   - **moss_003:** 5.4 cm proud. Snap it.
+   - **moss_009, moss_011 (cap, z 11.95):** they land on a shingle back face (dot −1.0), i.e. under a covering shingle. Put them on exposed butts.
+   - **lichen_004 (z 2.795):** inside MILL_baluster_062. Move it to the top of the upper string course (z 2.92, normal +Z).
+   - **soot_001 (door head):**
+     - Problem: 8.4 cm inside MILL_baluster_055 at z 2.79, with its normal rotated 54° off the door axis (−0.81, −0.58).
+     - Fix: put it on the wall face just above the door ring (z 2.30-2.50), normal (0, −1, 0).
+   - **water_streak_004, 005, 006, 007 (band, z 2.63-2.70):**
+     - Problem: buried 5-21 cm inside the string course; 004 and 007 point 47° down.
+     - Fix: put them on the rubble face directly under the lower string course (top of the streak at z 2.54, hanging down), normal radial.
+   - **water_streak_008, 010:** normal almost tangent to the wall (dot 0.07 / 0.39). Fix the orientation.
+   - **water_streak_009:** 25 cm proud of the recess back. Snap it to the back.
+   - **water_streak_011, 013:** buried 5-10 cm, pointing 34° down. Snap them to the face below the arcade sill.
+   - **water_streak_001, 002:** 2.6 cm buried / dot 0.78. Re-snap.
+   - **rust_stain_008 (prop collar, z 10.02):** no board behind (it sits over a gap). Snap it to the board face.
+   - **Also:** the build entry promises water_streak "from the wheel rim on the blades", but no anchor lies on MILL_wheel_blades or MILL_wheel_rim. Add 2-4 on the outer blade ends (note 11: "the ends of the wheel and boom"), or remove the claim.
+   - Keep the total within 40-120.
+3. **Door-surround spalls still make proud tabs (round-6 #1, open). This is the actor close-up.**
+   - **Where (x02, x08, c_door, actor_closeup):**
+     - left jamb, lower and middle blocks: ragged flaps along the bottom arris at z ≈ 0.95 and 1.45 m;
+     - right jamb, outer arris z ≈ 1.0-1.75 m: small rectangular tabs standing 1-2 cm off the face.
+   - **Fix:**
+     - Clamp every spall vertex to on-or-inside the pre-spall block (outward excess ≤ 0.5 mm, printed per block). Spall outlines are smooth loops of ≥ 8 points with no grid-aligned straight run over 3 cm.
+     - Under note 11's entrance exception keep only spalls ≥ 1 cm deep; drop the rest rather than leaving tabs.
+4. **Threshold still reads as a cast concrete kerb (round-6 #2, open; x03 vs r06 x03 identical).**
+   - Rebuild the 1.3 m curved nose as 2 dressed stones, 0.55-0.75 m each, with a joint.
+   - Each front is 2-3 chord facets; the arris is 0.5-1 cm, with 1-2 spalls of 1-2 cm (entrance zone); the nose height varies ±5 mm and the worn dip carries through.
+   - Keep the top at 0.14 m and the step rise at 6-7 cm.
+   - Level the right-hand passage flag (3-4 cm proud) to within ±1 cm of its neighbour.
+5. **Prop pads still read as two stacked plates (round-6 #3, open; x04, x14).** Use one split stone per pad:
+   - one continuous side face, 3-5 cm exposed above Z = 0, with no ledge;
+   - the lower body no wider than the top outline + 1 cm;
+   - a domed top (±1 cm) with 1-2 fracture facets;
+   - a buried skirt ≤ 5 cm.
+6. **Prop dogs read as welded gusset plates, and the chock as a machined box (round-6 #4, open; x04, x13).**
+   - **Dogs:** replace the two diagonal flat bars per foot with 1-2 staples of 15-20 mm square bar:
+     - each spans 20-25 cm across the chock/pole joint;
+     - each stands 12-18 mm proud;
+     - legs bent 90° into the timber.
+   - **Chock:** note 11 removed the < 2 cm adze facets, but the ≥ 2 cm shape items still belong in geometry:
+     - break the top edges with 2 hewn bevels of 2-3 cm;
+     - skew the plan 4-6° so it is not a rectangle.
+
+**Closed since round 6:**
+- #5, pole checks: handed to decals by note 11, and the poles now read as smooth hewn poles with a branch stub (x13).
+- #6, cap shingle grid (c_cap_rear, x05).
+
+**Nice to have:**
+- **Corbel pool:** the same V-chip at the top centre of the dentil repeats on most of the 40 corbels along the cornice (x09). Mirror or rotate the pooled corbel per placement, or add 2-3 variants, so that no identical chip falls within 3 neighbours.
+- **Cap shingle scale vs spec §E:** spec §E asks for a 0.12 m exposure; the cap now uses the shared chunky table. I accept this as the ensemble's one-scale decision, and record it here as a spec amendment.
+- **Apron top course (c_apron):** the comb-top dips leave a shadow slot under the tower sill ring. Tuck the top course 3-5 cm under the sill.
+- **Tail vane height:** 0.32 × the wheel diameter, against about 0.4 in mill_overall (carried over).
+- **Footing ends:** 1 in 3 footing stones should get a straight fracture end instead of a soap-bar end (carried over).
+- **Kit variant actor close-up:** the step reads as a clean rectangular plate. It inherits fixes 4-5 once they are in the kit.
+
+**Workflow note:** the round-6 phase-1 mill (9.1) stays the deliverable until a kit round grades at or above the pass mark and is upheld by the sign-off audit. This round clears 8.2 on its own. Must-fixes 1 and 2 are producer-note items and must be closed before the kit mill replaces signoff_phase1. Must-fix 1 also applies to the signed-off phase-1 file.
+
+
+## Round 8 — builder entry
+
+**Scope:** the sign-off audit of round 7 (director 8.8): note-6 daylight through the drum masonry, note-11 implausible
+decal anchors (43 of 107 failing the -Z ray test), and the open round-6 entrance / ground-contact must-fixes.
+Silhouette, rotor, tail, props, cap, apron and every phase-1 item are untouched; bbox 10.76 x 9.13 x 16.21 m as before.
+Review render: `renders/tower_windmill/round_08` (all six views, 32 samples).
+
+| | Round 7 | Round 8 |
+|---|---|---|
+| Triangles | 1,134,993 | 1,146,243 (+11.3k wall core) |
+| est_hidden_pct | 12.1 % | 13.3 % |
+| Material slots / Mask missing | 10 / none | 10 / none |
+| Decal anchors (failing the director's -Z test) | 107 (43) | 106 (0) |
+| Through-wall rays, eye-level drum test (my re-run of the director's set-up, 322k rays) | 0.98 % (1.1 % director) | 0 rays reach MILL_interior; 22 hit a mortar back face (0.007 %) |
+| Exterior back-face first hits, 90 views: base_mortar / interior | 3.2 % / 29.5 % | 0.41 % / 1.1 % |
+
+### Must-fix 1: drum wall closed (note 6), kit `drum_wall_core`
+- New component `drum_wall_core(g)` -> `MILL_wall_core` (M_mortar, 10.8k tris): a continuous ring 6 mm behind the
+  mortar skin on the skin's own rows (it follows the footing ledge, the 4.5 cm raked foot, the 2.2 cm recess and
+  the recessed balustrade band), from 5 cm below ground to 5 cm into the cornice.  6 mm sits just behind the open
+  stone backs (rubble is modelled to mortar depth + 8 mm), so a joint now shows mortar-coloured core, never the hollow drum.
+- Cut exactly for the door, both slit windows and the 10 arcade recesses: grid lines on every opening edge, arch
+  heads closed by box-to-circle patches.  No cell intrudes into an opening and no notch is left open by an arch.
+  Bottom / top annuli run to the interior radius.  An inward inner face covers the arc the interior does not model,
+  so a view through the door across the drum meets a front face; the passage is left open.
+- Also flipped the winding of the passage vault and the rear face of the door arch.  Both had been wound away from
+  the viewer (back faces seen through the door).
+- Result: in the eye-level test (22 cameras at 5 m, z 0.4 / 1.65, door sector and slits excluded) no ray reaches
+  MILL_interior or passes deeper than 12 cm into the wall (round 7: 1,301 rays).
+  - What remains are shallow grazing hits on the inside of a proud stone's open back (772 rays, 0.24 %).
+  - Those rays end on the core, which sits within 6 mm, so no daylight gets through.
+
+### Must-fix 2: decal anchors (note 11), gated and audited in the build
+- `decals=drum_tower_decals_gated` runs three gates, then asserts:
+  1. `decal_gate.snap_anchors`, with horizontal-radial macro normals on the drum and +Z on stone tops.  It snaps
+     each anchor to the first front face, rejects interior / back faces, checks exposure and de-duplicates.
+  2. `anchor_validate.validate_anchors`, applied.  It checks the slot, the outward normal, that the anchor is not
+     buried, and the 3x3 footprint.
+  3. New `anchor_audit.audit_anchors`, which is the director's test itself.  A ray from 0.25 m runs along -Z; it must
+     hit within +-1.5 cm, with dot >= 0.85, on a front face, with `surface` == the material hit.
+  - The build asserts 0 failures and a total of 40-120 anchors.
+  - `decal_anchors.json` carries a `validation` block.
+- Note 11 "ends of the wheel": 4 water streaks on the outer blade ends (`wheel_end_streaks`, MILL_wheel_blades,
+  up = radially outward).
+- Result: 110 placed, 4 dropped, 106 kept.
+  - The 4 dropped: the door-head soot, whose spot is still on the baluster row; a crack facing 48 deg off its face;
+    one duplicate lichen; one duplicate streak.
+  - Counts: damp_rise 14, moss 11, lichen 11, water_streak 23, rust_stain 9, soot 3, crack 21, grime 2,
+    repair_patch 8, plaster_patch 4.
+  - My copy of the director's test on the saved .blend: **106 checked, 0 fail.**
+
+### Round-6 must-fixes 3-6 (opt-in kit switches, `g.ENTRANCE_R8`)
+- **#3 jamb spall tabs.** The door jambs are built without edge spalls (`arch_set(jamb_min_relief=0.035)`, every
+  random draw unchanged).  Voussoir, threshold and window spalls stay.
+- **#4 threshold kerb.** Now two straight dressed stones of 0.66 m and 0.65 m with a 1.2 cm joint.
+  - Each is laid on its own chord, yawed +-1 deg, and its front has 2 facets meeting at a soft kink.
+  - The nose height varies +-4 mm and the worn dip runs across both stones.
+  - The top stays at 0.14 m and the step is unchanged.
+  - The passage flag was not levelled.
+- **#5 prop pads.** Each pad is one stone whose body is pulled in to the top outline + 1 cm, so it has one
+  continuous side and no lower plate or ledge.  The top stays domed.
+- **#6 dogs and chock.**
+  - The flat-bar dogs are replaced by one 18 mm square-bar staple per side (span 0.20-0.22 m, 13-18 mm proud, legs
+    3 cm into the timber).
+  - The chock's plan is skewed 4-6 deg, with two 2-3 cm hewn bevels on its top edges.
+
+### Kit edit rules
+- Added: `anchor_audit.py`, `drum_wall.drum_wall_core`, `drum_decals.drum_tower_decals_gated` /
+  `wheel_end_streaks`, `drum_door.threshold_two_stones`.
+- Optional additions: `arch_set(jamb_min_relief=None)`, `prop_foot(r8=False)`, and the `g.ENTRANCE_R8` flag
+  (default off).  Only the mill and its variant use these drum modules.
+- Recorded as 1.4.0 (mill part) in `kit/CHANGELOG.md`.
+- Re-runs to scratch, both without errors:
+  - `wattle_roundhut`: 827,563 tris, equal to its current record;
+  - `hilltop_keep`: 1,159,180 tris, equal to its 1.3.0 record.
+
+### Known gaps (not done this round)
+- The door-head soot was dropped, not moved to the wall above the ring (z 2.30-2.50), because its spot is still
+  the baluster row.  One more `above_opening` target would close it.
+- Exterior back faces elsewhere are untouched: tower boards 2.2 %, tower frame 2.7 %, apron rafters 2.4 %, apron
+  shakes 1.4 %, cap shingles 8 %, cap iron 13.6 % of their own hits.  The cap / boards / rafters need their
+  open-backed timber closed, which is the next note-6 item.
+- The core inner face still shows a few back hits (13 hits, inside the wall mass via the slit-window embrasure).
+- Not done: the threshold passage-flag level, the corbel-chip repeat, the apron top-course tuck, the tail vane
+  height and the footing fracture ends.
+- The kit variant (`MILL_KIT_VARIANT=1`) was not rebuilt this round.  It runs the same steps (core, gate,
+  `ENTRANCE_R8`), so its next build picks all of them up.
+- Close-up crops of the new threshold / staples / pads were not rendered beyond the six review views.
+
+## Round 8 — score 9.0/10
+
+**Reviewed:** renders/tower_windmill/round_08 (hero, front, side, back, aerial, actor_closeup, stats.json, hidden.json), `buildings/tower_windmill/decal_anchors.json` and the `DECAL_ANCHORS` collection in the .blend. Director close-ups are in renders/tower_windmill/round_08/director_extra:
+- x01 ref angle, x02 door, x03 threshold, x04 prop feet, x08 jambs, x09 passage, x14 near prop foot, x15 footing, x16 apron eave, x17 cap;
+- x12_pinholes_west / north / east (dark exterior, point light inside the drum);
+- x18_passage_floor_topdown (door leaf hidden).
+
+I compared them with ref1, mill_overall, mill_stone_base and mill_sails_wheel, and with the round-6 and round-7 sets. Ground dressing was not scored (producer note 10). I did not penalise sub-2 cm relief that note 11 moves to materials or decals.
+
+**Stats:** 1,146,243 tris; 210 objects; bbox 10.76 x 9.13 x 16.21 m (unchanged); 10 palette slots; est_hidden_pct 13.3 %; mask_attribute_missing empty; 106 decal anchors.
+
+**Director checks (Blender 5.2 ray casts on tower_windmill.blend):**
+- **Through-wall test.** 22 eye-level cameras at 5 m (z 0.4 / 1.65), door sector and slits excluded, 49k rays. **0 rays reach MILL_interior.** 30 rays (0.06 %) graze an open stone back and end on MILL_wall_core within millimetres. x12 shows no glowing joints at all: light leaves only through the two slit windows and the door. Round-7 must-fix 1 is closed.
+- **Decal anchors.** 106 EMPTYs. My own −Z test (ray from +0.25 m, 0.6 m reach, |offset| ≤ 1.5 cm, dot ≥ 0.85, surface == the material hit) gives **0 failures**.
+  - Counts: damp_rise 14, moss 11, lichen 11, water_streak 23, rust_stain 9, soot 3, crack 21, grime 2, repair_patch 8, plaster_patch 4. The total is inside 40-120.
+  - Placement logic is plausible:
+    - damp_rise all round the foot at z 0.46, with p = 1.0 on the north arc;
+    - foot moss on the north arc (az 35-118) and on the north apron;
+    - lichen on the string-course tops (+Z);
+    - streaks under the band, the cornice drip and the cap eave, plus 4 on the blade ends;
+    - rust under the door hinges and the prop collar;
+    - cracks at the door springings and crown, the arcade crowns and settlement points low in the rubble;
+    - grime on the jambs at hand height.
+  - Round-7 must-fix 2 is closed.
+- **Exterior back-face first hits** (90 views, 108k rays): 0.35 % overall. **MILL_cap_iron 22.7 % of its own hits**, MILL_wall_core 6.4 %, base_mortar 1.6 %, cap_frame 1.3 %, cap_shingles 1.3 %, tower_frame 1.2 %, and 15 pooled balusters (MILL_baluster_001, 010, 011, 014, 017, 024, 030, 033, 036, 042, 048, 057, 061 ...) each with 1-2 back-face hits from above.
+- **Passage floor.** Downward rays on a 5 cm grid over x −0.5..0.5, y −2.65..−1.45: **67 of 525 find no surface at all** (they fall through to Z < 0). The flag tops themselves sit at z 0.132-0.145, so the round-6 "proud flag" is now level within about ±0.7 cm.
+- **Prop feet (mesh parts).**
+  - Stone pad: 0.72 x 0.65 m, 4.5-5 cm tall.
+  - **M_earth packing:** a separate 0.55 x 0.35 m slab, 4.4 cm tall, with vertical sides, sitting on the pad.
+  - Chock: 18 cm.
+  - Each staple's lower leg sits at z 0.03-0.05, which is in the pad or packing, not in the chock.
+
+**Verdict: PASS. The kit mill is now at the sign-off level and can replace signoff_phase1, subject to the sign-off audit.** Both producer-note items from round 7 are fixed properly, at kit level:
+- the drum is closed by one cheap continuous core, with no daylight through any joint;
+- the anchors are gated by the director's own test in the build.
+
+The threshold is now two dressed stones with a real joint and chord facets instead of a cast kerb (x03 against r07 x03). The proud jamb tabs are gone. Silhouette, rotor, tail vane, apron, cap and arcade are unchanged from the 9.1 sign-off, and the rubble and balustrade keep the ensemble upgrades.
+
+It is not higher for these reasons:
+- the passage floor has open holes behind the threshold (note 6), which is the darkest pixel in x03;
+- the prop feet still read as a plate stack with a strut;
+- the jambs swung from "tabbed" to "pristine foam blocks";
+- the cap iron and pooled balusters still show back faces.
+
+**Axis scores:**
+
+| Axis | Score | Note |
+|---|---|---|
+| Silhouette | 9.3 | identical to sign-off from every review camera; reads as ref1's mill from x01 |
+| Proportion and scale | 9.2 | door, step 7.9 cm, threshold 0.136-0.139, band heights correct |
+| Construction | 8.9 | wall closed and threshold jointed; floor holes, earth-plate stack and staple-as-strut at the prop feet |
+| Detail | 8.9 | threshold up, tabs gone; jambs now featureless rounded boxes at actor distance |
+| Age | 8.9 | rubble, balusters and cap as round 7; the door surround lost all wear |
+| Technical | 9.0 | palette, Mask, budget, hidden 13.3 %, anchors 0 fails, no through-wall light; open floor holes and back faces (cap iron, balusters, core) |
+
+**Strengths:**
+- **Note 6 drum fix (x12 west / north / east):** `drum_wall_core` is a 10.8k-tri ring that follows the skin rows, is cut exactly for the door, slits and arcade, and is closed to the interior. It is the right kit pattern for the keep and the hut.
+- **Note 11 anchors:** 106 anchors that pass an independent ray audit, with physically sensible types and probabilities. The build asserts the audit, and the json carries a validation block. The wheel-end streaks are now real.
+- **Threshold (x03):** two 0.70 m dressed stones with a 1.2 cm joint, yawed chords and a worn dip running across both. The step rise is unchanged.
+- **Everything from sign-off is intact:**
+  - the arcade piers and voussoirs, the aged balusters, the coursed rubble with pinch-outs (x15, x16);
+  - the solid paddles on riveted rings and the fanned tail vane on its braced boom (x17, front, side);
+  - the ajar door with the ladder beyond (x02).
+- **Kit discipline:** only additive modules and opt-in switches. The keep and hut re-runs are unchanged.
+
+**MUST-FIX (priority order):**
+1. **Open holes in the passage and interior floor (producer note 6, "never open holes"; actor close-up).**
+   - **Where (x03 black slot behind the threshold, x09, x18):**
+     - an open seam 5-10 cm wide right across the passage at y −1.95..−1.85 (passage/interior junction);
+     - an open joint along x = 0 between the two passage flags, y −2.15..−1.95;
+     - open flag joints at y −1.80..−1.75 and −1.55..−1.45.
+     - 67 of 525 rays on a 5 cm grid find nothing below the flags.
+   - **Fix:** add one continuous floor bed under the passage and the interior floor out to r 1.0 m past the inner wall face (`M_mortar`, top at z 0.10-0.11, i.e. 3-4 cm below the flag tops at 0.132-0.145), closed to the wall core. Alternatively close the flag joints to 1-3 cm over a recessed mortar body.
+   - **Target:** 0 misses on a 2 cm downward grid over x −0.6..0.6, y −2.65..−1.0.
+   - Put the bed in the kit (`arched_door` / `entrance_step` passage), so that the variant and the keep inherit it.
+2. **Prop feet still read as stacked plates plus a strut (round-7 #5/#6 only partly closed; x04, x14).**
+   - **Earth packing:** the `M_earth` packing is a flat 0.55 x 0.35 m slab, 4.4 cm thick with vertical edges, sitting on the 4.5 cm stone pad, so the two read as two stacked plates. Fix it in one of two ways:
+     - make it a feathered mound: crown ≤ 3 cm at the chock face, falling to 0 at an irregular rim, no vertical edge anywhere, its rim tucked under the pad edge;
+     - or delete it.
+   - **Pad:** vary its exposed height from 4 to 8 cm round the perimeter, dome the top ±1-1.5 cm, and break the straight chamfered perimeter into 5-7 irregular fracture facets. It currently reads as a cast paving tablet.
+   - **Staples:** the lower leg is at z 0.03-0.05, in the pad or packing, so each staple reads as a diagonal strut from the stone to the pole.
+     - Re-seat both legs in timber: the lower leg into the chock face at z 0.10-0.15, the upper leg into the pole 5-8 cm above the chock top.
+     - Keep the span at 0.20-0.25 m and the bridge parallel to the surfaces, 12-18 mm proud.
+   - **Chock:** the near face of the near chock shows a 1-2 cm sliver plate standing off the face (x14, left edge, the hewn bevel). Make it part of the chock solid.
+3. **Door jambs are now pristine (the regression from `jamb_min_relief=0.035`; x02, x08, actor_closeup).**
+   - All 6 jamb blocks have the same uniform, roughly 2 cm rounded arris and no damage, so they read as foam blocks next to the actor.
+   - Under note 11's entrance exception (relief ≥ 1 cm kept within 3 m, 0-2.5 m high):
+     - give each block 1-2 spalls on its outer arrises, 1.0-2.5 cm deep and 6-15 cm long;
+     - each spall is a smooth outline of at least 8 points, clamped inside the pre-spall block with outward excess ≤ 0.5 mm (print the per-block maximum);
+     - vary the arris radius per edge between 0.5 and 2 cm.
+   - No tabs, and no grid-aligned steps.
+4. **Exterior back faces (producer note 1 closed pieces, note 6).**
+   - **Problem:** in my 90-view test, MILL_cap_iron shows 22.7 % back-face first hits (rollers and straps are open or inverted shells). MILL_wall_core shows 6.4 % (the top annulus where it meets the cornice, and the slit embrasure). About 15 pooled balusters show back faces from above (open tops or bottoms under the upper string course). Base_mortar is 1.6 %, and cap_frame, cap_shingles and tower_frame are each 1.2-1.3 %.
+   - **Fix:**
+     - close or recalculate the outward normals of the cap-iron shells;
+     - cap the baluster pool meshes, or sink their tops and bottoms ≥ 5 mm into the string courses;
+     - close the core's top annulus under the cornice.
+   - **Target:** ≤ 0.1 % back-face first hits per object (cap iron included), and ≤ 0.5 % for the open-backed tower boards, frame and cap shingles while their backing is pending.
+5. **Rebuild and render the kit variant (`MILL_KIT_VARIANT=1`) with the round-8 steps.** Deliver all 6 views plus stats in `round_NN/kit_variant/`, with the anchor audit at 0 failures and the through-wall test at 0 interior hits. The kit fixes are only proven once a second size builds clean.
+
+**Closed since round 7:**
+- #1 (see-through drum wall);
+- #2 (implausible anchors; also the wheel-end streaks);
+- #3 (proud jamb tabs, but see must-fix 3 above for the over-correction);
+- #4 (threshold kerb, and the passage flag level, now within about ±0.7 cm).
+
+**Nice to have:**
+- **Soot in a windmill:** a mill has no hearth. Retype DA_soot_001-003 (slit windows and hatch) as `grime` or `water_streak`, or drop their probability to ≤ 0.1.
+- **Cap moss:** DA_moss_009-011 sit at az 0-63 (east / north-east). Move them to the north arc (az 60-120) to match the foot and apron moss.
+- **Carried over:** corbel V-chip repeat (x16), apron top course tucked 3-5 cm under the tower sill (x16 shows the slot), tail vane height (0.32 against about 0.4 of the wheel diameter), and 1 in 3 footing stones with a straight fracture end (x15).
+- **Housekeeping:** remove the stray 0-byte `drum_wall.py` at the repository root (created 15:00 during this round). Builders write only inside their own building and render folders (art bible §8).
+
+**Workflow note:** 9.0 clears the 8.2 pass mark. Because both round-7 producer-note items are now closed, the kit mill may replace signoff_phase1 as the deliverable once the sign-off audit upholds this round. Must-fixes 1 and 4 are producer-note items and must be closed in the next kit round before the kit is frozen.

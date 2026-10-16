@@ -21,8 +21,12 @@ def arched_door_surround(g, parts):
     P_dr = kpart(g, parts, "door_surround", ["M_stone_dressed"], wear=0.45, angle=22.0)
     rd = g.RNG("door_surround")
     jam = {s: [(g.DOOR_JZ[i], g.DOOR_JZ[i + 1], g.DOOR_JAMBS[s][i]) for i in range(4)] for s in (-1, 1)}
+    r8 = bool(getattr(g, "ENTRANCE_R8", False))          # kit 1.4.0 opt-in (mill round 8); default: old build
     arch_set(g, P_dr, rd, 0.0, g.DOOR_CW, g.ZS_DOOR, 11, g.DOOR_RING, 0.34, jam, lambda z: np.full_like(z, g.R_DOOR),
-             yfront=0.03, style="hero")
+             yfront=0.03, style="hero", jamb_min_relief=0.035 if r8 else None)
+    if r8:
+        threshold_two_stones(g, P_dr, rd)
+        return
     # threshold stone (worn dip in the middle)
     P, T = stone_local(rd, [1.32], [0.17], [0.46], "hero", rot_deg=(0.2, 0.2, 0.2), spall=(1, 2),
                        min_relief=relief_door(g))
@@ -32,6 +36,38 @@ def arched_door_surround(g, parts):
     W = open_place(g, P, np.array([0.0]), np.array([0.0]), np.array([g.Z_TH - 0.085]), np.array([0.07]),
                    lambda z: np.full_like(z, g.R_DOOR))
     P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="all")
+
+
+def threshold_two_stones(g, P_dr, rd, total=1.32, joint=0.012, H=0.17, D=0.46):
+    """kit 1.4.0 (mill director r6/r7 must-fix 'cast-concrete curved kerb'): the threshold as TWO dressed stones
+    (0.55-0.75 m each) with a 1.2 cm joint.  Each stone is laid STRAIGHT on its own chord of the door circle (no
+    curved front), yawed +-1 deg, with a shallow kink part-way along so each front reads as 2 chord facets; the
+    nose height varies +-5 mm stone to stone, the worn dip runs across both stones (global x), 1-2 spalls of
+    1-2 cm on the exposed arris (entrance zone), top at Z_TH, the step below unchanged."""
+    rt = g.RNG("threshold_r8")
+    L1 = rt.uniform(0.58, 0.72)
+    Ls = [L1, total - L1 - joint]
+    x0 = -total / 2
+    R = g.R_DOOR
+    for k, L in enumerate(Ls):
+        xc = x0 + L / 2
+        x0 += L + joint
+        P, T = stone_local(rt, [L], [H], [D], "hero", rot_deg=(0.2, 0.2, 0.2), spall=(1, 2),
+                           min_relief=relief_door(g))
+        xk = rt.uniform(-0.2, 0.2) * L
+        kink = rt.uniform(0.008, 0.016) / (L / 2)
+        P[:, :, 1] -= kink * np.abs(P[:, :, 0] - xk)                 # two chord facets meeting on a soft kink
+        ug = (xc + P[:, :, 0]) / 0.66
+        top = P[:, :, 2] > 0.04
+        P[:, :, 2] -= top * 0.012 * np.exp(-(ug * 2.2) ** 2) * np.exp(-((P[:, :, 1] + 0.2) / 0.2) ** 2)
+        a = math.asin(xc / R) + rt.uniform(-1.0, 1.0) * D2R
+        t = np.array([math.cos(a), math.sin(a), 0.0])
+        o = np.array([math.sin(a), -math.cos(a), 0.0])
+        dz = rt.uniform(-0.004, 0.004)
+        W = (o[None, None, :] * (R + 0.07 + P[:, :, 1:2]) + t[None, None, :] * P[:, :, 0:1]
+             + np.array([0.0, 0.0, 1.0]) * (g.Z_TH - 0.085 + dz + P[:, :, 2:3]))
+        P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="all")
+    log("threshold: 2 straight dressed stones %.2f + %.2f m, joint %.3f m" % (Ls[0], Ls[1], joint))
 
 
 def door_planks(part, rng, x0, width, z_bot, ztop_fn, xf, n=6, t=0.042, min_relief=0.0):
@@ -136,7 +172,10 @@ def build_door_and_interior(g, parts):
     A, D = np.meshgrid(al, dd, indexing="ij")
     X = XW * np.cos(A)
     Z = ZV + XW * 0.9 * np.sin(A)
-    add_grid(P_mo, "M_mortar", to_world(X, D, Z), flip=True)
+    r8 = bool(getattr(g, "ENTRANCE_R8", False))
+    # kit 1.4.0 (r8 opt-in): the vault and the rear arch face were wound away from the passage (back faces seen
+    # through the door -> holes under backface culling); r8 winds them toward the viewer
+    add_grid(P_mo, "M_mortar", to_world(X, D, Z), flip=not r8)
     # rear face of the door arch between intrados and vault (at the rebate plane)
     xs = np.linspace(-XW, XW, 24)
     zz = np.linspace(g.ZS_DOOR - 0.05, ZV + XW * 0.9 + 0.02, 10)
@@ -147,7 +186,7 @@ def build_door_and_interior(g, parts):
             xc, zc = (xs[i] + xs[i + 1]) / 2, (zz[j] + zz[j + 1]) / 2
             inside_door = (zc - g.ZS_DOOR) ** 2 + xc ** 2 < (g.DOOR_CW + 0.01) ** 2 or zc < g.ZS_DOOR
             keep[i, j] = (not inside_door)
-    add_grid(P_mo, "M_mortar", to_world(X, np.full_like(X, d0 - 0.004), Z), keep=keep, flip=True)
+    add_grid(P_mo, "M_mortar", to_world(X, np.full_like(X, d0 - 0.004), Z), keep=keep, flip=not r8)
 
     # ---- interior: inner wall face, flagstone floor, ceiling beams, boards, ladder ----
     nth = 96

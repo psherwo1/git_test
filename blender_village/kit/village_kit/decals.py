@@ -288,9 +288,10 @@ def opening_corners(da, probe, corners, out_dir, decal_type="crack", size=(0.25,
 
 
 def wall_scatter(da, probe, center, r_out, n, z_range, decal_type="plaster_patch", size=((0.3, 0.6), (0.25, 0.5)),
-                 surfaces=None, rng=None, az_range=(0.0, 2 * math.pi), avoid=(), min_sep=0.6, tries=40):
+                 surfaces=None, rng=None, az_range=(0.0, 2 * math.pi), avoid=(), min_sep=0.6, tries=40, accept=None):
     """scatter anchors over a round wall face (horizontal rays toward the axis at random azimuth / height),
-    keeping min_sep from each other and from the `avoid` points."""
+    keeping min_sep from each other and from the `avoid` points.  accept (kit 1.3.0, optional): fn(hit, (w, h)) ->
+    bool, e.g. an anchor_validate.footprint_ok test; a rejected spot is skipped like a wrong-surface one."""
     rng = rng if rng is not None else np.random.RandomState(1)
     out = []
     placed = [np.asarray(a, float) for a in avoid]
@@ -307,6 +308,8 @@ def wall_scatter(da, probe, center, r_out, n, z_range, decal_type="plaster_patch
             continue
         w = rng.uniform(*size[0])
         h = rng.uniform(*size[1])
+        if accept is not None and not accept(hit, (w, h)):
+            continue
         out.append(da.add(decal_type, hit["pos"], hit["normal"], (w, h), hit["surface"],
                           seed=int(rng.randint(1 << 30))))
         placed.append(hit["pos"])

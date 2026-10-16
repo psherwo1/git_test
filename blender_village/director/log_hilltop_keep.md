@@ -1048,3 +1048,241 @@ Rulings:
 - Round-6 must-fix 2 loses its tooling clause under note 11. The arris and spall clauses remain (item 5).
 - The ensemble item for chunky cap shingles is closed. The hip-board side effect is item 3.
 - The migrated keep passes at 8.3 and may stand as the kit-phase deliverable. Must-fix 1 (decal anchors) must land next round.
+
+
+## Round 8 — builder entry
+
+### Files
+
+- **Script.** `buildings/hilltop_keep/build_hilltop_keep.py` still assembles from `village_kit` components only. New step options: `cone_cap(saddles=True, cap_exposure=CAP_EXPOSURE)`, `side_turret(saddles=True, cap_exposure=..., bulb_cushion=True, drum_backing=True)`, `thatch_wing_roof(bundled=True)`, `ridge_comb(dense=True)` and `thatch_junctions(continuous_fillet=True)`. `CAP_EXPOSURE = (0.24, 0.28)`.
+- **Outputs.**
+  - `hilltop_keep.blend` (28.7 MB, compressed) and `decal_anchors.json` (113 anchors).
+  - The kit variant was rebuilt to `kit_variant/` (1,055,773 tris, 109 anchors). It was built before the last soot fix and was not re-rendered.
+  - `signoff_phase1/` is untouched.
+- **Renders.**
+  - `renders/hilltop_keep/round_08/`: all 6 views at 32 spp, plus `stats.json` and `hidden.json`.
+  - `round_08/builder_checks/`: 12 close-ups of the final file at 16 spp: lantern_cap, lantern_far, turret_cap, thatch_eye, wing_door, wing_west_sw, wing_west_nw, cushion, ridge_comb, thatch_north, door, footing_sw.
+  - The final `.blend` was rebuilt after the review render. The rebuild changed only two soot anchors, which are empties. The geometry is identical: same triangle count, 1,159,180.
+
+### Stats
+
+| | Round 7 | Round 8 |
+|---|---|---|
+| Triangles | 1,123,849 | 1,159,180 (77 % of budget) |
+| est_hidden_pct | 14.1 % | 14.6 % |
+| Material slots | 11 (palette) | 11 (palette) |
+| `mask_attribute_missing` | none | none |
+| Decal anchors | 104 (8+ implausible) | 113, 0 failing |
+| bbox (m) | 16.41 x 10.60 x 14.05 | 16.41 x 10.62 x 14.05 (the bound roll and tufts add 2 cm in Y) |
+
+### Must-fix 1: decal anchors (producer note 11)
+
+- **The gate.** New kit module `decal_gate.snap_anchors` runs at the end of `oct_building_decals(snap=True)`. Each generator now records the anchor's intended normal: the facet normal, the wall normal, the turret radial, the slope normal or +Z for tops.
+- **Snapping.** Every anchor is ray-snapped to the first surface along that normal and ends 4 mm off the face. It is rejected if any of these hold:
+  - the face's own normal is below 0.85 alignment (back faces and reversed shells fail);
+  - the hit is an interior or blocker mesh;
+  - the spot is enclosed (fewer than 2 of 24 rays escape 12 m);
+  - something stands within 15 cm in front of it;
+  - the decal rectangle leaves the surface. This uses the hut builder's `anchor_validate.footprint_ok`, tried at sizes 1.0 / 0.75 / 0.55.
+- **Retry and de-duplication.** Before an anchor is dropped, nearby spots within 0.15 m in its plane are tried. Same-type anchors closer than 0.3 m are thinned.
+- **Fixes for the named anchors:**
+  - `damp_rise_018` (hall interior) is dropped as an interior hit.
+  - The NE window-head soot now sits on the NE facet stone 0.38 m over the opening, at (2.66, 2.94, 2.40), into (-0.71, -0.71, 0).
+  - The plate check (old `crack_011`) is now on the plate's outer vertical face, at (-0.25, -4.06, 3.83), into (0, +1, 0).
+  - `crack_008` now sits on the wing S wall with the twin's normal.
+  - The turret-foot damp_rise anchors are radial; radial dot 1.00 for all three N/W ones.
+  - `moss_001` is on a footing top, normal +Z.
+  - `damp_rise_007` is snapped onto the projecting footing face.
+  - The `damp_rise_004/005` pair and two other same-type pairs are de-duplicated.
+- **New moss.** 5 on the wing thatch N slope, 3 on the N eave roll, and 3 on the cushion top. The cushion rays are now cast from just above the cushion, under the turret-cap lip.
+- **Counts.** damp_rise 19, moss 24, lichen 15, water_streak 11, soot 6, rust_stain 9, crack 19, grime 6, repair_patch 4.
+- **Independent audit.** Snap along -normal from 0.2 m out, raw face normal: 113 of 113 anchors have offset ≤ 1.5 cm, alignment ≥ 0.85 and no interior hit, and no same-type pair is closer than 0.3 m. The kit's report-only anchor check in the build log also passes 113 of 113.
+
+### Must-fix 3: bell-cap hip boards and course count
+
+- **Saddles.** `oct_roof.hip_saddles` builds exactly one continuous saddle pair per hip:
+  - flat boards 14–18 cm wide and 2.5–3.5 cm thick, rectangular section with 1 cm chamfers;
+  - side 0 laps 3 cm past the hip line, and side 1 closes against it 0.4 t higher.
+- **Bedding.** Each board runs 2 cm down into the shingles. `cap_shingles(hip_bed=...)` presses the shingles under each board footprint to just under the board bed, with a 3 cm ramp. The result is no shadow gap, no butt poking through, and boards about 3–4 cm proud.
+- **Removed.** The multi-strip `hip_boards` runs are gone from both caps.
+- **Courses.** The cap exposure is now 0.24–0.28 m, so the lantern cap reads about 11–12 courses (builder_checks/lantern_far). The 0.35–0.55 m chunky widths are unchanged.
+
+### Must-fix 4: wing thatch at actor distance
+
+- **(a) Eave roll.**
+  - `d_roll(bundles=...)` binds the roll into bundles 0.25–0.40 m long, with 3–4 cm binding constrictions (2.5–3.5 cm wide) and ±2–3 cm bundle crowns.
+  - The diameter drifts ±4 cm.
+  - The constriction is kept small on the up-facing top, where course 1 is seated.
+  - In actor_closeup and wing_door the roll now reads as tied bundles, not a sausage.
+- **(b) Course butts.**
+  - Clumps are 10–25 cm wide with 2–4 lobes each and no constant pitch.
+  - Each clump is crowned 2.5–4 cm over its width.
+  - The butt line wanders ±3–5 cm from clump to clump, and 12.5 % of clumps are slipped 4–8 cm.
+  - Course 1 is seated 7 cm into the bound roll.
+- **(c) Eave fringe.** `tuft_bunches` builds tufts 4–10 cm wide of 3–8 strand wedges, 1.5–3 cm thick at the root and drooping 10–30°, with 2–5 cm gaps. This replaces the pins.
+- **(d) Holes.** No open slit or notch row shows at the round-7 spots in thatch_eye. The butt creases now cast short soft pockets along the course lines.
+
+### Carried must-fixes
+
+- **Must-fix 2: W eave-roll ends at the turret.**
+  - The thatch/turret junction is now one continuous mortar flaunching band (`flaunch_loop(mortar_only=True)`, 7.5 cm up the stone, 8 cm out, both ends tapered). The stepped-lead plates that stood out of both roll ends are gone.
+  - The roll ends taper over 0.55 m to a closed, rounded cap (tmin 0.12).
+  - **Not fully closed:** a small dark slit remains between the band and the stone at about (-10.3, 1.5, 3.1) in builder_checks/wing_west_sw.
+- **Must-fix 5: ridge comb.**
+  - Tufts every 0.08–0.15 m with a 0.18–0.35 m visible crest, about 70 % paired V/X.
+  - The rider log wobbles ±2 cm, with pegs every 0.6–0.9 m.
+- **Must-fix 6: turret cushion.** About 80 % of the upper corbel stones are crowned 3–6 cm and have a 6–10 cm rounded outer top arris (quarter round), on finer rows. The upper course now reads as a bulbous lip (builder_checks/cushion).
+- **Turret drum belt.** A closed backing ring of weathered timber sits 2 cm behind the boards (`KEEP_turret_drum_backing`, which is never a cull target). The joints show timber, not black.
+
+### Kept from phase 1
+
+- Silhouette, tiers, proportions and finial tip at 14.0 m are unchanged in all six views.
+- Every client correction still holds: no ground dressing; the building's own footing, pedestals, threshold and step meet Z = 0.
+- 11 palette slots, Mask on every mesh, hidden share 14.6 % (≤ 15 %).
+
+### Kit edits (kit/CHANGELOG.md "1.3.0, keep part")
+
+- New module `decal_gate.py`.
+- New optional parameters on keep-only components (`oct_decals`, `oct_roof`, `stone_cone`, `turret`, `thatch`), all defaulting to the 1.1.0 behaviour.
+- `decals.py` and all shared modules are untouched.
+- **Re-runs:**
+  - `tower_windmill`: 1,135,006 tris, record 1,134,993 (+0.001 %).
+  - `wattle_roundhut`: builds without errors at 827,563 tris. This differs from 744,105 because of the hut builder's own concurrent round-9 changes; the hut imports none of the modules changed here.
+
+### Known gaps
+
+- **Must-fix 5 (r7 numbering): dressed jamb blocks.** Not done this round; they still have soap-block round-overs and no spalls.
+- **Must-fix 6 (r7 numbering): footing.** Not done this round; it is still kerb boxes without split facets or yaw.
+- **W roll end.** One small dark slit is left at the SW band/stone junction.
+- **Fringe.** At 2 m the tufts still read slightly as light blades.
+- **Turret-cap saddles.** Near the apex the boards fill most of each narrow facet.
+- **Kit variant.** It was rebuilt but not re-rendered this round, and its anchors predate the final soot fix.
+
+## Round 8 — score 8.5/10
+
+**Reviewed:** `renders/hilltop_keep/round_08/`: all 6 views (hero, front, side, back, aerial, actor_closeup), `stats.json` and `hidden.json`; the 12 builder close-ups in `round_08/builder_checks/`; and 10 Director close-ups at 16 spp in `round_08/director_extra/`:
+- wing_valley, roll_sw_end, roll_nw_end, ridge_crane, caps_mid, turret_cap_hero, lantern_cap_count
+- footing_sw_left, door_jamb, skirt_hip_eye
+
+Compared side by side with round 7 (director_extra) and with ref1 crops keep_overall, keep_cone_lantern_cap and keep_west_wing_turret.
+
+The Director also audited the `.blend` and the kit variant in Blender 5.2:
+- `DECAL_ANCHORS` holds 113 empties, all with the 6 required properties. `decal_anchors.json` matches them exactly (max position diff 0.01 mm, normals identical).
+- Every anchor was ray-cast from 0.25 m out along its normal. Results: 113 of 113 hit a visible exterior face within 1.5 cm with alignment ≥ 0.85; none is on an interior or blocker mesh; none has an occluder within 0.15 m in front; and no same-type pair is closer than 0.3 m.
+- The kit variant (109 anchors) passes the same check, with 0 flagged.
+- Hygiene: 298 mesh objects, 76 unique meshes, 0 zero-area faces, Mask present on every mesh (CORNER, active and default), UVs on every mesh, z-min −0.050. `KEEP_turret_drum_backing` is present.
+
+Rulings: producer note 11 applies (lost straw striation, timber checks and tooling are not penalised). Ground dressing is not scored (producer note 10).
+
+**Stats:**
+- 298 objects, 1,159,180 tris (77 % of budget), est_hidden_pct 14.6 % (pass, 0.4 pt margin).
+- 11 slots, all from the palette (pass). `mask_attribute_missing` is empty (pass).
+- bbox 16.41 × 10.62 × 14.05 m. The finial tip is at 14.00 m.
+- 113 decal anchors (inside the 40–120 target).
+
+**Verdict: PASS (8.5, pass mark 8.2). This is the best kit-phase keep so far, and it now beats the signed-off round 6 (8.4).**
+- **Closed this round:**
+  - Must-fix 1 (decal anchors): fully closed.
+  - Must-fix 7 (ridge comb): closed. The crest is now dense, crossed and pegged on a wobbling rider (ridge_crane) and reads like ref1's spiky crest.
+  - Must-fix 8 (cushion): closed. The upper course is a crowned, rounded, bulbous lip (builder_checks/cushion, turret_cap_hero) that matches keep_west_wing_turret.
+- **Mostly closed:**
+  - Must-fix 4 (thatch): the bound roll, clumped butts and tufted fringe replace the fondant sausage and the sawtooth.
+  - Must-fix 2 (W roll ends): the lead plates are gone.
+  - Must-fix 3 (hip boards): the rods are gone.
+- **Why it is not higher:**
+  - The actor hero spot is unchanged: the soap-block jambs (r7 must-fix 5) and the kerb-box footing (r7 must-fix 6) were not touched, and those are the first things an actor stands beside.
+  - The new saddle pairs cover most of each cap facet near the apex, so both caps still read as ribbed umbrellas at hero distance.
+  - The NW roll end has become a pleated drape.
+
+| Axis | Score |
+|---|---|
+| Silhouette | 8.7 (cushion lip and ridge crest now match ref1; cap hips still over-read in hero, front and caps_mid) |
+| Proportion and scale | 9 |
+| Construction | 8.5 (NW roll-end drape, loose clump, two dark slits at the W junctions; saddles swamp the upper facets) |
+| Detail and craft | 8.4 (entrance dressed stone and footing unchanged; thatch clumps form a regular loaf grid; fringe still reads as blades) |
+| Age | 8.5 |
+| Technical | 9.2 (every producer-note metric passes; 113/113 anchors geometrically valid; 3 anchors fail plausibility, must-fix 5) |
+| **Overall** | **8.5** |
+
+**Strengths:**
+- **Decal anchors are now production-grade.**
+  - The kit snap gate (`decal_gate.snap_anchors`) works. It gives 113/113 geometrically valid anchors in the hero and 109/109 in the variant.
+  - The plausibility logic is good:
+    - damp_rise at every base, with probability 1.0 on north faces;
+    - moss on north footing tops, north skirt butts, collar, cushion top, N thatch slope, N eave roll and north turret-cap shingles;
+    - water_streak under every sill, the lantern drip line and the cushion lip;
+    - rust under every hinge strap and pintle;
+    - crack at arch springing, crown, window corners and lintels, and along the plate;
+    - grime at hand height on jambs and door posts;
+    - soot over openings.
+  - Up vectors are sensible: plate cracks run along the plate, and streaks run down the slope.
+- **The wing roof finally reads as layered thatch at mid distance.** The roll is bound into bundles (thatch_eye, wing_door), the course butts are clumped with a wandering line, and the r7 slit and notch row are gone.
+- **Ridge crest and cushion now overlay ref1** (ridge_crane, turret_cap_hero).
+- **The lantern cap reads about 10 courses** (lantern_cap_count) at the shared chunky width. That closes the course-count nice-to-have.
+- **Unchanged and still film-grade:** the eave underside (skirt_hip_eye), cone masonry, collar comb, main door leaf and ironwork, the finials, and actor scale.
+- **The kit structure holds.** The new options are opt-in keyword parameters with 1.1.0 defaults. Mill and hut re-run without regressions.
+
+### Must-fix (priority order)
+
+1. **Dressed door-surround blocks still read as soap (r7 must-fix 5, untouched)** (`KEEP_hall_dressed_stones`, e.g. the right-jamb block at (1.08, −4.03, 1.27); see director_extra/door_jamb.png x 610–880 / y 110–380 and builder_checks/door.png x 840–1020 / y 150–660).
+   - **What is wrong:** every arris carries a 3–4 cm round-over, the faces are domed, and there are no spalls.
+   - **Fix:**
+     - Faces flat with a dome ≤ 3 mm.
+     - A true 45° chamfer of 1.0–1.5 cm with split normals (auto-smooth ≤ 30°).
+     - 1–3 arris spalls of 2–5 cm on each of the 6 lowest blocks per jamb. They are in the note-11 entrance zone, so relief ≥ 1 cm stays as geometry.
+2. **Footing course is still flat-faced kerb boxes (r7 must-fix 6, untouched)** (footing in `KEEP_hall_wall_stones`, e.g. (−2.99, −2.93, 0.16); see director_extra/footing_sw_left.png x 410–830 / y 290–540, builder_checks/footing_sw.png).
+   - **What is wrong:** 0.5–0.8 m blocks, each with one planar face parallel to the wall line.
+   - **Fix:**
+     - 2–3 planar split facets per exposed face, with 2–4 cm steps between them.
+     - Each face yawed ±5–10° off the wall line.
+     - 1–2 top-arris spalls of 3–6 cm per stone.
+     - Heights varying 0.25–0.45 m.
+     - Keep the ≤ 5 cm buried skirt.
+3. **Bell-cap saddle boards swamp the upper facets** (`KEEP_cap_hips`, `KEEP_turret_cap_hips`; see director_extra/turret_cap_hero.png, lantern_cap_count.png, caps_mid.png, and hero.png).
+   - **What is wrong:**
+     - Each saddle pair is about 0.30–0.34 m wide at constant width. Near the apex the facets narrow below that, so above about 11.8 m on the lantern cap and about 7.9 m on the turret cap the facets are almost all board. At 10–30 m the caps read as 8 heavy ribs.
+     - ref1 (keep_cone_lantern_cap) shows quiet hip lines on a shingled pyramid.
+     - Torn shingle slivers remain along the saddle edges (lantern_cap_count x 300–400 / y 340–360; turret_cap x 0–120 and 1150–1280 / y 400–700).
+   - **Fix:**
+     - Taper each saddle board from 13–15 cm at the eave to 6–8 cm under the lead hat (turret cap: 10–12 cm to 5–6 cm), so the pair never covers more than 30 % of the facet width at any height.
+     - Keep the boards ≤ 3 cm proud.
+     - Trim the pressed shingles under the boards to whole units clipped cleanly to the board edge. No sliver under 4 cm may show.
+4. **West roll ends at the turret: drape, loose clump and slits (r7 must-fix 2, partly closed)** (`KEEP_wing_roof_rolls`, `KEEP_wing_roof_thatch`, `KEEP_wing_fillet`).
+   - **NW, about (−10.2, 4.6, 3.0):**
+     - The roll end collapses into a pleated, tent-like drape whose radial creases converge to a point (director_extra/roll_nw_end.png x 480–620 / y 160–560; builder_checks/wing_west_nw.png x 260–440 / y 180–600).
+     - A loose thatch clump lies on the slope beside the band (roll_nw_end x 690–830 / y 235–350; wing_west_nw x 480–670 / y 230–370).
+     - A dark slit sits between band and stone (wing_west_nw x 725–740 / y 340–360).
+   - **SW, about (−10.3, 1.5, 3.1):**
+     - A dark slit sits between band and stone (builder_checks/wing_west_sw x 580–600 / y 355–390).
+     - The course butts stop as stepped dark notches against the band (director_extra/roll_sw_end x 600–830 / y 190–330).
+   - **Fix:**
+     - Turn the roll 0.3–0.5 m around the turret and taper it from Ø 0.5 to ≤ 0.15 m over 0.55 m into the flaunching, ending in a closed rounded cap with no radial pleats.
+     - Delete the loose clump, or seat it ≥ 3 cm into the course below.
+     - Feather the course ends to ≤ 1 cm at the band.
+     - Fill the slits by extending the band 2 cm into the stone.
+     - No dark pixel may remain in roll_nw_end, roll_sw_end, wing_west_nw or wing_west_sw.
+5. **Three lichen anchors sit on the trodden walking line (producer note 11 plausibility)** (`oct_building_decals`).
+   - `DA_lichen_007` (0.45, −3.99, 0.10) is dead centre on the threshold.
+   - `DA_lichen_005` (−0.05, −4.54, 0.11) and `DA_lichen_006` (0.80, −4.69, 0.11) are on the step, inside the door's walking width (x −0.175..0.875).
+   - Lichen cannot grow where every visitor treads.
+   - **Fix:** move them to the outer 0.15 m of the step ends (x ≤ −0.20 or ≥ 0.90), or onto pedestal tops or the N/NE footing tops.
+   - **Kit gate rule:** reject `lichen` and `moss` anchors whose footprint overlaps a door's walking width (door clear width + 0.1 m each side, 1.5 m out from the threshold).
+
+**Nice-to-have:**
+- **Thatch course clumps line up into a regular grid of equal loaves** (thatch_north, thatch_eye y 40–250, ridge_crane). Offset the clump joints by 30–70 % of a clump width between courses, and vary clump width beyond the current narrow spread.
+- **Eave fringe still reads as pale 1–2 cm blades** (thatch_eye y 460–520, wing_door y 215–270). Make the tufts thicker at the root (2–3 cm), shorter (4–7 cm) and darker-reading (more droop, fewer edge-on wedges).
+- **Ridge dome** is a smooth 0.5–0.6 m band below the comb (ridge_crane x 520–1280 / y 330–420). Bind it every 0.3–0.5 m like the eave roll.
+- **Anchors:**
+  - Add a rust_stain under the ring pull (r7 had one).
+  - Add a crack at the hall/wing settlement junction.
+  - The variant has 4 soot anchors against the hero's 6: regenerate the variant after the final soot fix.
+- **Kit variant:** re-render its 6 views this round (not done in round 8).
+- **Hidden share** is 14.6 %, a 0.4 pt margin. Any thatch reinvestment must be paid for from `KEEP_wing_roof_thatch` core (32 % hidden).
+
+**Rulings:**
+- Must-fix 1 (r7: decal anchors), 7 (ridge comb) and 8 (cushion) are closed.
+- Must-fix 3 (r7: hip rods) is closed as written. The saddle swamping is new item 3.
+- Must-fix 4 (r7: thatch) is closed apart from the nice-to-haves.
+- Must-fix 2 (r7: W roll ends) is carried as item 4.
+- Must-fix 5 and 6 (r7: dressed stone, footing) are carried as items 1 and 2.
+- The round-8 build replaces round 7 as the kit-phase keep deliverable.

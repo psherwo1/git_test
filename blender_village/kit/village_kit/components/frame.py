@@ -133,6 +133,8 @@ class RoundFrame(Building):
       detail_rule   producer note 11 detail-scale rule (core.DetailRule, entrance at the door frame); False =
                     phase-1 behaviour (all sub-2 cm relief modelled)
       hygiene       Nanite clean-up (core.nanite_clean) on every mesh
+      wall_finish   dict of optional daub finish switches (components.daub.wall_finish_r9()); None / {} = the
+                    kit 1.0.0 coat (kit 1.3.0, additive)
     Everything else (front plane of the door frame, plinth face, floor edge, eave shadow heights, the doorway
     window of full-length shingles...) is derived from these, so a different radius / wall height builds a
     consistent hut.  The derived values reproduce the signed-off hut exactly at radius 3.50, eave_z 2.395.
@@ -141,8 +143,9 @@ class RoundFrame(Building):
     def __init__(self, prefix="HUT", radius=3.50, eave_z=2.395, overhang=0.63, pitch_deg=51.0, n_posts=None,
                  n_raft=None, door_post_az_deg=None, finial_tip=None, collar_r=0.745, collar_pitch_deg=53.0,
                  plinth_top=0.33, n_courses=None, sh_expose=0.318, daub_patches=None, cone_age=None,
-                 detail_rule=True, hygiene=True):
+                 detail_rule=True, hygiene=True, wall_finish=None):
         super().__init__(prefix)
+        self.wall_finish = dict(wall_finish or {})   # kit 1.3.0 (additive): see components.daub.WALL_FINISH_R9
         R = float(radius)
         self.k_r = R / R_REF
         self.Z_MIN = -0.045                   # lowest point (buried footing skirt); nothing deeper than 5 cm

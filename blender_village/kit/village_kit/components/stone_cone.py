@@ -289,12 +289,13 @@ def build_lantern(coll, seed=606):
     finalize(accf, coll)
 
 
-def build_main_cap_and_finial(coll, seed=707):
+def build_main_cap_and_finial(coll, seed=707, saddles=False, cap_exposure=None):
     rng = np.random.default_rng(seed)
     chunky = FR.units == "kit"
     Vsh = build_cap(coll, FR.CAP, FR.prefix + "_cap", rng, p_wall=FR.LANT_APO, z_plate=FR.LANT_Z1, n_raft=4,
                     p_top=0.30 if chunky else 0.14, chunky=chunky,
-                    expo=0.15, W=0.34, t=0.024, lens=(0.12, 0.18), bracket_z0=FR.LANT_Z1 - 0.45)
+                    expo=0.15, W=0.34, t=0.024, lens=(0.12, 0.18), bracket_z0=FR.LANT_Z1 - 0.45,
+                    saddles=saddles, cap_exposure=cap_exposure)
     acc = Acc(FR.prefix + "_finial_main")
     apex = float(FR.CAP.zb(0.02))
     if chunky:
@@ -338,6 +339,7 @@ def lantern(g, seed=606):
     build_lantern(g.sub("tower"), seed=seed)
 
 
-def cone_cap(g, seed=707):
-    """KIT COMPONENT: tier 4 bell cap with lead hat and turned finial."""
-    return build_main_cap_and_finial(g.sub("tower"), seed=seed)
+def cone_cap(g, seed=707, saddles=False, cap_exposure=None):
+    """KIT COMPONENT: tier 4 bell cap with lead hat and turned finial.  kit 1.3.0: saddles=True -> one flat saddle
+    pair per hip (oct_roof.hip_saddles); cap_exposure=(lo, hi) -> the cap's shingle course exposure."""
+    return build_main_cap_and_finial(g.sub("tower"), seed=seed, saddles=saddles, cap_exposure=cap_exposure)

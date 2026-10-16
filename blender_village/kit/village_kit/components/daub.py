@@ -20,6 +20,33 @@ from .frame import bay_s, wall_floor
 from .wattle import arc_path, line_path, rope_panel, weave_panel
 
 
+WALL_FINISH_R9 = dict(
+    daub_relief=True,         # note 11 per vertex (DetailRule.min_at_v): entrance-zone hand relief >= 1 cm kept
+    grid=(0.025, 0.016),      # intact-coat grid (m): outside / inside the entrance zone
+    ent_dents=(0.010, 0.015),  # entrance zone: the r7 palm-press dents (same places), lifted to 1.0-1.5 cm deep
+    ent_dabs=(0.010, 0.013),  # entrance zone: every `ent_dab_keep`-th r7 hand dab (same places), 1.0-1.3 cm proud
+    ent_dab_keep=3,
+    ent_soft=0.25,            # the entrance relief fades out over this distance (m) inside the zone boundary
+    lumps_per_m2=(2.0, 3.0),  # every bay: sparse hand-applied lumps of 2.0-2.5 cm (>= 2 cm: kept anywhere)
+    lump_amp=(0.020, 0.025), lump_sigma=(0.045, 0.08),
+    sag=(0.011, 0.004),       # sag belly 1.1-1.5 cm
+    flakes=False,             # director r7 #2 / r8 #5: clinging flakes read as leaves -> deleted
+    foot_bites=6,             # director r7 #3 / r8 #6: at most 6 splash bites round the hut, 0-1 per bay, not adjacent
+    bite_len=(0.20, 0.40), bite_h=(0.02, 0.04),
+)
+"""kit 1.3.0: the wall-finish switches (RoundFrame(wall_finish=...)); an empty dict keeps the 1.0.0 coat."""
+
+
+def wall_finish_r9(**kw):
+    d = dict(WALL_FINISH_R9)
+    d.update(kw)
+    return d
+
+
+def _wf(g):
+    return getattr(g, "wall_finish", None) or {}
+
+
 def CLUMP_BAYS(g):
     """bays with exposed wattle (clinging daub clumps wrap their rods)."""
     return sorted({len(g.POST_AZ) - 2} | {p[0] for p in g.DAUB_PATCHES})
@@ -248,7 +275,7 @@ def coat_floor(g, s):
     return np.interp(np.mod(np.asarray(s, float), 2 * np.pi * g.R_WALL), g.FOOT["s"], g.FOOT["z"])
 
 
-def low_margin(g, bay, seed, n_bites=(1, 2), bite_len=(0.10, 0.26), bite_h=(0.03, 0.065), bed=0.03):
+def low_margin(g, bay, seed, n_bites=(1, 2), bite_len=(0.10, 0.26), bite_h=(0.03, 0.065), bed=0.03, shoulder=6):
     """director r6 #5: the coat foot is BEDDED onto the stone tops (it runs `bed` into the stone, pressed
     into the joints) along >= 70 % of the bay; the bottom rod row shows only in 1-2 splash-eroded bites,
     each 10-26 cm long and 3-6.5 cm tall (flat-ish crown, ragged), placed at random along the bay (no
@@ -257,7 +284,8 @@ def low_margin(g, bay, seed, n_bites=(1, 2), bite_len=(0.10, 0.26), bite_h=(0.03
     rs = np.random.RandomState(seed)
     nb_ = n_bites[0] + int(rs.rand() < 0.45) * (n_bites[1] - n_bites[0])
     Ls = rs.uniform(*bite_len, nb_)
-    Ls *= min(1.0, 0.27 * (bs1 - bs0 - 0.2) / Ls.sum())        # bedded along >= ~70 % of the bay
+    if nb_ > 0:
+        Ls *= min(1.0, 0.27 * (bs1 - bs0 - 0.2) / Ls.sum())    # bedded along >= ~70 % of the bay
     bites = []
     for k in range(nb_):
         L = max(Ls[k], bite_len[0])
@@ -275,7 +303,7 @@ def low_margin(g, bay, seed, n_bites=(1, 2), bite_len=(0.10, 0.26), bite_h=(0.03
             u = (s - c_) / (L / 2)
             # flat-ish crown with ragged, steep-ish shoulders (splash-eroded scallop), slightly skewed
             u = np.where(u > 0, u * (1 + sk), u * (1 - sk * 0.5))
-            prof = np.clip(1 - np.abs(u) ** 6, 0, 1) ** 0.3
+            prof = np.clip(1 - np.abs(u) ** shoulder, 0, 1) ** 0.3
             hh = h_ * prof * (1 + 0.15 * n2(s * 40.0, c_, seed + 3)) + 0.003 * n2(s * 70.0, c_, seed + 4)
             out = np.where(prof > 0.02, np.maximum(out, fl + hh), out)
         return out
@@ -312,12 +340,31 @@ def make_daub_fields(g):
                 z = np.asarray(z, float)
                 return -poly_sdf(s, z, _P) + 0.003 * n2(s * 30.0, z * 30.0, _sd + 6)
             patches.setdefault(bay, []).append(hf)
+    wf = _wf(g)
+    bite_bays = None
+    if wf.get("foot_bites") is not None:
+        # kit 1.3.0 (director r7 #3): at most N splash bites round the hut, 0-1 per bay, never in adjacent bays
+        rsb = np.random.RandomState(9590)
+        cand = [b for b in range(nb) if b != door_bay and not any(p[0] == b and p[1] == "low" for p in g.DAUB_PATCHES)]
+        bite_bays = set()
+        for b in rsb.permutation(cand):
+            if len(bite_bays) >= int(wf["foot_bites"]):
+                break
+            if (b - 1) % nb in bite_bays or (b + 1) % nb in bite_bays:
+                continue
+            bite_bays.add(int(b))
+        g.BITE_BAYS = sorted(bite_bays)
     for bay in range(nb):
         if bay == door_bay:
             g.DAUB_BAYS[bay] = door_field
             g.DAUB_PARTS[bay] = (None, door_field)
             continue
-        lm = low_margin(g, bay, 9500 + 13 * bay)
+        if bite_bays is None:
+            lm = low_margin(g, bay, 9500 + 13 * bay)
+        else:
+            nbt = 1 if bay in bite_bays else 0
+            lm = low_margin(g, bay, 9500 + 13 * bay, n_bites=(nbt, nbt), bite_len=wf.get("bite_len", (0.20, 0.40)),
+                            bite_h=wf.get("bite_h", (0.02, 0.04)), shoulder=12)
         holes = patches.get(bay, [])
 
         def pfield(s, z, _holes=holes):
@@ -419,6 +466,12 @@ def build_daub(g, coll):
     k_fine = 0.0 if rule else 1.0
     if rule:
         H_S, H_Z, H_CR = 0.03, 0.03, 0.02
+    # kit 1.3.0 (wall_finish daub_relief, director r8 #1): the note-11 entrance exception is applied PER VERTEX
+    # (g.detail.min_at_v): inside the entrance zone the r7 hand relief comes back (palm dents and a third of the
+    # hand dabs, same places as r7, lifted to >= 1 cm so the rule keeps them); every bay gets sparse 2-2.5 cm
+    # hand-applied lumps (>= 2 cm: kept anywhere), so no bay reads as a flat board.  Cracks stay decals.
+    wf = _wf(g)
+    relief9 = bool(rule and wf.get("daub_relief"))
     n_cr = 0
     n_fl = 0
     stat_T = []
@@ -436,6 +489,13 @@ def build_daub(g, coll):
         zz_live = Zc[live]
         cs0, cs1 = max(s0, ss_live.min() - 0.03), min(s1, ss_live.max() + 0.03)
         cz0, cz1 = max(zlo, zz_live.min() - 0.03), min(zhi, zz_live.max() + 0.03)
+        if relief9:
+            # grid: finer where the entrance zone keeps the 7-12 cm palm dents
+            ssb = np.linspace(cs0, cs1, 9)
+            rc_ = g.R_WALL + g.COAT_R_NOM
+            Pb = np.stack([np.sin(ssb / g.R_WALL) * rc_, -np.cos(ssb / g.R_WALL) * rc_, np.full(ssb.shape, 1.2)], -1)
+            ent_bay = bool((g.detail.min_at_v(Pb) < g.detail.min_relief - 1e-9).any())
+            H_S = H_Z = wf.get("grid", (0.025, 0.016))[1 if ent_bay else 0]
         # ---- shrinkage cracks first (their boxes are refined): random-walk polylines in intact coat
         cracks = []
         ncr = rng.randint(2, 5)
@@ -602,6 +662,25 @@ def build_daub(g, coll):
         # ---- client r6: hand-applied dabs over the intact coat (handful pats 6-11 cm, 2-5 mm proud, a
         # slightly sharper lower lip where each was pushed upward)
         dabs = np.zeros(S.shape)
+        dabs_e = np.zeros(S.shape)          # kit 1.3.0: entrance-zone hand dabs (>= 1 cm, gated per vertex)
+        smear_e = np.zeros(S.shape)         # kit 1.3.0: entrance-zone palm dents (>= 1 cm, gated per vertex)
+        zone_any = False
+        if relief9:
+            rc_ = g.R_WALL + g.COAT_R_NOM
+            Pw = np.stack([np.sin(S / g.R_WALL) * rc_, -np.cos(S / g.R_WALL) * rc_, Z], -1)
+            minv = g.detail.min_at_v(Pw)                      # note 11 threshold per vertex
+            ex_, ey_ = g.detail.entrance
+            inside_ = np.minimum(g.detail.entrance_r - np.hypot(Pw[..., 0] - ex_, Pw[..., 1] - ey_),
+                                 g.detail.entrance_h - Z)
+            soft_ = smoothstep(0.0, wf.get("ent_soft", 0.25), inside_)
+            zone_any = bool((minv < g.detail.min_relief - 1e-9).any())
+
+            def keep_w(A_, _minv=minv, _soft=soft_):
+                """per-vertex weight of a relief feature of depth A_: DetailRule keeps it where A_ >= the local
+                threshold; sub-2 cm features fade out over the last `ent_soft` metres inside the zone boundary."""
+                k = (A_ >= _minv - 1e-9).astype(float)
+                return k if A_ >= g.detail.min_relief - 1e-9 else k * _soft
+        n_dab = 0
         for _ in range(int((cs1 - cs0) * (cz1 - cz0) * 30)):
             c_s = rng.uniform(cs0, cs1)
             c_z = rng.uniform(cz0, cz1)
@@ -613,7 +692,14 @@ def build_daub(g, coll):
             if not m.any():
                 continue
             lip = np.where(dz_ < 0, np.exp(-r2 * 2.2), np.exp(-r2 * 1.1))
-            dabs += rng.uniform(0.002, 0.005) * lip * m
+            A_d = rng.uniform(0.002, 0.005)
+            dabs += A_d * lip * m
+            if zone_any:
+                n_dab += 1
+                if n_dab % int(wf.get("ent_dab_keep", 3)) == 0:
+                    lo_, hi_ = wf.get("ent_dabs", (0.010, 0.013))
+                    Ae = lo_ + (A_d - 0.002) / 0.003 * (hi_ - lo_)
+                    dabs_e += Ae * lip * m * keep_w(Ae)
         dabs -= 0.003
         dabs *= k_fine
         # ---- palm-press dents (director r3 #5c): round 7-12 cm dents 0.8-1.8 cm deep with a slight
@@ -632,11 +718,34 @@ def build_daub(g, coll):
             A_ = rng.uniform(0.006, 0.012)
             rr_ = np.sqrt(r2)
             smear += k_fine * A_ * (-np.exp(-r2 * 1.3) + 0.12 * np.exp(-((rr_ - 1.1) / 0.35) ** 2)) * m
+            if zone_any:
+                lo_, hi_ = wf.get("ent_dents", (0.010, 0.015))
+                Ae = lo_ + (A_ - 0.006) / 0.006 * (hi_ - lo_)
+                smear_e += Ae * (-np.exp(-r2 * 1.3) + 0.15 * np.exp(-((rr_ - 1.1) / 0.35) ** 2)) * m * keep_w(Ae)
         fine = k_fine * (0.0035 * n2(S * 9, Z * 9, bay + 40) + 0.0012 * n2(S * 30, Z * 30, bay + 41)
                 + 0.0005 * n2(S * 80, Z * 80, bay + 42))
+        # ---- kit 1.3.0: sparse hand-applied lumps of 2.0-2.5 cm on every bay (own seed: no r7 draw changes)
+        lumps = np.zeros(S.shape)
+        if relief9:
+            rl = np.random.RandomState(7700 + bay)
+            for _ in range(int(round(area * rl.uniform(*wf.get("lumps_per_m2", (2.0, 3.0)))))):
+                c_s = rl.uniform(cs0, cs1)
+                c_z = rl.uniform(cz0 + 0.1, cz1 - 0.1)
+                sg_ = rl.uniform(*wf.get("lump_sigma", (0.045, 0.08)))
+                el = rl.uniform(1.0, 1.6)                       # pressed on wider than tall
+                A_ = rl.uniform(*wf.get("lump_amp", (0.020, 0.025)))
+                ds_ = (S - c_s) / (sg_ * el)
+                dz_ = (Z - c_z) / sg_
+                r2 = ds_ ** 2 + dz_ ** 2
+                m = r2 < 9.0
+                if not m.any():
+                    continue
+                # a slightly sharper lower lip where the handful was pushed upward
+                lumps += A_ * np.where(dz_ < 0, np.exp(-0.75 * r2), np.exp(-0.5 * r2)) * m * keep_w(A_)
         # ---- slight sag (a soft belly where the wet coat slumped, 0.5-1.0 m up; director r6 #4: <= 1.5 cm)
         z_sag = 0.62 + 0.3 * ((bay * 0.618) % 1.0)
-        sag = (0.008 + 0.004 * n2(S * 1.3, np.full(S.shape, 0.5), 4540 + bay)) * np.exp(-((Z - z_sag) / 0.28) ** 2)
+        sa0, sa1 = wf.get("sag", (0.008, 0.004)) if relief9 else (0.008, 0.004)
+        sag = (sa0 + sa1 * n2(S * 1.3, np.full(S.shape, 0.5), 4540 + bay)) * np.exp(-((Z - z_sag) / 0.28) ** 2)
         sag = sag * (1 - smoothstep(0.42, 0.62, np.abs(Z - z_sag) / 0.6))
         # ---- weathered foot: splash-pitted over the bottom ~25 cm; where it is bedded on the stones a
         # rough fillet squeezed out onto the stone tops and into the joints (director r6 #5)
@@ -645,6 +754,9 @@ def build_daub(g, coll):
         foot_n = np.clip(n2(S * 14.0, Z * 30.0, 4541 + bay) * 1.4 + 0.3, 0, 1)
         bedded = smoothstep(0.012, 0.028, fl_ - (Z - zfl))        # the foot here reaches the stone
         fillet = (0.009 + 0.004 * n2(S * 25.0, np.full(S.shape, 1.7), 4544 + bay)) * (1 - smoothstep(-0.01, 0.045, Z - zfl)) * bedded
+        if relief9:      # lumps / entrance relief fade into the post slits and toward the fracture margins
+            fade_ = smoothstep(0.03, 0.14, dfl) * smoothstep(0.04, 0.14, fp) * smoothstep(0.03, 0.12, fl_)
+            smear = smear + (smear_e + dabs_e + lumps) * fade_
         T_full = (g.COAT_R_NOM + bulge * (0.3 + 0.7 * smoothstep(-0.02, 0.16, dfl)) + ridge + smear + fine + dabs + sag
                   - k_fine * foot * (0.004 + 0.006 * foot_n)
                   + k_fine * foot * (0.004 * n2(S * 22.0, Z * 45.0, 4542 + bay) - 0.004 * np.clip(n2(S * 35, Z * 55, 4543 + bay) * 2 - 0.6, 0, 1))
@@ -690,7 +802,7 @@ def build_daub(g, coll):
         stat_T.append(T_full[(fp > 0.15) & (fl_ > 0.3) & (dfl > 0.12)])
         # ---- director r6 #2: clinging daub = flat torn FLAKES of coat lying on the rods' front face
         # (8-15 x 5-10 cm, 1-2 cm thick, 4-7 straight breaks), within 8 cm of the main break
-        if 1000 + bay * 17 in g.ROD_STORE:
+        if 1000 + bay * 17 in g.ROD_STORE and wf.get("flakes", True):
             n_fl += daub_flakes(g, acc, bay, field, g.ROD_STORE[1000 + bay * 17], rng, s0, s1,
                                 3 if bay == len(g.POST_AZ) - 2 else 2)
     tt = np.concatenate(stat_T)

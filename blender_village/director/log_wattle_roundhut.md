@@ -1088,3 +1088,120 @@ Compared in all 6 views:
 - **Post-flank slit transition.** It still reads as soft vertical curtain folds (door_bay_r08, left post). Widen the transition to 8-12 cm (carried from r7).
 - **Build time.** The hidden-geometry ray test takes about 4.6 of the 5.5 min. Cache the visibility mask per kit parameter set.
 - **Mask.** Set G high on patch fracture faces and flakes, and B high on the coat foot (carried from r7).
+
+
+## Round 9 — builder entry
+
+### Files
+
+- **Kit (1.3.0, hut part; recorded in `kit/CHANGELOG.md`).** New `kit/village_kit/anchor_validate.py`. Optional additions to `assembly.build_building` (`decal_validate`), `decals.wall_scatter` (`accept`), `components/frame.RoundFrame` (`wall_finish`), `components/daub` (`WALL_FINISH_R9`), `components/cone` (`surf(..., sag=)`, `AGE_R9`), `components/conical_roof` (rigid sag, under-lap, joint cap) and `components/round_decals` (`layout=2`). Every default keeps the old behaviour.
+- **Script.** `buildings/wattle_roundhut/build_wattle_roundhut.py` opts in: `wall_finish=wall_finish_r9()`, `cone_age=age_defaults(**AGE_R9)`, `decals=partial(round_building_decals, layout=2)`, `decal_validate=DECAL_VALIDATE`.
+- **Outputs.** `wattle_roundhut.blend` (17.9 MB, compressed) and `decal_anchors.json` (94 anchors plus a `validation` block). The renders are in `renders/wattle_roundhut/round_09/`: 6 views at 32 samples, `stats.json` and `hidden.json`.
+- **Partial round-9 patch.** From `director/partial_fix_wattle_roundhut_r9.patch` I reused the `surf(sag=)` switch, the rigid per-shingle offset, the `wall_finish` frame key, the foot-bite limiter, the lumps and the flake switch. I did not reuse `fracture_patch_r9`, `stepped_margin` or the bite backing: they were untested, and they belong to must-fixes #4 and #6, which are outside this round's three items.
+
+### Stats
+
+| | Round 7 (sign-off) | Round 8 | Round 9 |
+|---|---|---|---|
+| Triangles | 1,309,222 | 744,105 | 827,563 |
+| est_hidden_pct | 13.7 % | 7.7 % | 7.7 % |
+| Material slots | 10 | 10 | 10 |
+| Decal anchors | — | 105 | 94 |
+
+- `mask_attribute_missing` is empty, and the bbox is unchanged at (-4.19, -4.59, -0.041) to (4.19, 4.20, 8.73).
+- Most of the extra triangles are in `HUT_daub`. The entrance bays use a 1.6 cm grid and the other bays 2.5 cm; round 8 used 3 cm.
+- A build takes about 17 min on this machine. The visibility cull runs single-process on Windows.
+
+### Must-fix 1: the daub coat read as flat boards, and the note-11 entrance exception was missing
+
+**What changed.** `build_daub` now applies the entrance exception per vertex with `g.detail.min_at_v()`. The relief of every feature is kept wherever its depth is at least the local threshold.
+
+- **Inside the entrance zone (3 m from the door, 0-2.5 m high).**
+  - The round-7 palm dents come back in their round-7 places, with the same rng draws, deepened from 0.6-1.2 cm to 1.0-1.5 cm and keeping their squeezed-up rims.
+  - Every third round-7 hand dab comes back in its round-7 place at 1.0-1.3 cm.
+  - This relief fades out over the last 25 cm inside the zone boundary, so there is no step at the edge of the zone.
+- **On every bay.**
+  - There are sparse hand-applied lumps of 2.0-2.5 cm, about 2-3 per m², 15-35 cm across, with a slightly sharper lower lip. The 2 cm rule keeps them anywhere.
+  - The sag belly is now 1.1-1.5 cm.
+- **Unchanged.**
+  - The cracks stay decal anchors.
+  - The relief fades into the post slits and the fracture margins, so the crisp arrises and the 5-8 cm post reveal are unchanged.
+
+**Measured.** I repeated the profile test: vertical ray profiles every 1 cm over z 0.9-2.3, every 3 cm across each bay and kept 17 cm clear of the posts, minus a 31 cm moving average, scored as the mean 2.5-97.5 % span. My numbers for r7 and r8 are close to the director's.
+
+| Bay | r7 | r8 | r9 |
+|---|---|---|---|
+| Right of the door (bay 0, entrance) | 6.7 mm | 1.7 mm | **13.1 mm** |
+| Door bay (bay 12, entrance) | 10.9 mm | 6.2 mm | **16.7 mm** |
+| Bays 1 and 11 (part in the zone) | 8.0 / 8.4 mm | 3.0 / 2.8 mm | 10.2 / 10.8 mm |
+| Other intact bays (3-9) | 7.1-8.4 mm | 2.5-3.4 mm | **8.0-11.7 mm** |
+
+- The acceptance targets were 10 mm or more in the entrance bays and 6 mm or more elsewhere. Both are met.
+- A crop of actor_closeup.png (r7 | r8 | r9 side by side) shows the right-of-door bay in grazing light. The dents and lumps are back, at least as many as in r7, without the crack lines. The door-bay coat no longer reads as a smooth board.
+- Hidden stays at 7.7 %.
+
+**Also from the patch.**
+- The clinging flakes are deleted (r7 #2 / r8 #5: they read as leaves).
+- The foot bites are limited to 6 round the hut, at most 1 per bay and never in adjacent bays, each 20-40 × 2-4 cm (r7 #3 / r8 #6). side.png and back.png now show 1-2 small bites instead of a row of slots.
+
+### Must-fix 2: the roof's open joints had doubled
+
+**What changed.** The cone sag is now applied rigidly per shingle.
+- Each shingle is laid on the unsagged surface.
+- It is then translated along the cone normal by the sag at its centre, and tilted about its own axis by at most 1.5°.
+- The joints therefore keep their width, while the sag between the rafters and the eave wave still read course by course.
+
+**Under-lap.** Under every side joint of courses 1 and up there is now a 2 × 8 cm strip of covered shingle: 535 strips, 12 triangles each. The strips sit 4 mm under the deeper neighbour. They are in their own object, `HUT_roof_underlap`, which is not a cull target, so they are never culled. Side-joint gaps are capped at 1.5 cm.
+
+**Measured.**
+
+| Near-black (< 35/255) pixels | r7 | r8 | r9 |
+|---|---|---|---|
+| hero | 443 | 1011 | **252** |
+| front | 392 | 728 | **113** |
+| side | 892 | 1334 | **272** |
+| back | 826 | 1202 | **413** |
+| aerial | 216 | 327 | **27** |
+
+- These counts cover the upper 60 % of each frame; for aerial, a central crop.
+- I also cast 12k rays at the cone from hero, front, side and back. First hits on something other than a shingle (blocker, rafters, eave closure) were 2.0-2.6 % in r7 and 2.7-3.7 % in r8, and are **0.5-0.6 %** in r9. A further 1.9-2.4 % of rays land on the under-lap strips, which are shingle material.
+- Both acceptance targets are met: the hero roof crop is at most 450 px, and non-shingle hits are at most 2.5 %.
+
+### Must-fix 3: decal anchors
+
+**The kit gate.** `anchor_validate.validate_anchors`, which `build_building(decal_validate=...)` runs before the collection and the json are written, checks every anchor:
+- It must have a surface within 5 cm along −normal, or it is dropped. A ray from 5 cm outside snaps the anchor onto that surface plus a 4 mm lift.
+- It must be on its declared slot and not on a backing mesh.
+- Its normal must point outward. The generator's normal is kept where the face agrees with it (dot ≥ 0.8); otherwise the face normal is used.
+- It must be open for 15 cm in front, or it counts as buried and is dropped.
+- Its 3 × 3 footprint must lie on the surface. If not, it is shrunk to 0.75 once, and dropped if it still fails.
+- Same-type anchors closer than 0.25 m are thinned.
+
+**Placement changes (`layout=2`).**
+- The lintel-end streaks are now on the front faces of the door-frame posts, mirrored at x = ±0.97, y = frame front, top at z 2.20, size 0.12 × 0.80, normal (0, −1, 0). The post fronts span |x| 0.91-1.13, so a 12 cm streak centred at 0.92 would overhang the inner edge.
+- The threshold lichen is now on the left door-post pad stone top, at (−1.04, −3.61, 0.23).
+- The damp_rise ring is jittered by ±6° and −4 to +8 cm (z now 0.61-0.73), and kept clear of the back-low wattle patch. The plinth moss ring is jittered by ±6°.
+- The collar water streaks are found by their own ray at the streak centre.
+- Plaster and repair patches are split between +X and −X, and placed only where their footprint is on intact coat.
+
+**Result.**
+- 103 anchors were placed and **94 kept**. 5 were dropped by the footprint test (2 roof moss, 1 lichen on a stone flank, 1 collar soot, 1 rust stain) and 4 crack near-duplicates were thinned; these are the director's 014/019 and 016/021 pairs.
+- I re-checked the saved .blend independently:
+  - all 94 empties match the json;
+  - each one sits 4 mm off a face of its declared slot along −Z;
+  - none is occluded;
+  - the minimum spacing between same-type anchors is 0.33 m.
+- Counts: damp_rise 12, moss 12, lichen 6, water_streak 7, soot 4, grime 4, rust_stain 4, crack 32, plaster_patch 8, repair_patch 5.
+
+### Kit edit rules: other buildings re-run
+
+- **tower_windmill:** 1,135,006 triangles before the mill builder's own 1.4.0 edits (record 1,134,993, +0.001 %). On the final kit it gives 1,146,243 triangles, which equals the mill's 1.4.0 record.
+- **hilltop_keep:** 1,159,180 triangles on the final kit, which equals the keep's 1.3.0 record.
+- Both build without errors. Their anchors are unchanged, because the hut gate only reports for them, and it passes all 106 of the mill's anchors and all 113 of the keep's.
+
+### Not addressed this round (still open from the round-8 list)
+
+- #4: the +X side patch outline. `fracture_patch_r9` in the partial patch was not tested, so it was not used.
+- #7: the soft U-bottoms of the door-bay tabs.
+- The post-flank transition, the Mask G/B on fracture faces and the build-time cache.
+- I did not rebuild or re-render the kit variant this round. A quick no-cull variant build ran without errors at 836k triangles before the cull.

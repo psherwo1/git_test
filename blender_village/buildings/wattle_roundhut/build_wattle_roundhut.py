@@ -1,4 +1,4 @@
-"""Wattle-and-daub round hut (HUT) -- a thin declarative assembly on the shared village kit (phase 2, round 8).
+"""Wattle-and-daub round hut (HUT) -- a thin declarative assembly on the shared village kit (phase 2, round 9).
 
 Run:  /opt/bpyenv/bin/python build_wattle_roundhut.py
           -> wattle_roundhut.blend + decal_anchors.json (next to this script)
@@ -14,19 +14,24 @@ The hut is the signed-off phase-1 hut (round 7, ref2 foreground hut) rebuilt fro
     (eave wave, sag between rafters), lead-hat collar, spindle and spike finial leaning ~1 deg
   * projecting flat-fronted door frame, worn sill, threshold slabs, step, plank leaf open 75 deg with ironwork
   * earth floor and hearth seen through the door
-Producer note 11: sub-2 cm relief is not modelled (entrance zone: >= 1 cm kept); decal anchors are exported.
+Producer note 11: sub-2 cm relief is not modelled (entrance zone: >= 1 cm kept, gated per vertex by the kit daub);
+decal anchors are exported, snapped and validated by the kit gate (village_kit.anchor_validate).
+Round 9 (kit 1.3.0, director r8 #1-#3): WALL_FINISH (note-11 entrance relief per vertex, 2-2.5 cm hand lumps on
+every bay, sag 1.1-1.5 cm, flakes deleted, <= 6 foot bites), rigid per-shingle cone sag + joint under-lap
+(cone.AGE_R9), decal layout 2 + DECAL_VALIDATE.
 All randomness is seeded; the build is deterministic.  Dimensions live in ONE table, KIT (kit_set convention).
 """
 import os
 import sys
+from functools import partial
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "kit"))
 
 from village_kit.assembly import KitParams, build_building  # noqa: E402
-from village_kit.components.cone import age_defaults  # noqa: E402
+from village_kit.components.cone import AGE_R9, age_defaults  # noqa: E402
 from village_kit.components.frame import RoundFrame, round_hidden_cull  # noqa: E402
 from village_kit.components.plinth import drystone_plinth  # noqa: E402
-from village_kit.components.daub import round_daub_wall  # noqa: E402
+from village_kit.components.daub import round_daub_wall, wall_finish_r9  # noqa: E402
 from village_kit.components.round_wall import wall_plate  # noqa: E402
 from village_kit.components.conical_roof import conical_roof  # noqa: E402
 from village_kit.components.finial import finial  # noqa: E402
@@ -43,12 +48,20 @@ KIT = KitParams(
     overhang=0.63,            # eave dia 8.26 m
     pitch_deg=51.0,
     finial_tip=8.60,          # spike tip (bbox top 8.73 with the lean)
-    cone_age=age_defaults(),  # ensemble review: eave wave +-3-5 cm, 1-3 cm sag between rafters
+    cone_age=age_defaults(**AGE_R9),  # ensemble eave wave +-3-5 cm, 1-3 cm sag between rafters, applied RIGIDLY
+                              # per shingle (<= 1.5 deg tilt) + 8 cm under-lap beside every side joint (r8 #2)
     detail_rule=True,         # producer note 11
+    wall_finish=wall_finish_r9(),  # r8 #1: entrance relief >= 1 cm per vertex, hand lumps, no flakes, <= 6 bites
 )
 # HUT_KIT_VARIANT: a different hut from the same components -- 2.9 m radius (5.8 m wall), a 0.2 m taller wall,
 # post / rafter counts and door-post azimuth derived by the frame, finial derived from the collar
 HUT_KIT_VARIANT = dict(radius=2.90, eave_z=2.60, finial_tip=None)
+# director r8 #3: every anchor snapped onto its surface along -normal (none within 5 cm -> dropped), on its declared
+# slot, open along +normal, footprint on the surface, no same-type duplicate within 0.25 m
+DECAL_VALIDATE = dict(reach=0.05, min_sep=0.25, clear=0.15,
+                      exclude_objects=("_daub_interior", "_roof_blocker", "_eave_closure", "_roof_underlap",
+                                       "_door_panel_backing", "_floor"),
+                      strict_types=("plaster_patch", "repair_patch"))
 
 
 def kit_set(**kw):
@@ -74,7 +87,8 @@ def main():
                finial,                   # lead-hat collar, spindle, spike
                door_step, framed_door, interior,
                round_hidden_cull],       # producer note 6
-        decals=round_building_decals,    # producer note 11
+        decals=partial(round_building_decals, layout=2),    # producer note 11
+        decal_validate=DECAL_VALIDATE,
         out=out,
         decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
         decal_meta=dict(kit_params={k: v for k, v in KIT.items()}),

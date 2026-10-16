@@ -18,7 +18,7 @@ from ..core import log
 
 from ..core import chamfer_path, frame_R, grid_quads, lathe, n2, nrm, open_tube, rbox, ring_noise, tube, xf
 from ..shingles import SH_VARIANTS, shingle_mesh
-from .cone import az2th, rafter_center, s_at_r, surf, surf_frame
+from .cone import az2th, rafter_center, s_at_r, sag_at, surf, surf_frame
 from .frame import interior_visible
 
 
@@ -215,8 +215,15 @@ def build_shingles(g, coll, seed=606):
     rng = np.random.RandomState(seed)
     B_WEDGE = 0.066
     OV = 0.065
+    # kit 1.3.0 (opt-in cone_age keys, components.cone.AGE_R9; director r8 #2)
+    age = getattr(g, "cone_age", None) or {}
+    rigid = bool(age.get("rigid_sag")) and bool(age.get("sag"))
+    tilt_max = math.radians(age.get("rigid_tilt_deg", 1.5))
+    ul_hw = float(age.get("underlap", 0.0)) if rigid else 0.0
+    max_joint = age.get("max_joint")
+    pieces = {}                      # course -> [(theta_c, half-angle, depth at left edge, depth at right edge, s_b)]
 
-    def place(acc_, th_c, s_b, W, L, var, phi, lift, curl, base_fn, ys=None, closed=True, wear_=None):
+    def place(acc_, th_c, s_b, W, L, var, phi, lift, curl, base_fn, ys=None, closed=True, wear_=None, course=None):
         Pl, F, uv = shingle_mesh(W, L, var, curl=curl, ys=ys, bottom=closed, head=closed)
         x, y, z = Pl[:, 0], Pl[:, 1], Pl[:, 2]
         c, s_ = math.cos(phi), math.sin(phi)
@@ -225,13 +232,55 @@ def build_shingles(g, coll, seed=606):
         v = np.clip(y / 0.72, 0, 1)
         ss = s_b + yr
         th = np.full_like(ss, th_c)
-        P0, ts, tt, n = surf_frame(g, th, ss)
-        rb = float(np.hypot(*surf(g, th_c, s_b)[:2]))
+        P0, ts, tt, n = surf_frame(g, th, ss, sag=not rigid)
+        rb = float(np.hypot(*surf(g, th_c, s_b, sag=not rigid)[:2]))
         rcur = np.hypot(P0[:, 0], P0[:, 1])
         xr = xr * np.clip(rcur / rb, 0.3, 1.0)
         off = base_fn(v) + z + lift * (1 - v)
+        if rigid:
+            # the sag as a RIGID per-shingle offset (no shear, joint widths kept): evaluated at the centre of the
+            # exposed part, translated along the cone normal, tilted about the shingle axis by <= tilt_max
+            s_c = s_b + 0.5 * min(L, g.SH_EXPOSE)
+            dth = 0.5 * W / max(rb, 0.2)
+            sg_c, sg_l, sg_r = (float(sag_at(g, t_, s_c)) for t_ in (th_c, th_c - dth, th_c + dth))
+            tilt = float(np.clip(math.atan2(sg_r - sg_l, max(W, 0.05)), -tilt_max, tilt_max))
+            off = off - (sg_c + math.tan(tilt) * xr)
+            if course is not None:
+                pieces.setdefault(course, []).append((th_c, dth, sg_c - math.tan(tilt) * 0.5 * W,
+                                                      sg_c + math.tan(tilt) * 0.5 * W, s_b))
         V = P0 + tt * xr[:, None] + n * off[:, None]
         acc_.add(V, F, "M_roof_shingle", uv, smooth=True, wear=wear_)
+
+    def underlap(acc_, k, th_j, depth, s_b):
+        """a strip of covered shingle under one side joint of course k (stand-in for the hidden upper part of the
+        course below): 2 * ul_hw wide, from just above the butt line to under the next course, its top 4 mm under
+        the deeper of the two neighbours' undersides; top face + butt end only (never seen edge-on)."""
+        s_hi = min(s_b + g.SH_EXPOSE + 0.04, g.S_END)
+        if s_hi - s_b < 0.08:
+            return 0
+        ys_ = np.array([s_b + 0.015, s_b + 0.5 * (g.SH_EXPOSE + 0.055), s_hi])
+        xs_ = np.array([-ul_hw, 0.0, ul_hw])
+        rb_ = float(np.hypot(*surf(g, th_j, s_b, sag=False)[:2]))
+        Pt = []
+        for yy in ys_:
+            P0, ts, tt, n = surf_frame(g, np.full(3, th_j), np.full(3, yy), sag=False)
+            rcur = np.hypot(P0[:, 0], P0[:, 1])
+            xx = xs_ * np.clip(rcur / rb_, 0.3, 1.0)
+            vv = (yy - s_b) / 0.72
+            top = B_WEDGE * (1 - vv) - 0.004 - depth
+            Pt.append(np.stack([P0 + tt * xx[:, None] + n * top, P0 + tt * xx[:, None] + n * (top - 0.012)], 0))
+        Pt = np.array(Pt)                               # (row, layer, col, 3)
+        V = np.concatenate([Pt[:, 0].reshape(-1, 3), Pt[0, 1]])           # top grid 3x3 + butt bottom edge
+        F = [[r * 3 + c_, r * 3 + c_ + 1, (r + 1) * 3 + c_ + 1, (r + 1) * 3 + c_] for r in range(2) for c_ in range(2)]
+        F += [[9 + c_, 9 + c_ + 1, c_ + 1, c_] for c_ in range(2)]     # butt end face
+        F = np.array(F)
+        q = V[F[0]]
+        nn = np.cross(q[1] - q[0], q[3] - q[0])
+        out = V[4] - Pt[1, 1, 1]                        # from the bottom layer toward the top: outward
+        if float(np.dot(nn, out)) < 0:
+            F = F[:, ::-1]
+        acc_.add(V, F, "M_roof_shingle", None, smooth=False, wear=0.5)
+        return 1
 
     # ---- doubled starter course (underside seen from below at the eave)
     s_b = 0.012
@@ -266,6 +315,8 @@ def build_shingles(g, coll, seed=606):
         n = max(8, int(round(2 * math.pi * rmid / target)))
         w = rng.uniform(0.76, 1.24, n)
         gaps = rng.uniform(0.006, 0.016, n)
+        if max_joint:                       # kit 1.3.0: side-joint gaps capped (director r8 #2)
+            gaps = np.minimum(gaps, float(max_joint))
         w = w / w.sum() * (circ - gaps.sum())
         best, best_d = 0.0, -1
         for _ in range(12):
@@ -332,18 +383,40 @@ def build_shingles(g, coll, seed=606):
                 wb = Wi - wa - gap_
                 tha = thc - (Wi / 2 - wa / 2) / rb
                 thb = thc + (Wi / 2 - wb / 2) / rb
-                place(acc, tha, sb, wa, L, var, phi - 0.02, lift, curl, base_fn, closed=closed, wear_=0.85)
+                place(acc, tha, sb, wa, L, var, phi - 0.02, lift, curl, base_fn, closed=closed, wear_=0.85, course=k)
                 place(acc, thb, sb + 0.01, wb, L - 0.01, var, phi + 0.025, lift + 0.004, curl, base_fn, closed=closed,
-                      wear_=0.9)
+                      wear_=0.9, course=k)
                 n_total += 2
                 continue
             wr = 0.9 if r["slip"] > 0 else (0.55 + 0.2 * (k < 2) if k < 4 else None)
-            place(acc, thc, sb, Wi, L, var, phi, lift, curl, base_fn, closed=closed, wear_=wr)
+            place(acc, thc, sb, Wi, L, var, phi, lift, curl, base_fn, closed=closed, wear_=wr, course=k)
             n_total += 1
     log("shingles:", n_total, "full-length (covered part visible):", n_full)
     g.SHINGLE_TOP["V"] = np.concatenate(acc.V + st_acc.V)
     acc.build(coll)
     st_acc.build(coll)
+    if ul_hw > 0.0:
+        # kit 1.3.0 (director r8 #2): >= 8 cm of under-lap beside every side joint (courses >= 1), a separate
+        # object outside round_hidden_cull's targets so it is never culled
+        ul_acc = g.acc("roof_underlap", 45)
+        n_ul = 0
+        for k in sorted(pieces):
+            if k < 1:
+                continue
+            pc = sorted(pieces[k], key=lambda p_: p_[0] % (2 * math.pi))
+            rb = float(np.hypot(*surf(g, 0.0, k * g.SH_EXPOSE, sag=False)[:2]))
+            for i in range(len(pc)):
+                a_, b_ = pc[i], pc[(i + 1) % len(pc)]
+                ea = a_[0] + a_[1]
+                eb = b_[0] - b_[1]
+                gap = float(np.angle(np.exp(1j * (eb - ea))))
+                if gap * rb > 0.05 or gap * rb < -0.10:      # a missing shingle / not neighbours: no joint
+                    continue
+                th_j = ea + 0.5 * gap
+                n_ul += underlap(ul_acc, k, th_j, max(a_[3], b_[2]) + 0.002, max(a_[4], b_[4]))
+        log("underlap strips:", n_ul)
+        if n_ul:
+            ul_acc.build(coll)
 
 
 def conical_roof(g, seed=606, structure_seeds=(404, 505)):
