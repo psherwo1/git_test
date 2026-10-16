@@ -150,7 +150,7 @@ def peg(g, p, axis, rad=0.014, proud=0.016):
     return g.pools.place(me, "peg", R, p, scale=rad / 0.015)
 
 
-def nail_heads(g, P, normal, rad=0.009):
+def nail_heads(g, P, normal, rad=0.009, h=None):
     """forged nail heads at the points P (N, 3) on a surface with outward normal: the kit's pooled nail head
     (components.timber.make_nail_head, r ~0.95 cm) as linked duplicates scaled to rad."""
     P = np.atleast_2d(np.asarray(P, float))

@@ -12,10 +12,10 @@ Openings are dicts (OctFrame.OPENINGS): name, k (facet), xc (along the facet), k
 depth) or 'rect' (hw, z0, z1, depth, frame, surround='timber' for a timber surround with a stone sill only).
 
 Public components (g = OctFrame):
-    oct_hall_walls(g, seed=101)     KEEP_hall_wall_stones / _dressed_stones / _dressed_joint_mortar / _wall_mortar /
+    oct_hall_walls(g, seed=101)     <P>_hall_wall_stones / _dressed_stones / _dressed_joint_mortar / _wall_mortar /
                                     _interior
-    oct_hall_frame(g, seed=202)     KEEP_hall_posts / _post_bases / _knee_braces / _eave_plate (+ pooled pegs)
-    door_threshold(g, seed=1010)    KEEP_threshold (worn threshold stone + built-in step)
+    oct_hall_frame(g, seed=202)     <P>_hall_posts / _post_bases / _knee_braces / _eave_plate (+ pooled pegs)
+    door_threshold(g, seed=1010)    <P>_threshold (worn threshold stone + built-in step)
 Helpers other components use: facet_obox (boxes in a facet frame), rough_block, open_contains / open_outline.
 """
 import math
@@ -23,25 +23,24 @@ import math
 import numpy as np
 
 from ..core import log
-from ..geom import Acc, TAN22, fbm90, finalize, obox, prof_rect, sweep
+from ..geom import Acc, TAN22, axn, fbm90, finalize, obox, prof_rect, rbox_v, sweep
+from ..stones import stone_outline
 from .hewn import hewn_square, peg
-from .oct_frame import (F, FN, FT, FPHI, corner_dir, face_apo, facet_s, fmap, hall_L, hall_map, in_wing)
+from .oct_frame import FR, FN, FT, FPHI, corner_dir, face_apo, facet_s, fmap, hall_L, hall_map, in_wing
 from .stone_wall import (cat_stones, dress_irregular, fill_voids, filt, layout_wall, lay_poly_stones, lay_stones,
                          mortar_sheet, polygonize, rough_footing, stone_rec)
-from ..stones import stone_outline
-from ..geom import axn, rbox_v
 
 
 def _lay(*a, **k):
-    return lay_stones(*a, relief=F.min_relief, **k)
+    return lay_stones(*a, relief=FR.min_relief, **k)
 
 
 def _lay_poly(*a, **k):
-    return lay_poly_stones(*a, relief=F.min_relief, **k)
+    return lay_poly_stones(*a, relief=FR.min_relief, **k)
 
 
 def _hewn(*a, **k):
-    return hewn_square(*a, relief=F.min_relief, dropped=F.dropped_checks, **k)
+    return hewn_square(*a, relief=FR.min_relief, dropped=FR.dropped_checks, **k)
 
 
 def open_contains(op, x, z, m=0.0):
@@ -100,12 +99,12 @@ def hall_excl(z0, z1, zm):
         hw_ = 0.13 if z0 > 0.38 else 0.21
         if z1 > 0.0:
             out.append((sc_ - hw_, sc_ + hw_))
-    for op in F.OPENINGS:
+    for op in FR.OPENINGS:
         e = poly_band_extent(open_outline(op, grow=0.0), z0, z1)
         if e is not None:
             out.append((float(facet_s(op["k"], e[0] - 0.01, zm)), float(facet_s(op["k"], e[1] + 0.01, zm))))
     for k in range(8):
-        for poly in F.DRESSED_POLYS[k]:
+        for poly in FR.DRESSED_POLYS[k]:
             e = poly_band_extent(poly, z0, z1)
             if e is not None:
                 out.append((float(facet_s(k, e[0] - 0.012, zm)), float(facet_s(k, e[1] + 0.012, zm))))
@@ -114,7 +113,7 @@ def hall_excl(z0, z1, zm):
 
 def build_door_dressing(acc_d, op, rng):
     k, xc, hw, zs = op["k"], op["xc"], op["hw"], op["zs"]
-    leaf_apo = F.A_REF - op["depth"]
+    leaf_apo = FR.A_REF - op["depth"]
     recs = []
     # jambs (alternating long / short), both sides
     hs = np.array([0.40, 0.33, 0.37, 0.34, 0.33]) * rng.uniform(0.94, 1.06, 5)
@@ -135,7 +134,7 @@ def build_door_dressing(acc_d, op, rng):
             back = float(face_apo(k, x_in, zc)) - leaf_apo - 0.012
             recs.append(dict(x=0.5 * (xa + xb), zc=zc, hx=0.5 * (xb - xa) - 0.006, hy=0.5 * (z1_ - z0_),
                              f=0.05 + rng.uniform(0, 0.012), back=back))
-            F.DRESSED_POLYS[k].append([(xa, z0_), (xb, z0_), (xb, z1_), (xa, z1_)])
+            FR.DRESSED_POLYS[k].append([(xa, z0_), (xb, z0_), (xb, z1_), (xa, z1_)])
     # recessed lime mortar in the jamb bed joints (1.2 cm back from the face and from the reveal)
     for side in (-1, 1):
         for i in range(1, 5):
@@ -143,8 +142,8 @@ def build_door_dressing(acc_d, op, rng):
             x_in = xc + side * hw
             wj = min(jwd[(side, i - 1)], jwd[(side, i)]) - 0.012
             xa, xb = sorted([x_in + side * 0.03, x_in + side * wj])
-            wf_ = float(face_apo(k, x_in, zj)) - F.A_REF + 0.05 - 0.015 - 0.016
-            facet_obox(F.JOINT_ACC, k, xa, xb, zj - 0.0095, zj + 0.0095, leaf_apo - F.A_REF, wf_, 0.003, "M_mortar",
+            wf_ = float(face_apo(k, x_in, zj)) - FR.A_REF + 0.05 - 0.015 - 0.016
+            facet_obox(FR.JOINT_ACC, k, xa, xb, zj - 0.0095, zj + 0.0095, leaf_apo - FR.A_REF, wf_, 0.003, "M_mortar",
                        nx=4, ny=3, nz=3)
     S = stone_rec([facet_s(k, r["x"], r["zc"]) for r in recs], [r["zc"] for r in recs],
                   [r["hx"] for r in recs], [r["hy"] for r in recs], [r["f"] for r in recs],
@@ -172,7 +171,7 @@ def build_door_dressing(acc_d, op, rng):
         vs.append((tm, rm, hx, 0.5 * (rout - rin) - 0.004, back, zc_abs, 0.055 + rng.uniform(0, 0.012) + (0.012 if i == nv // 2 else 0)))
         poly = [(xc + rin * math.cos(a), zs + rin * math.sin(a)) for a in np.linspace(tb, ta, 5)] + \
                [(xc + rout * math.cos(a), zs + rout * math.sin(a)) for a in np.linspace(ta, tb, 5)]
-        F.DRESSED_POLYS[k].append(poly)
+        FR.DRESSED_POLYS[k].append(poly)
     # radial joints between voussoirs: mortar wedges recessed 1.2 cm from the face and the intrados
     for i in range(1, nv):
         tj = th[i]
@@ -180,16 +179,16 @@ def build_door_dressing(acc_d, op, rng):
         r1_ = min(vs[i - 1][1] + vs[i - 1][3], vs[i][1] + vs[i][3]) - 0.02
         cs, sn = math.cos(tj), math.sin(tj)
         tx, tz = -sn, cs
-        wf_ = float(face_apo(k, xc + 0.5 * (r0_ + r1_) * cs, zs + 0.5 * (r0_ + r1_) * sn)) - F.A_REF + 0.055 - 0.031
+        wf_ = float(face_apo(k, xc + 0.5 * (r0_ + r1_) * cs, zs + 0.5 * (r0_ + r1_) * sn)) - FR.A_REF + 0.055 - 0.031
         P8 = []
         for rr_ in (r0_, r1_):
             for dd_ in (-0.0095, 0.0095):
-                for ww_ in (leaf_apo - F.A_REF, wf_):
+                for ww_ in (leaf_apo - FR.A_REF, wf_):
                     P8.append((xc + rr_ * cs + dd_ * tx, zs + rr_ * sn + dd_ * tz, ww_))
         P8 = np.array(P8)
         Wp = fmap(k, P8[:, 0], P8[:, 1], P8[:, 2])
         quads = np.array([(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)])
-        F.JOINT_ACC.add(Wp, quads, "M_mortar")
+        FR.JOINT_ACC.add(Wp, quads, "M_mortar")
     vs = np.array(vs)
     S = stone_rec(np.zeros(nv), vs[:, 5], vs[:, 2], vs[:, 3], vs[:, 6], vs[:, 4],
                   rng.uniform(0.010, 0.015, nv), vs[:, 5], rng)
@@ -210,12 +209,12 @@ def build_door_dressing(acc_d, op, rng):
 def build_rect_dressing(acc_d, op, rng, sill_acc):
     k, xc, hw, z0, z1 = op["k"], op["xc"], op["hw"], op["z0"], op["z1"]
     depth = op["depth"]
-    fr_apo = F.A_REF - depth
+    fr_apo = FR.A_REF - depth
     h = z1 - z0
     if op.get("surround") == "timber":
         # simple heavy timber frame set in the rubble (ref1): no dressed jambs, only the stone sill;
         # the timber lintel (built with the frame) bears 0.16 m into the rubble each side.
-        F.DRESSED_POLYS[k].append([(xc - hw - 0.17, z1 - 0.01), (xc + hw + 0.17, z1 - 0.01),
+        FR.DRESSED_POLYS[k].append([(xc - hw - 0.17, z1 - 0.01), (xc + hw + 0.17, z1 - 0.01),
                                  (xc + hw + 0.17, z1 + 0.21), (xc - hw - 0.17, z1 + 0.21)])
         build_sill(sill_acc, op, rng)
         return
@@ -234,14 +233,14 @@ def build_rect_dressing(acc_d, op, rng, sill_acc):
             zc = 0.5 * (za + zb)
             back = float(face_apo(k, x_in, zc)) - fr_apo - 0.006
             recs.append((0.5 * (xa + xb), zc, 0.5 * (xb - xa) - 0.006, 0.5 * (zb - za), 0.045 + rng.uniform(0, 0.01), back))
-            F.DRESSED_POLYS[k].append([(xa, za), (xb, za), (xb, zb), (xa, zb)])
+            FR.DRESSED_POLYS[k].append([(xa, za), (xb, za), (xb, zb), (xa, zb)])
     # lintel
     lw = hw + (0.30 if hw > 0.2 else 0.22) + rng.uniform(0.0, 0.05)
     lh = 0.26 if hw > 0.2 else 0.2
     za, zb = z1 + 0.006, z1 + lh
     zc = 0.5 * (za + zb)
     recs.append((xc + rng.uniform(-0.03, 0.03), zc, lw, 0.5 * (zb - za), 0.05, float(face_apo(k, xc, zc)) - fr_apo - 0.006))
-    F.DRESSED_POLYS[k].append([(xc - lw, za), (xc + lw, za), (xc + lw, zb), (xc - lw, zb)])
+    FR.DRESSED_POLYS[k].append([(xc - lw, za), (xc + lw, za), (xc + lw, zb), (xc - lw, zb)])
     R = np.array(recs)
     S = stone_rec(facet_s(k, R[:, 0], R[:, 1]), R[:, 1], R[:, 2], R[:, 3], R[:, 4], R[:, 5],
                   rng.uniform(0.010, 0.015, len(R)), R[:, 1], rng)
@@ -275,7 +274,7 @@ def build_sill(sill_acc, op, rng):
     # out of level by ~1 deg, tooled undulation, worn & chipped front arris
     V[:, :, 1] += (xs[:, None] - xc) * math.tan(math.radians(rng.uniform(-1.2, 1.2)))
     sd = rng.uniform(0, 50)
-    thr = float(F.min_relief(fmap(k, np.array([xc]), np.array([ztop]), np.array([0.0])))[0])
+    thr = float(FR.min_relief(fmap(k, np.array([xc]), np.array([ztop]), np.array([0.0])))[0])
     kt = 1.0 if 0.003 >= thr else 0.0               # producer note 11: 3 mm tooling -> materials
     V[:, :, 1] += kt * 0.003 * fbm90(np.stack([V[:, :, 0] * 8 + sd, V[:, :, 2] * 8, V[:, :, 1] * 8], -1), 2)
     V[:, :, 2] += kt * 0.003 * fbm90(np.stack([V[:, :, 0] * 6, V[:, :, 1] * 9 + sd, V[:, :, 2]], -1), 2) * (V[:, :, 2] > 0.0)
@@ -295,7 +294,7 @@ def build_sill(sill_acc, op, rng):
     quads = np.stack([a, a + npf, b + npf, b], -1).reshape(-1, 4)
     caps = [np.arange(npf)[None, :], ((nx_ - 1) * npf + np.arange(npf)[::-1])[None, :]]
     sill_acc.add(W, [quads] + caps, "M_stone_dressed")
-    F.DRESSED_POLYS[k].append([(xc - sw, ztop - st), (xc + sw, ztop - st), (xc + sw, ztop), (xc - sw, ztop)])
+    FR.DRESSED_POLYS[k].append([(xc - sw, ztop - st), (xc + sw, ztop - st), (xc + sw, ztop), (xc - sw, ztop)])
 
 
 def hall_cull(S):
@@ -305,10 +304,10 @@ def hall_cull(S):
 
 def build_hall_masonry(coll, seed=101):
     rng = np.random.default_rng(seed)
-    acc = Acc(F.prefix + "_hall_wall_stones")
-    accd = Acc(F.prefix + "_hall_dressed_stones")
-    F.JOINT_ACC = Acc(F.prefix + "_hall_dressed_joint_mortar")
-    for op in F.OPENINGS:
+    acc = Acc(FR.prefix + "_hall_wall_stones")
+    accd = Acc(FR.prefix + "_hall_dressed_stones")
+    FR.JOINT_ACC = Acc(FR.prefix + "_hall_dressed_joint_mortar")
+    for op in FR.OPENINGS:
         if op["kind"] == "arch":
             build_door_dressing(accd, op, rng)
         else:
@@ -320,7 +319,7 @@ def build_hall_masonry(coll, seed=101):
                slant=0.27, ch_mix=[(0.30, 0.08, 0.11), (0.38, 0.11, 0.16), (0.22, 0.16, 0.21), (0.10, 0.21, 0.25)],
                pinch=(0.22, (0.04, 0.09), (0.7, 1.8)))
     srange = lambda zm: [(0.0, float(hall_L(zm)))]
-    S = layout_wall(rng, srange, -0.10, F.WALL_H, hall_excl, cfg)
+    S = layout_wall(rng, srange, -0.10, FR.WALL_H, hall_excl, cfg)
 
     def hero_of(SS):
         t = np.mod(SS["sc"] / hall_L(SS["zcrs"]), 1.0)
@@ -329,7 +328,7 @@ def build_hall_masonry(coll, seed=101):
     hero0, _ = hero_of(S)
     S = polygonize(S, (hero0 & (S["zc"] > 0.3)) | (S["foot"] > 0.5), np.random.default_rng(seed + 1818))
     S = rough_footing(S, np.random.default_rng(seed + 1819))
-    pins, _, _ = fill_voids(S, srange, hall_excl, -0.10, F.WALL_H, rng, cfg, label="hall")
+    pins, _, _ = fill_voids(S, srange, hall_excl, -0.10, FR.WALL_H, rng, cfg, label="hall")
     S = cat_stones(S, pins)
     S = filt(S, hall_cull(S))
     log("  hall stones:", len(S["sc"]))
@@ -353,19 +352,19 @@ def build_hall_masonry(coll, seed=101):
                  side_depth=0.018)
     finalize(acc, coll, smooth_deg=28.0)
     finalize(accd, coll, smooth_deg=24.0)          # crisp 1-1.5 cm arrises (no soft shading across the bevel)
-    finalize(F.JOINT_ACC, coll)
+    finalize(FR.JOINT_ACC, coll)
     return S
 
 
 def build_hall_mortar(coll):
-    acc = Acc(F.prefix + "_hall_wall_mortar")
+    acc = Acc(FR.prefix + "_hall_wall_mortar")
     # t = perimeter fraction; corner arcs of the rounded octagon are kept as knots
-    tt = np.unique(np.round(np.concatenate([np.linspace(0, 1, 89), F.OT[(F.OB == 0)]]), 6))
-    zs = np.concatenate([np.linspace(-0.05, F.WALL_H, 13)])
+    tt = np.unique(np.round(np.concatenate([np.linspace(0, 1, 89), FR.OT[(FR.OB == 0)]]), 6))
+    zs = np.concatenate([np.linspace(-0.05, FR.WALL_H, 13)])
 
     def near(t, z, dt, dz):
         nr = np.zeros(len(t), bool)
-        for op in F.OPENINGS:
+        for op in FR.OPENINGS:
             xl = (t - op["k"] / 8.0) * hall_L(z)
             ext = op["hw"] + 0.55
             ztop = op.get("z1", op.get("zs", 2.0) + op["hw"]) + 0.6
@@ -374,7 +373,7 @@ def build_hall_mortar(coll):
 
     def keep(t, z):
         k = np.ones(len(t), bool)
-        for op in F.OPENINGS:
+        for op in FR.OPENINGS:
             xl = (t - op["k"] / 8.0) * hall_L(z)
             k &= ~open_contains(op, xl, z, m=0.03)
         Pc = hall_map(t * hall_L(z), z, np.zeros(len(t)), z)
@@ -388,7 +387,7 @@ def build_hall_mortar(coll):
 def build_hall_interior(coll):
     """reveal tubes through the wall at every opening plus, behind each window, a simple dark blocker room
     (floor, ceiling, side and back walls ~1.5 m deep): only the depth visible through the openings is modelled."""
-    acc = Acc(F.prefix + "_hall_interior")
+    acc = Acc(FR.prefix + "_hall_interior")
 
     def add_facing(V, F, mat, R):
         """add faces wound toward the viewer point R (in front of the opening): Unreal culls back faces."""
@@ -400,7 +399,7 @@ def build_hall_interior(coll):
             f_[flip] = f_[flip][:, ::-1]
             out.append(f_)
         acc.add(V, out, mat)
-    for op in F.OPENINGS:
+    for op in FR.OPENINGS:
         k = op["k"]
         zc_ = op.get("z1", op.get("zs", 1.5) + op["hw"])
         R_ = fmap(k, np.array([op["xc"]]), np.array([0.5 * (op["z0"] + zc_)]), np.array([0.6]))[0]
@@ -411,7 +410,7 @@ def build_hall_interior(coll):
             o2[:2, 1] = np.maximum(o2[:2, 1], 0.0)
         n = len(o1)
         r1 = fmap(k, o1[:, 0], o1[:, 1], np.full(n, -op["depth"] + 0.005))
-        r2 = fmap(k, o2[:, 0], o2[:, 1], np.zeros(n), a_ref=F.INNER_APO)
+        r2 = fmap(k, o2[:, 0], o2[:, 1], np.zeros(n), a_ref=FR.INNER_APO)
         V = np.concatenate([r1, r2])
         q = np.array([(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)])
         add_facing(V, [q], "M_mortar", R_)
@@ -419,8 +418,8 @@ def build_hall_interior(coll):
             continue            # the door leaf is closed: nothing behind it can be seen
         # blocker room behind the window
         xa, xb = op["xc"] - op["hw"] - 0.9, op["xc"] + op["hw"] + 0.9
-        z0, z1 = 0.12, F.WALL_H
-        a_in, a_bk = F.INNER_APO + 0.02, F.INNER_APO - 1.5
+        z0, z1 = 0.12, FR.WALL_H
+        a_in, a_bk = FR.INNER_APO + 0.02, FR.INNER_APO - 1.5
         X = np.array([xa, xb, xb, xa, xa, xb, xb, xa])
         Z = np.array([z0, z0, z1, z1, z0, z0, z1, z1])
         Wv = np.array([0, 0, 0, 0, 1, 1, 1, 1], float)
@@ -436,14 +435,14 @@ def build_hall_interior(coll):
 
 def build_hall_frame(coll, seed=202):
     rng = np.random.default_rng(seed)
-    acc_p = Acc(F.prefix + "_hall_posts")
-    acc_b = Acc(F.prefix + "_hall_post_bases")
-    acc_k = Acc(F.prefix + "_hall_knee_braces")
-    acc_pl = Acc(F.prefix + "_hall_eave_plate")
+    acc_p = Acc(FR.prefix + "_hall_posts")
+    acc_b = Acc(FR.prefix + "_hall_post_bases")
+    acc_k = Acc(FR.prefix + "_hall_knee_braces")
+    acc_pl = Acc(FR.prefix + "_hall_eave_plate")
     up = np.array([0, 0, 1.0])
     for c in range(8):
         d, a = corner_dir(c)
-        P0 = np.array([d[0] * F.R_POST, d[1] * F.R_POST, 0.0])
+        P0 = np.array([d[0] * FR.R_POST, d[1] * FR.R_POST, 0.0])
         if in_wing(P0 + np.array([0, 0, 1.5]), margin=-0.3, zpad=0.0):
             continue
         ex = np.array([-math.sin(a), math.cos(a), 0.0])     # tangential
@@ -455,7 +454,7 @@ def build_hall_frame(coll, seed=202):
         eyr = -ex * math.sin(yaw) + ey * math.cos(yaw)
         chips = rng.uniform(0, 1, (4, 4))
         psd = rng.uniform(0, 50)
-        thr = float(F.min_relief(P0[None] + np.array([[0, 0, 0.2]]))[0])
+        thr = float(FR.min_relief(P0[None] + np.array([[0, 0, 0.2]]))[0])
 
         def ped_def(P, chips=chips, psd=psd, thr=thr):
             z = P[..., 0]
@@ -494,19 +493,19 @@ def build_hall_frame(coll, seed=202):
                                    x1=rng.uniform(0.8, 0.95), depth=rng.uniform(0.016, 0.024),
                                    width=rng.uniform(0.009, 0.013)))
         lean = np.clip(rng.normal(0, 0.009, 2), -0.0175, 0.0175)
-        _hewn(acc_p, P0 + np.array([0, 0, hp - 0.01]), up, ex, ey, F.WALL_H - hp + 0.02, 0.28, 0.28, rng,
+        _hewn(acc_p, P0 + np.array([0, 0, hp - 0.01]), up, ex, ey, FR.WALL_H - hp + 0.02, 0.28, 0.28, rng,
                     chamfer=0.03, nf=6, st_len=0.035, adze=0.008, lean=tuple(lean), swell=rng.uniform(-0.01, 0.01),
                     taper=rng.uniform(0.0, 0.01), wave=0.004, checks=checks, seed=40 + c, drop=(3,))
         # knee braces into the two adjacent plate runs
         for side, fk in ((-1, c), (1, (c + 1) % 8)):
             t = np.array([FT[fk][0], FT[fk][1], 0.0])
             nk = np.array([FN[fk][0], FN[fk][1], 0.0])
-            base = np.array([d[0] * F.R_POST, d[1] * F.R_POST, 0.0])
-            base = base - nk * (np.dot(base, nk) - (F.PLATE_APO + 0.02))
+            base = np.array([d[0] * FR.R_POST, d[1] * FR.R_POST, 0.0])
+            base = base - nk * (np.dot(base, nk) - (FR.PLATE_APO + 0.02))
             dirv = -t if side < 0 else t
             pa = base + dirv * 0.12 + np.array([0, 0, 2.78])
-            pc = base + dirv * 0.12 + np.array([0, 0, F.WALL_H - 0.04])
-            pb = base + dirv * 0.56 + np.array([0, 0, F.WALL_H + 0.02])
+            pc = base + dirv * 0.12 + np.array([0, 0, FR.WALL_H - 0.04])
+            pb = base + dirv * 0.56 + np.array([0, 0, FR.WALL_H + 0.02])
             us = np.linspace(0, 1, 14)
             ctrl = pc * 0.85 + 0.15 * (pa + pb) * 0.5
             path = ((1 - us) ** 2)[:, None] * pa + (2 * us * (1 - us))[:, None] * ctrl + (us ** 2)[:, None] * pb
@@ -515,19 +514,18 @@ def build_hall_frame(coll, seed=202):
             wob = 0.006 * np.sin(us * 3.1 + c)
             path = path + wob[:, None] * nk
             # chunky Y-bracket arm, slightly thicker at the root, adze-wobbled
-            nn_ = len(us)
             profs = np.stack([prof_rect(0.17 * (1.12 - 0.12 * u_), 0.16 + 0.01 * math.sin(7 * u_ + c), 0.024) for u_ in us])
             V, F = sweep(path, nk, profs)
             acc_k.add(V, F, "M_timber")
-            peg(F, base + dirv * 0.09 + np.array([0, 0, 2.86]) + nk * 0.165, nk)
-            peg(F, base + dirv * 0.46 + np.array([0, 0, F.WALL_H + 0.10]) + nk * (F.PLATE_W / 2 + 0.02), nk)
+            peg(FR, base + dirv * 0.09 + np.array([0, 0, 2.86]) + nk * 0.165, nk)
+            peg(FR, base + dirv * 0.46 + np.array([0, 0, FR.WALL_H + 0.10]) + nk * (FR.PLATE_W / 2 + 0.02), nk)
     # eave plate: 8 runs, lap-jointed corners with projecting ends
     for k in range(8):
         n, t = FN[k], FT[k]
-        half = F.PLATE_APO * TAN22
-        cA = n * F.PLATE_APO - t * half
-        cB = n * F.PLATE_APO + t * half
-        if in_wing(np.array([*(n * F.PLATE_APO), 3.5]), margin=-0.4, zpad=0.0):
+        half = FR.PLATE_APO * TAN22
+        cA = n * FR.PLATE_APO - t * half
+        cB = n * FR.PLATE_APO + t * half
+        if in_wing(np.array([*(n * FR.PLATE_APO), 3.5]), margin=-0.4, zpad=0.0):
             continue
         dz = rng.uniform(-0.004, 0.004)
         up_half = (k % 2 == 0)
@@ -538,35 +536,35 @@ def build_hall_frame(coll, seed=202):
             P = P.copy()
             P[..., 2] += 0.006 * np.sin(P[..., 0] * 1.3 + k)
             return P
-        A3 = np.array([cA[0], cA[1], F.WALL_H + F.PLATE_H / 2 + dz])
-        _hewn(acc_pl, A3 + tv * 0.02, tv, ey, np.array([0, 0, 1.0]), 2 * half - 0.04, F.PLATE_W, F.PLATE_H, rng,
+        A3 = np.array([cA[0], cA[1], FR.WALL_H + FR.PLATE_H / 2 + dz])
+        _hewn(acc_pl, A3 + tv * 0.02, tv, ey, np.array([0, 0, 1.0]), 2 * half - 0.04, FR.PLATE_W, FR.PLATE_H, rng,
                     chamfer=0.025, nf=3, st_len=0.11, adze=0.004, wave=0.007, seed=60 + k,
                     checks=[dict(face=1, pos=rng.uniform(-0.3, 0.3), x0=0.15, x1=0.7, depth=0.012, width=0.006)]
                     if k in (2, 3, 4) else (), drop=(1, 2))
         for end, sgn in ((cA, -1), (cB, 1)):
-            zoff = F.PLATE_H / 4 if up_half else -F.PLATE_H / 4
-            E3 = np.array([end[0], end[1], F.WALL_H + F.PLATE_H / 2 + zoff + dz])
+            zoff = FR.PLATE_H / 4 if up_half else -FR.PLATE_H / 4
+            E3 = np.array([end[0], end[1], FR.WALL_H + FR.PLATE_H / 2 + zoff + dz])
             ext = 0.17
             o = E3 + tv * (-0.04) if sgn > 0 else E3 - tv * ext
-            obox(acc_pl, o[None], tv, ey, np.array([0, 0, 1.0]), ext + 0.04, F.PLATE_W - 0.004, F.PLATE_H / 2 - 0.004,
+            obox(acc_pl, o[None], tv, ey, np.array([0, 0, 1.0]), ext + 0.04, FR.PLATE_W - 0.004, FR.PLATE_H / 2 - 0.004,
                  0.02, "M_timber", nx=4)
             if sgn > 0:
-                peg(F, E3 + np.array([0, 0, (F.PLATE_H / 4) if up_half else -(F.PLATE_H / 4)]),
+                peg(FR, E3 + np.array([0, 0, (FR.PLATE_H / 4) if up_half else -(FR.PLATE_H / 4)]),
                     np.array([0, 0, 1.0 if up_half else -1.0]))
     # raising plate (rafter plate) on top of the eave plate, scarf-jointed runs with pegs
     for k in range(8):
         n, t = FN[k], FT[k]
-        if in_wing(np.array([*(n * F.PLATE_APO), 3.5]), margin=-0.4, zpad=0.0):
+        if in_wing(np.array([*(n * FR.PLATE_APO), 3.5]), margin=-0.4, zpad=0.0):
             continue
-        half = (F.PLATE_APO + 0.02) * TAN22
+        half = (FR.PLATE_APO + 0.02) * TAN22
         tv = np.array([t[0], t[1], 0.0])
         ey = np.array([n[0], n[1], 0.0])
-        c0 = n * (F.PLATE_APO + 0.02) - t * (half + 0.06)
-        o = np.array([c0[0], c0[1], F.PLATE_TOP + F.RPLATE_H / 2 + rng.uniform(-0.003, 0.003)])
-        _hewn(acc_pl, o, tv, ey, np.array([0, 0, 1.0]), 2 * half + 0.12, 0.21, F.RPLATE_H, rng, chamfer=0.02,
+        c0 = n * (FR.PLATE_APO + 0.02) - t * (half + 0.06)
+        o = np.array([c0[0], c0[1], FR.PLATE_TOP + FR.RPLATE_H / 2 + rng.uniform(-0.003, 0.003)])
+        _hewn(acc_pl, o, tv, ey, np.array([0, 0, 1.0]), 2 * half + 0.12, 0.21, FR.RPLATE_H, rng, chamfer=0.02,
                     nf=2, st_len=0.13, adze=0.0035, wave=0.006, seed=70 + k, drop=(1, 2))
-        mid = n * (F.PLATE_APO + 0.02 + 0.105) + t * rng.uniform(-0.4, 0.4)
-        peg(F, np.array([mid[0], mid[1], F.PLATE_TOP + 0.10]), ey)
+        mid = n * (FR.PLATE_APO + 0.02 + 0.105) + t * rng.uniform(-0.4, 0.4)
+        peg(FR, np.array([mid[0], mid[1], FR.PLATE_TOP + 0.10]), ey)
     for a in (acc_b, acc_p, acc_k, acc_pl):
         finalize(a, coll)
 
@@ -594,8 +592,8 @@ def rough_block(acc, k, x0, x1, z0, z1, w0, w1, r, mat, rng, amp=0.006, dip=0.0,
         ew = (w0 if side == 0 else w1) if side < 2 else w0 + (w1 - w0) * t_
         cps.append((ex, ew, rng.uniform(0.03, 0.06), rng.uniform(0.01, 0.025)))
 
-    thr = float(F.min_relief(fmap(k, np.array([(x0 + x1) / 2]), np.array([z1]), np.array([(w0 + w1) / 2]),
-                                   a_ref=a_ref))[0])
+    thr = float(FR.min_relief(fmap(k, np.array([(x0 + x1) / 2]), np.array([z1]), np.array([(w0 + w1) / 2]),
+                                    a_ref=a_ref))[0])
     k_amp = 1.0 if amp >= thr else 0.0              # producer note 11: sub-threshold surface noise -> materials
     cps = [c_ for c_ in cps if c_[3] >= thr]
 
@@ -633,8 +631,8 @@ def rough_block(acc, k, x0, x1, z0, z1, w0, w1, r, mat, rng, amp=0.006, dip=0.0,
 
 def build_threshold(coll, seed=1010):
     rng = np.random.default_rng(seed)
-    acc = Acc(F.prefix + "_threshold")
-    op = F.OPENINGS[0]
+    acc = Acc(FR.prefix + "_threshold")
+    op = FR.OPENINGS[0]
     k, xc = op["k"], op["xc"]
     rough_block(acc, k, xc - 0.62, xc + 0.62, -0.08, 0.12, -0.55, 0.20, 0.025, "M_stone_dressed", rng, amp=0.004, dip=0.012,
                 outline=0.012)
@@ -643,7 +641,6 @@ def build_threshold(coll, seed=1010):
                 outline=0.06, chips=3)
     # interior floor flags
     finalize(acc, coll)
-
 
 
 # =================================================================================================================

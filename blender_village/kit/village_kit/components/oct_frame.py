@@ -11,7 +11,7 @@ OctFrame(prefix, **params) holds the building's ONE dimension table (PARAMS docu
 and everything derived from it (derive()).  The components of this family (oct_hall, oct_roof, stone_cone, annex,
 thatch, turret, plank_doors, windows, oct_decals) are functions component(g, ...); they read the frame's dimensions
 and the envelope functions below (apo, hall_map, fmap, wing_map, tur_dist, skirt_z_at, q_rr, wing_under, ...)
-through the module proxy F, which always points at the frame being built (activate()).  One frame is active at a
+through the module proxy FR, which always points at the frame being built (activate()).  One frame is active at a
 time (a build is one process); the dimension table itself is the frame object, not module globals.
 
 Surface conventions: facets k = 0..7 of the hall run CCW from NW (0 NW, 1 W, 2 SW, 3 S = door, 4 SE, 5 E, 6 NE,
@@ -80,7 +80,7 @@ _CUR = [None]
 
 
 class _Proxy:
-    """F.<name> reads / writes the attribute of the frame being built."""
+    """FR.<name> reads / writes the attribute of the frame being built."""
 
     def __getattr__(self, k):
         g = _CUR[0]
@@ -92,7 +92,7 @@ class _Proxy:
         setattr(_CUR[0], k, v)
 
 
-F = _Proxy()
+FR = _Proxy()
 
 
 def activate(g):
@@ -298,7 +298,7 @@ class OctFrame(Building):
 # hall envelope
 # =================================================================================================================
 def apo(z):
-    return F.A0 - np.asarray(z, float) * F.BAT
+    return FR.A0 - np.asarray(z, float) * FR.BAT
 
 
 def build_outline(A0):
@@ -341,7 +341,7 @@ def build_outline(A0):
 
 
 def hall_L(z):
-    return apo(z) * F.L1
+    return apo(z) * FR.L1
 
 
 def hall_map(s, z, w, zc):
@@ -349,28 +349,28 @@ def hall_map(s, z, w, zc):
     s = np.asarray(s, float)
     z = np.asarray(z, float)
     w = np.asarray(w, float)
-    OT, OP, ON, OB = F.OT, F.OP, F.ON, F.OB
+    OT, OP, ON, OB = FR.OT, FR.OP, FR.ON, FR.OB
     t = np.mod(s / hall_L(zc), 1.0)
     ox, oy = np.interp(t, OT, OP[:, 0]), np.interp(t, OT, OP[:, 1])
     nx, ny = np.interp(t, OT, ON[:, 0]), np.interp(t, OT, ON[:, 1])
     nn = np.sqrt(nx * nx + ny * ny)
     nx, ny = nx / nn, ny / nn
-    b = F.BULGE * np.interp(t, OT, OB)
+    b = FR.BULGE * np.interp(t, OT, OB)
     a = apo(z)
-    BAT = F.BAT
+    BAT = FR.BAT
     k3 = 1.0 / math.sqrt(1 + BAT * BAT)
     return np.stack([a * ox + b * nx + w * nx * k3, a * oy + b * ny + w * ny * k3, z + w * BAT * k3], -1)
 
 
 def face_apo(k, x, z):
     """apothem of the outer wall face at facet-local x, height z."""
-    half = TAN22 * F.A0
-    return apo(z) + F.BULGE * np.sin(np.pi * np.clip((x + half) / (2 * half), 0, 1))
+    half = TAN22 * FR.A0
+    return apo(z) + FR.BULGE * np.sin(np.pi * np.clip((x + half) / (2 * half), 0, 1))
 
 
 def fmap(k, x, z, w, a_ref=None):
     """plumb facet-local frame: x along facet (CCW), z up, w outward from the plane at a_ref (default A_REF)."""
-    a_ref = F.A_REF if a_ref is None else a_ref
+    a_ref = FR.A_REF if a_ref is None else a_ref
     x = np.asarray(x, float)
     z = np.asarray(z, float)
     w = np.asarray(w, float)
@@ -408,11 +408,11 @@ def skirt_z_at(x, y):
     k = np.round(ang / (np.pi / 4)).astype(int) % 8
     phi = k * np.pi / 4
     p = x * np.cos(phi) + y * np.sin(phi)
-    return F.SKIRT.zb(p), p
+    return FR.SKIRT.zb(p), p
 
 
 def cone_r(z):
-    return np.interp(np.asarray(z, float), F.CONE_ZF, F.CONE_RF)
+    return np.interp(np.asarray(z, float), FR.CONE_ZF, FR.CONE_RF)
 
 
 # =================================================================================================================
@@ -422,12 +422,12 @@ def q_rr(x, y, rc=None):
     """inward horizontal inset of plan points from the wing's eave outline (W, S, N eaves; the E end dies into the
     hall), measured to the family of rounded-rectangle contours that all keep corner radius rc: the hipped thatch
     surface z = 2.40 + q * tan(pitch) is rounded over the hips at every height."""
-    rc = F.HIP_RC if rc is None else rc
+    rc = FR.HIP_RC if rc is None else rc
     x = np.asarray(x, float)
     y = np.asarray(y, float)
-    dW = x - (F.WX_W - F.W_OVH)
-    dS = y - (F.WY_S - F.W_OVH)
-    dN = (F.WY_N + F.W_OVH) - y
+    dW = x - (FR.WX_W - FR.W_OVH)
+    dS = y - (FR.WY_S - FR.W_OVH)
+    dN = (FR.WY_N + FR.W_OVH) - y
     q = np.minimum(np.minimum(dW, dS), dN)
     for d2 in (dS, dN):
         a, b = dW - rc, d2 - rc
@@ -437,12 +437,12 @@ def q_rr(x, y, rc=None):
 
 
 def eave_q(x, y):
-    return q_rr(x, y, F.EAVE_RC)
+    return q_rr(x, y, FR.EAVE_RC)
 
 
 def wing_under(x, y):
     """underside of the wing thatch (rounded-hip deck)."""
-    return 2.40 + F.W_TAN * q_rr(x, y)
+    return 2.40 + FR.W_TAN * q_rr(x, y)
 
 
 def thatch_swell(x, y):
@@ -458,9 +458,9 @@ def hip_swell(x, y):
     """the thatch builds up over the rounded hips (rounded swell, ~0.25 m radius section)."""
     x = np.asarray(x, float)
     y = np.asarray(y, float)
-    dW = x - (F.WX_W - F.W_OVH)
-    dS = y - (F.WY_S - F.W_OVH)
-    dN = (F.WY_N + F.W_OVH) - y
+    dW = x - (FR.WX_W - FR.W_OVH)
+    dS = y - (FR.WY_S - FR.W_OVH)
+    dN = (FR.WY_N + FR.W_OVH) - y
     out = np.zeros_like(x)
     for d2, other in ((dS, dN), (dN, dS)):
         dh = np.abs(dW - d2) / math.sqrt(2)
@@ -470,25 +470,25 @@ def hip_swell(x, y):
 
 def thatch_low(x, y):
     """lowest course surface of the (swelling) thatch above plan point (x, y)."""
-    return wing_under(x, y) + F.TH_V_MIN + thatch_swell(x, y) / math.cos(F.W_PITCH)
+    return wing_under(x, y) + FR.TH_V_MIN + thatch_swell(x, y) / math.cos(FR.W_PITCH)
 
 
 def wing_top(x, y):
-    return wing_under(x, y) + F.TH_V + thatch_swell(x, y) / math.cos(F.W_PITCH)
+    return wing_under(x, y) + FR.TH_V + thatch_swell(x, y) / math.cos(FR.W_PITCH)
 
 
 def in_wing(P, margin=0.0, zpad=0.03):
     """points inside the wing envelope (under the thatch, within the walls)."""
     P = np.asarray(P, float)
     x, y, z = P[..., 0], P[..., 1], P[..., 2]
-    return (x < F.WX_E - margin) & (x > F.WX_W + margin) & (y > F.WY_S + margin) & (y < F.WY_N - margin) & \
+    return (x < FR.WX_E - margin) & (x > FR.WX_W + margin) & (y > FR.WY_S + margin) & (y < FR.WY_N - margin) & \
         (z < wing_under(x, y) - zpad)
 
 
 def in_wing_fp(x, y, pad=0.0):
     """plan points inside the wing's eave footprint (+ pad)."""
-    return (x > F.WX_W - F.W_OVH - pad) & (x < F.WX_E + F.W_OVH + pad) & (y > F.WY_S - F.W_OVH - pad) & \
-        (y < F.WY_N + F.W_OVH + pad)
+    return (x > FR.WX_W - FR.W_OVH - pad) & (x < FR.WX_E + FR.W_OVH + pad) & (y > FR.WY_S - FR.W_OVH - pad) & \
+        (y < FR.WY_N + FR.W_OVH + pad)
 
 
 def wing_roof_zone(C, pad=0.02):
@@ -503,7 +503,7 @@ def wing_roof_zone(C, pad=0.02):
 def build_wing_path():
     """the wing wall's plan path (outer face at ground): from the hall's N face along the N wall, W wall, S wall to
     the hall's SW facet, corners rounded r 0.07.  Returns arc length, points, outward normals."""
-    pts = [(F.WX_E, 3.70), (F.WX_E, F.WY_N), (F.WX_W, F.WY_N), (F.WX_W, F.WY_S), (-3.70, F.WY_S)]
+    pts = [(FR.WX_E, 3.70), (FR.WX_E, FR.WY_N), (FR.WX_W, FR.WY_N), (FR.WX_W, FR.WY_S), (-3.70, FR.WY_S)]
     rc = 0.07
     P, N = [], []
     for i in range(len(pts) - 1):
@@ -539,25 +539,25 @@ def wing_map(s, z, w, zc):
     s = np.asarray(s, float)
     z = np.asarray(z, float)
     w = np.asarray(w, float)
-    WS, WP, WN = F.WS, F.WP, F.WN
+    WS, WP, WN = FR.WS, FR.WP, FR.WN
     px, py = np.interp(s, WS, WP[:, 0]), np.interp(s, WS, WP[:, 1])
     nx, ny = np.interp(s, WS, WN[:, 0]), np.interp(s, WS, WN[:, 1])
     nn = np.sqrt(nx * nx + ny * ny)
     nx, ny = nx / nn, ny / nn
-    off = w - z * F.BAT
-    return np.stack([px + nx * off, py + ny * off, z + w * F.BAT], -1)
+    off = w - z * FR.BAT
+    return np.stack([px + nx * off, py + ny * off, z + w * FR.BAT], -1)
 
 
 def wing_s_of(x, y):
-    d = np.hypot(F.WP[:, 0] - x, F.WP[:, 1] - y)
-    return float(F.WS[np.argmin(d)])
+    d = np.hypot(FR.WP[:, 0] - x, FR.WP[:, 1] - y)
+    return float(FR.WS[np.argmin(d)])
 
 
 def wing_ztop(s):
-    x, y = np.interp(s, F.WS, F.WP[:, 0]), np.interp(s, F.WS, F.WP[:, 1])
-    if x > F.WX_E - 0.05 and y > 3.6:
+    x, y = np.interp(s, FR.WS, FR.WP[:, 0]), np.interp(s, FR.WS, FR.WP[:, 1])
+    if x > FR.WX_E - 0.05 and y > 3.6:
         return float(wing_under(x, y)) - 0.02
-    return F.W_WALL_H
+    return FR.W_WALL_H
 
 
 # =================================================================================================================
@@ -572,14 +572,14 @@ def _tur_table(scale):
 
 
 def tur_r(z):
-    return np.interp(np.asarray(z, float), F.TUR_ZF, F.TUR_RF)
+    return np.interp(np.asarray(z, float), FR.TUR_ZF, FR.TUR_RF)
 
 
 def tur_reff(th, z):
     """effective radius in plan direction th: the circle, flattened onto the south wall plane below the thatch."""
     r = tur_r(z)
     sn = np.sin(th)
-    lim = np.where(sn < -1e-3, (F.TUR_C[1] - F.TUR_CLIP_Y) / np.maximum(-sn, 1e-3), 1e9)
+    lim = np.where(sn < -1e-3, (FR.TUR_C[1] - FR.TUR_CLIP_Y) / np.maximum(-sn, 1e-3), 1e9)
     return np.where(np.asarray(z, float) < 3.4, np.minimum(r, lim), r)
 
 
@@ -587,8 +587,8 @@ def tur_dist(x, y, z):
     """signed horizontal distance of points from the turret stone surface (+ outside)."""
     x = np.asarray(x, float)
     y = np.asarray(y, float)
-    th = np.arctan2(y - F.TUR_C[1], x - F.TUR_C[0])
-    return np.hypot(x - F.TUR_C[0], y - F.TUR_C[1]) - tur_reff(th, z)
+    th = np.arctan2(y - FR.TUR_C[1], x - FR.TUR_C[0])
+    return np.hypot(x - FR.TUR_C[0], y - FR.TUR_C[1]) - tur_reff(th, z)
 
 
 def junction(name, z):
@@ -597,12 +597,12 @@ def junction(name, z):
     z = np.asarray(z, float)
     r = tur_r(z)
     if name == "N":
-        yf = F.WY_N - z * F.BAT
-        xj = F.TUR_C[0] + np.sqrt(np.maximum(r * r - (yf - F.TUR_C[1]) ** 2, 0))
-        return xj, yf, np.arctan2(yf - F.TUR_C[1], xj - F.TUR_C[0]), 1.0
-    xf = F.WX_W + z * F.BAT
-    yj = F.TUR_C[1] - np.sqrt(np.maximum(r * r - (xf - F.TUR_C[0]) ** 2, 0))
-    return xf, yj, np.arctan2(yj - F.TUR_C[1], xf - F.TUR_C[0]), -1.0
+        yf = FR.WY_N - z * FR.BAT
+        xj = FR.TUR_C[0] + np.sqrt(np.maximum(r * r - (yf - FR.TUR_C[1]) ** 2, 0))
+        return xj, yf, np.arctan2(yf - FR.TUR_C[1], xj - FR.TUR_C[0]), 1.0
+    xf = FR.WX_W + z * FR.BAT
+    yj = FR.TUR_C[1] - np.sqrt(np.maximum(r * r - (xf - FR.TUR_C[0]) ** 2, 0))
+    return xf, yj, np.arctan2(yj - FR.TUR_C[1], xf - FR.TUR_C[0]), -1.0
 
 
 def _tooth_specs():
@@ -620,26 +620,26 @@ def _tooth_specs():
 
 def cush_f(th, spec=None):
     """0 on the W / NW side .. 1 toward droop_dir (the lopsided overhang of ref1)."""
-    spec = F.CUSH if spec is None else spec
+    spec = FR.CUSH if spec is None else spec
     return 0.5 * (1 + np.cos(np.asarray(th, float) - spec["droop_dir"]))
 
 
 def cush_out_r(th):
     """outer radius of the cushion's upper corbel course about the turret axis."""
     f = cush_f(th)
-    C = F.CUSH
+    C = FR.CUSH
     return C["r_body"] + C["proj_up"][0] + (C["proj_up"][1] - C["proj_up"][0]) * f
 
 
 def cush_lip_z(th):
     """underside of the lower corbel course (droops toward droop_dir)."""
-    return F.CUSH["z_base"] - F.CUSH["droop"] * cush_f(th)
+    return FR.CUSH["z_base"] - FR.CUSH["droop"] * cush_f(th)
 
 
 def turret_outer(x, y, z):
     """signed distance from the turret envelope including the cushion collar (for ridge / comb ends)."""
-    th = np.arctan2(np.asarray(y) - F.TUR_C[1], np.asarray(x) - F.TUR_C[0])
-    r = np.hypot(np.asarray(x) - F.TUR_C[0], np.asarray(y) - F.TUR_C[1])
+    th = np.arctan2(np.asarray(y) - FR.TUR_C[1], np.asarray(x) - FR.TUR_C[0])
+    r = np.hypot(np.asarray(x) - FR.TUR_C[0], np.asarray(y) - FR.TUR_C[1])
     z = np.asarray(z, float)
     in_c = (z > cush_lip_z(th) - 0.02) & (z < 6.66)
     rr = np.where(in_c, np.maximum(cush_out_r(th) - 0.03, tur_r(z)), tur_r(z))
@@ -651,14 +651,14 @@ def turret_outer(x, y, z):
 # =================================================================================================================
 def get_pool(key, builder, n_var):
     """register a pool of n_var variants built by builder(acc, k) (built on first use)."""
-    F.POOL_SPECS[key] = (builder, n_var)
+    FR.POOL_SPECS[key] = (builder, n_var)
 
 
 def place(key, var, M, part):
     """linked duplicate of variant `var` of pool `key` with the 4x4 matrix M; object <PREFIX>_<part>_<nnn>."""
     from ..geom import pool_hygiene
-    builder, n = F.POOL_SPECS[key]
-    pools = F.pools
+    builder, n = FR.POOL_SPECS[key]
+    pools = FR.pools
     if not callable(pools.hygiene):
         pools.hygiene = pool_hygiene()
     me = pools.mesh(key, int(var) % n, builder, sharp=40.0)
