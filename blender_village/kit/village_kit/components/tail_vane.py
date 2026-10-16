@@ -9,9 +9,15 @@ from functools import partial  # noqa: F401
 
 import numpy as np
 
-from .drum_frame import (cap_z, capw, inst_bolts, to_cap_local)  # noqa: F401
+from .drum_frame import (relief_far, cap_z, capw, inst_bolts, to_cap_local)  # noqa: F401
 from ..tmplmesh import (D2R, PI, T_BLK, T_BRD, T_PLK, add_grid, blocks_world, bolt_heads, circle_prof, frame_mats,
     hewn_between, log, member, orient, rbox, rect_prof, sweep, unit)  # noqa: F401
+
+
+def _hewn(g, *a, **kw):
+    """hewn_between with the frame's producer-note-11 threshold (adze marks and checks -> material)."""
+    kw.setdefault("min_relief", relief_far(g))
+    return hewn_between(*a, **kw)
 
 
 def tail_boom(g, parts, x0=None, x1=None, z=None, seed="tail"):
@@ -31,7 +37,7 @@ def tail_boom(g, parts, x0=None, x1=None, z=None, seed="tail"):
     def C(x, y, zz):
         return capw(g, np.array([x, y, zz], float))
     for sy in (-1, 1):
-        hewn_between(P_b, "M_timber_weathered", C(x0, sy * g.TB_YC, zb(x0)), C(x1 + rng.uniform(-0.02, 0.02),
+        _hewn(g, P_b, "M_timber_weathered", C(x0, sy * g.TB_YC, zb(x0)), C(x1 + rng.uniform(-0.02, 0.02),
                      sy * g.TB_YC, zb(x1)), g.TB_RW, g.TB_RH, Z3, rng, chamfer=(0.012, 0.022), checks=(1, 1),
                      check_len=(0.6, 1.2), end_split=1, bow=0.006)
     # spacer blocks between the rails (behind the vane the boards themselves fill the gap)
@@ -63,7 +69,7 @@ def tail_boom(g, parts, x0=None, x1=None, z=None, seed="tail"):
     zfoot = g.ZCT - 0.49
     yu = g.TB_YC + g.TB_RW / 2 + 0.036
     for sy in (-1, 1):
-        hewn_between(P_b, "M_timber_weathered", C(xh, sy * yu, zfoot), C(xh, sy * yu, zb(xh) + 0.12), 0.09, 0.07,
+        _hewn(g, P_b, "M_timber_weathered", C(xh, sy * yu, zfoot), C(xh, sy * yu, zb(xh) + 0.12), 0.09, 0.07,
                      capw(g, np.array([1.0, 0, 0])), rng, checks=(0, 1), end_split=1)
         for zq in (zb(xh), zfoot + 0.05):
             inst_bolts(g, g.prefix + "_tail_bolt", C(xh, sy * (yu + 0.036), zq)[None], capw(g, np.array([[0, sy, 0.0]])), 0.018,
@@ -80,7 +86,7 @@ def tail_boom(g, parts, x0=None, x1=None, z=None, seed="tail"):
     # lower brace (round 5: hewn 0.08 x 0.10, 1.5-2.5 cm chamfers like the rails): from the cross block up and out
     # to the boom underside (just inside the vane), iron shoe
     xl = -3.24
-    hewn_between(P_b, "M_timber_weathered", C(xh - 0.03, 0.0, zfoot + 0.10), C(xl, 0.0, zb(xl) - g.TB_RH / 2 - 0.04),
+    _hewn(g, P_b, "M_timber_weathered", C(xh - 0.03, 0.0, zfoot + 0.10), C(xl, 0.0, zb(xl) - g.TB_RH / 2 - 0.04),
                  0.10, 0.08, Y3, rng, chamfer=(0.015, 0.025), checks=(0, 1), end_split=0)
     blocks_world(P_i, "M_iron", C(xl, 0.0, zb(xl) - g.TB_RH / 2 - 0.02)[None],
                  frame_mats(capw(g, np.array([[1.0, 0, 0]])), capw(g, np.array([[0, 1.0, 0]])), Z3[None]),
@@ -91,7 +97,7 @@ def tail_boom(g, parts, x0=None, x1=None, z=None, seed="tail"):
     zt, xu1 = king_post(g, parts, xk, rng)
     a_ = C(xk - 0.02, 0.0, zt - 0.085)
     b_ = C(xu1, 0.0, zb(xu1) + g.TB_RH / 2 + 0.05)
-    hewn_between(P_b, "M_timber_weathered", a_, b_, 0.10, 0.08, Y3, rng, chamfer=(0.015, 0.025), checks=(1, 1),
+    _hewn(g, P_b, "M_timber_weathered", a_, b_, 0.10, 0.08, Y3, rng, chamfer=(0.015, 0.025), checks=(1, 1),
                  check_len=(0.4, 0.8), end_split=0)
     bdir = unit(b_ - a_)
     for sy in (-1, 1):
@@ -124,7 +130,7 @@ def king_post(g, parts, xk, rng, h_above=0.30, half=0.06):
         return float(Lc[m_, 2].max()) if m_.any() else float(cap_z(g, np.array(x), np.array(y))) + 0.04
     z0 = roof(xk, 0.0, 0.07)
     zt = z0 + h_above
-    hewn_between(P_b, "M_timber_weathered", capw(g, np.array([xk, 0.0, z0 - 0.30])), capw(g, np.array([xk, 0.0, zt])),
+    _hewn(g, P_b, "M_timber_weathered", capw(g, np.array([xk, 0.0, z0 - 0.30])), capw(g, np.array([xk, 0.0, zt])),
                  2 * half, 2 * half, capw(g, np.array([1.0, 0, 0])), rng, chamfer=(0.012, 0.02), checks=(1, 1),
                  check_len=(0.15, 0.3), end_split=1)
     # lead collar: square ring path round the post

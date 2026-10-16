@@ -33,7 +33,7 @@ class DrumFrame(Building):
     LEANED = ("tower_", "cap_", "windshaft", "poll_end", "rotor_iron", "wheel_", "tail_")
 
     def __init__(self, prefix="MILL", collection=None, detail_rule=True, hygiene=True, entrance_relief=0.01,
-                 min_relief=0.02, **unused):
+                 min_relief=0.02, rubble=None, **unused):
         super().__init__(prefix, collection)
         self.hygiene = hygiene
         # ---- stone drum ----
@@ -86,6 +86,20 @@ class DrumFrame(Building):
         self.TV_LEN = 2.65
         self.TV_H0 = (-0.62, 0.78)
         self.TV_H1 = (-0.98, 1.22)
+        # ---- rubble language (ensemble review 1: rough rubble like the keep / hut, not near-ashlar) ----
+        self.rubble = dict(
+            rough=1.0,
+            plain=dict(hr=(0.08, 0.17), hbig=0.26, p_big=0.16, lr=(0.15, 0.68), p_tall=0.09, p_pin=0.2, wob=0.034,
+                       wob_cap=0.42, wob2=0.008, pinch=0.3, pinch_w=(0.45, 0.95), h_min=0.05, p_long=0.18),
+            spandrel=dict(hr=(0.08, 0.15), hbig=0.2, p_big=0.14, lr=(0.14, 0.55), p_tall=0.06, p_pin=0.16, wob=0.026,
+                          wob_cap=0.4, wob2=0.006, pinch=0.25, pinch_w=(0.4, 0.8), h_min=0.05, p_long=0.15),
+            emit=dict(p_tilt=0.26, dy=(-0.008, 0.016), follow=1.0, roll=2.0))
+        if rubble:
+            for k_, v_ in rubble.items():
+                if isinstance(v_, dict):
+                    self.rubble[k_] = dict(self.rubble[k_], **v_)
+                else:
+                    self.rubble[k_] = v_
         # ---- per-build state ----
         self.seed_salt = ""
         self.batch = []                 # BatchAcc parts in build order
@@ -392,12 +406,17 @@ def drum_mortar_d(g, u, z):
     d = np.where(z < 0.40, foot, rec)
     band = (z > g.Z_BAND0 + 0.004) & (z < g.Z_BAND1 - 0.004)
     d = np.where(band, -0.085, d)                                  # behind the recessed ashlar of the balustrade band
-    return d + wall_relief(u, z)
+    return d + (0.0 if g.rule.active else 1.0) * wall_relief(u, z)    # +-5 mm body relief: note 11 -> material
 
 
-def arch_set(g, P_dr, rng, th0, ri, zs, nv, ring, Dv, jambs, Rfun, yfront=0.03, vert=False, style="dressed"):
+def arch_set(g, P_dr, rng, th0, ri, zs, nv, ring, Dv, jambs, Rfun, yfront=0.03, vert=False, style="dressed",
+             min_relief=None):
     """Dressed voussoir ring + jamb blocks for an arch at azimuth th0.
-    jambs: dict side -> list of (z0, z1, face_width)."""
+    jambs: dict side -> list of (z0, z1, face_width).  min_relief (producer note 11) defaults to the frame's
+    threshold at the springing (1 cm for the entrance arch, 2 cm elsewhere)."""
+    if min_relief is None:
+        R_ = float(R_out(g, zs))
+        min_relief = float(relief_min(g, [R_ * math.sin(th0), -R_ * math.cos(th0), zs])[0])
     # voussoirs: widths vary +-25 %, key stone wider
     w = rng.uniform(0.75, 1.25, nv)
     w[nv // 2] = max(w[nv // 2], 1.0) * 1.15
@@ -408,7 +427,7 @@ def arch_set(g, P_dr, rng, th0, ri, zs, nv, ring, Dv, jambs, Rfun, yfront=0.03, 
         dep = ring[0] + (ring[1] - ring[0]) * math.sin(ac) + rng.uniform(-0.012, 0.012)
         rm = ri + dep / 2
         L = (a1 - a0) * rm - 0.012
-        P, T = stone_local(rng, [L], [dep], [Dv], style, rot_deg=(0.1, 0.1, 0.1))
+        P, T = stone_local(rng, [L], [dep], [Dv], style, rot_deg=(0.1, 0.1, 0.1), min_relief=min_relief)
         rho = ri + dep / 2 + P[:, :, 2]
         al = ac - P[:, :, 0] / rm
         E = np.stack([rho * np.cos(al), P[:, :, 1], zs + rho * np.sin(al)], 2)
@@ -419,7 +438,7 @@ def arch_set(g, P_dr, rng, th0, ri, zs, nv, ring, Dv, jambs, Rfun, yfront=0.03, 
         for (z0, z1, fw) in blocks:
             H = z1 - z0 - 0.012
             # more wear on the lower jambs (scuffed by carts / feet): 3-4 crisp spalls
-            P, T = stone_local(rng, [fw], [H], [Dv], style, rot_deg=(0.1, 0.1, 0.15),
+            P, T = stone_local(rng, [fw], [H], [Dv], style, rot_deg=(0.1, 0.1, 0.15), min_relief=min_relief,
                                spall=(3, 4) if z0 < 1.0 else None)
             W = open_place(g, P, np.array([th0]), np.array([s * (ri + fw / 2)]), np.array([(z0 + z1) / 2]),
                            np.array([yfront]), Rfun)

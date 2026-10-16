@@ -721,7 +721,7 @@ def build_base(g, parts):
             b |= np.abs(du) < fn(Z) * g.RREF / R_out(g, Z)
         return b
     WD = Wall("drum", partial(drum_to_world, g), partial(drum_to_wall, g), partial(drum_mortar_d, g), -PI * g.RREF, PI * g.RREF, 0.0, g.Z_CORN0, drum_blocked,
-              period=2 * PI * g.RREF, metric_z=(0.40, g.Z_BAND0), registry=g.walls)
+              period=2 * PI * g.RREF, metric_z=(0.40, g.Z_BAND0), registry=g.walls, min_relief=relief_door(g))
     R = g.rubble
     # 1. footing course (big stones projecting ~7 cm, bottoms cut at the ground)
     S = coursing(rng, -0.04, 0.40, free_fn_drum(g, rng), hr=(0.18, 0.24), hbig=0.26, p_big=0.0, lr=(0.42, 0.85),
@@ -756,20 +756,22 @@ def build_slit_windows(g, parts):
     rw = g.RNG("windows")
     for k, th in enumerate(g.WIN_AZ):
         fw = g.WIN["fw"][k]
+        Rw_ = float(R_out(g, 1.6))
+        mrw = float(relief_min(g, [Rw_ * math.sin(th), -Rw_ * math.cos(th), 1.6])[0])     # producer note 11
         jam = {-1: [(g.WIN["jz"][0], g.WIN["jz"][1], fw[0]), (g.WIN["jz"][1], g.WIN["jz"][2], fw[1])],
                1: [(g.WIN["jz"][0], g.WIN["jz"][1], fw[1]), (g.WIN["jz"][1], g.WIN["jz"][2], fw[0])]}
         for s, bl in jam.items():
             for (z0, z1, w) in bl:
-                P, T = stone_local(rw, [w], [z1 - z0 - 0.012], [0.32], "dressed", rot_deg=(0.2, 0.2, 0.3))
+                P, T = stone_local(rw, [w], [z1 - z0 - 0.012], [0.32], "dressed", rot_deg=(0.2, 0.2, 0.3), min_relief=mrw)
                 W = open_place(g, P, np.array([th]), np.array([s * (g.WIN["cw"] + w / 2)]), np.array([(z0 + z1) / 2]),
                                np.array([0.02]))
                 P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="bevel")
         # sill with drip (projects 6 cm) and lintel
-        P, T = stone_local(rw, [0.62], [0.12], [0.40], "dressed", rot_deg=(0.2, 0.3, 0.2))
+        P, T = stone_local(rw, [0.62], [0.12], [0.40], "dressed", rot_deg=(0.2, 0.3, 0.2), min_relief=mrw)
         P[:, :, 2] += np.where(P[:, :, 2] > 0, -0.02 * np.clip(P[:, :, 1] + 0.1, 0, 1) * 6, 0)
         W = open_place(g, P, np.array([th]), np.array([0.0]), np.array([1.235]), np.array([0.06]))
         P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="bevel")
-        P, T = stone_local(rw, [0.74], [0.18], [0.34], "dressed", rot_deg=(0.2, 0.2, 0.4))
+        P, T = stone_local(rw, [0.74], [0.18], [0.34], "dressed", rot_deg=(0.2, 0.2, 0.4), min_relief=mrw)
         W = open_place(g, P, np.array([th]), np.array([0.0]), np.array([1.945]), np.array([0.02]))
         P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="bevel")
         # splayed embrasure behind the slit (closed, dark): sides, sill, head and back (mortar)
@@ -810,7 +812,8 @@ def blind_arcade_build(g, parts):
         # 1 cm chamfer, 1-2 chips): the recess floor was open into the hollow drum from above
         cw = g.ARCH["cw"]
         zsill = g.ARCH["z0"] + ra.uniform(0.003, 0.016)
-        P, T = stone_local(ra, [2 * cw + 0.10], [0.06], [0.275], "dressed", rot_deg=(0.25, 0.15, 0.2), spall=(1, 2))
+        P, T = stone_local(ra, [2 * cw + 0.10], [0.06], [0.275], "dressed", rot_deg=(0.25, 0.15, 0.2), spall=(1, 2),
+                           min_relief=relief_far(g))
         W = open_place(g, P, np.array([th]), np.array([ra.uniform(-0.01, 0.01)]), np.array([zsill - 0.03]),
                        np.array([0.006]))
         P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="bevel", wear=0.5)
@@ -843,16 +846,17 @@ def blind_arcade_build(g, parts):
             return u, z, al - np.sqrt(np.maximum(R_out(g, z) ** 2 - u ** 2, 0.01)) + 0.25
 
         def a_mort(u, z, k=th):
-            return -0.022 + wall_relief(u, z, k)
+            return -0.022 + (0.0 if g.rule.active else 1.0) * wall_relief(u, z, k)
 
         def a_block(U, Z, cw=cw):
             top = g.ARCH["zs"] + np.sqrt(np.clip(cw ** 2 - U ** 2, 0, None))
             return (np.abs(U) > cw) | (Z < g.ARCH["z0"]) | (Z > top)
         WA = Wall("arch", a_world, a_wall, a_mort, -cw - 0.05, cw + 0.05, g.ARCH["z0"] - 0.02, g.ARCH["zs"] + cw + 0.05,
-                  a_block, registry=g.walls)
+                  a_block, registry=g.walls, min_relief=relief_far(g))
         if len(S["uc"]):
             ang, dy = depth_tilt_params(ra, len(S["uc"]))
-            P, T = stone_local(ra, S["L"], S["H"], wall_depth(dy, a_mort(S["uc"], S["zc"]), S["L"], ang), "rubble")
+            P, T = stone_local(ra, S["L"], S["H"], wall_depth(dy, a_mort(S["uc"], S["zc"]), S["L"], ang), "rubble",
+                               min_relief=relief_far(g))
             P = apply_tilt(P, ang)
             W = open_place(g, P, np.full(len(S["uc"]), th), S["uc"], S["zc"], -0.25 + dy)
             P_st.add(W, T, Pl=P, mat="M_stone", smooth="all")
@@ -910,7 +914,7 @@ def arcade_piers(g, P_dr, rng, yfront=0.015, depth=0.30):
             for q in range(nblk):
                 L = float(lens[q])
                 P, T = stone_local(rng, [L], [H], [depth], "dressed", rot_deg=(0.1, 0.1, 0.12),
-                                   spall=(1, 3) if q in (0, nblk - 1) else (0, 2))
+                                   spall=(1, 3) if q in (0, nblk - 1) else (0, 2), min_relief=relief_far(g))
                 u = starts[q] + L / 2 + P[0, :, 0]          # arc length from the left reveal edge
                 y = P[0, :, 1] + yfront + rng.uniform(-0.003, 0.004)
                 z = zc + P[0, :, 2] + rng.uniform(-0.002, 0.002)
@@ -958,7 +962,7 @@ def build_band_cornice_and_finish(g, parts):
     S = coursing(rb, g.Z_BAL0, g.Z_BAL1, lambda zb, zt: spans, hr=(0.17, 0.17), p_big=0, lr=(0.3, 0.55), p_tall=0,
                  p_pin=0, wob=0, joint=(0.008, 0.014), Dr=(0.05, 0.06))
     th = S["uc"] / R_out(g, S["zc"])
-    P, T = stone_local(rb, S["L"], S["H"], S["D"], "ashlar")
+    P, T = stone_local(rb, S["L"], S["H"], S["D"], "ashlar", min_relief=relief_far(g))
     P_dr.add(cyl_place(g, P, th, S["zc"], np.full(len(th), -0.03)), T, Pl=P, mat="M_stone_dressed", smooth="bevel")
     baluster_row(g, rb, spans, g.Z_BAL0, g.Z_BAL1)
 
@@ -972,7 +976,7 @@ def build_band_cornice_and_finish(g, parts):
                  hr=(0.15, 0.15), p_big=0, lr=(0.25, 0.5), p_tall=0, p_pin=0, wob=0, joint=(0.008, 0.012),
                  Dr=(0.05, 0.06))
     th = S["uc"] / R_out(g, S["zc"])
-    P, T = stone_local(rc, S["L"], S["H"], S["D"], "ashlar")
+    P, T = stone_local(rc, S["L"], S["H"], S["D"], "ashlar", min_relief=relief_far(g))
     P_dr.add(cyl_place(g, P, th, S["zc"], np.full(len(th), -0.005)), T, Pl=P, mat="M_stone_dressed", smooth="bevel")
     dentil_corbels(g, rc, zc0 + 0.145, n=int(round(40 * float(R_out(g, zc0)) / 2.446)))
     profile_course(g, P_dr, "M_stone_dressed", rc, zc0 + 0.22, [(-0.05, 0), (0.19, 0), (0.20, 0.01), (0.20, 0.042),

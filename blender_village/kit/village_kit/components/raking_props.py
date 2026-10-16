@@ -9,13 +9,13 @@ from functools import partial  # noqa: F401
 
 import numpy as np
 
-from .drum_frame import (TZ, face_axes, face_map, lean)  # noqa: F401
+from .drum_frame import (relief_far, TZ, face_axes, face_map, lean)  # noqa: F401
 from ..split_stones import (stone_local)  # noqa: F401
 from ..tmplmesh import (D2R, PI, R_UPRIGHT, T_PAD, add_caps, add_grid, bolt_heads, circle_prof, facet_shave,
     frame_mats, hewn_beam, lathe, log, member, orient, rect_prof, rotm, sweep, tmpl_rings, unit, xform)  # noqa: F401
 
 
-def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10):
+def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10, min_relief=0.0):
     """Raking-prop foot (kit component, round 5): a split-stone pad bedded in the soil with only its domed,
     irregular top showing (3-6 cm on the high side, 0-2 cm on the low side, no vertical side over 4 cm); a
     hewn chock with planar adze facets sunk >= 40 % of its height into a notch cut in the pad, a bird's-mouth
@@ -30,7 +30,8 @@ def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10):
         return xform(P, Rg, base + hz * along + sv * lat + np.array([0, 0, z]))
     # ---- pad: bedded split stone, domed top, tilted 3-4 deg, highest point 4.5-5.5 cm ----
     Lpad, Wpad, Hpad = rng.uniform(0.64, 0.74), rng.uniform(0.56, 0.64), 0.20
-    Pst, Tst = stone_local(rng, [Lpad], [Wpad], [Hpad], "ground", rot_deg=(0, 0, 0), T=T_PAD)
+    Pst, Tst = stone_local(rng, [Lpad], [Wpad], [Hpad], "ground", rot_deg=(0, 0, 0), T=T_PAD,
+                           min_relief=min_relief)
     uu = Pst[0, :, 0] / (Lpad / 2)
     ww = Pst[0, :, 2] / (Wpad / 2)
     up_w = np.clip((Pst[0, :, 1] + Hpad) / Hpad, 0, 1)
@@ -53,7 +54,7 @@ def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10):
     # ---- chock: hewn block with planar adze facets, bird's-mouth step at along = 0 ----
     Lc = al1 - al0
     Hc = Zf + heel - z_n
-    Pc, Tc = hewn_beam(rng, Lc, 2 * hwc, Hc, nx=18, chamfer=(0.007, 0.013), adze=(0.002, 0.004), checks=(1, 1),
+    Pc, Tc = hewn_beam(rng, Lc, 2 * hwc, Hc, nx=18, chamfer=(0.007, 0.013), adze=(0.002, 0.004), checks=(1, 1), min_relief=min_relief,
                        check_len=(0.15, 0.3), end_split=1, drop=((2, 0),))
     # round 6 (director r5 #4): an irregular hewn WEDGE - the top 2-3 cm narrower than the base, the heel end
     # tapering 3-5 cm toward the top, and adze facets 6-12 mm deep that read from 2 m
@@ -63,7 +64,7 @@ def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10):
     et_ = rng.uniform(0.03, 0.05)
     Pc[0, :, 0] -= et_ * zr_ * np.clip((Pc[0, :, 0] + 0.02) / (Lc / 2), 0, 1)
     Pc[0, :, 1] += rng.uniform(-0.006, 0.006) * zr_ * np.sign(Pc[0, :, 1])  # the two cheeks not parallel
-    Pc[0] = facet_shave(Pc[0], rng, ((1, 1), (1, -1), (2, 1), (0, 1), (0, -1)), n=(2, 3), dep=(0.006, 0.012),
+    Pc[0] = facet_shave(Pc[0], rng, ((1, 1), (1, -1), (2, 1), (0, 1), (0, -1)), n=(2, 3), dep=(0.006, 0.012), min_relief=min_relief,
                         tilt=0.18)
     xs_ = Pc[0, :, 0] + (al0 + al1) / 2                       # along
     zl = Pc[0, :, 2] + Hc / 2                                  # 0 .. Hc above the notch floor
@@ -127,6 +128,7 @@ def raking_prop(g, parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None
     """Raking timber prop (kit component): a bowed, checked, knotted pole from its head `top` (on tower face k at
     height zatt, carried by a cleat, collar lugs and a through-bolt) down to the ground anchor at `bot`, ending in
     prop_foot() (bedded pad, sunk chock, soil fillet). Writes <PREFIX>_props / _prop_anchors / _prop_iron."""
+    mr = relief_far(g)                    # producer note 11 (the props stand > 3 m from the door)
     P_p, P_a, P_i = parts["props"], parts["prop_anchors"], parts["prop_iron"]
     rng = g.RNG("prop_%s" % seed) if rng is None else rng
     nn_, tt_ = face_axes(k)
@@ -178,7 +180,8 @@ def raking_prop(g, parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None
                                                      rng.uniform(0.12, 0.28))   # q 3: adze flat at the foot
         win = np.clip(np.minimum(sdist - s0, s0 + lf - sdist) / 0.15, 0, 1)
         da = (ang[None, :] - af + PI) % (2 * PI) - PI
-        dep = rng.uniform(0.010, 0.014) * win
+        dmax = rng.uniform(0.010, 0.014)
+        dep = (dmax if dmax >= mr else 0.0) * win                  # adze flats: producer note 11
         flat = (rad[:, None] - dep[:, None]) / np.maximum(np.cos(da), 0.3)
         R = np.where(np.abs(da) < 1.2, np.minimum(R, flat), R)
     ab = rng.uniform(0, 2 * PI)
@@ -187,7 +190,7 @@ def raking_prop(g, parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None
     inb = (sdist > s0) & (sdist < s0 + lb)
     hw_b = 0.3 + 0.08 * np.sin(sdist * 17 + idx) + 0.05 * np.sin(sdist * 41)
     da = np.abs((ang[None, :] - ab + PI) % (2 * PI) - PI)
-    R += 0.010 * (inb[:, None] & (da < hw_b[:, None]))
+    R += (0.010 if 0.010 >= mr else 0.0) * (inb[:, None] & (da < hw_b[:, None]))      # bark strip: note 11
     # V checks (round 6, director r5 #4): each check is a tapering split - width 0 -> 1.5-2.5 cm -> 0 and depth
     # 0 -> 1.2-2.2 cm -> 0 along its 0.3-0.8 m length (no two the same length), drifting +-5 deg off the grain
     # (the V's bottom slides across the three check columns), plus one radial end-grain split at the butt
@@ -207,7 +210,8 @@ def raking_prop(g, parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None
             s0 = rng.uniform(1.3, Lp - lc - 0.8)
         u = np.clip((sdist - s0) / lc, 0, 1)
         env = np.sin(u * PI) ** 1.3 * (1 + 0.15 * np.sin(u * 11 + ci))
-        dep = rng.uniform(0.012, 0.022) * env
+        dk = rng.uniform(0.012, 0.022)
+        dep = (dk if dk >= mr else 0.0) * env                      # seasoning checks: producer note 11
         drift = rng.uniform(-1.4, 1.4)          # ~ +-5 deg over the check's length (column units)
         sl = np.clip(0.5 * drift * (2 * u - 1), -0.8, 0.8) * (u > 0) * (u < 1)
         wfac = np.clip(env * rng.uniform(1.1, 1.4), 0, 1)                             # width taper
@@ -215,8 +219,8 @@ def raking_prop(g, parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None
         R[:, jl] -= dep * np.clip(-sl, 0, 1) * wfac
         R[:, jr] -= dep * np.clip(sl, 0, 1) * wfac
         # narrow the open V toward its ends: the lip columns sag in only where the check is wide
-        R[:, jl] -= 0.002 * wfac * (u > 0) * (u < 1)
-        R[:, jr] -= 0.002 * wfac * (u > 0) * (u < 1)
+        R[:, jl] -= 0.002 * wfac * (u > 0) * (u < 1) * (dk >= mr)
+        R[:, jr] -= 0.002 * wfac * (u > 0) * (u < 1) * (dk >= mr)
         checks.append((round(s0, 2), round(lc, 2)))
     # end-grain split at the butt: deepest (2.5-3.5 cm) at the foot cut, closing 0.15-0.25 m up the pole
     jb = int(np.argmin(np.abs((ang - (ck_a[0] + PI * 0.55) % (2 * PI) + PI) % (2 * PI) - PI)))
@@ -234,7 +238,7 @@ def raking_prop(g, parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None
         dk = rng.uniform(0.05, 0.07) if ik < 2 else rng.uniform(0.04, 0.07)   # the two lower knots 5-7 cm
         knots.append((tk, ak, dk))
         dda = np.abs((ang - ak + PI) % (2 * PI) - PI)
-        R += 0.016 * np.exp(-(dda / 0.5) ** 2)[None, :] * np.exp(-((sdist - sk) / 0.09) ** 2)[:, None]
+        R += (0.016 if 0.016 >= mr else 0.0) * np.exp(-(dda / 0.5) ** 2)[None, :] * np.exp(-((sdist - sk) / 0.09) ** 2)[:, None]
     ex = side
     ey = upv
     prof = np.stack([R * np.cos(ang)[None], R * np.sin(ang)[None]], -1)
@@ -322,7 +326,7 @@ def raking_prop(g, parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None
     def pole_at(z, top=top, axis=axis, side=side, bow=bow):
         tq = (top[2] - z) / (top[2] - bot[2])
         return top + axis * tq + side * bow * math.sin(min(tq, 1.0) * PI), 0.075 + 0.025 * min(tq, 1.0)
-    prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at)
+    prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, min_relief=mr)
     return top, bot
 
 

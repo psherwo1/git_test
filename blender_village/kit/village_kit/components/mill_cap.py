@@ -8,7 +8,7 @@ from functools import partial  # noqa: F401
 
 import numpy as np
 
-from .drum_frame import (cap_dh, cap_h, cap_t, cap_z, capw, hood_z, to_cap_local, x_valley)  # noqa: F401
+from .drum_frame import (relief_far, cap_dh, cap_h, cap_t, cap_z, capw, hood_z, to_cap_local, x_valley)  # noqa: F401
 from .. import shingles
 from ..tmplmesh import (D2R, HeightField, PI, T_BLK, T_BRD_OT, add_grid, blocks_world, circle_prof, euler,
                         frame_mats, lathe, log, lowfreq, member, mesh_tmpl, part_samples, rbox, rect_prof, rotm,
@@ -296,7 +296,7 @@ def build_cap(g, parts):
         mid = np.abs(uy) < 0.01
         P[:, :, 0] -= np.sign(ux) * (endz & mid) * (0.012 + 0.03 * np.clip(uz + 0.3, 0, 1))
         top_near = (uz > 0.99) & mid & (np.abs(ux) > 0.6)
-        P[:, :, 2] -= top_near * 0.012 * np.clip((np.abs(ux) - 0.6) / 0.4, 0, 1)
+        P[:, :, 2] -= top_near * (0.012 if 0.012 >= relief_far(g) else 0.0) * np.clip((np.abs(ux) - 0.6) / 0.4, 0, 1)
         P[:, :, 1] += rng.uniform(-0.004, 0.004) * (1 - ux ** 2)
         Pc = np.stack([(x0 + x1) / 2 + P[:, :, 0], s * YS + P[:, :, 1], ZSH + P[:, :, 2]], -1)
         P_fr.add(capw(g, Pc), T_SHR, Pl=P, mat="M_timber", smooth="bevel")

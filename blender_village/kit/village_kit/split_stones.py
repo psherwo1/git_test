@@ -32,8 +32,10 @@ STYLE = {
     # rounding (frac of min dim, min, max), outline noise, face noise (m), pillow range (m), taper, shear
     # cuts = (min, max) straight fracture cuts on the outline; facets = (min, max) tilted face planes;
     # spall = (min, max) edge spalls (dressed work)
-    "rubble": dict(avar=(0.003, 0.015, 0.8), rr=(0.08, 0.008, 0.013), ry=0.009, nxz=0.045, ny=0.006, pil=(0.002, 0.009), tap=0.07,
-                   shear=0.06, T=T_RUB3, cuts=(2, 4), cutk=(0.8, 0.94), facets=(1, 2), hf=0.003, ftilt=0.25,
+    # kit 1.2.0 (ensemble review): rougher outlines -- bigger knocked-off corners (cutk), more outline noise and
+    # taper / shear, so a course of rubble no longer reads as near-ashlar blocks
+    "rubble": dict(avar=(0.003, 0.015, 0.8), rr=(0.08, 0.008, 0.013), ry=0.009, nxz=0.058, ny=0.006, pil=(0.002, 0.009), tap=0.10,
+                   shear=0.09, T=T_RUB3, cuts=(2, 4), cutk=(0.74, 0.92), facets=(1, 2), hf=0.003, ftilt=0.25,
                    fshave=(0.008, 0.02)),
     "pin": dict(avar=(0.002, 0.008, 0.8), rr=(0.12, 0.004, 0.008), ry=0.006, nxz=0.05, ny=0.004, pil=(0.0, 0.004), tap=0.12,
                 shear=0.08, T=T_PIN, cuts=(1, 3), cutk=(0.8, 0.92), facets=(0, 1), hf=0.0015, ftilt=0.3,

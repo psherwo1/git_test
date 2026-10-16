@@ -100,7 +100,7 @@ Tested target: Windows 10/11, AMD Ryzen 5 5600X, RTX 3060 12 GB.
    ```
 3. **Create a venv with Blender as a module:**
    ```
-   py -3.13 -m venv .bpyenv
+   py -3.13 -m venv .bpyenv            (Microsoft Store Python has no py launcher: use python3.13 -m venv .bpyenv)
    .bpyenv\Scripts\python -m pip install bpy==5.1.2
    ```
    On Linux/macOS, use `python3.13 -m venv .bpyenv` and `.bpyenv/bin/python`.
@@ -131,4 +131,4 @@ After the decision, follow `director/production_plan.md`:
 
 ## 7. Resume prompt
 
-*(Finalised at handoff, with the exact state and arguments.)*
+See `RESUME_PROMPT.md`. Paste its fenced block into the desktop session.

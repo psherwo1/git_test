@@ -8,7 +8,7 @@ from functools import partial  # noqa: F401
 
 import numpy as np
 
-from .drum_frame import (R_out, place_instance, pool_part)  # noqa: F401
+from .drum_frame import (relief_far, R_out, place_instance, pool_part)  # noqa: F401
 from ..split_stones import (stone_local)  # noqa: F401
 from ..tmplmesh import (D2R, PI, T_BLK_ABX, T_BLK_PLX, blocks_world, euler, lathe, log)  # noqa: F401
 

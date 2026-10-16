@@ -10,7 +10,7 @@ from functools import partial  # noqa: F401
 
 import numpy as np
 
-from .drum_frame import (R_out, arch_set, door_params, kpart, open_place)  # noqa: F401
+from .drum_frame import (relief_door, relief_far, R_out, arch_set, door_params, kpart, open_place)  # noqa: F401
 from ..split_stones import (stone_local)  # noqa: F401
 from ..tmplmesh import (BatchAcc, D2R, PI, T_BLK, T_FLAG_O, T_PLK_NI, add_caps, add_grid, circle_prof, frame_mats,
     lathe, log, member, orient, orient_open, rbox, rect_prof, rotm, sweep, tmpl_rings, xform)  # noqa: F401
@@ -24,7 +24,8 @@ def arched_door_surround(g, parts):
     arch_set(g, P_dr, rd, 0.0, g.DOOR_CW, g.ZS_DOOR, 11, g.DOOR_RING, 0.34, jam, lambda z: np.full_like(z, g.R_DOOR),
              yfront=0.03, style="hero")
     # threshold stone (worn dip in the middle)
-    P, T = stone_local(rd, [1.32], [0.17], [0.46], "hero", rot_deg=(0.2, 0.2, 0.2), spall=(1, 2))
+    P, T = stone_local(rd, [1.32], [0.17], [0.46], "hero", rot_deg=(0.2, 0.2, 0.2), spall=(1, 2),
+                       min_relief=relief_door(g))
     u = P[:, :, 0] / 0.66
     top = P[:, :, 2] > 0.04
     P[:, :, 2] -= top * 0.012 * np.exp(-(u * 2.2) ** 2) * np.exp(-((P[:, :, 1] + 0.2) / 0.2) ** 2)
@@ -33,7 +34,7 @@ def arched_door_surround(g, parts):
     P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="all")
 
 
-def door_planks(part, rng, x0, width, z_bot, ztop_fn, xf, n=6, t=0.042):
+def door_planks(part, rng, x0, width, z_bot, ztop_fn, xf, n=6, t=0.042, min_relief=0.0):
     """Arch-topped ledged door leaf planks (kit component), leaf-local x lateral (hinge at x0), y thickness from
     the outer face (y = 0) inward, z up; xf maps leaf-local -> world. Age per art bible section 4: outer arrises
     worn 1.5-2.5 cm (more in the bottom 0.4 m and on the lock stile), ragged rotted bottom end (+-2-4 cm) with
@@ -60,6 +61,7 @@ def door_planks(part, rng, x0, width, z_bot, ztop_fn, xf, n=6, t=0.042):
         xc = rng.uniform(0.3, 0.7) * w
         ck0, ckl = rng.uniform(0.1, 0.9), rng.uniform(0.3, 0.9)
         ckd = rng.uniform(0.004, 0.006)
+        ckd = ckd if ckd >= min_relief else 0.0         # producer note 11: face checks -> material / decals
         sh = rng.uniform(0.03, 0.05) if i in short else 0.0
         ph = rng.uniform(0, 6, 3)
         rings, xs_all = [], []
@@ -185,7 +187,8 @@ def build_door_and_interior(g, parts):
         y += hrow
     c = np.array(cells)
     N = len(c)
-    P, T = stone_local(rf, c[:, 2], c[:, 3], np.full(N, 0.035), "flag", rot_deg=(0.3, 0.3, 1.5), T=T_FLAG_O)
+    P, T = stone_local(rf, c[:, 2], c[:, 3], np.full(N, 0.035), "flag", rot_deg=(0.3, 0.3, 1.5), T=T_FLAG_O,
+                       min_relief=relief_door(g))
     # stone_local: x = length, y = "outward" (thickness), z = height -> lay flat: local y -> world z
     Rm = frame_mats(np.repeat([[1.0, 0, 0]], N, 0), np.repeat([[0, 0, 1.0]], N, 0), np.repeat([[0, -1.0, 0]], N, 0))
     W = xform(P, Rm, np.stack([c[:, 0], c[:, 1], np.full(N, g.Z_TH) + rf.normal(0, 0.003, N)], 1))
@@ -260,7 +263,7 @@ def build_door_and_interior(g, parts):
         return (W - hinge) @ Rleaf.T + hinge
 
     planks = door_planks(P_leaf, rng, leaf_x0, LEAF_W, g.Z_TH + 0.01, lambda x: g.ZS_DOOR + np.sqrt(
-        np.clip((g.DOOR_CW + 0.055) ** 2 - x ** 2, 0, None)) - 0.01, leaf_xf)
+        np.clip((g.DOOR_CW + 0.055) ** 2 - x ** 2, 0, None)) - 0.01, leaf_xf, min_relief=relief_door(g))
     # ledges + braces on the inner face
     ly = 0.042 + 0.018
     for zl in (g.Z_TH + 0.32, g.Z_TH + 1.02, g.Z_TH + 1.62):

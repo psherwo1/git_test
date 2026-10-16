@@ -9,7 +9,7 @@ from functools import partial  # noqa: F401
 
 import numpy as np
 
-from .drum_frame import (er_t, hex_heads, loc3, rotw, stock_depth, stock_w)  # noqa: F401
+from .drum_frame import (relief_far, er_t, hex_heads, loc3, rotw, stock_depth, stock_w)  # noqa: F401
 from ..tmplmesh import (D2R, PI, T_BRD, T_DRS, T_PLK, circle_prof, hewn_beam, lathe, member, perm_tmpl, rbox,
     rect_prof, sweep, unit, xform)  # noqa: F401
 
@@ -30,7 +30,7 @@ def build_rotor(g, parts):
         r0, r1 = -0.15, g.ARM_R1
         # hewn stock: adze scallops, worn chamfers (2-4 cm before the taper -> 1.5-3 cm), 1-2 long checks,
         # split end grain at the tip
-        P, Th = hewn_beam(rng, r1 - r0, 0.30, 0.30, chamfer=(0.02, 0.04), adze=(0.005, 0.008),
+        P, Th = hewn_beam(rng, r1 - r0, 0.30, 0.30, chamfer=(0.02, 0.04), adze=(0.005, 0.008), min_relief=relief_far(g),
                           checks=(1, 2), check_len=(0.6, 1.5), end_split=1, faces_check=(1, 2))
         r = (r0 + r1) / 2 + P[:, :, 0]
         sc = stock_depth(g, r, i) / 0.30
