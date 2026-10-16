@@ -833,9 +833,9 @@ Score by axis:
 
 ### Files
 
-- **Script.** `buildings/hilltop_keep/build_hilltop_keep.py` is now a thin declarative assembly (about 120 lines) on the shared kit `kit/village_kit/` (kit 1.1.0). One dimension table `KIT` (`kit_set()`), the component steps in build order, `KEEP_KIT_VARIANT=1` for the kit test, `KEEP_FAST=1` to skip the ray test on quick looks. A full build takes about 7.8 min (6.6 min of it the hidden-geometry ray test).
+- **Script.** `buildings/hilltop_keep/build_hilltop_keep.py` is now a thin declarative assembly (about 120 lines) on the shared kit `kit/village_kit/` (kit 1.1.0). One dimension table `KIT` (`kit_set()`), the component steps in build order, `KEEP_KIT_VARIANT=1` for the kit test, `KEEP_FAST=1` to skip the ray test on quick looks. A full build takes about 7.8 min (6.6 min of it the hidden-geometry ray test). Seeded and deterministic: two builds gave 0 of 388 objects different (vertex and matrix hashes) and a byte-identical `decal_anchors.json`.
 - **Outputs.** `hilltop_keep.blend` (27.8 MB, compressed) and `decal_anchors.json`; the variant in `kit_variant/` (`hilltop_keep_kit_variant.blend`, 25.2 MB, + its `decal_anchors.json`). `signoff_phase1/` is untouched.
-- **Renders.** `renders/hilltop_keep/round_07/`: all 6 views at 32 samples, `stats.json`, `hidden.json`; the variant in `round_07/kit_variant/` (same set).
+- **Renders.** `renders/hilltop_keep/round_07/`: all 6 views at 32 samples, `stats.json`, `hidden.json`; `builder_checks/` (16 spp close-ups of the final file: lantern_cap, turret_cap, cap_under, collar_comb, thatch_s, door, wing_west_end); the variant in `round_07/kit_variant/` (same 6-view set).
 
 ### Stats
 

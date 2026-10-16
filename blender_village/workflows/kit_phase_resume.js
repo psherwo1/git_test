@@ -185,6 +185,12 @@ Return the structured report.`, { label: `migrate:${id}`, phase: 'Migrate heroes
 const priorHeroResults = (args && args.hero_results) || []
 const gated = await parallel([
   ...((args && args.heroes_to_gate) || []).map(h => () => heroGate(h.id, h.round, 'Migrate heroes')),
+  // args.heroes_to_fix: [{id, round, feedback}] -> run a fix round first (renders into round_NN), then gate from that round
+  ...((args && args.heroes_to_fix) || []).map(h => async () => {
+    const w = await fixRound(h.id, h.round, h.feedback, 'Migrate heroes')
+    if (!w) return { id: h.id, signed_off: false, error: 'fix round failed' }
+    return heroGate(h.id, h.round, 'Migrate heroes')
+  }),
   ...((args && args.heroes_to_migrate) || []).map(h => async () => {
     const m = await migrate(h.id, { ...h, components: h.components + (h.resume_note ? `. NOTE: ${h.resume_note}` : '') })
     if (!m) return { id: h.id, signed_off: false, error: 'migration failed' }
