@@ -44,3 +44,12 @@ Target: populate a village of 40-50 buildings.
 - Export kit pieces and/or buildings for Unreal 5.8: FBX or USD, centimetre scale, Nanite-ready.
 - Supply instance layouts for Packed Level Actors.
 - Write import notes covering texturing with jointless Megascans surfaces, world-aligned projection and the `Mask` attribute.
+
+## Sign-off record
+
+| Building | Round | Director score | Sign-off audit | Date |
+|---|---|---|---|---|
+| tower_windmill | 6 | 9.1 | upheld | 2026-10-16 |
+| hilltop_keep | 6 | 8.4 | upheld | 2026-10-16 |
+
+Sign-off rules in force: pass mark 8.2 (client, "for now"), producer notes 1-10, and all client corrections.
