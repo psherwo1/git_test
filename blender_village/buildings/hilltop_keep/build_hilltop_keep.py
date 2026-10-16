@@ -427,7 +427,7 @@ def build_stones(acc, S, mapfn, mat, rng, rough=1.0, nxy=5, premap=None, noise_a
     if dressed:
         # tooled face: 2-5 mm undulation, punched/pitched centre inside a 2-3 cm drafted margin
         und = 0.0035 * fbm(np.stack([x * 7.0, y * 7.0, sid], -1), 2)
-        pick = np.abs(vnoise(np.stack([x * 55.0, y * 55.0, sid * 3.1], -1)))
+        pick = np.abs(vnoise(np.stack([x * 30.0, y * 30.0, sid * 3.1], -1)))
         dm = np.minimum(HX - np.abs(x0_), HY - np.abs(y0_))
         marg = np.asarray(S.get("margin", np.full(M, 0.025)), float)[:, None]
         inner = np.clip((dm - marg) / 0.008, 0, 1)
@@ -834,13 +834,18 @@ W_TAN = math.tan(W_PITCH)
 W_OVH = 0.55
 W_RAFT = 2.40 + W_OVH * W_TAN          # thatch underside at outer wall line (eave lip at 2.40)
 TH_V = 0.40 / math.cos(W_PITCH)         # vertical thatch thickness
-TUR_C = np.array([-8.65, 3.0])
+TUR_C = np.array([-8.45, 3.0])
+TUR_Z_TOP = 5.92                 # top of the stone body (cushion sits on it)
 
 
 def tur_r(z):
+    """strongly tapered concave stone cone (ref1): ~D4.0 where it leaves the wing roof (z~2.8), D2.5 under the
+    cushion; below the roof line a slightly battered base (D4.16 at the ground)."""
     z = np.asarray(z, float)
-    zz = np.clip(z / 6.0, 0, 1)
-    return 1.30 + 0.40 * (1 - zz) ** 1.7
+    u = np.clip((TUR_Z_TOP - z) / (TUR_Z_TOP - 2.8), 0, None)
+    upper = 1.25 + 0.75 * np.minimum(u, 1.0) ** 1.3
+    base = 2.0 + 0.08 * np.clip((2.8 - z) / 2.8, 0, 1)
+    return np.where(z >= 2.8, upper, base)
 
 
 def wing_under(x, y):
@@ -1041,11 +1046,11 @@ def build_door_dressing(acc_d, op, rng):
             DRESSED_POLYS[k].append([(xa, z0_), (xb, z0_), (xb, z1_), (xa, z1_)])
     S = stone_rec([facet_s(k, r["x"], r["zc"]) for r in recs], [r["zc"] for r in recs],
                   [r["hx"] for r in recs], [r["hy"] for r in recs], [r["f"] for r in recs],
-                  [r["back"] for r in recs], rng.uniform(0.010, 0.016, len(recs)),
+                  [r["back"] for r in recs], rng.uniform(0.008, 0.022, len(recs)),
                   [r["zc"] for r in recs], rng)
     dress_irregular(S, rng)
     wear = np.clip(1.1 - S["zc"] / 0.9, 0, 1)
-    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(12, 14), wear=wear)
+    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(22, 24), wear=wear)
     # voussoirs: irregular widths, thicker at the crown
     nv = 13
     wts = rng.uniform(0.8, 1.2, nv)
@@ -1068,7 +1073,7 @@ def build_door_dressing(acc_d, op, rng):
         DRESSED_POLYS[k].append(poly)
     vs = np.array(vs)
     S = stone_rec(np.zeros(nv), vs[:, 5], vs[:, 2], vs[:, 3], vs[:, 6], vs[:, 4],
-                  rng.uniform(0.010, 0.016, nv), vs[:, 5], rng)
+                  rng.uniform(0.008, 0.022, nv), vs[:, 5], rng)
     dress_irregular(S, rng, rot_sd=0.0)
     S["th"] = vs[:, 0]
     S["rm"] = vs[:, 1]
@@ -1080,7 +1085,7 @@ def build_door_dressing(acc_d, op, rng):
         zf = zs + R * np.sin(t)
         return facet_s(k, xf, SS["zcrs"][:, None]), zf
 
-    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, premap=premap, dressed=True, grid=(10, 10))
+    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, premap=premap, dressed=True, grid=(16, 18))
 
 
 def dress_irregular(S, rng, rot_sd=0.012):
@@ -1137,7 +1142,7 @@ def build_rect_dressing(acc_d, op, rng, sill_acc):
     S = stone_rec(facet_s(k, R[:, 0], R[:, 1]), R[:, 1], R[:, 2], R[:, 3], R[:, 4], R[:, 5],
                   rng.uniform(0.008, 0.014, len(R)), R[:, 1], rng)
     dress_irregular(S, rng)
-    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(10, 10))
+    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(18, 18))
     build_sill(sill_acc, op, rng)
 
 
@@ -1218,7 +1223,7 @@ def build_hall_masonry(coll):
     small = (S["hx"] < 0.05) & (S["hy"] < 0.05)
     log(f"  hall hero stones {int((hero & ~small).sum())}, other {int((~hero & ~small).sum())}, pins {int(small.sum())}")
     build_stones(acc, filt(S, hero & ~small), hall_map, "M_stone", rng, rough=1.0, grid=(14, 10), noise_amp=0.007)
-    build_stones(acc, filt(S, ~hero & ~small), hall_map, "M_stone", rng, rough=1.0, nxy=7, noise_amp=0.008)
+    build_stones(acc, filt(S, ~hero & ~small), hall_map, "M_stone", rng, rough=1.0, nxy=5, noise_amp=0.008)
     build_stones(acc, filt(S, small), hall_map, "M_stone", rng, rough=0.8, nxy=5, noise_amp=0.005)
     finalize(acc, coll, smooth_deg=28.0)
     finalize(accd, coll)
@@ -1973,12 +1978,16 @@ def build_cone(coll):
     m0 = float(np.interp(5.62, CONE_ZF, CONE_MF))
     m1 = float(np.interp(9.585, CONE_ZF, CONE_MF))
     cfg = dict(seed=11, footing=None, ch=(0.07, 0.13), p_tall=0.04, len=(0.12, 0.34), foot_len=(0.3, 0.5),
-               joint=(0.010, 0.022), front=(0.012, 0.045), foot_proj=(0, 0), bevel=(0.008, 0.016),
-               pillow=(0.004, 0.014), tilt=0.009, rot=0.035, p_double=0.05, p_long=0.02, back=0.08, bed_amp=0.018)
+               joint=(0.008, 0.016), front=(0.008, 0.042), foot_proj=(0, 0), bevel=(0.005, 0.025),
+               pillow=(0.004, 0.014), tilt=0.009, rot=0.02, p_double=0.05, p_long=0.02, back=0.08, bed_amp=0.018)
     srange = lambda mm: [(0.0, 2 * math.pi * float(np.interp(np.interp(mm, CONE_MF, CONE_ZF), CONE_ZF, CONE_RF)))]
     S = layout_wall(rng, srange, m0, m1, lambda a, b, c: [], cfg)
+    pins, _, _ = fill_voids(S, srange, lambda a, b, c: [], m0, m1, rng, cfg, label="cone")
+    S = cat_stones(S, pins)
     log("  cone stones:", len(S["sc"]))
-    build_stones(acc, S, cone_map_factory(), "M_stone", rng, rough=1.35, noise_amp=0.009)
+    small = (S["hx"] < 0.045) & (S["hy"] < 0.045)
+    build_stones(acc, filt(S, ~small), cone_map_factory(), "M_stone", rng, rough=1.35, noise_amp=0.009)
+    build_stones(acc, filt(S, small), cone_map_factory(), "M_stone", rng, rough=0.9, nxy=4, noise_amp=0.005)
     finalize(acc, coll, smooth_deg=28.0)
     # mortar body (lathe) with noise
     accm = Acc("KEEP_cone_mortar")
@@ -2633,10 +2642,13 @@ def build_wing_walls(coll):
             if z1 > za and z0 < zb:
                 out.append((s0 - 0.012, s1 + 0.012))
         return out
-    cfg = dict(seed=17, footing=0.32, ch=(0.10, 0.19), p_tall=0.08, len=(0.22, 0.62), foot_len=(0.45, 0.85),
-               joint=(0.013, 0.026), front=(0.016, 0.038), foot_proj=(0.03, 0.06), bevel=(0.007, 0.015),
-               pillow=(0.003, 0.010), tilt=0.008, rot=0.016, p_double=0.07, p_long=0.05, back=0.09, bed_amp=0.03)
-    S = layout_wall(rng, lambda zm: [(0.0, WING_LEN)], -0.10, 3.85, excl, cfg, ztop_fn=wing_ztop)
+    cfg = dict(seed=17, footing=0.32, ch=(0.09, 0.19), p_tall=0.08, len=(0.20, 0.62), foot_len=(0.45, 0.85),
+               joint=(0.009, 0.018), front=(0.005, 0.036), foot_proj=(0.03, 0.06), bevel=(0.005, 0.03),
+               pillow=(0.003, 0.012), tilt=0.008, rot=0.012, p_double=0.07, p_long=0.05, back=0.09, bed_amp=0.03)
+    srange = lambda zm: [(0.0, WING_LEN)]
+    S = layout_wall(rng, srange, -0.10, 3.85, excl, cfg, ztop_fn=wing_ztop)
+    pins, _, _ = fill_voids(S, srange, excl, -0.10, 3.85, rng, cfg, ztop_fn=wing_ztop, label="wing")
+    S = cat_stones(S, pins)
     P = wing_map(S["sc"], S["zc"], np.zeros_like(S["sc"]), S["zcrs"])
     keep = (np.hypot(P[:, 0] - TUR_C[0], P[:, 1] - TUR_C[1]) > tur_r(P[:, 2]) - 0.02)
     ang = np.arctan2(P[:, 1], P[:, 0])
@@ -2645,12 +2657,22 @@ def build_wing_walls(coll):
     keep &= pp > apo(P[:, 2]) - 0.02
     S = filt(S, keep)
     log("  wing stones", len(S["sc"]))
-    build_stones(acc, S, wing_map, "M_stone", rng, rough=1.1, nxy=7, noise_amp=0.008)
-    R = wing_quoins()
-    S2 = stone_rec(R[:, 0], R[:, 1], R[:, 2], R[:, 3], R[:, 4], R[:, 5], rng.uniform(0.012, 0.02, len(R)), R[:, 1], rng,
-                   pillow=(0.003, 0.008), rot=0.006, tilt=0.004)
-    build_stones(acc, S2, wing_map, "M_stone", rng, rough=0.6)
+    small = (S["hx"] < 0.05) & (S["hy"] < 0.05)
+    # hero zone: the wing's south wall below 3.5 m (seen in the hero/front/actor shots)
+    hero = (S["sc"] > S_SOUTH0 - 0.05) & (S["zc"] < 3.5) & ~small
+    log(f"  wing hero stones {int(hero.sum())}, other {int((~hero & ~small).sum())}, pins {int(small.sum())}")
+    build_stones(acc, filt(S, hero), wing_map, "M_stone", rng, rough=1.1, grid=(14, 10), noise_amp=0.008)
+    build_stones(acc, filt(S, ~hero & ~small), wing_map, "M_stone", rng, rough=1.1, nxy=5, noise_amp=0.008)
+    build_stones(acc, filt(S, small), wing_map, "M_stone", rng, rough=0.8, nxy=5, noise_amp=0.005)
     finalize(acc, coll, smooth_deg=28.0)
+    # dressed quoins / jamb blocks of the plank door and the window: tooled faces, chipped arrises, out of square
+    accq = Acc("KEEP_wing_dressed_stones")
+    R = wing_quoins()
+    S2 = stone_rec(R[:, 0], R[:, 1], R[:, 2], R[:, 3], R[:, 4], R[:, 5], rng.uniform(0.008, 0.022, len(R)), R[:, 1], rng)
+    dress_irregular(S2, rng)
+    wear = np.clip(1.0 - S2["zc"] / 0.8, 0, 1)
+    build_stones(accq, S2, wing_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(18, 18), wear=wear)
+    finalize(accq, coll)
     # mortar body
     accm = Acc("KEEP_wing_wall_mortar")
     ss = np.linspace(0, WING_LEN, int(WING_LEN / 0.06))
@@ -2860,6 +2882,101 @@ def thatch_roll(acc, path, r0, seed, flat=0.8, seg=12, mat="M_thatch"):
     acc.add(V, F, mat)
 
 
+def thatch_courses(acc, name, rng, clump_w, seed, m_max=4.15):
+    """Stepped thatch courses on one roof plane, each a continuous strip along the eave direction.
+    Exposure ~0.30 m, butt step 0.06-0.10 m, course line waving +-3 cm. Every butt is a fringe of tapering
+    strand clumps (1.5-3 cm pitch, +-4 cm length, +-8 deg splay); the clump boundaries continue up the course as
+    raking striations along the fall line (1-2 cm grooves, 0.5-1 cm deep). Quads that fall outside this plane's
+    share of the roof (hips, turret, hall, skirt) are culled per quad; the core body underneath is continuous."""
+    pl = PLANES[name]
+    nrm = pl["n"]
+    a_lo, a_hi = pl["a_rng"]
+    o = pl["o"]
+    e = 1e-3
+    dA = o(np.array([e]), np.array([0.0]))[0] - o(np.array([0.0]), np.array([0.0]))[0]
+    dM = o(np.array([0.0]), np.array([e]))[0] - o(np.array([0.0]), np.array([0.0]))[0]
+    flip = np.dot(np.cross(dA, dM), nrm) < 0
+    s0 = 0.02
+    m = -0.06
+    ci = 0
+    step_prev, E_prev = 0.08, 0.30
+    nq_tot = 0
+    while m < m_max:
+        E = 0.30 * rng.uniform(0.95, 1.05)
+        step = rng.uniform(0.06, 0.10)
+        # clump boundaries along the course
+        bnd = [a_lo - rng.uniform(0.0, 0.03)]
+        while bnd[-1] < a_hi + 0.02:
+            bnd.append(bnd[-1] + rng.uniform(*clump_w))
+        bnd = np.array(bnd)
+        nc = len(bnd) - 1
+        cen = 0.5 * (bnd[:-1] + bnd[1:])
+        ext_c = np.clip(0.04 + rng.uniform(-0.04, 0.04, nc) + 0.012 * rng.normal(0, 1, nc), 0.0, 0.09)
+        spl = np.tan(np.radians(np.clip(rng.normal(0, 4.5, nc), -8, 8)))
+        # columns: boundary, centre, boundary, centre, ..., boundary
+        A = np.empty(2 * nc + 1)
+        A[0::2] = bnd
+        A[1::2] = cen
+        kind = np.zeros(2 * nc + 1, bool)
+        kind[1::2] = True
+        ext = np.empty(2 * nc + 1)
+        ext[1::2] = ext_c
+        nb_ext = np.minimum(np.concatenate([[ext_c[0]], ext_c]), np.concatenate([ext_c, [ext_c[-1]]]))
+        ext[0::2] = 0.25 * nb_ext + rng.uniform(0, 0.008, nc + 1)
+        sp = np.empty(2 * nc + 1)
+        sp[1::2] = spl
+        sp[0::2] = 0.5 * (np.concatenate([[spl[0]], spl]) + np.concatenate([spl, [spl[-1]]]))
+        gd = np.where(kind, -rng.uniform(0.0, 0.004, 2 * nc + 1), rng.uniform(0.005, 0.010, 2 * nc + 1))
+        wave = 0.05 * n1(A * 0.45, seed * 100 + ci)
+        stp = step * (1 + 0.18 * n1(A * 0.9, seed * 100 + ci + 50))
+        mi = m + wave
+        lower_top = s0 + 0.58 * step_prev
+        if ci == 0:
+            low = np.full_like(A, -0.13)
+        else:
+            low = s0 + lower_top * 0 + 0.58 * step_prev * np.clip(ext / max(E_prev - 0.13, 0.05), 0, 1)
+        mb = mi - ext
+        top = s0 + 0.93 * stp
+        rows_m = np.stack([mb, mb + 0.010, mi - 0.25 * ext + 0.022, mi + 0.13, mi + E + 0.05], 1)
+        rows_h = np.stack([low - 0.012, low + 0.45 * (top - low), top, s0 + 0.58 * stp, np.full_like(A, s0 - 0.006)], 1)
+        if ci == 0:
+            rows_m[:, 0] -= 0.07
+            rows_m[:, 1] -= 0.035
+        # striations: boundary columns grooved (fade toward the strand tips), fine fibre noise
+        rows_h = rows_h - gd[:, None] * np.array([0.3, 0.7, 1.0, 1.0, 0.6])[None, :]
+        Am = np.repeat(A[:, None], 5, 1)
+        Am = Am + sp[:, None] * np.stack([ext + 0.03, ext * 0.8 + 0.02, np.zeros_like(A), np.zeros_like(A),
+                                          np.zeros_like(A)], 1)
+        Am = Am + 0.004 * n1(rows_m * 7.0 + A[:, None] * 0.3, seed + 9)
+        lf = 0.018 * fbm(np.stack([Am * 1.1, rows_m * 1.1, np.full_like(Am, seed * 3.7)], -1), 2)
+        fib = 0.003 * vnoise(np.stack([Am * 60.0, rows_m * 4.0, np.full_like(Am, seed + ci * 0.37)], -1))
+        H = rows_h + lf + fib + CORE_T
+        W = o(Am, rows_m) + H[..., None] * nrm
+        ncol = len(A)
+        idx = np.arange(ncol * 5).reshape(ncol, 5)
+        q = np.stack([idx[:-1, :-1], idx[1:, :-1], idx[1:, 1:], idx[:-1, 1:]], -1).reshape(-1, 4)
+        if flip:
+            q = q[:, ::-1]
+        C = W.reshape(-1, 3)[q].mean(1)
+        x_, y_ = C[:, 0], C[:, 1]
+        bad = thatch_cull(C)
+        bad |= (plane_under(name, x_, y_) - wing_under(x_, y_)) > 0.10
+        bad |= ~((x_ > WX_W - W_OVH - 0.12) & (x_ < WX_E + W_OVH + 0.04) & (y_ > WY_S - W_OVH - 0.12) &
+                 (y_ < WY_N + W_OVH + 0.12))
+        q = q[~bad]
+        if len(q):
+            used = np.unique(q)
+            remap = -np.ones(ncol * 5, np.int64)
+            remap[used] = np.arange(len(used))
+            acc.add(W.reshape(-1, 3)[used], remap[q], "M_thatch",
+                    uv=np.stack([Am.ravel(), rows_m.ravel()], -1)[used])
+            nq_tot += len(q)
+        step_prev, E_prev = step, E
+        m += E
+        ci += 1
+    return ci, nq_tot
+
+
 def build_wing_roof(coll):
     rng = np.random.default_rng(1313)
     acc = Acc("KEEP_wing_roof_thatch")
@@ -2901,83 +3018,19 @@ def build_wing_roof(coll):
     okv = ~thatch_cull(vp, tol_skirt=False) & ((ppv > SKIRT.p_lip + 0.2) | (vp[:, 2] < zsv - 0.36))
     for r_ in runs_of(vp, okv):
         thatch_roll(acc, r_, 0.12, 41, flat=0.9)
-    # --- bundles (stepped layers ~0.28 m, ragged butts, strand grooves)
-    recs = []
-    for name, pl in PLANES.items():
-        m = -0.07
-        ci = 0
-        while m < 6.0:
-            a = pl["a_rng"][0] - rng.uniform(0, 0.3)
-            while a < pl["a_rng"][1]:
-                w = rng.uniform(0.26, 0.40)
-                Lb = rng.uniform(0.70, 0.86)
-                recs.append((name, a, a + w, m + rng.normal(0, 0.022), Lb, rng.uniform(0.13, 0.17), ci,
-                             rng.normal(0, 0.035), rng.uniform()))
-                a += w * rng.uniform(0.80, 0.92)
-            m += 0.30 * rng.uniform(0.96, 1.04)
-            ci += 1
-    allW, allQ, allUV = [], [], []
-    for name, pl in PLANES.items():
-        R = [r for r in recs if r[0] == name]
-        a0 = np.array([r[1] for r in R])
-        a1 = np.array([r[2] for r in R])
-        mb = np.array([r[3] for r in R])
-        Lb = np.array([r[4] for r in R])
-        tb = np.array([r[5] for r in R])
-        rot = np.array([r[7] for r in R])
-        sd = np.array([r[8] for r in R])
-        ci = np.array([r[6] for r in R])
-        # centre test
-        C = pl["o"](0.5 * (a0 + a1), mb + Lb * 0.45) + pl["n"] * (CORE_T + 0.08)
-        zme = plane_under(name, C[:, 0], C[:, 1])
-        zmin = wing_under(C[:, 0], C[:, 1])
-        ok = (zme - zmin) < 0.14
-        # outside the footprint (beyond the eaves of the other planes) -> drop
-        ok &= (C[:, 0] > WX_W - W_OVH - 0.1) & (C[:, 0] < WX_E + W_OVH + 0.02)
-        ok &= (C[:, 1] > WY_S - W_OVH - 0.1) & (C[:, 1] < WY_N + W_OVH + 0.1)
-        ok &= ~thatch_cull(C)
-        a0, a1, mb, Lb, tb, rot, sd, ci = [v[ok] for v in (a0, a1, mb, Lb, tb, rot, sd, ci)]
-        M = len(a0)
-        rr = np.full(M, 0.04)
-        Xg = axn(a0, a1, rr, 12)
-        Yg = axn(mb, mb + Lb, rr, 7)
-        Zg = np.stack([np.zeros(M), tb - 0.04, tb], 1)
-        RJ = rng.uniform(0, 1, (M, 13))
-        RH = rng.uniform(0, 1, (M, 13))
-        P, qd = rbox(Xg, Yg, Zg, rr, skip_back=True, round_back=False)
-        a, m, h = P[..., 0], P[..., 1], P[..., 2]
-        ac = 0.5 * (a0 + a1)[:, None]
-        mc = (mb + Lb * 0.5)[:, None]
-        ar, mr = rot2(a - ac, m - mc, rot[:, None])
-        a, m = ar + ac, mr + mc
-        fr = np.clip((m - mb[:, None]) / Lb[:, None], 0, 1)
-        an = (a - a0[:, None]) / (a1 - a0)[:, None]
-        # ragged butt: columns pulled back differently, strand grooves on top
-        col = np.clip(np.round(an * 12).astype(int), 0, 12)
-        jag = 0.015 + 0.085 * np.take_along_axis(RJ, col, 1) ** 1.5
-        m = m + jag * (1 - fr) ** 4
-        groove = (0.028 * np.take_along_axis(RH, col, 1) - 0.01) * (h > tb[:, None] * 0.4)
-        lump = 0.02 * fbm(np.stack([a * 3, m * 3, np.broadcast_to(sd[:, None] * 30, a.shape)], -1), 2)
-        # rounded clump cross-section (thicker in the middle of the bundle)
-        crown = 0.6 + 0.4 * np.sin(np.pi * np.clip(an, 0, 1))
-        hl = h * crown * (1 - 0.65 * fr) - groove + lump + tb[:, None] * 0.7 * (1 - fr) ** 1.5
-        # eave course curls down over the roll
-        hl = hl - 0.05 * (ci[:, None] == 0) * (1 - fr) ** 2
-        Wp = pl["o"](a, m) + (hl + CORE_T)[..., None] * pl["n"]
-        allW.append(Wp.reshape(-1, 3))
-        allQ.append(inst_faces(qd, M, P.shape[1]))
-        allUV.append(np.stack([a, m], -1).reshape(-1, 2))
-        log(f"  thatch bundles {name}: {M}")
-    base = 0
-    for Wp, Q, UV in zip(allW, allQ, allUV):
-        acc.add(Wp, Q, "M_thatch", uv=UV)
+    # --- continuous stepped courses (no vertical gaps between units), strand-clump fringe at every butt
+    accc = Acc("KEEP_wing_roof_thatch_courses")
+    for name, cw, sd in (("S", (0.015, 0.030), 3), ("N", (0.017, 0.032), 5), ("W", (0.017, 0.032), 7)):
+        n_c, n_q = thatch_courses(accc, name, rng, cw, sd)
+        log(f"  thatch {name}: {n_c} courses, {n_q} quads")
+    finalize(accc, coll, smooth_deg=55.0, recalc=False)
     # --- eave rolls (rounded, lumpy) along S, N, W eaves
     def roll(path, rad):
         thatch_roll(acc, path, rad, 5 + len(path), flat=0.85)
     for name in ("S", "N", "W"):
         pl = PLANES[name]
         a = np.linspace(pl["a_rng"][0] + 0.3, pl["a_rng"][1], 70)
-        path = pl["o"](a, np.full_like(a, 0.10)) + pl["n"] * (CORE_T * 0.55)
+        path = pl["o"](a, np.full_like(a, 0.16)) + pl["n"] * (CORE_T * 0.42)
         path[:, 2] += 0.02 * n1(a * 0.8, 21)
         ok = ~thatch_cull(path)
         # keep within the footprint of this eave (hips)
@@ -2998,7 +3051,7 @@ def build_wing_roof(coll):
         if len(cur) > 2:
             runs.append(np.array(cur))
         for r_ in runs:
-            roll(r_, 0.14)
+            roll(r_, 0.205)
     finalize(acc, coll)
 
 
@@ -3106,14 +3159,14 @@ def build_wing_structure(coll):
             path = pl["o"](np.full_like(ms, xr2), ms) - pl["n"] * 0.12
             if thatch_cull(path.mean(0)[None], tol_skirt=False)[0]:
                 continue
-            if np.hypot(path[:, 0] - TUR_C[0], path[:, 1] - TUR_C[1]).min() < 1.7:
+            if (np.hypot(path[:, 0] - TUR_C[0], path[:, 1] - TUR_C[1]) - tur_r(path[:, 2])).min() < 0.15:
                 continue
             V, F = sweep(path, pl["n"], prof_circle(0.058 + rng.uniform(-0.006, 0.006), 9))
             acc.add(V, F, "M_timber_weathered")
         for mb in (0.15, 0.45, 0.75):
             a = np.linspace(WX_W - 0.2, WX_E + W_OVH - 0.1, 30)
             path = pl["o"](a, np.full_like(a, mb)) - pl["n"] * 0.04
-            ok = ~thatch_cull(path, tol_skirt=False) & (np.hypot(path[:, 0] - TUR_C[0], path[:, 1] - TUR_C[1]) > 1.75)
+            ok = ~thatch_cull(path, tol_skirt=False) & (np.hypot(path[:, 0] - TUR_C[0], path[:, 1] - TUR_C[1]) > tur_r(path[:, 2]) + 0.12)
             if ok.sum() < 3:
                 continue
             path = path[ok]
@@ -3216,6 +3269,51 @@ TUR_CAP = OctRoof(TUR_C[0], TUR_C[1], p_lip=1.5, z_lip=7.10, d_pts=[0, 0.25, 0.4
                   p_min=0.02, kick=0.03, kick_len=0.45, wave=0.008, sag=0.012, seed=13, rot_deg=8.0)
 
 
+def build_cushion(coll, rng):
+    """soft, bulbous mushroom-like cushion ring under the turret cap (ref1): two rows of big weathered,
+    rounded boulders fused into one lumpy ring; max D~3.05, rounded top dying into the drum."""
+    acc = Acc("KEEP_turret_corbel_collar")
+    prof = np.array([(1.215, 5.84), (1.27, 5.895), (1.36, 5.955), (1.44, 6.02), (1.49, 6.10), (1.515, 6.19),
+                     (1.522, 6.28), (1.51, 6.37), (1.47, 6.45), (1.40, 6.52), (1.31, 6.575), (1.21, 6.615),
+                     (1.12, 6.64), (1.06, 6.655)])
+    seg_d = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(prof, axis=0), axis=1))])
+    t = np.linspace(0, seg_d[-1], 44)
+    pr = np.stack([np.interp(t, seg_d, prof[:, 0]), np.interp(t, seg_d, prof[:, 1])], 1)
+    seg = 200
+    V, F = lathe(pr, seg, cap_bottom=False, cap_top=True)
+    nr_ = len(pr)
+    th = np.tile(np.linspace(0, 2 * np.pi, seg, endpoint=False), nr_)
+    zz = np.repeat(pr[:, 1], seg)
+    dpr = np.gradient(pr, axis=0)
+    nrm = np.stack([dpr[:, 1], -dpr[:, 0]], 1)
+    nrm /= np.linalg.norm(nrm, axis=1, keepdims=True)
+    nrm = np.repeat(nrm, seg, axis=0)
+    # boulders: 2 rows, irregular widths, row line wanders; joints where neighbouring domes meet
+    bump = np.full(len(th), -1.0)
+    for zc, hz in ((6.07, 0.17), (6.37, 0.19)):
+        a = rng.uniform(0, 0.4)
+        while a < 2 * np.pi + 0.01:
+            w = rng.uniform(0.30, 0.55) / 1.5
+            ac = a + w / 2
+            zc_ = zc + rng.normal(0, 0.025)
+            hz_ = hz * rng.uniform(0.85, 1.1)
+            da = np.angle(np.exp(1j * (th - ac)))
+            q = 1 - (da / (w / 2 + 0.01)) ** 2 - ((zz - zc_) / hz_) ** 2
+            bump = np.maximum(bump, np.where(q > 0, np.sqrt(np.clip(q, 0, 1)) * rng.uniform(0.85, 1.15), -1.0))
+            a += w
+    bump = np.clip(bump, 0, None)
+    rad_off = 0.045 * bump ** 0.6 - 0.035
+    lumps = 0.012 * fbm(np.stack([np.cos(th) * 6, np.sin(th) * 6, zz * 6], -1), 3)
+    fade = np.clip((zz - 5.86) / 0.08, 0, 1) * np.clip((6.645 - zz) / 0.06, 0, 1)
+    off = (rad_off + lumps) * fade
+    r = np.hypot(V[:, 0], V[:, 1]) + off * nrm[:, 0]
+    V[:, 2] += off * nrm[:, 1]
+    V[:, 0] = TUR_C[0] + r * np.cos(th)
+    V[:, 1] = TUR_C[1] + r * np.sin(th)
+    acc.add(V, F, "M_stone")
+    finalize(acc, coll, smooth_deg=50.0)
+
+
 def turret_cull(C):
     C = np.asarray(C, float)
     x, y, z = C[..., 0], C[..., 1], C[..., 2]
@@ -3228,43 +3326,29 @@ def turret_cull(C):
 def build_turret(coll):
     rng = np.random.default_rng(1616)
     acc = Acc("KEEP_turret_stones")
-    cfg = dict(seed=23, footing=0.30, ch=(0.10, 0.18), p_tall=0.07, len=(0.22, 0.55), foot_len=(0.4, 0.75),
-               joint=(0.012, 0.026), front=(0.016, 0.036), foot_proj=(0.03, 0.06), bevel=(0.007, 0.015),
-               pillow=(0.003, 0.01), tilt=0.008, rot=0.016, p_double=0.07, p_long=0.04, back=0.09, bed_amp=0.03)
-    S = layout_wall(rng, lambda zm: [(0.0, 2 * math.pi * float(tur_r(zm)))], -0.10, 5.98, lambda a, b, c: [], cfg)
+    cfg = dict(seed=23, footing=0.30, ch=(0.09, 0.17), p_tall=0.07, len=(0.18, 0.52), foot_len=(0.4, 0.75),
+               joint=(0.009, 0.018), front=(0.005, 0.034), foot_proj=(0.03, 0.06), bevel=(0.005, 0.03),
+               pillow=(0.003, 0.012), tilt=0.008, rot=0.016, p_double=0.07, p_long=0.04, back=0.09, bed_amp=0.03)
+    srange = lambda zm: [(0.0, 2 * math.pi * float(tur_r(zm)))]
+    S = layout_wall(rng, srange, -0.10, TUR_Z_TOP, lambda a, b, c: [], cfg)
+    pins, _, _ = fill_voids(S, srange, lambda a, b, c: [], -0.10, TUR_Z_TOP, rng, cfg, label="turret")
+    S = cat_stones(S, pins)
     P = tur_map(S["sc"], S["zc"], np.zeros_like(S["sc"]), S["zcrs"])
     S = filt(S, ~turret_cull(P))
     log("  turret stones", len(S["sc"]))
-    build_stones(acc, S, tur_map, "M_stone", rng, rough=1.1, nxy=7, noise_amp=0.008)
+    small = (S["hx"] < 0.05) & (S["hy"] < 0.05)
+    build_stones(acc, filt(S, ~small), tur_map, "M_stone", rng, rough=1.15, nxy=5, noise_amp=0.009)
+    build_stones(acc, filt(S, small), tur_map, "M_stone", rng, rough=0.8, nxy=5, noise_amp=0.005)
     finalize(acc, coll, smooth_deg=28.0)
     accm = Acc("KEEP_turret_mortar")
-    zs = np.linspace(-0.1, 6.0, 50)
-    V, F = lathe(np.stack([tur_r(zs) - 0.004, zs], 1), 72, cx=TUR_C[0], cy=TUR_C[1], cap_bottom=False, cap_top=False)
-    accm.add(V, F, "M_mortar")
-    V, F = lathe(np.stack([cush_r(np.linspace(5.95, 6.64, 14)) - 0.03, np.linspace(5.95, 6.64, 14)], 1), 72,
-                 cx=TUR_C[0], cy=TUR_C[1], cap_bottom=False, cap_top=True)
-    accm.add(V, F, "M_mortar")
+    zs = np.linspace(-0.1, TUR_Z_TOP + 0.02, 64)
+    V, F = lathe(np.stack([tur_r(zs) - 0.004, zs], 1), 96, cx=TUR_C[0], cy=TUR_C[1], cap_bottom=False, cap_top=False)
+    Vg = V.reshape(len(zs), 96, 3)
+    Cq = 0.25 * (Vg[:-1] + np.roll(Vg[:-1], -1, 1) + Vg[1:] + np.roll(Vg[1:], -1, 1))
+    keep = ~turret_cull(Cq.reshape(-1, 3))
+    accm.add(V, F[0][keep], "M_mortar")
     finalize(accm, coll)
-    # cushion collar: two courses of big rounded stones
-    accc = Acc("KEEP_turret_corbel_collar")
-    recs = []
-    for (z0, z1) in ((5.96, 6.19), (6.19, 6.41), (6.41, 6.63)):
-        zc = 0.5 * (z0 + z1)
-        C = 2 * math.pi * float(cush_r(zc))
-        s = rng.uniform(0, 0.3)
-        while s < C - 0.15:
-            L = rng.uniform(0.22, 0.52)
-            if C - s - L < 0.2:
-                L = C - s - 0.01
-            hh = (z1 - z0) / 2 - rng.uniform(0.006, 0.02)
-            recs.append((s + L / 2, zc + rng.normal(0, 0.01), L / 2 - rng.uniform(0.006, 0.016), hh,
-                         rng.uniform(0.02, 0.05), 0.14, rng.uniform(0.02, 0.035), zc))
-            s += L
-    R = np.array(recs)
-    S = stone_rec(R[:, 0], R[:, 1], R[:, 2], R[:, 3], R[:, 4], R[:, 5], R[:, 6], R[:, 7], rng, pillow=(0.006, 0.018),
-                  rot=0.03, tilt=0.012)
-    build_stones(accc, S, cush_map, "M_stone", rng, rough=1.4, noise_amp=0.012, nxy=7)
-    finalize(accc, coll)
+    build_cushion(coll, rng)
     # board drum with sill & head rings
     accd = Acc("KEEP_turret_drum")
     z0, z1 = 6.60, 7.02
@@ -3325,7 +3409,7 @@ def build_ground(coll):
         pts.append((P[0], P[1]))
     for _ in range(10):
         a = rng.uniform(math.pi * 0.5, math.pi * 1.5)
-        r = 1.7 + rng.uniform(0.15, 0.6)
+        r = float(tur_r(0.0)) + rng.uniform(0.15, 0.6)
         pts.append((TUR_C[0] + r * math.cos(a), TUR_C[1] + r * math.sin(a)))
     pts = np.array(pts)
     # keep clear of the door step and wing door threshold, and outside walls
@@ -3337,7 +3421,7 @@ def build_ground(coll):
     pp = pts[:, 0] * np.cos(kk * np.pi / 4) + pts[:, 1] * np.sin(kk * np.pi / 4)
     keep &= pp > A0 + 0.08
     keep &= ~((pts[:, 0] > WX_W - 0.08) & (pts[:, 0] < WX_E + 0.08) & (pts[:, 1] > WY_S - 0.08) & (pts[:, 1] < WY_N + 0.08))
-    keep &= np.hypot(pts[:, 0] - TUR_C[0], pts[:, 1] - TUR_C[1]) > 1.78
+    keep &= np.hypot(pts[:, 0] - TUR_C[0], pts[:, 1] - TUR_C[1]) > float(tur_r(0.0)) + 0.08
     pts = pts[keep]
     M = len(pts)
     u = rng.uniform(0, 1, M)

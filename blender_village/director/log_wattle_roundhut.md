@@ -27,3 +27,97 @@
   - The collar sits 0.17 m higher than the spec says (drip at 6.72, not 6.55). A 44 deg collar has to clear a 51 deg shingle cone.
   - The lintel is 2.3 m long so that it sits on the door posts with 0.21 m side panels.
   - Plate top is 2.86, not 3.05, because the rafters seat on the plate with the eave lip held at 2.42.
+
+## Round 1 — score 7/10
+
+**Director review.** I reviewed all 6 views and stats.json in `renders/wattle_roundhut/round_01/` side by side with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`. I also rendered 8 extra close-ups (apex, apex_side, profile, eave_under, daub_bay, door_front, wattle_macro, plinth) into `round_01/director_extra/` and measured the evaluated meshes.
+
+**Verdict.** This is a strong first round and a complete, well-engineered asset.
+- The overall cone/wall/plinth massing overlays ref2 closely. Roof + finial to wall height is about 2.3 (ref 2.4) and eave width to roof height is 1.34 (ref 1.36).
+- Actor scale is correct.
+- The shingle cone is genuinely good.
+
+Four things hold it at 7:
+- The apex reads wrong at every distance (collar too short and shallow, needle spike).
+- The wattle reads as a fine, regular basket mat or screen rather than ref2's coarse open weave.
+- The plinth stones are uniform pillowy loaves (the strongest CG tell in the actor close-up).
+- The daub panels read as flat boards.
+
+Axes:
+- Silhouette 7 (apex).
+- Proportion and scale 8.
+- Construction 8.
+- Detail and craft 7.
+- Age 7.
+- Technical 8 (apron seam artefact, extra `M_earth` slot).
+
+**Strengths**
+- The silhouette and massing match ref2: squat round wall on a plinth under a huge 51° cone. The convex profile, eave kick and eave wobble all read.
+- **Shingles are hero quality.** About 690 individually modelled chunky shingles with thickness, cup, curl, stagger, slips and missing pieces. The profile render looks right, and they read at about 0.45 m next to the figure.
+- **Scale is correct.** Clear door 1.00 x 2.08, eave lip 2.42 over the door, head clearance for the 1.8 m figure, and sensible step risers.
+- **The roof structure reads from below.** Rafter pole ends (some split), battens in the eave gap, the plate and real eave thickness are all visible.
+- **The door assembly is complete.** Projecting flat-fronted frame, leaf open 75° inward with ledges, brace and strap hinges, sill on a threshold stone, step stone and flag path. The interior reads dark and deep, with rafters, purlins and the hearth visible through the door. There is no sky void.
+- **The wattle is real woven tube geometry.** In/out alternation is visible, the daub's eroded lower edge exposes it, and the bay placement matches ref2.
+- **Technical work is clean.** Deterministic 6 s build, identity transforms, UVs, named slots, 1.215 M tris, 23.8 MB.
+
+**Spec amendments (these supersede spec §H/§I and the art bible §1.5 "44°" for this hut).** I re-measured the reference crops (`hut_overall`, `hut_cap_finial`):
+- **Lead-hat collar pitch.** It runs at the same pitch as the roof or slightly steeper (about 51–55°), not shallower.
+- **Collar height.** The lower collar is about 0.65 m tall from the drip to a top Ø of about 0.5 m.
+- **Upper collar.** It is a separate bell cone, base Ø about 0.55 m, with its own drip, about 0.3 m tall.
+- **Finial.** It is chunky: spindle Ø up to about 0.2 m, and the spike base about 0.14–0.16 m Ø.
+- **Wattle row pitch.** It is about 6–8 cm in ref2 (rods about 2.5–3.5 cm with dark gaps between rows), not 3.5–4 cm.
+- **Shingle exposure.** The builder's 17 courses at 0.318 m exposure is ACCEPTED, because the spec's 0.36–0.40 cannot fit the 5.4 m slope.
+- **Other accepted deviations.** The plate at 2.66–2.86, the 2.3 m lintel and `M_earth` are also accepted.
+
+**Must-fix (priority order)**
+
+1. **APEX COLLAR + FINIAL (silhouette; HUT_cap_collar, HUT_finial).**
+   - *Problem:* the lower collar rises only 0.35 m (z 6.66 → 7.01, r 0.765 → 0.40) at 44°. Above it, the "upper collar" is a flat drum ring (r 0.40, 5 cm tall) plus a low cone. In hero, front and side the lead hat is invisible at thumbnail and merges into the shingle cone. In ref2 it is the second most recognisable feature.
+   - *Lower collar:* rebuild it as a smooth cone at about 52–54°, drip edge at about 6.60 with base Ø 1.45–1.50, rising to z ≈ 7.25 with top Ø ≈ 0.50.
+   - *Drip edge:* give it a vertical fascia 5–7 cm deep that stands 8–10 cm off the shingle surface, so a hard shadow line reads at 30 m. Keep the rolled lip, the slight dents and the 10 seams.
+   - *Upper collar:* replace the drum + cone with a bell-cast cone, base Ø 0.55 at z 7.25 with a 4–5 cm drip overhanging the lower collar's top, rising to about 7.55 (top Ø about 0.16).
+   - *Finial:* a turned spindle 7.55 → 7.95, with a bead ring Ø 0.20, a neck Ø 0.10 and a vase bulb Ø 0.18. Then a sharp conical spike from Ø 0.14–0.16 at 7.95 to a point at 8.60 (tip r ≤ 5 mm; currently r 0.021). The spike is currently a needle (r 0.05 → 0.02) that vanishes at distance.
+   - Keep the 1° lean.
+
+2. **WATTLE WEAVE READS AS A FINE MAT (HUT_wattle_rods; all bays and door side panels).**
+   - *Problem:* row pitch is r_row + r_next (about 2.1–3.5 cm), so the rods touch and the wall reads as a regular screen in hero, side and back, and like a basket in close-up.
+   - *Rows:* change to a row pitch of 6–8 cm (±1.5 cm random), with rods Ø 2.4–3.6 cm, so dark gaps of 2–4 cm show between rows as in `hut_wattle_daub_plinth`.
+   - *Rods:* increase vertical drift to ±3 cm over 1 m (low-frequency noise per rod, not a shared field), add knots or kinks (Ø +15% bumps every 0.3–0.6 m) and a slight non-circular (oval/knobbly) section. About 15% of rows should be paired or tripled.
+   - *Weave depth:* keep the in/out amplitude at ±2.5–3 cm.
+   - *Budget:* this should also free about 300k tris; spend them on items 3–5.
+
+3. **PLINTH STONES ARE PILLOWY LOAVES (HUT_plinth_stones, HUT_plinth_chinking, HUT_ground_rubble, step stone).**
+   - *Problem:* all 40 boulders are similar rounded boxes (r_frac 0.3–0.5, D 0.40–0.52, nearly all full plinth height). They read as marshmallows or teeth in a ring (actor_closeup, director_extra/plinth.png).
+   - *Shape:* make them sub-angular. Corner rounding should be 2–4 cm (r_frac 0.08–0.18), with 3–6 large flat fracture facets per stone and flatter bedding faces.
+   - *Size and height:* vary heights 0.18–0.42. About 40% should be two-high (a big flat lower stone 0.15–0.25 tall plus a flatter upper stone or slab), and lengths should vary 0.25–0.85. Include 2–3 long through-stones.
+   - *Faces:* the outer faces should form a rough wall line (±4 cm) with stones in contact, not a row of separated blobs.
+   - *Chinking:* the chinking pieces currently stick out between stones as flat tabs. Recess them 2–5 cm behind the adjacent faces and make them wedge-shaped.
+   - *Rubble and step stone:* apply the same sub-angular treatment. The step stone currently reads as a pillow/pill disc: give it a flat, slightly dished top with chipped edges and bury it 3–4 cm.
+
+4. **DAUB READS AS FLAT BOARDS (HUT_daub; large bay left of the door, back-right bay, side patch).**
+   - *Problem:* lumps are about ±1 cm at a 0.45 m wavelength, and in clay the panels read as planar sheets (daub_bay, back, side).
+   - *Bulges:* add low-frequency bulges of 2.5–4 cm amplitude at 0.4–0.8 m wavelength, following the rods beneath (a faint horizontal ridging of 0.5–1 cm at the 6–8 cm rod pitch where the daub is thinner).
+   - *Surface:* add hand-pressed trowel or palm smears of 0.5–1 cm and 3–6 shrinkage cracks per bay (0.3–0.8 m long, 0.5–1 cm wide, 1–2 cm deep).
+   - *Edges:* chip the edges where the daub meets the posts, with no clean vertical cut lines. On the eroded lower edge, vary the break height by ±12 cm (currently it reads nearly straight) and leave 2–3 detached clumps clinging to the rods.
+
+5. **ENTRANCE TIMBER IS CG-CLEAN (HUT_door_frame, HUT_posts).**
+   - *Problem:* in door_front the door posts, jambs and cheek members read as straight, smooth extruded boxes. The 14 round posts read as smooth tubes in daub_bay.
+   - *Frame members:* add visible hewing: adze facets 4–8 cm wide and 3–6 mm deep, wane (bark-edge rounding) on 1–2 arrises of the door posts, ±8 mm width swell along the length, and 2–3 drying checks (3–6 mm wide, 15–40 cm long) on the two door posts.
+   - *Lintel and pegs:* show end-grain checks at the projecting lintel ends, and make the pegs proud 1.5 cm.
+   - *Round posts:* give them 6–10 visible adze flats (5–8 mm deep) and a knot or two.
+
+6. **DOOR SIDE WATTLE PANELS READ AS LADDERS (HUT_door_frame side panels).**
+   - *Problem:* each 0.21 m panel has rods crossing a single central stake, so it looks like rungs.
+   - *Fix:* use 2 stakes per panel and the coarser woven rods from item 2. Alternatively, follow `hut_door.png`, which shows a diagonal, rope-like twisted weave in those narrow panels.
+
+7. **APRON SEAM ARTEFACT (HUT_ground_apron).**
+   - *Problem:* the apron's outer rim at r about 4.74 sits about 2 mm above the review ground plane, and renders as a dashed or z-fighting ring (actor_closeup, director_extra/plinth.png).
+   - *Fix:* give the apron a flat outer band at least 0.4 m wide at exactly the bbox-min level, so the rim is coplanar and hidden, or tuck the rim under the plane by feathering it.
+   - Keep M_earth (accepted).
+
+**Nice to have**
+- Standing seams on the collar: make them folded seams (a 6–8 mm raised fin with soft fillets) instead of round rods.
+- Shingle butts: more raggedness (2–3 notches per butt, ±1.5 cm), and a few more cracked/split shingles near the eave on the door side.
+- Path flagstones: bed them 3–5 cm into the apron (they currently sit on top), with tufts of apron height between them.
+- Optional low-poly moss cushions at the collar drip and a few eave butts.
+- Door leaf: a little more visible ironwork scale. Hinge straps should be 45–55 mm wide so they read in actor_closeup.
