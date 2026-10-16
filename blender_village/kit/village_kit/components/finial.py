@@ -137,3 +137,58 @@ def finial(g, style="spike"):
 
 
 lead_hat_finial = finial
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# kit 1.1.0 (hilltop keep): the "turned" style -- a turned / forged finial over a lead hat on a bell cap apex
+# ---------------------------------------------------------------------------------------------------------------
+TURNED_PROFILE = np.array([
+    (0.10, 0.0), (0.105, 0.09), (0.128, 0.105), (0.128, 0.14), (0.075, 0.16), (0.08, 0.21), (0.105, 0.26),
+    (0.112, 0.31), (0.105, 0.35), (0.06, 0.41), (0.048, 0.43), (0.068, 0.445), (0.068, 0.465), (0.048, 0.48),
+    (0.066, 0.495), (0.066, 0.512), (0.042, 0.53), (0.05, 0.57), (0.072, 0.63), (0.076, 0.67), (0.068, 0.72),
+    (0.045, 0.79), (0.024, 0.86), (0.021, 0.9), (0.032, 0.915), (0.032, 0.94), (0.019, 0.96), (0.015, 1.05),
+    (0.010, 1.2), (0.004, 1.38), (0.0, 1.45)])
+"""(r, z) of the keep's main finial at scale 1 (1.45 m): socket collar, ring, bulb, two thin rings, onion /
+teardrop, neck, tapering spike."""
+
+
+def turned_finial(acc, base, scale=1.0, lean_deg=1.0, lean_dir=(0.6, -0.8), seg=28):
+    """FINIAL STYLE "turned": the turned / forged finial (TURNED_PROFILE x scale) standing at `base`, leaning
+    lean_deg toward lean_dir (a shear proportional to height), M_iron."""
+    from ..geom import lathe_rz
+    V, F = lathe_rz(TURNED_PROFILE * scale, seg, cap_bottom=True, cap_top=False)
+    a = math.radians(lean_deg)
+    d = np.array([lean_dir[0], lean_dir[1], 0.0])
+    d /= np.linalg.norm(d)
+    V = V + d[None] * (V[:, 2:3] * math.tan(a))
+    acc.add(V + np.asarray(base, float)[None], F, "M_iron")
+
+
+def lead_hat(acc, cx, cy, z_apex, r0, h0, seg=28, cover=None, clear=0.02):
+    """lead hat over a cap apex: a shallow lead cone of radius r0 with a rolled drip edge h0 below the apex.
+    cover: optional (N, 3) vertices of the covering under it (e.g. the chunky cap shingles); the drip edge and the
+    cone are then lowered / raised so that every covering vertex inside r0 stays `clear` under the lead (no shingle
+    pokes through the hat).  Returns the height of the hat top (where the finial stands)."""
+    from ..geom import lathe_rz
+    z_top = z_apex + 0.05
+    if cover is not None and len(cover):
+        r_v = np.hypot(cover[:, 0] - cx, cover[:, 1] - cy)
+        m = r_v < r0 + 0.04
+        if m.any():
+            z_v, r_v = cover[m, 2], r_v[m]
+            z_top = max(z_top, float(z_v[r_v < 0.10].max(initial=-1e9)) + clear + 0.03)
+            # the cone from (0.09, z_top - 0.03) down to (r0, z_apex - h0 + 0.02) must pass over every vertex
+            for _ in range(60):
+                zr = z_apex - h0 + 0.02
+                t_ = np.clip((r_v - 0.09) / max(r0 - 0.09, 1e-3), 0, 1)
+                z_cone = (z_top - 0.03) * (1 - t_) + zr * t_
+                need = float((z_v + clear - z_cone).max())
+                if need <= 0:
+                    break
+                h0 = h0 - min(need, 0.02)
+    prof = [(r0 + 0.02, -h0 - 0.01), (r0 + 0.025, -h0 + 0.012), (r0, -h0 + 0.02),
+            (r0 * 0.55, -h0 * 0.45 + 0.45 * (z_top - z_apex - 0.05)), (0.09, z_top - z_apex - 0.03),
+            (0.085, z_top - z_apex), (0.0, z_top - z_apex)]
+    V, F = lathe_rz(prof, seg, cx=cx, cy=cy, z0=z_apex, cap_bottom=True, cap_top=False)
+    acc.add(V, F, "M_lead")
+    return z_top

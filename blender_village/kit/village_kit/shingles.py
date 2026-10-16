@@ -166,3 +166,81 @@ def board_mesh(rng, W=None, H=1.0, thick=None, chamfer=0.006, segs_h=4):
     V[:, 1] += H / 2 + np.where(V[:, 1] > 0, rng.uniform(-0.01, 0.01), rng.uniform(-0.01, 0.0)) * (np.abs(V[:, 1]) > H / 2 - 0.02)
     V[:, 2] += T / 2 - rng.uniform(0.0, 0.004) * (2 * V[:, 0] / W) ** 2
     return V, [F]
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# kit 1.1.0 (hilltop keep migration): named rows for the tiered octagonal buildings' units (kit edit rule: a unit
+# outside the shared ranges gets its own row with the reason).  The keep's turret and lantern caps use the shared
+# chunky `shingle` / `shingle_apex` / `starter` rows above (ensemble review 1).
+# ---------------------------------------------------------------------------------------------------------------
+SIZE_TABLE.update({
+    # tier-1 skirt roof of a polygonal hall: long horizontal BOARDS laid in courses (spec C, ref1 keep: the skirt
+    # reads as horizontal board courses, not shingles).  Length along the course 0.6-1.2 m, 0.215 m exposure, 0.47 m
+    # slope length, 3.2 cm butt.  A different unit from the chunky shingle.
+    "skirt_board": dict(length=(0.6, 1.2), exposure=0.215, slope_len=0.47, butt=0.032, gap=0.009),
+    # tier-2 shake collar round a stone cone: radiating riven shakes 1.0-1.2 m long but NARROW (0.12-0.22 m, the
+    # cone's circumference at the comb is only ~19 m and ref1's comb is a dense crest), 3.7-4.4 cm butts, two layers.
+    "collar_shake": dict(width=(0.12, 0.22), butt=(0.037, 0.044), tip=(0.05, 0.25)),
+    # ridge comb of a thatch ridge: short stubby riven shakes crossed in V / X tufts (director round 6: crest 0.18-0.35
+    # m visible, shakes 6-10 cm wide, 3-5 cm thick); ten pooled lengths.
+    "comb_shake": dict(lengths=(0.24, 0.27, 0.30, 0.33, 0.36, 0.39, 0.42, 0.46, 0.50, 0.55), width=(0.06, 0.11),
+                       thick=(0.03, 0.05)),
+    # hip / saddle boards over the hips of an octagonal roof or cap (width, thickness).
+    "hip_board": dict(skirt=(0.13, 0.030), cap=(0.10, 0.025)),
+})
+
+
+def riven_shakes(Sh, idx, ncol=11, halves=0, min_relief=0.0):
+    """kit 1.1.0: a batch of long riven shakes for a radiating collar (SIZE_TABLE 'collar_shake'; the hilltop keep's
+    tier-2 comb), in shake-local coordinates: x across the shake, u along it from the butt (0..L), h out of the roof.
+    Sh: dict of per-shake arrays (w width, L length, tb butt thickness, taper (10-20 % narrower at the top), kind
+    (tip: 0 / 3 ragged, 1 slanted split, 2 notched), cang (split angle), notch, twist, sl (split length fraction),
+    phase (an angle used for the ragged tip), nrid / rc / ra / rsig (2-4 riven ridges per face)); idx selects the
+    shakes; halves = -1 / +1 builds the two halves of split shakes that open toward the top.
+    Wedge-riven thickness (butt -> half at the head), edges waving +-5 mm, blunt broken / split ends (never pointed).
+    Producer note 11: the 2-5 mm riven ridges and the 5 mm edge wave are below min_relief and not modelled then.
+    Returns P (M, V, 3) and the shared quads (geom.inst_faces)."""
+    from .geom import axn, n1, rbox_v
+    idx = np.asarray(idx)
+    Mi = len(idx)
+    w, L, tb = Sh["w"][idx], Sh["L"][idx], Sh["tb"][idx]
+    wi = w if halves == 0 else w * 0.5 - 0.002
+    rr = np.full(Mi, 0.0095)
+    X = axn(-wi / 2, wi / 2, rr, ncol)
+    Y = axn(np.zeros(Mi), L, rr, 9)
+    Z = np.stack([np.zeros(Mi), tb - rr, tb], 1)
+    P, quads = rbox_v(X, Y, Z, rr, skip_back=True, round_back=False)
+    x, u, h = P[..., 0], P[..., 1], P[..., 2]
+    Li = L[:, None]
+    fu = u / Li
+    xc_off = 0.0 if halves == 0 else (halves * (w * 0.25))[:, None]
+    xf = x + xc_off
+    xn_full = xf / (w[:, None] / 2)
+    h = h * (1 - 0.5 * fu)
+    k_rid = 1.0 if 0.005 >= min_relief else 0.0
+    rid = np.zeros_like(h)
+    for k_ in range(4):
+        on = (k_ < Sh["nrid"][idx])[:, None]
+        c_ = Sh["rc"][idx, k_][:, None] + 0.12 * np.sin(fu * 3.0 + k_ + idx[:, None])
+        rid += np.where(on, Sh["ra"][idx, k_][:, None] * np.exp(-((xn_full - c_) / Sh["rsig"][idx, k_][:, None]) ** 2), 0.0)
+    h = h + k_rid * rid * np.clip(h / np.maximum(tb[:, None] * (1 - 0.5 * fu), 1e-4), 0, 1) ** 4
+    x = xf * (1 - Sh["taper"][idx][:, None] * fu)
+    edge = np.clip(np.abs(xn_full) - 0.6, 0, 1) / 0.4
+    k_edge = 1.0 if 0.005 >= min_relief else 0.0
+    x = x + k_edge * np.sign(xf) * edge * 0.005 * n1(fu * 6.0 + idx[:, None] * 0.37 + np.sign(xf) * 3.1, 77)
+    if halves != 0:
+        sl = Sh["sl"][idx][:, None]
+        sp_ = np.clip((fu - (1 - sl)) / sl, 0, 1) ** 1.3
+        x = x + halves * sp_ * 0.012
+        h = h + halves * sp_ * 0.004
+    tipz = np.clip((u - (Li - 0.10)) / 0.10, 0, 1)
+    xn = x / (w[:, None] / 2)
+    wl_ = w[:, None] * 0.82
+    k_i = Sh["kind"][idx][:, None]
+    cang = Sh["cang"][idx]
+    u = u - np.where(k_i == 1, np.tan(np.abs(cang))[:, None] * (0.5 + 0.5 * np.sign(cang)[:, None] * xn) * wl_ * tipz, 0.0)
+    if halves == 0:
+        u = u - np.where((k_i == 2) & (np.abs(xn) < 0.22), Sh["notch"][idx][:, None] * tipz, 0.0)
+    u = u - np.where((k_i == 3) | (k_i == 0), 0.012 * tipz * np.abs(np.sin(xn * 4.0 + Sh["phase"][idx][:, None] * 30)), 0.0)
+    x = x + Sh["twist"][idx][:, None] * u * (u / Li)
+    return np.stack([x, u, h], -1), quads

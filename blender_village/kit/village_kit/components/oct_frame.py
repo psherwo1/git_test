@@ -55,6 +55,7 @@ PARAMS = dict(
     TUR_C=(-8.55, 2.70), TUR_SCALE=1.0, TUR_Z_TOP=5.92,
     # producer note 11
     detail_rule=True,
+    units="kit",             # roofing / board units: 'kit' (SIZE_TABLE, chunky caps) or 'phase1' (refactor check)
     seed_offset=0,           # added to the masonry layout seeds (a variant gets its own stones)
 )
 
