@@ -1,0 +1,31 @@
+{
+  "objects": 35,
+  "triangles": 899500,
+  "bbox_min": [
+    -6.53094482421875,
+    -5.086108207702637,
+    0.0
+  ],
+  "bbox_max": [
+    6.22833776473999,
+    3.832615613937378,
+    15.701915740966797
+  ],
+  "size_m": [
+    12.759283065795898,
+    8.918724060058594,
+    15.701915740966797
+  ],
+  "materials": [
+    "M_iron",
+    "M_lead",
+    "M_mortar",
+    "M_roof_shake",
+    "M_roof_shingle",
+    "M_rubble",
+    "M_stone",
+    "M_stone_dressed",
+    "M_timber",
+    "M_timber_weathered"
+  ]
+}

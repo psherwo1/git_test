@@ -535,7 +535,7 @@ STYLE = {
     # cuts = (min, max) straight fracture cuts on the outline; facets = (min, max) tilted face planes;
     # spall = (min, max) edge spalls (dressed work)
     "rubble": dict(rr=(0.08, 0.008, 0.013), ry=0.009, nxz=0.06, ny=0.006, pil=(0.002, 0.009), tap=0.16,
-                   shear=0.12, T=T_RUB, cuts=(3, 4), facets=(1, 2), hf=0.003, ftilt=0.55, fshave=(0.006, 0.016)),
+                   shear=0.12, T=T_RUB, cuts=(3, 4), facets=(1, 2), hf=0.003, ftilt=0.25, fshave=(0.008, 0.02)),
     "footing": dict(rr=(0.09, 0.01, 0.015), ry=0.012, nxz=0.06, ny=0.006, pil=(0.002, 0.01), tap=0.14,
                     shear=0.1, T=T_RUBF, cuts=(3, 4), facets=(1, 2), hf=0.0025, ftilt=0.5, fshave=(0.006, 0.016)),
     "boulder": dict(rr=(0.2, 0.012, 0.05), ry=0.2, nxz=0.12, ny=0.012, pil=(0.0, 0.01), tap=0.2,
@@ -2373,15 +2373,21 @@ def build_cap(parts):
             nsh += keep.sum()
     log("cap shingles", nsh)
     # ---- hip boards, ridge roll, rear knob ----
-    vprof = np.array([(0.12, -0.10), (0.12, -0.074), (0.0, 0.036), (-0.12, -0.074), (-0.12, -0.10), (0.0, 0.006)])
+    vprof = np.array([(0.095, -0.085), (0.095, -0.064), (0.0, 0.032), (-0.095, -0.064), (-0.095, -0.085),
+                      (0.0, 0.006)])
     for fx in (0, 1):
         for sy in (-1, 1):
-            tt = np.linspace(-0.04, 1.0, 16)
-            x = (CAP_AF - tt * CAP_EF) if fx == 0 else (-CAP_AB + tt * CAP_EB)
-            y = sy * (CAP_B - tt * CAP_SB)
-            z = CAP_ZE + cap_h(tt) + 0.06 + lowfreq(tt, rng, 0.006)
-            P, T = sweep(capw(np.stack([x, y, z], 1))[None], vprof, up=(0, 0, 1))
-            P_fr.add(P, T, mat="M_timber_weathered", smooth="bevel")
+            # hip saddle: 3-4 separate boards with butt joints, each slightly off line
+            nseg = int(rng.integers(3, 5))
+            cuts = np.sort(np.concatenate([[-0.04, 1.0], rng.uniform(0.15, 0.85, nseg - 1)]))
+            for q in range(nseg):
+                tt = np.linspace(cuts[q] + 0.006, cuts[q + 1] - 0.006, 7)
+                x = (CAP_AF - tt * CAP_EF) if fx == 0 else (-CAP_AB + tt * CAP_EB)
+                y = sy * (CAP_B - tt * CAP_SB)
+                z = CAP_ZE + cap_h(tt) + 0.058 + rng.uniform(-0.004, 0.006) + lowfreq(tt, rng, 0.004)
+                P, T = sweep(capw(np.stack([x, y, z], 1))[None], vprof * [rng.uniform(0.92, 1.05), 1.0],
+                             up=(0, 0, 1))
+                P_fr.add(P, T, mat="M_timber_weathered", smooth="bevel")
     xr = np.linspace(XR0 - 0.06, XR1 + 0.06, 6)
     path = capw(np.stack([xr, np.zeros(6), CAP_ZE + CAP_RISE + 0.05 + lowfreq(xr, rng, 0.006)], 1))[None]
     P, T = sweep(path, vprof, up=(0, 0, 1))
@@ -2425,6 +2431,11 @@ def build_cap(parts):
             Rr = np.repeat(frame_mats(tt[None], nn[None], ee[None]), N, 0) @ rotm([0, 0, 1], np.full(N, -0.06))
             Wl = xform(P, Rr, ctr)
             Wl[:, :, 0] = np.clip(Wl[:, :, 0], x_valley(Wl[:, :, 1]) + 0.035, HOOD_XF + 0.05)
+            # never cross the hood ridge: clip at the ridge line and keep the vertex on its own plane
+            yo_ = Wl[:, :, 1].copy()
+            yn_ = s * np.maximum(s * yo_, 0.012)
+            Wl[:, :, 2] += -(HOOD_ZR - HOOD_ZE) * (s * yn_ - s * yo_) / (HOOD_YW + 0.03)
+            Wl[:, :, 1] = yn_
             keep = Wl[:, :, 0].max(1) > x_valley(Wl[:, :, 1]).max(1) + 0.06
             P_sh.add(capw(Wl[keep]), T_SHK, Pl=P[keep], mat="M_roof_shingle", smooth="bevel")
         # lead valley flashing: folded strip lying on both roof planes under the shingle edges
@@ -2447,8 +2458,8 @@ def build_cap(parts):
                        up=(0, s, 0), c=0.005, rng=rng, bow=0.003)
     # ridge of the hood (runs back into the main roof above the valley junction)
     path = capw(np.stack([np.linspace(float(x_valley(0.0)) - 0.03, HOOD_XF + 0.05, 5), np.zeros(5),
-                          np.full(5, HOOD_ZR + 0.035)], 1))[None]
-    P, T = sweep(path, vprof * [0.8, 0.8], up=(0, 0, 1))
+                          np.full(5, HOOD_ZR + 0.05)], 1))[None]
+    P, T = sweep(path, vprof * [0.75, 0.9], up=(0, 0, 1))
     P_fr.add(P, T, mat="M_timber_weathered", smooth="bevel")
     # front gable boards with a hole for the shaft
     zsh = HUB_Z - (HUB_D - HOOD_XF) * math.tan(TILT)
@@ -3031,9 +3042,9 @@ def moss_cushion(rng, n, wmin, wmax, hmin, hmax):
     Hh = rng.uniform(hmin, hmax, n)
     u = P.copy()
     P = np.stack([P[:, :, 0] * W[:, None] / 2, P[:, :, 2] * Hh[:, None], P[:, :, 1] * D[:, None] / 2], -1)
-    P[:, :, 1] *= 1 + 0.35 * noise_field(u * 1.5, rng, nterms=3, fmin=1.5, fmax=3.0)
-    P[:, :, 0] *= 1 + 0.15 * noise_field(u, rng)
-    P[:, :, 2] *= 1 + 0.15 * noise_field(u * 1.2, rng)
+    P[:, :, 1] *= 1 + 0.45 * noise_field(u * 1.5, rng, nterms=3, fmin=1.5, fmax=3.0)
+    P[:, :, 0] *= 1 + 0.3 * noise_field(u, rng, fmin=1.2, fmax=2.8)
+    P[:, :, 2] *= 1 + 0.3 * noise_field(u * 1.2, rng, fmin=1.2, fmax=2.8)
     P[:, :, 1] -= 0.012                                   # tucked into the shingle gaps
     return P, flip_tmpl(T) if False else T
 
@@ -3044,13 +3055,13 @@ def build_moss(parts):
     P_m = parts["moss"]
     rng = RNG("moss")
     ca, sa = math.cos(AP_A), math.sin(AP_A)
-    n = 22
-    phi = np.concatenate([rng.normal(PI, 0.8, 15), rng.uniform(-PI, PI, 7)])
-    sc = rng.choice([0.6, 1.2, 1.78], n) + rng.uniform(-0.04, 0.02, n)
-    P, T = moss_cushion(rng, n, 0.14, 0.34, 0.025, 0.055)
+    n = 14
+    phi = np.concatenate([rng.normal(PI, 0.7, 10), rng.uniform(-PI, PI, 4)])
+    sc = rng.choice([0.25, 0.85, 1.45], n) + rng.uniform(-0.05, 0.05, n)
+    P, T = moss_cushion(rng, n, 0.28, 0.55, 0.014, 0.028)
     Rf, er, nrm = cone_frame(phi, AP_A)
     # local (x along slope, y normal, z around) from cushion (x, y=up, z)
-    ctr = er * (AP_RE - sc * ca)[:, None] + np.stack([0 * sc, 0 * sc, AP_ZE + sc * sa], 1) + nrm * 0.055
+    ctr = er * (AP_RE - sc * ca)[:, None] + np.stack([0 * sc, 0 * sc, AP_ZE + sc * sa], 1) + nrm * 0.058
     Rl = rotm([0, 1, 0], rng.uniform(-0.4, 0.4, n))
     P_m.add(xform(P, Rf @ Rl, ctr), T, Pl=P, mat="M_moss_clump", smooth="all")
     # cap eave: a few small cushions on the shaded back / side faces (cap is yawed + leaned)
@@ -3241,7 +3252,7 @@ def main():
     parts["sail_C_counterweight"] = Part("MILL_sail_C_counterweight", ["M_iron"])
 
     for fn in (build_base, build_door_and_interior, build_ground, build_buttress, build_apron, build_tower,
-               build_cap, build_rotor, build_props, build_moss):
+               build_cap, build_rotor, build_props):
         fn(parts)
         log("built", fn.__name__)
 
@@ -3270,6 +3281,7 @@ def main():
     lo = np.min([np.array(o.bound_box).min(0) for o in col.objects], 0)
     hi = np.max([np.array(o.bound_box).max(0) for o in col.objects], 0)
     log("bbox", np.round(lo, 3), np.round(hi, 3))
+    bpy.context.preferences.filepaths.save_version = 0     # no .blend1 backups in the building folder
     bpy.ops.wm.save_as_mainfile(filepath=OUT_BLEND, compress=True)
     log("saved", OUT_BLEND, "%.1f MB" % (os.path.getsize(OUT_BLEND) / 1e6))
 

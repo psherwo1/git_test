@@ -424,6 +424,67 @@ def stone(half, r_frac, segs, rng, amp=0.02, freq=3.0, flat_top=None, flat_bot=N
     return P, F
 
 
+def rbox2(half, r, segs):
+    """rounded box with TWO rows of vertices in every rounded edge zone (true 2-segment rounding)."""
+    h = np.asarray(half, float)
+    r = min(r, float(h.min()) * 0.9)
+    c = 0.82
+    axes = [[-1.0, -(1 + c) / 2, -c] + list(np.linspace(-c, c, n + 1)[1:-1]) + [c, (1 + c) / 2, 1.0]
+            for n in segs]
+    Vt, F = box_template(*axes)
+    a = np.abs(Vt)
+    P = np.where(a <= c + 1e-9, Vt / c * (h - r), np.sign(Vt) * (h - r + (a - c) / (1 - c) * r))
+    q = np.clip(P, -(h - r), h - r)
+    d = P - q
+    L = np.linalg.norm(d, axis=1, keepdims=True)
+    P = np.where(L > 1e-9, q + d / np.maximum(L, 1e-12) * r, P)
+    return P, F
+
+
+def smin(a, b, k):
+    """polynomial smooth minimum (soft fillet of width k)."""
+    hh = np.clip(0.5 + 0.5 * (b - a) / k, 0.0, 1.0)
+    return b * (1 - hh) + a * hh - k * hh * (1 - hh)
+
+
+def rock(half, rng, round_r=0.03, facets=(3, 6), segs=(9, 7, 6), warp=0.05, amp=0.005, freq=4.0,
+         flat_top=None, flat_bot=None, fillet=0.018, face_bias=None, chips=0, pit=0.0015):
+    """sub-angular split stone: small corner rounding, 3-6 big flat fracture facets with soft
+    fillets, flat bedding faces, faint low-frequency undulation. local coords, bedding face down.
+    face_bias: optional unit vector; facets are biased toward it (e.g. the exposed face)."""
+    h = np.asarray(half, float)
+    P, F = rbox2(h, round_r, segs)
+    off = rng.uniform(-100, 100, 3)
+    q = P / h
+    wv = np.stack([vnoise(q * 0.7 + off + k * 17.3) for k in range(3)], -1)
+    P = P + wv * h * warp
+    nf = rng.randint(facets[0], facets[1] + 1)
+    for _ in range(nf):
+        nv = rng.normal(size=3) * [1.0, 1.0, 0.55]
+        if face_bias is not None and rng.rand() < 0.6:
+            nv = np.asarray(face_bias, float) * 1.2 + rng.normal(size=3) * [0.6, 0.6, 0.35]
+        nv = nrm(nv)
+        proj = P @ nv
+        cut = proj.max() - (proj.max() - proj.min()) * rng.uniform(0.06, 0.2)
+        newp = smin(proj, cut, fillet)
+        P = P + nv * (newp - proj)[:, None]
+    for _ in range(chips):
+        # small conchoidal chip off a top edge
+        az = rng.uniform(0, 2 * np.pi)
+        nv = nrm(np.array([math.cos(az), math.sin(az), rng.uniform(0.7, 1.3)]))
+        proj = P @ nv
+        cut = proj.max() - rng.uniform(0.012, 0.03)
+        P = P + nv * (smin(proj, cut, 0.006) - proj)[:, None]
+    dirn = nrm(P / h)
+    d = fbm(P * freq + off, 3) * amp + vnoise(P * freq * 4.3 + off * 1.7) * pit
+    P = P + dirn * d[:, None]
+    if flat_top is not None:
+        P[:, 2] = np.where(P[:, 2] > flat_top, flat_top + (P[:, 2] - flat_top) * 0.12, P[:, 2])
+    if flat_bot is not None:
+        P[:, 2] = np.maximum(P[:, 2], flat_bot)
+    return P, F
+
+
 def flagstone(lx, ly, th, rng, segs=30):
     """flat irregular slab (top at z=0) with rounded arrises and a slightly domed, pitted top."""
     seed = rng.randint(1, 100000)
@@ -573,8 +634,8 @@ BATTEN_T = 0.03
 SH_EXPOSE = 0.318
 SH_LEN = 0.72
 N_COURSES = 17
-COLLAR_R = 0.73
-COLLAR_PITCH = math.radians(44.0)
+COLLAR_R = 0.745               # lead-hat drip radius (dia 1.49)
+COLLAR_PITCH = math.radians(53.0)   # director r1: collar matches / slightly exceeds roof pitch
 FINIAL_TIP = 8.60
 DOOR_W = 1.00
 SILL_TOP = 0.20
@@ -704,32 +765,228 @@ def post_azimuths():
 POST_AZ = post_azimuths()
 
 
-def round_post(acc, base, top, rad, rng, sides=14, check=False):
-    nseg = 14
+def round_post(acc, base, top, rad, rng, sides=32, check=False, n_knots=None):
+    """round-hewn post: lean, bow, taper, 6-10 long adze flats 5-8 mm deep, adze scallops,
+    1-2 branch-stub knots with a swelling round them, optional drying check (narrow V split)."""
+    nseg = 64
     t = np.linspace(0, 1, nseg)
     lean = np.array([rng.uniform(-1, 1), rng.uniform(-1, 1), 0.0]) * math.tan(math.radians(0.7))
     H = top[2] - base[2]
     bow = np.array([rng.uniform(-1, 1), rng.uniform(-1, 1), 0]) * 0.012
     path = base[None, :] + np.outer(t, top - base) + np.outer(t * H, lean) + np.outer(np.sin(np.pi * t), bow)
     taper = rad * (1 + 0.05 * (0.5 - t)) + rng.uniform(-0.005, 0.005)
-    ang = 2 * np.pi * np.arange(sides) / sides + rng.uniform(0, 1)
-    # adze flats: random per-side flattening, slowly varying along the length
-    flat = rng.uniform(0.0, 1.0, sides)
-    prof = []
+    ph0 = rng.uniform(0, 1)
+    ang = 2 * np.pi * np.arange(sides) / sides + ph0
     seed = rng.randint(1000)
-    for i, tt in enumerate(t):
-        rr = 1 - 0.06 * flat * (0.6 + 0.4 * np.sin(tt * 5 + flat * 6)) + 0.025 * n2(ang * 1.3, tt * 4, seed)
-        p = np.stack([np.cos(ang) * rr, np.sin(ang) * rr], -1)
-        prof.append(p)
-    prof = np.array(prof)
-    if check:  # drying check: a groove down one face
+    A2 = np.broadcast_to(ang, (nseg, sides)).copy()
+    T2 = np.broadcast_to(t[:, None], (nseg, sides))
+    rr = 1 + 0.02 * n2(A2 * 1.3, T2 * 4, seed) + 0.006 * n2(A2 * 4, T2 * 30, seed + 1)
+    # adze flats: planar cuts 5-8 mm deep over a stretch of the post, feathered at their ends
+    nfl = rng.randint(6, 11)
+    for kf in range(nfl):
+        af = ph0 + 2 * np.pi * (kf + rng.uniform(-0.3, 0.3)) / nfl
+        d = rng.uniform(0.005, 0.008) / rad
+        t0 = rng.uniform(-0.1, 0.45)
+        t1 = t0 + rng.uniform(0.45, 1.0)
+        wgt = smoothstep(t0, t0 + 0.06, T2) * (1 - smoothstep(t1 - 0.06, t1, T2))
+        # scalloped depth along the flat (adze strokes 5-8 cm)
+        dd = d * wgt * (0.75 + 0.25 * np.abs(np.sin(T2 * H / 0.065 * np.pi + kf)))
+        ca = np.cos(A2 - af)
+        cutr = np.where(ca > 0.2, (1 - dd) / np.maximum(ca, 0.2), 10.0)
+        rr = np.minimum(rr, cutr)
+    # knots: branch stubs (separate pieces) + swelling of the surface round them
+    if n_knots is None:
+        n_knots = rng.randint(1, 3)
+    stubs = []
+    for _ in range(n_knots):
+        ka = ph0 + rng.uniform(0, 2 * np.pi)
+        kt = rng.uniform(0.25, 0.8)
+        da = np.angle(np.exp(1j * (A2 - ka))) * rad
+        dz = (T2 - kt) * H
+        dist = np.hypot(da, dz * 0.8)
+        rr = rr + (0.012 * np.exp(-(dist / 0.04) ** 2)) / rad
+        stubs.append((ka, kt))
+    if check:  # drying check: a narrow, deep V split down one face
         k = rng.randint(sides)
-        z0, z1 = rng.uniform(0.15, 0.35), rng.uniform(0.6, 0.9)
-        m = smoothstep(z0, z0 + 0.06, t) * (1 - smoothstep(z1 - 0.06, z1, t))
-        prof[:, k, :] *= (1 - 0.15 * m)[:, None]
+        z0, z1 = rng.uniform(0.15, 0.35), rng.uniform(0.55, 0.8)
+        m = smoothstep(z0, z0 + 0.08, t) * (1 - smoothstep(z1 - 0.08, z1, t))
+        rr[:, k] *= (1 - 0.13 * m)
+        dA = 2 * np.pi / sides
+        A2[:, (k - 1) % sides] += dA * 0.82 * m
+        A2[:, (k + 1) % sides] -= dA * 0.82 * m
+    prof = np.stack([np.cos(A2) * rr, np.sin(A2) * rr], -1)
     P, F, uv, w = tube(path, taper, sides, up=(1, 0, 0), profile=prof)
-    # chamfer ends: shrink end rings slightly
     acc.add(P, F, "M_timber", uv, w)
+    T_, N_, B_ = frames(path, (1, 0, 0))
+    for (ka, kt) in stubs:
+        i = int(kt * (nseg - 1))
+        dirv = nrm(np.cos(ka) * N_[i] + np.sin(ka) * B_[i])
+        c0 = path[i] + dirv * taper[i] * 0.6
+        dirv2 = nrm(dirv + np.array([0, 0, rng.uniform(0.2, 0.6)]))
+        L = taper[i] * 0.4 + rng.uniform(0.014, 0.024)
+        pth = np.linspace(c0, c0 + dirv2 * L, 4)
+        rs_ = rng.uniform(0.016, 0.024)
+        pth, rk = chamfer_path(pth, np.linspace(rs_ * 1.25, rs_, 4), 0.005)
+        Pk, Fk, uvk, wk = tube(pth, rk, 10, up=(0, 0, 1))
+        acc.add(Pk, Fk, "M_timber", uvk, wk)
+
+
+def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_faces=(0, 1, 2, 3),
+                end_checks=0, sag=0.0, adze=True, mat="M_timber", ds=0.012, ns=7, nc=4, swell=0.008):
+    """hand-hewn squared timber along local +X (half = (L/2, a, b)); R columns = local axes in world.
+    adze facets 4-8 cm wide x 3-6 mm deep on every face, +-8 mm swell along the length, rounded
+    arrises, wane (bark-edge rounding) on chosen corners (0:+y+z 1:-y+z 2:-y-z 3:+y-z), narrow
+    drying checks on chosen faces (0:+z 1:-y 2:-z 3:+y), end-grain checks at both ends."""
+    hl, a0, b0 = (float(v) for v in half)
+    L = 2 * hl
+    nl = max(6, int(L / ds) + 1)
+    che = min(ch, 0.012)
+    xs = np.concatenate([[-hl, -hl + che], np.linspace(-hl + che * 2, hl - che * 2, nl), [hl - che, hl]])
+    n = len(xs)
+    tt = (xs + hl) / L
+    seed = rng.randint(100000)
+    sw_a = a0 + swell * n2(tt * 3.0, np.full(n, 0.5), seed)
+    sw_b = b0 + swell * n2(tt * 3.0, np.full(n, 2.5), seed + 1)
+    rc = np.full((n, 4), ch)
+    for cw in wane:
+        rc[:, cw] = np.clip(0.045 + 0.02 * n2(tt * 4.0, np.full(n, cw * 3.1), seed + 5 + cw), 0.025, 0.065)
+    # build the profile rings: corners c0..c3, CCW in (y,z); each side has ns interior points
+    M = 4 * (ns + nc)
+    Y = np.zeros((n, M))
+    Zp = np.zeros((n, M))
+    face = np.full(M, -1)
+    across = np.zeros(M)
+    corner_sign = [(1, 1), (-1, 1), (-1, -1), (1, -1)]
+    for i in range(n):
+        a, b = sw_a[i], sw_b[i]
+        pts = []
+        for c in range(4):
+            sy, sz = corner_sign[c]
+            r = min(rc[i, c], a * 0.6, b * 0.6)
+            cy, cz = sy * (a - r), sz * (b - r)
+            a_start = math.atan2(0, sy) if c in (0, 2) else math.atan2(sz, 0)
+            # corner arcs CCW: c0 from +y dir (0) to +z (90); c1 from +z(90) to -y(180); etc.
+            a_beg = [0.0, 0.5 * np.pi, np.pi, 1.5 * np.pi][c]
+            arc = a_beg + np.linspace(0, 0.5 * np.pi, nc)
+            for k_ in range(nc):
+                pts.append((cy + r * math.cos(arc[k_]), cz + r * math.sin(arc[k_])))
+            # side after corner c -> corner c+1
+            cn = (c + 1) % 4
+            sy2, sz2 = corner_sign[cn]
+            r2 = min(rc[i, cn], a * 0.6, b * 0.6)
+            p_from = np.array([cy + r * math.cos(arc[-1]), cz + r * math.sin(arc[-1])])
+            p_to_c = np.array([sy2 * (a - r2), sz2 * (b - r2)])
+            a_beg2 = [0.0, 0.5 * np.pi, np.pi, 1.5 * np.pi][cn]
+            p_to = p_to_c + r2 * np.array([math.cos(a_beg2), math.sin(a_beg2)])
+            for k_ in range(ns):
+                u = (k_ + 1) / (ns + 1)
+                pts.append(tuple(p_from + (p_to - p_from) * u))
+        pts = np.array(pts)
+        Y[i] = pts[:, 0]
+        Zp[i] = pts[:, 1]
+    for c in range(4):
+        for k_ in range(ns):
+            j = c * (ns + nc) + nc + k_
+            face[j] = c
+            across[j] = (k_ + 1) / (ns + 1) * 2 - 1
+    # face outward normals in (y,z): side after c0 is the +z face, etc.
+    fn = {0: (0, 1), 1: (-1, 0), 2: (0, -1), 3: (1, 0)}
+    disp = np.zeros((n, M))
+    if adze:
+        for c in range(4):
+            bnd = [-hl]
+            while bnd[-1] < hl:
+                bnd.append(bnd[-1] + rng.uniform(0.04, 0.08))
+            bnd = np.array(bnd)
+            dep = rng.uniform(0.003, 0.006, len(bnd))
+            tilt = rng.uniform(-0.5, 0.5, len(bnd))
+            k = np.clip(np.searchsorted(bnd, xs) - 1, 0, len(bnd) - 2)
+            tl = (xs - bnd[k]) / (bnd[k + 1] - bnd[k])
+            scoop = dep[k] * (1 - (2 * tl - 1) ** 2) ** 0.6
+            js = np.where(face == c)[0]
+            disp[:, js] += scoop[:, None] * (1 + tilt[k][:, None] * across[js][None, :] * 0.6)
+            # corner points get half the scoop of the adjacent faces
+            for jc in range(c * (ns + nc), c * (ns + nc) + nc):
+                disp[:, jc] += 0.35 * scoop
+    # apply face displacement (inward along the face normal)
+    for c in range(4):
+        js = np.where(face == c)[0]
+        ny, nz = fn[c]
+        Y[:, js] -= ny * disp[:, js]
+        Zp[:, js] -= nz * disp[:, js]
+    cj = np.where(face < 0)[0]
+    rad_ = np.hypot(Y[:, cj], Zp[:, cj])
+    Y[:, cj] *= 1 - disp[:, cj] / np.maximum(rad_, 1e-3)
+    Zp[:, cj] *= 1 - disp[:, cj] / np.maximum(rad_, 1e-3)
+    # drying checks (narrow V split: centre line sinks, neighbours pulled in)
+
+    def apply_check(c, j_off, i0, i1, depth, width, from_end=0):
+        j = c * (ns + nc) + nc + j_off
+        ny, nz = fn[c]
+        ii = np.arange(i0, i1)
+        tl = (ii - i0) / max(1, (i1 - i0 - 1))
+        if from_end < 0:
+            m = (1 - tl) ** 0.7
+        elif from_end > 0:
+            m = tl ** 0.7
+        else:
+            m = np.sin(np.pi * tl) ** 0.6
+        Y[ii, j] -= ny * depth * m
+        Zp[ii, j] -= nz * depth * m
+        sp_ = (2 * (a0 if c in (0, 2) else b0)) / (ns + 1)
+        pull = (sp_ - width / 2) * np.clip(m * 1.4, 0, 1)
+        tyz = np.array([-nz, ny], float)       # across-face direction (toward increasing j)
+        for jn, sg in ((j - 1, 1), (j + 1, -1)):
+            Y[ii, jn] += sg * tyz[0] * pull
+            Zp[ii, jn] += sg * tyz[1] * pull
+
+    for _ in range(n_checks):
+        c = int(rng.choice(check_faces))
+        j_off = rng.randint(2, ns - 2)
+        lc = rng.uniform(0.15, 0.4)
+        x0 = rng.uniform(-hl + 0.15, hl - 0.15 - lc)
+        i0 = int(np.searchsorted(xs, x0))
+        i1 = int(np.searchsorted(xs, x0 + lc))
+        apply_check(c, j_off, i0, i1, rng.uniform(0.012, 0.02), rng.uniform(0.003, 0.006))
+    for _ in range(end_checks):
+        for side_ in (-1, 1):
+            c = rng.randint(4)
+            j_off = rng.randint(1, ns - 1)
+            lc = rng.uniform(0.06, 0.16)
+            if side_ < 0:
+                i0, i1 = 0, int(np.searchsorted(xs, -hl + lc))
+            else:
+                i0, i1 = int(np.searchsorted(xs, hl - lc)), n
+            apply_check(c, j_off, i0, i1, rng.uniform(0.012, 0.022), rng.uniform(0.003, 0.006), from_end=side_)
+    # end chamfer rings
+    for i_e, f_e in ((0, 1), (n - 1, 1)):
+        Y[i_e] *= 1 - che / max(a0, 1e-3)
+        Zp[i_e] *= 1 - che / max(b0, 1e-3)
+    X = np.broadcast_to(xs[:, None], (n, M)).copy()
+    if sag:
+        X_t = xs / hl
+        Zp += (-sag * (1 - X_t ** 2))[:, None]
+    # end faces: inner ring + centre; end checks also notch into the end face
+    V = np.stack([X, Y, Zp], -1).reshape(-1, 3)
+    inner0 = np.stack([X[0] + 0.002, Y[0] * 0.55, Zp[0] * 0.55], -1)
+    inner1 = np.stack([X[-1] - 0.002, Y[-1] * 0.55, Zp[-1] * 0.55], -1)
+    cen = np.array([[xs[0] + 0.003, 0, Zp[0].mean()], [xs[-1] - 0.003, 0, Zp[-1].mean()]])
+    V = np.concatenate([V, inner0, inner1, cen])
+    j = np.arange(M)
+    j1 = (j + 1) % M
+    i = np.arange(n - 1)[:, None]
+    Fs = np.stack([i * M + j, i * M + j1, (i + 1) * M + j1, (i + 1) * M + j], -1).reshape(-1, 4)
+    o_in0 = n * M
+    o_in1 = n * M + M
+    c0i = n * M + 2 * M
+    c1i = c0i + 1
+    last = (n - 1) * M
+    cap0 = np.stack([o_in0 + j, o_in0 + j1, j1, j], -1)                       # faces -X
+    cap1 = np.stack([last + j, last + j1, o_in1 + j1, o_in1 + j], -1)         # faces +X
+    fan0 = np.stack([np.full(M, c0i), o_in0 + j1, o_in0 + j], -1)
+    fan1 = np.stack([np.full(M, c1i), o_in1 + j, o_in1 + j1], -1)
+    Vw = xf(V, R, center)
+    acc.add(Vw, [Fs, cap0, cap1, fan0, fan1], mat)
 
 
 def build_posts(coll):
@@ -774,79 +1031,123 @@ def weave_offset(s, stakes, signs, A):
     return A * (signs[k] * c + signs[k + 1] * (1 - c))
 
 
+ROD_SIDES = 6
+
+
+def rod_profile(n_rings, seed, oval):
+    """slightly oval, knobbly rod section, varying ring to ring (6 sides)."""
+    ang = 2 * np.pi * np.arange(ROD_SIDES) / ROD_SIDES
+    rs = np.random.RandomState(seed)
+    ph = rs.uniform(0, 6.3)
+    kn = 0.07 * n2(np.arange(n_rings)[:, None] * 0.35 + ang[None, :] * 0.0, np.broadcast_to(ang, (n_rings, ROD_SIDES)) * 1.7, seed)
+    rr = 1.0 + kn
+    x = np.cos(ang + ph) * rr
+    y = np.sin(ang + ph) * rr * oval
+    return np.stack([x, y], -1)
+
+
 def weave_panel(rods, stakes_acc, pathf, s0, s1, z0, z1, seed, hide=None, n_stakes=None,
-                end_stakes=True, stake_bottom=None, amp_scale=1.0):
-    """woven panel between s0 and s1 (ends are hidden in posts/jambs)."""
+                end_stakes=True, stake_bottom=None, amp_scale=1.0, slant=0.0, pitch=(0.058, 0.082),
+                rod_r=(0.012, 0.018)):
+    """woven panel between s0 and s1 (ends are hidden in posts/jambs).
+    Coarse open weave: rows every 6-8 cm (+-1.5), rods dia 2.4-3.6 cm, so 2-4 cm dark gaps read
+    between rows. Each rod has its own low-frequency drift, knots (+15% dia bumps every 0.3-0.6 m),
+    taper and an oval knobbly section; ~15% of rows are paired or tripled."""
     rng = np.random.RandomState(seed)
     L = s1 - s0
     if n_stakes is None:
         n_stakes = max(1, int(round(L / 0.29)) - 1)
     st = np.linspace(s0, s1, n_stakes + 2)
-    st[1:-1] += rng.uniform(-0.025, 0.025, n_stakes)
+    st[1:-1] += rng.uniform(-0.025, 0.025, n_stakes) * min(1.0, L / 0.6)
     real_st = st[1:-1]
-    # stakes
+    # stakes (sails)
     zb = z0 - 0.07 if stake_bottom is None else stake_bottom
     for k, ss in enumerate(real_st):
-        r = rng.uniform(0.019, 0.026)
+        r = rng.uniform(0.02, 0.027)
         if hide is not None and hide(np.full(5, ss), np.linspace(z0, z1, 5), 0.0).all():
             continue
-        zz = np.linspace(zb, z1 + 0.03, 12)
-        pt, nn = pathf(np.full(12, ss))
-        wob = 0.008 * n2(zz * 1.5, np.full(12, ss * 3.0), seed + k)
+        nz = 16
+        zz = np.linspace(zb, z1 + 0.03, nz)
+        pt, nn = pathf(np.full(nz, ss))
+        wob = 0.01 * n2(zz * 1.5, np.full(nz, ss * 3.0), seed + k)
         tang = np.stack([nn[:, 1], -nn[:, 0]], -1)
-        xy = pt + tang * wob[:, None] + nn * (0.006 * n2(zz * 2.0, np.full(12, ss), seed + 50 + k))[:, None]
+        xy = pt + tang * wob[:, None] + nn * (0.007 * n2(zz * 2.0, np.full(nz, ss), seed + 50 + k))[:, None]
         path = np.c_[xy, zz]
-        path, rr = chamfer_path(path, r, 0.006)
+        rad = r * (1 + 0.08 * n2(zz * 3.0, np.full(nz, ss), seed + 70 + k)) * np.linspace(1.08, 0.92, nz)
+        path, rr = chamfer_path(path, rad, 0.006)
         P, F, uv, w = tube(path, rr, 8, up=(nn[0, 0], nn[0, 1], 0))
         stakes_acc.add(P, F, "M_wattle", uv, w)
     # rods
-    z = z0 + 0.014
+    z = z0 + rng.uniform(0.012, 0.03)
     row = 0
-    r_row = rng.uniform(0.0105, 0.0175)
-    shared_seed = seed * 3 + 1
-    tilt = rng.uniform(-0.012, 0.012)
-    while z < z1 - 0.012:
-        paired = rng.rand() < 0.12
+    tilt = rng.uniform(-0.01, 0.01) + slant
+    n_rods = 0
+    while z < z1 - 0.02:
+        u = rng.rand()
+        nsub = 3 if u < 0.045 else (2 if u < 0.155 else 1)
+        r_row = rng.uniform(*rod_r)
         split = rng.rand() < 0.22
-        A = (0.019 + r_row * 0.75) * amp_scale
+        A = rng.uniform(0.025, 0.03) * amp_scale
         signs = np.array([(-1) ** (k + row) for k in range(len(st))], float)
         pieces = []
         if split and L > 0.6:
             ks = rng.randint(1, len(st) - 1) if len(st) > 2 else 1
             sm = st[ks]
-            pieces.append((s0 - 0.01, min(s1, sm + 0.33), -0.005, 1))
-            pieces.append((max(s0, sm - 0.33), s1 + 0.01, 0.005, -1))
+            pieces.append((s0 - 0.01, min(s1, sm + 0.33), -0.006, 1))
+            pieces.append((max(s0, sm - 0.33), s1 + 0.01, 0.006, -1))
         else:
             pieces.append((s0 - 0.01, s1 + 0.01, 0.0, 0))
-        for (a, b, dz, tipside) in pieces:
+        if nsub == 1:
             subs = [(r_row, 0.0)]
-            if paired:
-                subs = [(r_row * 0.62, -r_row * 0.62), (r_row * 0.6, r_row * 0.62)]
-            for (rr0, dzz) in subs:
-                n = max(4, int((b - a) / 0.036) + 1)
-                ss = np.linspace(a, b, n)
-                zz = (z + dz + dzz + 0.022 * n2(ss * 0.9, np.full(n, z * 1.3), shared_seed)
-                      + tilt * (ss - s0) + 0.003 * n2(ss * 3.0, np.full(n, z * 9.0), seed + row))
+        elif nsub == 2:
+            rA, rB = r_row * rng.uniform(0.72, 0.85), r_row * rng.uniform(0.68, 0.82)
+            subs = [(rA, -rB * 0.95), (rB, rA * 0.95)]
+        else:
+            rr_ = r_row * rng.uniform(0.6, 0.72, 3)
+            subs = [(rr_[0], -(rr_[0] + rr_[1]) * 0.95), (rr_[1], 0.0), (rr_[2], (rr_[1] + rr_[2]) * 0.95)]
+        bundle_h = sum(2 * x for x, _ in subs)
+        for (a, b, dz, tipside) in pieces:
+            for si, (rr0, dzz) in enumerate(subs):
+                rseed = seed * 131 + row * 7 + si * 3 + int(a * 10)
+                # knots: +15% diameter bumps every 0.3-0.6 m, resolved with extra rings
+                kpos = []
+                kp = a + rng.uniform(0.05, 0.4)
+                while kp < b - 0.03:
+                    kpos.append(kp)
+                    kp += rng.uniform(0.3, 0.6)
+                base = np.linspace(a, b, max(4, int((b - a) / 0.03) + 1))
+                extra = [kp_ + d for kp_ in kpos for d in (-0.02, -0.009, 0.0, 0.009, 0.02)]
+                ss = np.unique(np.concatenate([base, np.clip(extra, a, b)]))
+                n = len(ss)
+                # per-rod low-frequency drift (+-3 cm per metre) + slight shared tilt
+                drift = (0.016 * n2(ss * 1.1, np.full(n, rseed * 0.37), 7000 + seed % 97)
+                         + 0.004 * n2(ss * 4.0, np.full(n, rseed * 0.71), 7100 + seed % 89))
+                for kp_ in kpos:          # kinks: sharp little bends where a side shoot was
+                    if rng.rand() < 0.55:
+                        drift = drift + rng.uniform(-1, 1) * 0.009 * np.clip(1 - np.abs(ss - kp_) / 0.07, 0, 1) ** 1.5
+                zz = z + dz + dzz + drift + tilt * (ss - s0)
                 if hide is not None and hide(ss, zz, 0.012).all():
                     continue
                 off = weave_offset(ss, st, signs, A)
                 if tipside != 0:
-                    # free tip end flicks outward from the face (a visible stub)
                     tip = b if tipside > 0 else a
                     tt = 1 - np.clip(np.abs(ss - tip) / 0.1, 0, 1)
                     off = off + 0.035 * tt ** 2 * (1 if rng.rand() < 0.7 else -1)
                 pt, nn = pathf(ss)
                 xy = pt + nn * off[:, None]
                 path = np.c_[xy, zz]
-                taper = np.linspace(1.0, 0.68, n) if rng.rand() < 0.5 else np.linspace(0.68, 1.0, n)
-                rr = rr0 * taper * (1 + 0.06 * n2(ss * 4, np.full(n, z), seed + 7))
-                P, F, uv, w = tube(path, rr, 6, up=(0, 0, 1), phase=rng.uniform(0, 1))
+                taper = np.linspace(1.0, 0.7, n) if rng.rand() < 0.5 else np.linspace(0.7, 1.0, n)
+                knot = np.zeros(n)
+                for kp_ in kpos:
+                    knot += 0.15 * np.exp(-((ss - kp_) / 0.011) ** 2)
+                rr = rr0 * taper * (1 + knot + 0.05 * n2(ss * 5, np.full(n, z), seed + 7))
+                prof = rod_profile(n, rseed, rng.uniform(0.78, 0.9))
+                P, F, uv, w = tube(path, rr, ROD_SIDES, up=(0, 0, 1), profile=prof)
                 rods.add(P, F, "M_wattle", uv, w)
-        r_next = rng.uniform(0.0105, 0.0175)
-        pitch = (r_row if not paired else r_row * 1.24) + r_next + rng.uniform(-0.0015, 0.003)
-        z += pitch
-        r_row = r_next
+                n_rods += 1
+        z += rng.uniform(*pitch) + max(0.0, bundle_h - 2 * r_row) + rng.uniform(-0.004, 0.004)
         row += 1
+    return n_rods
 
 
 # ---------------------------------------------------------------------------------------------
@@ -861,10 +1162,29 @@ def bay_s(i):
 DAUB_BAYS = {}   # bay index -> function(s, z) -> thickness above wattle centre (m), <=0 => none
 
 
+def _knot_curve(seed, s_lo, s_hi, spacing, amp):
+    rs = np.random.RandomState(seed)
+    ks = np.arange(s_lo - spacing, s_hi + 2 * spacing, spacing) + rs.uniform(-0.3, 0.3, 1) * spacing
+    kv = rs.uniform(-1, 1, len(ks)) * amp
+    fine = np.linspace(ks[0], ks[-1], 600)
+    v = np.interp(fine, ks, kv)
+    ker = np.exp(-np.linspace(-2, 2, 31) ** 2)
+    ker /= ker.sum()
+    v = np.convolve(np.pad(v, 15, mode="edge"), ker, mode="valid")
+    return fine, v
+
+
+_EDGE_CURVE = {}
+
+
 def daub_edge_door_bay(s):
-    # eroded lower edge, about 0.55 m, ragged and chunky
-    return (0.57 + 0.10 * n2(s * 2.2, 0.3, 901) + 0.05 * n2(s * 7.0, 1.7, 902)
-            + 0.03 * n2(s * 17.0, 3.1, 903) + 0.015 * n2(s * 41.0, 5.3, 904))
+    """eroded lower edge of the big bay left of the door: break height ~0.62 m +-12 cm with bites."""
+    if "door" not in _EDGE_CURVE:
+        _EDGE_CURVE["door"] = _knot_curve(9011, 17.5, 22.5, 0.25, 0.24)
+    fs, fv = _EDGE_CURVE["door"]
+    s = np.asarray(s, float)
+    return (0.61 + np.interp(s, fs, fv) + 0.025 * n2(s * 7.0, 1.7, 902)
+            + 0.014 * n2(s * 17.0, 3.1, 903) + 0.007 * n2(s * 41.0, 5.3, 904))
 
 
 def make_daub_fields():
@@ -929,8 +1249,9 @@ def build_wattle(coll):
         p0 = (side * x0, FRONT_Y + 0.11)
         p1 = (side * x1, FRONT_Y + 0.11)
         f = line_path(p0, p1, (0, -1))
-        weave_panel(rods, stakes, f, -0.06, (x1 - x0) + 0.06, 0.40, HEAD_Z, 3000 + side, n_stakes=1,
-                    stake_bottom=0.33, amp_scale=0.6)
+        weave_panel(rods, stakes, f, -0.06, (x1 - x0) + 0.06, 0.40, HEAD_Z, 3000 + side, n_stakes=2,
+                    stake_bottom=0.33, amp_scale=0.55, slant=0.85 * side, pitch=(0.042, 0.05),
+                    rod_r=(0.011, 0.014))
         # cheek panels: door post back corner -> wall post
         pa = np.array([side * 1.02, FRONT_Y + 0.17])
         wp = az_pt(WALL_POST_AZ_DOOR * side, R_WALL)[:2]
@@ -940,40 +1261,189 @@ def build_wattle(coll):
         if nout[0] * side < 0:
             nout = -nout
         f2 = line_path(pa, wp, nout)
-        weave_panel(rods, stakes, f2, -0.05, L + 0.02, 0.40, HEAD_Z, 3100 + side, n_stakes=1,
-                    stake_bottom=0.33, amp_scale=0.7)
+        weave_panel(rods, stakes, f2, -0.05, L + 0.02, 0.40, HEAD_Z, 3100 + side, n_stakes=2,
+                    stake_bottom=0.33, amp_scale=0.6, slant=-0.6 * side, pitch=(0.045, 0.055),
+                    rod_r=(0.011, 0.015))
     rods.build(coll)
     stakes.build(coll)
 
 
+def _seg_dist(Sx, Zx, segs):
+    """distance from grid points to a polyline (list of (s,z) points). returns dist, closest s,z, t along."""
+    best = np.full(Sx.shape, 1e9)
+    cs = np.zeros(Sx.shape)
+    cz = np.zeros(Sx.shape)
+    ct = np.zeros(Sx.shape)
+    segs = np.asarray(segs, float)
+    Ltot = np.sum(np.linalg.norm(np.diff(segs, axis=0), axis=1))
+    acc_l = 0.0
+    for k in range(len(segs) - 1):
+        a = segs[k]
+        b = segs[k + 1]
+        d = b - a
+        ll = float(np.dot(d, d))
+        t = np.clip(((Sx - a[0]) * d[0] + (Zx - a[1]) * d[1]) / max(ll, 1e-12), 0, 1)
+        px = a[0] + t * d[0]
+        pz = a[1] + t * d[1]
+        dist = np.hypot(Sx - px, Zx - pz)
+        m = dist < best
+        best = np.where(m, dist, best)
+        cs = np.where(m, px, cs)
+        cz = np.where(m, pz, cz)
+        ct = np.where(m, (acc_l + t * math.sqrt(ll)) / Ltot, ct)
+        acc_l += math.sqrt(ll)
+    return best, cs, cz, ct
+
+
 def build_daub(coll):
+    """front daub sheets: 2.5-4 cm bulges (0.4-0.8 m), faint horizontal ridging over the rods,
+    palm / trowel smears, 3-6 shrinkage cracks per bay, chipped edges against the posts, eroded
+    ragged lower edge, detached clumps clinging to the rods. Every boundary tucks behind the
+    wattle / into the posts / under the plate, so no clean cut edge is exposed."""
     acc = Acc("HUT_daub", 70)
+    h = 0.0075
+    n_cr = 0
     for bay, field in DAUB_BAYS.items():
-        s0, s1 = bay_s(bay)
-        s0 += 0.05
-        s1 -= 0.05
-        nu = int((s1 - s0) / 0.015) + 1
-        nv = int((WATTLE_TOP + 0.02 - 0.42) / 0.015) + 1
-        S, Z = np.meshgrid(np.linspace(s0, s1, nu), np.linspace(0.42, WATTLE_TOP + 0.02, nv), indexing="ij")
+        rng = np.random.RandomState(4400 + bay)
+        sb0, sb1 = bay_s(bay)
+        s0, s1 = sb0 + 0.04, sb1 - 0.04
+        zlo, zhi = 0.42, WATTLE_TOP + 0.02
+        # crop to where the daub exists
+        Sc, Zc = np.meshgrid(np.linspace(s0, s1, 120), np.linspace(zlo, zhi, 160), indexing="ij")
+        fc = field(Sc, Zc)
+        live = fc > -0.07
+        ss_live = Sc[live]
+        zz_live = Zc[live]
+        cs0, cs1 = max(s0, ss_live.min() - 0.03), min(s1, ss_live.max() + 0.03)
+        cz0, cz1 = max(zlo, zz_live.min() - 0.03), min(zhi, zz_live.max() + 0.03)
+        nu = int((cs1 - cs0) / h) + 1
+        nv = int((cz1 - cz0) / h) + 1
+        S, Z = np.meshgrid(np.linspace(cs0, cs1, nu), np.linspace(cz0, cz1, nv), indexing="ij")
+        # ---- shrinkage cracks: random-walk polylines; snap grid lines into narrow V grooves
+        cracks = []
+        ncr = rng.randint(3, 7)
+        tries = 0
+        while len(cracks) < ncr and tries < 200:
+            tries += 1
+            ps = rng.uniform(cs0 + 0.12, cs1 - 0.12)
+            pz = rng.uniform(cz0 + 0.12, cz1 - 0.1)
+            if field(np.array([ps]), np.array([pz]))[0] < 0.15:
+                continue
+            Lc = rng.uniform(0.3, 0.8)
+            ang = rng.choice([rng.uniform(-0.5, 0.5) + np.pi / 2, rng.uniform(-1.2, 1.2)])
+            pts = [(ps, pz)]
+            l = 0.0
+            while l < Lc:
+                st_ = rng.uniform(0.035, 0.06)
+                ang += rng.uniform(-0.45, 0.45)
+                ps += math.cos(ang) * st_
+                pz += math.sin(ang) * st_
+                pts.append((ps, pz))
+                l += st_
+            cracks.append((pts, rng.uniform(0.005, 0.01), rng.uniform(0.012, 0.02)))
+            if rng.rand() < 0.4:        # short branch
+                kb = rng.randint(1, len(pts) - 1)
+                bs, bz = pts[kb]
+                ang2 = ang + rng.choice([-1, 1]) * rng.uniform(0.6, 1.1)
+                bp = [(bs, bz)]
+                for _ in range(rng.randint(3, 6)):
+                    ang2 += rng.uniform(-0.4, 0.4)
+                    bs += math.cos(ang2) * 0.04
+                    bz += math.sin(ang2) * 0.04
+                    bp.append((bs, bz))
+                cracks.append((bp, rng.uniform(0.004, 0.007), rng.uniform(0.01, 0.015)))
+        crack_d = np.zeros(S.shape)
+        for (pts, wd, dp) in cracks:
+            dist, cs_, cz_, ct = _seg_dist(S, Z, pts)
+            prof = np.sin(np.pi * np.clip(ct, 0, 1)) ** 0.5
+            ww = wd * 0.5 * (0.3 + 0.7 * prof)
+            core = dist < 0.55 * h
+            band = (dist >= 0.55 * h) & (dist < 1.8 * h)
+            # core vertices snap onto the crack centre line (groove bottom)
+            S = np.where(core, cs_, S)
+            Z = np.where(core, cz_, Z)
+            # neighbours are pulled in to the crack lip (narrow 0.5-1 cm crack)
+            with np.errstate(invalid="ignore", divide="ignore"):
+                ux = (S - cs_) / np.maximum(dist, 1e-9)
+                uz = (Z - cz_) / np.maximum(dist, 1e-9)
+            dn = ww + (dist - 0.55 * h) * (1.8 * h - ww) / (1.25 * h)
+            S = np.where(band, cs_ + ux * dn, S)
+            Z = np.where(band, cz_ + uz * dn, Z)
+            crack_d = np.minimum(crack_d, np.where(core, -dp * (0.2 + 0.8 * prof), 0.0))
+            n_cr += 1
         f = field(S, Z)
-        # thickness (outward from wattle centre): full 0.062 + lumps; collapses behind the rods at edges
-        lump = (0.022 * fbm(np.stack([S * 2.2, Z * 2.2, np.full(S.shape, bay * 1.3)], -1), 3)
-                + 0.006 * n2(S * 9, Z * 9, bay + 40) + 0.0025 * n2(S * 24, Z * 24, bay + 41)
-                + 0.0012 * n2(S * 60, Z * 60, bay + 42))
-        edge = smoothstep(-0.005, 0.07, f)
-        # crumbled lip: a slightly thinner, pitted band right above the break
-        pit = 0.012 * np.clip(n2(S * 25, Z * 25, bay + 77), 0, 1) * (1 - smoothstep(0.05, 0.2, f))
-        T = -0.035 + (0.097 + lump - pit) * edge
-        # fillet against posts at the bay ends
-        sp = np.minimum(S - s0, s1 - S)
-        T = T + 0.012 * (1 - smoothstep(0.0, 0.12, sp)) * edge
+        P3 = np.stack([S * 1.7, Z * 1.7, np.full(S.shape, bay * 1.31)], -1)
+        # ---- big soft bulges (2.5-4 cm at 0.4-0.8 m)
+        bul = fbm(P3, 2, gain=0.45)
+        bul = (bul - bul.mean()) / max(bul.std(), 1e-6)
+        bulge = 0.016 * np.clip(bul, -2.2, 2.2)
+        # ---- faint horizontal ridging over the rods beneath (6-8 cm pitch), strongest where thin
+        drift = 0.02 * n2(S * 1.1, np.full(S.shape, 3.3), 4500 + bay)
+        rid = np.cos(2 * np.pi * (Z + drift) / 0.07 + 0.5 * n2(S * 3, Z, 4510 + bay))
+        thin = 1 - smoothstep(-0.9, 0.4, bul)
+        patchy = np.clip(n2(S * 2.5, Z * 2.5, 4511 + bay) * 2.0 + 0.2, 0, 1)
+        ridge = 0.0065 * rid * thin ** 2 * patchy
+        # ---- palm / trowel smears
+        smear = np.zeros(S.shape)
+        area = (cs1 - cs0) * (cz1 - cz0)
+        for _ in range(int(area * 16)):
+            c_s = rng.uniform(cs0, cs1)
+            c_z = rng.uniform(cz0, cz1)
+            l_ = rng.uniform(0.12, 0.3)
+            w_ = rng.uniform(0.05, 0.1)
+            an = rng.choice([rng.uniform(-0.6, 0.6), rng.uniform(0.9, 2.2)])
+            du = (S - c_s) * math.cos(an) + (Z - c_z) * math.sin(an)
+            dv = -(S - c_s) * math.sin(an) + (Z - c_z) * math.cos(an)
+            e = np.sqrt((du / (l_ / 2)) ** 2 + (dv / (w_ / 2)) ** 2)
+            m = e < 1.6
+            if not m.any():
+                continue
+            A_ = rng.uniform(0.005, 0.01)
+            dep = -np.clip(1 - e, 0, 1) ** 1.3 * (0.7 + 0.3 * du / (l_ / 2))
+            lip = np.exp(-((e - 1.0) / 0.2) ** 2) * (0.45 + 0.55 * np.clip(du / (l_ / 2), 0, 1))
+            smear += A_ * (dep + 0.8 * lip) * m
+        fine = (0.0035 * n2(S * 9, Z * 9, bay + 40) + 0.0012 * n2(S * 30, Z * 30, bay + 41)
+                + 0.0005 * n2(S * 80, Z * 80, bay + 42))
+        # ---- chipped / crumbled edges where the daub meets the posts (no clean vertical line)
+        sp = np.minimum(S - sb0, sb1 - S)
+        side_ = np.where(S - sb0 < sb1 - S, 0.0, 1.0)
+        # broken margin: its distance from the post wanders 9-17 cm in irregular bites
+        reach = (0.13 + 0.035 * n2(Z * 5.5, side_ * 7.0 + bay, 4520) + 0.015 * n2(Z * 17, side_ * 3.0 + bay, 4521))
+        chip = (1 - smoothstep(reach - 0.025, reach + 0.004, sp)) * smoothstep(0.06, 0.08, sp)
+        chip = chip * np.clip(0.55 + 0.6 * n2(S * 9, Z * 9, 4522 + bay), 0.25, 1.0)
+        nearp = 1 - smoothstep(0.08, 0.22, sp)
+        T_full = 0.088 + bulge * (0.3 + 0.7 * smoothstep(0.07, 0.25, sp)) + ridge * (1 - nearp) + smear + fine
+        T_full = T_full - 0.024 * chip - 0.008 * nearp
+        # thickness envelope: tucks behind the rods where the field ends (eroded / patch edges)
+        edge = smoothstep(-0.004, 0.045, f)
+        pit = 0.01 * np.clip(n2(S * 25, Z * 25, bay + 77), 0, 1) * (1 - smoothstep(0.04, 0.16, f))
+        T = -0.036 + (T_full + 0.036 - pit) * edge + crack_d * edge
+        # tuck into the posts at the very ends of the sheet
+        T = np.where(sp < 0.075, np.minimum(T, 0.055), T)
         a = S / R_WALL
         rad = R_WALL + T
         P = np.stack([np.sin(a) * rad, -np.cos(a) * rad, Z], -1)
-        rin = R_WALL - 0.05
-        Q = np.stack([np.sin(a) * rin, -np.cos(a) * rin, Z], -1)
-        V, F = slab(P, Q)
-        acc.add(V, F, "M_daub")
+        Vv = P.reshape(-1, 3)
+        F = grid_quads(nu, nv)
+        # cull quads that sit entirely behind the rods (eroded zone): the inner skin is behind
+        Tf = T.reshape(-1)[F]
+        F = F[(Tf > -0.03).any(1)]
+        used = np.unique(F)
+        remap = np.full(len(Vv), -1)
+        remap[used] = np.arange(len(used))
+        acc.add(Vv[used], remap[F], "M_daub")
+        # ---- detached clumps clinging to the rods below the break (eroded bays)
+        if bay == len(POST_AZ) - 2:
+            for kcl in range(3):
+                cs_ = rng.uniform(s0 + 0.2, s1 - 0.2)
+                cz_ = float(daub_edge_door_bay(np.array([cs_]))[0]) - rng.uniform(0.07, 0.2)
+                hs = np.array([rng.uniform(0.05, 0.09), rng.uniform(0.018, 0.026), rng.uniform(0.03, 0.05)])
+                Pc, Fc = stone(hs, 0.6, (6, 4, 5), rng, amp=0.006, freq=14, warp=0.3, facets=(2, 4))
+                Pc[:, 1] -= 0.012 * (1 - (Pc[:, 0] / hs[0]) ** 2)       # cupped over the rods
+                ac_ = cs_ / R_WALL
+                cc = az_pt(ac_, R_WALL + 0.035 + hs[1] * 0.4, cz_)
+                acc.add(xf(Pc, rotz(ac_) @ roty(rng.uniform(-0.4, 0.4)), cc), Fc, "M_daub")
+    log("daub cracks:", n_cr)
     acc.build(coll)
 
 
@@ -1154,6 +1624,7 @@ def build_purlins_battens(coll):
 # =============================================================================================
 # shingles
 # =============================================================================================
+SH_XS = np.array([-1.0, -CH_C, -0.55, -0.18, 0.18, 0.55, CH_C, 1.0])
 SH_TPL = box_template(
     [-1.0, -CH_C, -0.55, -0.18, 0.18, 0.55, CH_C, 1.0],
     [-1.0, -CH_C, -0.55, -0.15, 0.25, 0.6, CH_C, 1.0],
@@ -1191,9 +1662,10 @@ def shingle_local(W, L, Tb, Th, rc, cup, curl, rng_vals):
     sc = np.where(m & (dl > rc * 0.98), rc * (0.98 + 0.02 * zt) / np.maximum(dl, 1e-9), 1.0)
     x = np.where(m, cx + dx * sc, x)
     y = np.where(m, cy + dy * sc, y)
-    # ragged hand-split butt
-    jag = rng_vals[0] * np.sin(x * rng_vals[1] + rng_vals[2]) * (y < 0.03)
-    y = y + jag
+    # ragged hand-split butt: per-column offsets (2-3 notches, skew, +-1.5 cm)
+    col = np.clip(np.searchsorted(SH_XS, Vt[:, 0] - 1e-6), 0, len(SH_XS) - 1)
+    butt = Vt[:, 1] <= -CH_C + 1e-6
+    y = y + np.where(butt, np.asarray(rng_vals)[col], 0.0)
     # cup (edges lift) and curl (butt lifts)
     z = z + cup * (2 * x / W) ** 2 + curl * (1 - v) ** 2
     return np.stack([x, y, z], -1), F
@@ -1208,8 +1680,12 @@ def build_shingles(coll):
     n_total = 0
 
     def place(acc_, th_c, s_b, W, L, Tb, Th, phi, lift, cup, curl, base_fn, rc):
-        Pl, F = shingle_local(W, L, Tb, Th, rc, cup, curl,
-                              (rng.uniform(0.002, 0.006), rng.uniform(25, 60), rng.uniform(0, 6)))
+        offs = rng.uniform(-0.012, 0.012, 8)
+        offs[[0, 1, 6, 7]] *= 0.4
+        for c_ in rng.choice([2, 3, 4, 5], rng.randint(2, 4), replace=False):
+            offs[c_] += rng.uniform(0.012, 0.022)
+        offs += np.linspace(-1, 1, 8) * rng.uniform(-0.012, 0.012)
+        Pl, F = shingle_local(W, L, Tb, Th, rc, cup, curl, offs)
         x, y, z = Pl[:, 0], Pl[:, 1], Pl[:, 2]
         c, s_ = math.cos(phi), math.sin(phi)
         xr = x * c - y * s_
@@ -1288,7 +1764,9 @@ def build_shingles(coll):
                 sb -= rng.uniform(0.05, 0.11)
                 lift += 0.016
                 phi += math.radians(rng.uniform(-4, 4))
-            if 0.03 < ri < 0.045 and Wi > 0.36:             # split into two pieces
+            dd_door = abs(float(np.angle(np.exp(1j * (thc + np.pi / 2)))))
+            door_eave = (k < 4) and dd_door < 1.0 and (0.03 < ri < 0.13)
+            if (0.03 < ri < 0.045 or door_eave) and Wi > 0.34:      # split into two pieces
                 g = 0.012
                 wa = Wi * rng.uniform(0.4, 0.6)
                 wb = Wi - wa - g
@@ -1302,6 +1780,7 @@ def build_shingles(coll):
             n_total += 1
         prev_joints = np.mod(best + np.cumsum((w + gaps) / rb), 2 * math.pi)
     log("shingles:", n_total)
+    SHINGLE_TOP["V"] = np.concatenate(acc.V + st_acc.V)
     acc.build(coll)
     st_acc.build(coll)
 
@@ -1309,217 +1788,347 @@ def build_shingles(coll):
 # =============================================================================================
 # apex collar + finial
 # =============================================================================================
-def collar_base_z():
-    best = -1e9
-    for r in np.linspace(0.40, COLLAR_R + 0.02, 30):
-        ss = s_at_r(r)
-        th = np.linspace(0, 2 * np.pi, 64)
-        P, ts, tt, n = surf_frame(th, np.full_like(th, ss))
-        top = np.max(P[:, 2] + n[:, 2] * 0.075)
-        best = max(best, top - (COLLAR_R - r) * math.tan(COLLAR_PITCH))
-    return best + 0.012
+SHINGLE_TOP = {}
+
+
+def collar_drip_z(clear=0.02):
+    """lowest fascia-bottom height that clears every shingle vertex under the 53 deg collar."""
+    V = SHINGLE_TOP["V"]
+    r = np.hypot(V[:, 0], V[:, 1])
+    m = r < COLLAR_R + 0.03
+    need = V[m, 2] - np.maximum(COLLAR_R - r[m], 0.0) * math.tan(COLLAR_PITCH) * 0.97
+    return float(need.max()) + clear
+
+
+def ccw(prof):
+    prof = np.asarray(prof, float)
+    x, y = prof[:, 0], prof[:, 1]
+    area = 0.5 * np.sum(x * np.roll(y, -1) - np.roll(x, -1) * y)
+    return prof if area > 0 else prof[::-1]
 
 
 def build_collar_finial(coll):
+    """lead-hat collar (smooth 53 deg cone, dia 1.49, 6.5 cm drip fascia standing ~8 cm off the
+    shingles, rolled drip bead, 10 folded standing seams), bell-cast upper collar (dia 0.57) with its
+    own 4.5 cm drip, turned spindle (bead ring 0.20 / neck 0.10 / bulb 0.18) and a conical spike.
+    Upper collar + finial lean 1 deg."""
     acc = Acc("HUT_cap_collar", 50)
     fin = Acc("HUT_finial", 50)
-    z0 = collar_base_z()
-    t = 0.022
-    za = z0 + COLLAR_R * math.tan(COLLAR_PITCH)
     R = COLLAR_R
+    tp = math.tan(COLLAR_PITCH)
+    zf = collar_drip_z()                     # fascia bottom (drip line)
+    FD = 0.065                               # fascia depth
+    zd = zf + FD                             # where the cone surface meets the fascia top
+    r_top = 0.25
+    z_top = zd + (R - r_top) * tp
     seed = 808
 
     def dent(th, z):
-        return 1 + 0.010 * n2(th * 2.2, np.full_like(th, z * 3), seed) + 0.004 * n2(th * 7, np.full_like(th, z * 9), seed + 1)
+        return 1 + 0.007 * n2(th * 2.2, np.full_like(th, z * 3), seed) + 0.003 * n2(th * 7, np.full_like(th, z * 9), seed + 1)
 
-    # CCW in (r,z): underside outward, drip roll, outer surface up to apex
-    prof = [(0.0, za - t - 0.03), (R - 0.03, z0 - t + 0.005), (R - 0.005, z0 - 0.045), (R + 0.012, z0 - 0.058),
-            (R + 0.027, z0 - 0.046), (R + 0.03, z0 - 0.025), (R + 0.018, z0 - 0.004), (R, z0 + 0.004)]
-    for f in np.linspace(0.08, 0.92, 10):
-        rr = R * (1 - f)
-        prof.append((rr, z0 + 0.004 + (R - rr) * math.tan(COLLAR_PITCH)))
-    prof.append((0.075, z0 + (R - 0.075) * math.tan(COLLAR_PITCH)))
-    prof.append((0.0, za + 0.004))
-    V, F, uv, w = lathe(prof, 112, rfunc=dent)
+    # CCW in (r,z): underside (from the axis outward), fascia inner face, drip bead, fascia, cone
+    under = [(0.0, zf + 0.70)] + [(r_, zf + 0.012 + (R - r_) * tp * 0.97) for r_ in np.linspace(0.2, R - 0.03, 6)]
+    prof = under + [(R - 0.018, zf + 0.04), (R - 0.016, zf + 0.012),
+            (R - 0.012, zf + 0.001), (R - 0.002, zf - 0.004), (R + 0.008, zf + 0.0), (R + 0.0135, zf + 0.009),
+            (R + 0.012, zf + 0.019), (R + 0.004, zf + 0.026), (R + 0.0015, zf + 0.035), (R + 0.001, zd - 0.012),
+            (R - 0.002, zd - 0.003), (R - 0.009, zd + 0.004)]
+    for f in np.linspace(0.04, 1.0, 14):
+        rr = (R - 0.012) - (R - 0.012 - r_top + 0.0) * f
+        prof.append((rr, zd + (R - rr) * tp))
+    prof.append((0.2, z_top + 0.01))
+    prof.append((0.0, z_top + 0.02))
+    V, F, uv, w = lathe(prof, 128, rfunc=dent)
     acc.add(V, F, "M_lead", uv, w)
-    # standing seams (10) running up the collar
+    # folded standing seams (raised 6-8 mm fins with soft fillets), 10 of them
+    fin_prof = ccw([(-0.003, 0.0), (-0.0012, 0.013), (0.0018, 0.0058), (0.0052, 0.0034), (0.0074, 0.0014),
+                    (0.0076, -0.0012), (0.0054, -0.0032), (0.002, -0.0056), (-0.0012, -0.013)])
     for k in range(10):
-        th = 2 * np.pi * k / 10 + 0.13
-        ts_ = np.linspace(0.02, 0.85, 12)
-        rr = (R + 0.005) * (1 - ts_)
-        zz = z0 + 0.004 + (R - rr) * math.tan(COLLAR_PITCH)
+        th = 2 * np.pi * k / 10 + 0.13 + 0.03 * math.sin(k * 2.7)
+        rr = np.linspace(R - 0.02, r_top + 0.01, 16)
+        zz = zd + (R - rr) * tp
         dd = dent(np.full_like(rr, th), zz)
         path = np.stack([np.cos(th) * rr * dd, np.sin(th) * rr * dd, zz], -1)
-        nrmv = np.array([math.cos(th) * math.sin(COLLAR_PITCH), math.sin(th) * math.sin(COLLAR_PITCH), math.cos(COLLAR_PITCH)])
-        path = path + nrmv * 0.006
-        prof2 = np.array([[1.0, 0.4], [0.6, 1.0], [-0.6, 1.0], [-1.0, 0.4], [-1.0, -0.6], [1.0, -0.6]])
-        prof2 = np.stack([prof2[:, 0] * 0.009, prof2[:, 1] * 0.006], -1)
-        # frames: N = up-projected (normal-ish), B across. profile (N,B) -> want height along normal
-        prof2 = prof2[:, ::-1]
-        P, Fp, uvp, wp = tube(path, 1.0, 6, up=tuple(nrmv), profile=prof2)
+        nrmv = np.array([math.cos(th) * math.sin(COLLAR_PITCH), math.sin(th) * math.sin(COLLAR_PITCH),
+                         math.cos(COLLAR_PITCH)])
+        path = path + nrmv * 0.001
+        P, Fp, uvp, wp = tube(path, 1.0, len(fin_prof), up=tuple(nrmv), profile=fin_prof)
         acc.add(P, Fp, "M_lead", uvp, wp)
-    # upper collar sits on the lead hat (same slope family), then turned spindle + spike (leans ~1 deg)
-    up_r = 0.375
-    zb = z0 + 0.004 + (R - up_r) * math.tan(COLLAR_PITCH) + 0.006
-    up_pitch = math.tan(math.radians(43))
-    prof_u = [(0.0, zb + 0.02), (up_r - 0.03, zb + 0.004), (up_r - 0.004, zb - 0.02), (up_r + 0.01, zb - 0.03),
-              (up_r + 0.02, zb - 0.018), (up_r + 0.018, zb + 0.004), (up_r, zb + 0.016)]
-    for f in np.linspace(0.12, 0.88, 6):
-        rr = up_r - (up_r - 0.065) * f
-        prof_u.append((rr, zb + 0.016 + (up_r - rr) * up_pitch))
-    zf = zb + 0.016 + (up_r - 0.065) * up_pitch
-    prof_u += [(0.065, zf), (0.0, zf + 0.004)]
-    lean = rotx(math.radians(0.7)) @ roty(math.radians(-0.6))
-    V, F, uv, w = lathe(prof_u, 64, rfunc=lambda th, z: 1 + 0.006 * np.sin(2 * th + 0.4))
-    acc.add(V, F, "M_lead", uv, w)
-    prof_f = [(0.0, zf - 0.01), (0.08, zf - 0.008), (0.098, zf + 0.006), (0.102, zf + 0.026), (0.092, zf + 0.046),  # ring 1
-              (0.066, zf + 0.056), (0.054, zf + 0.085), (0.051, zf + 0.105), (0.06, zf + 0.13),                    # neck
-              (0.098, zf + 0.158), (0.11, zf + 0.182), (0.104, zf + 0.208), (0.072, zf + 0.226),                # bead
-              (0.056, zf + 0.25), (0.06, zf + 0.275), (0.088, zf + 0.30), (0.094, zf + 0.318),                  # ring 2
-              (0.084, zf + 0.338), (0.058, zf + 0.35), (0.05, zf + 0.37)]
-    zs = zf + 0.37
-    tip = FINIAL_TIP
-    for f in np.linspace(0.08, 0.96, 12):
-        prof_f.append((0.048 * (1 - f) ** 1.15 + 0.0016, zs + (tip - 0.004 - zs) * f))
-    prof_f += [(0.0011, tip - 0.002), (0.0, tip)]
-    V, F, uv, w = lathe(prof_f, 32)
-    V = (V - [0, 0, zf]) @ lean.T + [0, 0, zf]
+    # ---- upper collar (bell-cast), leaning 1 deg with the finial
+    lean = rotx(math.radians(0.75)) @ roty(math.radians(-0.65))
+    piv = np.array([0.0, 0.0, z_top])
+    ru = 0.285
+    zu0 = z_top - 0.03                       # its drip bottom (4.5 cm fascia)
+    zu1 = zu0 + 0.045
+    H_u = 0.30
+    prof_u = [(0.0, z_top - 0.02), (ru - 0.03, zu0 + 0.012), (ru - 0.014, zu0 + 0.004), (ru - 0.006, zu0 - 0.002),
+              (ru + 0.005, zu0 + 0.002), (ru + 0.009, zu0 + 0.01), (ru + 0.006, zu0 + 0.018),
+              (ru + 0.001, zu0 + 0.024), (ru, zu1 - 0.006), (ru - 0.005, zu1 + 0.002)]
+    for f in np.linspace(0.06, 1.0, 12):
+        r_ = 0.075 + (ru - 0.012 - 0.075) * (1 - f) ** 1.9
+        prof_u.append((r_, zu1 + (H_u - 0.015) * f))
+    z_s = zu1 + H_u - 0.015
+    prof_u.append((0.0, z_s + 0.004))
+    V, F, uv, w = lathe(prof_u, 64, rfunc=lambda th_, z_: 1 + 0.005 * np.sin(2 * th_ + 0.4))
+    V = (V - piv) @ lean.T + piv
+    fin.add(V, F, "M_lead", uv, w)
+    # ---- turned spindle (timber): seat ring, bead ring 0.20, neck 0.10, vase bulb 0.18, top ring
+    sp = [(0.0, z_s - 0.01), (0.07, z_s - 0.01), (0.088, z_s + 0.004), (0.09, z_s + 0.02),          # seat
+          (0.1, z_s + 0.034), (0.102, z_s + 0.05), (0.094, z_s + 0.064),                               # bead ring
+          (0.064, z_s + 0.078), (0.052, z_s + 0.1), (0.05, z_s + 0.12),                                # neck
+          (0.066, z_s + 0.15), (0.086, z_s + 0.185), (0.091, z_s + 0.215), (0.084, z_s + 0.245),       # bulb
+          (0.062, z_s + 0.275), (0.054, z_s + 0.3), (0.056, z_s + 0.318),                              # upper neck
+          (0.078, z_s + 0.338), (0.088, z_s + 0.356), (0.086, z_s + 0.374), (0.076, z_s + 0.385),      # top ring
+          (0.0, z_s + 0.387)]
+    V, F, uv, w = lathe(sp, 40)
+    V = (V - piv) @ lean.T + piv
+    fin.add(V, F, "M_timber", uv, w)
+    # ---- spike (iron): conical from dia ~0.15 to a sharp point at FINIAL_TIP
+    z_k = z_s + 0.385
+    tip = max(FINIAL_TIP, z_k + 0.6)
+    spk = [(0.0, z_k - 0.004), (0.074, z_k - 0.004), (0.077, z_k + 0.01), (0.074, z_k + 0.022)]
+    for f in np.linspace(0.06, 0.985, 18):
+        spk.append((0.071 * (1 - f) ** 1.05 + 0.0015, z_k + 0.022 + (tip - z_k - 0.022) * f))
+    spk += [(0.0012, tip - 0.003), (0.0, tip)]
+    V, F, uv, w = lathe(spk, 40)
+    V = (V - piv) @ lean.T + piv
     fin.add(V, F, "M_iron", uv, w)
     acc.build(coll)
     fin.build(coll)
-    return z0, za
+    return zf, zd, z_top, z_s, z_k, tip
 
 
 # =============================================================================================
 # plinth, rubble, apron
 # =============================================================================================
+R_PL_FACE = 3.76            # plinth outer face line (rough wall line, +-4 cm)
+
+
+def plinth_face_r(az):
+    return R_PL_FACE + 0.018 * ring_noise(np.asarray(az, float), 9091, 6, 1.0)
+
+
 def build_plinth(coll):
+    """dry-stone plinth: sub-angular split boulders in contact along a rough face line.
+    ~45% single tall stones, ~40% two-high (flat lower stone + flatter upper slab), a few low
+    stones carrying pinning slabs, 2-3 long through-stones. Wedge chinking recessed in joints."""
     acc = Acc("HUT_plinth_stones", 70)
     chink = Acc("HUT_plinth_chinking", 70)
-    rng = np.random.RandomState(909)
+    rng = np.random.RandomState(9090)
     r_c = 3.53
-    door_half = 0.80
-    s_tot = 2 * math.pi * r_c
-    # walk from the right door edge counter-clockwise around to the left door edge
     a_start = math.asin(1.30 / 3.78)
     a_end = 2 * math.pi - a_start
     a = a_start
     stones = []
+    through_at = set(rng.choice(np.arange(6, 34), 3, replace=False).tolist())
+    k = 0
     while a < a_end - 0.02:
-        L = rng.uniform(0.3, 0.75)
+        kind = rng.choice(["single", "double", "low"], p=[0.45, 0.40, 0.15])
+        if k in through_at:
+            kind = "through"
+            L = rng.uniform(0.76, 0.86)
+        elif kind == "double":
+            L = rng.uniform(0.45, 0.85)
+        else:
+            L = rng.choice([rng.uniform(0.25, 0.42), rng.uniform(0.38, 0.65)], p=[0.35, 0.65])
         if a + L / r_c > a_end:
             L = (a_end - a) * r_c
-            if L < 0.18:
+            if L < 0.2:
                 break
-        g = rng.uniform(-0.01, 0.03)
-        stones.append((a + (L / 2) / r_c, L))
+            if kind == "through":
+                kind = "single"
+        g = rng.uniform(-0.03, 0.0)              # in contact (rounded corners leave a V joint)
+        stones.append([a + (L / 2) / r_c, L, kind])
         a += (L + g) / r_c
+        k += 1
     post_az = list(POST_AZ)
-    n_pin = 0
-    for i, (ac, L) in enumerate(stones):
-        D = rng.uniform(0.40, 0.52)
-        bot = -rng.uniform(0.03, 0.075)
-        # stones carrying posts get a flat bearing top at ~0.37
-        near_post = min(abs(np.angle(np.exp(1j * (ac - pa)))) for pa in post_az) * r_c < L / 2
-        top = 0.38 if near_post else rng.uniform(0.355, 0.44)
-        H = top - bot
-        half = np.array([L / 2, D / 2, H / 2])
-        P, F = stone(half, rng.uniform(0.3, 0.5), (8, 6, 6), rng, amp=rng.uniform(0.012, 0.02),
-                     freq=rng.uniform(2.5, 4.0), warp=rng.uniform(0.12, 0.2), facets=(3, 5), taper=(0.0, 0.14),
-                     flat_top=(H / 2 - 0.012) if near_post else (H / 2 - rng.uniform(0.02, 0.05)))
-        R = rotz(ac + rng.uniform(-0.1, 0.1)) @ rotx(rng.uniform(-0.07, 0.04)) @ roty(rng.uniform(-0.1, 0.1))
-        c = az_pt(ac, r_c + rng.uniform(-0.03, 0.03), bot + H / 2)
-        acc.add(xf(P, R, c), F, "M_stone")
-        # low stones get a flat pinning stone on top to carry the wattle
-        if not near_post and top < 0.365:
-            k = 2 if L > 0.5 and rng.rand() < 0.5 else 1
-            for j in range(k):
-                pl = rng.uniform(0.14, 0.24) if k == 2 else rng.uniform(0.2, 0.32)
-                ph_ = rng.uniform(0.03, 0.05) + (0.40 - top) * 0.5
-                hp = np.array([pl / 2, rng.uniform(0.14, 0.2), ph_])
-                Pp, Fp = stone(hp, 0.8, (5, 4, 3), rng, amp=0.006, freq=7, warp=0.12, facets=(2, 4),
-                               flat_top=hp[2] * 0.8)
-                da = ((j - (k - 1) / 2) * (L / k)) / r_c + rng.uniform(-0.02, 0.02)
-                cp = az_pt(ac + da, r_c - 0.05 + rng.uniform(-0.03, 0.03), top - 0.035 + hp[2])
-                acc.add(xf(Pp, rotz(ac + da + rng.uniform(-0.2, 0.2)), cp), Fp, "M_stone")
+    n_up = n_pin = n_ch = 0
+    tops = []
+
+    def put(Pl, Fl, az, z_bot, depth, rot_jit=0.04, tilt=(0.02, 0.02), mat="M_stone", tgt=None, face_off=0.0):
+        """place a local stone (x along the ring, y radial-in, z up) with its outer face on the line."""
+        rf = float(plinth_face_r(az)) - face_off
+        R = rotz(az + rng.uniform(-rot_jit, rot_jit)) @ rotx(rng.uniform(-tilt[0], tilt[0])) @ \
+            roty(rng.uniform(-tilt[1], tilt[1]))
+        Vw = xf(Pl, R, (0, 0, 0))
+        # shift so the outermost point of the stone face sits on the face line
+        u = np.array([math.sin(az), -math.cos(az), 0.0])
+        out_ext = float((Vw @ u).max())
+        c = u * (rf - out_ext)
+        c[2] = z_bot - float(Vw[:, 2].min())
+        (tgt or acc).add(Vw + c, Fl, mat)
+        return c
+
+    for i, (ac, L, kind) in enumerate(stones):
+        near_post = min(abs(np.angle(np.exp(1j * (ac - pa)))) for pa in post_az) * r_c < L / 2 + 0.05
+        top = rng.uniform(0.355, 0.41)
+        if near_post:
+            top = rng.uniform(0.365, 0.385)
+        bot = -rng.uniform(0.05, 0.10)
+        D = rng.uniform(0.36, 0.52)
+        rr = rng.uniform(0.02, 0.04)
+        if kind == "single" or (kind == "low" and near_post):
+            H = top - bot
+            P, F = rock((L / 2, D / 2, H / 2), rng, round_r=rr, facets=(3, 6), segs=(10, 6, 7),
+                        warp=rng.uniform(0.03, 0.06), amp=rng.uniform(0.004, 0.007), face_bias=(0, -1, 0),
+                        flat_top=H / 2 - rng.uniform(0.01, 0.03), flat_bot=-H / 2 + 0.02)
+            put(P, F, ac, bot, D)
+            tops.append(top)
+        elif kind == "through":
+            lo_top = rng.uniform(0.17, 0.24)
+            H = lo_top - bot
+            Dt = rng.uniform(0.62, 0.72)
+            P, F = rock((L / 2, Dt / 2, H / 2), rng, round_r=rr, facets=(3, 5), segs=(12, 7, 5),
+                        warp=0.035, amp=0.005, face_bias=(0, -1, 0), flat_top=H / 2 - 0.012,
+                        flat_bot=-H / 2 + 0.02)
+            put(P, F, ac, bot, Dt, face_off=-rng.uniform(0.02, 0.05))   # projects slightly
+            # two upper stones on the through-stone
+            xs_ = [-L * 0.24, L * 0.26]
+            for xo in xs_:
+                Lu = L * rng.uniform(0.42, 0.5)
+                Hu = top - lo_top + 0.01
+                Pu, Fu = rock((Lu / 2, D * 0.45, Hu / 2), rng, round_r=min(rr, Hu * 0.3), facets=(3, 5),
+                              segs=(7, 5, 5), warp=0.04, amp=0.004, face_bias=(0, -1, 0),
+                              flat_top=Hu / 2 - 0.01, flat_bot=-Hu / 2 + 0.012)
+                put(Pu, Fu, ac + xo / r_c, lo_top - 0.008, D * 0.9, face_off=rng.uniform(0.0, 0.03))
+                n_up += 1
+            tops.append(top)
+        elif kind == "double":
+            lo_top = rng.uniform(0.15, 0.25)
+            H = lo_top - bot
+            P, F = rock((L / 2, D / 2, H / 2), rng, round_r=rr, facets=(3, 6), segs=(10, 6, 5),
+                        warp=0.04, amp=0.005, face_bias=(0, -1, 0), flat_top=H / 2 - 0.012,
+                        flat_bot=-H / 2 + 0.02)
+            put(P, F, ac, bot, D)
+            # one or two flatter upper slabs, offset (break the joint)
+            nu_ = 2 if (L > 0.62 and rng.rand() < 0.55) else 1
+            span = L * rng.uniform(0.85, 1.05)
+            for j in range(nu_):
+                Lu = span / nu_ * rng.uniform(0.85, 1.0)
+                xo = (j - (nu_ - 1) / 2) * span / nu_ + rng.uniform(-0.06, 0.06)
+                Hu = top - lo_top + 0.008
+                Pu, Fu = rock((Lu / 2, D * rng.uniform(0.38, 0.48), Hu / 2), rng,
+                              round_r=min(rng.uniform(0.018, 0.032), Hu * 0.3), facets=(3, 5), segs=(8, 5, 4),
+                              warp=0.04, amp=0.004, face_bias=(0, -1, 0), flat_top=Hu / 2 - 0.008,
+                              flat_bot=-Hu / 2 + 0.01)
+                put(Pu, Fu, ac + xo / r_c, lo_top - 0.006, D * 0.85, face_off=rng.uniform(-0.01, 0.035))
+                n_up += 1
+            # wedge chinking in the course joint
+            for _ in range(rng.randint(1, 3)):
+                xo = rng.uniform(-L / 2, L / 2) * 0.8
+                hs = np.array([rng.uniform(0.035, 0.07), rng.uniform(0.05, 0.07), rng.uniform(0.012, 0.022)])
+                Pc, Fc = rock(hs, rng, round_r=0.006, facets=(2, 3), segs=(2, 1, 1), warp=0.08, amp=0.002)
+                Pc[:, 2] *= (1.0 - 0.6 * (Pc[:, 1] / hs[1] + 1) / 2)            # wedge: thin inward end
+                put(Pc, Fc, ac + xo / r_c, lo_top - 0.012, 0.1, tilt=(0.05, 0.05), mat="M_rubble",
+                    tgt=chink, face_off=rng.uniform(0.02, 0.05))
+                n_ch += 1
+            tops.append(top)
+        else:   # low stone + pinning slabs to bring the bed up to the wattle
+            lo_top = rng.uniform(0.22, 0.28)
+            H = lo_top - bot
+            P, F = rock((L / 2, D / 2, H / 2), rng, round_r=rr, facets=(3, 6), segs=(9, 6, 5),
+                        warp=0.05, amp=0.005, face_bias=(0, -1, 0), flat_top=H / 2 - 0.015,
+                        flat_bot=-H / 2 + 0.02)
+            put(P, F, ac, bot, D)
+            kk = 2 if L > 0.45 else 1
+            for j in range(kk):
+                pl = L / kk * rng.uniform(0.6, 0.85)
+                hp = np.array([pl / 2, rng.uniform(0.12, 0.17), (top - lo_top) / 2 + 0.004])
+                Pp, Fp = rock(hp, rng, round_r=min(0.015, hp[2] * 0.5), facets=(2, 4), segs=(5, 4, 3),
+                              warp=0.06, amp=0.003, flat_top=hp[2] * 0.8)
+                xo = (j - (kk - 1) / 2) * L / kk + rng.uniform(-0.03, 0.03)
+                put(Pp, Fp, ac + xo / r_c, lo_top - 0.004, 0.3, face_off=rng.uniform(0.03, 0.07))
                 n_pin += 1
-        # chinking stones wedged into the gap after this stone
+            tops.append(top)
+        # wedge chinking driven into the vertical joint after this stone (recessed 2-5 cm)
         if i < len(stones) - 1:
-            ga = (ac + stones[i + 1][0]) / 2 + (L - stones[i + 1][1]) / 4 / r_c
-            for zc in rng.choice([0.05, 0.16, 0.27, 0.34], rng.randint(1, 3), replace=False):
-                hs = np.array([rng.uniform(0.04, 0.07), rng.uniform(0.09, 0.12), rng.uniform(0.025, 0.045)])
-                Pc, Fc = stone(hs, 0.5, (4, 4, 3), rng, amp=0.005, freq=9, warp=0.12, facets=(2, 4))
-                cc = az_pt(ga + rng.uniform(-0.006, 0.006), 3.69 - hs[1], zc + rng.uniform(-0.02, 0.02))
-                Vc = xf(Pc, rotz(ga + rng.uniform(-0.3, 0.3)) @ rotx(rng.uniform(-0.3, 0.3)), cc)
-                chink.add(Vc, Fc, "M_rubble")
-    log("pinning stones:", n_pin)
-    log("plinth stones:", len(stones))
+            ga = ac + (L / 2) / r_c
+            for zc in rng.choice([0.04, 0.12, 0.2, 0.3], rng.randint(1, 3), replace=False):
+                hs = np.array([rng.uniform(0.018, 0.03), rng.uniform(0.05, 0.08), rng.uniform(0.03, 0.055)])
+                Pc, Fc = rock(hs, rng, round_r=0.006, facets=(2, 3), segs=(1, 2, 2), warp=0.08, amp=0.002)
+                Pc[:, 0] *= (1.0 - 0.65 * (Pc[:, 1] / hs[1] + 1) / 2)            # wedge: thin inward end
+                put(Pc, Fc, ga + rng.uniform(-0.004, 0.004), zc + rng.uniform(-0.02, 0.02), 0.1,
+                    rot_jit=0.15, tilt=(0.1, 0.25), mat="M_rubble", tgt=chink, face_off=rng.uniform(0.02, 0.05))
+                n_ch += 1
+    log("plinth stones:", len(stones), "upper:", n_up, "pinning:", n_pin, "chinking:", n_ch,
+        "kinds:", {kk_: sum(1 for st in stones if st[2] == kk_) for kk_ in ("single", "double", "low", "through")})
     acc.build(coll)
     chink.build(coll)
 
 
 def build_rubble(coll):
     acc = Acc("HUT_ground_rubble", 70)
-    rng = np.random.RandomState(1010)
+    rng = np.random.RandomState(1011)
     pts = []
-    # drip-line / plinth foot scatter
+    # drip-line / plinth foot scatter (spalls fallen from the plinth, pebbles in the drip trench)
     for i in range(30):
         az = rng.uniform(0.35, 2 * math.pi - 0.35)
-        r = rng.choice([rng.uniform(3.85, 4.05), rng.uniform(4.05, 4.45)])
-        pts.append((az, r, rng.uniform(0.04, 0.16)))
+        r = rng.choice([rng.uniform(3.84, 4.0), rng.uniform(4.05, 4.45)])
+        pts.append((az, r, rng.uniform(0.04, 0.15)))
     # cluster by the door, avoiding the path
     for i in range(14):
         x = rng.choice([-1, 1]) * rng.uniform(0.85, 1.7)
-        y = rng.uniform(-4.6, -3.85)
-        pts.append((math.atan2(x, -y), math.hypot(x, y), rng.uniform(0.04, 0.13)))
+        y = rng.uniform(-4.6, -3.88)
+        pts.append((math.atan2(x, -y), math.hypot(x, y), rng.uniform(0.04, 0.12)))
     for (az, r, sz) in pts:
-        half = np.array([sz * rng.uniform(0.8, 1.3), sz * rng.uniform(0.6, 1.0), sz * rng.uniform(0.35, 0.6)])
-        P, F = stone(half, rng.uniform(0.7, 0.95), (5, 4, 3), rng, amp=sz * 0.06, freq=3 / sz, warp=0.18)
-        R = rotz(rng.uniform(0, 6.28)) @ rotx(rng.uniform(-0.25, 0.25))
-        c = az_pt(az, r, half[2] * rng.uniform(-0.2, 0.35))
+        half = np.array([sz * rng.uniform(0.8, 1.3), sz * rng.uniform(0.6, 1.0), sz * rng.uniform(0.32, 0.55)])
+        P, F = rock(half, rng, round_r=float(half.min()) * rng.uniform(0.2, 0.4), facets=(2, 5), segs=(5, 4, 3),
+                    warp=0.08, amp=sz * 0.03, freq=2.0 / sz, fillet=sz * 0.12,
+                    flat_bot=-half[2] * 0.9)
+        R = rotz(rng.uniform(0, 6.28)) @ rotx(rng.uniform(-0.3, 0.3)) @ roty(rng.uniform(-0.3, 0.3))
+        x_, y_ = math.sin(az) * r, -math.cos(az) * r
+        g = float(apron_height(np.array([x_]), np.array([y_]))[0])
+        c = (x_, y_, g + half[2] * rng.uniform(-0.45, 0.05))          # half-buried
         acc.add(xf(P, R, c), F, "M_rubble")
     acc.build(coll)
 
 
+STEP_C = (0.04, FRONT_Y - 0.44)       # step stone centre (x, y)
+APRON_RIM = 4.62
 
 
 def apron_height(X, Y):
+    X = np.asarray(X, float)
+    Y = np.asarray(Y, float)
     r = np.hypot(X, Y)
     th = np.arctan2(Y, X)
-    # mound: flat inside ~4.45 m (+ path corridor), falls to Z_MIN at the rim
-    rim = 4.62 + 0.10 * ring_noise(th, 1111, 5, 1.0)
-    m_circle = 1 - smoothstep(rim - 0.85, rim, r)
-    m_path = ((1 - smoothstep(0.85, 1.25, np.abs(X + 0.12 * np.sin(Y * 1.3))))
-              * smoothstep(-6.15, -5.55, Y) * (Y < -2.0))
-    m = np.maximum(m_circle, m_path * 0.0)
+    # mound: flat inside ~4.45 m, falls to Z_MIN at the rim, then a flat band at exactly Z_MIN
+    rim = APRON_RIM + 0.10 * ring_noise(th, 1111, 5, 1.0)
+    m = 1 - smoothstep(rim - 0.85, rim, r)
     h = Z_MIN + (0.0 - Z_MIN) * m
     lumps = 0.012 * fbm(np.stack([X * 0.9, Y * 0.9, np.zeros_like(X)], -1), 3) * m
     # drip-line trench under the eave (not across the path)
     dr = r - (4.17 + 0.03 * ring_noise(th, 1112, 5, 1.0))
     trench = -0.032 * np.exp(-(dr / 0.13) ** 2) * (1 - (np.abs(X) < 1.1) * (Y < 0))
     # gentle wear hollow along the path
-    wear = -0.012 * np.exp(-(X / 0.5) ** 2) * (Y < -3.8) * m_path
-    return h + lumps + trench * m + wear
+    wear = -0.012 * np.exp(-(X / 0.5) ** 2) * (Y < -3.8) * (Y > -6.2)
+    # earth heaped round the step stone (buries its foot 3-4 cm)
+    ex = (X - STEP_C[0]) / 0.74
+    ey = (Y - STEP_C[1]) / 0.44
+    e = np.sqrt(ex ** 2 + ey ** 2)
+    bed = 0.038 * np.exp(-np.clip(e - 1.0, 0, None) ** 2 / 0.05) * smoothstep(0.55, 0.85, e)
+    return h + (lumps + trench + wear) * m + bed * m
 
 
 def build_apron(coll):
     acc = Acc("HUT_ground_apron", 30)
-    step = 0.07
-    xs = np.arange(-4.9, 4.9 + 1e-6, step)
-    ys = np.arange(-6.9, 4.9 + 1e-6, step)
-    X, Y = np.meshgrid(xs, ys, indexing="ij")
+    r_in, r_out = 3.15, 5.25
+    rr = np.concatenate([np.arange(r_in, 4.95, 0.045), np.linspace(4.95, r_out, 4)])
+    nt = 500
+    th = 2 * np.pi * np.arange(nt) / nt
+    R_, T_ = np.meshgrid(rr, th, indexing="ij")
+    X = R_ * np.cos(T_)
+    Y = R_ * np.sin(T_)
     Z = apron_height(X, Y)
-    Z = np.maximum(Z, Z_MIN + 0.0005)
+    outer = R_ > (APRON_RIM + 0.10 * ring_noise(T_, 1111, 5, 1.0))
+    Z = np.where(outer, Z_MIN, np.maximum(Z, Z_MIN))
+    Z[-4:, :] = Z_MIN                 # >= 0.4 m flat band exactly at the bbox-min level
     P = np.stack([X, Y, Z], -1).reshape(-1, 3)
-    F = grid_quads(len(xs), len(ys))
-    zf = P[F, 2]
-    rr = np.hypot(P[F, 0], P[F, 1]).max(1)
-    keep = (zf.max(1) > Z_MIN + 0.002) & (rr > 3.1)
-    F = F[keep]
-    used = np.unique(F)
-    remap = np.full(len(P), -1)
-    remap[used] = np.arange(len(used))
-    acc.add(P[used], remap[F], "M_earth")
+    nr = len(rr)
+    i = np.arange(nr - 1)[:, None]
+    j = np.arange(nt)[None, :]
+    j1 = (j + 1) % nt
+    F = np.stack([i * nt + j, (i + 1) * nt + j, (i + 1) * nt + j1, i * nt + j1], -1).reshape(-1, 4)   # normals up
+    acc.add(P, F, "M_earth")
     acc.build(coll)
 
 
@@ -1558,12 +2167,18 @@ def timber_box(acc, center, half, R=None, ch=0.02, segs=(1, 1, 1), noise=0.0, se
     acc.add(V, F, mat)
 
 
-def peg(acc, p, d, rng, r=0.014, proud=0.016, depth=0.05):
+def peg(acc, p, d, rng, r=0.015, proud=0.016, depth=0.05):
+    """whittled oak peg: irregular octagon, proud 1.5-1.8 cm with a domed, slightly split head."""
     d = nrm(d)
-    path = np.linspace(p - d * depth, p + d * proud, 3)
-    path, rr = chamfer_path(path, r * rng.uniform(0.9, 1.1), 0.004)
+    proud = proud * rng.uniform(0.95, 1.12)
+    path = np.linspace(p - d * depth, p + d * proud, 5)
+    ang = 2 * np.pi * np.arange(8) / 8 + rng.uniform(0, 1)
+    rr = 1 + rng.uniform(-0.08, 0.08, 8)
+    prof = np.stack([np.cos(ang) * rr, np.sin(ang) * rr], -1)
+    rad = np.full(5, r * rng.uniform(0.9, 1.1))
+    path, rad = chamfer_path(path, rad, 0.005)
     up = (0, 0, 1) if abs(d[2]) < 0.9 else (1, 0, 0)
-    P, F, uv, w = tube(path, rr, 8, up=up)
+    P, F, uv, w = tube(path, rad, 8, up=up, profile=prof)
     acc.add(P, F, "M_timber", uv, w)
 
 
@@ -1581,30 +2196,36 @@ def build_door(coll):
         P, F = stone(np.array([0.26, 0.25, 0.22]), 0.3, (5, 5, 4), rng, amp=0.012, freq=3.0, flat_top=0.20)
         thr.add(xf(P, rotz(side * 0.2 + rng.uniform(-0.1, 0.1)), (side * 1.04, -3.62, POST_BASE - 0.20)), F, "M_stone")
         # door posts (heavier, squared)
-        timber_box(fr, (x, yc, (POST_BASE + HEAD_Z) / 2), (0.12, 0.11, (HEAD_Z - POST_BASE) / 2), rotz(side * 0.006),
-                   ch=0.025, segs=(1, 1, 8), noise=0.006, seed=side + 3)
+        RV = np.array([[0.0, 1, 0], [0, 0, 1], [1, 0, 0]])        # local X -> world Z (vertical member)
+        wane_c = (3, 0) if side > 0 else (2, 1)                    # front-outer + back-outer arrises
+        inner_f, outer_f = (1, 3) if side > 0 else (3, 1)
+        hewn_member(fr, (x, yc, (POST_BASE + HEAD_Z) / 2), ((HEAD_Z - POST_BASE) / 2, 0.12, 0.11),
+                    rotz(side * 0.006) @ RV, rng, ch=0.02, wane=wane_c, n_checks=3, check_faces=(2, 2, outer_f, inner_f),
+                    ns=9, nc=4)
         # inner jambs on the sill
         xj = side * 0.60
-        timber_box(fr, (xj, yc, (SILL_TOP + HEAD_Z) / 2), (0.10, 0.11, (HEAD_Z - SILL_TOP) / 2),
-                   rotz(side * 0.004) @ roty(side * 0.003), ch=0.022, segs=(1, 1, 8), noise=0.005, seed=side + 9)
+        hewn_member(fr, (xj, yc, (SILL_TOP + HEAD_Z) / 2), ((HEAD_Z - SILL_TOP) / 2, 0.10, 0.11),
+                    rotz(side * 0.004) @ roty(side * 0.003) @ RV, rng, ch=0.018, wane=(2 if side > 0 else 3,),
+                    n_checks=2, check_faces=(2, inner_f), ns=8, nc=4)
         # sole rail under the side panel, resting on the sill end
-        timber_box(fr, (side * 0.805, yc, (SILL_TOP + 0.405) / 2), (0.115, 0.075, (0.405 - SILL_TOP) / 2), ch=0.015,
-                   segs=(2, 1, 2), noise=0.004, seed=side + 15)
+        hewn_member(fr, (side * 0.805, yc, (SILL_TOP + 0.405) / 2), (0.115, 0.075, (0.405 - SILL_TOP) / 2),
+                    np.eye(3), rng, ch=0.015, ns=6, nc=3, ds=0.015)
         # return tie beam from the door post to the wall post
         wp = az_pt(WALL_POST_AZ_DOOR * side, R_WALL, 0)
         p0 = np.array([x, yc + 0.05, HEAD_Z + 0.11])
         p1 = np.array([wp[0], wp[1], HEAD_Z + 0.11])
         L = float(np.linalg.norm(p1 - p0))
         R = frame_R(p1 - p0, (0, 0, 1))
-        timber_box(fr, (p0 + p1) / 2, (L / 2 + 0.1, 0.08, 0.10), R, ch=0.02, segs=(3, 1, 1), seed=side + 21)
+        hewn_member(fr, (p0 + p1) / 2, (L / 2 + 0.1, 0.08, 0.10), R, rng, ch=0.02, wane=(0,), end_checks=1,
+                    sag=0.004, ns=6, nc=4)
         # pegs: lintel -> door post and jamb tenons, sill tenons
-        for (px, pz) in ((x - side * 0.03, HEAD_Z + 0.06), (x + side * 0.045, HEAD_Z + 0.15),
-                         (xj, HEAD_Z + 0.07), (xj - side * 0.03, SILL_TOP + 0.05)):
-            peg(fr, np.array([px, FRONT_Y - 0.014, pz]), (0, -1, 0), rng)
+        for (px, pz, fy) in ((x - side * 0.03, HEAD_Z + 0.06, FRONT_Y - 0.009), (x + side * 0.045, HEAD_Z + 0.15, FRONT_Y - 0.009),
+                             (xj, HEAD_Z + 0.07, FRONT_Y - 0.009), (xj - side * 0.03, SILL_TOP + 0.05, FRONT_Y + 0.004)):
+            peg(fr, np.array([px, fy, pz]), (0, -1, 0), rng)
         peg(fr, p1 - R[:, 0] * 0.06 + np.array([0, 0, 0.10]), (0, 0, 1), rng)
     # lintel on the door posts (front face slightly proud), slight sag
-    timber_box(fr, (0.0, yc - 0.008, HEAD_Z + 0.11), (1.15, 0.115, 0.11), ch=0.025, segs=(10, 1, 1),
-               noise=0.006, seed=31, sag=0.008)
+    hewn_member(fr, (0.0, yc - 0.008, HEAD_Z + 0.11), (1.15, 0.115, 0.11), np.eye(3), rng, ch=0.022,
+                wane=(1,), n_checks=2, check_faces=(1,), end_checks=2, sag=0.008, ns=9, nc=4)
     # infill above the lintel up to the rafters: short vertical boards
     xx = -1.05
     k = 0
@@ -1631,8 +2252,16 @@ def build_door(coll):
     V = xf(V, None, (0.0, yc, (SILL_TOP + 0.09) / 2))
     thr.add(V, F, "M_timber")
     # big flat step stone (top ~0.09)
-    P, F = flagstone(0.66, 0.36, 0.15, rng, segs=40)
-    thr.add(xf(P, rotz(0.05), (0.04, FRONT_Y - 0.44, 0.09)), F, "M_stone")
+    # big flat step stone: split slab with a flat, wear-dished top, chipped arrises, foot buried
+    hs = np.array([0.64, 0.37, 0.085])
+    rs_step = np.random.RandomState(1313)
+    P, F = rock(hs, rs_step, round_r=0.02, facets=(4, 6), segs=(16, 10, 4), warp=0.035, amp=0.004, freq=3.0,
+                chips=7, flat_top=hs[2] - 0.014, flat_bot=-hs[2] + 0.01, fillet=0.012, face_bias=(0, -1, 0.15))
+    rq = (P[:, 0] / hs[0]) ** 2 + (P[:, 1] / hs[1]) ** 2
+    top_ = P[:, 2] > hs[2] * 0.4
+    P[top_, 2] -= 0.008 * np.clip(1 - rq[top_] * 1.1, 0, 1) ** 0.8
+    P = xf(P, rotz(0.05))
+    thr.add(P + [STEP_C[0], STEP_C[1], 0.095 - float(P[:, 2].max())], F, "M_stone")
     # stepping-stone path: irregular flags laid one or two abreast, ~2.5 m out from the step
     ys = -4.50
     k = 0
@@ -1652,7 +2281,7 @@ def build_door(coll):
             lyy = ly * rng.uniform(0.85, 1.1)
             yo = ys - ly + rng.uniform(-0.04, 0.04)
             P, F = flagstone(lx, lyy, 0.10, rng)
-            topz = rng.uniform(0.028, 0.045) + max(float(apron_height(np.array([xo]), np.array([yo]))[0]), Z_MIN)
+            topz = rng.uniform(0.006, 0.02) + max(float(apron_height(np.array([xo]), np.array([yo]))[0]), Z_MIN)   # bedded
             thr.add(xf(P, rotz(rng.uniform(-0.35, 0.35)) @ rotx(rng.uniform(-0.012, 0.012)), (xo, yo, topz)), F, "M_stone")
             n_flags += 1
         ys -= 2 * ly + rng.uniform(0.04, 0.09)
@@ -1702,9 +2331,9 @@ def build_door(coll):
     face_y = LY - 0.0175                 # outer face
     for zh in (h0 + 0.30, h1 - 0.30):
         Ls = 0.80
-        outline = [(0.0, -0.024), (-Ls + 0.10, -0.021), (-Ls + 0.055, -0.034), (-Ls, 0.0),
-                   (-Ls + 0.055, 0.034), (-Ls + 0.10, 0.021), (0.0, 0.024)]
-        V, faces = prism(outline[::-1], 0.006)
+        outline = [(0.0, -0.026), (-Ls + 0.10, -0.023), (-Ls + 0.055, -0.038), (-Ls, 0.0),
+                   (-Ls + 0.055, 0.038), (-Ls + 0.10, 0.023), (0.0, 0.026)]
+        V, faces = prism(outline[::-1], 0.007)
         V = np.stack([V[:, 0], face_y - V[:, 2], V[:, 1] + zh], -1)
         iron.add(xf(V, Rl, pivot), faces, "M_iron", smooth=False)
         # knuckle wrapped round the pintle
@@ -1718,7 +2347,7 @@ def build_door(coll):
         for xn in (-0.07, -0.22, -0.38, -0.54, -0.68):
             prof = [(0.0, 0.0), (0.009, 0.0), (0.009, 0.0018), (0.006, 0.0042), (0.0, 0.0052)]
             Vn, Fn, uvn, wn = lathe(prof, 8)
-            Vn = np.stack([Vn[:, 0] + xn, face_y - 0.006 - Vn[:, 2], Vn[:, 1] + zh], -1)
+            Vn = np.stack([Vn[:, 0] + xn, face_y - 0.007 - Vn[:, 2], Vn[:, 1] + zh], -1)
             iron.add(xf(Vn, Rl, pivot), Fn, "M_iron")
     # ring pull with rose plate near the free edge
     plate = [(0.035 * math.cos(a), 0.035 * math.sin(a)) for a in np.linspace(0, 2 * np.pi, 13)[:-1]]
@@ -1789,8 +2418,8 @@ def main():
     log("roof structure")
     build_shingles(coll)
     log("shingles")
-    z0, za = build_collar_finial(coll)
-    log(f"collar base {z0:.3f} apex {za:.3f}")
+    zz = build_collar_finial(coll)
+    log("collar drip %.3f fascia top %.3f lower top %.3f upper top %.3f spindle top %.3f tip %.3f" % zz)
     build_plinth(coll)
     build_rubble(coll)
     build_apron(coll)
