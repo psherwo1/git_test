@@ -25,7 +25,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "kit"))
 
 from village_kit.assembly import KitParams, build_building  # noqa: E402
-from village_kit.components.drum_frame import DrumFrame, drum_finish  # noqa: E402
+from village_kit.components.drum_frame import DrumFrame, drum_finish, drum_hidden_cull  # noqa: E402
 from village_kit.components.drum_wall import round_stone_drum  # noqa: E402
 from village_kit.components.drum_door import entrance_step  # noqa: E402
 from village_kit.components.smock_tower import smock_tower  # noqa: E402
@@ -34,6 +34,7 @@ from village_kit.components.mill_cap import mill_cap  # noqa: E402
 from village_kit.components.fan_wheel import fan_wheel  # noqa: E402
 from village_kit.components.tail_vane import rear_tail_vane  # noqa: E402
 from village_kit.components.raking_props import raking_props  # noqa: E402
+from village_kit.components.drum_decals import drum_tower_decals  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -122,9 +123,12 @@ def main():
                (rear_tail_vane, KIT["tail"]),
                (_props_step, KIT["props"]),
                _dump_parts,
-               drum_finish],                       # parts -> objects, pools, clearance checks
+               drum_finish,                        # parts -> objects, pools, clearance checks
+               drum_hidden_cull],                  # producer note 6
+        decals=drum_tower_decals,                  # producer note 11
         out=out,
         decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
+        decal_meta=dict(kit_params={k: v for k, v in KIT.items()}),
     ))
 
 

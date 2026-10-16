@@ -969,6 +969,23 @@ def tower_b(V, VN, moss0=0.0, zoff=0.0):
     return np.clip(b, 0, 1)
 
 
+def _drop_tiny_polys(me, a_min=1e-8):
+    """delete the polygons under a_min m2 that core.nanite_clean leaves (it deletes below 5e-9) and their loose
+    vertices -- the director's test counts polygons under 1e-8 m2."""
+    import bmesh
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bad = [f for f in bm.faces if f.calc_area() < a_min]
+    if bad:
+        bmesh.ops.delete(bm, geom=bad, context="FACES")
+        loose = [v for v in bm.verts if not v.link_faces]
+        if loose:
+            bmesh.ops.delete(bm, geom=loose, context="VERTS")
+        bm.to_mesh(me)
+        me.update()
+    bm.free()
+
+
 class BatchAcc:
     """numpy accumulator of template-instanced pieces -> one mesh object (see the module doc).
 
@@ -1225,6 +1242,9 @@ class BatchAcc:
                 a_.data.foreach_set("value", arr.astype(np.float32))
         if hygiene and not os.environ.get("KIT_NOCLEAN"):
             self.n_alt, self.n_area = _nanite_clean(me)          # producer note 1 (core.nanite_clean)
+            if self.n_area:                                       # zero-area leftovers (5e-9 .. 1e-8 m2): delete
+                _drop_tiny_polys(me)
+                self.n_alt, self.n_area = _sliver_report(me)
         else:
             self.n_alt, self.n_area = _sliver_report(me)
         moss0, zref = self.moss0, self.zref

@@ -828,3 +828,73 @@ Score by axis:
 - Producer note 10 is applied. Ground dressing is neither scored nor requested, and the building-owned footing, pedestals, threshold and step are correctly kept.
 - The round 4 to 5 must-fix items 1(a), 1(c), 1(d), 2, 7 and 8(a) are closed.
 - Items 1(b), 4 and 5 are improved, but their residue is carried into must-fix 1, 6 and 3 above.
+
+## Round 7 — builder entry (kit migration)
+
+### Files
+
+- **Script.** `buildings/hilltop_keep/build_hilltop_keep.py` is now a thin declarative assembly (about 120 lines) on the shared kit `kit/village_kit/` (kit 1.1.0). One dimension table `KIT` (`kit_set()`), the component steps in build order, `KEEP_KIT_VARIANT=1` for the kit test, `KEEP_FAST=1` to skip the ray test on quick looks. A full build takes about 7.8 min (6.6 min of it the hidden-geometry ray test).
+- **Outputs.** `hilltop_keep.blend` (27.8 MB, compressed) and `decal_anchors.json`; the variant in `kit_variant/` (`hilltop_keep_kit_variant.blend`, 25.2 MB, + its `decal_anchors.json`). `signoff_phase1/` is untouched.
+- **Renders.** `renders/hilltop_keep/round_07/`: all 6 views at 32 samples, `stats.json`, `hidden.json`; the variant in `round_07/kit_variant/` (same set).
+
+### Stats
+
+| | Round 6 (signed off) | Round 7 | Variant |
+|---|---|---|---|
+| Triangles | 1,296,876 | 1,123,849 | 1,025,777 |
+| est_hidden_pct | 13.9 % | 14.1 % | 14.9 % |
+| Objects (linked duplicates / pooled meshes) | 289 (238 / 49) | 282 (231 / 25) | 271 (220 / 24) |
+| Material slots (all palette) | 11 | 11 | 11 |
+| `mask_attribute_missing` | none | none | none |
+| Needle / zero-area faces | 0 / 0 | 0 / 0 | — |
+| Decal anchors | — | 104 | 107 |
+| bbox (m) | 16.41 x 10.60 x 14.05 | 16.41 x 10.60 x 14.05 (unchanged) | 14.54 x 10.60 x 13.35 |
+
+Triangles by part (round 6 -> 7): hall 354.5k -> 354.1k, tower tiers 301.1k -> 278.6k, wing 362.7k -> 231.0k (straw striation dropped, note 11), turret 185.9k -> 165.8k, skirt 60.3k -> 60.3k, pooled instances 32.3k -> 34.0k.
+
+### Kit migration
+
+1. **Pure refactor first.** The phase-1 script's code moved into kit modules: the frame `components/oct_frame.py` (`OctFrame`, the keep's one dimension table and every envelope function), `stone_wall`, `oct_hall`, `plank_doors`, `windows`, `oct_roof`, `stone_cone`, `turret`, `annex`, `thatch`, `hewn`, `oct_cull`, `oct_decals`, plus `geom.py` (vectorised primitives, the strict hygiene hook). The private Mask writer, palette, pools, `Acc` / clean-up, stone generator and shingle / shake generators are gone: everything now goes through `palette.material`, `mask.write_mask` (per-island R / G, the shared B), `pools.Pools` (the pegs and nails are now the kit's pooled `timber.make_peg` / `make_nail_head`, scaled), `stones.make_stone` (new styles `coursed` / `coursed_poly`), `shingles.SIZE_TABLE` (new rows `skirt_board`, `collar_shake`, `comb_shake`, `hip_board`) and `shingles.riven_shakes` / `shingle_mesh`. **Check:** built with `units="phase1"`, no note-11 rule and no cull, the kit keep matched a phase-1 build object by object: 52 of 55 unique meshes vertex-identical (count, bounds, coordinate sum), the other 3 (skirt boards, both cap coverings) within 4 vertices from the clean-up order. Only then were the changes below switched on.
+2. **Components (producer note 2).** Each is `component(g, ..., seed=...)` and builds its own named objects: `oct_hall_walls`, `oct_hall_frame`, `door_threshold` (polygonal post-and-stone hall walls), `arched_door`, `plank_door`, `hall_windows`, `annex_window`, `skirt_roof` (tiered bell-cast skirt roof), `shake_collar`, `stone_cone`, `lantern`, `cone_cap` (stone cone tower with lantern and bell cap), `side_turret` (side turret with corbelled cushion), `annex_walls`, `thatch_wing_roof`, `ridge_comb`, `thatch_junctions` (thatch wing roof with ridge comb), `oct_hidden_cull`, `oct_building_decals`. The finial is the kit's new "turned" style (`finial.turned_finial`, `finial.lead_hat`).
+3. **`kit_set()` and `KEEP_KIT_VARIANT`.** The variant (round_07/kit_variant) is a shorter, narrower wing (6.98 x 4.0 m instead of 8.7 x 4.2) under a steeper 52 deg thatch, a 0.8x turret moved with it, a lower, stubbier stone cone (top 8.9 m instead of 9.6; total 13.3 m), the annex door and window re-spaced and every masonry / roofing layout re-seeded. The cone profile above the collar, the lantern, cap, finial and the decal recipe all follow `CONE_TOP`; the hall (A0, WALL_H) derives its timber frame, skirt eave and reference planes from the table.
+
+### Ensemble consistency fix
+
+- The **lantern cap and the turret cap** now carry the village's chunky shingles: `shingles.shingle_mesh` units from `SIZE_TABLE["shingle"]` (0.35-0.55 m wide, course target 0.44 +-24 %, 0.30-0.40 m exposure, 3.4-4.2 cm butts), `shingle_apex` (0.40 m target) for the top 3 courses, a doubled `starter` course at the eave, the hut cone's stacking wedges, curled eave courses, 2 % missing and 3 % slipped units over the sarking deck. The cap course jitter is halved (round-6 nice-to-have) so the horizontal courses read. Hip boards come from the new `hip_board` row and bed on the butt peaks; the lead hats are fitted over the shingle vertices (`lead_hat(cover=...)`, r 0.42 m main / 0.38 m turret) so no shingle pokes through. Lantern and drum boards use `SIZE_TABLE["board"]`.
+- Lantern cap: 167 shingles (was ~2,900 small boards); turret cap: 118.
+
+### Producer note 11
+
+- **Rule.** `OctFrame.detail` = `core.DetailRule` with the entrance at the arched door: relief >= 2 cm kept, >= 1 cm within 3 m of the door below 2.5 m. Every threshold is evaluated at the piece's world position (`g.min_relief(P)`); the random draws are made either way, so the kept shapes are the round-6 shapes.
+- **Stone.** Dropped: the value-noise face skin (<= 1 cm), the mm outline nibbling, dressed tooling and pick (1.2 / 0.4 mm), the 1.5 mm worn-rim dip, chips and split facets shallower than the local threshold, the footing's +-1.5-2 cm lumps outside the entrance zone (round-6 must-fix 3 asked for them to be cut back), the sill tooling, pedestal tooling, 8 mm ledge-slab noise. Kept: every stone, pillow, tilt, the 1-2 split planes, coursing, recessed joints, chips >= the threshold, the footing projection.
+- **Timber.** Adze scallops are modelled only where the deepest scallop reaches the threshold (the door posts in the entrance zone keep theirs); checks shallower than the threshold are not modelled (the wing door jambs and lintel, the plate checks) and become `crack` anchors; the door posts' 1.6-3.2 cm checks stay. Plank cup / grain / fine adze marks on both door leaves are dropped; joints, offsets, the split plank and the rotted corner stay. The 1.2-2 cm rafter-pole end checks are dropped.
+- **Thatch.** The straw striation (0.5-1.5 cm fall-line ridges) and the eave-roll / ridge-dome strand ribs are dropped. The courses are laid as discrete clumps instead (one column pair per 6-12 cm clump, crowned 1-2 cm over a soft crease, butts ragged +-1 cm, sunk 3.2 cm into the course below so no gap opens), and the roll and ridge dome keep bound bundles (2-3 cm constrictions every 0.08-0.18 m). Wing triangles 362.7k -> 231.0k.
+- **Shakes.** The 2-5 mm riven ridges and the 5 mm edge wave of the collar shakes and the comb shakes' 2-4 mm riving wobble are dropped; tip shapes, splits and thickness taper stay.
+- **Decal anchors.** 104 in `DECAL_ANCHORS` (empties `DA_<type>_<nnn>`, -Z into the surface, custom properties `decal_type`, `size_w`, `size_h`, `surface`, `probability`, `seed`) and in `buildings/hilltop_keep/decal_anchors.json` (units and axes header): damp_rise 22 (hall facet feet, wing walls, turret foot; north faces more likely), moss 14 (north footing tops, north skirt-roof butts at the eave, collar comb, cushion top, north turret-cap shingles), lichen 15 (pedestal tops, sills, threshold and step, cone ledge slabs, cushion faces), water_streak 13 (below the window sills, below the lantern-cap drip line on the flaring cone, below the cushion lip), soot 6 (arch crown, window heads, lantern openings, wing door), rust_stain 10 (below the strap-hinge terminals, pintles and ring pull of both doors), crack 14 (arch springing and crown, window corners, wing lintel ends, the hall / wing settlement junction, the dropped timber checks), grime 6 (door jambs at hand height, the door-flanking posts), repair_patch 4 (repointing on the rubble). No plaster_patch: the keep has no rendered walls (the daub eave filling is not reached by the probe rays).
+
+### Kept from phase 1
+
+- Every client correction: no ground dressing (producer note 10); the building's own footing course, pedestals, threshold and built-in step meet Z = 0 (z-min -0.050).
+- Silhouette, tiers, proportions and scale are the round-6 ones (bbox identical; finial tip 14.00 m; door 1.05 x 2.18 m clear, skirt eave over the door >= 3.5 m).
+- Hidden-geometry cull with the round-5 / 6 actor, door and off-ring crane views (`oct_hidden_cull`); backing surfaces (mortar sheets, decks, thatch core, blockers) are never culled.
+
+### Side by side with round 6 (signoff_phase1)
+
+All six views compared with round_06 (= the signed-off build):
+- **Silhouette / massing:** overlays round 6 in every view; caps, collar comb, cone flare, lantern, finials unchanged.
+- **Caps:** the lantern and turret caps now read as the hut's chunky shingle courses (front, side, back, aerial) instead of fine narrow boards: the ensemble item. The courses read horizontally at 15 m.
+- **Masonry / entrance (actor_closeup):** the same stones, joints, dressed surround, door, ironwork and footing; the faces are planar without the sub-cm skin, which reads slightly crisper, not softer.
+- **Thatch:** the stepped clumped courses read as layered bundles at crane and mid distance (front, back); at actor distance the S slope is plainer than round 6's straw striation (the intended note-11 result: straw striation is now a material / decal job).
+- **Holes:** none found in the 6 views or the builder close-ups (caps, thatch S slope, door).
+
+### Kit edits (kit/CHANGELOG.md 1.1.0)
+
+All additive: new modules (`geom.py` and the components above); appended functions / rows in `stones.py`, `shingles.py`, `components/finial.py`; one optional behaviour in `core.Acc` (`hygiene` may be a callable hook; `True` still runs `nanite_clean`). Other buildings re-run: `wattle_roundhut` builds without errors at 744,105 triangles (round-8 record 744,105, 0.0 %) and 105 anchors; `tower_windmill` (now importing the kit, its migration in progress): see the CHANGELOG entry.
+
+### Known gaps
+
+- At the actor close-up the thatch reads plainer than round 6 in clay; the straw texture is meant to come back through the Megascans straw material and decals.
+- The dimension table is the frame object, but the family's helper functions read it through the module proxy `oct_frame.FR` (one active frame per process), not an argument on every helper.
+- Round-6 must-fixes 1 (roll-end shards at the turret), 5 (ridge comb density) and 6 (cushion upper course) are not addressed in this migration round; 2 (dressed blocks) and 3 (footing) are only partly helped by the note-11 drops; 4 (straw relief) is superseded by note 11.
+- The chunky cap hip boards bed on the butt peaks, so a 2-3 cm shadow gap shows under them between the courses at close range.
+- The variant's hidden share is 14.9 %, close to the 15 % limit.

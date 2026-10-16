@@ -89,10 +89,10 @@ class DrumFrame(Building):
         # ---- rubble language (ensemble review 1: rough rubble like the keep / hut, not near-ashlar) ----
         self.rubble = dict(
             rough=1.0,
-            plain=dict(hr=(0.08, 0.17), hbig=0.26, p_big=0.16, lr=(0.15, 0.68), p_tall=0.09, p_pin=0.2, wob=0.034,
-                       wob_cap=0.42, wob2=0.008, pinch=0.3, pinch_w=(0.45, 0.95), h_min=0.05, p_long=0.18),
+            plain=dict(hr=(0.085, 0.19), hbig=0.27, p_big=0.2, lr=(0.15, 0.62), p_tall=0.12, p_pin=0.2, wob=0.036,
+                       wob_cap=0.42, wob2=0.009, pinch=0.3, pinch_w=(0.45, 0.95), h_min=0.035, p_long=0.15),
             spandrel=dict(hr=(0.08, 0.15), hbig=0.2, p_big=0.14, lr=(0.14, 0.55), p_tall=0.06, p_pin=0.16, wob=0.026,
-                          wob_cap=0.4, wob2=0.006, pinch=0.25, pinch_w=(0.4, 0.8), h_min=0.05, p_long=0.15),
+                          wob_cap=0.4, wob2=0.006, pinch=0.25, pinch_w=(0.4, 0.8), h_min=0.035, p_long=0.15),
             emit=dict(p_tilt=0.26, dy=(-0.008, 0.016), follow=1.0, roll=2.0))
         if rubble:
             for k_, v_ in rubble.items():
@@ -715,3 +715,38 @@ def relief_far(g):
 def relief_door(g):
     """the entrance-zone threshold (1 cm; 0 when the rule is off)."""
     return g.rule.entrance_relief if g.rule.active else 0.0
+
+
+# =============================================================================================
+# producer note 6: hidden-geometry cull (only pieces with a backing surface behind them)
+# =============================================================================================
+DRUM_CULL_TARGETS = ("arcade_dressed", "arcade_backs", "base_dressed", "cap_shingles")
+
+
+def drum_views(g):
+    """actor / crane viewpoints round a drum tower: rings at knee, waist, eye, raised-hand and first-floor height
+    0.5-6 m out from the drum face, a band-level ring (the balustrade / arcade close-ups), crane rings, close views
+    in front of the door and the six review cameras -- so the cull never removes what a camera can plausibly see."""
+    from ..core import ring_views, review_cameras
+    R = g.R_BASE0
+    V = [ring_views((0, 0), [R + 0.5, R + 2.0, R + 5.0], [0.4, 1.65, 3.4], n=16),
+         ring_views((0, 0), [R + 1.2, R + 2.6], [4.5, 6.0], n=12, phase=0.21),
+         ring_views((0, 0), [R + 9.0], [6.0, 11.0, 16.0], n=12, phase=0.11)]
+    fy = -g.R_DOOR
+    V.append(np.array([(x, fy - d, z) for d in (0.5, 1.0, 2.0) for z in (0.4, 1.1, 1.7, 2.3) for x in (-0.9, 0.0, 0.9)]))
+    co = np.concatenate([np.array(o.bound_box) @ np.array(o.matrix_world)[:3, :3].T + np.array(o.matrix_world)[:3, 3]
+                         for o in g.coll.all_objects if o.type == "MESH"])
+    V.append(review_cameras(co.min(0), co.max(0)))
+    return np.concatenate(V)
+
+
+def drum_hidden_cull(g, targets=DRUM_CULL_TARGETS, procs=3):
+    """KIT COMPONENT (post step, producer note 6): delete the faces of the named objects that no review / actor /
+    crane viewpoint can see (core.visibility_cull).  Only pieces with a continuous backing behind them are
+    culled -- the arcade and band dressed work and recess backs (wall-core ring) and the cap shingles (sarking
+    deck) -- so no cull can open a see-through hole.  Run after drum_finish."""
+    from ..core import visibility_cull
+    names = [f"{g.prefix}_{t}" for t in targets]
+    n = visibility_cull(names, extra_views=drum_views(g), procs=procs)
+    log(f"hidden-geometry cull: -{n} polygons")
+    return n

@@ -135,7 +135,7 @@ def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0
             hw_ = rng.uniform(*pinch_w)
             if b_ - a_ > 2.2 * hw_:
                 u_c = rng.uniform(a_ + hw_, b_ - hw_)
-                pinches[k + 1].append((u_c, hw_, (zs[k + 1] - zs[k]) * rng.uniform(0.8, 1.0)))
+                pinches[k + 1].append((u_c, hw_, (zs[k + 1] - zs[k]) * rng.uniform(0.92, 1.0)))
                 n_pinch += 1
         for a, b in sp2:
             S = b - a
@@ -183,12 +183,15 @@ def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0
                     zp = zc + Hs / 2 - Hp / 2 if not top else zc - Hs / 2 + Hp / 2
                     for kk, v in zip(("uc", "zc", "L", "H", "D", "sb", "st"), (uc, zm, Lr, Hm, Ds, sb, st)):
                         out[kk].append(v)
-                    npin = 1 if Lr < 0.4 else 2
+                    # 1-2 pinning stones of different sizes, never a row of equal chips (director r5 #2)
+                    npin = 1 if Lr < 0.5 else 1 + int(rng.random() < 0.6)
                     seg = Lr / npin
                     for q in range(npin):
-                        lp = seg * rng.uniform(0.55, 0.85)
-                        up = uc - Lr / 2 + seg * (q + 0.5) + rng.uniform(-0.03, 0.03)
-                        for kk, v in zip(("uc", "zc", "L", "H", "D", "sb", "st"), (up, zp, lp, Hp, Ds * 0.7, st, st)):
+                        lp = seg * rng.uniform(0.45, 0.9)
+                        up = uc - Lr / 2 + seg * (q + 0.5) + rng.uniform(-0.04, 0.04)
+                        Hq = Hp * rng.uniform(0.6, 1.0)
+                        zq = zp + rng.uniform(-0.3, 0.3) * (Hp - Hq)
+                        for kk, v in zip(("uc", "zc", "L", "H", "D", "sb", "st"), (up, zq, lp, Hq, Ds * 0.7, st, st)):
                             out[kk].append(v)
                     continue
                 for kk, v in zip(("uc", "zc", "L", "H", "D", "sb", "st"), (uc, zc, Lr, Hs, Ds, sb, st)):

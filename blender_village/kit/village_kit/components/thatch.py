@@ -342,10 +342,13 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
       * the exposed course top carries an extra crowned row (soft, lumpy, not a flat slab).
     Producer note 11 (relief_min > straw_depth): the straw ridges are not modelled (striation is a material job);
     the courses are laid as discrete thatch CLUMPS instead -- one column pair per clump (clump_cols wide), each clump
-    crowned 1.0-2.0 cm, its butt standing +-1.5-2 cm proud of its neighbours, with a 1.5-2 cm crease between
-    clumps, so the bundles read at actor and crane distance with a fraction of the straw's triangles."""
+    crowned 1.0-2.0 cm over a soft crease to its neighbours (2-3 cm rise and fall per clump), its butt ragged by
+    +-1 cm, so the bundles read at actor and crane distance with a fraction of the straw's triangles."""
     from mathutils.kdtree import KDTree
     straw_on = straw_depth[1] >= relief_min
+    # the butt's lowest row is seated into the course below; with clumps (and the roll's bound bundles) it sinks
+    # deeper than their 2-3 cm relief so no gap opens where a clump meets a crease of the course under it
+    sink = 0.004 if straw_on else 0.032
     ms = []
     m = m0
     while m < m_max:
@@ -412,9 +415,9 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
         bflag[0::2] = flags
         crease = np.where(bflag, rng.uniform(0.0015, 0.002, ncol), rng.uniform(0.0005, 0.001, ncol))
         if not straw_on:
-            # discrete clumps: ragged butts +-1.5-2 cm along the slope, each clump crowned 1.0-2.0 cm, 1.5-2 cm
-            # soft creases between clumps (joints that cast real shadows)
-            prot_l = prot_l * 1.3 + rng.normal(0, 0.004, nl)
+            # discrete clumps: each clump crowned 1.0-2.0 cm over a soft 0.7-0.9 cm crease to its neighbours (a
+            # 2-3 cm rise and fall per clump), butts ragged by +-1 cm along the slope
+            prot_l = prot_l * 0.6 + rng.normal(0, 0.002, nl)
             crown = crown * 5.0
             crease = crease * 10.0
         p_col = np.where(isb, np.minimum(prot_l[lprev], prot_l[lid]) - 0.002, prot_l[lid])
@@ -502,7 +505,7 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
                 return _interp_rows(mg, pM[idx], pH[idx])
             Qb = plan(mb)
             sw_b = thatch_swell(Qb[:, 0], Qb[:, 1]) + hip_swell(Qb[:, 0], Qb[:, 1])
-            top = FR.TH_BASE + stp + sw_b + np.where(isb, 0.45 if straw_on else 1.0, 1.0) * crr
+            top = FR.TH_BASE + stp + sw_b + np.where(isb, 0.45, 1.0) * crr
             low_b = low_at(mb)
             dh = np.maximum(top - low_b, 0.012) * fe - 0.008 * (1 - fe)
             run = np.maximum(np.abs(dh), 0.004) / np.tan(beta)
@@ -511,7 +514,7 @@ def thatch_courses(acc, rng, seed, lobe_w=(0.025, 0.045), clump_w=(0.04, 0.12), 
             Qf = plan(m_far)
             h_far = FR.TH_BASE - 0.004 + thatch_swell(Qf[:, 0], Qf[:, 1]) + hip_swell(Qf[:, 0], Qf[:, 1]) + 0.3 * crr
             h_top = low_b + dh
-            rows_h = np.stack([low_at(mb - F) - 0.004, low_at(mb - 0.45 * F) + 0.05 * dh,
+            rows_h = np.stack([low_at(mb - F) - sink, low_at(mb - 0.45 * F) + 0.05 * dh,
                                low_at(mb - 0.12 * F) + 0.22 * dh, low_b + 0.72 * dh, h_top,
                                0.5 * (h_top + h_far) + bump * ff, h_far], 1)
             # straw ridges (fall-line), all exposed rows; skewed per patch

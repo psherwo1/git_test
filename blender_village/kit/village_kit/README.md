@@ -4,8 +4,8 @@ Phase 2 of the production plan. The three signed-off hero buildings (hilltop kee
 roundhut) are being moved onto one kit, so that 40 to 50 village buildings can be assembled from parameterised
 components that share one material palette, one Mask writer, one stone generator and one roofing scale.
 
-- **Status:** `wattle_roundhut` is migrated (round 8). The keep and the mill still run their phase-1 scripts. Their
-  migrators add their components here, following the extension points below.
+- **Status:** `wattle_roundhut` (round 8), `hilltop_keep` (round 7, kit 1.1.0) and `tower_windmill` (round 7, kit
+  1.2.0) are migrated; see the sections at the end. Further migrators add their components here, following the extension points below.
 - **Runtime:** Blender 5.1.2 as a Python module (`/opt/bpyenv/bin/python`). Every building script starts with
   `sys.path.insert(0, ".../blender_village/kit")` and then `import village_kit...`.
 - **Kit edit rules:** read `kit/CHANGELOG.md` before you edit anything here.
@@ -232,3 +232,69 @@ from the radius and the eave height, so `RoundFrame(radius=2.9, eave_z=2.6)` bui
   `below_points` at the wheel and boom ends.
 - **Hidden-geometry cull.** Call `core.visibility_cull` with the building's own near and door views. The keep
   already does this the same way.
+
+## Kit 1.1.0: the tiered octagonal family (hilltop keep migration, round 7)
+
+The keep is now a thin assembly (`buildings/hilltop_keep/build_hilltop_keep.py`) on these modules.  The pure
+refactor was checked first: with `units="phase1"` and `detail_rule=False` the kit build reproduced the signed-off
+phase-1 keep (52 of 55 unique meshes vertex-identical, the other 3 within 4 vertices from the clean-up order; only
+the pegs / nails changed, to the kit's shared pooled ones).
+
+| module | what it holds |
+|---|---|
+| `geom.py` | vectorised primitives (`rbox_v` many rounded boxes at once, `obox` / `beam`, `sweep`, `lathe_rz`, `prof_*`), 2-D helpers, the keep's noise table (`n1`, `fbm90`, `vnoise90` = `core.Noise(90210)`), and the strict hygiene hook `strict_clean` (clip at -5 cm, `core.nanite_clean`, 5e-8 zero-area, outward normals, tessellation re-pass, sharp edges re-applied, per-ISLAND Mask R / G) used through `core.Acc(hygiene=callable)`; `Acc(name)` / `finalize(acc, coll, smooth_deg, recalc, clip_z)` |
+| `stones.py` (+) | styles `coursed` (a whole batch of coursed rubble / dressed blocks in surface coords) and `coursed_poly` (one hero stone from its polygonal outline), `stone_outline`; both take `min_relief` (note 11) without changing the random draws |
+| `shingles.py` (+) | SIZE_TABLE rows `skirt_board`, `collar_shake`, `comb_shake`, `hip_board` (each with its reason); `riven_shakes` (the collar's riven shake batch) |
+| `components/oct_frame.py` | `OctFrame(prefix, **PARAMS)`: the frame / dimension table (hall A0 / WALL_H, CONE_TOP, wing plan and thatch pitch, turret centre / scale, WDOOR / WWIN, `detail_rule`, `units`) and everything derived from it (`derive()`, `set()`); `OctRoof`; the envelope functions (`apo`, `hall_map`, `fmap`, `wing_map`, `q_rr`, `wing_under`, `thatch_low`, `tur_r`, `tur_dist`, `skirt_z_at`, `cush_*` ...); `g.min_relief(P)` (note-11 threshold at world points, 1 cm in the entrance zone); `get_pool` / `place` (kit pools) |
+| `components/stone_wall.py` | `layout_wall`, `fill_voids`, `polygonize`, `rough_footing`, `dress_irregular`, `lay_stones` / `lay_poly_stones` (make_stone + mapping + per-stone note-11 threshold), `mortar_sheet`, `round_stone_wall` |
+| `components/oct_hall.py` | **polygonal post-and-stone hall walls**: `oct_hall_walls(g)`, `oct_hall_frame(g)`, `door_threshold(g)`; helpers `facet_obox`, `rough_block`, `open_outline` |
+| `components/plank_doors.py` | **arched / plank doors**: `arched_door(g)`, `plank_door(g)`, `door_spec()`; `plank_leaf`, `strap_hinge`, pooled `make_pintle` |
+| `components/windows.py` | **windows**: `hall_windows(g)`, `annex_window(g)`, `window_spec()` |
+| `components/oct_roof.py` | **tiered bell-cast skirt roof and caps**: `skirt_roof(g)`; `build_cap` (chunky shingles by default), `cap_shingles` (the shared `shingle` / `shingle_apex` / `starter` units bent onto a bell cap), `covering_boards`, `sarking_deck`, `hip_boards`, `eave_structure` |
+| `components/stone_cone.py` | **stone cone tower with lantern and bell cap**: `shake_collar(g)`, `stone_cone(g)`, `lantern(g)`, `cone_cap(g)` |
+| `components/turret.py` | **side turret with corbelled cushion**: `side_turret(g)`; `corbel_cushion`, toothing into the annex walls |
+| `components/annex.py` | the annex (wing) rubble walls: `annex_walls(g)` |
+| `components/thatch.py` | **thatch wing roof with ridge comb**: `thatch_wing_roof(g)`, `ridge_comb(g)`, `thatch_junctions(g)`; `d_roll`, `tuft_fringe`, `mortar_fillet`, `stepped_flashing` |
+| `components/hewn.py` | `hewn_square` (square hewn member; note 11 drops adze / checks below the threshold and reports the dropped checks), `peg` / `nail_heads` (the kit's pooled `timber.make_peg` / `make_nail_head`, scaled) |
+| `components/finial.py` (+) | the "turned" style: `turned_finial(acc, base, scale, lean)`, `lead_hat(acc, ..., cover=)` (fitted over the shingles under it) |
+| `components/oct_cull.py` | `oct_hidden_cull(g)`: `core.visibility_cull` with the family's actor / door / crane views (`<PREFIX>_FAST=1` skips it) |
+| `components/oct_decals.py` | `oct_building_decals(g)`: ~110 note-11 anchors (damp, moss, lichen, streaks below sills and drip lines, soot, rust under ironwork, cracks at openings and where timber checks were dropped, grime, repair patches) |
+
+How the components read the frame: every component is `component(g, ..., seed=...)`.  Inside the family the
+dimension table is read through the proxy `oct_frame.FR`, which points at the frame being built (`OctFrame`
+activates itself); the table is the frame object, so one building is built per frame and a kit_set() is
+`KIT.set(...)` before the build (or `g.set(...)`, which re-derives).  Variant switch: `KEEP_KIT_VARIANT=1`.
+Deviation from the extension-point notes above: the collar uses `shingles.riven_shakes` (the keep's signed-off riven
+shakes, moved into the shared module) rather than `shake_mesh`, whose wider 0.16-0.30 m board would thin the comb.
+
+## Kit 1.2.0: the stone-drum tower family (tower windmill migration, round 7)
+
+The mill is now a thin declarative assembly (`buildings/tower_windmill/build_tower_windmill.py`, one `KIT` table
+of per-component parameter dicts, `kit_set()`, `MILL_KIT_VARIANT=1`).  The pure refactor was checked first: before
+any intentional change, the kit build reproduced the signed-off phase-1 mill exactly -- all 236 accumulated
+arrays (every part's vertices, faces and material indices, every pooled variant and every linked-duplicate
+matrix) of the hero AND of the variant were identical to the phase-1 script's.
+
+| module | what it holds |
+|---|---|
+| `tmplmesh.py` | template-instanced pieces: `tmpl_box` / `tmpl_rings` topologies with buried / covered faces dropped, `rbox`, `sweep`, `lathe`, `profile_block`, `add_grid`, transforms, `noise_field`, `hewn_beam` / `hewn_between` / `facet_shave` (note-11 `min_relief`), `BatchAcc` (N pieces per `add()`, palette slots, box UVs, sharp-by-angle, degenerate / buried-face removal, `core.nanite_clean`, Mask through `mask.write_mask`), `mesh_tmpl` (a kit mesh such as `shingle_mesh` as a batch template), `fill_acc` (a batch into a `core.Acc`, for `pools.Pools.mesh`), `tower_b` (Mask B for tall buildings), analysis helpers |
+| `split_stones.py` | the vectorised split-stone language (`split_batch` = `stone_local`, `SPLIT_STYLES`: rubble, footing, pin, dressed, hero, ashlar, flag, ground), `conchoidal`; `min_relief` per stone (note 11). Registered in `stones.STYLES` as `split_<style>`, so `make_stone("split_rubble", rng, half=...)` builds one |
+| `shingles.py` (+) | SIZE_TABLE row `shingle_small` (the gablet hood over a windshaft, with its reason). The mill cap now uses the chunky `shingle` unit and the apron `shake_mesh` |
+| `components/drum_frame.py` | `DrumFrame(prefix, detail_rule, rubble=...)`: the dimension table of a drum tower (drum, door, windows, band, arcade, cornice, apron, smock tower and lean, cap profile and hood, rotor frame, tail) with `set()` / `derive()`, the `rubble` coursing table (ensemble roughening), per-build state (named parts, wall rasters, pooled placements); geometry helpers taking the frame first (`R_out`, `face_map`, `lean`, `cap_z`, `capw`, `rotw`, `arch_set` ...); `relief_min(g, P)` (note-11 threshold at world points); `drum_finish(g)` (parts -> objects, pools -> linked duplicates, clearance checks); `drum_hidden_cull(g)` (`core.visibility_cull` on the backed pieces only) |
+| `components/drum_wall.py` | **stone drum with arcade and balustrade band**: `round_stone_drum(g, r_base, r_top, height, zones, door, arcade, windows, seed)`, `blind_arcade(g, n, ...)`; `coursing` (wandering beds, pinch-outs, through-stones), `follow_beds`, `Wall` (raster, pinning stones, mortar strike), piers, string courses, cornice, mortar skin, wall-core backing |
+| `components/drum_band.py` | `baluster_row` (5 turned profile families, eroded / chipped / replacement / stump variants, lost ones, +-1 deg lean; pooled), `dentil_corbels` (pooled) |
+| `components/drum_door.py` | `arched_door(g, width, spring, reveal, ring, seed)` (surround, threshold, plank leaf ajar, ironwork, passage, ladder), `entrance_step(g)` |
+| `components/shake_apron.py` | `shake_apron(g, r_eave, z_eave, r_top, z_top, courses, seed)` (kit `shake_mesh` shakes, rafters, sarking, fascia, flashing) |
+| `components/smock_tower.py` | **timber smock tower**: `smock_tower(g, af_bottom, af_top, z0, z1, lean_deg, seed)` |
+| `components/mill_cap.py` | **hipped mill cap**: `mill_cap(g, length, width, rise, ridge_len, yaw, seed)` (chunky kit shingles, cappings, lead saddles, hood, windshaft) |
+| `components/fan_wheel.py` | **fan wheel rotor**: `fan_wheel(g, r_in, r_rim, r_tip, n_blades, pitch, hub_d, seed)` (alias `wind_wheel`) |
+| `components/tail_vane.py` | **tail vane on a rear boom**: `rear_tail_vane(g, boom_end, vane_s0, vane_length, vane_h0, vane_h1, seed)` |
+| `components/raking_props.py` | **raking props**: `raking_props(g, props, seed)` |
+| `components/rotor_checks.py` | `rotor_clearance(g)`: swept rotor / tail clearances (>= 0.30 m), blades vs arms |
+| `components/drum_decals.py` | `drum_tower_decals(g)`: ~100-110 note-11 anchors (damp rise, moss, lichen, streaks below sills / cornice / cap eave / boom end / wheel rim, rust under ironwork, soot, cracks at openings and settlement, grime, repairs, plaster) |
+
+How the components read the frame: every helper takes the frame `g` as its first argument (nothing reads a module
+global), every public component is `component(g, <its dimensions>=None, seed=None)`; given dimensions are written
+with `g.set(...)`, which re-derives the dependent ones.  Note 11 is a frame option (`detail_rule`); every relief
+switch keeps its random draws, so turning it off reproduces the shapes.
+

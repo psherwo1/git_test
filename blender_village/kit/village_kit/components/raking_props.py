@@ -352,6 +352,7 @@ def build_props(g, parts, props=None):
     a = at_z(defs[0][0], defs[0][1], 3.1)
     b = at_z(defs[1][0], defs[1][1], 3.3)
     member(P_p, 0, a[None], b[None], 0.11, 0.09, up=(0, 0, 1), c=0.015, rng=rng, bow=0.02)
+    g.prop_feet = [d[1] for d in defs]
     return defs
 
 
