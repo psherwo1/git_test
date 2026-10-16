@@ -779,7 +779,7 @@ def sliver_keep(W0, Wl, tt, ee, min_w=0.05, T=T_SHK):
     (minimum caliper width of its top face) -> no thin triangular slivers at hips and valleys."""
     N = len(Wl)
     keep = np.ones(N, bool)
-    top_ = np.nonzero(T["idx"][:, 1] == T["n"][1] - 1)[0]
+    top_ = T["top"] if "top" in T else np.nonzero(T["idx"][:, 1] == T["n"][1] - 1)[0]
     moved = np.abs(Wl - W0).max(axis=(1, 2)) > 0.002
     tt = np.broadcast_to(tt, (N, 3))
     ee = np.broadcast_to(ee, (N, 3))
@@ -1234,6 +1234,31 @@ class BatchAcc:
         ob = bpy.data.objects.new(self.name, me)
         collection.objects.link(ob)
         return ob
+
+
+def mesh_tmpl(faces, nv, top=None, fan_from=0):
+    """a BatchAcc template from a kit mesh's face list (quads plus any n-gons, which are fan-triangulated from their
+    `fan_from`-th corner), e.g. village_kit.shingles.shingle_mesh / shake_mesh: then N pieces of that topology go
+    into one BatchAcc.add() call.  top: indices of the piece's top-face vertices (sliver tests)."""
+    quads, tris = [], []
+    for f in faces:
+        f = np.asarray(f, np.int64)
+        if f.ndim == 1:
+            f = f[None]
+        if f.shape[1] == 4:
+            quads.append(f)
+        elif f.shape[1] == 3:
+            tris.append(f)
+        else:
+            for row in f:
+                r = np.roll(row, -fan_from)
+                tris.append(np.stack([np.full(len(r) - 2, r[0]), r[1:-1], r[2:]], 1))
+    Q = np.concatenate(quads) if quads else np.zeros((0, 4), np.int64)
+    Tt = np.concatenate(tris) if tris else np.zeros((0, 3), np.int64)
+    T = dict(quads=Q, tris=Tt, qflat=np.zeros(len(Q), bool), tflat=np.ones(len(Tt), bool), nv=int(nv))
+    if top is not None:
+        T["top"] = np.asarray(top, np.int64)
+    return T
 
 
 def fill_acc(batch, acc, mat_override=None):

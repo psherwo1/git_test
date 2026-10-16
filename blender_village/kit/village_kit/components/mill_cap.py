@@ -9,10 +9,37 @@ from functools import partial  # noqa: F401
 import numpy as np
 
 from .drum_frame import (cap_dh, cap_h, cap_t, cap_z, capw, hood_z, to_cap_local, x_valley)  # noqa: F401
-from .shake_apron import (shingle_local)  # noqa: F401
-from ..tmplmesh import (D2R, HeightField, PI, T_BLK, T_BRD_OT, T_SHK, T_SHK_O, T_SHK_ST, add_grid, blocks_world,
-    circle_prof, euler, frame_mats, lathe, log, lowfreq, member, part_samples, rbox, rect_prof, rotm, slab_along,
-    sliver_keep, sweep, tmpl_box, unit, xform)  # noqa: F401
+from .. import shingles
+from ..tmplmesh import (D2R, HeightField, PI, T_BLK, T_BRD_OT, add_grid, blocks_world, circle_prof, euler,
+                        frame_mats, lathe, log, lowfreq, member, mesh_tmpl, part_samples, rbox, rect_prof, rotm,
+                        slab_along, sliver_keep, sweep, tmpl_box, unit, xform)  # noqa: F401
+
+
+def kit_shingles(rng, L, W, unit="shingle"):
+    """N hand-split shingles from the ONE village generator (village_kit.shingles.shingle_mesh with the 16 pooled
+    SHINGLE_VARIANTS base shapes: ragged butt notches, rounded corners, cup, curl) at the SIZE_TABLE[unit] scale, in
+    the cap frame: x along the slope (butt at -L/2), y up from the bed, z across.  L is the MODELLED length
+    (exposure + lap; the deck is under every course, producer note 6), W the width.  No bed face, no head end.
+    Returns (P (N, nv, 3), template)."""
+    Ps, F, nv = [], None, 0
+    small = unit == "shingle_small"
+    m = len(shingles.SH_LOOP_X)
+    for l_, w_ in zip(L, W):
+        var = dict(shingles.SHINGLE_VARIANTS[int(rng.integers(0, len(shingles.SHINGLE_VARIANTS)))])
+        if small:
+            var["Tb"] = shingles.SIZE_TABLE["shingle_small"]["butt"]
+            var["offs"] = var["offs"] * 0.5
+            ys = l_ * np.array([0.0, 0.04, 0.11, 0.25, 0.45, 0.7, 1.0])
+            th = shingles.SIZE_TABLE["shingle_small"]["head"]
+        else:
+            ys = np.concatenate([[0.0, 0.006, 0.018, 0.04, 0.075, 0.13], np.linspace(0.2, l_, 4)])
+            th = shingles.SIZE_TABLE["shingle"]["head"]
+        V, faces, _ = shingles.shingle_mesh(float(w_), float(l_), var, Th=th, ys=ys, bottom=False, head=False)
+        Ps.append(np.stack([V[:, 1] - l_ / 2, V[:, 2], V[:, 0]], -1))
+        F, nv = faces, len(V)
+    n = nv // m
+    top = (np.arange(n)[:, None] * m + np.arange(6)[None]).ravel()
+    return np.array(Ps), mesh_tmpl(F, nv, top=top, fan_from=8)
 
 
 def cap_member(g, part, mat, a, b, w, d, up=(0, 0, 1), **kw):
@@ -26,7 +53,7 @@ def build_cap_cappings(g, P_sh, P_fr, P_ir, rng):
     The boards sit 5 cm above the roof surface; shingle courses under each board's footprint are dressed
     down under it (so every board bears on the shingles)."""
     TB, WL = 0.025, 0.165
-    SEAT = 0.050                              # board bottom above the roof surface (shingle butts ~5 cm)
+    SEAT = 0.070                              # board bottom above the roof surface (chunky shingle butts ~7 cm)
     Z3 = np.array([0, 0, 1.0])
     T_SAD = 0.90
 
@@ -456,12 +483,13 @@ def build_cap(g, parts):
             return g.CAP_B - t * g.CAP_SB
         return (g.CAP_AF + g.CAP_AB) / 2 - t * g.CAP_EF
 
+    SH = shingles.SIZE_TABLE["shingle"]              # the village's chunky unit (ensemble review: one scale)
     t = -0.03 / g.CAP_SB
     courses = []
     while t < 1 - 0.045:
         courses.append(t)
         sig = math.atan(float(cap_dh(g, t + 0.05)) / g.CAP_SB)
-        t += 0.12 * math.cos(sig) / g.CAP_SB * rng.uniform(0.96, 1.04)
+        t += rng.uniform(*SH["exposure"]) * math.cos(sig) / g.CAP_SB
     courses = [courses[0]] + courses
     nsh = 0
     nsliver = 0
@@ -474,16 +502,17 @@ def build_cap(g, parts):
             wl = []
             tot = 0
             while tot < 2 * hl:
-                w = rng.uniform(0.12, 0.2)
+                w = SH["target_w"] * rng.uniform(*SH["w_jitter"])         # +-24 % widths (director r6 #6)
                 wl.append(w)
-                tot += w + rng.uniform(0.006, 0.012)
+                tot += w + rng.uniform(*SH["gap"])
             wl = np.array(wl) * 2 * hl / tot
             lc = -hl + np.cumsum(wl) + (np.arange(len(wl)) + 0.5) * (2 * hl - wl.sum()) / len(wl) - wl / 2
-            lc += (ci % 2) * 0.06 + (0.07 if starter else 0.0)
+            # joints break course to course by about half a unit (never aligned over 3 courses)
+            lc += (ci % 2) * 0.5 * float(wl.mean()) + rng.uniform(-0.05, 0.05) + (0.12 if starter else 0.0)
             N = len(wl)
-            # exposure (0.12 m) + ~9 cm hidden lap only: the rest of each covered shingle is not modelled
-            L = rng.uniform(0.14, 0.15, N) * (0.9 if starter else 1.0)     # exposure 0.12 + 2-3 cm lap (deck under)
-            Tsh = T_SHK_ST if ci == 0 else T_SHK_O
+            # exposure + 6-8 cm lap only: the rest of each covered shingle is not modelled (the deck is under it)
+            expo = (courses[min(ci + 1, len(courses) - 1)] - tb) * g.CAP_SB if ci + 1 < len(courses) else 0.34
+            L = np.clip(expo + rng.uniform(0.06, 0.08, N), 0.30, 0.50) * (0.8 if starter else 1.0)
             tbb = tb + (rng.uniform(-0.006, 0.006, N) + (0.004 if starter else 0.0)) / R
             sig = np.arctan(cap_dh(g, tbb + L * 0.35 / R) / R)
             tc = tbb + L / 2 * np.cos(sig) / R
@@ -504,14 +533,17 @@ def build_cap(g, parts):
                 ts_c = (g.CAP_B - np.abs(yc)) / g.CAP_SB
                 under |= (xc + wl * 0.25 < -g.CAP_AB + g.CAP_EB * ts_c) | (xc - wl * 0.25 > g.CAP_AF - g.CAP_EF * ts_c)
             zb = g.CAP_ZE + cap_h(g, tc)
-            ob, ot = (0.006, 0.002) if starter else ((0.022, 0.004) if ci == 1 else (0.03, 0.004))
+            # lift at butt / head: course 1 rides on the starter's butt, the others on the head of the course below
+            ob, ot = (0.006, 0.002) if starter else ((0.042, 0.006) if ci == 1 else (0.032, 0.005))
             beta = np.arctan2(ob - ot, L) + rng.uniform(-0.01, 0.02, N)
             tt = -np.cos(sig)[:, None] * o[None] + np.sin(sig)[:, None] * np.array([0, 0, 1.0])
             nn = np.sin(sig)[:, None] * o[None] + np.cos(sig)[:, None] * np.array([0, 0, 1.0])
             ee = np.cross(tt, nn)
-            P = shingle_local(rng, L, wl * rng.uniform(0.97, 1.03, N), rng.uniform(0.016, 0.02, N),
-                              np.full(N, 0.007), jag=0.01, curl=0.01, cup=0.003, T=Tsh)
-            Rl = rotm([0, 0, 1], -beta) @ rotm([0, 1, 0], np.clip(rng.normal(0, 1.0, N), -2.5, 2.5) * D2R)
+            P, Tsh = kit_shingles(rng, L, wl * rng.uniform(0.97, 1.03, N))
+            # in-plane rotation: +-1 deg on most, +-3 deg on 20 % (director r6 #6)
+            rot = np.where(rng.random(N) < 0.2, rng.uniform(2.0, 3.5, N) * rng.choice([-1, 1], N),
+                           np.clip(rng.normal(0, 1.0, N), -2.0, 2.0))
+            Rl = rotm([0, 0, 1], -beta) @ rotm([0, 1, 0], rot * D2R)
             ctr = np.stack([xc, yc, zb], 1) + nn * ((ob + ot) / 2 + rng.uniform(-0.002, 0.003, N))[:, None]
             Wl = xform(P, frame_mats(tt, nn, ee) @ Rl, ctr)
             W0 = Wl.copy()
@@ -567,10 +599,10 @@ def build_cap(g, parts):
             N = len(xl)
             if N == 0:
                 continue
-            L = rng.uniform(0.16, 0.18, N)
-            W = rng.uniform(0.13, 0.16, N)
-            Tsh = T_SHK if ci == 0 else T_SHK_O
-            P = shingle_local(rng, L, W, np.full(N, 0.017), np.full(N, 0.007), jag=0.008, curl=0.008, T=Tsh)
+            SS = shingles.SIZE_TABLE["shingle_small"]       # the hood's documented small unit
+            L = rng.uniform(*SS["length"], N)
+            W = rng.uniform(*SS["width"], N)
+            P, Tsh = kit_shingles(rng, L, W, unit="shingle_small")
             tt = np.array([0.0, -s * math.cos(sl), math.sin(sl)])
             nn = np.array([0.0, s * math.sin(sl), math.cos(sl)])
             ee = np.cross(tt, nn)

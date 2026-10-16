@@ -244,3 +244,9 @@ def riven_shakes(Sh, idx, ncol=11, halves=0, min_relief=0.0):
     u = u - np.where((k_i == 3) | (k_i == 0), 0.012 * tipz * np.abs(np.sin(xn * 4.0 + Sh["phase"][idx][:, None] * 30)), 0.0)
     x = x + Sh["twist"][idx][:, None] * u * (u / Li)
     return np.stack([x, u, h], -1), quads
+
+
+# kit 1.2.0 (tower windmill): DELIBERATE EXCEPTION row.  The gablet hood over a mill windshaft is two roof planes
+# only ~0.5 m deep and ~0.7 m long between the lead valley and the verge: the chunky `shingle` unit would leave 1-2
+# shingles per course and no readable coursing.  Main cap faces use `shingle`; only the hood uses this row.
+SIZE_TABLE["shingle_small"] = dict(width=(0.13, 0.16), length=(0.16, 0.18), exposure=0.11, butt=0.017, head=0.007)

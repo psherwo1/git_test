@@ -9,68 +9,28 @@ from functools import partial  # noqa: F401
 import numpy as np
 
 from .drum_frame import (TZ, face_axes, tw_a)  # noqa: F401
-from ..tmplmesh import (D2R, PI, T_BRD, T_SHK, T_SHK2, T_SHK2_O, add_grid, cone_frame, log, member, orient, rbox,
-    rotm, xform)  # noqa: F401
+from .. import shingles
+from ..tmplmesh import (D2R, PI, T_BRD, add_grid, cone_frame, log, member, mesh_tmpl, orient, rbox, rotm,
+                        xform)  # noqa: F401
 
 
-def shingle_local(rng, L, W, tb, tt, jag=0.012, curl=0.012, cup=0.004, comb=0.0, T=T_SHK):
-    """Shingle: x = length (butt at -L/2), y = thickness from 0 (bed) up, z = width."""
-    N = len(L)
-    h = np.stack([L / 2, np.full(N, 0.01), W / 2], 1)
-    P = rbox(T, h, np.stack([np.full(N, 0.006), np.full(N, 0.004), np.full(N, 0.006)], 1))
-    u = P[:, :, 0] / h[:, None, 0]
-    vz = P[:, :, 2] / h[:, None, 2]
-    th = tb[:, None] + (tt - tb)[:, None] * (u + 1) / 2
-    P[:, :, 1] = (P[:, :, 1] / 0.01 + 1) / 2 * th
-    bw = (1 - u) / 2
-    a1 = rng.uniform(-jag, jag, N)[:, None]
-    a2 = rng.uniform(-jag, jag, N)[:, None]
-    f2 = rng.uniform(1.5, 4.0, N)[:, None]
-    P[:, :, 0] += (a1 * vz + a2 * np.sin(vz * f2 + a1 * 50)) * bw ** 3
-    if comb > 0:
-        P[:, :, 0] += rng.uniform(-comb, comb * 0.4, N)[:, None] * ((u + 1) / 2) ** 3 \
-                      + rng.uniform(-comb, comb, N)[:, None] * 0.4 * vz * ((u + 1) / 2) ** 3
-    P[:, :, 1] += rng.uniform(0, curl, N)[:, None] * bw ** 2 + rng.uniform(-cup, cup, N)[:, None] * vz ** 2
-    return P
-
-
-def shake_local(rng, L, W, tb=(0.025, 0.035), tt=0.008, comb=0.0, T=None):
-    """Split shake (T_SHK2): x = length (butt at -L/2), y = thickness from the bed up, z = width.
-    Thickness tapers from a 2.5-3.5 cm butt to a 0.8 cm head; split, tapered outline (each long edge
-    wanders +-2 cm and the head is narrower); slight cup or crown; ragged, uneven butt."""
-    N = len(L)
-    T = T_SHK2 if T is None else T
-    h = np.stack([L / 2, np.full(N, 0.01), W / 2], 1)
-    P = rbox(T, h, np.stack([np.full(N, 0.005), np.full(N, 0.003), np.full(N, 0.005)], 1))
-    u = P[:, :, 0] / h[:, None, 0]               # -1 butt .. +1 head
-    s = (u + 1) / 2                               # 0 butt .. 1 head
-    vz = P[:, :, 2] / h[:, None, 2]               # -1 .. 1 across
-    tbv = rng.uniform(*tb, N)
-    th = tbv[:, None] + (tt - tbv)[:, None] * s
-    P[:, :, 1] = (P[:, :, 1] / 0.01 + 1) / 2 * th
-    # outline: head narrower, each edge wanders independently (split timber)
-    taper = rng.uniform(0.0, 0.16, N)[:, None]
-    e1 = rng.uniform(-0.02, 0.02, (N, 3))
-    e2 = rng.uniform(-0.02, 0.02, (N, 3))
-    def edge(e):
-        return e[:, 0:1] * s + e[:, 1:2] * np.sin(s * PI) + e[:, 2:3] * np.sin(s * 2 * PI) * 0.5
-    side = np.where(vz > 0, 1.0, -1.0)
-    wid = (1 - taper * s) * np.abs(P[:, :, 2])
-    # edges only ever wander inward (split timber never grows into its neighbour -> no interpenetration;
-    # the widened gaps show the offset under-layer)
-    off = -np.abs(np.where(vz > 0, edge(e1), edge(e2))) * np.clip(np.abs(vz), 0, 1)
-    P[:, :, 2] = side * (wid + off)
-    # ragged butt: piecewise steps across the width
-    k = rng.uniform(-0.025, 0.02, (N, 4))
-    zi = np.clip(((vz + 1) / 2 * 3.999).astype(int), 0, 3)
-    jag = np.take_along_axis(k, zi, 1)
-    P[:, :, 0] += jag * np.clip(1 - s * 2.5, 0, 1)
-    if comb > 0:
-        P[:, :, 0] += rng.uniform(-comb, comb * 0.4, N)[:, None] * s ** 3
-    # cup / crown and a slight curl at the butt
-    P[:, :, 1] += rng.uniform(-0.006, 0.008, N)[:, None] * (vz ** 2 - 0.33) + \
-        rng.uniform(0, 0.01, N)[:, None] * np.clip(1 - s * 3, 0, 1) ** 2
-    return P
+def kit_shakes(rng, L, W, comb=0.0, n_len=9):
+    """N long split shakes from the ONE village generator (village_kit.shingles.shake_mesh, SIZE_TABLE['shake']:
+    2.5-3.5 cm butt tapering to 0.8 cm, ragged stepped butt, edges wandering inward, cup, jagged comb head) in the
+    apron frame: x along the slope (butt at -L/2), y up from the bed, z across.  L is the MODELLED length (the
+    exposure plus the lap that shows at the course gaps; the head under the next course is not built, producer
+    note 6) and W the width.  The bed face and the covered head end are dropped (the sarking shell is under every
+    shake).  Returns (P (N, nv, 3), template)."""
+    Ps, F, nv, nl, nx = [], None, 0, n_len, 5
+    for l_, w_ in zip(L, W):
+        V, faces, _ = shingles.shake_mesh(rng, L=float(l_), W=float(w_), comb=comb, n_len=n_len)
+        Ps.append(np.stack([V[:, 1] - l_ / 2, V[:, 2], V[:, 0]], -1))
+        F, nv = faces[0], len(V)
+    off = nl * nx
+    bed = (F >= off).all(1)                                   # the bed face lies on the sarking
+    head = ((F % off) // nx == nl - 1).all(1)                 # the head end is under the course above
+    T = mesh_tmpl([F[~bed & ~head]], nv, top=np.arange(off))
+    return np.array(Ps), T
 
 
 def apron_wave(phi):
@@ -216,7 +176,7 @@ def build_apron(g, parts):
             widths, gaps = [], []
             tot = 0
             while tot < C:
-                widths.append(rng.uniform(0.14, 0.22))
+                widths.append(rng.uniform(*shingles.SIZE_TABLE["shake"]["width"]))
                 gaps.append(rng.uniform(0.005, 0.015))
                 tot += widths[-1] + gaps[-1]
             widths = np.array(widths) * C / tot
@@ -238,8 +198,7 @@ def build_apron(g, parts):
                 comb = 0.04
             sbb = sb - (0.04 if layer == 0 else 0.0) - (0.045 if ci == 0 else 0.0) + rng.uniform(-0.02, 0.02, N)
             W = widths * rng.uniform(0.93, 1.0, N)
-            Tsh = T_SHK2_O               # the sarking runs out past every eave butt, so no bed face is ever seen
-            P = shake_local(rng, L, W, comb=comb, T=Tsh)
+            P, Tsh = kit_shakes(rng, L, W, comb=comb)    # the sarking runs out past every eave butt
             # a few slipped shakes (2-3 %) hang 4-7 cm low instead of leaving holes
             slip = rng.random(N) < 0.025
             sbb = sbb - np.where(slip, rng.uniform(0.04, 0.07, N), 0.0)

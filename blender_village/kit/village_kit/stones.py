@@ -1196,3 +1196,15 @@ STYLES.update({
     "coursed": dict(fn="coursed_batch", needs_half=False),
     "coursed_poly": dict(fn="poly_rubble_stone", needs_half=False),
 })
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# kit 1.2.0 (tower windmill migration): the mill's vectorised split-stone language (village_kit.split_stones).
+# split_batch(rng, L, H, D, style) lays N stones of one template topology per call (the drum's ~9k stones);
+# make_stone("split_rubble" / "split_dressed" / ..., rng, half=(a, b, c)) builds one of them.
+# ---------------------------------------------------------------------------------------------------------------
+from .split_stones import (SPLIT_STYLES, split_batch, split_rubble, split_footing, split_pin,  # noqa: E402,F401
+                           split_dressed, split_hero, split_ashlar, split_flag)
+
+STYLES.update({"split_" + _k: dict(fn="split_" + _k, needs_half=True)
+               for _k in ("rubble", "footing", "pin", "dressed", "hero", "ashlar", "flag")})

@@ -80,6 +80,10 @@ The full text is in the art bible's producer notes and the per-building logs.
 
 Tested target: Windows 10/11, AMD Ryzen 5 5600X, RTX 3060 12 GB.
 
+**Blender version.** Keep the installed Blender 5.2 for viewing. The pipeline runs on **Blender 5.1.2 as a Python module** in its own venv, which does not touch the 5.2 install. 5.1.2 keeps the builds bit-identical to the signed-off versions.
+- 5.1.2 files open fine in 5.2.
+- Moving the pipeline to 5.2 later is a separate, deliberate task: rebuild everything and diff the results.
+
 1. **Install Git, and Python 3.13 (64-bit).** `bpy` 5.1 wheels require Python 3.13.
 2. **Clone the branch:**
    ```

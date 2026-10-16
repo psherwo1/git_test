@@ -164,9 +164,33 @@ async function heroGate(id, firstRound, phaseName) {
 // ---------- Phase: Migrate heroes (resume) ----------
 // args.hero_results: results already obtained in the cloud session (kept as-is).
 // args.heroes_to_gate: [{id, round}] heroes whose kit gate still needs to run, starting by GRADING that round.
+// args.heroes_to_migrate: [{id, round, components, ensemble, corrections, resume_note}] heroes whose kit migration
+// was interrupted; the migrator continues from the files on disk, then the hero goes through its gate.
 phase('Migrate heroes')
+function migrate(id, notes) {
+  return agent(`You are a senior technical artist on a film team. Move the signed-off hero "${id}" onto the shared kit ${KIT}/village_kit/ (read its README.md and CHANGELOG.md first; the roundhut is already migrated — use it as the pattern).
+${REFS}
+Read ${ROOT}/director/art_bible.md (producer notes 1-11), ${ROOT}/director/spec_${id}.md, the end of ${ROOT}/director/log_${id}.md (CLIENT CORRECTIONS), and ${ROOT}/director/ensemble_log.md.
+Tasks:
+1. Replace this building's private stone, shingle/shake, Mask, palette and pooling code with the kit's shared modules. Add this building's reusable parts to village_kit/components/ as parameterised functions (${notes.components}). Keep a kit_set() and a variant switch that builds a convincingly different variant.
+2. Apply the ensemble consistency fix: ${notes.ensemble}
+3. Apply producer note 11 (drop sub-threshold modelled relief except the entrance exception; DECAL_ANCHORS + decal_anchors.json).
+4. Keep every phase-1 quality and CLIENT CORRECTION${notes.corrections}. The result must not look worse than ${ROOT}/buildings/${id}/signoff_phase1/ — compare renders side by side.
+5. Render into ${ROOT}/renders/${id}/round_${pad(notes.round)} (all views, --samples 32), plus the variant into round_${pad(notes.round)}/kit_variant/. Append "## Round ${notes.round} — builder entry (kit migration)" to the log.
+
+${TECH}
+Return the structured report.`, { label: `migrate:${id}`, phase: 'Migrate heroes', schema: WORK_SCHEMA, effort: 'high' })
+}
+
 const priorHeroResults = (args && args.hero_results) || []
-const gated = await parallel(((args && args.heroes_to_gate) || []).map(h => () => heroGate(h.id, h.round, 'Migrate heroes')))
+const gated = await parallel([
+  ...((args && args.heroes_to_gate) || []).map(h => () => heroGate(h.id, h.round, 'Migrate heroes')),
+  ...((args && args.heroes_to_migrate) || []).map(h => async () => {
+    const m = await migrate(h.id, { ...h, components: h.components + (h.resume_note ? `. NOTE: ${h.resume_note}` : '') })
+    if (!m) return { id: h.id, signed_off: false, error: 'migration failed' }
+    return heroGate(h.id, h.round, 'Migrate heroes')
+  }),
+])
 const heroResults = priorHeroResults.concat(gated.filter(Boolean))
 const core = { summary: 'kit core built in the cloud session; see kit/village_kit/README.md and CHANGELOG.md' }
 
