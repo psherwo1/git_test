@@ -1,6 +1,6 @@
 # Production plan: village buildings
 
-## Phase 1: hero buildings (in progress)
+## Phase 1: hero buildings (all three signed off on 2026-10-16; ensemble review in progress)
 
 **Buildings:**
 - hilltop keep
@@ -51,5 +51,6 @@ Target: populate a village of 40-50 buildings.
 |---|---|---|---|---|
 | tower_windmill | 6 | 9.1 | upheld | 2026-10-16 |
 | hilltop_keep | 6 | 8.4 | upheld | 2026-10-16 |
+| wattle_roundhut | 7 | 8.5 | upheld (round 6 at 8.3 was rejected) | 2026-10-16 |
 
 Sign-off rules in force: pass mark 8.2 (client, "for now"), producer notes 1-10, and all client corrections.
