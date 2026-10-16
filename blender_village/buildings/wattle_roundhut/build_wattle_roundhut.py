@@ -701,7 +701,7 @@ Z_MIN = -0.045               # lowest point (apron outer band); nothing deeper t
 R_WALL = 3.50                 # wattle centre line / post centre line
 WALL_POST_AZ_DOOR = math.radians(21.0)
 N_POSTS = 14
-Z_WATTLE0 = 0.40
+Z_WATTLE0 = 0.345            # director r2: ref2's plinth is one course of low stones (~0.3 m visible)
 PITCH = math.radians(51.0)
 R_EAVE = 4.13                 # roof reference surface radius at the eave
 Z_EAVE = 2.395                # roof reference surface height at the eave
@@ -1132,7 +1132,7 @@ def build_posts(coll):
     acc = Acc("HUT_posts", 15)          # low angle: adze-flat edges crisp, 48-gon stays smooth
     rng = np.random.RandomState(202)
     for i, az in enumerate(POST_AZ):
-        b = az_pt(az, R_WALL, 0.362)
+        b = az_pt(az, R_WALL, PLINTH_TOP - 0.012)
         tp = az_pt(az, R_WALL, PLATE_BOT + 0.01)
         round_post(acc, b, tp, rng.uniform(0.10, 0.12), rng, check=(i % 3 == 1))
     acc.build(coll)
@@ -1235,8 +1235,8 @@ def _runs(mask):
 
 
 def weave_panel(rods, stakes_acc, pathf, s0, s1, z0, z1, seed, hide=None, n_stakes=None, stake_bottom=None,
-                slant=0.0, rod_r=(0.0125, 0.019), gap=(0.003, 0.02), stake_r=(0.015, 0.02), trim=(0.0, 0.0),
-                junctions=True, lean=1.5, stake_sp=0.40, stake_back=0.016):
+                slant=0.0, rod_r=(0.0125, 0.019), gap=(-0.004, 0.01), stake_r=(0.014, 0.018), trim=(0.0, 0.0),
+                junctions=True, lean=1.5, stake_sp=0.40, stake_back=0.022):
     """woven panel between s0 and s1 (post / jamb centres; rods end `trim` inside them).
     Spec amendment r2: thin stakes (dia 3-4 cm) ~0.38-0.50 m apart, jittered +-4 cm and leaning
     +-1.5 deg, mostly hidden behind the rods; rods dia 2.5-3.8 cm with 0.5-2.5 cm dark gaps between
@@ -1343,8 +1343,8 @@ def weave_panel(rods, stakes_acc, pathf, s0, s1, z0, z1, seed, hide=None, n_stak
                     kp += rng.uniform(0.3, 0.6)
                 if z > EAVE_SHADOW_Z:
                     dense = (st[:, None] + np.array([-0.045, 0.0, 0.045])[None, :]).ravel()
-                    extra = [kp_ for kp_ in kpos]
-                    step_ = 0.08
+                    extra = []
+                    step_ = 0.1
                 else:
                     dense = (st[:, None] + np.array([-0.06, -0.04, -0.02, 0.0, 0.02, 0.04, 0.06])[None, :]).ravel()
                     extra = [kp_ + d for kp_ in kpos for d in (-0.01, 0.0, 0.01)]
@@ -1358,8 +1358,8 @@ def weave_panel(rods, stakes_acc, pathf, s0, s1, z0, z1, seed, hide=None, n_stak
                 if n < 3:
                     continue
                 # per-rod drift: +-1 rod diameter at 0.5-1 m wavelength, plus kinks at side shoots
-                wl = rng.uniform(0.5, 1.0)
-                drift = 0.9 * 2 * rr0 * n2(ss / wl, np.full(n, rseed * 0.37), 7000 + seed % 97) \
+                wl = rng.uniform(0.35, 0.75)
+                drift = 1.2 * 2 * rr0 * n2(ss / wl, np.full(n, rseed * 0.37), 7000 + seed % 97) \
                     + 0.003 * n2(ss * 4.0, np.full(n, rseed * 0.71), 7100 + seed % 89)
                 for kp_ in kpos:
                     if rng.rand() < 0.55:
@@ -1407,13 +1407,17 @@ def weave_panel(rods, stakes_acc, pathf, s0, s1, z0, z1, seed, hide=None, n_stak
                 oval = rng.uniform(0.8, 0.92)
                 # section arc: +-108 deg where the rod passes proud of its neighbours (in front of a stake,
                 # top & bottom glimpsed), +-72 deg where it is level with or behind them (occluded)
-                proud = np.clip(off / np.maximum(Ak.mean(), 1e-3), 0, 1)
-                if junction_piece or steep:
-                    proud = np.ones(n)
-                if z > EAVE_SHADOW_Z:            # deep in the eave shadow: lighter section
-                    lo_a, hi_a = 55.0 + 22.0 * proud, 70.0 + 22.0 * proud
-                else:                            # undersides are glimpsed less than tops
-                    lo_a, hi_a = 62.0 + 34.0 * proud, 76.0 + 32.0 * proud
+                proud = np.clip((off - rho.mean()) / np.maximum(Ak.mean(), 1e-3), 0, 1)
+                if junction_piece:
+                    proud = np.maximum(proud, 0.5)
+                if steep:                        # recessed rope-weave door panels
+                    lo_a, hi_a = np.full(n, 58.0), np.full(n, 80.0)
+                elif z > EAVE_SHADOW_Z:          # deep in the eave shadow: lighter section
+                    lo_a, hi_a = 50.0 + 20.0 * proud, 62.0 + 22.0 * proud
+                elif z < 1.55:                   # below eye level: undersides face away from every viewer
+                    lo_a, hi_a = 46.0 + 30.0 * proud, 78.0 + 30.0 * proud
+                else:                            # above eye level: tops face away from most viewers
+                    lo_a, hi_a = 62.0 + 34.0 * proud, 68.0 + 30.0 * proud
                 arc_n = -np.radians(lo_a)[:, None] + (np.radians(lo_a + hi_a))[:, None] * np.linspace(0, 1, len(ROD_ARC))[None, :]
                 for (ra, rb) in _runs(vis):
                     if rb - ra < 3:
@@ -1606,7 +1610,7 @@ def build_daub(coll):
         rng = np.random.RandomState(4400 + bay)
         sb0, sb1 = bay_s(bay)
         s0, s1 = sb0 + 0.04, sb1 - 0.04
-        zlo, zhi = 0.42, WATTLE_TOP + 0.02
+        zlo, zhi = Z_WATTLE0 + 0.02, WATTLE_TOP + 0.02
         # crop to where the daub exists
         Sc, Zc = np.meshgrid(np.linspace(s0, s1, 120), np.linspace(zlo, zhi, 160), indexing="ij")
         fc = field(Sc, Zc)
@@ -1985,7 +1989,7 @@ def shingle_variant(k):
 SH_VARIANTS = [shingle_variant(k) for k in range(16)]
 
 
-def shingle_mesh(W, L, var, Th=0.01, curl=None, ys=None):
+def shingle_mesh(W, L, var, Th=0.01, curl=None, ys=None, bottom=True, head=True):
     """one shingle in local coords: x across (W), y from butt (0) to head (L), z up (0..thickness).
     Section loop: 6 top points (cup), rounded side edges, ONE bottom strip (the underside lies on the
     course below and is never seen), n-gon end caps.  Thickness tapers as on a full 0.72 m shingle,
@@ -2017,8 +2021,12 @@ def shingle_mesh(W, L, var, Th=0.01, curl=None, ys=None):
     i = np.arange(n - 1)[:, None]
     j = np.arange(m)[None, :]
     j1 = (j + 1) % m
-    F = [np.stack([i * m + j, i * m + j1, (i + 1) * m + j1, (i + 1) * m + j], -1).reshape(-1, 4),
-         np.arange(m)[::-1][None, :] * 1, ((n - 1) * m + np.arange(m))[None, :]]
+    jj = j if bottom else j[:, SH_LOOP_Z[j[0]] + SH_LOOP_Z[j1[0]] > 0]       # drop the underside strip
+    jj1 = (jj + 1) % m
+    F = [np.stack([i * m + jj, i * m + jj1, (i + 1) * m + jj1, (i + 1) * m + jj], -1).reshape(-1, 4),
+         np.arange(m)[::-1][None, :] * 1]
+    if head:
+        F.append(((n - 1) * m + np.arange(m))[None, :])
     uv = np.stack([V[:, 0] / max(W, 1e-3) + 0.5, V[:, 1]], -1)
     return V, F, uv
 
@@ -2059,8 +2067,8 @@ def build_shingles(coll):
     B_WEDGE = 0.066
     OV = 0.065
 
-    def place(acc_, th_c, s_b, W, L, var, phi, lift, curl, base_fn, ys=None):
-        Pl, F, uv = shingle_mesh(W, L, var, curl=curl, ys=ys)
+    def place(acc_, th_c, s_b, W, L, var, phi, lift, curl, base_fn, ys=None, closed=True):
+        Pl, F, uv = shingle_mesh(W, L, var, curl=curl, ys=ys, bottom=closed, head=closed)
         x, y, z = Pl[:, 0], Pl[:, 1], Pl[:, 2]
         c, s_ = math.cos(phi), math.sin(phi)
         xr = x * c - y * s_
@@ -2166,17 +2174,20 @@ def build_shingles(coll):
             dd_door = abs(float(np.angle(np.exp(1j * (thc + np.pi / 2)))))
             door_eave = (k < 4) and dd_door < 1.0 and (0.03 < r["ri"] < 0.13)
             n_full += r["full"]
+            # underside (lies on the course below) and head end (under the course above) are only
+            # modelled where they can be seen: eave courses, full-length shingles, slipped ones
+            closed = k < 2 or r["full"] or r["slip"] > 0
             if (0.03 < r["ri"] < 0.045 or door_eave) and Wi > 0.34:      # split into two pieces
                 g = 0.012
                 wa = Wi * rng.uniform(0.4, 0.6)
                 wb = Wi - wa - g
                 tha = thc - (Wi / 2 - wa / 2) / rb
                 thb = thc + (Wi / 2 - wb / 2) / rb
-                place(acc, tha, sb, wa, L, var, phi - 0.02, lift, curl, base_fn)
-                place(acc, thb, sb + 0.01, wb, L - 0.01, var, phi + 0.025, lift + 0.004, curl, base_fn)
+                place(acc, tha, sb, wa, L, var, phi - 0.02, lift, curl, base_fn, closed=closed)
+                place(acc, thb, sb + 0.01, wb, L - 0.01, var, phi + 0.025, lift + 0.004, curl, base_fn, closed=closed)
                 n_total += 2
                 continue
-            place(acc, thc, sb, Wi, L, var, phi, lift, curl, base_fn)
+            place(acc, thc, sb, Wi, L, var, phi, lift, curl, base_fn, closed=closed)
             n_total += 1
     log("shingles:", n_total, "full-length (covered part visible):", n_full)
     SHINGLE_TOP["V"] = np.concatenate(acc.V + st_acc.V)
@@ -2308,6 +2319,7 @@ def build_collar_finial(coll):
 # plinth, rubble, apron, path
 # =============================================================================================
 R_PL_FACE = 3.76            # plinth outer face line (rough wall line, +-4 cm)
+PLINTH_TOP = 0.33
 STEP_C = (0.04, FRONT_Y - 0.50)       # step stone centre (x, y)
 APRON_RIM = 4.62
 R_FLOOR_EDGE = 3.36         # inside this radius the ground is the interior earth floor
@@ -2612,8 +2624,8 @@ def build_path(coll):
         else:
             V, F = shell_stone(fl["hu"], fl["hv"], rng, "flag", fl["th"], rr=(0.005, 0.03), dome=0.008,
                                tilt=math.tan(math.radians(rng.uniform(1, 3))) / 1.4, n_frac=2,
-                               frac_depth=(0.012, 0.03), frac_k=(0.003, 0.006), n_facet=1, n_th=60, noise=0.006,
-                               freq=4.0, side_bulge=0.004, thick_var=0.2, sm_scale=0.6,
+                               frac_depth=(0.012, 0.03), frac_k=(0.003, 0.006), n_facet=2, n_th=60, noise=0.009,
+                               freq=3.5, side_bulge=0.004, thick_var=0.2, sm_scale=0.6,
                                face_fr=(0.0, 0.3, 0.55, 0.75, 0.9))
         V[:, 2] += fl["top"] - V[0, 2]
         add_shell(acc, V, F, "plan", rotz(fl["rot"]), (fl["c"][0], fl["c"][1], 0.0), "M_stone")
@@ -2665,19 +2677,19 @@ def build_plinth(coll):
 
     for i, (ac, L) in enumerate(stones):
         near_post = min(abs(np.angle(np.exp(1j * (ac - pa)))) for pa in post_az) * r_c < L / 2 + 0.05
-        top = rng.uniform(0.37, 0.41) if not near_post else rng.uniform(0.375, 0.39)
+        top = PLINTH_TOP + (rng.uniform(-0.015, 0.025) if not near_post else rng.uniform(-0.005, 0.008))
         bot = -0.035
         two = (rng.rand() < 0.5) and L > 0.46 and not near_post
         kind = kinds[rng.randint(len(kinds))] if not near_post else "trap"
         depth_face = plinth_face_r(ac) - (R_WALL - 0.06)            # face -> just behind the wattle line
-        rr = (rng.uniform(0.01, 0.045), rng.uniform(0.02, 0.06))
+        rr = (rng.uniform(0.008, 0.035), rng.uniform(0.015, 0.05))
         rr = (min(rr), max(rr))
         if not two:
             H = top - bot
             V, F = shell_stone(L / 2, H / 2, rng, kind, depth_face, rr=rr, dome=rng.uniform(0.02, 0.045),
                                tilt=math.tan(math.radians(rng.uniform(5, 15))) / 1.4, n_frac=rng.randint(1, 3),
                                frac_depth=(0.04, 0.08), frac_k=(0.003, 0.006), n_facet=rng.randint(2, 4),
-                               noise=0.006, freq=6.0, side_bulge=rng.uniform(0.0, 0.008), sm_scale=0.4, n_th=56,
+                               noise=0.006, freq=6.0, side_bulge=0.0, sm_scale=0.25, n_th=56,
                                face_fr=(0.0, 0.25, 0.45, 0.62, 0.78, 0.9))
             V[:, 1] *= 1.0
             place(V, F, ac, bot, face_off=rng.uniform(-0.015, 0.02),
@@ -2685,12 +2697,12 @@ def build_plinth(coll):
             placed.append((ac, top, L, None))
         else:
             n_two += 1
-            lo_top = rng.uniform(0.18, 0.25)
+            lo_top = rng.uniform(0.15, 0.21)
             H = lo_top - bot
             V, F = shell_stone(L / 2, H / 2, rng, rng.choice(["trap", "D"]), depth_face, rr=rr,
                                dome=rng.uniform(0.02, 0.04), tilt=math.tan(math.radians(rng.uniform(5, 12))) / 1.4,
                                n_frac=rng.randint(1, 3), frac_depth=(0.04, 0.07), frac_k=(0.003, 0.006),
-                               n_facet=rng.randint(1, 3), noise=0.006, freq=6.0, side_bulge=0.005, sm_scale=0.4,
+                               n_facet=rng.randint(1, 3), noise=0.006, freq=6.0, side_bulge=0.0, sm_scale=0.25,
                                n_th=52)
             place(V, F, ac, bot, face_off=rng.uniform(0.0, 0.02), rot=(rng.uniform(-0.03, 0.03), 0.0, 0.0))
             Lu = L * rng.uniform(0.55, 0.75)
@@ -2801,9 +2813,9 @@ def apron_phi(X, Y):
     th = np.arctan2(Y, X)
     edge_r = (5.1 + 0.12 * ring_noise(th, 1113, 9, 1.0, 0.6) + 0.05 * ring_noise(th, 1114, 45, 1.0, 0.2))
     phi_ring = edge_r - r
-    wx = 1.5 + 0.12 * n2(Y * 1.5, 0.3, 1131) - np.abs(X)
-    wy = Y + 7.45 - 0.1 * n2(X * 2, 0.7, 1132)
-    phi_path = np.where(Y < -3.0, smin(wx, wy, 0.35), -1.0)
+    wx = 1.45 + 0.28 * n2(Y * 0.9, 0.3, 1131) + 0.08 * n2(Y * 3.1, 1.3, 1133) - np.abs(X + 0.15 * n2(Y * 0.5, 2.1, 1134))
+    wy = Y + 7.35 - 0.18 * n2(X * 1.2, 0.7, 1132)
+    phi_path = np.where(Y < -3.0, smin(wx, wy, 0.6), -1.0)
     return np.maximum(phi_ring, phi_path)
 
 
