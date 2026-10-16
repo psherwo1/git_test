@@ -959,6 +959,40 @@ def _vis_worker(chunk):
     return hidden
 
 
+def _vis_spawn_init(Vw, T, own):
+    """worker initialiser for platforms without fork (Windows): rebuild the BVH once per worker process."""
+    from mathutils.bvhtree import BVHTree
+    bvh = BVHTree.FromPolygons(Vw.tolist(), T.tolist(), all_triangles=True, epsilon=0.0)
+    _VIS.update(bvh=bvh, V=Vw, T=T, own=own)
+
+
+def _vis_spawn_pool(procs, Vw, T, own):
+    """spawn workers inherit the parent's sys.path; after `import bpy` that path puts Blender's internal
+    scripts/modules/bpy (which needs the compiled _bpy) ahead of the real bpy package, so the workers start with the
+    pre-bpy path and import the bpy module themselves."""
+    import multiprocessing as mp
+    import os
+    import sys
+    saved = list(sys.path)
+    norm = [os.path.normcase(p) for p in saved]
+    blender = (os.path.normcase(os.sep + "bpy" + os.sep), os.path.normcase("Blender Foundation"))
+    sys.path[:] = [p for p, n in zip(saved, norm)
+                   if not (blender[0] in n and os.path.normcase(os.sep + "scripts") in n) and blender[1] not in n]
+    try:
+        pool = mp.get_context("spawn").Pool(procs, initializer=_vis_spawn_init, initargs=(Vw, T, own))
+    finally:
+        sys.path[:] = saved
+    return pool
+
+
+def _vis_spawn_worker(args):
+    from mathutils import Vector
+    views_np, chunk = args
+    _VIS["views"] = [Vector(tuple(map(float, v))) for v in views_np]
+    _VIS["views_np"] = views_np
+    return _vis_worker(chunk)
+
+
 def review_views(lo, hi):
     """the exterior viewpoints the review tool's hidden-triangle estimate uses (eye-level rings at 1.4 / 2.5 x
     the half-size, a mid ring, crane and aerial rings, a top view), from the scene bounds lo / hi."""
@@ -1052,6 +1086,8 @@ def visibility_cull(targets, extra_views=(), procs=3, extra_by_target=None, obje
     bvh = BVHTree.FromPolygons(Vw.tolist(), T.tolist(), all_triangles=True, epsilon=0.0)
     _VIS.update(bvh=bvh, V=Vw, T=T, own=own)
     log(f"  visibility: {nt} tris, {len(base)} viewpoints")
+    has_fork = "fork" in mp.get_all_start_methods()
+    spawn_pool = None                         # Windows: one spawn pool per call, BVH rebuilt once per worker
     total = 0
     for name in targets:
         if name not in tri_base:
@@ -1069,11 +1105,23 @@ def visibility_cull(targets, extra_views=(), procs=3, extra_by_target=None, obje
         groups = np.split(order + t0, bounds)
         items = [(int(own[g_[0]]), [int(x) for x in g_]) for g_ in groups]
         chunks = [items[i::procs * 8] for i in range(procs * 8)]
-        try:
-            with mp.get_context("fork").Pool(procs) as pool:
-                res = pool.map(_vis_worker, chunks)
-        except Exception as ex:                                   # no fork available: single process
-            log("  (visibility: single process)", ex)
+        res = None
+        if has_fork:
+            try:
+                with mp.get_context("fork").Pool(procs) as pool:
+                    res = pool.map(_vis_worker, chunks)
+            except Exception as ex:
+                log("  (visibility: fork failed)", ex)
+        else:
+            try:
+                if spawn_pool is None:
+                    spawn_pool = _vis_spawn_pool(procs, Vw, T, own)
+                VN = _VIS["views_np"]
+                res = spawn_pool.map(_vis_spawn_worker, [(VN, c_) for c_ in chunks])
+            except Exception as ex:
+                log("  (visibility: spawn failed)", ex)
+        if res is None:                                           # single process (same chunks, same result)
+            log("  (visibility: single process)")
             res = [_vis_worker(c_) for c_ in chunks]
         hid = sorted(set(int(h) for r_ in res for h in r_))
         base_id = int(own[t0]) - int(lp[0])
@@ -1092,6 +1140,9 @@ def visibility_cull(targets, extra_views=(), procs=3, extra_by_target=None, obje
         ob.data.update()
         total += len(pids)
         log(f"  visibility cull {name}: -{len(pids)} of {len(groups)} polygons")
+    if spawn_pool is not None:
+        spawn_pool.close()
+        spawn_pool.join()
     return total
 
 

@@ -1,0 +1,201 @@
+﻿diff --git a/blender_village/kit/CHANGELOG.md b/blender_village/kit/CHANGELOG.md
+index f964ae4..7b4de16 100644
+--- a/blender_village/kit/CHANGELOG.md
++++ b/blender_village/kit/CHANGELOG.md
+@@ -18,6 +18,45 @@
+ 
+ ---
+ 
++## 1.6.0, keep part (2026-10-16): note-11 crisp wing thatch, slim eave lip, roll-end pointing, turret cover refine (KEEP builder, round 10)
++
++Fixes the sign-off audit of keep round 9 (director 8.6).  Every change is a new function or an optional parameter
++whose default reproduces kit 1.5.0 exactly; only the keep passes the new options (no other building imports
++`components.thatch`).
++
++### New functions
++
++- `thatch.roll_profile_scaled(sq=0.75, sv=0.80)`: the eave-roll section scaled about the eave-lip point (underside
++  stays on the 2.40 m line).
++- `thatch._point_roll_ends(...)` (private, used by `build_wing_structure(point_roll_ends=True)`): an `M_mortar` bead
++  (4 x 3.4 cm) along each W roll end's real contact line with the turret stone, plus a pointing strip (11 cm up the
++  stone, bedded 3.5 cm) over the lowest 0.35 m of the flaunching band at each roll end.
++- `thatch._eave_cover_fn(obs)` (private): builds the `FR.TUR_CULL_FN` refinement below from the built thatch.
++
++### New optional parameters (defaults = 1.5.0 behaviour)
++
++- `thatch.roll_top_mh(..., prof=None)`: another roll section.
++- `thatch.d_roll(..., butts=None, round_end=False)`: `butts=(len_rng, step_rng)` lays the roll face as bundle butts
++  (log-uniform lengths, alternating levels differing by step_rng >= 2 cm, 3 cm transitions, no crowns / bindings),
++  no butt joints on tight bends (hip corners), butts faded out before the end tapers; `round_end` shrinks the end
++  taper about the visible section's bbox centre (round end, no beak).
++- `thatch.thatch_courses(..., crisp=False, remnant_min=0.9, butt_step=(0.02, 0.03))`: with `layered`, crisp drops
++  every sub-2-cm relief (crowns, creases, inner-lobe crowns, the 0.4-1 cm crowned exposure) and gives each clump
++  its own butt thickness (neighbours differ by butt_step); bounded course remnants shorter than remnant_min sink.
++- `thatch.tuft_skirt(..., prof=None, end_fade=0.3, end_scale=1.0)`: roll section, end fade length, and (when
++  end_scale != 1) tufts <= 4 cm wide / <= 4 cm drop within end_fade of the roll ends.
++- `thatch.build_wing_roof(..., crisp=None)` / `thatch_wing_roof(..., crisp=None)`: a dict of crisp-lip options
++  (`roll`, `m0`, `butts`, `butt_step`, `taper`, `tmin`, `core_drop`, `core_eave`, `remnant_min`, `fringe`); when set
++  it also publishes `FR.ROLL_TOP_M/H` for the scaled roll and `FR.TUR_CULL_FN`.
++- `thatch.build_wing_structure(..., point_roll_ends=False)` / `thatch_junctions(..., point_roll_ends=False)`.
++- `turret.turret_cull`: if a component published `FR.TUR_CULL_FN(C, bad)`, the analytic thatch-cover cull is refined
++  by it (unset everywhere but the crisp keep, so 1.5.0 behaviour is unchanged).
++
++### Re-runs (to scratch; the deliverables were not overwritten)
++
++- tower_windmill: RERUN_MILL
++- wattle_roundhut: RERUN_HUT
++
+ ## 1.6.0, hut part (2026-10-16): strict decal-anchor gate, crisp door-bay break, split-facet plinth stones, fine-relief gates (HUT builder, round 11)
+ 
+ Fixes the sign-off audit of hut round 10 (director 8.8).  Every change is a new function / constant or an optional
+diff --git a/blender_village/kit/village_kit/components/thatch.py b/blender_village/kit/village_kit/components/thatch.py
+index 65993ae..689b6ae 100644
+--- a/blender_village/kit/village_kit/components/thatch.py
++++ b/blender_village/kit/village_kit/components/thatch.py
+@@ -219,6 +219,12 @@ def d_roll(acc, path, prof, vis, seed, rng, up=(0.0, 0.0, 1.0), var=0.03, sp=(0.
+         while bj[-1] < L:
+             bj.append(bj[-1] + float(np.exp(rng.uniform(np.log(butts[0][0]), np.log(butts[0][1])))))
+         bj = np.array(bj)
++        # no butt joint on a tight bend (the hip corners): the joints would fan into radial pleats there
++        T2_ = np.gradient(path[:, :2], axis=0)
++        ang_ = np.unwrap(np.arctan2(T2_[:, 1], T2_[:, 0]))
++        kap_ = np.abs(np.gradient(ang_)) / np.maximum(np.gradient(d), 1e-6)
++        kap_d = np.array([np.max(kap_[np.abs(d - s_) < 0.12], initial=0.0) for s_ in bj])
++        bj = bj[kap_d < 0.7]
+         nb_ = len(bj) + 1
+         hi_ = rng.uniform(*butts[1], nb_)
+         hi_ = hi_ + np.where(rng.uniform(size=nb_) < 0.3, rng.uniform(*butts[1], nb_), 0.0)
+@@ -229,6 +235,12 @@ def d_roll(acc, path, prof, vis, seed, rng, up=(0.0, 0.0, 1.0), var=0.03, sp=(0.
+             t_ = np.clip((st - b_ + 0.015) / 0.03, 0, 1)
+             boff = boff + (lev[k_ + 1] - lev[k_]) * t_ * t_ * (3 - 2 * t_)
+         boff = boff - 0.5 * float(np.mean(lev))   # centred on the nominal section (positive = stands out)
++        # the butts die out before the end tapers (a calm round end, no creases converging on it)
++        for k_, te_ in enumerate(taper):
++            if te_ > 0:
++                dist_ = st if k_ == 0 else L - st
++                r_ = np.clip((dist_ - 0.6 * te_) / (0.6 * te_), 0, 1)
++                boff = boff * (r_ * r_ * (3 - 2 * r_))
+     elif bundles is not None:
+         st = np.linspace(0, L, max(int(math.ceil(L / 0.025)), 2) + 1)
+         dd = np.zeros(len(st))
+@@ -786,9 +798,9 @@ def build_wing_roof(coll, seed=3, rng_seed=1313, bundled=False, layered=False, c
+     rng = np.random.default_rng(rng_seed)
+     if crisp is not None:
+         layered = True
+-        cz = dict(roll=(0.75, 0.80), m0=0.48, butts=((0.14, 0.55), (0.02, 0.03)), taper=0.32, tmin=0.35,
+-                  core_drop=0.30, remnant_min=1.8, butt_step=(0.02, 0.03),
+-                  fringe=dict(width=(0.03, 0.06), length=(0.025, 0.05), end_fade=0.6, end_scale=0.6))
++        cz = dict(roll=(0.75, 0.80), m0=0.48, butts=((0.14, 0.55), (0.02, 0.03)), taper=0.5, tmin=0.3,
++                  core_drop=0.30, core_eave=0.07, remnant_min=1.8, butt_step=(0.02, 0.03),
++                  fringe=dict(width=(0.03, 0.045), length=(0.02, 0.04), end_fade=0.6, end_scale=0.6))
+         cz.update(crisp)
+         roll_P, roll_V = roll_profile_scaled(*cz["roll"])
+         FR.ROLL_TOP_M, FR.ROLL_TOP_H = roll_top_mh(FR.CP_, FR.SP_, roll_P)
+@@ -834,7 +846,7 @@ def build_wing_roof(coll, seed=3, rng_seed=1313, bundled=False, layered=False, c
+     ztm = 0.25 * (Zt[:-1, :-1] + Zt[1:, :-1] + Zt[1:, 1:] + Zt[:-1, 1:])
+     keep = ~thatch_cull(np.stack([xm, ym, ztm], -1), tol_skirt=False)
+     keep &= ~(tur_dist(xm, ym, ztm) < -0.05)
+-    keep &= eave_q(xm, ym) > -0.01
++    keep &= eave_q(xm, ym) > (-0.01 if crisp is None else cz["core_eave"])
+     # top: drop cells under the course cover (probe the 4 corners and the centre)
+     covered = np.ones(xm.shape, bool)
+     for fx, fy in ((0.5, 0.5), (0.1, 0.1), (0.9, 0.1), (0.1, 0.9), (0.9, 0.9)):
+@@ -938,7 +950,41 @@ def build_wing_roof(coll, seed=3, rng_seed=1313, bundled=False, layered=False, c
+             else:
+                 nt += tuft_fringe(acc, P, np.random.default_rng(4040 + len(P)))
+     log(f"  eave fringe tufts {nt}")
+-    finalize(acc, coll, smooth_deg=70.0)
++    ob_t = finalize(acc, coll, smooth_deg=70.0)
++    if crisp is not None:
++        FR.TUR_CULL_FN = _eave_cover_fn([ob_c, ob_t])
++
++
++def _eave_cover_fn(obs, q_max=0.6, probe=0.08):
++    """kit 1.6.0: refine the turret's analytic thatch-cover cull in the eave zone (q < q_max) against the thatch
++    actually built: a stone centre is culled only if the thatch probe-metres outside it (radially from the turret)
++    stands above it; otherwise it is kept (no open joints / holes above a roll lower than thatch_low)."""
++    from mathutils import Vector
++    from mathutils.bvhtree import BVHTree
++    dg = bpy.context.evaluated_depsgraph_get()
++    trees = [BVHTree.FromObject(o, dg) for o in obs if o is not None]
++    cx, cy = FR.TUR_C
++
++    def fn(C, bad):
++        C = np.asarray(C, float)
++        bad = np.array(bad, bool, copy=True)
++        flat = C.reshape(-1, 3)
++        bf = bad.reshape(-1)
++        zone = bf & (eave_q(flat[:, 0], flat[:, 1]) < q_max)
++        for i in np.flatnonzero(zone):
++            x, y, z = flat[i]
++            dx, dy = x - cx, y - cy
++            rr = math.hypot(dx, dy) + 1e-9
++            px, py = x + dx / rr * probe, y + dy / rr * probe
++            top = None
++            for tr in trees:
++                hit = tr.ray_cast(Vector((px, py, z + 0.6)), Vector((0, 0, -1.0)), 1.2)
++                if hit[0] is not None and (top is None or hit[0].z > top):
++                    top = hit[0].z
++            if top is None or top < z + 0.01:
++                bf[i] = False
++        return bf.reshape(bad.shape)
++    return fn
+ 
+ 
+ def tuft_fringe(acc, P, rng, q_rng=(-0.07, 0.0), L_rng=(0.02, 0.06), sp=(0.004, 0.009), mat="M_thatch"):
+@@ -1548,16 +1594,29 @@ def _point_roll_ends(accm, accf, band, mortar_tube=None, bead=(0.02, 0.017), see
+         pts3, ups = np.array(pts3), np.array(ups)
+         d_roll(accm, pts3, ell, np.ones(len(ell)), seed + k_, prng, up=ups, var=0.004, ribs=False, step=0.02,
+                taper=(0.03, 0.03), tmin=(0.3, 0.3), mat="M_mortar", z_wave=0.0)
+-        # (2) pointing strip over the band near this end
+-        if len(band):
+-            dd_ = np.hypot(band[:, 0] - E[0], band[:, 1] - E[1])
+-            seg = band[dd_ < 0.45]
+-            if len(seg) >= 4:
+-                tseg = np.unwrap(np.arctan2(seg[:, 1] - cy, seg[:, 0] - cx))
+-                seg = seg[np.argsort(tseg)]
+-                nrm = np.column_stack([seg[:, 0] - cx, seg[:, 1] - cy, np.zeros(len(seg))])
+-                mortar_fillet(accm, seg + np.array([0.0, 0.0, 0.03]), nrm, seed + 50 + k_, h_up=0.10, out=0.045,
+-                              taper=(0.12, 0.12), smooth=True, bury=0.035)
++    # (2) pointing strip over the band where it drops down to the roll ends (the lowest 0.35 m of the band: the open
++    # turret joints and the band / roll-end crevices sit there)
++    if len(band) >= 4:
++        low_ = band[:, 2] < band[:, 2].min() + 0.35
++        runs_, cur_ = [], []
++        for i_ in range(len(band)):
++            if cur_ and np.linalg.norm(band[i_] - cur_[-1]) > 0.15:
++                runs_.append(np.array(cur_))
++                cur_ = []
++            if low_[i_]:
++                cur_.append(band[i_])
++            elif cur_:
++                runs_.append(np.array(cur_))
++                cur_ = []
++        if cur_:
++            runs_.append(np.array(cur_))
++        for k_, seg in enumerate(runs_):
++            if len(seg) < 4:
++                continue
++            nrm = np.column_stack([seg[:, 0] - cx, seg[:, 1] - cy, np.zeros(len(seg))])
++            mortar_fillet(accm, seg + np.array([0.0, 0.0, 0.03]), nrm, seed + 50 + k_, h_up=0.11, out=0.045,
++                          taper=(0.12, 0.12), smooth=True, bury=0.035)
++        log(f"  roll-end pointing strips: {sum(len(r) >= 4 for r in runs_)}")
+     log(f"  roll-end pointing: {len(ends)} ends")
+ 
+ 
+diff --git a/blender_village/kit/village_kit/components/turret.py b/blender_village/kit/village_kit/components/turret.py
+index 3b3071f..b198156 100644
+--- a/blender_village/kit/village_kit/components/turret.py
++++ b/blender_village/kit/village_kit/components/turret.py
+@@ -364,6 +364,11 @@ def turret_cull(C, wing_margin=0.0):
+     x, y, z = C[..., 0], C[..., 1], C[..., 2]
+     fp = (x > FR.WX_W - FR.W_OVH) & (x < FR.WX_E + FR.W_OVH) & (y > FR.WY_S - FR.W_OVH) & (y < FR.WY_N + FR.W_OVH)
+     bad = fp & (z > wing_under(x, y) - 0.06) & (z < thatch_low(x, y) - 0.02)
++    fn = getattr(FR, "TUR_CULL_FN", None)
++    if fn is not None:
++        # kit 1.6.0: a thatch component may refine the analytic cover test against the thatch it really built
++        # (keep round 10: the slim eave roll sits lower than thatch_low; stones above it are kept -- no holes)
++        bad = fn(C, bad)
+     bad |= in_wing(C, margin=wing_margin, zpad=0.0)
+     return bad
+ 

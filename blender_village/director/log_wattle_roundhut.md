@@ -1585,3 +1585,86 @@ The door-head soot's lower footprint row falls in the door opening. It failed th
 - The plinth stone bodies (curved facet_stone faces) still read slightly soft next to r07's fully scarred skin. The crispness now comes from the split facets only.
 - The door soot is 0.11 m tall. The visible lintel front between the opening and the eave is only about 13 cm.
 - Not done: the frame adze-hatching variety, the eave-patch thumbnail read, the daub budget coarsening, and the kit-variant re-render.
+
+## Round 11 — score 8.9/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_11/`, side by side with round_10 and with the crops `hut_overall`, `hut_door` and `hut_wattle_daub_plinth`.
+- 16 Director close-ups at 32 spp (review clay, sun and world) plus 3 upscaled crops in `round_11/director_extra/`: door_bay, door_bay_below (30° from below), door_bay_tele (actor camera at 135 mm), entrance_plinth, entrance_plinth_right, plinth_az42, lintel, door_depth, eave_patch, eave_patch_hero_tele, side_patch, back_low, left_flank_low, left_flank_hero_tele, roof_flank, apex; crop_actor_plinth_left/right and crop_hero_wall. Scripts: `dir_render_r11.py`, `dir_inspect_r11.py` (my r10 audit tightened to 4 cm), `dir_adze_r11.py` and `dir_adze2_r11.py` (ray-scan of the frame groove depth). Raw anchor audit: `inspect_r11.json`.
+- **Decal anchors.** `DECAL_ANCHORS` holds 98 empties that match `decal_anchors.json` one to one: position within 1 mm, empty +Z = json normal (dot 1.0), and all six custom properties on every empty. The json header states units, space and axes, plus the kit params and the validation block.
+  - My strict audit: **98 of 98 pass**. Every anchor has ≥ 7 of 9 footprint points on the declared slot within 4 cm, and a footprint-mean normal dot ≥ 0.971. All wall anchors have |n.z| ≤ 0.09.
+  - Counts: crack 31, moss 14, damp_rise 11, lichen 9, plaster_patch 8, water_streak 7, repair_patch 5, soot 5, grime 4, rust_stain 4. That is inside 40-120.
+  - Placement is plausible: damp_rise one per bay between the posts; moss at the plinth foot and on the north (+Y) shingle butts; lichen on plinth tops (none on the step); soot at the collar seep and now on the lintel front (DA_soot_005); water streaks under the collar drip and under the lintel ends; rust under the hinge straps; grime at hand height on the jambs; cracks at patch corners and settlement points ≥ 5 cm below the plate.
+  - The old DA_repair_patch_004 is gone. The new one at (−2.26, −2.76, 1.25) has normal (−0.63, −0.78, 0.00) and fp 9/9. DA_crack_030 is at z 2.38, fp 9/9. DA_damp_rise_005/006 are now clear of the posts.
+- **Ground dressing.** Not scored (producer note 10).
+- **Note-11 drops** (daub cracks, fine scars, chinking noise, step dish): not penalised.
+
+**Verdict.**
+- **PASS at 8.9.** It is better than round 10 (8.8) and the phase-1 sign-off (8.5), so the kit version stays a valid replacement for the phase-1 deliverable. It is ready for the phase-2 kit sign-off audit. It complies with producer notes 1-10:
+  - 876,619 tris; est_hidden_pct 7.4 %;
+  - 10 slots, all in the palette;
+  - `mask_attribute_missing` is empty;
+  - 124 objects;
+  - bbox 8.37 × 8.78 × 8.77 m, unchanged.
+- One marginal note-11 defect remains: the frame adze hatching (must-fix 1).
+- **What this round closed.** Both round-10 must-fixes, plus two nice-to-haves.
+  - **#1, the door-bay tabs.** The break now reads as straight, slightly tilted runs with stepped diagonal breaks (door_bay_r11, door_bay_tele_r11, actor_closeup.png x 60-280, y 480-500). There is no U notch and no rounded lobe. From 30° below (door_bay_below_r11) the coat shows a real broken face of about 5-6 cm. It now matches `hut_wattle_daub_plinth.png`.
+  - **#2, the anchor gate.** The gate is now my own inspection, and it holds: 98 of 98 pass.
+  - **Nice-to-have, the door-head soot.** It is exported on the lintel front.
+  - **Nice-to-have, the entrance plinth.** The melted skirts are gone. The stones have flat beds and planar split facets (entrance_plinth_r11, crop_actor_plinth_left_r11).
+- **Why not 9+.**
+  - The frame adze hatching is still a uniform chevron. It is also measurably below the note-11 entrance threshold.
+  - The new split scars leave comb-like serrations on some entrance plinth stones.
+  - The patch clumps are still round beads.
+  - The eave patch still reads as a dark slot in the hero thumbnail.
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | It still overlays ref2: a huge 51° chunky cone, the lead hat with standing seams, the spike finial, the dry-stone plinth and the flat-fronted projecting frame. |
+| Proportion and scale | 9 | Door 1.00 × 2.08. Eave lip over the door ≥ 2.40. Shingles read at about 0.45 m next to the figure. |
+| Construction | 9 | The plate, rafters, battens, frame, leaf, pintles and step are all carried. The interior gives dark depth with the hearth ring (door_depth_r11). There is no eave light leak. |
+| Detail and craft | 8.9 | The door-bay break is now a true fracture with a thick coat edge, and the entrance stones have split facets. Minus: the uniform chevron adze hatching on all five frame members, round-bead clumps on the patches, and comb serrations on the split scars. |
+| Age and irregularity | 8.9 | The cone wave and sag hold (roof_flank_r11, back.png). Patches and break are no longer procedural. Minus: the split facets on the plinth stones read slightly as crumpled foil on soft bodies (back_low_r11 x 450-580, y 500-600). |
+| Technical | 8.9 | Budget, hidden share, palette, Mask, naming and anchors are clean (98/98 under the strict audit). Minus: the sub-threshold frame relief (must-fix 1) and the scar serrations (must-fix 2). |
+
+**Strengths**
+- **The door-bay break is finally right.** In the actor close-up it reads as an eroded, ragged, near-horizontal fracture with a thick coat edge over the woven rods. That matches the ref2 bay left of the door.
+- **The anchor export is production-grade.** It matches one to one, is seeded, and is validated by the director's own footprint test (98/98 at 4 cm and dot ≥ 0.97). The anchors are physically sensible, and DA_soot_005 now covers the only opening.
+- **The entrance ground contact is improved.** The plinth stones sit on flat beds with no melted skirt (crop_actor_plinth_left_r11). The hand-split facets give crisp creases where the actor camera looks.
+- **Budget discipline.** 877k tris, which is −33 % on the phase-1 sign-off, at 7.4 % hidden. The +39k went to the entrance stones and the door-bay break, where note 4 says close-up quality matters.
+
+### Must-fix (priority order)
+
+1. **DOOR-FRAME ADZE HATCHING IS SUB-THRESHOLD AND A UNIFORM CHEVRON** (producer note 11, entrance exception; `components/doors` frame members `HUT_door_frame`; lintel_r11, door_depth_r11, actor_closeup.png x 330-790, y 150-620).
+   - **Measured** (`dir_adze_r11.py` / `dir_adze2_r11.py`, ray scans at 1-2 mm spacing, depth below the most proud point within ±5-6 cm):
+     - **Lintel front** (z 2.33-2.36): groove depth p90 0.78-0.80 cm, max 0.96 cm.
+     - **Right jamb and outer post** (x 0.58-0.62): p90 0.82 cm, max 0.92 cm.
+     - **Left members** (x −0.98 to −0.58): p90 0.91-0.93 cm, max 1.11-1.13 cm.
+   - So most of this relief is under the 1 cm entrance threshold. Note 11 sends sub-threshold adze and saw marks to materials. It is also one pitch (about 4-5 cm) and one angle on every member, so at actor distance it reads as a carved chevron pattern, not hewing. ref2 `hut_door.png` shows plain weathered posts.
+   - **Fix: choose ONE of these.**
+     - **(a) Remove the hatching from the geometry.** Keep only the member chamfers (1.5-3 cm) and the ±1 cm taper and swell. Add `DA_grime` or wood-wear anchors if needed.
+     - **(b) Rebuild it as real hewing facets.** Facets 1.2-2.0 cm deep, at a 3-8 cm pitch, with the angle varied ±15° per pass, in 20-40 cm hewing passes that break and overlap. No facet shallower than 1.0 cm.
+   - **Acceptance:** re-running `dir_adze2_r11.py` either shows no groove signal above 0.3 cm, or shows p90 ≥ 1.0 cm with no two adjacent passes at the same angle. No chevron reads in actor_closeup.png.
+
+2. **SPLIT-SCAR SERRATIONS AND A BED GAP ON THE ENTRANCE PLINTH STONES** (`stones._split_scar`, `stone_skin(split=)`, `components/plinth`; entrance zone az −50…+50).
+   - **What's wrong:**
+     - Where a scar's break plane cuts the curved stone body, the rim is stair-stepped into comb teeth about 0.5-1.5 cm tall, not a single plane-plane crease. See plinth_az42_r11 at x 280-380, y 230-330 and x 590-620, y 380-520 (stone at about (−2.45, −2.75, 0.15-0.35)), and entrance_plinth_r11 at x 10-70, y 330-400.
+     - Thin vertical slivers stand on the stone flanks next to the door-post pad: entrance_plinth_r11 at x 360-410, y 350-440 and x 650-690, y 340-450.
+     - A dark bed gap about 1.5 × 1 cm shows under the leftmost hero stone in actor_closeup.png at about x 78-95, y 655-662.
+   - **Fix:**
+     - Clip the scar planes against the stone body with a proper boolean or bisect, so that each rim is one clean crease. No rim edge should be shorter than 1 cm, and no step should exceed 3 mm.
+     - Merge or drop any facet strip narrower than 1 cm.
+     - Close the bed gap: the bed must meet Z ≤ 0 along its whole visible contact.
+   - **Acceptance:** plinth_az42 and entrance_plinth at 32 spp show clean creases with no serration or sliver, and actor_closeup.png shows no dark gap at the stone feet.
+
+**Nice to have**
+- **Patch clumps still read as round beads.** Examples: eave_patch_r11 at (495, 165) and (415, 325), side_patch_r11 at (715, 135) and back_low_r11 at (445, 195) and (980, 240). Use the r11 `slab` clump style on the patches as well, not only on the door-bay break.
+- **The door-break slab clump** in door_bay_below_r11 at (860-960, 375-465) and door_bay_r11 at (760-810, 450-475) reads as a sharp folded-paper triangle. Break its front into 2-3 facets and round the arris 3-5 mm.
+- **The door-break edge face** is a constant 3 cm (`door_edge_w` [0.03, 0.03]). Vary it to 2-5 cm as on the patches.
+- **Small saw-teeth** at two step corners: door_bay_below_r11 at x 240-280, y 240-275 and x 545-580, y 280-320.
+- **The eave patch still reads as a dark slot under the eave** (hero.png x 425-455, y 440-480; eave_patch_hero_tele_r11). Lower its top to ≤ 1.95 m or cut its height to ≤ 0.5 m.
+- **Plinth split facets outside the entrance** read as crumpled foil on soft bodies (back_low_r11 x 450-580, y 500-600). Use fewer, larger facets (2-3 per stone, ≥ 6 cm across).
+- **Daub budget.** HUT_daub is now 329,280 tris (38 % of the building). Coarsen the grid outside the entrance zone wherever relief stays ≥ 2 cm.
+- **Carried over:** a re-render of the kit variant `HUT_KIT_VARIANT=1` on kit 1.6.0, dent variety, the post-flank transition, Mask G on the fracture faces, and the build-time cache.

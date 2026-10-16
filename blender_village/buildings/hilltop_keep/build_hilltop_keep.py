@@ -72,11 +72,6 @@ CAP_EXPOSURE = (0.24, 0.28)
 # <= 28 %), 1.8-2.4 cm thick (<= 3 cm proud), shingles clipped cleanly under the board edges, no sliver < 4 cm
 LANTERN_SADDLES = dict(w_eave=(0.13, 0.15), w_top=(0.06, 0.08), max_frac=0.14, t=(0.018, 0.024), raise_frac=0.2)
 TURRET_SADDLES = dict(w_eave=(0.10, 0.12), w_top=(0.05, 0.06), max_frac=0.14, t=(0.018, 0.022), raise_frac=0.2)
-# round 10 (sign-off audit, producer note 11): wing thatch with no sub-2-cm modelled relief -- flat-topped clumps
-# whose butts step 2-3 cm (up to 6 cm) clump to clump, the first course lowered to the lip, a slim ~0.35 m eave roll
-# laid as 0.14-0.55 m bundle butts stepping 2-3 cm, round domed roll ends, course remnants < 1.8 m sunk
-WING_CRISP = dict(roll=(0.75, 0.80), m0=0.48, butts=((0.14, 0.55), (0.02, 0.03)), butt_step=(0.02, 0.03),
-                  remnant_min=1.8)
 
 
 def decals(g):
@@ -98,9 +93,9 @@ def steps(off=0):
             (shake_collar, dict(seed=505 + off)), (stone_cone, dict(seed=404 + off)), (lantern, dict(seed=606 + off)),
             (cone_cap, dict(seed=707 + off, saddles=True, cap_exposure=CAP_EXPOSURE, saddle_taper=LANTERN_SADDLES)),
             (annex_walls, dict(seed=1111 + off)), (plank_door, {}), (annex_window, {}),
-            (thatch_wing_roof, dict(rng_seed=1313 + off, layered=True, crisp=WING_CRISP)),
+            (thatch_wing_roof, dict(rng_seed=1313 + off, layered=True)),
             (ridge_comb, dict(seed=1414 + off, dense=True)),
-            (thatch_junctions, dict(continuous_fillet=True, band_bury=0.035, point_roll_ends=True)),
+            (thatch_junctions, dict(continuous_fillet=True, band_bury=0.035)),
             (side_turret, dict(seed=1616 + off, saddles=True, cap_exposure=CAP_EXPOSURE, bulb_cushion=True,
                                drum_backing=True, saddle_taper=TURRET_SADDLES)),
             oct_hidden_cull]                 # producer note 6

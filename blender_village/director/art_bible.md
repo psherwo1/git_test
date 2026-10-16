@@ -311,3 +311,22 @@ Megascans-style normal and height maps on jointless surfaces supply these. Never
 - **Count:** aim for about 40–120 anchors per hero building.
 
 **Still in force:** hidden triangles ≤ 15%, the material palette, `Mask`, and every other producer note. Triangles freed by this rule may go to silhouette and discrete-piece quality, or stay saved.
+
+### Producer note 12: modularity over detail (client direction, 2026-10-16; applies from now on)
+
+**Direction (client's words):** "We don't need more detail at this point, we need reusable modules that can be combined to complete entirely unique structures." The client is hesitant to push surface detail further before materials and textures are added.
+
+**What this changes:**
+- **No more detail rounds on the heroes.** The hero kit gates are closed (see the production plan). Do not spend builder time on finer surface detail, micro-wear, hewing marks, crack shapes or similar polish. Materials, textures and decals will carry that.
+- **The work is the kit.** Builders improve reusable, parameterised modules and the way they combine: new module types where a building needs one, parameter ranges that produce genuinely different results, clean junctions between any two modules that can meet, and an assembly API that makes a new building a short declarative recipe.
+- **Variant grading uses the modularity rubric below, pass mark 8.2.** It replaces rubric axes 4 (detail density) and 5 (age) for variants. Detail is judged only to the extent that a module reads as the right construction at mid-shot distance; do not ask for more surface detail.
+
+**Modularity rubric (variants and any kit-assembled building).** The overall grade is roughly the lowest axis, rounded up by at most one.
+1. **Silhouette and massing:** a distinct, believable building of this village at thumbnail size, unmistakably the concept-art style.
+2. **Proportion and actor scale:** doors, eaves, steps and windows right next to the 1.8 m figure.
+3. **Construction logic:** every module looks built and carried; roofs sit on walls, walls on footings, nothing floats or interpenetrates visibly.
+4. **Seams and junctions:** where modules meet (wall to wall, roof to wall, roof to roof, turret to body, annex to main body, roof to tower) the joint is closed, flashed or covered, with no gaps, see-through pixels, z-fighting or obvious clipping.
+5. **Distinctness and reuse:** clearly a different building from the three heroes and from the other variants, yet built from shared modules. Score down for a near-copy of a hero, and for bespoke one-off geometry that is not a reusable kit module.
+6. **Technical compliance:** producer notes 1-3 and 6-11 (Nanite hygiene, pooling, hidden ≤ 15 %, palette, `Mask`, no ground dressing, decal anchors plausibly placed), deterministic seeded build, real-world scale.
+
+**Kept unchanged:** the 8.2 pass mark, producer notes 1-11 as technical rules, every client correction, and the signed-off deliverables.

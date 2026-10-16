@@ -18,6 +18,30 @@
 
 ---
 
+## 1.6.1 (2026-10-16): multi-process hidden-geometry cull on Windows (producer, desktop handoff)
+
+- **`core.visibility_cull`** used `multiprocessing` with `fork`, which Windows does not have, so every build on the
+  desktop silently ran the cull on one core ("visibility: single process").  Where `fork` is unavailable it now runs
+  the SAME chunks through the SAME `_vis_worker` in a `spawn` pool (`_vis_spawn_pool`, `_vis_spawn_init`,
+  `_vis_spawn_worker`): one pool per call, each worker rebuilds the BVH once from the same triangle lists.  The pool
+  starts with the pre-bpy `sys.path`, because after `import bpy` the parent's path resolves `bpy` to Blender's internal
+  `scripts/modules/bpy`.  Linux / macOS (`fork`) are unchanged; any pool failure still falls back to one process.
+- **Build scripts must keep their build under `if __name__ == "__main__":`** (spawn re-imports the script in every
+  worker).  All three hero scripts already do.
+- **Verified** (all three rebuilt to scratch, in parallel): hilltop_keep **1,166,874**, wattle_roundhut **876,619**,
+  tower_windmill **1,146,243**, all identical to the records.  Build times on the Ryzen 5 5600X with three builds at
+  once: keep 587 -> 325 s, hut 829 -> 364 s, mill 345 -> 218 s.
+
+### Hero gates closed (client direction, producer note 12)
+
+- The interrupted keep round-10 fixer left opt-in options in `components/thatch.py` (`thatch_wing_roof(crisp=...)`,
+  `d_roll` bundle butts, `thatch_junctions(point_roll_ends=...)`, the "kit 1.6.0 (keep round 10)" docstrings).  They
+  are unverified and unused: the keep recipe was restored to its round-9 options (1,166,874 tris, above).  Its other
+  partial edits are saved in `director/partial_fix_hilltop_keep_r10.patch`.
+- From here on, variant builders record kit changes in `kit/changes/<variant id>.md`; the producer merges them here.
+
+---
+
 ## 1.6.0, hut part (2026-10-16): strict decal-anchor gate, crisp door-bay break, split-facet plinth stones, fine-relief gates (HUT builder, round 11)
 
 Fixes the sign-off audit of hut round 10 (director 8.8).  Every change is a new function / constant or an optional

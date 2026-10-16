@@ -67,6 +67,22 @@ Sign-off rules in force: pass mark 8.2 (client, "for now"), producer notes 1-10,
 
 Rules in force for phase-2 sign-offs: pass mark 8.2, producer notes 1-11, all client corrections.
 
+### Client direction, 2026-10-16: hero gates closed, modularity first (producer note 12)
+
+The client stopped the hero detail rounds: "we don't need more detail at this point, we need reusable modules that can be combined to complete entirely unique structures". Surface detail waits for materials and textures. Kit variants are graded on the modularity rubric in the art bible (note 12), pass mark 8.2.
+
+Hero outcomes when the gates closed:
+
+| Building | Last kit round | Director | Audit | Deliverable |
+|---|---|---|---|---|
+| tower_windmill | 8 | 9.0 | upheld | **kit r8** (`signoff_kit_r08/`) |
+| wattle_roundhut | 11 | 8.9 | not run (gates closed); r9 8.6 and r10 8.8 were rejected | phase 1 stays the signed-off deliverable; the kit r11 build is the kit's reference hut |
+| hilltop_keep | 9 | 8.6 | rejected (wing thatch note 11 / macro-form); r7 8.3 and r8 8.5 were also rejected | phase 1 stays the signed-off deliverable; the kit r9 build is the kit's reference keep |
+
+The interrupted keep round-10 fixer's kit edits are saved in `director/partial_fix_hilltop_keep_r10.patch` and were reverted from the kit.
+
+**Texturing readiness (checked 2026-10-16 on the signed-off kit windmill):** every unique mesh has one `UVMap` (box projection at real-world scale, about 1 UV unit per metre, no zero-area UV faces), `Mask` everywhere and the 15-slot palette. Still to do before a texturing pass: check that wood grain (U axis) follows the long axis of planks, shingles and rafters; choose UV0 tiling versus world-aligned in Unreal; build the export (FBX/USD, cm, custom normals, `Mask` as vertex colour); and run one lookdev test in UE 5.8 on the signed-off windmill before any further modelling detail.
+
 Ensemble review 1: 8.4/10, APPROVED. These non-blocking consistency items carry into phase 2:
 - **Shared shingle size table.** The keep's turret and lantern caps go up to the chunky 0.35-0.55 m scale.
 - **Age passes.** Roughen the windmill's drum masonry and balusters. Add an age pass to the roundhut cone.
