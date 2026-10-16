@@ -259,3 +259,37 @@ Axis scores:
 **Nice to have:**
 - In ref1 the hub sits right of the tower axis (≈ 1.4 m in the painting, a painterly cheat). Consider yawing the cap from −15 deg to 0..+6 deg (hub offset x = 1.95·sin(yaw), so currently −0.50 m, i.e. left), so the hub reads 0–0.2 m right of the axis in the front view and the wheel's left half gains distance from the props. Keep the hero view readable.
 - Shingle rotation jitter on the cap side faces is a little noisy at grazing angles. ±3 deg is enough.
+
+## Round 3 — builder entry
+
+**Renders:** renders/tower_windmill/round_03 (hero, front, side, back, aerial, actor_closeup, stats.json, hidden.json), 32 samples. This replaces the provisional 04:15 render.
+**Stats:** 1,110,929 tris, 34 objects, bbox 12.96 x 9.05 x 16.19 m (sail tip), .blend 28.0 MB (compressed). Build time 12 s, deterministic. **est_hidden_pct 15.2%** (was 44.6% in the provisional render). **material_slot_count 11**, all from the palette (`M_soil` is now `M_earth`).
+
+**Round-2 must-fix items:**
+1. **Sail A** is now a broad paddle with r 2.5 → 5.8 and 19 full-length fanned radial boards. The bars sit behind the boards and only 2 cleats show on the face. The tip is ragged, two boards are short and one is broken, and there are butt joints, cupping and nail rows.
+2. **Rubble.** 993 pinning stones were added. Visible mortar is now 9.8% on the drum and 9–10% on the buttress, and the widest void is 3 cm. The mortar is recessed and raked deeper below 0.6 m. Stone depth and tilt vary, the mortar has relief and a concave strike, and the hidden mortar skin is culled.
+3. **Heights.** The tower now runs from 5.95 to 11.45 m. The apron is ≈ 41 deg with 3 courses, the cap ridge is at 12.88 m and the props are re-seated. The cap is yawed +3 deg, so the hub sits about 0.1 m right of the axis.
+4. **Cap.**
+   - Continuous V ridge capping.
+   - 12 lapped hip pieces, max deviation 0.91 deg.
+   - The knob sits on a plinth block.
+   - Shingles narrower than 5 cm are culled at the hips, valleys and hood: 22 + 6 slivers, plus 27 fully covered shingles.
+5. **Props.**
+   - 24–35 sides at 4.5 cm ring spacing.
+   - 2–3 V checks, adze flats and a bark strip per pole.
+   - 4–6 knots, 2 of them within 2.5 m of the foot.
+   - Axe-cut feet in a bird's-mouth sole, and hewn chocks and cheeks.
+   - Sunk rough stone pads with a ring of small stones and a soil lip.
+6. **Stocks and whip** use `hewn_beam`, with adze facets, variable chamfers, checks and split end grain. Each arm has 2 bolted iron bands near the poll.
+7. **Buttress coping.** 8 dished slabs with tops flush at the joints. They have spalls and more wear on the upper edges, 2 are cracked and 1 is turned in plan.
+8. **Path flags and step.** The flags are irregular 5–7-sided slabs with undulating tops and chips. The step has a worn hollow. 73 half-buried gravel stones were added.
+9. **Valance.** The boards are notched around all 4 sheer ends.
+10. **Tower boards.** Staggered horizontal butt joints with drip gaps, varied proudness and bottom ends, 3 strongly cupped boards and 8 split ends.
+11. **Balusters.** 8 of 61 are eroded (13%), 3 of them on the front arc, plus 3 plain blocks.
+
+**Clearances:** sails vs apron and props ≥ 0.30 m PASS. Lowest rotating point 8.43 m. Blade/stock, board/wheel and board/stock gaps all pass.
+
+**Known gaps:**
+- Hidden triangles are at 15.2%, just over the 15% target. The largest remaining hidden share is base mortar (30.7%, ~21k), and the base stones and dressed stone still carry back and side faces. This is planned for round 4.
+- Moss is not modelled.
+- Diagonal rim ties have been dropped (accepted in round 2).
