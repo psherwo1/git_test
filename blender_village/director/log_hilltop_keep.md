@@ -436,3 +436,234 @@ Score by axis:
 - **Eave roll:** slim the bolster from 0.43 m to 0.32–0.36 m high, and add an irregular hanging fringe of 2–4 cm tufts on its lower edge.
 - **Corner posts:** the swell shows high-frequency wobble on the silhouette edge (wing_door, right edge). Keep it low-frequency (wavelength ≥ 0.8 m).
 - **Step stone:** it reads like a bar of soap (ground_contact). Add a 1–2 cm worn hollow at the centre and 2–3 chipped edges.
+
+## Round 4 — builder entry
+
+**Renders:** renders/hilltop_keep/round_04/ (all 6 views at 32 spp, stats.json, hidden.json).
+**Stats:** 352 objects (47 unique-geometry objects + 305 linked duplicates of 65 pooled meshes), 1,313,720 tris, **est_hidden_pct 13.5 %**, 11 material slots (all from the 15-slot palette), `mask_attribute_missing` is empty. bbox x −11.43..5.30, y −5.30..5.45, z −0.05..14.00 (16.73 × 10.75 × 14.05 m). .blend 32.0 MB. Build takes about 8 min on the shared CPU; about 6 min of that is the hidden-surface pass.
+
+**Must-fix items:**
+1. **Wing window:** moved to xc = −7.4, clear of the turret base. Clear opening 0.45 × 0.55, sill at 1.30. The 0.07 m timber frame has four members plus a mullion, with pegged corners, and sits 0.16 m back in the reveal. There is a timber lintel and a projecting stone sill. Dressed blocks (2 per side) form the jambs. The reveal tube runs through the wall into a dark blocker room 1.0 m inside. The stones, mortar and turret clip are all cut by the same opening rects (wing_south now shows a dark opening).
+2. **Cushion:** new `corbel_cushion(spec)` component with 2 corbel courses of 17 + 18 stones (0.40–0.60 m long, 0.20–0.32 m tall). The lower course projects 0.12–0.23 m and the upper 0.15 (W/NW) to 0.43 m (E/SE). The lip droops 0.15 m on E/SE. Top weathering is 10° plus the E droop. Each stone is a 2–2.5 cm-arris block cut by 2–3 planar cleaves 2–3 cm deep, plus an underside cleave. Only the upper top-outer lip is rounded (~6–8 cm). Joints are 2–3 cm, over a mortar body recessed 4 cm. The stepped bed-joint splits are gone. I count 16–22 stones per course, not in total, so that the 0.40–0.60 m stone length holds.
+3. **Thatch:** `thatch_courses()` is rewritten. Each course is one continuous strip round the whole roof (N side, NW hip, W end, SW hip, S side). A course rises from the course below through a 0.10–0.15 m concave fillet into a steep butt (2.8–6.8 cm, varying per 0.7 m patch), then a rounded crown and a flat tail. Lobes (2.5–4.5 cm) are grouped in 4–12 cm clumps with 0.5–2 mm creases. The mass swells ±5–8 cm over about 2.3 m, coherently through course, core, ridge and fillets. Toward the hall valley the steps fade over about 0.45 m, and the courses soft-clamp under the skirt as a continuous rounded valley. 12 courses, 71.6k tris.
+4. **Hips and fillet:** the hip-roll tubes and their mortar saddles are deleted. The deck is now a rounded-hip surface: every contour keeps a 0.55 m plan radius (`q_rr`), with a 5 cm hip swell, so the courses wrap round the hips and die into the turret on the fillet. `mortar_fillet()` is a triangular section: 8 cm up the stone, ~45° flat face, 7.5 cm toe, bedded into the thatch. It wanders only at low frequency (≥ 1.3 m wavelength, ±2 cm), with the path smoothed to σ ≈ 0.35 m. The course butts run straight into it, with no turn-up. The hall-wall fillet uses the same component.
+5. **Hidden triangles:** down from 34.7 % to 13.5 %.
+   - **By construction:** stone sides reach only 1.8 cm (cone 2.2 cm) behind the wall plane and have no backs. No rubble is laid behind the engaged posts and pedestals. The cone starts at the collar top. The mortar bodies are coarse sheets, refined only round openings. Rafters and soffit boards drop their covered top faces and start 0.10 m inside the plate. Covering units stop where the next course covers them (worst-case jitter + 1.2 cm), keeping the full length under missing and slipped pieces. The buried faces of plates, posts and drum boards are dropped. The hall interior is now just the reveal tubes plus one blocker room behind each window. The wing plates and battens are gone; only the rafter-pole ends remain. The thatch core is trimmed under the course cover and inside the walls. The buried roll and ridge-dome tails are trimmed.
+   - **Final ray pass (`visibility_cull`):** deletes the polygons of roof-level, structural, stone-body and door objects that no viewpoint can reach. The viewpoints are the review rings plus about 120 actor-scale positions: under and outside the eaves, low ground views, along the wing walls, round the turret, and 0.5–2 m in front of both doors. Close-up surfaces are therefore kept.
+6. **Degenerate and below-ground geometry:** `finalize()` → `clean_mesh()` clips at −0.05 m, merges by distance at 0.1 mm, dissolves degenerates and deletes the remaining zero-area faces. The audit shows zmin −0.050. There are **8 faces left under 1e-8 m²** (6–10e-9, all in skirt_boards), from a float rounding difference between bmesh and polygon area. Raising the delete threshold to 5e-8 fixes them; that change goes in next round.
+7. **Dressed jambs and quoins:** faces are flat-tooled (dome ≤ ~4 mm), arrises are 1.0–1.5 cm, and 0–2 corner chips of 2–4 cm. Jamb and voussoir joint mortar now sits 3 cm behind the reveal and 3.1 cm behind the face.
+8. **Footing:** footing tops step stone by stone (−0.10..+0.10, so 0.23–0.43 m visible), with lengths 0.40–1.10 and projection 3.5–13 cm. Footing stones on every hall facet, the wing and the turret are polygonised poly-stones. The course above beds on the highest step, and the voids are pinned. There are 13 half-buried boulders (1–2 per hall facet, wing, turret foot).
+9. **Shared mesh data:**
+   - **Pools placed as linked duplicates (65 pooled meshes, 305 instances):** pegs (4 variants per size, 94), forged nail heads (4 per size, 59), knuckle/pintle/shank (3, 6), ridge-comb shakes (10 lengths, 66), and rubble/boulders (16 variants in 4 size classes, 67 + 13). Instances carry object transforms (necessarily). Every other object keeps identity transforms.
+   - **Parameterised components (new or rewritten):** `round_stone_wall(name, center, radius_fn, z0, z1, seed, cfg, eff_radius_fn, excl_fn, cull_fn, ...)` (the turret body now uses it), `corbel_cushion(acc, accm, center, spec)`, `thatch_courses(...)`, `mortar_fillet(...)`, `mortar_sheet(...)`, `get_pool`/`place`, and `visibility_cull(targets, views)`.
+- **Also done:**
+  - Mandatory `Mask` attribute on every mesh: R is per island, G is per-island wear by material, and B is ground, up-facing and north damp. The palette is updated to the 15-slot list.
+  - Nice-to-haves: turret cap eave across-flats is now 3.3 m. The ridge comb is now 0.07–0.25 m above the log (tallest about −40 %).
+
+**Known gaps:**
+- The cushion's upper course still reads slightly soft at very close range. Its cleaves are planar but shallow.
+- Some legacy builders still read module globals (WX_*, TUR_C, WDOOR/WWIN specs); the deep refactor is partial.
+- The W eave-roll end at the turret is unchanged.
+- Not done: the eave-roll slimming and fringe, the step-stone hollow, and the low-frequency post wobble.
+- 8 sub-1e-8 m² slivers (item 6).
+
+## Round 4 — score 8/10
+
+**Reviewed:** renders/hilltop_keep/round_04/: all 6 views (hero, front, side, back, aerial, actor_closeup) plus stats.json and hidden.json, side by side with ref1 (keep_overall, keep_hall_door_window, keep_west_wing_turret) and style_thatch_and_tiered_tower. The Director rendered 23 extra views at 16 spp in renders/hilltop_keep/round_04/director_extra/:
+- **Close-ups:** door, hinge_graze, wing_south, wing_window, turret_cushion, cushion_e, wing_turret, wing_west_end, back_wing, wing_hall_n, wing_hall_s, eave_under, ground_contact, thatch_eye, sw_window, lantern_cap, collar_comb, skirt_graze_ne, under_skirt_e, turret_n.
+- **Off-ring hole hunt:** odd_aerial_se, odd_aerial_nw and low_crane_w. These cameras sit deliberately between the review rings, because `visibility_cull` uses exactly the review-tool rings as its viewpoints.
+
+The Director also audited the .blend and ray-cast every suspect dark pixel to find its world position.
+
+**Stats:**
+- 352 objects (305 linked duplicates of 65 pooled meshes) and 1,313,720 tris.
+- **est_hidden_pct 13.5% (pass).** 11 material slots, all from the palette (pass). `mask_attribute_missing` is empty, and the Mask attribute is CORNER, active and render on every mesh (pass).
+- z-min −0.050 (pass). UVs on every mesh. Non-identity transforms only on the 305 instances (accepted).
+- 8 faces under 1e-8 m², all in KEEP_roof_skirt_boards.
+- Biggest meshes: hall_wall_stones 226k, **cone_stones 198k** (I asked for ≤ 140k in round 2), wing_wall_stones 96k, turret_stones 87k, thatch core 86k, thatch courses 71k.
+- Build takes about 8 min, close to the 10 min limit.
+
+**Verdict:** this round is a technical clean-up and it achieved that.
+- **Producer notes now met:** hidden triangles, palette, Mask, below-ground clipping and mesh sharing.
+- **Visual items fixed:**
+  - The wing window now exists, with frame, mullion, sill and lintel.
+  - The hip-roll tubes are gone.
+  - The cushion reads as stone corbel courses rather than sandbags.
+  - The jamb mortar shelf is gone.
+- **Why the grade stays at 8:** the off-ring cameras found **four see-through holes and voids**. These are the CG tells producer note 6 forbids ("never open holes when culling"):
+  - a missing-board void into the hall interior on the W skirt facet;
+  - the open W eave-roll / thatch-core end at the turret;
+  - a staircase of black slots at the NW skirt/thatch eave;
+  - pinholes through the hall rubble into the interior at ground level.
+- **Fixes that did not land visually:**
+  - The thatch/stone fillet still renders as a rounded rope that loops across the turret.
+  - The thatch courses are still near-parallel ruler lines of smooth "fondant" with no straw relief at actor distance.
+  - The cushion's upper course is a ring of identical upholstered slabs.
+  - The footing on the hall S/SW facets is still a row of kerb boxes.
+- **Regression:** the cone masonry has slipped back toward "stones glued on smooth plaster" on its W/SW flank.
+
+Score by axis:
+
+| Axis | Score |
+|---|---|
+| Silhouette | 8.5 (the cushion reads as a regular tyre band; otherwise unchanged and strong) |
+| Proportion and scale | 9 |
+| Construction | 7.5 (4 see-through holes, rope fillet, stub course ends) |
+| Detail and craft | 8 (straw-less thatch, uniform cushion, kerb footing, cone mortar) |
+| Age | 8.5 |
+| Technical | 8 (hidden, palette, Mask and sharing pass; 8 degenerates; partial kit refactor; holes) |
+| **Overall** | **8** |
+
+**Strengths:**
+- **Producer notes:** hidden triangles 34.7% → 13.5%. Palette-only slots, Mask on every mesh, and nothing below −0.05 m. 65 pooled meshes with 305 linked duplicates for pegs, nails, pintles, ridge-comb shakes and rubble. Mortar and covering culls are done by construction.
+- **Wing south window** at xc −7.4 (wing_window, wing_south): a real dark opening with a pegged frame, mullion, timber lintel, projecting stone sill and a 1.0 m blocker. It matches ref1's small dark wing window.
+- **Turret cushion** (turret_cushion, low_crane_w): now two rough corbel courses with recessed joints and an E/SE overhang. The quilted-pillow read is gone.
+- **The hip-roll tubes are gone.** The hips are a rounded swell of the courses.
+- **Close-up timber holds up:**
+  - The eave underside is film-grade (eave_under, under_skirt_e): curved sprockets, soffit boards, a pegged plate, Y braces and checked posts.
+  - The SW window (sw_window) has a chamfered cross-mullion frame with pegs.
+  - Main door and ironwork (door): tapered strap hinges with spear terminals, seated nails, ring pull, and varied planks.
+- **Upper tiers:** the lantern, propped hatch, bell-cast cap with hip boards and the finial are unchanged and strong (lantern_cap). The turret cap at 3.3 m now overhangs the cushion, as in ref1.
+- **Silhouette:** at thumbnail size, hero and front still read unmistakably as ref1's keep.
+
+### Must-fix (priority order)
+1. **See-through holes and voids, new or revealed this round.** Every location was confirmed by ray cast.
+   - **(a) W skirt facet, near where the wing ridge dies into the collar,** at about (−3.8, 1.1, 4.8). There is a missing or culled board with **no deck under it**, so the camera sees straight through into the hall interior. It shows as a black triangle about 0.3 m across (low_crane_w x 770–800 / y 195–230).
+     - Fix: add a continuous sarking deck (M_timber, 2 cm thick, 2–3 cm under the board undersides) on all 8 skirt facets from eave to collar foot, and the same under the cap and turret cap shingles. Cost: about 2–4k tris.
+   - **(b) SW wing hip / W eave-roll end at the turret,** at about (−9.4..−9.7, −0.2..0.1, 2.9–3.2). The roll end is open and the inside (back) faces of the thatch core show as a black slot (odd_aerial_nw x 905–935 / y 600–630; wing_west_end, upper left; hero, turret foot). This is your own known gap.
+     - Fix: cap the roll with a tapered thatch end that dies into the fillet. The core must be closed wherever it can be seen.
+   - **(c) NW skirt eave over the thatch,** at about (−2.1..−2.5, 3.95..4.15, 3.9–4.1). The skirt board, sprocket and fascia ends step down as a staircase with black slots between them (odd_aerial_nw x 430–500 / y 380–470). The round-2 NW junction fix has regressed.
+     - Fix: scribe the fascia and the last board course continuously onto the thatch, and run the lead apron under them with no gaps. Check the matching SW junction too.
+   - **(d) Pinholes through the hall rubble into the interior,** at the −Y facet, about (−1.2, −4.0, 0.49) (ground_contact x 780–830 / y 265–290; actor_closeup x 470–520 / y 430–440).
+     - Fix: the coarse mortar sheet must be continuous 2–4 cm behind every stone face, with no openings except the real door and windows. Check every facet below 1.0 m.
+   - **Process:** `visibility_cull` uses exactly the review-tool rings as its viewpoints, so the metric cannot see what it removes.
+     - Before returning, render at least 6 cameras that are **not** on those rings: two crane cameras at elevation 25–40° and azimuths offset 10–20° from the ring stations, two under-eave cameras, and two at 0.8 m height along the wall bases.
+     - Confirm that no pixel shows sky or interior through the building.
+2. **The thatch/stone fillet still reads as a rope or worm** (`mortar_fillet()`; see turret_n, wing_turret, back_wing, wing_west_end, and the hero crop of the turret).
+   - **What is wrong:**
+     - The section renders as a rounded tube about 10–12 cm thick lying *on* the courses. On the N side it makes a U-loop down the turret flank (turret_n x 330–860 / y 0–390). On the turret's E side it snakes diagonally from the cushion to the eave (wing_turret x 420–750 / y 140–360).
+     - On the W hip, a flat strip ends in a square blunt cut in mid-slope (wing_west_end x 690–720 / y 520–545).
+   - **Fix:**
+     - Keep a hard crease at the top edge, feathered to ≤ 5 mm proud into the stone joints. Split normals there and at the toe (no auto-smooth across the profile).
+     - The face must be planar at 40–45°, standing at most 5–6 cm proud.
+     - Tuck the toe 3 cm **under** the course butts rather than resting on top of them.
+     - Run one continuous path along the actual thatch/stone intersection, with no end cuts and no loops. Where the intersection curve is steep (more than 50°), use stepped lead flashing instead.
+3. **The thatch still reads as smooth stacked slabs ("fondant") with ruler-parallel course lines** (`thatch_courses()`; see wing_hall_n, wing_turret, back_wing, thatch_eye, actor_closeup top left).
+   - **(a) Course lines.** The claimed ±5–8 cm swelling does not read: across 5 m the lines stay parallel to within about 2 cm.
+     - Let each course line drift ±6–10 cm in height over 2–4 m, independently per course.
+     - Vary exposure along the run from 0.24 to 0.36 m, so that neighbouring butt lines visibly converge and diverge.
+   - **(b) Straw relief.** At actor distance the exposed course surface is dead smooth.
+     - Add fall-line straw relief: ridges 0.5–1.5 cm deep at 1–3 cm pitch, broken into 0.2–0.5 m patches with differing direction (±5°).
+     - Apply it at least on the S slope, both hips and the W end.
+     - Pay for it from the core (86k, 20% hidden).
+   - **(c) Course ends.** Near the hall valley, course ends stop as vertical cut stubs (wing_turret x 1080–1150 / y 410–520; thatch_eye x 770–790 / y 205–260). Feather every course end to zero over 0.3–0.5 m.
+   - **(d) Eave roll lower edge.** It is a crisp machined band with a tiny regular zigzag (thatch_eye y 590–610). Replace it with an irregular hanging fringe of 2–6 cm tufts, and slim the roll to 0.32–0.36 m.
+4. **The cushion's upper course is a ring of identical upholstered slabs** (`corbel_cushion()`; see turret_cushion, cushion_e, low_crane_w, hero).
+   - **What is wrong:**
+     - All 17–18 upper stones share the same height, the same rounded lip and parallel radial joints, which reads as tyre tread or sofa cushions.
+     - The 2–3 cm cleaves are invisible.
+     - A dark open slot runs between the upper and lower course (turret_cushion x 430–560 / y 405–415).
+   - **Fix:**
+     - Per stone: height 0.20–0.34 m, length 0.35–0.70 m, tilt ±3–6°, and outer face offset ±4 cm.
+     - Cut cleaves 4–8 cm deep. Round the lip on only about half the stones, with the radius varied from 3 to 8 cm.
+     - Add 2–4 pinning stones.
+     - Close the bed joint with mortar recessed 3 cm.
+     - Keep the E/SE overhang and droop, and make the overall outline lumpier: ±5 cm around the ring.
+5. **The hall S/SW footing still reads as kerb boxes** (ground_contact, actor_closeup).
+   - **What is wrong:**
+     - Three blocks of about 0.9 × 0.45 m on the −Y facet have dead-flat faces, vertical sides and level tops.
+     - Left of the SW pedestal, one long slab rises as a smooth wedge ramp (ground_contact x 20–440 / y 200–330).
+     - The boulder at the SW pedestal reads as two stacked soap bars with a scooped hollow (actor_closeup x 610–680 / y 490–520).
+   - **Fix:**
+     - Give the footing faces the hero-rubble treatment: 1–2 split planes at 5–15°, a 1–2 cm pillow, chipped arrises, and tops sloping 3–8°.
+     - Make boulders single sub-angular masses.
+6. **Dressed blocks are still pillowy, and the main-door jamb has a seam** (hinge_graze, wing_window, door).
+   - **Arrises:** the wing-window jamb blocks and the main door's left jamb read with 3–5 cm round-overs, like foam.
+     - Measure the built bevel and make it 1.0–1.5 cm, as reported.
+   - **Seam:** a continuous thin vertical line crosses the three lower-left jamb blocks of the main door (hinge_graze x 630 / y 0–560). It is a coincident or intersecting surface. Remove it.
+   - **Blank panel:** above and below the wing window frame, the reveal shows a featureless flat panel about 0.25 m tall (wing_window y 30–220).
+     - Seat the timber lintel directly on the frame head, and fill below the sill with rubble.
+7. **Cone masonry regression** (`KEEP_cone_stones`; see collar_comb.png, left half).
+   - On the W/SW flank above the collar, visible mortar is about 25–30%, so the stones again read as glued onto smooth plaster.
+   - Restore ≤ 15% visible mortar, as in rounds 2–3, and bring the cone back to ≤ 150k tris (it is 198k today and never appears in a close-up).
+8. **Producer-note compliance leftovers:**
+   - **(a) Degenerate faces:** 8 zero-area faces in KEEP_roof_skirt_boards. The target is 0; apply your 5e-8 threshold.
+   - **(b) Kit refactor (producer note 2) is still partial.** `build_hall_masonry`, `build_hall_mortar`, `build_main_door`, `build_wing_walls`, `build_wing_door_window`, `build_wing_roof`, `build_skirt` and `build_turret` read module globals (WX_*, WY_*, TUR_C, WDOOR, WWIN, OPENINGS).
+     - Expose them as parameterised components, for example `stone_wall(path, height, openings, seed)`, `plank_door(width, height, arch)`, `window(w, h, frame, mullion)`, `thatch_roof(outline, pitch, thickness, seed)` and `turret(center, profile, cushion, cap)`.
+     - Prove it with one variant build (for example a 0.8× turret and a 4 m wing) rendered to renders/hilltop_keep/round_05/kit_test.png.
+   - **(c) Build time:** keep it safely under 10 min. The cull alone takes about 6 min; reduce its viewpoint count or cull analytically, but never at the cost of item 1.
+
+**Nice-to-have:**
+- **Ridge comb:** from eye level it still reads as thin pickets (thatch_eye, top). Use wedge-thick 3–5 cm shakes clustered in V tufts.
+- **Cap shingles:** a missing cap shingle shows black (lantern_cap x 345–370 / y 325–335). The deck from 1(a) will fix it.
+- **Leftovers from round 3:** the step-stone worn hollow and chips, low-frequency post wobble, and pooled lantern boards.
+
+**Rulings:** linked-duplicate instances may carry object transforms (accepted). est_hidden_pct 13.5% passes.
+
+## Round 5 — builder entry
+
+**Renders:** renders/hilltop_keep/round_05/ (all 6 views at 32 spp, stats.json, hidden.json), `kit_test.png` (variant keep from the kit), and `builder_checks/` (16 spp off-ring cameras: off_crane_sw, off_crane_nw, off_under_eave_se, off_under_eave_wing_n, off_base_s, off_base_turret_w, plus the Director's low_crane_w, odd_aerial_nw, odd_aerial_se and ground_contact).
+**Stats:** 369 objects (318 linked duplicates of the pooled meshes), 1,306,850 tris, **est_hidden_pct 14.3 %**, 12 material slots (all palette; M_daub is new, for the eave filling), `mask_attribute_missing` empty, **0 faces under 1e-8 m²**, zmin −0.050. bbox x −11.43..5.30, y −5.30..5.45, z −0.05..14.00 (16.73 × 10.75 × 14.05 m). .blend 31.7 MB. The build takes about 7 min on the shared CPU (cull about 6 min of it; it was 5.8 min when the CPU was free).
+
+**Must-fix items:**
+1. **Holes.**
+   - (a) New `sarking_deck()` component: a 2 cm closed deck under the boards on all 8 skirt facets (`KEEP_roof_skirt_deck`), and under the cap and turret-cap shingles (`KEEP_cap_deck`, `KEEP_turret_cap_deck`). About 6k tris. Decks are never culled.
+   - (b) The thatch core's cut edges are now closed by side walls on every boundary edge of the kept region. The core skin is kept within 0.3 m of the eave and 1.1 m of the turret.
+   - (c) Skirt boards are no longer dropped whole where the thatch rises over them. `covering_boards(scribe=...)` cuts every unit obliquely along the true thatch intersection, with butt and tail cut separately, over the lead apron. The NW and SW junctions use the same code.
+   - (d) Mortar sheets, thatch courses, core, rolls, fillet and decks are removed from the visibility cull, so the hall mortar sheet is continuous behind every stone. Mortar sheets are wound outward and the reveal and blocker faces face their opening (`recalc=False`), so nothing shows a back face in Unreal.
+   - Also: a new **eave filling** (M_daub) on the wing wall heads closes the roof space between the wall top and the thatch underside. This was a see-through under the N wing eave that the off-ring check found.
+   - The cull viewpoints gained 24 off-ring crane stations.
+   - Off-ring check: a ray-grid audit (first hit is a back face) shows no interior or sky through the hall, skirt or wing walls. The residual back-face hits are on open board shells (normals), not openings.
+2. **Fillet.** It is rebuilt as `mortar_fillet()`:
+   - a hard top crease 4 mm proud;
+   - one planar ~43° face at most 5.5 cm proud;
+   - the toe tucked 3 cm under the butts;
+   - split normals (own object `KEEP_wing_fillet`, smoothing 25°).
+   `flaunch_loop()` runs one continuous path along the ray-cast intersection. It uses `stepped_flashing()` (lead in level steps) where the line is steeper than 50°, and tapers the open ends to nothing. The old roll collars and saddles are gone.
+3. **Thatch.**
+   - (a) Course lines: a shared 2–4 m drift (±8.5 cm in slope) plus an independent per-course drift (±5.5 cm), with exposure clamped to 0.24–0.36 m against the course below.
+   - (b) Fall-line straw ridges 0.5–1.5 cm deep at 1.5–3 cm pitch, in 0.2–0.5 m patches skewed ±5°, on the S slope, hips and W end. The N side gets shallower 2.8–4.2 cm straw.
+   - Each course has an extra crowned row.
+   - (c) Every course end feathers to nothing over 0.4 m and sinks under the course below.
+   - (d) The roll is slimmed to about 0.35 m. `tuft_fringe()` adds about 1,950 slender tapered bristle clumps, 2–6 cm long, with clumped lengths and gaps.
+   - Course tails under the ridge dome are trimmed.
+4. **Cushion.** Per stone:
+   - length 0.35–0.70 m and height 0.20–0.36 m (each upper stone has its own height);
+   - tilt ±3–6°, face ±4 cm, and an outline wobble of ±5 cm around the ring;
+   - 1.2–2 cm arrises and 2–3 cleaves 4–8 cm deep, plus 1–2 top cleaves on the upper stones;
+   - the lip is rounded on about half of the stones (3–8 cm).
+   4 pinning stones sit in the stepped beds. The mortar body follows the actual course tops and bed joints, filled to 3 cm behind the face.
+5. **Footing.** `rough_footing()` gives every footing stone:
+   - a 3–8° sloping top;
+   - a 1–2 cm pillow;
+   - two split planes at 9–16°, kept inside the projection (the faces were being flattened onto front_min before);
+   - 4–7 chips of 3–6 cm;
+   - 1–2 knocked top corners.
+   Boulders are single sub-angular masses with 4–5 cleaves and low-amplitude lumps.
+6. **Dressed blocks.**
+   - The stepped drafted margin, which shaded as a 2–3 cm round-over and was the jamb "seam" line, is removed. Faces are one flat tooled plane, the arris is 1.0–1.5 cm, and dressed objects are smoothed at 24°.
+   - The wing-window mortar cells no longer span the head of the opening. The reveal is now two tubes: face to frame round the frame, then the clear opening to the blocker. No blank panel remains.
+7. **Cone.**
+   - Joints are 0.6–1.1 cm and the outline is less nibbled (rough 1.0): measured visible mortar is 10.8 % after pinning.
+   - Face grids are 7×7 only on stones with hx > 0.13 and 5×5 on the rest: 142.5k tris (was 198k).
+   - The cone is out of the cull.
+8. **Producer notes.**
+   - (a) The degenerate threshold is 5e-8: 0 faces.
+   - (b) Kit section: `kit_set()` / `_derive()` re-derive the dimension table (wing path, turret profile, cap and cushion, thatch planes, roll seating, toothing). The components are `stone_wall(coll, path, height, openings, seed)`, `arched_door`, `plank_door(...)`, `window(...)`, `wing_openings`, `thatch_roof(coll, outline, pitch_deg, thickness, overhang, seed)`, `turret(coll, center, scale, cushion)` and `sarking_deck`, `tuft_fringe`, `mortar_fillet`, `stepped_flashing`, `corbel_cushion`. main() builds the keep only through them. `KEEP_KIT_VARIANT=1` builds a 0.8× turret and a 4.0 × 7.0 m wing with no errors → `round_05/kit_test.png` (scratch .blend outside the building folder).
+   - (c) The build takes 5.8–7.1 min depending on CPU load.
+- **Nice-to-haves done:**
+  - Ridge comb: 3–5 cm wedge shakes, V pairs clustered in groups.
+  - The cap deck covers the missing-shingle hole.
+  - The step stone has 3 chipped edges (it already had a worn hollow).
+
+**Known gaps:**
+- The cushion still reads fairly regular at the turret_cushion distance.
+- The footing faces on the S facet are better broken but still large.
+- A few course stubs remain where the courses pass under the hall skirt valley.
+- The kit still shares one module dimension table (via `kit_set`) rather than passing a context object to every helper.
+- Some open board and shingle shells have mixed normals (recalc on open shells).
+
+
+## CLIENT CORRECTION — producer note 10
+
+Delete all loose ground stones, rubble scatter, path flags, stepping stones and ground aprons that are not part of the building. Do not score them. See producer note 10 in the art bible.

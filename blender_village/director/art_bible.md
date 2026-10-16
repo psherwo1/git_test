@@ -252,3 +252,20 @@ Time-box each builder round to roughly 60-90 minutes of work. After the full rev
 - every other mesh too. Use R = a per-object random, and fill G and B sensibly.
 
 **Enforcement.** `stats.json` lists `mask_attribute_missing`. Any object listed there is a must-fix.
+
+### Producer note 10: NO loose ground stones or paths (client requirement; applies from the next round on)
+
+**Rule.** Loose stones, scattered rubble, path flags, stepping stones, gravel and ground aprons or earth discs that are **not part of the building itself** are out of scope. Terrain and set dressing will be built separately in Unreal.
+
+**Delete** every such object from every building, together with any code that exists only to place them.
+
+**The director and auditors must NOT score anything against the reference for ground dressing.** Do not penalise its absence. Do not ask for it back.
+
+**What stays**, because it is part of the building:
+- the building's own footing, plinth and foundation course;
+- the door threshold, and a door step that is built into the entrance;
+- pad stones under posts;
+- the feet and chocks of the mill props;
+- anything structurally attached.
+
+**Ground contact still matters.** The building's own footing must meet Z = 0 convincingly, so that it can sit on any terrain. A shallow (≤ 5 cm) buried skirt is allowed.

@@ -132,3 +132,15 @@ Read `hut_door.png`. The door sits in a **projecting flat-fronted frame** that s
 7. **Age pass:** convincing irregularity (wobbly eave line, post lean, shingle variation, slipped shingles, plinth stones varied). No perfect circles and no CG repetition.
 8. **Technical:** all of art bible §8 (deterministic, oriented per §1, named objects, material slots `M_wattle`/`M_daub`/`M_roof_shingle`/`M_timber`/`M_stone`/`M_lead`/`M_iron`/`M_rubble`, UVs, ≤ 1.5 M triangles, `.blend` < 80 MB, no artefacts in the 6 views).
 9. **Must-fix list empty**, and no objection in the Director's side-by-side with the reference crops.
+
+
+## CLIENT CORRECTION — the exterior is MOSTLY INTACT DAUB (supersedes the earlier exposed-wattle balance)
+
+The client says there is too much exposed wattle.
+
+- **Daub coverage.** The exterior walls must be **mostly intact daub, about 80–90% of the wall face**.
+- **Exposed wattle** appears only in **small sections**: about 3–5 patches around the whole hut, each roughly 0.3–1.0 m², where the daub has fallen away. Each patch has an eroded, ragged, thick daub edge, with rods visible beneath and a few clinging clumps. This is the existing "daub bay" erosion language, inverted.
+- **The door side panels** may keep their visible woven rope look if they read as intentional framing. Otherwise daub them too.
+- **Daub surface.** Keep a hand-applied, slightly bulging coat with shrinkage cracks, a weathered lower margin and slight sag. Avoid flat board-like daub.
+- **Hidden geometry.** Rods behind intact daub become hidden geometry. **Delete them.** Keep wattle only inside the exposed patches, plus about 10 cm under the patch edges. Re-check est_hidden_pct ≤ 15%.
+- **Ground dressing.** Per producer note 10, delete all path flags, stepping stones, ground rubble and the ground apron. Keep the stone plinth, the door-post pad stones and the threshold.
