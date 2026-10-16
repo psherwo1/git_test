@@ -45,7 +45,32 @@ RESUME THE PRODUCTION (phase 2)
 5. Run the workflow script blender_village/workflows/kit_phase_resume.js with these args.
    - Fill in root/py/render_flags from check_env.
    - The rest is filled in from the handoff state:
-     __RESUME_ARGS__
+     {
+       "root": "<root from check_env.py>",
+       "py": "<python from check_env.py>",
+       "render_flags": "<render_flags from check_env.py, e.g. --device GPU --gpu-backend OPTIX>",
+       "hero_results": [],
+       "heroes_to_audit": [
+         {
+           "id": "hilltop_keep",
+           "round": 7,
+           "score": 8.3
+         }
+       ],
+       "heroes_to_gate": [
+         {
+           "id": "tower_windmill",
+           "round": 7
+         }
+       ],
+       "heroes_to_fix": [
+         {
+           "id": "wattle_roundhut",
+           "round": 9,
+           "feedback": "The sign-off audit REJECTED kit round 8 (director 8.4). Read director/audit_wattle_roundhut_r8.md and the '## Round 8 — score 8.4/10' must-fix list in director/log_wattle_roundhut.md. Fix it in the KIT, so every building benefits: (1) Wire producer note 11's entrance exception into the daub component per vertex, using core.DetailRule.scale_v / min_at_v (added in kit 1.2.0). Within 3 m of the door and below 2.5 m, the coat must keep relief of 1 cm or more; restore the round-7 hand-dab relief there. (2) Apply the cone sag/wave per shingle (rigid per piece), not per vertex, so joints stop shearing open. Open-joint pixels must return to round-7 levels. (3) Fix decal-anchor placement in the kit helper: snap each anchor to the surface along -normal, drop any anchor with no surface within 5 cm, enforce outward normals, and remove duplicates (the keep also had 8 of 104 bad anchors). A previous round-9 fixer was interrupted. Its partial kit edits are saved in director/partial_fix_wattle_roundhut_r9.patch and were reverted from the kit; reuse whatever is sound. Follow the kit edit rules: re-run the keep and windmill builds and confirm their triangle counts."
+         }
+       ]
+     }
 6. The workflow does three things:
    - finishes the hero kit gates (grade, audit, fix rounds) so no hero falls below its signed-off quality;
    - builds and grades 4 kit variant buildings;
@@ -81,4 +106,4 @@ WORKING CONVENTIONS (same as the original session)
 
 These values replace `__RESUME_ARGS__` above.
 
-*(Filled in when the cloud run stops.)*
+The arguments are already embedded in the prompt above. The state they encode is in HANDOFF.md section 4.

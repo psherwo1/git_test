@@ -185,6 +185,17 @@ Return the structured report.`, { label: `migrate:${id}`, phase: 'Migrate heroes
 const priorHeroResults = (args && args.hero_results) || []
 const gated = await parallel([
   ...((args && args.heroes_to_gate) || []).map(h => () => heroGate(h.id, h.round, 'Migrate heroes')),
+  // args.heroes_to_audit: [{id, round, score}] -> the round is already graded as a pass: run the sign-off audit;
+  // if rejected, run a fix round (round+1) with the audit's issues and gate from there
+  ...((args && args.heroes_to_audit) || []).map(h => async () => {
+    const renderDir = `${ROOT}/renders/${h.id}/round_${pad(h.round)}`
+    const a = await audit(`the kit-migrated hero "${h.id}"`, renderDir, `Also compare with the phase-1 sign-off renders of this building; the kit version must not be visibly worse.`, `${h.id}:r${h.round}`, 'Migrate heroes')
+    if (a && a.upheld) { log(`${h.id}: kit version SIGNED OFF at round ${h.round} (${h.score})`); return { id: h.id, signed_off: true, round: h.round, score: h.score } }
+    const fb = `Sign-off audit rejected round ${h.round} (director ${h.score}):\n- ${(a ? a.blocking_issues : ['audit failed; re-verify everything']).join('\n- ')}`
+    const w = await fixRound(h.id, h.round + 1, fb, 'Migrate heroes')
+    if (!w) return { id: h.id, signed_off: false, error: 'fix round failed' }
+    return heroGate(h.id, h.round + 1, 'Migrate heroes')
+  }),
   // args.heroes_to_fix: [{id, round, feedback}] -> run a fix round first (renders into round_NN), then gate from that round
   ...((args && args.heroes_to_fix) || []).map(h => async () => {
     const w = await fixRound(h.id, h.round, h.feedback, 'Migrate heroes')

@@ -641,6 +641,28 @@ class DetailRule:
     def scale(self, depth, p=(1e9, 1e9, 1e9)):
         return 1.0 if self.keeps(depth, p) else 0.0
 
+    # ---- vectorised forms (kit 1.2.0, additive): per-vertex / per-feature gating of relief terms
+    def in_entrance_v(self, P):
+        """bool per point of P (..., 3): inside the entrance zone (plan distance <= entrance_r, 0..entrance_h)."""
+        P = np.asarray(P, float)
+        d = np.hypot(P[..., 0] - self.entrance[0], P[..., 1] - self.entrance[1])
+        return (d <= self.entrance_r) & (P[..., 2] >= -0.05) & (P[..., 2] <= self.entrance_h)
+
+    def min_at_v(self, P):
+        """relief threshold (m) per point of P (..., 3)."""
+        P = np.asarray(P, float)
+        if not self.active:
+            return np.zeros(P.shape[:-1])
+        return np.where(self.in_entrance_v(P), self.entrance_relief, self.min_relief)
+
+    def scale_v(self, depth, P):
+        """1.0 / 0.0 per point of P (..., 3) for a relief component of amplitude `depth` (scalar or per point):
+        the vectorised rule.scale(), so a component gates each relief term where it is, not building-wide."""
+        P = np.asarray(P, float)
+        if not self.active:
+            return np.ones(P.shape[:-1])
+        return (np.asarray(depth, float) >= self.min_at_v(P) - 1e-9).astype(float)
+
 
 # =============================================================================================
 # mesh accumulator

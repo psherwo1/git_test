@@ -1,6 +1,6 @@
 {
   "objects": 209,
-  "triangles": 1134997,
+  "triangles": 1134993,
   "bbox_min": [
     -6.548432350158691,
     -3.3874478340148926,
@@ -28,8 +28,8 @@
     "M_timber",
     "M_timber_weathered"
   ],
-  "est_hidden_pct": 12.5,
-  "est_hidden_triangles": 142016,
+  "est_hidden_pct": 12.1,
+  "est_hidden_triangles": 136908,
   "material_slot_count": 10,
   "mask_attribute_missing": []
 }

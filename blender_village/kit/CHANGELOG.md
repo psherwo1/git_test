@@ -14,7 +14,51 @@
 |---|---|---|
 | wattle_roundhut | 1.0.0 (round 8) | 744,105 (re-run after 1.1.0: 744,105) |
 | hilltop_keep | 1.1.0 (round 7) | 1,123,849 (variant 1,025,777) |
-| tower_windmill | not yet (phase-1 script) | — |
+| tower_windmill | 1.2.0 (round 7) | 1,134,993 (variant 865,123) |
+
+---
+
+## 1.2.0 (2026-10-16): the stone-drum tower family, tower windmill migrated (MILL builder, round 7)
+
+### New modules (no existing module changed behaviour)
+
+- **`tmplmesh.py`.** The mill's template-instanced mesh machinery: `tmpl_box` / `tmpl_rings` topologies with the
+  buried / covered faces dropped, `rbox`, `sweep`, `lathe`, `profile_block`, `add_grid`, transforms, smooth noise,
+  `hewn_beam` / `hewn_between` / `facet_shave` (note-11 `min_relief`, draws unchanged), and `BatchAcc` (N pieces per
+  `add()`; palette slots via `palette.material`, box UVs, sharp-by-angle, degenerate / buried-face removal,
+  `core.nanite_clean` + a < 1e-8 m2 polygon sweep, Mask through `mask.write_mask` with per-piece R / G); `mesh_tmpl`
+  (a kit mesh such as `shingles.shingle_mesh` / `shake_mesh` as a batch template), `fill_acc` (a batch into a
+  `core.Acc` so pooled variants go through `pools.Pools.mesh`), `tower_b` (Mask B for tall buildings).
+- **`split_stones.py`.** The mill's vectorised split-stone language (`split_batch`, `SPLIT_STYLES`, `conchoidal`),
+  with `min_relief` per stone (note 11: face skin, spalls and scoops below the threshold dropped, draws unchanged).
+- **`components/`**: `drum_frame` (`DrumFrame`, helpers taking the frame first, `relief_min`, `drum_finish`,
+  `drum_hidden_cull`), `drum_wall` (`round_stone_drum`, `blind_arcade`, `coursing` with wandering beds / pinch-outs,
+  `follow_beds`, `Wall`), `drum_band` (`baluster_row` aged, `dentil_corbels`), `drum_door` (`arched_door`,
+  `entrance_step`), `shake_apron`, `smock_tower`, `mill_cap`, `fan_wheel` (+ alias `wind_wheel`), `tail_vane`
+  (`rear_tail_vane`), `raking_props`, `rotor_checks` (`rotor_clearance`), `drum_decals` (`drum_tower_decals`).
+
+### Additions to existing modules (append-only)
+
+- **`stones.py`.** At the end: imports the split styles and registers `split_rubble`, `split_footing`, `split_pin`,
+  `split_dressed`, `split_hero`, `split_ashlar`, `split_flag` in `STYLES` (`make_stone("split_rubble", rng,
+  half=...)`).  No existing style or function changed.
+- **`shingles.py`.** At the end: SIZE_TABLE row `shingle_small` (the gablet hood over a windshaft, with its
+  reason).  The mill cap now uses the shared chunky `shingle` unit and the apron the shared `shake_mesh`.
+- **`README.md`.** Status line and a "Kit 1.2.0" section.
+
+### Verification
+
+- **Pure refactor.** Before any intentional change, the kit mill reproduced the phase-1 script exactly: all 236
+  accumulated arrays (every part's vertices, faces and material indices, every pooled variant and every linked-
+  duplicate matrix) identical, for the hero and for `MILL_KIT_VARIANT`.
+- **Round 7 (note 11 on, ensemble roughening, chunky cap, kit shakes, cull):** 1,134,993 triangles, 12.1 % hidden,
+  10 slots, Mask complete, 0 needle / 0 zero-area polygons, 107 decal anchors; variant 865,123 triangles, 13.2 %
+  hidden, 108 anchors.  Deterministic: a second build gave the same triangle count and an identical
+  `decal_anchors.json`.
+- **Other buildings re-run after the 1.2.0 edits** (to scratch files):
+  - `wattle_roundhut`: builds without errors, **744,105 triangles** (record 744,105, 0.0 %).
+  - `hilltop_keep`: builds without errors, **1,123,849 triangles** (1.1.0 record 1,123,849, 0.0 %).
+- `__init__.__version__` was left for the kit architect to bump (it still reads 1.0.0).
 
 ---
 

@@ -980,3 +980,133 @@ It is not a 10, because a production designer would still flag these in an actor
 - Kit: pass a context or dimension object down to the helpers instead of the module table.
 
 **Workflow note:** the user has lowered the pass criterion to 8.2 for now. This round's 9.1 clears it. The must-fix list above still stands for the eventual 10. The user's round-hut daub/wattle correction belongs to the HUT log and was not applied here.
+
+## Round 7 — builder entry (kit migration)
+
+### Files
+
+- **Script.** `buildings/tower_windmill/build_tower_windmill.py` is now a thin declarative assembly (about 150 lines)
+  on the shared kit `kit/village_kit/` (kit 1.2.0): one `KIT` table of per-component parameter dicts, `kit_set()`,
+  and `MILL_KIT_VARIANT=1`.  Seeded and deterministic: a second build gave the same triangle count and an identical
+  `decal_anchors.json`.  A build takes about 3-5 min on the shared CPU; most of it is the hidden-geometry ray test.
+- **Outputs.** `tower_windmill.blend` (26.6 MB, compressed) and `decal_anchors.json`; the variant in
+  `kit_variant/tower_windmill_kit_variant.blend` (20.0 MB) and `kit_variant/decal_anchors.json`.
+- **Renders.** `renders/tower_windmill/round_07/`: the 6 views at 32 samples, `stats.json`, `hidden.json`; the
+  variant in `round_07/kit_variant/`.  `round_07/builder_extra/`: side-by-side comparisons with sign-off round 6
+  (`cmp_r06_r07_<view>.png`, round 6 left) and builder close-ups (`c_wall_left`, `c_balusters`, `c_band_y01`,
+  `c_arcade_east`, `c_door`, `c_apron`, `c_cap_rear`, 24 samples).
+
+### Stats
+
+| | Round 6 (sign-off) | Round 7 | Round 7 variant |
+|---|---|---|---|
+| Triangles | 1,212,256 | 1,134,993 | 865,123 |
+| est_hidden_pct | 14.4 % | 12.1 % | 13.2 % |
+| Objects | 211 | 209 (175 linked duplicates of 24 pooled meshes) | 183 |
+| Material slots | 10 | 10, all from the palette | 10 |
+| mask_attribute_missing | none | none | none |
+| Needle / zero-area polygons | 0 / 0 | 0 / 0 on every mesh | 0 / 0 |
+| Decal anchors | — | 107 | 108 |
+| Bbox (m) | 10.77 x 9.13 x 16.21 | 10.77 x 9.13 x 16.21 (unchanged) | 9.23 x 8.49 x 13.61 |
+
+- Clearances unchanged from round 6: wheel vs apron / props / tail PASS (>= 0.30 m), lowest rotating point 8.43 m,
+  tail swept clearance to the tower boards 0.256 m at any cap yaw.
+
+### Kit migration
+
+1. **Pure refactor first.** The 5,800-line phase-1 script was split into kit modules by a token-level rewrite: every
+   module dimension became an attribute of an explicit frame `g` (`components.drum_frame.DrumFrame`), every helper
+   that reads one takes `g` as its first argument (nothing reads a module global), and the per-build state (named
+   parts, wall rasters, pooled placements, seed salt) lives on the frame.  **Before any intentional change the kit
+   build reproduced the phase-1 mill exactly**: all 236 accumulated arrays (every part's vertices, faces and material
+   indices, every pooled variant and every linked-duplicate matrix) identical, for the hero and for the variant.
+2. **Shared modules replace the private code.**
+   - **Palette:** materials come only from `palette.material` (no `bpy.data.materials.new` in the mill).
+   - **Mask:** the private `set_mask` is gone; every mesh gets its Mask from `mask.write_mask` (per-piece R / G ride
+     through the hygiene pass as point attributes; B from `tmplmesh.tower_b`, the mill's tall-building rule).
+   - **Pooling:** balusters, corbels and bolt heads are `pools.Pools` meshes (`Pools.mesh` + `Pools.place`, linked
+     duplicates in `MILL_kit_instances`).
+   - **Stones:** the split-stone generator is a kit module (`split_stones.py`) registered in `stones.STYLES` as
+     `split_rubble` / `split_dressed` / ... (`make_stone("split_rubble", ...)`).
+   - **Shingles / shakes:** the cap uses `shingles.shingle_mesh` with the 16 pooled `SHINGLE_VARIANTS` at the shared
+     chunky `SIZE_TABLE["shingle"]` scale (0.33-0.55 m wide, 0.30-0.40 m exposure, 3.4-4.2 cm butts, joints
+     staggered about half a unit course to course, 20 % turned 2-3.5 deg) -- the ensemble's one roofing scale; the
+     tiny gablet hood uses the documented `shingle_small` row.  The apron uses `shingles.shake_mesh`
+     (`SIZE_TABLE["shake"]` widths and butts).
+   - **Hygiene:** `core.nanite_clean` on every mesh plus a sweep of polygons under 1e-8 m2.
+3. **Components** (`kit/village_kit/components/`, each `component(g, <dimensions>=None, seed=None)`):
+   `round_stone_drum` (drum with arcade and balustrade band, cornice, door, slit windows), `blind_arcade`,
+   `arched_door`, `entrance_step`, `smock_tower`, `shake_apron`, `mill_cap` (hipped mill cap), `fan_wheel`
+   (16-blade fan wheel rotor), `rear_tail_vane` (tail vane on the rear boom), `raking_props`, plus `drum_finish`,
+   `drum_hidden_cull`, `drum_tower_decals`, `rotor_clearance`.
+4. **Variant (`MILL_KIT_VARIANT=1`)**: drum r 2.0 m with 8 arches and a 4.2 m cornice, tower 4.0 m tall (af 2.7 ->
+   1.9 m), cap 2.6 x 2.4 m, a 12-blade wheel (r 1.2 / 2.8 / 3.4 m), shorter boom and vane, its own props --
+   865,123 tris, 13.2 % hidden, 108 anchors, clearance PASS (`round_07/kit_variant/`).
+
+### Ensemble consistency fix (drum masonry and balustrade)
+
+- **Rough rubble, not near-ashlar** (`drum_wall.coursing`, `follow_beds`, the frame's `rubble` table):
+  - bed lines wander up to +-3.6 cm (cap 0.42 x the course height) plus a second shorter wave;
+  - **pinch-outs**: about 3 per drum, a course thins to nothing over 0.9-1.9 m and the course above thickens;
+  - every stone is sheared / tapered to follow its own sloping beds (wedge stones where a course pinches);
+  - course heights 8.5-19 cm with 20 % up to 27 cm, lengths 0.15-0.62 m with 15 % long stones, 12 % through-stones
+    over two courses, 20 % of stones with a pinning strip of 1-2 unequal pinners (never a row of equal chips);
+  - +-2 deg in-plane roll, 26 % of stones yawed 2-4 deg with one end proud, face depth range 2.4 cm;
+  - rougher split outlines (bigger knocked-off corners, more taper and shear).
+  The plain rubble now reads as the keep's coursed rubble (compare `c_wall_left` and `cmp_r06_r07_actor_closeup`).
+- **Aged balustrade** (`drum_band.baluster_row`): 12 pooled variants from 5 turned profile families (vase, double
+  bead, squat bulb, column, inverted vase), 8 eroded (a bead or neck lost), 4 chipped (a 2-2.5 cm split facet),
+  3 plain square replacement blocks, 3 broken stumps and 2 lost altogether (the recessed ashlar shows); every
+  baluster leans +-1 deg and sits up to 3 mm low; no two neighbours share a variant.
+
+### Producer note 11 (detail-scale rule + decal anchors)
+
+- `DrumFrame(detail_rule=True)`: 2 cm threshold, 1 cm in the entrance zone (3 m round the door, 0-2.5 m high);
+  every switch keeps its random draws, so the kept shapes are unchanged.
+  - **Stones:** the face skin (low / fine face noise) and the conchoidal scoops are no longer modelled; dressed
+    spalls under 2 cm are dropped on the arcade, band, cornice and corbels, kept down to 1 cm on the door surround,
+    threshold and the slit window inside the entrance zone.  Outline cuts, split facets, pillow and arris wear are
+    stone shape and stay.  The +-5 mm mortar-body relief is flat.
+  - **Timber:** adze scallops and checks on the hewn arms, boom, braces, king post, chocks and sheer ends; the prop
+    poles' seasoning checks, adze flats, bark strip and knot swellings (branch stubs, bow and the 2.5-3.5 cm butt
+    split stay); the door planks' face checks (the 2.7 cm split at the arched head stays, entrance zone); the chock
+    facets.
+- **Decal anchors:** 107 empties `DA_<type>_<nnn>` in `DECAL_ANCHORS` (-Z into the surface, custom properties
+  `decal_type`, `size_w`, `size_h`, `surface`, `probability`, `seed`) and `buildings/tower_windmill/decal_anchors.json`
+  (units / axes header, the kit table): damp_rise 14 (drum foot, north more likely), moss 12 (north foot, north
+  apron shakes and cap shingles, prop pads), lichen 12 (cornice cap, upper string course, arcade and window sills),
+  water_streak 20 (below the window and arcade sills, the cornice drip, the cap eave on the tower boards, the boom
+  end on the vane, the wheel rim on the blades), rust_stain 9 (door strap hinges, prop collar and lugs, boom bands),
+  soot 4 (door head, slit windows, hatch), crack 22 (door / window / arcade corners and crowns, settlement low in
+  the rubble and under the band), grime 2 (door jambs at hand height), repair_patch 8 (rubble, patched tower
+  boards), plaster_patch 4 (render remnants beside the door, plastered passage).
+
+### Hidden geometry (note 6)
+
+- `drum_hidden_cull`: `core.visibility_cull` (review views + 270 actor / band / crane / door views) only on pieces
+  with a continuous backing behind them -- arcade and band dressed work and recess backs (wall-core ring) and the
+  cap shingles (sarking deck) -- so no cull can open a see-through hole: -19,862 polygons, 12.1 % hidden.  Checked
+  in `c_band_y01` and `c_arcade_east`: no slots or voids.
+
+### Client corrections and phase-1 qualities kept
+
+- Tail vane on the doubled rear boom behind the wheel, braced from the king post; cap yaw 21 deg (vane left of the
+  tower from the ref camera, edge-on behind the wheel from the front).  16-blade fan wheel only (no lattice sails).
+- **No sloping buttress**; the drum runs continuous.  **No ground dressing**: only the built-in door step, the prop
+  pads / chocks and the footing (<= 5 cm skirt).
+- Everything signed off in round 6 is in the same place: arcade piers, sills, wall-core backing, door leaf ajar with
+  ladder and floor sill, prop feet, clearances, bbox.
+
+### Kit edit rules
+
+- Only added modules and append-only additions to `stones.py` (split styles registered) and `shingles.py`
+  (`shingle_small` row); no existing function changed.  Re-run after the edits: `wattle_roundhut` 744,105 tris
+  (unchanged), `hilltop_keep` 1,123,849 tris (unchanged).  Recorded in `kit/CHANGELOG.md` (1.2.0).
+
+### Known gaps
+
+- The chunky cap shingles are a deliberate change of scale (the ensemble's one roofing scale): the cap now reads
+  like the hut cone with 4-5 courses instead of 13 fine ones.  The hood keeps a small documented unit.
+- The visibility cull is the slow part of the build (about 2.5-3.5 min on the shared CPU).
+- Round-6 must-fixes 1-5 (door-surround spall clamp check, two-stone threshold, single-stone prop pads, iron
+  staples, V checks) were not reworked this round; note 11 now hands the pole checks and sub-2 cm spalls to decals.

@@ -74,7 +74,42 @@ The full text is in the art bible's producer notes and the per-building logs.
 
 ## 4. State at handoff
 
-*(Filled in at the moment of handoff. See section 7.)*
+The cloud run was stopped on 2026-10-16 at 16:51 UTC, at the planned handoff point: both kit migrations had finished.
+
+**Phase 1** is complete. The three heroes are signed off, with the ensemble approved at 8.4. The phase-1 files are in `buildings/<id>/signoff_phase1/` and **remain the deliverables** until a kit version is signed off.
+
+**Phase 2, the modular kit (`kit/village_kit`, version 1.2.0, about 30 component modules):**
+
+| Hero | Kit round | Status | Next on resume |
+|---|---|---|---|
+| wattle_roundhut | 8 | Graded **8.4**, sign-off audit **REJECTED** (`director/audit_wattle_roundhut_r8.md`) | **Fix round 9**, then gate |
+| hilltop_keep | 7 | Graded **8.3** (pass); its sign-off audit was interrupted before it finished | **Audit round 7**; if rejected, fix round 8, then gate |
+| tower_windmill | 7 | Migration finished and rendered; **not yet graded** | **Gate from round 7** (grade, then audit) |
+
+**What the roundhut audit rejected:**
+- the entrance exception of producer note 11 is not wired into the daub, so the door-bay coat went flat;
+- the cone sag is applied per vertex, which opens the shingle joints;
+- some decal anchors are implausible.
+
+**Kit-level issues to fix once, for all buildings:**
+- the decal-anchor helper places some anchors badly (the keep also has 8 of 104 wrong);
+- the daub entrance exception is not wired in;
+- the cone age pass works per vertex instead of per piece.
+
+**The interrupted round-9 roundhut fixer.** Its partial edits to the 4 hut components were saved as `director/partial_fix_wattle_roundhut_r9.patch` and **reverted** from the kit. The windmill migrator's finished additions (`core.DetailRule.scale_v` and related, plus the changelog) were kept. After the revert, all three buildings rebuilt from the kit, with the triangle counts recorded below.
+
+**Not yet started:** the 4 kit variant buildings, and the kit feasibility decision.
+
+**Triangle counts in the latest renders:**
+
+| Building | Signed-off phase 1 | Kit version |
+|---|---|---|
+| hut | 1.31 M | 744 k |
+| keep | 1.30 M | 1.12 M |
+| windmill | 1.21 M | 1.13 M |
+
+All three kit versions are at 14.1 % hidden or less, on the palette, with Mask complete.
+
 
 ## 5. Desktop setup (one time)
 
