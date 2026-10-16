@@ -141,3 +141,33 @@ Each round is scored on 6 axes. The overall grade is roughly the *lowest* axis r
   - **Nothing remains on the must-fix list.** If the Director can name any defect a production designer would flag, the grade is not 10.
 
 The Director keeps a must-fix list per building in `director/log_<id>.md`. A round may only be graded 10 when that list is empty and the newest full 6-view render set has been reviewed side by side with the reference crops.
+
+---
+
+## Producer notes from the client (added mid-production; apply from the next round on)
+
+1. **Target is Unreal Engine 5.8 with Nanite enabled.**
+   - No manual LODs are needed.
+   - Keep geometry Nanite-friendly:
+     - closed or solid pieces where possible;
+     - no zero-area or degenerate faces;
+     - no huge single meshes mixing hero and hidden geometry;
+     - nothing modelled that will never be seen (interiors beyond the visible depth of doorways and windows).
+2. **The village will need 40-50 buildings, and these three heroes become the basis of a MODULAR KIT.**
+   - Write build code so every component is a separate, parameterised function. Examples:
+     - `round_stone_wall(radius, height, seed)`
+     - `conical_roof(radius, pitch, flare, overhang, tiers, seed)`
+     - `arched_door(width, height)`
+     - `finial(style)`
+     - `turret(...)`
+     - `sail(...)`
+   - Each component produces its own named object(s).
+   - Avoid code that only works for one hard-coded size.
+3. **Repeated small elements should share mesh data** where it does not hurt the look. These are shingle or shake variants, stone variants, balusters, pegs, nails and hinge parts.
+   - Build a small pool of variants, roughly 6-20, and place linked duplicates or instances rather than unique copies of everything.
+   - This becomes Unreal instanced static meshes and keeps memory sane across 50 buildings.
+4. **Camera usage:**
+   - at most about 3 buildings within 10 m of actors at once;
+   - typical shots are actors right outside one building's entrance, and walk-throughs past many buildings.
+   - Close-up quality matters most at entrances, ground contact and eye-level walls. Roof tops are seen mainly from the aerial and mid distance.
+5. These notes do NOT lower the 10/10 bar. They govern how the geometry is structured.

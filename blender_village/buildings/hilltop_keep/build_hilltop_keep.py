@@ -3465,7 +3465,7 @@ def catmull_closed(C, n_per):
 
 
 def roll_profile():
-    nper = np.array([1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1])
+    nper = np.array([1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1])
     P, sid = catmull_closed(_ROLL_CTRL, nper)
     vis = np.interp(sid, np.arange(len(_ROLL_CTRL) + 1), np.concatenate([_ROLL_VIS, _ROLL_VIS[:1]]))
     return P, vis
@@ -3513,7 +3513,7 @@ def rib_stations(L, rng, sp=(0.01, 0.04), dep=(0.003, 0.015)):
     while g[-1] < L:
         g.append(g[-1] + rng.uniform(*sp))
     g = np.array(g[:-1])
-    d = dep[0] + (dep[1] - dep[0]) * rng.uniform(0, 1, len(g)) ** 1.7
+    d = dep[0] + (dep[1] - dep[0]) * rng.uniform(0, 1, len(g)) ** 1.2
     mids = 0.5 * (g[1:] + g[:-1])
     st = np.concatenate([[0.0], g, mids, [L]])
     dd = np.concatenate([[0.0], d, np.zeros(len(mids)), [0.0]])
@@ -3647,10 +3647,14 @@ def thatch_courses(acc, name, rng, lobe_w, seed, m_max=4.15, m0=0.64):
         isb = np.zeros(ncol, bool)
         isb[0::3] = True
         lid = np.minimum(np.arange(ncol) // 3, nl - 1)
-        prot = np.clip(rng.normal(0, 0.009, nl), -0.02, 0.02)
-        crown = rng.uniform(0.006, 0.013, nl)
+        # lobes come in loose clumps: protrusion varies smoothly over 4-8 lobes plus a little per-lobe jitter
+        li = np.arange(nl)
+        prot = np.clip(0.013 * n1(li * 0.22, seed * 31 + ci) + rng.normal(0, 0.004, nl), -0.02, 0.02)
+        crown = rng.uniform(0.005, 0.010, nl)
+        lean_l = rng.normal(0, 0.006, nl)
         lprev = np.maximum(lid - 1, 0)
-        p_col = np.where(isb, np.minimum(prot[lprev], prot[lid]) - rng.uniform(0.006, 0.012, ncol), prot[lid])
+        p_col = np.where(isb, np.minimum(prot[lprev], prot[lid]) - rng.uniform(0.003, 0.007, ncol), prot[lid])
+        lean_c = np.where(isb, 0.5 * (lean_l[lprev] + lean_l[lid]), lean_l[lid])
         pinch = np.ones(ncol)
         if ci in pinch_ids:
             ac = rng.uniform(a_lo + 1.2, a_hi - 1.2)
@@ -3658,7 +3662,7 @@ def thatch_courses(acc, name, rng, lobe_w, seed, m_max=4.15, m0=0.64):
             pinch = 1 - 0.86 * 0.5 * (1 + np.cos(np.pi * np.clip((A - ac) / (0.5 * wpi), -1, 1)))
         wave = 0.025 * n1(A / 1.1, seed * 100 + ci)
         stp = step * (1 + 0.15 * n1(A * 0.9, seed * 100 + ci + 50)) * pinch
-        cr_ = np.where(isb, -rng.uniform(0.004, 0.009, ncol), crown[lid]) * pinch
+        cr_ = np.where(isb, -rng.uniform(0.002, 0.005, ncol), crown[lid]) * pinch
         mi = m + wave
         mb = mi - p_col * pinch
         # height of the surface below at the tip (course below, or the eave roll for the first course)
@@ -3673,14 +3677,15 @@ def thatch_courses(acc, name, rng, lobe_w, seed, m_max=4.15, m0=0.64):
             f = np.clip((mb - m3) / np.maximum(m4 - m3, 1e-3), 0, 1)
             low = h3 + (h4 - h3) * f
         sw_b = swell(A, mi)
-        top = TH_BASE + stp + sw_b + cr_
+        top = TH_BASE + stp + sw_b + np.where(isb, 0.45, 1.0) * cr_
         dh = np.maximum(top - low, 0.012)
         run = dh / math.tan(beta)
         m_far = mi + E + 0.07
         rows_m = np.stack([mb + 0.03, mb, mb + run - 0.012, mb + run + 0.022, m_far], 1)
         h_far = TH_BASE - 0.004 + swell(A, m_far) + 0.3 * cr_
-        rows_h = np.stack([low - 0.035, low + 0.004, top - 0.007, top, h_far], 1)
+        rows_h = np.stack([low - 0.035, low + 0.004 + np.where(isb, cr_, 0.0), top - 0.007, top, h_far], 1)
         Am = np.repeat(A[:, None], 5, 1)
+        Am = Am + lean_c[:, None] * np.array([0.0, 0.0, 1.0, 1.2, 2.5])[None, :]
         Am = Am + 0.003 * n1(rows_m * 6.0 + A[:, None] * 0.4, seed + 9)
         W = o(Am, rows_m) + rows_h[..., None] * nrm
         # butts turn up 2-4 cm against the turret fillet
@@ -3701,7 +3706,7 @@ def thatch_courses(acc, name, rng, lobe_w, seed, m_max=4.15, m0=0.64):
         C = Wf[q].mean(1)
         x_, y_ = C[:, 0], C[:, 1]
         bad = thatch_cull(C, tol_skirt=False)
-        bad |= (plane_under(name, x_, y_) - wing_under(x_, y_)) > 0.10
+        bad |= (plane_under(name, x_, y_) - wing_under(x_, y_)) > 0.05
         bad |= ~((x_ > WX_W - W_OVH - 0.12) & (x_ < WX_E + W_OVH + 0.04) & (y_ > WY_S - W_OVH - 0.12) &
                  (y_ < WY_N + W_OVH + 0.12))
         zsq, ppq = skirt_z_at(Wf[q][..., 0], Wf[q][..., 1])
@@ -3858,14 +3863,22 @@ def build_wing_ridge(coll):
             cross = np.array([x + rng.normal(0, 0.012), WY_R + rng.normal(0, 0.01), zc + rng.normal(0, 0.01)])
             # walk down the shake axis until the butt is >= 4.5 cm inside the dome (or near the log axis)
             Ldn = 0.06
-            while Ldn < 0.6:
+            buried = False
+            while Ldn < 0.32:
                 pb = cross - D * Ldn
                 lat = pb[1] - WY_R
-                zd = float(np.interp(pb[0], path[:, 0], path[:, 2])) + float(ridge_dome_top(lat))
+                zd = float(np.interp(pb[0], path[:, 0], path[:, 2])) + float(ridge_dome_top(lat)) - 0.015
                 dl = math.hypot(lat, pb[2] - zl)
                 if pb[2] < zd - 0.045 or dl < LOG_R - 0.025:
+                    buried = True
                     break
                 Ldn += 0.01
+            if not buried:
+                # steep leaners: stand them more upright and end the butt inside the rider log
+                lean = min(lean, math.atan(0.035 / (zc - zl)))
+                D = side * math.sin(lean) * hdir + math.cos(lean) * np.array([0, 0, 1.0])
+                D /= np.linalg.norm(D)
+                Ldn = (zc - zl) / max(D[2], 0.5)
             recs.append((cross - D * Ldn, D, Lup + Ldn, rng.uniform(0.06, 0.12), rng.uniform(0.02, 0.04),
                          int(rng.integers(0, 3)), math.radians(rng.uniform(20, 40)) * rng.choice([-1, 1]),
                          rng.uniform(0.02, 0.05), Ldn))
@@ -3900,7 +3913,8 @@ def build_wing_ridge(coll):
     h = h + 0.002 * np.cos(xn * np.pi * 1.5 + L[:, None] * 11) * (h > 0)
     Wc = base[:, None, :] + u[..., None] * D[:, None, :] + x_[..., None] * E[:, None, :] + h[..., None] * Nn[:, None, :]
     acc.add(Wc.reshape(-1, 3), inst_faces(qd, M, P.shape[1]), "M_roof_shake", uv=np.stack([x_, u], -1).reshape(-1, 2))
-    log("  ridge comb shakes", M)
+    ldn = np.array([r[8] for r in recs])
+    log("  ridge comb shakes", M, "butt depth below crossing: min %.2f mean %.2f max %.2f" % (ldn.min(), ldn.mean(), ldn.max()))
     for xx in np.arange(lp[0, 0] + 0.3, lp[-1, 0], 0.9):
         zz = np.interp(xx, lp[:, 0], lp[:, 2])
         peg(acc, np.array([xx, WY_R, zz + LOG_R]), np.array([0, 0, 1.0]), rad=0.016, proud=0.03)
@@ -3919,7 +3933,7 @@ def build_wing_ridge(coll):
         nb_ = nS + nW
         nb_ /= np.linalg.norm(nb_)
         hp = np.column_stack([xy, z + (TH_BASE + 0.05) / CP_])
-        hp[:, 2] -= 0.10 * np.clip(1 - t[:, 0] / 0.12, 0, 1)
+        hp[:, 2] -= 0.40 * np.clip(1 - t[:, 0] / 0.16, 0, 1) ** 1.6
         # stop where the dome meets the fillet against the turret stone
         dt = tur_dist(hp[:, 0], hp[:, 1], hp[:, 2])
         stop = np.flatnonzero(dt < 0.10)
@@ -3927,7 +3941,7 @@ def build_wing_ridge(coll):
         hp = hp[:i_end]
         if len(hp) > 4:
             d_roll(acct, hp, HIP_DOME, HIP_VIS, 61 + sy, rng, up=nb_, var=0.02, sp=(0.012, 0.04),
-                   dep=(0.003, 0.012), taper=(0.35, 0.28))
+                   dep=(0.003, 0.012), taper=(0.0, 0.28))
             HIP_ENDS.append((hp[-1], (hp[-1] - hp[-2]) / np.linalg.norm(hp[-1] - hp[-2]), nb_))
     finalize(acc, coll)
     finalize(acct, coll, smooth_deg=70.0)
@@ -3987,36 +4001,76 @@ def build_wing_structure(coll):
         prof = ell * np.array([rx, ry])
         d_roll(accf, pts, prof, np.ones(len(prof)), seed, frng, up=ups, var=0.016, sp=(0.03, 0.08),
                dep=(0.0, 0.004), taper=(0.04, 0.04), mat="M_mortar", z_wave=0.0)
+    # find the real outer thatch surface next to the stone by ray-casting down onto the built thatch meshes
+    from mathutils import Vector
+    from mathutils.bvhtree import BVHTree
+    dg = bpy.context.evaluated_depsgraph_get()
+    trees = [BVHTree.FromObject(bpy.data.objects[nm], dg) for nm in
+             ("KEEP_wing_roof_thatch_courses", "KEEP_wing_roof_thatch", "KEEP_wing_roof_rolls") if nm in bpy.data.objects]
     pts = []
-    for th in np.linspace(0, 2 * np.pi, 540, endpoint=False):
-        def f(z):
-            r = float(tur_reff(th, z))
+    for th in np.linspace(0, 2 * np.pi, 720, endpoint=False):
+        best = None
+        for zz in np.arange(6.4, 2.3, -0.04):
+            r = float(tur_reff(th, zz)) + 0.035
             x, y = TUR_C[0] + r * math.cos(th), TUR_C[1] + r * math.sin(th)
-            return z - float(thatch_top_z(x, y)), x, y
-        lo, hi = 2.3, 6.3
-        if f(lo)[0] > 0 or f(hi)[0] < 0:
+            zh = None
+            for tr in trees:
+                hit = tr.ray_cast(Vector((x, y, zz + 0.04)), Vector((0, 0, -1.0)), 0.08)
+                if hit[0] is not None and (zh is None or hit[0].z > zh):
+                    zh = hit[0].z
+            if zh is not None:
+                best = (x, y, zh)
+                break
+        if best is None:
             pts.append(None)
             continue
-        for _ in range(36):
-            mid = 0.5 * (lo + hi)
-            if f(mid)[0] > 0:
-                hi = mid
-            else:
-                lo = mid
-        _, x, y = f(lo)
+        x, y, zh = best
         zsk, ppk = skirt_z_at(np.array([x]), np.array([y]))
         if x > WX_E - 0.3 or float(ppk[0]) < SKIRT.p_lip + 0.1:
             pts.append(None)
             continue
-        pts.append(np.array([x, y, lo + 0.035]))
-    # rotate so a run never starts in the middle of the loop
+        r = float(tur_reff(th, zh))
+        pts.append(np.array([TUR_C[0] + r * math.cos(th), TUR_C[1] + r * math.sin(th), zh + 0.01]))
+    # median-smooth the heights round the loop (course steps become gentle ramps under the fillet)
+    zs_ = np.array([p_[2] if p_ is not None else np.nan for p_ in pts])
+    for i_ in range(len(pts)):
+        if pts[i_] is None:
+            continue
+        w_ = zs_[[(i_ + k_) % len(pts) for k_ in range(-4, 5)]]
+        w_ = w_[~np.isnan(w_)]
+        pts[i_] = pts[i_].copy()
+        pts[i_][2] = max(float(np.median(w_)), pts[i_][2] - 0.02)
     first_none = next((i for i, p_ in enumerate(pts) if p_ is None), 0)
     pts = pts[first_none:] + pts[:first_none]
+    wedge = np.array([(0.13, -0.035), (0.118, 0.003), (0.09, 0.011), (0.058, 0.024), (0.03, 0.043), (0.008, 0.06),
+                      (-0.012, 0.07), (-0.03, 0.062), (-0.07, 0.03), (-0.08, -0.035)])
     for r_ in runs_of_list(pts, 4):
+        # resample evenly and smooth the curve
+        dd_ = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(r_, axis=0), axis=1))])
+        ss_ = np.arange(0, dd_[-1], 0.03)
+        r_ = np.stack([np.interp(ss_, dd_, r_[:, i]) for i in range(3)], 1)
+        for _ in range(3):
+            r_[1:-1] = 0.25 * r_[:-2] + 0.5 * r_[1:-1] + 0.25 * r_[2:]
+        if len(r_) < 4:
+            continue
         ups = np.column_stack([r_[:, 0] - TUR_C[0], r_[:, 1] - TUR_C[1], np.zeros(len(r_))])
         ups /= np.linalg.norm(ups, axis=1, keepdims=True)
-        # profile 'up' = outward from the stone: rx along the stone face (vertical), ry out over the thatch
-        mortar_tube(r_, ups, 0.10, 0.068, 51 + len(r_))
+        T_ = np.gradient(r_, axis=0)
+        Rz = np.cross(ups, T_)[:, 2].mean()
+        prof = wedge * np.array([1.0 if Rz > 0 else -1.0, 1.0])
+        # irregular: top edge height and toe reach vary along the run, small lumps
+        n_ = len(r_)
+        sc_top = 1 + 0.22 * n1(ss_[:n_] / 0.55, 400 + n_)
+        sc_out = 1 + 0.25 * n1(ss_[:n_] / 0.45, 410 + n_)
+        profs = []
+        for i_ in range(n_):
+            pr = prof.copy()
+            pr[:, 0] = np.where(pr[:, 0] * np.sign(prof[0, 0]) > 0, pr[:, 0] * sc_top[i_], pr[:, 0])
+            pr[:, 1] = np.where(pr[:, 1] > 0, pr[:, 1] * sc_out[i_], pr[:, 1])
+            pr = pr + 0.004 * n1(np.arange(len(pr)) * 1.3 + i_ * 0.7, 420)[:, None]
+            profs.append(pr)
+        V, F = sweep(r_, ups, np.stack(profs))
+        accf.add(V, F, "M_mortar")
     # collars where the eave roll dives into the stone (W eave): trace the roll section's entry curve
     for P in EAVE_RUNS:
         if P is None or len(P) < 5:
@@ -4044,7 +4098,7 @@ def build_wing_structure(coll):
                 ups /= np.linalg.norm(ups, axis=1, keepdims=True)
                 tg = np.gradient(C, axis=0)
                 ups = ups - (ups * tg).sum(1, keepdims=True) * tg / np.maximum((tg * tg).sum(1, keepdims=True), 1e-9)
-                mortar_tube(C, ups, 0.07, 0.06, 77 + len(cur))
+                mortar_tube(C, ups, 0.085, 0.045, 77 + len(cur))
     # ridge dome entering the turret body / under the cushion
     if RIDGE_PATH is not None and len(RIDGE_PATH) > 4:
         P = RIDGE_PATH
@@ -4058,7 +4112,7 @@ def build_wing_structure(coll):
         if len(cur) > 3:
             C = np.array(cur)
             ups = np.tile(np.array([[1.0, 0, 0]]), (len(C), 1))
-            mortar_tube(C, ups, 0.07, 0.06, 91)
+            mortar_tube(C, ups, 0.085, 0.045, 91)
     # hip-roll ends bedded on the fillet: a mortar saddle joining the tapered roll end to the stone
     for pe, de, nb_ in HIP_ENDS:
         cen = pe + de * 0.05 - nb_ * 0.02

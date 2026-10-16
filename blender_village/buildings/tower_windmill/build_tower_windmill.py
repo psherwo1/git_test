@@ -2646,8 +2646,11 @@ def slab_along(part, mat, A, E, Nn, w, t, c=0.004, T_cache={}):
     Profile chamfered; caps at both ends."""
     A = np.asarray(A, float)
     n = len(A)
-    prof = rect_prof(w, t, c)                                   # centred (x across, y thickness)
-    P = A[:, None, :] + (prof[None, :, 0:1] + w / 2) * E[:, None, :] + (prof[None, :, 1:2] + t / 2) * Nn[:, None, :]
+    w = np.broadcast_to(np.asarray(w, float), (n,))
+    wm = float(w.min())
+    prof = rect_prof(wm, t, c)                                  # centred (x across, y thickness)
+    px = (prof[None, :, 0] + wm / 2) / wm * w[:, None]          # per-station width (tapered boards)
+    P = A[:, None, :] + px[..., None] * E[:, None, :] + (prof[None, :, 1:2] + t / 2) * Nn[:, None, :]
     P = P.reshape(1, -1, 3)
     key = (n, len(prof))
     T = tmpl_rings(n, len(prof), cap0=True, cap1=True)
@@ -2660,46 +2663,35 @@ def slab_along(part, mat, A, E, Nn, w, t, c=0.004, T_cache={}):
 def build_cap_cappings(P_sh, P_fr, P_ir, rng):
     """Continuous V ridge capping, lapped V hip cappings (0.6-0.9 m lengths following the bell-cast hip line),
     lead hip-end saddles where hips meet the ridge, hood ridge capping and the knob on a square plinth.
-    Every board is seated on the measured shingle surface (height field)."""
-    HF = HeightField(to_cap_local(part_samples(P_sh, 0.02)))
+    The boards sit 5 cm above the roof surface; shingle courses under each board's footprint are dressed
+    down under it (so every board bears on the shingles)."""
     TB, WL = 0.025, 0.165
-    gaps, devs = [], []
+    SEAT = 0.050                              # board bottom above the roof surface (shingle butts ~5 cm)
     Z3 = np.array([0, 0, 1.0])
+    T_SAD = 0.90
 
-    def seat(apex, legs, w_list, ns=7):
-        """lift per station so that no shingle pokes through any leaf; returns lift (n,)"""
-        need = np.zeros(len(apex))
-        for e, w in zip(legs, w_list):
-            for f in np.linspace(0, 1, ns):
-                p = apex + e * (f * w)[:, None]
-                need = np.maximum(need, HF(p[:, 0], p[:, 1]) - p[:, 2])
-        # smooth: moving max then moving average (boards are stiff)
-        nm = np.maximum(np.maximum(need, np.roll(need, 1)), np.roll(need, -1))
-        nm[0], nm[-1] = max(need[0], need[1]), max(need[-1], need[-2])
-        k = np.array([0.25, 0.5, 0.25])
-        sm = np.convolve(np.pad(nm, 1, mode="edge"), k, mode="valid")
-        return np.maximum(sm, nm - 0.002) + 0.002
-
-    def gap_stats(apex, legs, w_list):
-        for e, w in zip(legs, w_list):
-            for f in (0.2, 0.5, 0.8):
-                p = apex + e * (f * w)[:, None]
-                gaps.extend(list(p[:, 2] - HF(p[:, 0], p[:, 1])))
+    def hip_xy(fx, sy, t):
+        t = np.asarray(t, float)
+        x = (CAP_AF - t * CAP_EF) if fx == 0 else (-CAP_AB + t * CAP_EB)
+        return x, sy * (CAP_B - t * CAP_SB)
+    gaps, devs = [], []
+    bottoms = []                              # underside sample points of every capping board
+    groups = []
 
     def v_cap(apex, eA, nA, wA, eB, nB, wB):
         """two leaves meeting at the apex line; leaf B laps over leaf A's top edge"""
-        PA = slab_along(P_fr, "M_timber_weathered", apex, eA, nA, 1.0, TB) if False else None
         out = []
         for (e, nn, w, over) in ((eA, nA, wA, False), (eB, nB, wB, True)):
             base = apex - (e * 0.022 if over else 0) + (nn * 0.010 if over else 0)
             ww = w + (0.022 if over else 0)
-            # per-station width: emulate by building with the minimum width (stiff board)
-            out.append(slab_along(P_fr, "M_timber_weathered", base, e, nn, float(np.min(ww)), TB))
+            out.append(slab_along(P_fr, "M_timber_weathered", capw(base), capw(e), capw(nn), ww, TB))
+            grp = np.array([base + e * (f * ww)[:, None] for f in np.linspace(0, 1, 14)])
+            bottoms.extend(list(grp))
+            groups.append(grp)
         return out
 
     caps_V = []
     # ---------------- hips ----------------
-    T_SAD = 0.90
     for fx in (0, 1):
         Rend = CAP_EF if fx == 0 else CAP_EB
         oE = np.array([1.0 if fx == 0 else -1.0, 0, 0])
@@ -2707,14 +2699,13 @@ def build_cap_cappings(P_sh, P_fr, P_ir, rng):
             oS = np.array([0, float(sy), 0])
 
             def Hf(t):
-                t = np.asarray(t, float)
-                x = (CAP_AF - t * CAP_EF) if fx == 0 else (-CAP_AB + t * CAP_EB)
-                return np.stack([x, sy * (CAP_B - t * CAP_SB), CAP_ZE + cap_h(t)], -1)
+                x, y = hip_xy(fx, sy, t)
+                return np.stack([x, y, CAP_ZE + cap_h(np.asarray(t, float))], -1)
             tt_ = np.linspace(-0.035, T_SAD, 400)
             Hp = Hf(tt_)
             sacc = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(Hp, axis=0), axis=1))])
             Ltot = sacc[-1]
-            npc = max(1, int(round(Ltot / 0.75)))
+            npc = max(1, int(math.ceil(Ltot / 0.80)))
             cuts = np.linspace(0, Ltot, npc + 1)
             cuts[1:-1] += rng.uniform(-0.05, 0.05, npc - 1)
             for k in range(npc):
@@ -2733,15 +2724,17 @@ def build_cap_cappings(P_sh, P_fr, P_ir, rng):
                 eS = unit(np.cross(nS, Tg))
                 eS *= np.where((eS @ -oE) > 0, 1.0, -1.0)[:, None]
                 wE = np.minimum(WL, np.abs(H[:, 1]) / np.maximum(np.abs(eE[:, 1]), 1e-3) - 0.004)
-                lift = seat(H, (eE, eS), (wE, np.full(len(H), WL)))
+                if fx == 0:     # front hips: the end-face leaf is cut to fit against the hood cheek
+                    far = H + eE * wE[:, None]
+                    near_hood = far[:, 0] > float(x_valley(HOOD_YW)) - 0.12
+                    wh = (np.abs(H[:, 1]) - (HOOD_YW + 0.07)) / np.maximum(np.abs(eE[:, 1]), 1e-3)
+                    wE = np.where(near_hood, np.clip(np.minimum(wE, wh), 0.06, None), wE)
+                lift = np.full(len(H), SEAT)
                 if k > 0:   # rides over the feathered head of the piece below (lap 6 cm, < 1 deg)
                     lift = lift + 0.010 * (1 - (ss - s0) / (s1 - s0))
+                lift += lowfreq(ss, rng, 0.003)
                 apex = H + Z3 * lift[:, None]
-                if os.environ.get("MILL_DBG"):
-                    log("hip", fx, sy, k, "t", np.round(t[[0, -1]], 2), "lift", np.round(lift, 3), "wE", np.round(wE, 2),
-                        "hf-H", np.round(HF(H[:, 0], H[:, 1]) - H[:, 2], 3))
                 caps_V.append(v_cap(apex, eE, nE, wE, eS, nS, np.full(len(H), WL)))
-                gap_stats(apex, (eE, eS), (wE, np.full(len(H), WL)))
                 ch = apex[-1] - apex[0]
                 hh = H[-1] - H[0]
                 devs.append(math.degrees(math.acos(np.clip(ch @ hh / np.linalg.norm(ch) / np.linalg.norm(hh), -1, 1))))
@@ -2754,10 +2747,8 @@ def build_cap_cappings(P_sh, P_fr, P_ir, rng):
     eB = np.repeat([[0, math.cos(sg), -math.sin(sg)]], 12, 0)
     nB = np.repeat([[0, math.sin(sg), math.cos(sg)]], 12, 0)
     wR = np.full(12, 0.165)
-    lift = seat(H, (eA, eB), (wR, wR))
-    ridge_apex = H + Z3 * lift[:, None]
+    ridge_apex = H + Z3 * (SEAT + lowfreq(xr, rng, 0.003))[:, None]
     caps_V.append(v_cap(ridge_apex, eA, nA, wR, eB, nB, wR))
-    gap_stats(ridge_apex, (eA, eB), (wR, wR))
     # ---------------- hood ridge ----------------
     sl = math.atan2(HOOD_ZR - HOOD_ZE, HOOD_YW + 0.03)
     xh = np.linspace(float(x_valley(0.0)) + 0.03, HOOD_XF + 0.05, 8)
@@ -2767,14 +2758,47 @@ def build_cap_cappings(P_sh, P_fr, P_ir, rng):
     eB = np.repeat([[0, math.cos(sl), -math.sin(sl)]], 8, 0)
     nB = np.repeat([[0, math.sin(sl), math.cos(sl)]], 8, 0)
     wH = np.full(8, 0.15)
-    lift = seat(H, (eA, eB), (wH, wH))
-    caps_V.append(v_cap(H + Z3 * lift[:, None], eA, nA, wH, eB, nB, wH))
-    g = np.array(gaps)
-    log("CAP cappings: %d hip pieces, max deviation from hip line %.2f deg; seat gap median %.3f, 90%% %.3f m"
-        % (len(devs), max(devs), np.median(g), np.percentile(g, 90)))
-    for pair in caps_V:
-        for V in pair:
-            HF.add(to_cap_local(V))
+    caps_V.append(v_cap(H + Z3 * SEAT, eA, nA, wH, eB, nB, wH))
+    # ---- dress the shingle courses down under the boards: every shingle vertex under a board's footprint
+    # (+1 cm) is pressed to 3 mm below that board's underside -> the cappings bear on the shingles ----
+    B = np.concatenate(bottoms)                 # cap-local already
+    cb = 0.01
+    bx0, by0 = B[:, 0].min() - 0.05, B[:, 1].min() - 0.05
+    BF = np.full((int((B[:, 0].max() + 0.05 - bx0) / cb) + 1, int((B[:, 1].max() + 0.05 - by0) / cb) + 1), np.inf)
+    np.minimum.at(BF, (((B[:, 0] - bx0) / cb).astype(int), ((B[:, 1] - by0) / cb).astype(int)), B[:, 2])
+    for _ in range(2):                         # close sampling holes + 1 cm margin
+        G2 = BF.copy()
+        G2[1:] = np.minimum(G2[1:], BF[:-1])
+        G2[:-1] = np.minimum(G2[:-1], BF[1:])
+        G2[:, 1:] = np.minimum(G2[:, 1:], BF[:, :-1])
+        G2[:, :-1] = np.minimum(G2[:, :-1], BF[:, 1:])
+        BF = G2
+
+    def bf(x, y):
+        i = ((x - bx0) / cb).astype(int)
+        j = ((y - by0) / cb).astype(int)
+        ok = (i >= 0) & (i < BF.shape[0]) & (j >= 0) & (j < BF.shape[1])
+        out = np.full(len(x), np.inf)
+        out[ok] = BF[i[ok], j[ok]]
+        return out
+
+    def press(Vw):
+        Vl = to_cap_local(Vw)
+        Vw = Vw.copy()
+        Vw[:, 2] = np.minimum(Vw[:, 2], bf(Vl[:, 0], Vl[:, 1]) - 0.003)
+        return Vw
+    P_sh.V = [press(V) for V in P_sh.V]
+    HF = HeightField(to_cap_local(part_samples(P_sh, 0.02)))
+    st_gap = []
+    for grp in groups:                         # per station: smallest gap across the board's width
+        gg = grp[1:-1, :, 2] - HF(grp[1:-1, :, 0].ravel(), grp[1:-1, :, 1].ravel(), r=0).reshape(grp[1:-1, :, 2].shape)
+        gg = np.where(np.abs(gg) < 1.0, gg, np.nan)
+        st_gap.extend(list(np.nanmin(gg, 0)))
+    g = np.array(st_gap)
+    g = g[np.isfinite(g)]
+    log("CAP cappings: %d hip pieces (%.2f-%.2f m), max deviation from hip line %.2f deg; bearing gap per "
+        "station (board underside to highest shingle under it): median %.3f, 90%% %.3f m, 1%% %.3f" % (len(devs), np.diff(cuts).min(), np.diff(cuts).max(),
+                                                             max(devs), np.median(g), np.percentile(g, 90), np.percentile(g, 1)))
     # ---------------- lead hip-end saddles over the ridge ends ----------------
     apex_z = {}
     for fx in (0, 1):
@@ -3068,6 +3092,9 @@ def build_cap(parts):
             else:
                 ts = (CAP_B - np.abs(Wl[:, :, 1])) / CAP_SB
                 Wl[:, :, 0] = np.clip(Wl[:, :, 0], -CAP_AB + CAP_EB * ts - 0.025, CAP_AF - CAP_EF * ts + 0.025)
+                # top course stops at the ridge line (under the V ridge capping), never across it
+                sgn = 1.0 if fi == 2 else -1.0
+                Wl[:, :, 1] = sgn * np.maximum(sgn * Wl[:, :, 1], -0.015)
             if fi == 0:
                 # stop short of the valleys (exposes the lead valley); fold clamped vertices onto the face
                 near = np.abs(Wl[:, :, 1]) < HOOD_YW + 0.05
