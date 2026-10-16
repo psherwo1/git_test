@@ -21,7 +21,7 @@ import bpy
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT_BLEND = os.path.join(HERE, "tower_windmill.blend")
+OUT_BLEND = os.environ.get('MILL_OUT') or os.path.join(HERE, 'tower_windmill.blend')
 PI = math.pi
 D2R = PI / 180.0
 T0 = time.time()
@@ -467,6 +467,7 @@ class Part:
 # =============================================================================================
 T_RUB = tmpl_box(9, 4, 7, drop_back=True)     # rubble stones (back face culled, buried in mortar)
 T_RUBF = tmpl_box(7, 4, 5)                    # free-standing rubble / boulders
+T_PIN = tmpl_box(6, 4, 5, drop_back=True)     # pinning stones
 T_DRS = tmpl_box(8, 4, 6)                     # dressed blocks
 T_DRSH = tmpl_box(11, 4, 10)                  # hero dressed blocks (door surround, coping): room for spalls
 T_BLK = tmpl_box(4, 4, 4)                     # small chamfered blocks / timbers
@@ -534,8 +535,12 @@ STYLE = {
     # rounding (frac of min dim, min, max), outline noise, face noise (m), pillow range (m), taper, shear
     # cuts = (min, max) straight fracture cuts on the outline; facets = (min, max) tilted face planes;
     # spall = (min, max) edge spalls (dressed work)
-    "rubble": dict(rr=(0.08, 0.008, 0.013), ry=0.009, nxz=0.06, ny=0.006, pil=(0.002, 0.009), tap=0.16,
-                   shear=0.12, T=T_RUB, cuts=(3, 4), facets=(1, 2), hf=0.003, ftilt=0.25, fshave=(0.008, 0.02)),
+    "rubble": dict(rr=(0.08, 0.008, 0.013), ry=0.009, nxz=0.045, ny=0.006, pil=(0.002, 0.009), tap=0.07,
+                   shear=0.06, T=T_RUB, cuts=(2, 4), cutk=(0.8, 0.94), facets=(1, 2), hf=0.003, ftilt=0.25,
+                   fshave=(0.008, 0.02)),
+    "pin": dict(rr=(0.12, 0.004, 0.008), ry=0.006, nxz=0.05, ny=0.004, pil=(0.0, 0.004), tap=0.12,
+                shear=0.08, T=T_PIN, cuts=(1, 3), cutk=(0.8, 0.92), facets=(0, 1), hf=0.0015, ftilt=0.3,
+                fshave=(0.003, 0.008)),
     "footing": dict(rr=(0.09, 0.01, 0.015), ry=0.012, nxz=0.06, ny=0.006, pil=(0.002, 0.01), tap=0.14,
                     shear=0.1, T=T_RUBF, cuts=(3, 4), facets=(1, 2), hf=0.0025, ftilt=0.5, fshave=(0.006, 0.016)),
     "boulder": dict(rr=(0.2, 0.012, 0.05), ry=0.2, nxz=0.12, ny=0.012, pil=(0.0, 0.01), tap=0.2,
@@ -551,7 +556,7 @@ STYLE = {
 }
 
 
-def stone_local(rng, L, H, D, style, rot_deg=(2.6, 1.5, 1.3), spall=None):
+def stone_local(rng, L, H, D, style, rot_deg=(2.0, 0.8, 1.1), spall=None):
     """Irregular stone, local x = length, y = outward (front face at y=0), z = up. (N,nv,3).
     Split-stone language: angular outline from straight fracture cuts, a flat bed face with 1-2 tilted
     facets (pillow <= 1 cm), small arris radius. Dressed work: flat faces, 1 cm chamfer, edge spalls."""
@@ -588,7 +593,7 @@ def stone_local(rng, L, H, D, style, rot_deg=(2.6, 1.5, 1.3), spall=None):
             nrm = np.stack([np.cos(a) / h[:, 0], rng.normal(0, 0.12, N) / h[:, 1] * 0.0, np.sin(a) / h[:, 2]], 1)
             nrm /= np.linalg.norm(nrm, axis=1, keepdims=True)
             proj = np.einsum("nvc,nc->nv", P, nrm)
-            o = proj.max(1) * rng.uniform(0.7, 0.9, N)
+            o = proj.max(1) * rng.uniform(*st.get("cutk", (0.7, 0.9)), N)
             exc = np.clip(proj - o[:, None], 0, None) * (k < ncut)[:, None]
             P -= exc[:, :, None] * nrm[:, None, :]
     if st.get("facets"):
@@ -661,7 +666,7 @@ def open_place(P, th0, xc, zc, yoff, Rfun=R_out):
     return np.stack([x * c + d * s, x * s - d * c, z], 2)
 
 
-def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0.22, 0.62), joint=(0.008, 0.02),
+def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0.22, 0.62), joint=(0.006, 0.013),
              wob=0.018, p_tall=0.05, p_pin=0.12, fix_ends=True, Dr=(0.18, 0.30), lmin=0.12):
     """Generic coursed walling in (u, z). free_fn(zb, zt) -> list of (ua, ub) free spans.
     Returns dict of arrays uc, zc, L, H, D for each stone."""
@@ -728,17 +733,18 @@ def coursing(rng, z0, z1, free_fn, hr=(0.10, 0.16), hbig=0.24, p_big=0.12, lr=(0
                 kt = k + 2 if tall else k + 1
                 zb, zt = B(k, uc), B(kt, uc)
                 jv = rng.uniform(*joint)
-                Hs = (zt - zb) - jv - rng.uniform(0, 0.012)
+                Hs = (zt - zb) - jv - rng.uniform(0, 0.003)
                 zc = (zb + zt) / 2 + rng.uniform(-0.004, 0.004)
                 Ds = rng.uniform(*Dr)
                 if tall:
                     new_carry.append((uc - Lr / 2 - j / 2, uc + Lr / 2 + j / 2))
-                if (not tall) and rng.random() < p_pin and Hs > 0.09 and Lr > 0.25:
+                if (not tall) and rng.random() < p_pin and Hs > 0.13 and Lr > 0.25:
                     # main stone + small pinning stones in a strip above or below
                     frac = rng.uniform(0.62, 0.75)
                     top = rng.random() < 0.5
                     Hm = Hs * frac
-                    Hp = Hs - Hm - jv * 0.6
+                    Hp = max(Hs - Hm - jv * 0.6, 0.03)
+                    Hm = Hs - Hp - jv * 0.6
                     zm = zc - Hs / 2 + Hm / 2 if not top else zc + Hs / 2 - Hm / 2
                     zp = zc + Hs / 2 - Hp / 2 if not top else zc - Hs / 2 + Hp / 2
                     for kk, v in zip(("uc", "zc", "L", "H", "D"), (uc, zm, Lr, Hm, Ds)):
@@ -940,18 +946,342 @@ def free_fn_drum(rng, extra_rad=0.0):
     return f
 
 
-def emit_drum_stones(part, mat, rng, S, style, yoff_base, bulge=True):
+# =============================================================================================
+# Rubble wall analysis (round 3): every rubble wall records its stones; finalize() rasterises the stone
+# outlines at 1 cm in wall coordinates (u along the wall, z up, d outward from the reference face), fills
+# every mortar void wider than 3 cm with 4-12 cm pinning stones, measures the visible mortar fraction and
+# lays a concave mortar strike (a fillet skirt climbing ~7 mm up each stone's side) around every stone.
+# =============================================================================================
+def ring_loop(T, j):
+    """Boundary loop (around the x/z outline) of a tmpl_box template at y-line j."""
+    lut = {tuple(v): i for i, v in enumerate(T["idx"])}
+    nx, nz = T["n"][0], T["n"][2]
+    loop = [(i, 0) for i in range(nx)] + [(nx - 1, k) for k in range(1, nz)] + \
+        [(i, nz - 1) for i in range(nx - 2, -1, -1)] + [(0, k) for k in range(nz - 2, 0, -1)]
+    return np.array([lut[(i, j, k)] for i, k in loop])
+
+
+RING2 = {id(T): (ring_loop(T, 2), ring_loop(T, 1)) for T in (T_RUB, T_RUBF, T_PIN, T_DRS, T_DRSH)}
+
+
+def hull2d(p):
+    """Convex hull (monotone chain), CCW."""
+    p = p[np.lexsort((p[:, 1], p[:, 0]))]
+    if len(p) < 3:
+        return p
+
+    def half(pts):
+        h = []
+        for q in pts:
+            while len(h) >= 2 and (h[-1][0] - h[-2][0]) * (q[1] - h[-2][1]) - (h[-1][1] - h[-2][1]) * (q[0] - h[-2][0]) <= 0:
+                h.pop()
+            h.append(q)
+        return h
+    lo = half(p)
+    up = half(p[::-1])
+    return np.array(lo[:-1] + up[:-1])
+
+
+class Wall:
+    registry = []
+
+    def __init__(self, name, to_world, to_wall, mortar_d, u0, u1, z0, z1, blocked, period=None, metric_z=None,
+                 cell=0.01):
+        self.name, self.to_world, self.to_wall, self.mortar_d = name, to_world, to_wall, mortar_d
+        self.u0, self.z0, self.cell, self.period = u0, z0, cell, period
+        self.nu = int(math.ceil((u1 - u0) / cell))
+        self.nz = int(math.ceil((z1 - z0) / cell))
+        uc = u0 + (np.arange(self.nu) + 0.5) * cell
+        zc = z0 + (np.arange(self.nz) + 0.5) * cell
+        self.U, self.Z = np.meshgrid(uc, zc, indexing="ij")
+        self.block = blocked(self.U, self.Z)
+        self.cov = np.zeros((self.nu, self.nz), bool)
+        self.metric_z = metric_z
+        self.stones = []
+        Wall.registry.append(self)
+
+    def unwrap(self, u, ref):
+        if self.period is None:
+            return u
+        C = self.period
+        return ((u - ref + C / 2) % C) - C / 2 + ref
+
+    def add(self, W, T):
+        self.stones.append((np.asarray(W), T))
+        self.raster(W, T)
+
+    def raster(self, W, T):
+        r2, _ = RING2[id(T)]
+        R = W[:, r2]
+        u, z, d = self.to_wall(R.reshape(-1, 3))
+        u = u.reshape(R.shape[:2])
+        z = z.reshape(R.shape[:2])
+        c = self.cell
+        for s in range(len(R)):
+            us = self.unwrap(u[s], u[s, 0])
+            h = hull2d(np.stack([us, z[s]], 1))
+            if len(h) < 3:
+                continue
+            i0 = int(math.floor((h[:, 0].min() - self.u0) / c))
+            i1 = int(math.ceil((h[:, 0].max() - self.u0) / c))
+            k0 = max(int(math.floor((h[:, 1].min() - self.z0) / c)), 0)
+            k1 = min(int(math.ceil((h[:, 1].max() - self.z0) / c)), self.nz)
+            if k1 <= k0 or i1 <= i0:
+                continue
+            ii = np.arange(i0, i1)
+            kk = np.arange(k0, k1)
+            pu = self.u0 + (ii + 0.5) * c
+            pz = self.z0 + (kk + 0.5) * c
+            PU, PZ = np.meshgrid(pu, pz, indexing="ij")
+            a = h
+            b = np.roll(h, -1, 0)
+            cr = (b[:, 0, None, None] - a[:, 0, None, None]) * (PZ[None] - a[:, 1, None, None]) - \
+                (b[:, 1, None, None] - a[:, 1, None, None]) * (PU[None] - a[:, 0, None, None])
+            ins = (cr >= 0).all(0)
+            if self.period is not None:
+                iw = ii % self.nu
+            else:
+                ok = (ii >= 0) & (ii < self.nu)
+                ins = ins[ok]
+                iw = ii[ok]
+            self.cov[iw[:, None], kk[None, :]] |= ins
+
+    def mortar_fraction(self, zlo=None, zhi=None):
+        m = ~self.block
+        if zlo is not None:
+            m &= (self.Z >= zlo) & (self.Z <= zhi)
+        n = m.sum()
+        return float((~self.cov & m).sum()) / max(n, 1), int(n)
+
+    def max_void(self, where=False):
+        D = chamfer_dt(self.cov | self.block, self.cell)
+        D[:, :5] = 0                     # ignore the raster's ground / top boundary rows
+        D[:, -5:] = 0
+        if where:
+            i, k = np.unravel_index(np.argmax(D), D.shape)
+            return 2 * float(D.max()), self.U[i, k], self.Z[i, k]
+        return 2 * float(D.max())
+
+    def fill_pins(self, part, rng, yo=(0.012, 0.024), erode=0.0055, hw=(7, 6)):
+        """Fill every mortar void wider than 3 cm with pinning stones shaped to the void: the free region
+        around the widest point (eroded by the joint width, limited to ~15 x 13 cm) is flood-filled, its convex
+        hull becomes the pin's outline (a box template mapped radially onto the polygon)."""
+        c = self.cell
+        npins = 0
+        polys = []
+        for it in range(14):
+            occ = self.cov | self.block
+            D = chamfer_dt(occ, c)
+            cand = np.argwhere(D > 0.0155)
+            if len(cand) == 0:
+                break
+            order = np.argsort(-D[cand[:, 0], cand[:, 1]], kind="stable")
+            supp = np.zeros_like(occ)
+            new = []
+            for q in order:
+                i, k = cand[q]
+                if supp[i, k]:
+                    continue
+                ii = np.arange(i - hw[0], i + hw[0] + 1)
+                if self.period is not None:
+                    ii = ii % self.nu
+                else:
+                    ii = ii[(ii >= 0) & (ii < self.nu)]
+                kk = np.arange(max(k - hw[1], 0), min(k + hw[1] + 1, self.nz))
+                free = (D[np.ix_(ii, kk)] >= erode) & ~supp[np.ix_(ii, kk)]
+                si = int(np.nonzero(ii == i)[0][0])
+                sk = int(np.nonzero(kk == k)[0][0])
+                comp = np.zeros_like(free)
+                comp[si, sk] = True
+                for _ in range(40):
+                    g = comp.copy()
+                    g[1:] |= comp[:-1]
+                    g[:-1] |= comp[1:]
+                    g[:, 1:] |= comp[:, :-1]
+                    g[:, :-1] |= comp[:, 1:]
+                    g &= free
+                    if (g == comp).all():
+                        break
+                    comp = g
+                supp[np.ix_(ii, kk)] |= comp
+                supp[i, k] = True
+                cells = np.argwhere(comp)
+                if len(cells) < 4:
+                    continue
+                pu = self.u0 + (i + (cells[:, 0] - si) + 0.5) * c
+                pz = self.z0 + (kk[cells[:, 1]] + 0.5) * c
+                pts = np.stack([pu, pz], 1)
+                h = hull2d(pts)
+                if len(h) < 3:
+                    continue
+                ext = np.ptp(h, 0)
+                if ext.min() < 0.008 or ext.max() < 0.02:
+                    continue
+                new.append(h)
+            if not new:
+                break
+            W_all, P_all = [], []
+            for h in new:
+                cen = h.mean(0)
+                hp = cen + (h - cen) * 0.97
+                ext = np.ptp(hp, 0)
+                dep = rng.uniform(0.05, 0.09)
+                hh = np.array([[ext[0] / 2, dep / 2, ext[1] / 2]])
+                r = np.array([[min(0.006, ext[0] * 0.2), 0.005, min(0.006, ext[1] * 0.2)]])
+                P = rbox(T_PIN, hh, r)[0]
+                bc = (hp.min(0) + hp.max(0)) / 2
+                x, z = P[:, 0], P[:, 2]
+                # radial map of the box outline onto the polygon (about the bbox centre)
+                cen2 = bc if all(((hp[(j + 1) % len(hp)] - hp[j])[0] * (bc[1] - hp[j][1]) -
+                                  (hp[(j + 1) % len(hp)] - hp[j])[1] * (bc[0] - hp[j][0])) >= 0
+                                 for j in range(len(hp))) else cen
+                vx, vz = x + bc[0] - cen2[0], z + bc[1] - cen2[1]
+                ang = np.arctan2(vz, vx)
+                dx, dz = np.cos(ang), np.sin(ang)
+                # box radius in that direction (about cen2) and polygon radius
+                def ray_poly(poly):
+                    a = poly - cen2
+                    b = np.roll(poly, -1, 0) - cen2
+                    e = b - a
+                    den = dx[:, None] * e[None, :, 1] - dz[:, None] * e[None, :, 0]
+                    den = np.where(np.abs(den) < 1e-12, 1e-12, den)
+                    t = (a[None, :, 0] * e[None, :, 1] - a[None, :, 1] * e[None, :, 0]) / den
+                    s_ = (a[None, :, 0] * dz[:, None] - a[None, :, 1] * dx[:, None]) / den
+                    t = np.where((s_ >= -1e-9) & (s_ <= 1 + 1e-9) & (t > 0), t, np.inf)
+                    return t.min(1)
+                box = np.array([[-hh[0, 0], -hh[0, 2]], [hh[0, 0], -hh[0, 2]], [hh[0, 0], hh[0, 2]],
+                                [-hh[0, 0], hh[0, 2]]]) + bc
+                Rb = ray_poly(box)
+                Rp = ray_poly(hp)
+                f = np.where(np.isfinite(Rb) & np.isfinite(Rp), Rp / np.maximum(Rb, 1e-6), 1.0)
+                nu_ = cen2[0] + vx * f
+                nz_ = cen2[1] + vz * f
+                u_ = np.stack([P[:, 0] / hh[0, 0], P[:, 1] / hh[0, 1], P[:, 2] / hh[0, 2]], 1)[None]
+                y = P[:, 1] - hh[0, 1] + 0.003 * noise_field(u_ * 1.5, rng, fmin=1.5, fmax=3.0)[0] * \
+                    np.clip(u_[0, :, 1], 0, 1)
+                d = self.mortar_d(np.array([cen2[0]]), np.array([cen2[1]]))[0] + rng.uniform(*yo)
+                W_all.append(self.to_world(nu_, nz_, d + y))
+                P_all.append(np.stack([nu_ - cen2[0], y, nz_ - cen2[1]], 1))
+            W = np.array(W_all)
+            part.add(W, T_PIN, Pl=np.array(P_all), mat="M_stone", smooth="all")
+            self.add(W, T_PIN)
+            npins += len(W)
+            self.iters = getattr(self, "iters", []) + [len(W)]
+        self.rejected = 0
+        return npins
+
+    def skirts(self, part, w_out=(0.010, 0.015), climb=0.007):
+        """Concave mortar strike: a fillet strip around each stone from ~7 mm up its side down to the mortar."""
+        for W, T in self.stones:
+            r2, r1 = RING2[id(T)]
+            sub = slice(0, None, 2)
+            A = W[:, r2[sub]]
+            B = W[:, r1[sub]]
+            N, m = A.shape[:2]
+            ua, za, da = (x.reshape(N, m) for x in self.to_wall(A.reshape(-1, 3)))
+            ub, zb, db = (x.reshape(N, m) for x in self.to_wall(B.reshape(-1, 3)))
+            ua = self.unwrap(ua, ua[:, :1])
+            ub = self.unwrap(ub, ua[:, :1])
+            dm = self.mortar_d(ua, za)
+            # skip stones whose sides are not exposed, or that sit on a mortar-depth step (footing ledge)
+            dmo = self.mortar_d(ua, za - 0.03)
+            okst = (np.median(da - dm, 1) > 0.008) & (np.abs(dmo - dm).max(1) < 0.01) & \
+                (np.abs(self.mortar_d(ua, za + 0.03) - dm).max(1) < 0.01)
+            if not okst.any():
+                continue
+            sel = np.nonzero(okst)[0]
+            ua, za, da, ub, zb, db, dm = ua[sel], za[sel], da[sel], ub[sel], zb[sel], db[sel], dm[sel]
+            N = len(sel)
+            tgt = dm + climb
+            t = np.clip((da - tgt) / np.maximum(da - db, 1e-6), 0, 1)
+            ui, zi, di = ua + t * (ub - ua), za + t * (zb - za), da + t * (db - da)
+            di = np.maximum(di, dm + 0.001)
+            cu, cz = ui.mean(1, keepdims=True), zi.mean(1, keepdims=True)
+            du, dz = ui - cu, zi - cz
+            nr = np.sqrt(du ** 2 + dz ** 2) + 1e-9
+            wo = np.random.default_rng(len(self.stones) + N).uniform(*w_out, (N, 1))
+            uo, zo = ui + du / nr * wo, zi + dz / nr * wo
+            do = np.minimum(self.mortar_d(uo, zi) - 0.0015, di - 0.002)
+            Pin = self.to_world(ui, zi, di)
+            Pout = self.to_world(uo, zo, do)
+            V = np.concatenate([Pin, Pout], 1)                # (N, 2m, 3)
+            j = np.arange(m)
+            q = np.stack([j, (j + 1) % m, m + (j + 1) % m, m + j], 1)
+            # winding: outward normal must point away from the wall
+            T2 = dict(quads=q, tris=np.zeros((0, 3), np.int64), qflat=np.zeros(m, bool), tflat=np.zeros(0, bool),
+                      nv=2 * m)
+            a, b_, c_ = V[0, q[0, 0]], V[0, q[0, 1]], V[0, q[0, 2]]
+            nrm = np.cross(b_ - a, c_ - a)
+            out = self.to_world(np.array([ui[0, 0]]), np.array([zi[0, 0]]), np.array([di[0, 0] + 0.05]))[0] - a
+            if np.dot(nrm, out) < 0:
+                T2["quads"] = q[:, ::-1].copy()
+            part.add(V, T2, mat="M_mortar", smooth="all")
+
+    def report(self, label):
+        f_all, n = self.mortar_fraction()
+        msg = "WALL %-18s visible mortar %.1f%% (%d cells)" % (label, 100 * f_all, n)
+        if self.metric_z is not None:
+            f, n2 = self.mortar_fraction(*self.metric_z)
+            msg += ", plain zone %.1f%%" % (100 * f)
+        mv = self.max_void(True)
+        msg += ", widest void %.3f m at u %.2f z %.2f, stones %d" % (mv + (sum(len(W) for W, _ in self.stones),))
+        log(msg)
+
+
+def wall_relief(u, z, k=0.0):
+    """Low-frequency +-5 mm relief of the mortar body."""
+    return 0.0028 * np.sin(u * 7.1 + z * 3.3 + k) + 0.0022 * np.sin(u * 4.3 - z * 8.9 + 1.7 + k)
+
+
+RREF = 2.53
+
+
+def drum_to_world(u, z, d):
+    th = np.asarray(u) / RREF
+    r = R_out(z) + d
+    return np.stack([r * np.sin(th), -r * np.cos(th), np.asarray(z, float) + 0 * th], -1)
+
+
+def drum_to_wall(W):
+    W = np.asarray(W)
+    th = np.arctan2(W[..., 0], -W[..., 1])
+    return th * RREF, W[..., 2], np.hypot(W[..., 0], W[..., 1]) - R_out(W[..., 2])
+
+
+def drum_mortar_d(u, z):
+    z = np.asarray(z, float)
+    rec = -0.022 - 0.023 * (1 - smoothstep(0.45, 0.68, z))        # raked to 4.5 cm in the bottom 0.6 m
+    foot = 0.065 - 0.042                                           # footing course projects 6.5 cm
+    d = np.where(z < 0.40, foot, rec)
+    return d + wall_relief(u, z)
+
+
+def stone_depth_tilt(rng, P, N, p_tilt=0.18):
+    """Per-stone face depth (2 cm range) and a 2-4 deg yaw on ~18% of stones so one end stands proud."""
+    tilt = rng.random(N) < p_tilt
+    ang = np.where(tilt, rng.uniform(2.0, 4.0, N) * rng.choice([-1, 1], N), 0.0) * D2R
+    P = xform(P, rotm([0, 0, 1], ang), np.zeros(3))
+    return P, rng.uniform(-0.006, 0.012, N)
+
+
+def emit_drum_stones(part, mat, rng, S, style, yoff_base, bulge=True, wall=None, tilt=True):
     if len(S["uc"]) == 0:
         return 0
     zc = S["zc"]
     th = S["uc"] / R_out(zc)
     P, T = stone_local(rng, S["L"], S["H"], S["D"], style)
-    # individual stones sit at different depths (faces vary ~1.5 cm stone to stone)
-    yo = yoff_base + rng.uniform(-0.004, 0.007, len(zc))
+    N = len(zc)
+    if tilt:
+        P, dy = stone_depth_tilt(rng, P, N)
+    else:
+        dy = rng.uniform(-0.003, 0.004, N)
+    yo = yoff_base + dy
     if bulge:  # stones bulge in and out of the wall plane (low-frequency)
         yo += 0.004 * np.sin(th * 3 + 1.3) * np.sin(zc * 2.1 + 0.4) + 0.003 * np.sin(th * 7 + zc * 3)
     W = cyl_place(P, th, zc, yo)
     part.add(W, T, Pl=P, mat=mat, smooth="all")
+    if wall is not None:
+        wall.add(W, T)
     return len(zc)
 
 
@@ -988,21 +1318,31 @@ def build_base(parts):
     P_st, P_mo, P_dr = parts["stones"], parts["mortar"], parts["dressed"]
     rng = RNG("base_rubble")
     n = 0
+
+    def drum_blocked(U, Z):
+        b = (Z < 0.0) | (Z > Z_CORN0) | ((Z > Z_BAND0 - 0.005) & (Z < Z_BAND1 + 0.005))
+        C = 2 * PI * RREF
+        for th0, fn in OPENINGS:
+            du = ((U - th0 * RREF + C / 2) % C) - C / 2
+            b |= np.abs(du) < fn(Z) * RREF / R_out(Z)
+        return b
+    WD = Wall("drum", drum_to_world, drum_to_wall, drum_mortar_d, -PI * RREF, PI * RREF, 0.0, Z_CORN0, drum_blocked,
+              period=2 * PI * RREF, metric_z=(0.40, Z_BAND0))
     # 1. footing course (big stones projecting ~7 cm, bottoms cut at the ground)
     S = coursing(rng, -0.04, 0.40, free_fn_drum(rng), hr=(0.18, 0.24), hbig=0.26, p_big=0.0, lr=(0.42, 0.85),
                  p_tall=0.0, p_pin=0.06, Dr=(0.3, 0.4), wob=0.015)
-    n += emit_drum_stones(P_st, "M_stone", rng, S, "footing", 0.065)
+    n += emit_drum_stones(P_st, "M_stone", rng, S, "footing", 0.065, wall=WD)
     # 2. plain rubble 0.40 - 2.55
     S = coursing(rng, 0.40, Z_BAND0, free_fn_drum(rng), hr=(0.095, 0.15), hbig=0.22, p_big=0.1, lr=(0.2, 0.6),
                  p_tall=0.05, p_pin=0.14)
-    n += emit_drum_stones(P_st, "M_stone", rng, S, "rubble", 0.0)
+    n += emit_drum_stones(P_st, "M_stone", rng, S, "rubble", 0.0, wall=WD)
     # 4. arcade zone: ashlar-ish piers to springing, rubble spandrels above
     S = coursing(rng, Z_BAND1, ARCH["zs"], free_fn_drum(rng), hr=(0.2, 0.25), hbig=0.25, p_big=0.0,
                  lr=(0.24, 0.45), p_tall=0.0, p_pin=0.0, wob=0.0, joint=(0.01, 0.016))
-    n += emit_drum_stones(P_st, "M_stone", rng, S, "ashlar", 0.012, bulge=False)
+    n += emit_drum_stones(P_st, "M_stone", rng, S, "ashlar", 0.012, bulge=False, wall=WD, tilt=False)
     S = coursing(rng, ARCH["zs"], Z_CORN0, free_fn_drum(rng), hr=(0.09, 0.14), hbig=0.18, p_big=0.1,
                  lr=(0.18, 0.5), p_tall=0.03, p_pin=0.1, wob=0.012)
-    n += emit_drum_stones(P_st, "M_stone", rng, S, "rubble", 0.0)
+    n += emit_drum_stones(P_st, "M_stone", rng, S, "rubble", 0.0, wall=WD)
     log("drum rubble stones", n)
 
     # ---- dressed: door ----
@@ -1081,18 +1421,40 @@ def build_base(parts):
 
         S = coursing(ra, ARCH["z0"], ARCH["zs"] + cw, ff, hr=(0.09, 0.14), hbig=0.16, p_big=0.1, lr=(0.16, 0.4),
                      p_tall=0.0, p_pin=0.1, wob=0.01, Dr=(0.15, 0.22))
+        cth, sth = math.cos(th), math.sin(th)
+
+        def a_world(u, z, d, cth=cth, sth=sth):
+            u = np.asarray(u, float)
+            z = np.asarray(z, float) + 0 * u
+            al = np.sqrt(np.maximum(R_out(z) ** 2 - u ** 2, 0.01)) - 0.25 + d
+            return np.stack([u * cth + al * sth, u * sth - al * cth, z], -1)
+
+        def a_wall(W, cth=cth, sth=sth):
+            W = np.asarray(W)
+            u = W[..., 0] * cth + W[..., 1] * sth
+            al = W[..., 0] * sth - W[..., 1] * cth
+            z = W[..., 2]
+            return u, z, al - np.sqrt(np.maximum(R_out(z) ** 2 - u ** 2, 0.01)) + 0.25
+
+        def a_mort(u, z, k=th):
+            return -0.022 + wall_relief(u, z, k)
+
+        def a_block(U, Z, cw=cw):
+            top = ARCH["zs"] + np.sqrt(np.clip(cw ** 2 - U ** 2, 0, None))
+            return (np.abs(U) > cw) | (Z < ARCH["z0"]) | (Z > top)
+        WA = Wall("arch", a_world, a_wall, a_mort, -cw - 0.05, cw + 0.05, ARCH["z0"] - 0.02, ARCH["zs"] + cw + 0.05,
+                  a_block)
         if len(S["uc"]):
             P, T = stone_local(ra, S["L"], S["H"], S["D"], "rubble")
-            W = open_place(P, np.full(len(S["uc"]), th), S["uc"], S["zc"], np.full(len(S["uc"]), -0.25))
+            P, dy = stone_depth_tilt(ra, P, len(S["uc"]))
+            W = open_place(P, np.full(len(S["uc"]), th), S["uc"], S["zc"], -0.25 + dy)
             P_st.add(W, T, Pl=P, mat="M_stone", smooth="all")
-        # mortar back panel of the recess
-        xs = np.linspace(-cw - 0.06, cw + 0.06, 12)
-        zz = np.linspace(ARCH["z0"] - 0.02, ARCH["zs"] + cw + 0.05, 14)
+            WA.add(W, T)
+        # mortar back panel of the recess (low-frequency relief)
+        xs = np.linspace(-cw - 0.06, cw + 0.06, 16)
+        zz = np.linspace(ARCH["z0"] - 0.02, ARCH["zs"] + cw + 0.05, 20)
         X, Z = np.meshgrid(xs, zz, indexing="ij")
-        Rz = R_out(Z)
-        d = np.sqrt(Rz ** 2 - X ** 2) - 0.272
-        G = np.stack([X * math.cos(th) + d * math.sin(th), X * math.sin(th) - d * math.cos(th), Z], 2)
-        add_grid(P_mo, "M_mortar", G, flip=False)
+        add_grid(P_mo, "M_mortar", a_world(X, Z, a_mort(X, Z)), flip=False)
 
     # ---- band: strings, back panel, balusters ----
     rb = RNG("band")
@@ -1200,13 +1562,34 @@ def build_base(parts):
            (0.29, 0.058), (0.305, 0.072), (0.305, 0.145), (0.29, 0.16), (0.0, 0.18), (-0.42, 0.18)]
     profile_course(P_dr, "M_stone_dressed", rc, zc0 + 0.27, cap, seg=(0.75, 1.05), joint=0.008)
 
-    # ---- mortar core (outer skin, recessed 1.3 cm behind the stone faces) ----
+    # ---- pinning stones in every void > 3 cm, concave strike skirts, visible-mortar report ----
+    rp = RNG("pins")
+    for wl in [w for w in Wall.registry if w.name in ("drum", "arch")]:
+        before = wl.mortar_fraction(*wl.metric_z)[0] if wl.metric_z else wl.mortar_fraction()[0]
+        if os.environ.get("MILL_DUMP") and wl.name == "drum":
+            np.save(os.environ["MILL_DUMP"] + "_pre.npy", (wl.cov.astype(np.uint8) + 2 * wl.block.astype(np.uint8)))
+        npin = wl.fill_pins(P_st, rp)
+        if os.environ.get("MILL_DUMP") and wl.name == "drum":
+            np.save(os.environ["MILL_DUMP"] + "_post.npy", (wl.cov.astype(np.uint8) + 2 * wl.block.astype(np.uint8)))
+        if wl.name == "drum":
+            log("drum pins %d, rejected %d (plain-zone mortar before pins %.1f%%)" % (npin, wl.rejected, 100 * before))
+            wl.report("drum")
+            log("  pins per iteration", wl.iters)
+        if not os.environ.get("MILL_NOSKIRT"):
+            wl.skirts(P_mo)
+    arch_walls = [w for w in Wall.registry if w.name == "arch"]
+    fr = np.mean([w.mortar_fraction()[0] for w in arch_walls])
+    log("WALL arcade backs: mean visible mortar %.1f%%, widest void %.3f m" %
+        (100 * fr, max(w.max_void() for w in arch_walls)))
+
+    # ---- mortar core (outer skin): recessed 2.2 cm (4.5 cm raked in the bottom 0.6 m), +-5 mm relief ----
     nth = 288
     ths = np.linspace(0, 2 * PI, nth, endpoint=False)
-    zs = np.concatenate([np.linspace(0.0, Z_BAND0, 27), np.linspace(Z_BAL0, Z_CORN0 + 0.12, 17)])
+    zs = np.concatenate([np.linspace(0.0, 0.40, 6), np.linspace(0.41, 0.70, 5), np.linspace(0.78, Z_BAND0, 22),
+                         np.linspace(Z_BAL0, Z_CORN0 + 0.12, 17)])
     TH, Z = np.meshgrid(ths, zs, indexing="ij")
-    r = R_out(Z) - MORTAR_RECESS + 0.0025 * np.sin(TH * 13 + Z * 7) * np.sin(TH * 5 - Z * 3)
-    G = np.stack([r * np.sin(TH), -r * np.cos(TH), Z], 2)
+    U = np.where(TH > PI, TH - 2 * PI, TH) * RREF
+    G = drum_to_world(U, Z, drum_mortar_d(U, Z))
     keep = np.ones((nth, len(zs) - 1), bool)
     # remove cells touching the clear part of door / windows / arcade recesses
     for i in range(nth):
@@ -1218,7 +1601,6 @@ def build_base(parts):
                     if inside_clear(tq, zq):
                         keep[i, j] = False
     add_grid(P_mo, "M_mortar", G, keep=keep, wrap=True, flip=False)
-    # top of the drum under the cornice / curb (hidden mostly)
     return n
 
 
@@ -1538,21 +1920,45 @@ def build_buttress(parts):
         # footing stones bigger: first course boost
         N = len(S["uc"])
         P, T = stone_local(rng, S["L"], S["H"], S["D"], "rubble")
+        P, dy = stone_depth_tilt(rng, P, N)
         zc = S["zc"]
         z = zc[:, None] + P[:, :, 2]
-        y = butt_halfwidth(z) + rng.normal(0, 0.004, N)[:, None] + P[:, :, 1] + 0.006 * np.sin(S["uc"] * 3)[:, None]
+        y = butt_halfwidth(z) + dy[:, None] + P[:, :, 1] + 0.004 * np.sin(S["uc"] * 3)[:, None]
         if side > 0:
             W = np.stack([S["uc"][:, None] + P[:, :, 0], y, z], 2)
         else:
             W = np.stack([S["uc"][:, None] - P[:, :, 0], -y, z], 2)
         P_b.add(W, T, Pl=P, mat="M_stone", smooth="all")
-        # mortar core face
-        xs = np.linspace(2.1, BT_TOE_X + 0.02, 26)
-        jj = np.linspace(0, 1, 12)
+
+        def b_world(u, z, d, side=side):
+            u = np.asarray(u, float)
+            z = np.asarray(z, float) + 0 * u
+            return np.stack([u, side * (butt_halfwidth(z) + d), z], -1)
+
+        def b_wall(W, side=side):
+            W = np.asarray(W)
+            return W[..., 0], W[..., 2], side * W[..., 1] - butt_halfwidth(W[..., 2])
+
+        def b_mort(u, z, side=side):
+            z = np.asarray(z, float)
+            return -0.022 - 0.02 * (1 - smoothstep(0.35, 0.6, z)) + wall_relief(u, z, 2.0 + side)
+
+        def b_block(U, Z):
+            w = butt_halfwidth(Z)
+            xa = np.sqrt(np.maximum(R_out(Z) ** 2 - w ** 2, 0)) - 0.02
+            return (U < xa) | (U > BT_TOE_X - Z / k - 0.02) | (Z < 0.0) | (Z > BT_TOP_Z + 0.05)
+        WB = Wall("buttress", b_world, b_wall, b_mort, 2.0, BT_TOE_X + 0.1, 0.0, BT_TOP_Z + 0.1, b_block)
+        WB.add(W, T)
+        npin = WB.fill_pins(P_b, rng)
+        WB.report("buttress %+d" % side)
+        log("  pins per iteration", WB.iters)
+        WB.skirts(P_b)
+        # mortar core face (recessed 2.2 cm, raked low down, +-5 mm relief)
+        xs = np.linspace(2.1, BT_TOE_X + 0.02, 40)
+        jj = np.linspace(0, 1, 24)
         X, J = np.meshgrid(xs, jj, indexing="ij")
         Z = np.minimum(bt_slope_z(X), BT_TOP_Z + 0.4) * J
-        Y = side * (butt_halfwidth(Z) - 0.024)
-        add_grid(P_b, "M_mortar", np.stack([X, Y, Z], 2), flip=(side < 0))
+        add_grid(P_b, "M_mortar", b_world(X, Z, b_mort(X, Z) - 0.002), flip=(side < 0))
     # mortar bed along the slope (closes the top of the rubble core: nothing can be seen through)
     sdir = unit(np.array([1.0, 0, -k]))
     ndir = unit(np.array([k, 0, 1.0]))
@@ -1596,7 +2002,7 @@ def build_buttress(parts):
 AP_RE = 3.17                       # eave radius of the shake bed
 AP_ZE = 4.50 + DZ                  # bed height at the eave (4.62)
 AP_RT = 1.60                       # top radius (tower foot)
-AP_ZT = 5.45 + DZ
+AP_ZT = 6.00                       # tower foot: apron ~41 deg (art bible 35-45)
 AP_A = math.atan2(AP_ZT - AP_ZE, AP_RE - AP_RT)
 
 
@@ -1683,7 +2089,7 @@ def build_apron(parts):
     rng = RNG("apron")
     ca, sa = math.cos(AP_A), math.sin(AP_A)
     # stone kerb inside (carries the tower sill; hidden behind rafters)
-    P, T = lathe(np.array([[[1.40, 4.45 + DZ], [1.78, 4.45 + DZ], [1.78, 5.30 + DZ], [1.40, 5.30 + DZ]]]), 48)
+    P, T = lathe(np.array([[[1.40, 4.45 + DZ], [1.78, 4.45 + DZ], [1.78, 5.80], [1.40, 5.80]]]), 48)
     P_c.add(P, T, mat="M_mortar", smooth="none")
     # timber curb on the cornice (16 lapped segments, 0.22 x 0.24)
     n = 16
@@ -1727,7 +2133,7 @@ def build_apron(parts):
     # Lift per layer is a fixed offset normal to the bed (no per-shake pitch blow-up), the under-layer is
     # complete, and only isolated top-layer shakes are missing (exposing the under-layer).
     slope_len = (AP_RE - AP_RT) / ca
-    courses = [0.0, 0.6, 1.2]
+    courses = [0.0, 0.68, 1.36]          # 3 courses of 0.72-0.84 m shakes over the 2.09 m slope (41 deg)
     stats = 0
     for ci, sb in enumerate(courses):
         rb_ = AP_RE - sb * ca
@@ -1747,7 +2153,7 @@ def build_apron(parts):
             phc += rng.uniform(-0.004, 0.004, len(phc))
             N = len(phc)
             if ci < 2:
-                L = rng.uniform(0.66, 0.8, N)
+                L = rng.uniform(0.74, 0.84, N)
                 comb = 0.0
             else:
                 # top course: reach the tower face (octagon) with a ragged comb top
@@ -1784,18 +2190,18 @@ def build_apron(parts):
 # =============================================================================================
 # D. OCTAGONAL TIMBER SMOCK TOWER
 # =============================================================================================
-TW_Z0, TW_Z1 = 5.40 + DZ, 10.97          # timber tower 5.52 -> 10.97 m (about 1.3x the stone base)
+TW_Z0, TW_Z1 = 5.95, 11.45               # timber tower 5.95 -> 11.45 m (round 3: +0.45..0.5 m, per ref1)
 TW_A0, TW_A1 = 1.55, 0.95                # half across-flats at the foot / at the top
 TW_TAPER = (TW_A0 - TW_A1) / (TW_Z1 - TW_Z0)
 TAN225 = math.tan(PI / 8)
 COS225 = math.cos(PI / 8)
 LEAN_DIR = unit(np.array([-0.95, 0.31, 0.0]))
 LEAN_ANG = 0.55 * D2R
-LEAN_PIVOT = np.array([0, 0, 5.30 + DZ])
+LEAN_PIVOT = np.array([0, 0, 5.80])
 LEAN_R = rotm(np.cross([0, 0, 1.0], LEAN_DIR), [LEAN_ANG])[0]
 CURB_R, CURB_W, CURB_D = 0.99, 0.22, 0.24     # circular top curb (8 lapped segments) on the octagon
 ZCT = TW_Z1 + 0.01                            # curb top
-Z_COLLAR = 9.80                               # iron prop collar
+Z_COLLAR = 10.30                              # iron prop collar
 
 
 def lean(V):
@@ -2075,7 +2481,7 @@ def build_tower(parts):
 #    neck with proper lead-lined valleys, a board skirt (valance) hanging outside the curb, and cast-iron
 #    truck wheels on the curb.                       cap-local: X' = heading, Y', Z
 # =============================================================================================
-CAP_AZ = -15 * D2R
+CAP_AZ = 3 * D2R                 # round 3: hub ~0.1 m right of the tower axis in the front view (ref1)
 HDIR = np.array([math.sin(CAP_AZ), -math.cos(CAP_AZ), 0.0])
 YDIR = np.cross([0, 0, 1.0], HDIR)
 CAP_AF, CAP_AB, CAP_B = 1.28, 1.48, 1.28          # footprint 2.76 x 2.56 m
@@ -2083,10 +2489,10 @@ CAP_XC = (CAP_AF - CAP_AB) / 2
 RIDGE_L = 1.0
 XR0, XR1 = CAP_XC - RIDGE_L / 2, CAP_XC + RIDGE_L / 2
 CAP_EF, CAP_EB, CAP_SB = CAP_AF - XR1, CAP_AB + XR0, CAP_B   # horizontal runs: front / back / sides
-CAP_ZE = ZCT + 0.24                                # eave lip (11.22)
-CAP_RISE = 1.18                                    # eave -> ridge (ridge 12.40)
+CAP_ZE = ZCT + 0.24                                # eave lip (11.70)
+CAP_RISE = 1.18                                    # eave -> ridge (ridge 12.88)
 HUB_D, TILT = 1.95, 8 * D2R
-HUB_Z = CAP_ZE + 0.66                              # 11.88
+HUB_Z = CAP_ZE + 0.66                              # 12.36
 HOOD_XF, HOOD_YW = 1.15, 0.45
 HOOD_ZE, HOOD_ZR = CAP_ZE + 0.62, CAP_ZE + 1.06
 SKIRT_R = CURB_R + CURB_W / 2 + 0.012              # inner face of the valance boards (gap to curb ~1-2 cm)
@@ -2506,9 +2912,9 @@ E1 = unit(np.cross(-S_AX, [0, 0, 1.0]))
 E2 = np.cross(E1, -S_AX)
 HUB = HDIR * HUB_D + np.array([0, 0, HUB_Z])
 PHI_A = (180 - 8) * D2R          # sail A near 9 o'clock (ref1)
-SAIL_R1 = 5.6                    # sail A tip radius
+SAIL_R1 = 5.8                    # sail A tip radius (ref1 broad paddle, sweep ~5.85)
 ARM_R1 = 3.35                    # bare arms B, C, D end just past the rim
-PAD_R0 = 2.0                     # board panel heel radius on sail A
+PAD_R0 = 2.5                     # board panel heel radius on sail A
 W_WH = -0.33                     # wind-wheel blade plane (behind both stocks)
 RING_IN, RING_OUT = 1.35, 3.20
 W_RING = W_WH - 0.058
@@ -2550,11 +2956,11 @@ def twist(r):
 
 
 def lead_w(r):
-    return 0.70 + 0.10 * np.clip((r - PAD_R0) / (SAIL_R1 - PAD_R0), 0, 1)
+    return 1.02 + 0.23 * np.clip((r - PAD_R0) / (SAIL_R1 - PAD_R0), 0, 1)
 
 
 def trail_w(r):
-    return 0.80 + 0.30 * np.clip((r - PAD_R0) / (SAIL_R1 - PAD_R0), 0, 1)
+    return 1.30 + 0.33 * np.clip((r - PAD_R0) / (SAIL_R1 - PAD_R0), 0, 1)
 
 
 def sail_map(P, use_twist=True):
@@ -2684,71 +3090,108 @@ def build_rotor(parts):
             member(P_stA, 1, aw - dv * 0.0045, bw + dv * 0.0045, 0.05, 0.009, up=upv, c=0.002)
         hex_heads(P_ri, np.array([loc3(er, t, rc, l, wb - 0.0045) for l in (-sw_ + 0.02, sw_ - 0.02)]),
                   np.array([-Z3, -Z3]), rad=0.019, hgt=0.014)
-    # sail bars (6), mortised through the whip, visible in front of the boards
-    rs = np.array([2.06, 2.76, 3.46, 4.16, 4.86, 5.52]) + rng.uniform(-0.02, 0.02, 6)
+    # ---- ref1 broad board paddle: panel r 2.5 -> ~5.8, 2.3 m wide at the heel flaring to 2.9 m.
+    # Construction (front -> back): whip + clamps, 2 cross cleats, full-length radial boards (2 cm), sail bars
+    # (3 x 4.5 cm) BEHIND the boards (only their ends show past the edges), back uplongs. Sail-A-local z is
+    # measured from the whip centre; the stock's front face is at z = -whip_depth/2.
+    def z_bar(r):
+        return -whip_depth(r) / 2 + 0.012 + 0.0225
+
+    def z_board(r):
+        return -whip_depth(r) / 2 + 0.012 + 0.045 + 0.0105
+
+    def lin_(r):           # boards start just outside the stock + clamp side straps
+        return stock_depth(r, 0) / 2 + 0.022
+    rs = np.array([2.545, 3.17, 3.885, 4.50, 5.09, 5.62]) + rng.uniform(-0.006, 0.006, 6)
     nbar = len(rs)
-    l0 = lead_w(rs) + 0.045
-    l1 = -trail_w(rs) - 0.045
-    h = np.stack([(l0 - l1) / 2, np.full(nbar, 0.015), np.full(nbar, 0.025)], 1)
+    ext = rng.uniform(0.03, 0.05, (nbar, 2))
+    l0 = lead_w(rs) + ext[:, 0]
+    l1 = -trail_w(rs) - ext[:, 1]
+    h = np.stack([(l0 - l1) / 2, np.full(nbar, 0.015), np.full(nbar, 0.0225)], 1)
     P = rbox(T_PLK, h, np.repeat([[0.006, 0.005, 0.006]], nbar, 0))
-    P[:, :, 1] += rng.uniform(-0.006, 0.006, (nbar, 1)) * (1 - (P[:, :, 0] / h[:, None, 0]) ** 2)
-    Q = np.stack([rs[:, None] + P[:, :, 1], ((l0 + l1) / 2)[:, None] + P[:, :, 0], P[:, :, 2]], -1)
+    P[:, :, 1] += rng.uniform(-0.005, 0.005, (nbar, 1)) * (1 - (P[:, :, 0] / h[:, None, 0]) ** 2)
+    Q = np.stack([rs[:, None] + P[:, :, 1], ((l0 + l1) / 2)[:, None] + P[:, :, 0], z_bar(rs)[:, None] + P[:, :, 2]], -1)
     P_bar.add(rotw(sail_map(Q)), perm_tmpl(T_PLK, True), Pl=P, mat="M_timber_weathered", smooth="bevel")
-    # hemlaths: leading edge, trailing edge, and one mid-trailing uplong
-    for kind, wid in (("lead", 0.045), ("mid", 0.04), ("trail", 0.05)):
-        r0, r1 = PAD_R0 - 0.06, SAIL_R1 + 0.01
-        h = np.array([[(r1 - r0) / 2, wid / 2, 0.035]])
-        P = rbox(T_PLK, h, np.array([[0.008, 0.008, 0.008]]))
+    # back uplongs (hemlaths) behind the bars: leading edge, trailing edge and a mid-trailing one
+    for lat_fn in (lambda r: lead_w(r) - 0.06, lambda r: -trail_w(r) + 0.06, lambda r: -0.5 * (trail_w(r) + lin_(r))):
+        r0, r1 = PAD_R0 + 0.02, SAIL_R1 - 0.12
+        h = np.array([[(r1 - r0) / 2, 0.022, 0.02]])
+        P = rbox(T_PLK, h, np.array([[0.006, 0.006, 0.006]]))
         rr = (r0 + r1) / 2 + P[:, :, 0]
-        if kind == "lead":
-            lat = lead_w(rr) + 0.02
-        elif kind == "trail":
-            lat = -trail_w(rr) - 0.02
-        else:
-            lat = -0.5 * (trail_w(rr) + stock_depth(rr, 0) / 2 + 0.03)
-        Q = np.stack([rr, lat + P[:, :, 1], P[:, :, 2] + 0.006], -1)
-        Q[..., 1] += rng.uniform(-0.012, 0.012) * np.sin((Q[..., 0] - r0) / (r1 - r0) * PI)
+        Q = np.stack([rr, lat_fn(rr) + P[:, :, 1], z_bar(rr) - 0.0225 - 0.0205 + P[:, :, 2]], -1)
+        Q[..., 1] += rng.uniform(-0.01, 0.01) * np.sin((rr - r0) / (r1 - r0) * PI)
         P_hem.add(rotw(sail_map(Q)), T_PLK, Pl=P, mat="M_timber_weathered", smooth="bevel")
-    # boards: radial planks behind the bars on both sides of the stock + whip (5 leading, 6 trailing),
-    # 2 cm thick, 0.5-1.5 cm gaps, uneven ends (+-4 cm), slight cup and warp
-    zbd = -0.025 - 0.0105
+    # full-length radial boards, 7 leading / 9 trailing, 2 cm thick, 0.5-1.5 cm gaps; seams fan toward the tip.
+    # Ragged tip (+-4 cm), two boards short (8-15 cm, one broken on the diagonal), three with a butt joint
+    # over a bar, cup / warp per board.
     nails = []
     nb_total = 0
-    for side, nbd in ((1, 5), (-1, 6)):
-        fw = rng.uniform(0.85, 1.15, nbd)
+    cleat_r = (2.72, 4.30)
+    short = {(1, 4): 0.10, (-1, 6): 0.13}
+    butt = {(1, 2): 3, (-1, 3): 2, (-1, 7): 3}
+    for side, nbd in ((1, 7), (-1, 9)):
+        fw = rng.uniform(0.88, 1.12, nbd)
         fr = np.concatenate([[0], np.cumsum(fw)]) / fw.sum()
         for j in range(nbd):
             g0 = rng.uniform(0.0025, 0.0075)
             g1 = rng.uniform(0.0025, 0.0075)
-            rh_ = PAD_R0 + rng.uniform(-0.04, 0.04)
-            rt_ = SAIL_R1 - 0.03 + rng.uniform(-0.04, 0.04)
-            h = np.array([[(rt_ - rh_) / 2, 0.01, 0.5]])
-            P = rbox(T_BRD, h, np.array([[0.006, 0.005, 0.02]]))
-            u = (P[:, :, 0] + h[0, 0]) / (2 * h[0, 0])
-            v = P[:, :, 2] + 0.5
-            rr = rh_ + u * (rt_ - rh_)
-            # ragged ends: each corner of the board end differs a little
-            rr += np.where(u > 0.5, rng.uniform(-0.02, 0.02) * (v - 0.5), rng.uniform(-0.015, 0.015) * (v - 0.5))
-            lin = stock_depth(rr, 0) / 2 + 0.03
-            lout = lead_w(rr) if side > 0 else trail_w(rr)
-            e0 = lin + fr[j] * (lout - lin) + g0
-            e1 = lin + fr[j + 1] * (lout - lin) - g1
-            lat = side * (e0 + v * (e1 - e0))
-            zz = zbd + P[:, :, 1] + rng.uniform(-0.004, 0.004) * (2 * v - 1) ** 2 + \
-                rng.uniform(-0.006, 0.006) * np.sin(u * PI)
-            Q = np.stack([rr, lat, zz], -1)
-            P_bd.add(rotw(sail_map(Q)), perm_tmpl(T_BRD, side > 0), Pl=P, mat="M_timber_weathered", smooth="bevel")
-            nb_total += 1
-            for rb in rs:
-                ln = float(side * (stock_depth(rb, 0) / 2 + 0.03 + (fr[j] + fr[j + 1]) / 2 *
-                                   ((lead_w(rb) if side > 0 else trail_w(rb)) - stock_depth(rb, 0) / 2 - 0.03)))
-                nails.append((rb + rng.uniform(-0.006, 0.006), ln + rng.uniform(-0.02, 0.02), zbd - 0.0105))
+            rh_ = PAD_R0 + rng.uniform(-0.01, 0.02)
+            rt_ = SAIL_R1 - 0.04 + rng.uniform(-0.04, 0.04) - short.get((side, j), 0.0)
+            cup = rng.uniform(-0.005, 0.005)
+            warp = rng.uniform(-0.005, 0.005)
+            tw_end = rng.uniform(-0.004, 0.004)
+            tip_k = rng.uniform(-0.03, 0.03)
+            broken = (side, j) == (1, 4)
+            jb = butt.get((side, j))
+            pieces = [(rh_, rs[jb] - 0.002), (rs[jb] + 0.003, rt_)] if jb is not None else [(rh_, rt_)]
+            for (pa, pb) in pieces:
+                h = np.array([[(pb - pa) / 2, 0.01, 0.5]])
+                P = rbox(T_BRD, h, np.array([[0.005, 0.004, 0.012]]))
+                u = (P[:, :, 0] + h[0, 0]) / (2 * h[0, 0])
+                v = P[:, :, 2] + 0.5
+                rr = pa + u * (pb - pa)
+                at_tip = u > 0.5 if pb == rt_ else np.zeros_like(u, bool)
+                rr = rr + np.where(at_tip, tip_k * (v - 0.5) - (0.11 * v if broken else 0.0), 0.0)
+                lout = lead_w(rr) if side > 0 else trail_w(rr)
+                lin = lin_(rr)
+                e0 = lin + fr[j] * (lout - lin) + g0
+                e1 = lin + fr[j + 1] * (lout - lin) - g1
+                lat = side * (e0 + v * (e1 - e0))
+                s_ = (rr - rh_) / (rt_ - rh_)
+                zz = z_board(rr) + P[:, :, 1] + cup * ((2 * v - 1) ** 2 - 0.33) + warp * np.sin(s_ * PI) + \
+                    tw_end * (2 * v - 1) * s_
+                Q = np.stack([rr, lat, zz], -1)
+                P_bd.add(rotw(sail_map(Q)), perm_tmpl(T_BRD, side > 0), Pl=P, mat="M_timber_weathered",
+                         smooth="bevel")
+                nb_total += 1
+            for rb in list(rs) + list(cleat_r):
+                if rb > rt_ - 0.05:
+                    continue
+                lin = float(lin_(rb))
+                lout = float(lead_w(rb) if side > 0 else trail_w(rb))
+                wj = (fr[j + 1] - fr[j]) * (lout - lin)
+                lc = lin + (fr[j] + fr[j + 1]) / 2 * (lout - lin)
+                zf = float(z_board(rb)) + 0.0105 + (0.03 if rb in cleat_r else 0.0)
+                offs = (-0.28, 0.28) if rb in cleat_r else (rng.uniform(-0.15, 0.15),)
+                for o in offs:
+                    nails.append((rb + rng.uniform(-0.01, 0.01), side * (lc + o * wj), zf))
     log("sail A boards", nb_total)
+    # two cross cleats (8 x 3 cm) on the board faces, either side of the whip
+    for rc in cleat_r:
+        for side in (1, -1):
+            la = float(lin_(rc)) + 0.015
+            lb = float(lead_w(rc) if side > 0 else trail_w(rc)) - rng.uniform(0.02, 0.05)
+            h = np.array([[(lb - la) / 2, 0.04, 0.015]])
+            P = rbox(T_PLK, h, np.array([[0.008, 0.006, 0.006]]))
+            P[:, :, 2] += rng.uniform(-0.003, 0.003) * (1 - (P[:, :, 0] / h[0, 0]) ** 2)
+            Q = np.stack([rc + P[:, :, 1] + rng.uniform(-0.01, 0.01) * P[:, :, 0] / h[0, 0],
+                          side * ((la + lb) / 2 + P[:, :, 0]), z_board(rc) + 0.0105 + 0.015 + P[:, :, 2]], -1)
+            P_bar.add(rotw(sail_map(Q)), perm_tmpl(T_PLK, side < 0), Pl=P, mat="M_timber_weathered", smooth="bevel")
     nails = np.array(nails)
-    prof = np.array([(0.0, 0.0), (0.008, 0.0), (0.007, 0.003), (0.0, 0.005)])
+    prof = np.array([(0.0, -0.002), (0.0075, -0.002), (0.0072, 0.002), (0.004, 0.0045), (0.0, 0.005)])
     P, T = lathe(np.repeat(prof[None], len(nails), 0), 6)
     Q = sail_map(nails)
-    nrm = sail_map(nails - [0, 0, 0.01]) - Q
+    nrm = sail_map(nails + [0, 0, 0.01]) - Q
     Rn = []
     for v in nrm:
         zz = unit(v)
@@ -3160,6 +3603,10 @@ def rotor_internal_report(parts):
     lat = np.concatenate([loc(part_samples(parts["sail_A_%s" % s], 0.01)) for s in ("bars", "hemlaths", "boards", "whip")])
     g2 = voxel_min_gap(lat, wheel, 0.06)
     log("ROTOR sail A boards/bars vs wind-wheel: min gap %.3f m %s" % (g2, "(PASS)" if g2 > 0.015 else "(FAIL)"))
+    sA = np.concatenate([loc(part_samples(parts["sail_A_%s" % s], 0.01)) for s in ("boards",)])
+    stA = loc(part_samples(parts["sail_A_stock"], 0.01))
+    g3 = voxel_min_gap(sA, stA, 0.06)
+    log("ROTOR sail A boards vs stock + clamps: min gap %.3f m %s" % (g3, "(PASS)" if g3 > 0.004 else "(FAIL)"))
     # blade-to-blade spacing (ref1 near-continuous annulus)
     for r in (2.5, BL_R1):
         s_ = np.clip((r - BL_R0) / (BL_R1 - BL_R0), 0, 1)
@@ -3181,7 +3628,7 @@ def clearance_report(rot_parts, static_parts, xf, res=0.02):
         return w, rho
     RV = np.concatenate([xf(p, part_samples(p, res)) for p in rot_parts if p.V])
     w, rho = to_rot(RV)
-    w0, w1, r1 = -1.0, 1.2, 6.2
+    w0, w1, r1 = -3.0, 1.2, 6.4
     nw, nr = int((w1 - w0) / res) + 1, int(r1 / res) + 1
     G = np.zeros((nw, nr), bool)
     G[np.clip(((w - w0) / res).astype(int), 0, nw - 1), np.clip((rho / res).astype(int), 0, nr - 1)] = True
@@ -3266,7 +3713,7 @@ def main():
     for k, v in sorted(clr.items(), key=lambda kv: kv[1]):
         log("CLEARANCE rotor -> %-24s %.3f m" % (k, v))
     lowest = min(lean(np.concatenate(p.V))[:, 2].min() for p in rot if p.V)
-    log("lowest rotating point z = %.3f m (apron top 5.45 m, ground 0)" % lowest)
+    log("lowest rotating point z = %.3f m (apron top %.2f m, ground 0)" % (lowest, AP_ZT))
     rotor_internal_report(parts)
     log("CLEARANCE CHECK sails vs apron/props >= 0.30 m: %s" %
         ("PASS" if min(clr["MILL_apron_shingles"], clr["MILL_props"]) >= 0.30 else "FAIL"))

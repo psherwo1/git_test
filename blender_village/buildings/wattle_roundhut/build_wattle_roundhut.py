@@ -17,7 +17,11 @@ Layout (metres, Z up, hut centred on the world origin, door centred on -Y):
   * 28 pole rafters (uneven, some split ends) on the plate, purlin rings, batten rings, hub
   * 17-course individually modelled shingle cone (convex, eave kick, faceted between
     rafters), doubled starter, slipped / split / missing shingles
-  * lead-hat apex collar with standing seams + upper collar + turned finial and spike
+  * lead-hat apex collar (53 deg, dia 1.49, 6.5 cm drip fascia, folded standing seams), bell-cast
+    upper collar with its own drip, turned spindle (bead / neck / bulb) and conical spike
+Round 2: coarse open wattle (6-8 cm rows, knots, kinks, oval rods, bundles), sub-angular two-high
+plinth with recessed wedge chinking, bulging/cracked/smeared daub, hand-hewn frame timber (adze
+strokes, wane, swell, drying + end checks), adze-flatted knotty posts, flat-banded apron.
 Interior: earth floor, daubed inner skin, hearth ring.
 All randomness is seeded; the script is reproducible bit-for-bit.
 """
@@ -449,7 +453,7 @@ def smin(a, b, k):
 
 def rock(half, rng, round_r=0.03, facets=(3, 6), segs=(9, 7, 6), warp=0.05, amp=0.005, freq=4.0,
          flat_top=None, flat_bot=None, fillet=0.018, face_bias=None, chips=0, pit=0.0015, batter=0.0,
-         bias_p=0.6, face_cuts=0):
+         bias_p=0.6, face_cuts=0, nz_w=0.55):
     """sub-angular split stone: small corner rounding, 3-6 big flat fracture facets with soft
     fillets, flat bedding faces, faint low-frequency undulation. local coords, bedding face down.
     face_bias: optional unit vector; facets are biased toward it (e.g. the exposed face)."""
@@ -461,7 +465,7 @@ def rock(half, rng, round_r=0.03, facets=(3, 6), segs=(9, 7, 6), warp=0.05, amp=
     P = P + wv * h * warp
     nf = rng.randint(facets[0], facets[1] + 1)
     for _ in range(nf):
-        nv = rng.normal(size=3) * [1.0, 1.0, 0.55]
+        nv = rng.normal(size=3) * [1.0, 1.0, nz_w]
         if face_bias is not None and rng.rand() < bias_p:
             nv = np.asarray(face_bias, float) * 1.0 + rng.normal(size=3) * [0.7, 0.6, 0.6]
         nv = nrm(nv)
@@ -776,10 +780,10 @@ def post_azimuths():
 POST_AZ = post_azimuths()
 
 
-def round_post(acc, base, top, rad, rng, sides=32, check=False, n_knots=None):
+def round_post(acc, base, top, rad, rng, sides=48, check=False, n_knots=None):
     """round-hewn post: lean, bow, taper, 6-10 long adze flats 5-8 mm deep, adze scallops,
     1-2 branch-stub knots with a swelling round them, optional drying check (narrow V split)."""
-    nseg = 64
+    nseg = 50
     t = np.linspace(0, 1, nseg)
     lean = np.array([rng.uniform(-1, 1), rng.uniform(-1, 1), 0.0]) * math.tan(math.radians(0.7))
     H = top[2] - base[2]
@@ -791,7 +795,7 @@ def round_post(acc, base, top, rad, rng, sides=32, check=False, n_knots=None):
     seed = rng.randint(1000)
     A2 = np.broadcast_to(ang, (nseg, sides)).copy()
     T2 = np.broadcast_to(t[:, None], (nseg, sides))
-    rr = 1 + 0.02 * n2(A2 * 1.3, T2 * 4, seed) + 0.006 * n2(A2 * 4, T2 * 30, seed + 1)
+    rr = 1 + 0.02 * n2(A2 * 1.3, T2 * 4, seed) + 0.002 * n2(A2 * 2, T2 * 30, seed + 1)
     # adze flats: planar cuts 5-8 mm deep over a stretch of the post, feathered at their ends
     nfl = rng.randint(6, 11)
     for kf in range(nfl):
@@ -843,7 +847,7 @@ def round_post(acc, base, top, rad, rng, sides=32, check=False, n_knots=None):
 
 
 def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_faces=(0, 1, 2, 3),
-                end_checks=0, sag=0.0, adze=True, mat="M_timber", ds=0.012, ns=7, nc=4, swell=0.008):
+                end_checks=0, sag=0.0, adze=True, mat="M_timber", ds=0.012, ns=7, nc=6, swell=0.008):
     """hand-hewn squared timber along local +X (half = (L/2, a, b)); R columns = local axes in world.
     adze facets 4-8 cm wide x 3-6 mm deep on every face, +-8 mm swell along the length, rounded
     arrises, wane (bark-edge rounding) on chosen corners (0:+y+z 1:-y+z 2:-y-z 3:+y-z), narrow
@@ -954,14 +958,16 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
             m = tl ** 0.7
         else:
             m = smoothstep(0.0, 0.18, tl) * (1 - smoothstep(0.82, 1.0, tl))
-        Y[ii, j] -= ny * depth * m
-        Zp[ii, j] -= nz * depth * m
-        sp_ = (2 * (a0 if c in (0, 2) else b0)) / (ns + 1)
-        pull = (sp_ - width / 2) * np.clip(m * 2.5, 0, 1)
         tyz = np.array([-nz, ny], float)       # across-face direction (toward increasing j)
+        hw = width / 2 * (0.35 + 0.65 * np.sqrt(np.clip(m, 0, 1)))
         for jn, sg in ((j - 1, 1), (j + 1, -1)):
+            # pull the neighbour line in to the crack lip using the REAL spacing on this ring
+            dist = np.abs((Y[ii, jn] - Y[ii, j]) * tyz[0] + (Zp[ii, jn] - Zp[ii, j]) * tyz[1])
+            pull = np.clip(dist - hw, 0, None) * smoothstep(0.0, 0.35, m)
             Y[ii, jn] += sg * tyz[0] * pull
             Zp[ii, jn] += sg * tyz[1] * pull
+        Y[ii, j] -= ny * depth * m
+        Zp[ii, j] -= nz * depth * m
 
     for _ in range(n_checks):
         c = int(rng.choice(check_faces))
@@ -970,7 +976,7 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
         x0 = rng.uniform(-hl + 0.15, hl - 0.15 - lc)
         i0 = int(np.searchsorted(xs, x0))
         i1 = int(np.searchsorted(xs, x0 + lc))
-        apply_check(c, j_off, i0, i1, rng.uniform(0.012, 0.02), rng.uniform(0.003, 0.006))
+        apply_check(c, j_off, i0, i1, rng.uniform(0.012, 0.02), rng.uniform(0.004, 0.006))
     for _ in range(end_checks):
         for side_ in (-1, 1):
             c = rng.randint(4)
@@ -1013,7 +1019,7 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
 
 
 def build_posts(coll):
-    acc = Acc("HUT_posts", 50)
+    acc = Acc("HUT_posts", 15)          # low angle: adze-flat edges crisp, 48-gon stays smooth
     rng = np.random.RandomState(202)
     for i, az in enumerate(POST_AZ):
         b = az_pt(az, R_WALL, 0.362)
@@ -2143,12 +2149,14 @@ def apron_height(X, Y):
     trench = -0.032 * np.exp(-(dr / 0.13) ** 2) * (1 - (np.abs(X) < 1.1) * (Y < 0))
     # gentle wear hollow along the path
     wear = -0.012 * np.exp(-(X / 0.5) ** 2) * (Y < -3.8) * (Y > -6.2)
-    # earth heaped round the step stone (buries its foot 3-4 cm)
-    ex = (X - STEP_C[0]) / 0.74
-    ey = (Y - STEP_C[1]) / 0.44
+    base = h + (lumps + trench + wear) * m
+    # earth banked round the step stone: its top stands ~5 cm proud, the foot is buried
+    ex = (X - STEP_C[0]) / 0.66
+    ey = (Y - STEP_C[1]) / 0.39
     e = np.sqrt(ex ** 2 + ey ** 2)
-    bed = 0.038 * np.exp(-np.clip(e - 1.0, 0, None) ** 2 / 0.05) * smoothstep(0.55, 0.85, e)
-    return h + (lumps + trench + wear) * m + bed * m
+    bank = 0.045 + 0.006 * n2(X * 6, Y * 6, 1120)
+    w_ = 1 - smoothstep(1.0, 1.9, e)
+    return np.where(e < 1.9, np.maximum(base, base * (1 - w_) + bank * w_), base)
 
 
 def build_apron(coll):
@@ -2230,7 +2238,7 @@ def peg(acc, p, d, rng, r=0.015, proud=0.016, depth=0.05):
 
 
 def build_door(coll):
-    fr = Acc("HUT_door_frame", 40)
+    fr = Acc("HUT_door_frame", 28)      # adze ridges / checks read crisp; corner arcs are 18 deg
     leaf = Acc("HUT_door_leaf", 40)
     iron = Acc("HUT_door_ironwork", 50)
     thr = Acc("HUT_threshold", 50)
@@ -2250,15 +2258,15 @@ def build_door(coll):
         inner_f, outer_f = (1, 3) if side > 0 else (3, 1)
         hewn_member(fr, (x, yc, (POST_BASE + HEAD_Z) / 2), ((HEAD_Z - POST_BASE) / 2, 0.12, 0.11),
                     rotz(side * 0.006) @ RV, rng, ch=0.02, wane=wane_c, n_checks=3, check_faces=(2, 2, outer_f, inner_f),
-                    ns=9, nc=4)
+                    ns=9, nc=6)
         # inner jambs on the sill
         xj = side * 0.60
         hewn_member(fr, (xj, yc, (SILL_TOP + HEAD_Z) / 2), ((HEAD_Z - SILL_TOP) / 2, 0.10, 0.11),
                     rotz(side * 0.004) @ roty(side * 0.003) @ RV, rng, ch=0.018, wane=(2 if side > 0 else 3,),
-                    n_checks=2, check_faces=(2, inner_f), ns=8, nc=4)
+                    n_checks=2, check_faces=(2, inner_f), ns=8, nc=6)
         # sole rail under the side panel, resting on the sill end
         hewn_member(fr, (side * 0.805, yc, (SILL_TOP + 0.405) / 2), (0.115, 0.075, (0.405 - SILL_TOP) / 2),
-                    np.eye(3), rng, ch=0.015, ns=6, nc=3, ds=0.015)
+                    np.eye(3), rng, ch=0.015, ns=6, nc=5, ds=0.015)
         # return tie beam from the door post to the wall post
         wp = az_pt(WALL_POST_AZ_DOOR * side, R_WALL, 0)
         p0 = np.array([x, yc + 0.05, HEAD_Z + 0.11])
@@ -2266,7 +2274,7 @@ def build_door(coll):
         L = float(np.linalg.norm(p1 - p0))
         R = frame_R(p1 - p0, (0, 0, 1))
         hewn_member(fr, (p0 + p1) / 2, (L / 2 + 0.1, 0.08, 0.10), R, rng, ch=0.02, wane=(0,), end_checks=1,
-                    sag=0.004, ns=6, nc=4)
+                    sag=0.004, ns=6, nc=6)
         # pegs: lintel -> door post and jamb tenons, sill tenons
         for (px, pz, fy) in ((x - side * 0.03, HEAD_Z + 0.06, FRONT_Y - 0.009), (x + side * 0.045, HEAD_Z + 0.15, FRONT_Y - 0.009),
                              (xj, HEAD_Z + 0.07, FRONT_Y - 0.009), (xj - side * 0.03, SILL_TOP + 0.05, FRONT_Y + 0.004)):
@@ -2274,7 +2282,7 @@ def build_door(coll):
         peg(fr, p1 - R[:, 0] * 0.06 + np.array([0, 0, 0.10]), (0, 0, 1), rng)
     # lintel on the door posts (front face slightly proud), slight sag
     hewn_member(fr, (0.0, yc - 0.008, HEAD_Z + 0.11), (1.15, 0.115, 0.11), np.eye(3), rng, ch=0.022,
-                wane=(1,), n_checks=2, check_faces=(1,), end_checks=2, sag=0.008, ns=9, nc=4)
+                wane=(1,), n_checks=2, check_faces=(1,), end_checks=2, sag=0.008, ns=9, nc=6)
     # infill above the lintel up to the rafters: short vertical boards
     xx = -1.05
     k = 0
@@ -2303,10 +2311,10 @@ def build_door(coll):
     thr.add(V, F, "M_timber")
     # big flat step stone (top ~0.09)
     # big flat step stone: split slab with a flat, wear-dished top, chipped arrises, foot buried
-    hs = np.array([0.64, 0.37, 0.085])
-    rs_step = np.random.RandomState(1313)
-    P, F = rock(hs, rs_step, round_r=0.02, facets=(4, 6), segs=(16, 10, 4), warp=0.035, amp=0.004, freq=3.0,
-                chips=7, flat_top=hs[2] - 0.014, flat_bot=-hs[2] + 0.01, fillet=0.012, face_bias=(0, -1, 0.15))
+    hs = np.array([0.64, 0.37, 0.07])
+    rs_step = np.random.RandomState(1314)
+    P, F = rock(hs, rs_step, round_r=0.022, facets=(5, 7), segs=(16, 10, 3), warp=0.03, amp=0.004, freq=3.0,
+                chips=6, flat_top=hs[2] - 0.012, flat_bot=-hs[2] + 0.01, fillet=0.014, nz_w=0.12)
     rq = (P[:, 0] / hs[0]) ** 2 + (P[:, 1] / hs[1]) ** 2
     top_ = P[:, 2] > hs[2] * 0.4
     P[top_, 2] -= 0.008 * np.clip(1 - rq[top_] * 1.1, 0, 1) ** 0.8
