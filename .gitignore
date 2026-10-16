@@ -2,3 +2,7 @@
 *.blend2
 __pycache__/
 *.pyc
+blender_village/materials/*.zip
+blender_village/lookdev/textures/
+blender_village/lookdev/*.blend
+blender_village/lookdev/_tests/
