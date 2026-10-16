@@ -1616,8 +1616,8 @@ def build_daub(coll):
         cs0, cs1 = max(s0, ss_live.min() - 0.03), min(s1, ss_live.max() + 0.03)
         cz0, cz1 = max(zlo, zz_live.min() - 0.03), min(zhi, zz_live.max() + 0.03)
         nu = int((cs1 - cs0) / h) + 1
-        zr = np.linspace(cz0, min(cz1, EAVE_SHADOW_Z + 0.04), int((min(cz1, EAVE_SHADOW_Z + 0.04) - cz0) / h) + 1)
-        if cz1 > EAVE_SHADOW_Z + 0.04:
+        zr = np.linspace(cz0, min(cz1, EAVE_SHADOW_Z - 0.06), int((min(cz1, EAVE_SHADOW_Z - 0.06) - cz0) / h) + 1)
+        if cz1 > EAVE_SHADOW_Z - 0.06:
             zr = np.concatenate([zr, np.linspace(zr[-1], cz1, int((cz1 - zr[-1]) / 0.02) + 2)[1:]])
         nv = len(zr)
         S, Z = np.meshgrid(np.linspace(cs0, cs1, nu), zr, indexing="ij")
@@ -1905,13 +1905,13 @@ def build_purlins_battens(coll):
     rng = np.random.RandomState(505)
     d = 2 * math.pi / N_RAFT
     # purlin rings inside (under rafters)
-    for sp in (1.25, 2.05):
+    for sp in (1.25,):
         az = RAFT_AZ0 + np.arange(N_RAFT + 1) * d
         th = az2th(az)
         C, ts, tt, n = rafter_center(th, np.full_like(th, sp))
         C = C - n * (RAFT_R + 0.035)
         for k in range(N_RAFT):
-            if not (interior_visible(az[k], math.radians(72)) and interior_visible(az[k + 1], math.radians(72))):
+            if not (interior_visible(az[k], math.radians(55)) and interior_visible(az[k + 1], math.radians(55))):
                 continue                     # only where the doorway shows them
             p0, p1 = C[k], C[k + 1]
             # extend a little past rafters (lapped / lashed)
@@ -2791,7 +2791,7 @@ def build_rubble(coll):
         mesh = pool_mesh("rubble", k, make_rubble_variant)
         g = float(apron_height(np.array([x_]), np.array([y_]))[0])
         R = rotz(rng.uniform(0, 6.28)) @ rotx(rng.uniform(-0.15, 0.15)) @ roty(rng.uniform(-0.15, 0.15))
-        place_instance(mesh, "ground_rubble", R, (x_, y_, g - 0.004), scale=sc)
+        place_instance(mesh, "ground_rubble", R, (x_, y_, max(g - 0.004, Z_MIN + 0.0101 * sc)), scale=sc)
     log("rubble instances:", len(pts))
 
 
@@ -2952,12 +2952,12 @@ def build_door(coll):
         inner_f, outer_f = (1, 3) if side > 0 else (3, 1)
         hewn_member(fr, (x, yc, (POST_BASE + HEAD_Z) / 2), ((HEAD_Z - POST_BASE) / 2, 0.12, 0.11),
                     rotz(side * 0.006) @ RV, rng, ch=0.02, wane=wane_c, n_checks=3,
-                    check_faces=(2, 2, outer_f, inner_f), ns=9, nc=6, hero=(2, outer_f), hidden=(0,))
+                    check_faces=(2, 2, outer_f, inner_f), ns=9, nc=6, hero=(2, outer_f), hidden=(0, inner_f))
         # inner jambs on the sill
         xj = side * 0.60
         hewn_member(fr, (xj, yc, (SILL_TOP + HEAD_Z) / 2), ((HEAD_Z - SILL_TOP) / 2, 0.10, 0.11),
                     rotz(side * 0.004) @ roty(side * 0.003) @ RV, rng, ch=0.018, wane=(2 if side > 0 else 3,),
-                    n_checks=2, check_faces=(2, inner_f), ns=8, nc=6, hero=(2, inner_f), hidden=(0,))
+                    n_checks=2, check_faces=(2, inner_f), ns=8, nc=6, hero=(2, inner_f), hidden=(0, outer_f))
         # sole rail under the side panel, resting on the sill end
         hewn_member(fr, (side * 0.805, yc, (SILL_TOP + 0.405) / 2), (0.115, 0.075, (0.405 - SILL_TOP) / 2),
                     np.eye(3), rng, ch=0.015, ns=5, nc=4, ds=0.02, hidden=(3,))
@@ -3037,7 +3037,7 @@ def build_door(coll):
     for b in range(6):
         bw = widths[b]
         cx = -(x + bw / 2)
-        V, F = rbox((bw / 2, 0.0175, (h1 - h0) / 2), 0.006, (4, 1, 14))
+        V, F = rbox((bw / 2, 0.0175, (h1 - h0) / 2), 0.006, (3, 1, 10))
         zl = V[:, 2] / ((h1 - h0) / 2)
         # gaps 0.5-1.5 cm varying along the length: each edge wanders +-3 mm
         ea, eb = edge_fns[b]
@@ -3133,7 +3133,7 @@ def build_interior(coll):
     """earthen floor (tucked under the sill: no seam inside the doorway), hearth ring."""
     acc = Acc("HUT_floor", 40)
     rng = np.random.RandomState(1313)
-    nr, nt = 26, 160
+    nr, nt = 18, 96
     T1 = np.linspace(0, 2 * np.pi, nt, endpoint=False)
     dth = np.angle(np.exp(1j * (T1 + np.pi / 2)))
     r_out = R_WALL + 0.02 + 0.20 * np.exp(-(dth / 0.22) ** 2)
