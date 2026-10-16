@@ -112,3 +112,150 @@ Axis scores:
 - Board-level irregularity on the tower: ±0.5 deg board lean, 2–3 split board ends and one patched board.
 - Optional `M_moss_clump` cushions at the apron eave lip and the cap eave.
 - Slightly vary the wheel-blade outlines per blade (±2 cm) so the 16 blades are not clones.
+
+## Round 2 — score 8/10
+
+**Reviewed:** renders/tower_windmill/round_02 (hero, front, side, back, aerial, actor_closeup, stats.json), plus director close-ups in renders/tower_windmill/round_02/director_extra (r01–r13, s01–s07, t01–t04). Compared side by side with ref1 and the crops mill_overall, mill_sails_wheel, mill_stone_base, style_mill_lattice_sails and style_aerial_village. Stats: 899,500 tris, 35 objects, bbox 12.76 x 8.92 x 15.70 m, .blend 20.2 MB. Deterministic, transforms identity, UVs and named slots present. A BVH check of the 74 wind-wheel parts found no blade-to-blade interpenetration; the only contacts are battens seated on their boards.
+
+**Verdict:** This is a big step up. At thumbnail size it now reads as ref1's mill:
+- a dense near-continuous 16-blade "sunflower" wheel
+- one board sail at 9 o'clock
+- bare arms
+- a low hipped cap
+- the timber tower visible below the wheel
+- props on the left and the buttress on the right
+
+The apron is now real split shakes with no hole, the strap hinges lie flat, the arcade has the right tall proportion, and the balusters vary.
+
+It is not yet near-hero, for these reasons:
+- **Sail A is the wrong shape and texture.** The signature board sail reads as a long, narrow gridded crate. In ref1 it is a broad, almost square paddle of radial boards.
+- **The rubble reads as flat plates on plaster.** In the actor close-up, the stones look like thin flat plates stuck onto a smooth plaster wall.
+- **The timber tower and apron sit about 0.5 m too low against the art.** The apron pitch of 30 deg is below the art bible's 35–45 deg.
+- **Several primitive-looking parts remain:**
+  - plastic-dowel props on clean box chocks and slab pads
+  - 114-face box stocks
+  - a messy cap ridge with slivers at the hood
+
+Axis scores:
+| Axis | Score |
+|---|---|
+| Silhouette | 8 |
+| Proportion and scale | 8 |
+| Construction | 8 |
+| Detail | 8 |
+| Age | 7 |
+| Technical | 9 |
+
+**Strengths:**
+- The rotor composition now matches ref1. The wheel is a near-continuous annulus with an open eye of about 0.35 R, and one board sail sits at 9 o'clock. B, C and D are bare arms strapped to the rim, with a counterweight on C. The tower reads below the wheel. Clearances pass.
+- The low hipped cap (ridge 12.40 m) replaces the spire, so the side and back silhouettes now read as a mill cap. The valance closes the hovering gap. Truck wheels, sheers, rafters and the curb of 8 half-lapped, pegged segments are present.
+- The apron rebuild is good:
+  - tapered, split, ragged-butt shakes in 4 readable courses
+  - full sarking and a fascia
+  - no see-through hole
+  - no floating shakes
+- The base band is now right:
+  - The arcade is 0.72 x 1.08 clear with h/w 1.5, and its rubble-backed recesses, irregular cracked voussoirs and dressed piers match mill_stone_base (s07).
+  - The balusters are stubby, varied and partly replaced by plain blocks.
+- The ironwork is right: flat strap hinges with spear terminals and seated nails, a ring pull, a flat 60x10 collar with bolts, clevis lugs and cleats at the prop heads (t02), and hex-bolted poll-end plates (t04).
+- The base massing, door scale (1.05 x 2.18, 14 cm riser), interior depth, dentil cornice and buttress remain correct.
+
+**MUST-FIX (priority order).** Item 1 amends my own round-1 numbers for sail A after measuring the crops. Where it conflicts with round 1 or the spec, these numbers win.
+
+1. **Sail A shape and face (silhouette signature; r01, r11, front, hero).**
+   - In mill_overall and mill_sails_wheel the board sail is a broad, almost square paddle:
+     - panel from r ≈ 2.5 to 5.6–5.8 m (≈ 3.2 m long)
+     - ≈ 2.3 m wide at the heel, flaring to ≈ 2.9 m at the tip
+     - the stock roughly centred, with leading side ≈ 45%: leading 1.0 → 1.25 m, trailing 1.3 → 1.65 m
+   - Ours is 1.5 → 1.9 m wide over 3.6 m, which reads as an ordinary lattice sail.
+   - The face reads as a crate or grid. Six full-width bars and two hemlath rails sit in front of short board segments.
+   - Fix:
+     - Put the sail bars **behind** the boards (on the back, windward face), so only their ends show 3–5 cm past the panel edges.
+     - On the front face keep only the stock and whip with their U-clamps, plus at most 2 cross cleats (heel and mid, 8 x 3 cm).
+     - Use full-length radial boards (one 1–2 butt joint per board line is fine). Make them 8–10 per side, 2 cm thick and 14–22 cm wide, with 0.5–1.5 cm gaps.
+     - Fan the boards slightly so the seams diverge toward the tip.
+     - Make the tip edge ragged by ±4 cm, with 1–2 boards short by 8–15 cm or split at the tip.
+     - Add a slight cup or warp per board (±5 mm) and nail-head rows at the cleats.
+   - Re-run the rotor/prop and rotor/apron clearance checks. The sweep radius grows to about 5.85 m.
+2. **Rubble masonry reads as flat plates on plaster (actor_closeup, r13, r06).**
+   - The fracture-cut outlines leave wide triangular mortar voids at stone ends (5–10 cm). The stone faces stand only ≈ 1.4 cm proud with ≈ 1 cm depth variation, so the wall reads as thin appliqué tiles on a smooth plaster body. About 25% of the plain zone is visible mortar.
+   - Fix:
+     - (a) Fill every void wider than 3 cm with pinning stones of 4–12 cm (art bible §3), or let neighbours share fracture planes. The target is joints of 1–2.5 cm and no more than 12–15% visible mortar.
+     - (b) Recess the mortar 2–3 cm, raking it to 4–5 cm in the bottom 0.6 m.
+     - (c) Vary face depth 0.5–2.5 cm per stone as specified, and tilt 15–20% of stones 2–4 deg so one end stands proud.
+     - (d) Give the mortar body low-frequency relief (±5 mm), and slump it slightly into each joint (a concave strike) instead of a smooth cylinder.
+   - Keep the crisp split-stone arrises. They were the right fix.
+3. **Timber-tower height and apron pitch (front, hero, r02 against mill_overall).**
+   - Measured against ref1 (wheel R 3.9 m = 59 px/m), the art has:
+     - the apron top ≈ 6.1 m (ours 5.52)
+     - the cap eave ≈ 12.2 m (ours 11.22)
+     - the hub ≈ 12.4 m (ours 11.87)
+     - the timber tower ≈ 1.3 x the stone base (ours 1.18 x)
+   - Our apron pitch is ≈ 30 deg (rise 0.90 over 1.55 m), which is below the art bible's mill apron range of 35–45 deg.
+   - Fix:
+     - Raise the tower foot and sill to ≈ 6.0 m. The apron then runs from eave 4.62 m at r 3.15 m up to 6.0 m, ≈ 41 deg, with 3 courses of 0.66–0.8 m shakes.
+     - Raise everything above it by ≈ 0.5 m: top curb ≈ 11.47, cap eave ≈ 11.72, ridge ≈ 12.9, hub ≈ 12.37.
+     - Keep the tower taper (3.1 → 2.0 m across flats).
+     - Re-seat the props (collar ≈ 10.3 m), and re-run the clearance checks.
+   - This amends the spec's 4.5/5.2 ratio.
+4. **Cap ridge, hips and hood junction (t03, t04, s01).**
+   - The ridge is a pile of hip-saddle boards lying at random angles around the knob, with no continuous ridge capping.
+   - Thin triangular shingle slivers (1–3 cm wide, 20–40 cm long) stick out at the hood/front-face valley and at the hip below the hood.
+   - Fix:
+     - Fit a continuous ridge capping of two boards in a V (2.5 cm thick, 15–18 cm per leaf) along the 1.0 m ridge.
+     - Run hip capping boards from each ridge end to the eave in 0.6–0.9 m lengths with lapped joints. Each piece should follow the hip line within ±1 deg and sit within 1 cm of the shingles.
+     - Seat the knob on a small square plinth block at the rear ridge end.
+     - Cull or merge any clipped shingle narrower than 5 cm at the hips and valleys, and let the lead flashing take that strip.
+   - Nothing may stand off the roof surface more than 2 cm except the knob.
+5. **Raking props still read as plastic dowels (r08, hero, aerial).**
+   - Each pole has only 34 rings over about 10 m. The checks are one-vertex grooves of 0.6–1.1 cm and vanish under smooth shading. The knots are hard to see. The foot end is a rounded bullet between plain box cheeks. The pads are clean chamfered slabs on top of the ground.
+   - Fix:
+     - Use ring spacing of 6–8 cm or less and 24 sides.
+     - Add 2–3 real checks per pole: V-grooves 1.5–2.5 cm wide and 1.5–2.5 cm deep, over 0.8–2 m.
+     - Add 2–3 long adze flats or bark-strip remnants (±1 cm).
+     - Add 4–6 knots of Ø 4–7 cm, 2–4 cm proud, at least 2 of them within 2.5 m of the foot.
+     - Make the foot a faceted axe-cut end (2–3 planar facets, crisp), seated in the chock notch with the bird's mouth visible.
+     - Use hewn chocks and cheeks (adze-faceted, 1.5–2.5 cm worn chamfers, an end check).
+     - Make the pad an irregular rough stone 0.55–0.75 m across with a domed, uneven top (±2 cm), sunk so only 5–9 cm shows, with 4–6 small rubble stones and a soil lip around it.
+6. **Stocks, arms and whip are clean boxes (r10, r07, r12).**
+   - MILL_sail_B, C and D stocks are 114-face tapered boxes. The A stock and whip are equally clean.
+   - Fix:
+     - Give them hewn faces (2–3 shallow adze facets per face, ±5 mm) and varying chamfers of 1.5–3 cm.
+     - Add 1–2 long checks per stock (1 cm wide, 0.5–1.5 m) and split or checked end grain at the arm tips.
+     - Add 2 iron bands per arm near the poll (50 x 6 mm, with bolts).
+   - Arm C's counterweight is fine.
+7. **Buttress coping (r09).**
+   - The slabs are large, smooth, perfectly flat soap-bars with no visible spalls. Each joint shows a 1–2 cm step lip.
+   - Fix:
+     - Use a weathered, slightly dished top (±1 cm) with 1–2 visible spalls per slab on the top arris.
+     - Wear the upper edges more than the lower ones.
+     - Make each slab's top surface flush (±3 mm) with the next at the joint, with no stepped lips.
+     - Add 1–2 cracked slabs and one slab rotated 1–2 deg in plan.
+8. **Path flags and step (s06, actor_closeup).**
+   - They are soft, smooth, uniform-thickness rounded rectangles that read as rubber tiles.
+   - Fix:
+     - Use irregular 5–7-sided outlines with ±4 cm deviation and 1–2 straight broken edges.
+     - Give the tops low-frequency undulation (±1 cm) and edge chips (2–3 per flag).
+     - Make the step stone's front arris worn more at the centre (2–3 cm hollow).
+     - Add a ring of small half-buried gravel and stones (3–8 cm) around each flag so it sits in the ground rather than on it.
+9. **Valance vs sheer ends (t01, s05).**
+   - The sheer ends (cap-local x = 0.98 and −1.20, r ≈ 1.25 and 1.43 m) pass straight through the valance boards (inner face r 1.112 m) with no notch.
+   - Fix: notch the boards around each sheer end (1 cm clearance), and either fit a small end board, or chamfer the sheer ends and let them project 8–15 cm, with an end check.
+10. **Tower boards too clean (s03, t02, r02).**
+    - The cladding is long, straight boards of identical thickness. The ±0.5 deg lean is invisible.
+    - Fix:
+      - Add 1–2 horizontal butt joints per face at staggered heights between rails, with 1–2 cm drip gaps (ref1 shows horizontal joints).
+      - Vary board proudness ±4 mm and the bottom ends ±3 cm.
+      - Add 2–3 more visibly warped boards (cupping 6–10 mm) and 4–6 more split or checked ends on the hero (−Y and −X) faces.
+11. **Baluster erosion.** The rate is 4 of 61 (7%), against the requested 10–15%. Bring it to 7–9 balusters, with at least 2 visible from the front camera.
+
+**Accepted from known gaps:**
+- Diagonal rim ties dropped (the blade battens and arm straps carry the rim).
+- Truck wheels hidden inside the valance.
+- Hatch clearance of 0.16 m.
+- Moss skipped.
+- Ivy is set dressing, not building geometry.
+
+**Nice to have:**
+- In ref1 the hub sits right of the tower axis (≈ 1.4 m in the painting, a painterly cheat). Consider yawing the cap from −15 deg to 0..+6 deg (hub offset x = 1.95·sin(yaw), so currently −0.50 m, i.e. left), so the hub reads 0–0.2 m right of the axis in the front view and the wheel's left half gains distance from the props. Keep the hero view readable.
+- Shingle rotation jitter on the cap side faces is a little noisy at grazing angles. ±3 deg is enough.
