@@ -1398,9 +1398,11 @@ def post_azimuths():
 POST_AZ = post_azimuths()
 
 
-def round_post(acc, base, top, rad, rng, sides=48, check=False, n_knots=None):
+def round_post(acc, base, top, rad, rng, sides=48, check=False, n_knots=None, radial=1.0):
     """round-hewn post: lean, bow, taper, 6-10 long adze flats 5-8 mm deep, adze scallops,
-    1-2 branch-stub knots with a swelling round them, optional drying check (narrow V split)."""
+    1-2 branch-stub knots with a swelling round them, optional drying check (narrow V split).
+    radial: scale of the lean / bow component toward or away from the wall centre (a wall post in a
+    daubed wall keeps its face a constant distance proud of the coat; it leans along the wall)."""
     tz = (EAVE_SHADOW_Z - base[2]) / (top[2] - base[2])
     t_sh = 1 - 0.26 / (top[2] - base[2])
     t_sh = 1 - 0.016 / (top[2] - base[2])
@@ -1409,6 +1411,10 @@ def round_post(acc, base, top, rad, rng, sides=48, check=False, n_knots=None):
     lean = np.array([rng.uniform(-1, 1), rng.uniform(-1, 1), 0.0]) * math.tan(math.radians(0.7))
     H = top[2] - base[2]
     bow = np.array([rng.uniform(-1, 1), rng.uniform(-1, 1), 0]) * 0.012
+    if radial != 1.0:
+        u_r = np.array([base[0], base[1], 0.0]) / max(math.hypot(base[0], base[1]), 1e-6)
+        lean = lean - (1 - radial) * (lean @ u_r) * u_r
+        bow = bow - (1 - radial) * (bow @ u_r) * u_r
     path = base[None, :] + np.outer(t, top - base) + np.outer(t * H, lean) + np.outer(np.sin(np.pi * t), bow)
     taper = rad * (1 + 0.05 * (0.5 - t)) + rng.uniform(-0.005, 0.005)
     # director r4 #5d: the post is cut square under the plate (the plate bears on its end grain): only a
@@ -1740,23 +1746,35 @@ def post_cull(V):
     return hid | (~door_side & (Zv > 0.3) & (dr < thr))
 
 
+COVER_FOOT = {}
+
+
 def plinth_under_coat(V):
-    """client r6: where the intact daub foot comes down onto the stones, the stone top behind the wattle
-    centre line (under the bottom rod row and the coat) is never seen."""
+    """client r6 / director r6 #5: where the bedded daub foot comes down onto the stones, the stone top
+    behind the coat (inside the wattle line) is never seen.  Stone tops stay wherever the foot is broken
+    (splash bites, patches, the door bay) within 8 cm, so no hole ever opens behind the exposed rods."""
+    if "s" not in COVER_FOOT:
+        sg = np.arange(0.0, 2 * np.pi * R_WALL, 0.01)
+        cov = np.zeros(len(sg), bool)
+        for b in range(len(POST_AZ) - 1):
+            sb0, sb1 = bay_s(b)
+            m = (sg > sb0 + 0.10) & (sg < sb1 - 0.10)
+            if m.any():
+                cov[m] = DAUB_BAYS[b](sg[m], wall_floor(sg[m]) + 0.005) > 0.005
+        k = 8
+        bad = ~cov
+        dil = bad.copy()
+        for d in range(1, k + 1):
+            dil |= np.roll(bad, d) | np.roll(bad, -d)
+        COVER_FOOT["s"], COVER_FOOT["c"] = sg, ~dil
     r_ = np.hypot(V[:, 0], V[:, 1])
-    cand = (r_ < R_WALL + 0.005) & (V[:, 2] > 0.18)
+    cand = (r_ < R_WALL + 0.045) & (V[:, 2] > 0.18)          # behind the bedded coat face (r >= 3.55 at the foot)
     hid = np.zeros(len(V), bool)
     if not cand.any():
         return hid
     az = np.mod(np.arctan2(V[cand, 0], -V[cand, 1]), 2 * np.pi)
-    sw = az * R_WALL
-    cover = np.zeros(len(az), bool)
-    for b in range(len(POST_AZ) - 1):
-        sb0, sb1 = bay_s(b)
-        m = (sw > sb0 + 0.10) & (sw < sb1 - 0.10)
-        if m.any():
-            cover[m] = DAUB_BAYS[b](sw[m], wall_floor(sw[m]) + 0.045) > 0.0
-    hid[np.where(cand)[0][cover]] = True
+    i_ = np.clip(np.round(az * R_WALL / 0.01).astype(int), 0, len(COVER_FOOT["s"]) - 1)
+    hid[np.where(cand)[0][COVER_FOOT["c"][i_]]] = True
     return hid
 
 
@@ -1782,17 +1800,68 @@ def cull_object(ob, fn):
     return len(dead)
 
 
+POST_OUT = 0.02                # director r6 #4: wall posts sit 2 cm outside the wattle line (stand proud)
+PLATE_OUT = 0.01               # the wall plate follows them out 1 cm (heads stay under the plate)
+POST_RAD = []                  # nominal radius per wall post (filled by build_posts)
+POST_PROF = []                 # per post (z, s_centre, r_front) measured from the built mesh (daub fits to it)
+
+
 def build_posts(coll):
     acc = Acc("HUT_posts", 15, cull=post_cull)   # low angle: adze-flat edges crisp, 48-gon stays smooth
     rng = np.random.RandomState(202)
+    POST_RAD.clear()
     for i, az in enumerate(POST_AZ):
         # stand on the crowned stone under the post: lowest stone point under the footprint (no float)
         fp = [az_pt(az + da / R_WALL, R_WALL + dr) for da in (-0.08, 0.0, 0.08) for dr in (-0.07, 0.0, 0.08)]
         zb_ = float(np.min(stone_top([p_[0] for p_ in fp], [p_[1] for p_ in fp])))
-        b = az_pt(az, R_WALL, zb_ - 0.012)
-        tp = az_pt(az, R_WALL, PLATE_BOT + 0.004)       # head bears on the plate underside
-        round_post(acc, b, tp, rng.uniform(0.10, 0.12), rng, check=(i % 3 == 1))
-    acc.build(coll)
+        b = az_pt(az, R_WALL + POST_OUT, zb_ - 0.012)
+        tp = az_pt(az, R_WALL + POST_OUT, PLATE_BOT + 0.004)       # head bears on the plate underside
+        rad = rng.uniform(0.10, 0.12)
+        POST_RAD.append(rad)
+        round_post(acc, b, tp, rad, rng, check=(i % 3 == 1), radial=0.3)
+    ob = acc.build(coll)
+    post_profiles(ob)
+
+
+def post_profiles(ob, dz=0.04):
+    """front radius and centre (arc length) of every wall post along its height, measured from the built
+    mesh (lean, bow, adze flats included): the daub coat is fitted so each post stands 5-8 cm proud."""
+    me = ob.data
+    V = np.zeros(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", V)
+    V = V.reshape(-1, 3)
+    az = np.mod(np.arctan2(V[:, 0], -V[:, 1]), 2 * np.pi)
+    r = np.hypot(V[:, 0], V[:, 1])
+    zs = np.arange(0.20, PLATE_BOT + 0.05, dz)
+    POST_PROF.clear()
+    for i, a in enumerate(POST_AZ):
+        d = np.angle(np.exp(1j * (az - a))) * R_WALL
+        m = (np.abs(d) < 0.2) & (r > R_WALL - 0.06)
+        dm, rm, zm = d[m], r[m], V[m, 2]
+        sc, rf = np.full(len(zs), np.nan), np.full(len(zs), np.nan)
+        for k, z in enumerate(zs):
+            mk = np.abs(zm - z) < dz * 0.75
+            if mk.sum() < 6:
+                continue
+            j = np.argmax(rm[mk])
+            near = mk & (np.abs(dm - dm[mk][j]) < 0.035)
+            rf[k] = np.percentile(rm[near], 80)
+            top = near & (rm > rf[k] - 0.004)
+            sc[k] = np.mean(dm[top]) if top.any() else dm[mk][j]
+        ok = ~np.isnan(rf)
+        # the post is a smooth leaning / bowed stick: a robust quadratic through the per-height
+        # estimates (knot stubs and adze flats are outliers), so the coat fits the true flank
+        for _ in range(3):
+            cs_ = np.polyfit(zs[ok], sc[ok], 2)
+            cr_ = np.polyfit(zs[ok], rf[ok], 2)
+            res = np.abs(np.polyval(cs_, zs) - sc) + np.abs(np.polyval(cr_, zs) - rf)
+            ok2 = ok & (res < max(0.006, np.nanpercentile(res[ok], 75) * 1.5))
+            if ok2.sum() < 8:
+                break
+            ok = ok2
+        sc = np.polyval(cs_, zs) + a * R_WALL
+        rf = np.polyval(cr_, zs)
+        POST_PROF.append((zs, sc, rf))
 
 
 # =============================================================================================
@@ -2248,29 +2317,156 @@ def _knot_curve(seed, s_lo, s_hi, spacing, amp):
 _EDGE_CURVE = {}
 
 
-def daub_edge_door_bay(s):
-    """eroded lower edge of the big bay left of the door (director r4 #5a): the broken edge runs post to
-    post at z 0.65-0.95 (ragged +-12 cm at a 5-15 cm wavelength) with 2-3 deeper bites, exposing the
-    bottom wattle across the whole bay (ref2) -- no arch, the coat never reaches the plinth."""
+def stepped_break(seed, s_lo, s_hi, z0, rows=(0, 3), run=(0.08, 0.25), notch_c=(), notch_rows=(2, 3),
+                  notch_w=(0.10, 0.17), min_tooth=0.13, max_row=6, jog=(0.0, 0.03)):
+    """director r6 #1: a FRACTURE line across a daub coat -- straight runs of 8-25 cm, each 1-2 whole rod
+    rows (ROD_ROW_P) above / below its neighbour, joined by short vertical or diagonal breaks (sharp
+    corners), plus flat-floored notches stepped UP by 2-3 rows where a chunk fell.  No downward tooth
+    (a run lower than both neighbours) narrower than min_tooth.  Returns the polyline (k, 2) in (s, z)."""
+    rs = np.random.RandomState(seed)
+    k = rs.randint(rows[0], rows[1] + 1)
+    runs = []                                   # [x0, x1, level, is_notch]
+    x = s_lo - 0.35
+    notch_c = sorted(notch_c)
+    ni = 0
+    while x < s_hi + 0.35:
+        L = rs.uniform(*run)
+        if ni < len(notch_c) and x + L > notch_c[ni] - 0.06:
+            # finish the run at the notch, then the notch itself (flat floor, stepped up)
+            xn = max(x + 0.03, notch_c[ni] - 0.06)
+            runs.append([x, xn, k, False])
+            wn = rs.uniform(*notch_w)
+            runs.append([xn, xn + wn, None, True])
+            x = xn + wn
+            ni += 1
+            continue
+        runs.append([x, x + L, k, False])
+        x += L
+        dk = rs.choice([-2, -1, -1, 1, 1, 2])
+        k2 = int(np.clip(k + dk, rows[0], rows[1]))
+        if k2 == k:
+            k2 = int(np.clip(k - dk, rows[0], rows[1]))
+        k = k2
+    # merge consecutive non-notch runs that share a level
+    out = []
+    for r_ in runs:
+        if out and not r_[3] and not out[-1][3] and out[-1][2] == r_[2]:
+            out[-1][1] = r_[1]
+        else:
+            out.append(r_)
+    runs = out
+    for i, r_ in enumerate(runs):              # notch levels: 2-3 rows above the higher neighbour
+        if r_[3]:
+            nb_ = [runs[j][2] for j in (i - 1, i + 1) if 0 <= j < len(runs) and runs[j][2] is not None]
+            r_[2] = int(min(max(nb_ + [0]) + rs.randint(notch_rows[0], notch_rows[1] + 1), max_row))
+    # no narrow downward teeth: a short run below both neighbours is raised to the lower neighbour
+    for _ in range(4):
+        for i in range(1, len(runs) - 1):
+            a_, b_, c_ = runs[i - 1][2], runs[i][2], runs[i + 1][2]
+            if b_ < a_ and b_ < c_ and runs[i][1] - runs[i][0] < min_tooth:
+                runs[i][2] = min(a_, c_)
+    # breaks between runs: short vertical / diagonal jogs; every notch gets one clearly diagonal side
+    # (a chunk fell along a crack, not a cut-out battlement)
+    J = rs.uniform(*jog, len(runs) + 1)
+    for i, r_ in enumerate(runs):
+        if r_[3]:
+            J[i + rs.randint(2)] = rs.uniform(0.03, 0.065)
+    pts = []
+    for i, (x0, x1, lv, _) in enumerate(runs):
+        z = z0 + lv * ROD_ROW_P
+        jl = J[i] * 0.5 if i > 0 else 0.0
+        jr = J[i + 1] * 0.5 if i < len(runs) - 1 else 0.0
+        xa, xb = x0 + jl, x1 - jr
+        # a straight run is not a ruler: 1-2 interior kinks of +-3-6 mm
+        nk = 1 + int(xb - xa > 0.16)
+        xs = np.linspace(xa, xb, nk + 2)
+        zz = z + np.r_[0.0, rs.uniform(-0.006, 0.006, nk), 0.0] + rs.uniform(-0.004, 0.004)
+        pts.extend(zip(xs, zz))
+    P = np.array(pts)
+    keep = np.r_[True, np.hypot(*(np.diff(P, axis=0).T)) > 1e-4]
+    return P[keep]
+
+
+def daub_edge_door_bay():
+    """coat polygon (s, z) of the big bay left of the door: everything ABOVE the stepped fracture line
+    (z 0.72-0.95, director r6 #1) is coat; below it the wattle is exposed post to post (ref2)."""
     if "door" not in _EDGE_CURVE:
-        _EDGE_CURVE["door"] = _knot_curve(9011, 17.5, 22.5, 0.32, 0.07)
         sb0, sb1 = bay_s(len(POST_AZ) - 2)
         rs = np.random.RandomState(9013)
-        nb = 3
-        cs_ = sb0 + (sb1 - sb0) * (np.arange(nb) + 0.5 + rs.uniform(-0.3, 0.3, nb)) / nb
-        _EDGE_CURVE["door_bites"] = [(c_, rs.uniform(0.025, 0.05), rs.uniform(0.04, 0.08), rs.uniform(0.08, 0.13))
-                                     for c_ in cs_]
-    fs, fv = _EDGE_CURVE["door"]
-    s = np.asarray(s, float)
-    e = (0.79 + np.interp(s, fs, fv) + 0.05 * n2(s * 8.0, 1.7, 902)
-         + 0.035 * n2(s * 15.0, 3.1, 903) + 0.012 * n2(s * 37.0, 5.3, 904))
-    for (c_, wl_, wr_, d_) in _EDGE_CURVE["door_bites"]:          # asymmetric bites (steep one side)
-        w_ = np.where(s < c_, wl_, wr_)
-        e = e + d_ * np.exp(-np.abs((s - c_) / w_) ** 1.5) * (1 + 0.3 * n2(s * 30.0, c_, 905))
-    return np.clip(e, 0.62, 1.02)
+        cs_ = sb0 + 0.12 + (sb1 - sb0 - 0.24) * (np.arange(3) + 0.5 + rs.uniform(-0.25, 0.25, 3)) / 3
+        line = stepped_break(9011, sb0, sb1, 0.72, rows=(0, 3), notch_c=cs_)
+        _EDGE_CURVE["door_line"] = line
+        poly = np.vstack([line, [[line[-1, 0], 6.0], [line[0, 0], 6.0]]])
+        _EDGE_CURVE["door"] = poly[::-1] if _poly_area(poly) < 0 else poly
+    return _EDGE_CURVE["door"]
 
 
-DAUB_KEEP_UNDER = 0.07     # client r6: wattle is kept only in the exposed patches + ~7-10 cm under their edges
+def _poly_area(P):
+    return 0.5 * float(np.sum(P[:, 0] * np.roll(P[:, 1], -1) - np.roll(P[:, 0], -1) * P[:, 1]))
+
+
+def fracture_patch(c_s, c_z, h_s, h_z, seed):
+    """director r6 #3: outline of a fallen-out daub patch -- a broken irregular quadrilateral / pentagon
+    (4-6 principal breaks, width:height = h_s:h_z), top and bottom margins near horizontal along the rod
+    rows (stepped one row over 8-25 cm runs), sides vertical (along a stake) or one corner cut off on a
+    30-60 deg diagonal; no notch, no convex corner sharper than ~80 deg.  Returns a CCW polygon (s, z)."""
+    rs = np.random.RandomState(seed)
+    xl = c_s - h_s * rs.uniform(0.92, 1.05)
+    xr = c_s + h_s * rs.uniform(0.92, 1.05)
+    zb = c_z - h_z
+    zt = c_z + h_z
+    H = zt - zb
+    lean_l = rs.uniform(-0.02, 0.02)
+    lean_r = rs.uniform(-0.02, 0.02)
+    # one or two corners cut on a diagonal (pentagon / hexagon)
+    c0 = int(rs.randint(4))
+    corners = [c0] + ([(c0 + 2) % 4] if rs.rand() < 0.35 else [])      # a second cut only diagonally opposite
+    cut = {}
+    for c_ in corners:
+        ang = math.radians(rs.uniform(35, 55))
+        dz_ = H * rs.uniform(0.28, 0.45)
+        cut[int(c_)] = (dz_ / math.tan(ang), dz_)          # (horizontal, vertical) legs
+
+    def edge(xa, xb, z, sd):
+        P = stepped_break(sd, xa + 0.36, xb - 0.36, z, rows=(-1, 0), run=(0.08, 0.25), jog=(0.0, 0.015),
+                          max_row=1)
+        P = P[(P[:, 0] > xa) & (P[:, 0] < xb)]
+        return P
+    # corners: 0 = BL, 1 = BR, 2 = TR, 3 = TL
+    bl = (xl - lean_l, zb)
+    br = (xr - lean_r, zb)
+    tr = (xr + lean_r, zt)
+    tl = (xl + lean_l, zt)
+    pts = []
+    # bottom edge, left -> right
+    x0 = bl[0] + (cut[0][0] if 0 in cut else 0.0)
+    x1 = br[0] - (cut[1][0] if 1 in cut else 0.0)
+    if 0 in cut:
+        pts.append((bl[0], bl[1] + cut[0][1]))
+    pts.append((x0, zb))
+    pts.extend(edge(x0, x1, zb, seed + 11)[:, :].tolist())
+    pts.append((x1, zb))
+    if 1 in cut:
+        pts.append((br[0], br[1] + cut[1][1]))
+    # right side up, top edge right -> left
+    x2 = tr[0] - (cut[2][0] if 2 in cut else 0.0)
+    x3 = tl[0] + (cut[3][0] if 3 in cut else 0.0)
+    if 2 in cut:
+        pts.append((tr[0], tr[1] - cut[2][1]))
+    pts.append((x2, zt))
+    top = edge(x3, x2, zt, seed + 13)
+    top[:, 1] = zt - (top[:, 1] - zt)          # steps of the top margin go up into the coat
+    pts.extend(top[::-1].tolist())
+    pts.append((x3, zt))
+    if 3 in cut:
+        pts.append((tl[0], tl[1] - cut[3][1]))
+    P = np.array(pts, float)
+    keep = np.r_[True, np.hypot(*(np.diff(P, axis=0).T)) > 1e-4]
+    P = P[keep]
+    return P if _poly_area(P) > 0 else P[::-1]
+
+
+DAUB_KEEP_UNDER = 0.05     # client r6: wattle is kept only in the exposed patches + ~7-10 cm under their edges
 ROD_ROW_P = 0.036          # nominal rod row pitch: patch margins break along the rows
 # client correction r6: the exterior is MOSTLY INTACT DAUB; exposed wattle only in 4 small patches where
 # the coat has fallen away (bay, kind, centre fraction along the bay, centre z, half width, half height, seed)
@@ -2352,65 +2548,129 @@ def daub_hole(c_s, c_z, h_s, h_z, seed, floor=None):
     return f
 
 
-def low_margin(bay, seed, bite_amp=0.07, bite_max=0.10):
-    """weathered lower margin of an intact bay: the coat stops 2-4 cm over the stone tops (the bottom rod
-    shows), with occasional splash-eroded bites up to ~10 cm, rounding up into the posts."""
+FOOT = {}         # coat-foot stone top along the wall: arc length grid -> z (filled by coat_floor())
+COAT_R_NOM = 0.062  # director r6 #4: mean coat face 6.2 cm outside the wattle centre line (r ~ 3.562)
+
+
+def coat_floor(s):
+    """stone top under the daub coat face (r = R_WALL + COAT_R_NOM) at arc length s: the coat foot is
+    bedded onto it (director r6 #5).  Sampled once from the plinth BVH."""
+    if "s" not in FOOT:
+        from mathutils import Vector
+        bvh = PL_TOP["bvh"]
+        sg = np.arange(0.0, 2 * np.pi * R_WALL + 0.005, 0.005)
+        zs = np.full(len(sg), np.nan)
+        for i, s_ in enumerate(sg):
+            a_ = s_ / R_WALL
+            best = None
+            for rr_ in (R_WALL + COAT_R_NOM - 0.012, R_WALL + COAT_R_NOM + 0.006):
+                hit = bvh.ray_cast(Vector((math.sin(a_) * rr_, -math.cos(a_) * rr_, 1.5)), Vector((0, 0, -1.0)), 2.0)
+                if hit[0] is not None:
+                    best = hit[0][2] if best is None else max(best, hit[0][2])
+            if best is not None:
+                zs[i] = best
+        wf = wall_floor(sg)
+        zs = np.where(np.isnan(zs), wf - 0.03, zs)
+        zs = np.clip(zs, wf - 0.07, wf + 0.03)
+        FOOT["s"], FOOT["z"] = sg, zs
+    return np.interp(np.mod(np.asarray(s, float), 2 * np.pi * R_WALL), FOOT["s"], FOOT["z"])
+
+
+def low_margin(bay, seed, n_bites=(1, 2), bite_len=(0.10, 0.26), bite_h=(0.03, 0.065), bed=0.03):
+    """director r6 #5: the coat foot is BEDDED onto the stone tops (it runs `bed` into the stone, pressed
+    into the joints) along >= 70 % of the bay; the bottom rod row shows only in 1-2 splash-eroded bites,
+    each 10-26 cm long and 3-6.5 cm tall (flat-ish crown, ragged), placed at random along the bay (no
+    rhythm with the posts).  Returns e(s): the coat's lower margin."""
     bs0, bs1 = bay_s(bay)
-    fs, fv = _knot_curve(seed, bs0 - 0.3, bs1 + 0.3, 0.17, bite_amp)
+    rs = np.random.RandomState(seed)
+    nb_ = n_bites[0] + int(rs.rand() < 0.45) * (n_bites[1] - n_bites[0])
+    Ls = rs.uniform(*bite_len, nb_)
+    Ls *= min(1.0, 0.27 * (bs1 - bs0 - 0.2) / Ls.sum())        # bedded along >= ~70 % of the bay
+    bites = []
+    for k in range(nb_):
+        L = max(Ls[k], bite_len[0])
+        for _ in range(30):
+            c_ = rs.uniform(bs0 + 0.15 + L / 2, bs1 - 0.15 - L / 2)
+            if all(abs(c_ - b_[0]) > 0.3 for b_ in bites):
+                break
+        bites.append((c_, L, rs.uniform(*bite_h), rs.uniform(0.25, 0.45)))
 
     def e(s):
         s = np.asarray(s, float)
-        fl = wall_floor(s)
-        bite = np.clip(np.interp(s, fs, fv) - 0.015, 0.0, bite_max)
-        out = (fl + 0.028 + bite + 0.012 * n2(s * 9.0, 2.7, seed + 1) * (bite > 0.01) + 0.008 * n2(s * 23.0, 4.1, seed + 2))
-        sp = np.minimum(s - bs0, bs1 - s)
-        out = out + 0.05 * (1 - smoothstep(0.05, 0.24, sp)) ** 2
-        return np.clip(out, fl + 0.02, 0.62)
+        fl = coat_floor(s)
+        out = fl - bed + 0.006 * n2(s * 23.0, 4.1, seed + 2)
+        for (c_, L, h_, sk) in bites:
+            u = (s - c_) / (L / 2)
+            # flat-ish crown with ragged, steep-ish shoulders (splash-eroded scallop), slightly skewed
+            u = np.where(u > 0, u * (1 + sk), u * (1 - sk * 0.5))
+            prof = np.clip(1 - np.abs(u) ** 6, 0, 1) ** 0.3
+            hh = h_ * prof * (1 + 0.15 * n2(s * 40.0, c_, seed + 3)) + 0.003 * n2(s * 70.0, c_, seed + 4)
+            out = np.where(prof > 0.02, np.maximum(out, fl + hh), out)
+        return out
+    e.bites = bites
     return e
+
+
+DAUB_PARTS = {}     # bay -> (low margin e(s) or None, patch field(s, z) or None): build_daub edge profiles
 
 
 def make_daub_fields():
     """every bay is daubed (client r6); field(s, z) ~ distance inside the intact coat (m), negative in the
-    exposed patches.  Door bay: the ref2 eroded lower band (post to post, edge at z 0.62-1.0)."""
+    exposed patches.  Door bay: the ref2 eroded lower band (post to post), now a stepped fracture line
+    (director r6 #1).  Other bays: a bedded foot with a few splash bites (r6 #5) and the fallen-out
+    patches (fracture polygons, r6 #3)."""
     nb = len(POST_AZ) - 1
     door_bay = nb - 1                      # between POST_AZ[-2] and POST_AZ[-1] (az -45..-21)
+    door_poly = daub_edge_door_bay()
 
     def door_field(s, z):
-        f = z - daub_edge_door_bay(s)
-        # clinging scabs just below the break (within 10 cm of it: nothing below z 0.5)
-        isl = np.clip(n2(s * 9.0, z * 9.0, 905) * 1.6 - 0.45, 0, 1) * 0.06
-        f = np.where(f < 0, np.maximum(f, f + isl * (1 - smoothstep(0.0, 0.10, -f)) * 1.5), f)
-        # a few pock holes where daub has fallen out higher up
-        hole = np.clip(n2(s * 6.0, z * 6.0, 906) * 2.2 - 1.5, 0, 1)
-        return np.minimum(f - hole * 0.6, 1.0)
+        s = np.asarray(s, float)
+        z = np.asarray(z, float)
+        f = poly_sdf(s, z, door_poly) + 0.003 * n2(s * 30.0, z * 30.0, 905)
+        return np.minimum(f, 1.0)
 
     patches = {}
     for (bay, kind, cf, cz, hs, hz, seed) in DAUB_PATCHES:
         s0, s1 = bay_s(bay)
-        patches.setdefault(bay, []).append(
-            daub_hole(s0 + cf * (s1 - s0), cz, hs, hz, seed, floor=wall_floor if kind == "low" else None))
+        cs = s0 + cf * (s1 - s0)
+        if kind == "low":
+            patches.setdefault(bay, []).append(daub_hole(cs, cz, hs, hz, seed, floor=wall_floor))
+        else:
+            P = fracture_patch(cs, cz, hs, hz, seed)
+
+            def hf(s, z, _P=P, _sd=seed):
+                s = np.asarray(s, float)
+                z = np.asarray(z, float)
+                return -poly_sdf(s, z, _P) + 0.003 * n2(s * 30.0, z * 30.0, _sd + 6)
+            patches.setdefault(bay, []).append(hf)
     for bay in range(nb):
         if bay == door_bay:
             DAUB_BAYS[bay] = door_field
+            DAUB_PARTS[bay] = (None, door_field)
             continue
         lm = low_margin(bay, 9500 + 13 * bay)
         holes = patches.get(bay, [])
 
-        def field(s, z, _lm=lm, _holes=holes):
-            f = np.asarray(z, float) - _lm(s)
+        def pfield(s, z, _holes=holes):
+            f = np.ones(np.broadcast(np.asarray(s, float), np.asarray(z, float)).shape)
             for h_ in _holes:
                 f = np.minimum(f, h_(s, z))
-            return np.minimum(f, 1.0)
+            return f
+
+        def field(s, z, _lm=lm, _pf=pfield):
+            f = np.asarray(z, float) - _lm(s)
+            return np.minimum(np.minimum(f, _pf(s, z)), 1.0)
 
         def hide(s, z, _lm=lm, _holes=holes):
-            # rods buried in the intact coat are not modelled: kept ~7 cm under a patch margin, but only
-            # ~3.5 cm (the bottom row) under the weathered foot
+            # rods buried in the intact coat are not modelled: kept ~7 cm under a patch margin, and only
+            # ~3.5 cm (the bottom row) over a splash bite in the foot
             hb = (np.asarray(z, float) - _lm(s)) > 0.035
             for h_ in _holes:
                 hb &= h_(s, z) > DAUB_KEEP_UNDER
             return hb
         DAUB_BAYS[bay] = field
         DAUB_HIDE[bay] = hide
+        DAUB_PARTS[bay] = (lm, pfield if holes else None)
     for bay in DAUB_BAYS:
         DAUB_COVER[bay] = DAUB_KEEP_UNDER
 
@@ -2498,21 +2758,26 @@ def _seg_dist(Sx, Zx, segs):
 
 
 def build_daub(coll):
-    """front daub coat on every bay (client r6): 2.5-4 cm bulges (0.4-0.8 m), hand-applied dabs, a sag
-    belly, palm dents, 2-4 shrinkage cracks per bay, ridging over the rods only where the coat thins at
-    a patch margin, chipped edges against the posts, a splash-eroded foot, thick broken margins round
-    the exposed patches, torn clumps wrapped round the exposed rods. Every boundary tucks behind the
-    wattle / into the posts / into the plate, so no clean cut edge is exposed."""
+    """front daub coat on every bay (client r6, director r6): mean face 6.2 cm outside the wattle line
+    (2-4 cm over the rod fronts) with lumps <= +-1.5 cm, hand-applied dabs, a <= 1.5 cm sag belly, palm
+    dents, 2-4 shrinkage cracks per bay; a 1-2 cm shrinkage-slit dip within 8-12 cm of every post so the
+    posts stand 5-8 cm proud; a foot bedded onto the stone tops with 1-3 splash bites; crisp stepped
+    fracture margins round the exposed patches and the door-bay break; flat torn flakes clinging to the
+    exposed rods.  Every boundary tucks behind the wattle / into the posts / into the plate / into the
+    stones, so no clean cut edge is exposed."""
     acc = Acc("HUT_daub", 70)
     h = 0.0075                     # fine grid: patch margins, cracks, the weathered foot
     H_S, H_Z = 0.016, 0.013        # intact coat away from them (hand-applied dabs and bulges)
     H_CR = 0.0105                  # crack boxes and the weathered foot
     n_cr = 0
+    n_fl = 0
+    stat_T = []
     for bay, field in DAUB_BAYS.items():
         rng = np.random.RandomState(4400 + bay)
         sb0, sb1 = bay_s(bay)
         s0, s1 = sb0 + 0.04, sb1 - 0.04
-        zlo, zhi = 0.30, PLATE_BOT + 0.012           # client r6: the intact coat runs up INTO the plate (no gap)
+        zlo = min(0.30, float(coat_floor(np.linspace(s0, s1, 200)).min()) - 0.045)
+        zhi = PLATE_BOT + 0.012                     # client r6: the intact coat runs up INTO the plate (no gap)
         # crop to where the daub exists
         Sc, Zc = np.meshgrid(np.linspace(s0, s1, 120), np.linspace(zlo, zhi, 160), indexing="ij")
         fc = field(Sc, Zc)
@@ -2612,48 +2877,76 @@ def build_daub(coll):
             Z = np.where(band, cz_ + uz * dn, Z)
             crack_d = np.minimum(crack_d, np.where(core, -dp * (0.2 + 0.8 * prof), 0.0))
             n_cr += 1
+        lm_, pf_ = DAUB_PARTS[bay]
+
+        def f_low(S_, Z_):
+            return (np.asarray(Z_, float) - lm_(S_)) if lm_ is not None else np.ones(np.shape(S_))
+
+        def f_pat(S_, Z_):
+            return pf_(S_, Z_) if pf_ is not None else np.ones(np.shape(S_))
+        # wall posts as built (lean / bow / radius): distance from the nearer post's flank, its front
+        zs_l, sc_l, rf_l = POST_PROF[bay]
+        zs_r, sc_r, rf_r = POST_PROF[bay + 1]
+
+        def post_d(S_, Z_):
+            dl = S_ - np.interp(Z_, zs_l, sc_l) - POST_RAD[bay]
+            dr = np.interp(Z_, zs_r, sc_r) - S_ - POST_RAD[bay + 1]
+            left = dl < dr
+            rf = np.where(left, np.interp(Z_, zs_l, rf_l), np.interp(Z_, zs_r, rf_r)) - R_WALL
+            return np.minimum(dl, dr), rf, np.where(left, 0.0, 1.0)
         f = field(S, Z)
+        dfl0, _, _ = post_d(S, Z)
         # director r4 #5c: the sheet's cut boundary (where it is dropped behind the rods) is snapped onto
         # the smooth field contour -- no grid stair-steps along any daub margin
         F_all = grid_quads(nu, nv)
-        sp0 = np.minimum(S - sb0, sb1 - S)
-        hv0 = ((f < -0.03) | (sp0 < 0.085)).ravel()
+        hv0 = ((f < -0.03) | (dfl0 < -0.03)).ravel()
         F_keep = F_all[~hv0[F_all].all(axis=1)]
         used = np.zeros(S.size, bool)
         used[F_keep.ravel()] = True
-        mv = (used & (f.ravel() < -0.03) & (sp0.ravel() >= 0.085)).reshape(S.shape)
-        if mv.any():
-            ps, pz = S[mv].copy(), Z[mv].copy()
-            hm = HL[mv]
-            for _ in range(4):
+
+        def snap(fn, sel, off, it=5):
+            ps, pz = S[sel].copy(), Z[sel].copy()
+            hm = HL[sel]
+            for _ in range(it):
                 e_ = 1e-3
-                f0 = field(ps, pz) + 0.03
-                gs = (field(ps + e_, pz) - field(ps - e_, pz)) / (2 * e_)
-                gz = (field(ps, pz + e_) - field(ps, pz - e_)) / (2 * e_)
+                f0 = fn(ps, pz) + off
+                gs = (fn(ps + e_, pz) - fn(ps - e_, pz)) / (2 * e_)
+                gz = (fn(ps, pz + e_) - fn(ps, pz - e_)) / (2 * e_)
                 g2 = np.maximum(gs * gs + gz * gz, 0.05)
-                ds_ = np.clip(-f0 * gs / g2, -hm, hm)
-                dz_ = np.clip(-f0 * gz / g2, -hm, hm)
-                ps, pz = ps + ds_, pz + dz_
+                ps = ps + np.clip(-f0 * gs / g2, -hm, hm)
+                pz = pz + np.clip(-f0 * gz / g2, -hm, hm)
+            return ps, pz
+        mv = (used & (f.ravel() < -0.03) & (dfl0.ravel() >= -0.03)).reshape(S.shape)
+        if mv.any():
             S = S.copy()
             Z = Z.copy()
-            S[mv], Z[mv] = ps, pz
-            f = field(S, Z)
+            S[mv], Z[mv] = snap(field, mv, 0.03, 4)
+        # director r6 #1/#3: a CRISP outer arris on every fracture margin -- the grid vertices nearest the
+        # patch / break contour are snapped onto it, so the coat face turns into the fracture face on an
+        # edge loop (no 1-cell soft chamfer, no pillowed lip)
+        fp = f_pat(S, Z)
+        if pf_ is not None:
+            ar = (np.abs(fp) < 0.42 * HL) & (f_low(S, Z) > 0.03) & (dfl0 > 0.0)
+            if ar.any():
+                S = S.copy()
+                Z = Z.copy()
+                S[ar], Z[ar] = snap(f_pat, ar, 0.0, 5)
+        f = field(S, Z)
+        fp = f_pat(S, Z)
+        fl_ = f_low(S, Z)
+        dfl, RF, side_ = post_d(S, Z)
         P3 = np.stack([S * 1.7, Z * 1.7, np.full(S.shape, bay * 1.31)], -1)
-        # ---- big soft bulges (2.5-4 cm at 0.4-0.8 m)
+        # ---- soft bulges (director r6 #4: lumps <= +-1.5 cm about the mean face)
         bul = fbm(P3, 2, gain=0.45)
         bul = (bul - bul.mean()) / max(bul.std(), 1e-6)
-        bulge = 0.011 * np.clip(bul, -2.2, 2.2) + 0.004 * n2(S * 7.0, Z * 7.0, 4490 + bay)
-        # ---- faint horizontal ridging over the rods beneath (6-8 cm pitch), strongest where thin
-        # ridging only in small patches (<= 0.3 m) where the coat is thin, pitch 5-7.5 cm and amplitude varying
-        # ridges follow the horizontal rod rows only: pitch 4.5-6.5 cm varying slowly ALONG the wall,
-        # phase depending on s only, 3-6 mm, in horizontally elongated patches
+        bulge = 0.0062 * np.clip(bul, -2.2, 2.2) + 0.0025 * n2(S * 7.0, Z * 7.0, 4490 + bay)
+        # ---- feathering: along ~30 % of each fracture margin the coat thins over the rods (ridged) in
+        # a softer lip; elsewhere the break is a crisp step (director r6 #1)
+        Fm = smoothstep(0.18, 0.42, n2(S * 3.2, Z * 3.2, 4560 + bay))
         drift = 0.006 * n2(S * 1.1, np.full(S.shape, 3.3), 4500 + bay)
-        pitch = 0.05 + 0.012 * (bay % 3) / 2.0           # one pitch per bay (4.5-6.5 cm): rows stay level
+        pitch = ROD_ROW_P
         rid = np.cos(2 * np.pi * (Z + drift) / pitch)
-        thin = 1 - smoothstep(-0.9, 0.4, bul)
-        patchy = np.clip(n2(S * 2.5, Z * 7.0, 4511 + bay) * 2.4 - 0.5, 0, 1)
-        r_amp = 0.0018 + 0.0022 * np.clip(n2(S * 2.0, Z * 5.0, 4512 + bay) + 0.5, 0, 1)
-        ridge = r_amp * rid * (0.35 + 0.65 * thin) * patchy * (1 - smoothstep(0.05, 0.22, field(S, Z)))
+        ridge = 0.0 * rid               # r7: no rod ridging (it read as corrugation); feathering is in the edge profile
         # ---- client r6: hand-applied dabs over the intact coat (handful pats 6-11 cm, 2-5 mm proud, a
         # slightly sharper lower lip where each was pushed upward)
         dabs = np.zeros(S.shape)
@@ -2669,6 +2962,7 @@ def build_daub(coll):
                 continue
             lip = np.where(dz_ < 0, np.exp(-r2 * 2.2), np.exp(-r2 * 1.1))
             dabs += rng.uniform(0.002, 0.005) * lip * m
+        dabs -= 0.003
         # ---- palm-press dents (director r3 #5c): round 7-12 cm dents 0.8-1.8 cm deep with a slight
         # squeezed-up rim; they break the long undulations (no strokes, no folds)
         smear = np.zeros(S.shape)
@@ -2687,92 +2981,147 @@ def build_daub(coll):
             smear += A_ * (-np.exp(-r2 * 1.3) + 0.12 * np.exp(-((rr_ - 1.1) / 0.35) ** 2)) * m
         fine = (0.0035 * n2(S * 9, Z * 9, bay + 40) + 0.0012 * n2(S * 30, Z * 30, bay + 41)
                 + 0.0005 * n2(S * 80, Z * 80, bay + 42))
-        # ---- chipped / crumbled edges where the daub meets the posts (no clean vertical line)
-        sp = np.minimum(S - sb0, sb1 - S)
-        side_ = np.where(S - sb0 < sb1 - S, 0.0, 1.0)
-        # broken margin: its distance from the post wanders 9-17 cm in irregular bites
-        reach = (0.13 + 0.035 * n2(Z * 5.5, side_ * 7.0 + bay, 4520) + 0.015 * n2(Z * 17, side_ * 3.0 + bay, 4521))
-        chip = (1 - smoothstep(reach - 0.025, reach + 0.004, sp)) * smoothstep(0.06, 0.08, sp)
-        chip = chip * np.clip(0.55 + 0.6 * n2(S * 9, Z * 9, 4522 + bay), 0.25, 1.0)
-        nearp = 1 - smoothstep(0.08, 0.22, sp)
-        T_full = 0.088 + bulge * (0.3 + 0.7 * smoothstep(0.07, 0.25, sp)) + ridge * (1 - nearp) + smear + fine + dabs
-        T_full = T_full - 0.024 * chip - 0.008 * nearp
-        # thickness envelope: tucks behind the rods where the field ends (eroded / patch edges)
-        # ---- client r6: slight sag (a soft belly where the wet coat slumped, 0.5-1.0 m up) and a
-        # weathered foot (splash-eroded: thinner, pitted, rougher over the bottom ~25 cm)
+        # ---- slight sag (a soft belly where the wet coat slumped, 0.5-1.0 m up; director r6 #4: <= 1.5 cm)
         z_sag = 0.62 + 0.3 * ((bay * 0.618) % 1.0)
-        sag = (0.010 + 0.005 * n2(S * 1.3, np.full(S.shape, 0.5), 4540 + bay)) * np.exp(-((Z - z_sag) / 0.28) ** 2)
+        sag = (0.008 + 0.004 * n2(S * 1.3, np.full(S.shape, 0.5), 4540 + bay)) * np.exp(-((Z - z_sag) / 0.28) ** 2)
         sag = sag * (1 - smoothstep(0.42, 0.62, np.abs(Z - z_sag) / 0.6))
-        foot = 1 - smoothstep(0.0, 0.26, Z - wall_floor(S))
+        # ---- weathered foot: splash-pitted over the bottom ~25 cm; where it is bedded on the stones a
+        # rough fillet squeezed out onto the stone tops and into the joints (director r6 #5)
+        zfl = coat_floor(S)
+        foot = 1 - smoothstep(0.0, 0.26, Z - zfl)
         foot_n = np.clip(n2(S * 14.0, Z * 30.0, 4541 + bay) * 1.4 + 0.3, 0, 1)
-        T_full = (T_full + sag - foot * (0.010 + 0.012 * foot_n)
-                  + foot * (0.0045 * n2(S * 22.0, Z * 45.0, 4542 + bay) - 0.004 * np.clip(n2(S * 35, Z * 55, 4543 + bay) * 2 - 0.6, 0, 1)))
-        edge = smoothstep(-0.004, 0.045, f)
-        pit = 0.01 * np.clip(n2(S * 25, Z * 25, bay + 77), 0, 1) * (1 - smoothstep(0.04, 0.16, f))
+        bedded = smoothstep(0.012, 0.028, fl_ - (Z - zfl))        # the foot here reaches the stone
+        fillet = (0.009 + 0.004 * n2(S * 25.0, np.full(S.shape, 1.7), 4544 + bay)) * (1 - smoothstep(-0.01, 0.045, Z - zfl)) * bedded
+        T_full = (COAT_R_NOM + bulge * (0.3 + 0.7 * smoothstep(-0.02, 0.16, dfl)) + ridge + smear + fine + dabs + sag
+                  - foot * (0.004 + 0.006 * foot_n)
+                  + foot * (0.004 * n2(S * 22.0, Z * 45.0, 4542 + bay) - 0.004 * np.clip(n2(S * 35, Z * 55, 4543 + bay) * 2 - 0.6, 0, 1))
+                  + fillet)
+        # ---- director r6 #1: the coat at a fracture margin stands 2.5-4 cm over the rod fronts
+        T_full = T_full + np.clip(0.068 - T_full, 0, None) * (1 - smoothstep(0.04, 0.12, fp))
+        # ---- director r6 #4: posts stand 5-8 cm proud.  Within 8-12 cm of each post the coat dips a
+        # further 1-2 cm into the shrinkage slit (a broken step, not a fillet), and never comes within
+        # 5.5 cm of the post's (as-built) front face
+        slit_w = 0.08 + 0.04 * np.clip(0.5 + 0.6 * n2(Z * 2.2, side_ * 7.0 + bay, 4520), 0, 1) + 0.004 * n2(Z * 14.0, side_ + bay, 4524)
+        zone = 1 - smoothstep(slit_w - 0.012, slit_w + 0.004, dfl)
+        dip = (0.012 + 0.008 * np.clip(0.5 + 0.6 * n2(Z * 4.0, side_ * 3.0 + bay, 4521), 0, 1)) * zone
+        T_full = T_full - dip
+        cap = RF - 0.058 + 0.004 * n2(S * 12.0, Z * 12.0, 4523 + bay)
+        T_full = np.minimum(T_full, cap + (1 - zone) * 0.2)
+        # rods stay covered wherever they are still modelled (patch margins, foot bites)
+        rods_behind = (fp < DAUB_KEEP_UNDER + 0.03) | (fl_ < 0.07)
+        T_full = np.maximum(T_full, np.where(rods_behind, 0.050, 0.034))
+        # ---- edge profiles.  Foot bites: a rounded splash-eroded edge.  Fracture margins (door-bay
+        # break, patches): a crisp arris, then a near-normal broken face (2.4 cm run for a ~10 cm drop,
+        # <= 15 deg off the wall normal) with 3-6 mm grit; softer where feathered
+        e_low = smoothstep(-0.004, 0.02, fl_) if lm_ is not None else np.ones(S.shape)
+        grit = 0.005 * n2(S * 70.0, Z * 70.0, 4570 + bay) + 0.002 * n2(S * 160.0, Z * 160.0, 4571 + bay)
+        fpg = fp + grit * np.clip(-fp / 0.006, 0, 1)
+        w_e = 0.024 + 0.02 * Fm
+        tpe = np.clip(1 + fpg / w_e, 0, 1)
+        e_pat = (1 - Fm) * tpe + Fm * smoothstep(0.0, 1.0, tpe)
+        edge = np.minimum(e_low, e_pat)
+        pit = 0.004 * np.clip(n2(S * 25, Z * 25, bay + 77), 0, 1) * (1 - smoothstep(0.04, 0.16, f))
         T = -0.036 + (T_full + 0.036 - pit) * edge + crack_d * edge
         # tuck into the posts at the very ends of the sheet, and back under the plate at the top
-        T = T - 0.04 * (1 - smoothstep(0.045, 0.095, sp)) * edge
+        T = T - 0.04 * (1 - smoothstep(-0.05, -0.012, dfl)) * edge
         T = T - 0.032 * smoothstep(zhi - 0.09, zhi, Z)
         a = S / R_WALL
         rad = R_WALL + T
         P = np.stack([np.sin(a) * rad, -np.cos(a) * rad, Z], -1)
         Vv = P.reshape(-1, 3)
-        # drop the parts never seen: sheet tucked behind the rods below the break, and inside the posts
+        # drop the parts never seen: sheet tucked behind the rods below the break, inside the posts, and
+        # the bedded foot inside the stones
+        buried = (Z < zfl - 0.004).ravel()
+        F_keep = F_keep[~buried[F_keep].all(axis=1)]
         acc.add(Vv, F_keep, "M_daub")
-        # ---- detached clumps (director r4 #2e): 2-3 flattened, torn daub blobs 4-8 cm long WRAPPED round
-        # real rods just below the break (a sleeve on the rod path, thickest on the top / front, ragged
-        # ends), never a free-floating lump
+        stat_T.append(T_full[(fp > 0.15) & (fl_ > 0.3) & (dfl > 0.12)])
+        # ---- director r6 #2: clinging daub = flat torn FLAKES of coat lying on the rods' front face
+        # (8-15 x 5-10 cm, 1-2 cm thick, 4-7 straight breaks), within 8 cm of the main break
         if 1000 + bay * 17 in ROD_STORE:
-            store = ROD_STORE.get(1000 + bay * 17, [])
-            cand = []
-            for (ss_r, pth, rad_r) in store:
-                for ic in range(3, len(ss_r) - 4, 3):
-                    if not (s0 + 0.15 < ss_r[ic] < s1 - 0.15):
-                        continue
-                    if pth[ic, 2] < float(wall_floor(np.array([ss_r[ic]]))[0]) + 0.12:
-                        continue
-                    fc_ = float(field(np.array([ss_r[ic]]), np.array([pth[ic, 2]]))[0])
-                    if -0.22 < fc_ < -0.05:
-                        cand.append((ss_r, pth, rad_r, ic))
-            picks = []
-            for _ in range(60):
-                if len(picks) >= (3 if bay == len(POST_AZ) - 2 else 2) or not cand:
-                    break
-                c_ = cand[rng.randint(len(cand))]
-                if all(abs(c_[0][c_[3]] - q[0][q[3]]) > 0.25 for q in picks):
-                    picks.append(c_)
-            for (ss_r, pth, rad_r, ic) in picks:
-                Lc = rng.uniform(0.04, 0.08)
-                s_c = ss_r[ic]
-                tt = np.linspace(-0.5, 0.5, 9)
-                sq = s_c + tt * Lc
-                C = np.stack([np.interp(sq, ss_r, pth[:, k]) for k in range(3)], -1)
-                rr_c = np.interp(sq, ss_r, rad_r)
-                nside = 12
-                ang = 2 * np.pi * np.arange(nside) / nside
-                Tn, Nn, Bn = frames(C, (0, 0, 1))
-                cut = 0.5 - rng.uniform(0.0, 0.22, nside)                 # ragged torn ends per side
-                cut = np.minimum(cut, np.roll(cut, 1) * 0.5 + cut * 0.5)
-                T0 = rng.uniform(0.010, 0.016)
-                thick = np.zeros((len(tt), nside))
-                for k_ in range(nside):
-                    w_ = np.clip(1 - (np.abs(tt) / max(cut[k_], 0.05)) ** 2, 0, 1) ** 0.6
-                    bias = 1.0 + 0.6 * max(0.0, math.cos(ang[k_])) + 0.4 * max(0.0, math.sin(ang[k_]))
-                    thick[:, k_] = T0 * w_ * bias * (0.7 + 0.3 * rng.rand())
-                rr2 = rr_c[:, None] + thick + 0.001
-                # flatten: squash the sleeve toward the wall plane (pressed blob, not a bead)
-                Vb = (C[:, None, :] + (np.cos(ang)[None, :, None] * rr2[..., None]) * Nn[:, None, :]
-                      + (np.sin(ang)[None, :, None] * rr2[..., None] * 0.8) * Bn[:, None, :])
-                Vb = Vb.reshape(-1, 3)
-                i_ = np.arange(len(tt) - 1)[:, None]
-                j_ = np.arange(nside)[None, :]
-                j1_ = (j_ + 1) % nside
-                Fb = [np.stack([i_ * nside + j_, i_ * nside + j1_, (i_ + 1) * nside + j1_, (i_ + 1) * nside + j_], -1).reshape(-1, 4)]
-                Fb.append(np.arange(nside)[::-1][None, :])
-                Fb.append(((len(tt) - 1) * nside + np.arange(nside))[None, :])
-                acc.add(Vb, Fb, "M_daub", wear=0.8)
-    log("daub cracks:", n_cr)
+            n_fl += daub_flakes(acc, bay, field, ROD_STORE[1000 + bay * 17], rng, s0, s1,
+                                3 if bay == len(POST_AZ) - 2 else 2)
+    tt = np.concatenate(stat_T)
+    log("daub cracks:", n_cr, "flakes:", n_fl, "intact coat T mean %.4f p5 %.4f p95 %.4f" % (tt.mean(), np.percentile(tt, 5), np.percentile(tt, 95)))
     acc.build(coll)
+
+
+def flake_mesh(rng, w, h, thick, ch=0.0025):
+    """one torn flake of daub: an irregular 5-7 sided polygon of straight breaks (no rectangle, no lens),
+    a flat dabbed front, broken sides at varying slopes with a small arris; local x across, y up, z out of
+    the wall (back face at z = 0)."""
+    m = rng.randint(5, 8)
+    gaps = rng.dirichlet(np.full(m, 2.2)) * 2 * np.pi          # uneven breaks: some long, some short
+    gaps = np.clip(gaps, 0.35, None)
+    gaps *= 2 * np.pi / gaps.sum()
+    ang = np.cumsum(gaps) + rng.uniform(0, 2 * np.pi)
+    rr = rng.uniform(0.62, 1.0, m)
+    o = np.stack([np.cos(ang) * rr * w / 2, np.sin(ang) * rr * h / 2], -1)
+    o = o - o.mean(0)
+    c = np.zeros(2)
+    sc = 1 - ch / max(np.linalg.norm(o, axis=1).mean(), 1e-3)
+    back = rng.uniform(0.82, 1.02, m)[:, None]               # break faces lean in / out per edge
+    zt = thick + 0.003 * rng.uniform(-1, 1, m)
+    V = np.concatenate([
+        np.c_[o * back, np.zeros(m)],
+        np.c_[o, zt - ch],
+        np.c_[o * sc, zt],
+        np.c_[o * rng.uniform(0.45, 0.6), thick + 0.002 * rng.uniform(-1, 1, m)],
+        [[c[0], c[1], thick + 0.0015 * rng.uniform(-1, 1)]],
+    ])
+    j = np.arange(m)
+    j1 = (j + 1) % m
+    F = [
+        np.stack([j, j1, m + j1, m + j], -1),
+        np.stack([m + j, m + j1, 2 * m + j1, 2 * m + j], -1),
+        np.stack([2 * m + j, 2 * m + j1, 3 * m + j1, 3 * m + j], -1),
+        np.stack([3 * m + j, 3 * m + j1, np.full(m, 4 * m)], -1),
+        j[::-1][None, :],
+    ]
+    return V, F
+
+
+def daub_flakes(acc, bay, field, store, rng, s0, s1, n_max):
+    """director r6 #2: flat torn flakes of coat still clinging to the exposed rods just below / beside a
+    break (never a sleeve round one rod).  Each bridges 2-3 rod rows on their front face."""
+    allS = np.concatenate([st[0] for st in store])
+    allP = np.concatenate([st[1] for st in store])
+    allR = np.concatenate([st[2] for st in store])
+    front = np.hypot(allP[:, 0], allP[:, 1]) + allR
+    cs = rng.uniform(s0 + 0.16, s1 - 0.16, 500)
+    cz = rng.uniform(0.40, PLATE_BOT - 0.25, 500)
+    fc = field(cs, cz)
+    ok = (fc > -0.085) & (fc < -0.045) & (cz > coat_floor(cs) + 0.10)
+    picks = []
+    for i in np.where(ok)[0]:
+        if len(picks) >= n_max:
+            break
+        if any(abs(cs[i] - q[0]) < 0.25 for q in picks):
+            continue
+        w = rng.uniform(0.09, 0.15)
+        h = min(0.10, max(0.05, w * rng.uniform(0.5, 0.72)))
+        th = rng.uniform(-0.35, 0.35)
+        cr = np.array([[-w / 2, -h / 2], [w / 2, -h / 2], [w / 2, h / 2], [-w / 2, h / 2]])
+        cr = cr @ np.array([[math.cos(th), math.sin(th)], [-math.sin(th), math.cos(th)]])
+        if (field(cs[i] + cr[:, 0], cz[i] + cr[:, 1]) > 0.01).any():
+            continue
+        m = (np.abs(allS - cs[i]) < w / 2) & (np.abs(allP[:, 2] - cz[i]) < h / 2)
+        if m.sum() < 6 or np.ptp(allP[m, 2]) < 0.03:
+            continue                                    # needs rods under it, >= 2 rows
+        r_back = float(np.percentile(front[m], 90)) - 0.005
+        V, F = flake_mesh(rng, w, h, rng.uniform(0.011, 0.018))
+        # into the wall frame: x along the wall, y up, z outward; in-plane rotation, bottom peeled out
+        tilt = rng.uniform(0.0, 0.12)
+        Rl = np.array([[math.cos(th), -math.sin(th), 0], [math.sin(th), math.cos(th), 0], [0, 0, 1]])
+        V = V @ Rl.T
+        V[:, 2] += (-V[:, 1]) * tilt * (V[:, 1] < 0)
+        a_ = cs[i] / R_WALL
+        t_ = np.array([math.cos(a_), math.sin(a_), 0.0])
+        n_ = np.array([math.sin(a_), -math.cos(a_), 0.0])
+        W = n_[None, :] * r_back + V[:, 0:1] * t_[None, :] + V[:, 2:3] * n_[None, :]
+        W[:, 2] = cz[i] + V[:, 1]
+        acc.add(W, F, "M_daub", wear=0.85)
+        picks.append((cs[i], cz[i]))
+    return len(picks)
 
 
 INNER_SKIN_D = 0.17            # inner daub skin face, behind the wattle centre line (director r2: >= 0.15)
@@ -2821,7 +3170,7 @@ def build_wall_plate(coll):
         e1 = a1 + 0.17 / R_WALL
         n = max(8, int((e1 - e0) * R_WALL / 0.12))
         a = np.linspace(e0, e1, n)
-        rr = R_WALL + 0.012 * np.sin(np.pi * (a - e0) / (e1 - e0)) * rng.uniform(-1, 1)
+        rr = R_WALL + PLATE_OUT + 0.012 * np.sin(np.pi * (a - e0) / (e1 - e0)) * rng.uniform(-1, 1)
         zz = np.full(n, zc) - 0.012 * np.sin(np.pi * (a - e0) / (e1 - e0)) * rng.uniform(0.3, 1)
         path = np.stack([np.sin(a) * rr, -np.cos(a) * rr, zz], -1)
         pr = np.broadcast_to(prof, (n, 8, 2)).copy()
@@ -2839,7 +3188,7 @@ def build_wall_plate(coll):
             for d in (-0.07, 0.07):
                 az_ = aj + d / R_WALL
                 u = np.array([math.sin(az_), -math.cos(az_), 0.0])
-                p = az_pt(az_, R_WALL + hw - 0.002, zc + rng.uniform(-0.03, 0.03))
+                p = az_pt(az_, R_WALL + PLATE_OUT + hw - 0.002, zc + rng.uniform(-0.03, 0.03))
                 peg(p, u, rng)
     acc.build(coll)
 
@@ -3798,7 +4147,7 @@ def build_plinth(coll):
                        frac_cut=(0.08, 0.2), warp=0.12, amp=0.0015, freq=25.0, pit=0.0006, taper=0.05,
                        nu=14, nv=6)
         V[:, 2] *= 1 - 0.55 * np.clip(-V[:, 1] / 0.035, 0, 1)        # wedge: thins toward the back
-        acc_.add(V, F, "M_rubble")
+        acc_.add(V, F, "M_mortar")            # producer note 7: chinking is on M_mortar
 
     n_ch = n_try = 0
     ch_rng = np.random.RandomState(9393)

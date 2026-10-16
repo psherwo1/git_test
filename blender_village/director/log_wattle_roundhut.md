@@ -729,3 +729,150 @@ A continuous dark slot also runs under the coat foot all round the hut. Every on
   - Crack-lip zigzag under 1 m.
 - Moss cushions remain optional.
 - **Mask:** set G high on the patch fracture faces and B high on the coat foot.
+
+## Round 7 — builder entry
+- Script `buildings/wattle_roundhut/build_wattle_roundhut.py` (seeded, ~26 s build), saves `wattle_roundhut.blend` (28.0 MB). Renders: `renders/wattle_roundhut/round_07/` (6 views, 32 spp, stats.json, hidden.json).
+- **Stats:** 1,309,222 tris. **est_hidden_pct 13.7 %.** **material_slot_count 10**, all from the palette (`M_rubble` is gone: the plinth chinking is now on `M_mortar`, per note 7). `mask_attribute_missing` is empty. 123 objects (99 linked duplicates, 22 pools). bbox min (-4.19, -4.59, -0.041), max (4.19, 4.20, 8.73). Ground dressing is still absent (note 10). The only stone outside the plinth is the built-in step.
+- **#1 Door-bay break.** The new `stepped_break()` builds the break and `daub_edge_door_bay()` turns it into a coat polygon. The field is now an exact signed distance (`poly_sdf`), not z minus a noisy curve.
+  - The break is made of straight runs of 8-25 cm at z 0.72-0.83, each 1-2 rod rows (3.6/7.2 cm) above or below the last. Runs carry 3-6 mm kinks and are joined by vertical or diagonal jogs of 0-3 cm.
+  - The 3 bites are now flat-floored notches stepped UP by 2-3 rows (to z ≤ 0.94). Each has one clearly diagonal side.
+  - Any run lower than both neighbours and narrower than 13 cm is raised, so there are no narrow downward teeth.
+  - The arris is crisp: grid vertices within 0.42 cells of the contour are Newton-snapped onto it, so there is an edge loop on the break. The fracture face drops about 10 cm over 2.4 cm (about 14° off the wall normal) and carries 3-6 mm grit.
+  - The coat at every fracture margin is at least 6.8 cm (≥ 2.5 cm over the rod fronts).
+  - Along about 30 % of the margin the edge is feathered: a softer profile over 4.4 cm.
+  - The scabs below the break, the pock holes and the old rod ridging are removed. The ridging read as corrugation.
+- **#2 Clumps → flakes.** The sleeves are deleted. `flake_mesh()` and `daub_flakes()` replace them.
+  - Each flake is a flat torn flake: 9-15 × 5-10 cm, 1.1-1.8 cm thick, with an irregular outline of 5-7 straight breaks (Dirichlet-spaced) and broken sides at varying slopes.
+  - Its back sits on the local rod fronts (90th percentile from `ROD_STORE`), and it bridges at least 2 rows.
+  - Flakes sit 4.5-8.5 cm inside the break, with a small in-plane rotation and a slight peel.
+  - Count: 3 in the door bay and 2 in each patch bay except the eave patch's 1. That is 8 in total.
+- **#3 Patches.** `fracture_patch()` makes the +X side patch (bay 2) and the eave patch (bay 10). Each is a broken quadrilateral 1.5-1.6:1, with top and bottom margins stepped by 1 rod row over 8-25 cm runs and near-vertical sides (±2 cm lean). One corner, or two opposite corners, are cut on a 35-55° diagonal, which makes a pentagon or hexagon. There is no notch and no star. The crisp edge face from #1 applies. The back-low patch keeps its approved outline.
+- **#4 Posts proud.**
+  - The wall posts stand 2 cm outside the wattle line, and the wall plate moves out 1 cm. The radial lean and bow are damped to 30 %; the tangential lean of ±0.7° is kept.
+  - `post_profiles()` measures each built post (a robust quadratic fit of centre and front along its height) and the coat fits to it.
+  - The mean coat face is `COAT_R_NOM` 0.062. Ray-measured at z 0.9-2.3 it is r 3.558 (p5 3.542, p95 3.572). Lumps are about ±1.5 cm. The sag belly is ≤ 1.2 cm.
+  - Within 8-12 cm of each post flank the coat dips a further 1.2-2.0 cm into the shrinkage slit, and it is capped at the post front minus 5.8 cm.
+  - Ray profiles across posts give: post fronts r 3.617-3.635, slit coat r 3.540-3.555, and mid-bay coat r 3.555-3.577. So posts stand **6.5-9 cm proud of the adjacent coat** and 5-7.5 cm proud of the mid-bay coat.
+- **#5 Foot.**
+  - `low_margin()` beds the coat foot 3 cm into the stone tops along `coat_floor()`. That is the stone top sampled under the coat face, so the coat follows down into the joints.
+  - A rough fillet of 0.9 ± 0.4 cm is squeezed out at the contact.
+  - Each bay has 1-2 splash-eroded bites of 10-26 cm × 3-6.5 cm at random positions, capped at 27 % of the bay length. The rod row is kept only above the bites.
+  - The coat sheet inside the stones is dropped.
+  - `plinth_under_coat()` now culls stone tops only where the foot is bedded (dilated 8 cm from any bite or patch), up to r 3.545.
+  - Ray test (rays at stone top + 1.2 cm): the coat reaches the stones along 68-100 % of every intact bay. The door bay (52 %) is the ref2 exposed band.
+- **Hole checks.** About 853k rays round every post margin, and about 197k rays at the foot (az 24-336°, pitch 5-40°), hit nothing but geometry. The only interior hits are through the open weave of the exposed patches, the door bay and the bites (the inner skin or the floor edge), which is expected. One see-through gap at the post at about 289° was found and fixed: the post fit was being skewed by a knot stub.
+- **Known gaps.**
+  - The flakes are still fairly crisp polygonal chips in clay and could read slightly stone-like at under 1 m.
+  - The low back patch keeps its round-6 outline and has one lens-ish flake.
+  - The foot bites still show as small dark slots at thumbnail, though they are now irregular.
+  - The round-6 pre-existing items (plinth flake-scar steps, the drying-check crease, crack-lip zigzag) are unchanged.
+  - HUT_daub is still about 705k tris; the intact grid was not coarsened, to keep the hidden % margin.
+- User note relayed: the pass criterion moves to 8.2 once these corrections are in.
+
+## Round 7 — score 8.5/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_07/`, side by side with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`. I applied the CLIENT CORRECTION (mostly intact daub with small exposed-wattle patches) and producer note 10.
+- I made 10 Director close-ups at 12 spp in `round_07/director_extra/`. They use the round-6 camera set, so the two rounds compare one to one, with the ground at Z = 0: door_bay, patch_side, patch_side_near, patch_eave, patch_back_low, wall_eye, wall_rake, coat_rake2, foot_ground and door_near.
+- I also made 3x crops of the back, hero and side walls to judge at thumbnail size, and listed every object in the .blend.
+- **Ground dressing.** It is **not scored** (producer note 10). The .blend holds no rubble, flag, path or apron object. The only stone outside the plinth is `HUT_step_stone`, the built-in door step (x -0.61..0.67, y -4.59..-3.97, top 0.11). That is correct.
+
+**Verdict.**
+- **Client brief.** The user's corrections are in.
+  - The hut is a daubed hut with a few small breaks. Daub is about 84 % of the wall face, with 4 small patches.
+  - There is no ground dressing.
+- **Round-6 must-fixes.** All five structural complaints are addressed, and three are genuinely closed:
+  - The posts now stand clearly proud, so the frame carries the infill.
+  - The coat foot is bedded onto the plinth, and the continuous slot is gone.
+  - The door-bay break is now a stepped, near-horizontal fracture that reads correctly in the actor close-up.
+- **Remaining tells.** They are second-order and live in the daub craft:
+  - The +X patch has overcorrected from a star into a clean rectangular vent with a constant-width bevel ring.
+  - The new flakes read as small leaves or arrowheads peeling off the rods.
+  - The foot bites read as a row of punched dark holes at thumbnail.
+  - The shrinkage cracks are smooth C-arcs.
+- Roof, apex, silhouette and scale remain hero quality.
+- **8.5 clears the user's revised pass mark of 8.2.**
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | The cone, lead hat, spike finial, dry-stone plinth and projecting flat-fronted door frame overlay ref2. The wall reads as intact daub per the client. |
+| Proportion and scale | 9 | Unchanged and correct: door 1.00 × 2.08, eave ≥ 2.40, shingles about 0.45 m next to the 1.8 m figure. bbox 8.37 × 8.78 × 8.77. |
+| Construction | 9 | Posts stand 5-9 cm proud of the coat (wall_eye: they read as the frame carrying the infill). The coat is bedded onto the stone tops with a fillet. The plate, rafters and door frame are all carried. |
+| Detail and craft | 8 | Better than r6. But the side patch is a cut rectangle, the flakes are leaf-like chips, the cracks are C-arcs, and the door-bay tabs have soft U-bottoms. |
+| Age and irregularity | 8 | The roof and stones are convincing. The patch outlines and foot bites are still visibly procedural: crenellated 1-row steps, an equal-width edge ring, and bites spaced like vents. |
+| Technical | 9 | 1,309,222 tris (≤ 1.5 M) and est_hidden_pct 13.7 % (≤ 15 %). 10 slots, all in the palette; `M_rubble` is gone and the chinking is now `M_mortar`. Mask is complete, 123 objects, below-ground 0 %. `HUT_daub` alone is 703k tris (54 %), which is inefficient (see the nice-to-haves). |
+
+**Strengths**
+- **The client corrections have landed.**
+  - The exterior is mostly intact daub: about 84 % first-hit, 4 small patches, and rods behind the coat deleted.
+  - There is no loose stone, path, rubble or apron anywhere in the file; only the built-in step stays.
+- **Posts proud (r6 #4 CLOSED).**
+  - In wall_eye.png and the back and side crops the posts read as real members standing in front of the coat, with a slit dip at each flank.
+  - The quilted-pillow look is gone.
+- **Foot bedded (r6 #5 CLOSED as a structural item).** The coat now sits on the stones round the whole hut (back and side crops). The continuous dark ring at the plinth line has disappeared.
+- **Door-bay break (r6 #1 largely CLOSED).** In actor_closeup.png the break is a ragged, stepped, essentially horizontal fracture over exposed wattle down to the plinth. This is the ref2 `hut_wattle_daub_plinth` language, and the icing drips are gone.
+- **Beads gone (r6 #2 superseded).** No rotationally symmetric sleeves remain.
+- **Star gone (r6 #3 superseded).** No star outline remains. The eave patch has a cut-corner pentagon.
+- **Unchanged hero areas.** The entrance (rope panels, adze-worked jambs and frame, open plank leaf, dark interior depth with no see-through), the roof shingles, eave construction, collar and finial are all unchanged and still hero quality.
+
+### Must-fix (priority order)
+
+1. **+X SIDE PATCH READS AS A RECTANGULAR VENT OR GRILLE** (`HUT_daub` `fracture_patch()`, bay 2, az about 82°, z about 1.0-1.6). It reads at thumbnail size in side.png and clearly in director_extra/patch_side.png. The eave patch, bay 10 (patch_eave.png), has the same language to a lesser degree.
+   - **What's wrong:**
+     - The two sides are dead vertical and parallel, and three of the four corners are about 90°.
+     - The 1-row steps on the top and bottom margins pair up into square merlons and crenels about 6-10 cm wide.
+     - The fracture face is a constant-width bevel ring all round, so the hole looks cut with a knife and framed.
+   - **Fix, sides:** lean the sides 8-25° off vertical, in opposite senses, and break each side into 2-3 segments.
+   - **Fix, corners:** no more than one corner may lie within 80-100°. At least two corners are obtuse (110-150°) or chamfered.
+   - **Fix, steps:** steps on the top and bottom margins are 1 or 2 rows, chosen at random, with runs of 5-30 cm. Never place an up-step and a down-step less than 12 cm apart, because that makes a merlon.
+   - **Fix, edge face:**
+     - Vary the visible edge face width from 1.5 to 5 cm along the perimeter.
+     - Add 2-3 shallow spall scallops (6-12 cm wide) where the coat thins to 1-1.5 cm over the rod fronts with faint rod ridging, on 15-25 % of the perimeter, so the hole has no picture-frame ring.
+   - **Eave patch:** apply the same rules. Also delete the curled, rolled lip on its lower-left margin (patch_eave.png, lower left).
+   - **Target:** the ragged, chunky reading of ref2's break, not a window.
+
+2. **FLAKES READ AS LEAVES OR ARROWHEADS PEELING OFF THE RODS** (`daub_flakes()` / `flake_mesh()`, 8 flakes). They are visible in director_extra/door_bay.png (2 below the break), patch_side_near.png (top-left and bottom-right), patch_eave.png (left and right) and foot_ground.png.
+   - **What's wrong:** each flake is a thin pointed lens, 1.1-1.8 cm, tilted off the rods, isolated mid-panel with daylight under one end. In clay it reads as a leaf, scale or chip of stone, not a daub remnant.
+   - **Fix, contact and attachment:**
+     - The back is in full contact with at least 2 rod fronts, with a peel of 5° or less.
+     - At least one edge of each flake is coincident with, or within 2 cm of, the main fracture line, so it reads as a part-detached piece of the margin.
+   - **Fix, shape:**
+     - Thickness 2.5-4 cm, matching the coat, with a squared broken edge face.
+     - Outline: 4-6 breaks, no tip sharper than 60°, and no lens or spindle shape.
+     - Size 10-18 × 6-12 cm.
+   - **Count:** at most 1 per patch and 2 in the door bay. Deleting them is preferable to keeping leaves.
+
+3. **FOOT BITES READ AS A ROW OF PUNCHED DARK HOLES AT THUMBNAIL** (`low_margin()` splash bites). In the back.png and side.png crops there are about 15-20 small dark oval pockets, each sitting on a stone top at roughly even spacing. They read as vents or mouse holes.
+   - **Cause:** each bite exposes a black void behind the bottom rod row.
+   - **Fix, number:** 0-1 bites per bay, at most 6 round the hut, never in two adjacent bays at the same height.
+   - **Fix, shape:** longer and shallower, 20-40 cm long × 2-4 cm tall, with a ragged top following the rod row. No ovals.
+   - **Fix, backing:** back each bite with the coat (or `HUT_daub_interior`) no more than 4 cm behind the rod fronts, so the bite shows rods against a mid-grey surface, not a black slot.
+
+4. **SHRINKAGE CRACKS ARE SMOOTH C-SHAPED ARCS** (`HUT_daub` crack grooves). They are visible in director_extra/wall_eye.png, coat_rake2.png and the back crop, reading as fingernail scratches or hairline swooshes.
+   - **Fix, crack shape:** rebuild cracks as polylines.
+     - 3-6 straight segments of 3-12 cm, with direction changes of 20-60° at sharp vertices.
+     - 1-2 branches per crack, meeting at about 120°.
+     - Width tapering 4 mm → 1 mm and depth 3-6 mm, with V-section lips no smoother than the coat.
+   - **Fix, placement:** place them radiating from patch corners and post slits, and in 2-4 crack networks per bay. No isolated single arcs.
+
+5. **DOOR-BAY HANGING TABS HAVE SOFT U-BOTTOMS** (`daub_edge_door_bay()`, two tabs at about az -38° and -28°, z about 0.72-0.80; director_extra/door_bay.png, actor_closeup.png at close inspection).
+   - **What's wrong:** the two downward tabs, about 15-20 cm wide, end in rounded lobes. Together with the vertical fold in the coat at the left post flank they give a hanging-fabric-hem reading at 1.5 m.
+   - **Fix:**
+     - Make each tab bottom a straight run (8-20 cm) with corner radii of 1 cm or less, like the rest of the stepped break.
+     - The edge face shows the full coat thickness (4 cm or more visible from 30° below).
+     - Reduce the post-flank slit transition so that no vertical fold wider than 3 cm reads in the coat.
+
+**Nice to have**
+- **Daub budget.**
+  - `HUT_daub` is 703k tris (54 % of the asset), at a 1.6 × 1.3 cm grid over the intact coat. The relief that reads is at a wavelength of 6 cm or more.
+  - Coarsen the intact field to about 3 cm (target about 250-300k) and keep 7.5 mm only at margins and cracks.
+  - Re-check est_hidden_pct afterwards. The share is a ratio, so cutting a mostly-visible mesh raises it slightly; keep the margin with the existing culls.
+- **Near-post slit steps.** They read as soft vertical curtain folds in shadowed oblique views (patch_back_low.png). Soften the transition width to 8-12 cm.
+- **Pre-existing items:**
+  - The plinth flake-scar steps.
+  - The drying-check crease on the left door post.
+  - The crack-lip zigzag; fold this into #4.
+- **Mask:** set G high on the patch fracture faces and flakes, and B high on the coat foot.
+- **Moss cushions** remain optional.
