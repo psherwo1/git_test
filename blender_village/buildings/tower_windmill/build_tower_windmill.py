@@ -2577,6 +2577,243 @@ def cap_member(part, mat, a, b, w, d, up=(0, 0, 1), **kw):
     return member(part, mat, capw(np.atleast_2d(a)), capw(np.atleast_2d(b)), w, d, up=upw, **kw)
 
 
+_SHK_TOP = np.nonzero(T_SHK["idx"][:, 1] == T_SHK["n"][1] - 1)[0]
+
+
+def sliver_keep(W0, Wl, tt, ee, min_w=0.05):
+    """Shingles altered by hip / valley clamping keep only if the clamped outline is still >= 5 cm wide
+    (minimum caliper width of its top face) -> no thin triangular slivers at hips and valleys."""
+    N = len(Wl)
+    keep = np.ones(N, bool)
+    moved = np.abs(Wl - W0).max(axis=(1, 2)) > 0.002
+    tt = np.broadcast_to(tt, (N, 3))
+    ee = np.broadcast_to(ee, (N, 3))
+    for q in np.nonzero(moved)[0]:
+        V = Wl[q, _SHK_TOP]
+        pts = np.stack([V @ tt[q], V @ ee[q]], 1)
+        h = hull2d(pts)
+        if len(h) < 3:
+            keep[q] = False
+            continue
+        best = 1e9
+        for j in range(len(h)):
+            e = h[(j + 1) % len(h)] - h[j]
+            ln = np.linalg.norm(e)
+            if ln < 1e-6:
+                continue
+            nrm = np.array([-e[1], e[0]]) / ln
+            best = min(best, np.abs((h - h[j]) @ nrm).max())
+        keep[q] = best >= min_w
+    return keep
+
+
+class HeightField:
+    """Max-height field over cap-local (x, y) built from mesh samples (1.5 cm cells)."""
+
+    def __init__(self, Vloc, cell=0.015):
+        self.c = cell
+        self.x0, self.y0 = Vloc[:, 0].min() - 0.1, Vloc[:, 1].min() - 0.1
+        nx = int((Vloc[:, 0].max() + 0.1 - self.x0) / cell) + 1
+        ny = int((Vloc[:, 1].max() + 0.1 - self.y0) / cell) + 1
+        self.H = np.full((nx, ny), -1e9)
+        self.add(Vloc)
+
+    def add(self, Vloc):
+        i = ((Vloc[:, 0] - self.x0) / self.c).astype(int)
+        j = ((Vloc[:, 1] - self.y0) / self.c).astype(int)
+        ok = (i >= 0) & (i < self.H.shape[0]) & (j >= 0) & (j < self.H.shape[1])
+        np.maximum.at(self.H, (i[ok], j[ok]), Vloc[ok, 2])
+
+    def __call__(self, x, y, r=1):
+        i = ((np.asarray(x) - self.x0) / self.c).astype(int)
+        j = ((np.asarray(y) - self.y0) / self.c).astype(int)
+        out = np.full(np.shape(i), -1e9)
+        for di in range(-r, r + 1):
+            for dj in range(-r, r + 1):
+                ii = np.clip(i + di, 0, self.H.shape[0] - 1)
+                jj = np.clip(j + dj, 0, self.H.shape[1] - 1)
+                out = np.maximum(out, self.H[ii, jj])
+        return out
+
+
+def to_cap_local(V):
+    V = np.asarray(V)
+    return np.stack([V @ HDIR, V @ YDIR, V[:, 2]], 1)
+
+
+def slab_along(part, mat, A, E, Nn, w, t, c=0.004, T_cache={}):
+    """Board lying along polyline A (n,3): width w toward E (n,3), thickness t toward Nn (n,3).
+    Profile chamfered; caps at both ends."""
+    A = np.asarray(A, float)
+    n = len(A)
+    prof = rect_prof(w, t, c)                                   # centred (x across, y thickness)
+    P = A[:, None, :] + (prof[None, :, 0:1] + w / 2) * E[:, None, :] + (prof[None, :, 1:2] + t / 2) * Nn[:, None, :]
+    P = P.reshape(1, -1, 3)
+    key = (n, len(prof))
+    T = tmpl_rings(n, len(prof), cap0=True, cap1=True)
+    P = add_caps(P, T)
+    T = orient(T, P[0])
+    part.add(P, T, mat=mat, smooth="bevel")
+    return P[0]
+
+
+def build_cap_cappings(P_sh, P_fr, P_ir, rng):
+    """Continuous V ridge capping, lapped V hip cappings (0.6-0.9 m lengths following the bell-cast hip line),
+    lead hip-end saddles where hips meet the ridge, hood ridge capping and the knob on a square plinth.
+    Every board is seated on the measured shingle surface (height field)."""
+    HF = HeightField(to_cap_local(part_samples(P_sh, 0.02)))
+    TB, WL = 0.025, 0.165
+    gaps, devs = [], []
+    Z3 = np.array([0, 0, 1.0])
+
+    def seat(apex, legs, w_list, ns=7):
+        """lift per station so that no shingle pokes through any leaf; returns lift (n,)"""
+        need = np.zeros(len(apex))
+        for e, w in zip(legs, w_list):
+            for f in np.linspace(0, 1, ns):
+                p = apex + e * (f * w)[:, None]
+                need = np.maximum(need, HF(p[:, 0], p[:, 1]) - p[:, 2])
+        # smooth: moving max then moving average (boards are stiff)
+        nm = np.maximum(np.maximum(need, np.roll(need, 1)), np.roll(need, -1))
+        nm[0], nm[-1] = max(need[0], need[1]), max(need[-1], need[-2])
+        k = np.array([0.25, 0.5, 0.25])
+        sm = np.convolve(np.pad(nm, 1, mode="edge"), k, mode="valid")
+        return np.maximum(sm, nm - 0.002) + 0.002
+
+    def gap_stats(apex, legs, w_list):
+        for e, w in zip(legs, w_list):
+            for f in (0.2, 0.5, 0.8):
+                p = apex + e * (f * w)[:, None]
+                gaps.extend(list(p[:, 2] - HF(p[:, 0], p[:, 1])))
+
+    def v_cap(apex, eA, nA, wA, eB, nB, wB):
+        """two leaves meeting at the apex line; leaf B laps over leaf A's top edge"""
+        PA = slab_along(P_fr, "M_timber_weathered", apex, eA, nA, 1.0, TB) if False else None
+        out = []
+        for (e, nn, w, over) in ((eA, nA, wA, False), (eB, nB, wB, True)):
+            base = apex - (e * 0.022 if over else 0) + (nn * 0.010 if over else 0)
+            ww = w + (0.022 if over else 0)
+            # per-station width: emulate by building with the minimum width (stiff board)
+            out.append(slab_along(P_fr, "M_timber_weathered", base, e, nn, float(np.min(ww)), TB))
+        return out
+
+    caps_V = []
+    # ---------------- hips ----------------
+    T_SAD = 0.90
+    for fx in (0, 1):
+        Rend = CAP_EF if fx == 0 else CAP_EB
+        oE = np.array([1.0 if fx == 0 else -1.0, 0, 0])
+        for sy in (-1, 1):
+            oS = np.array([0, float(sy), 0])
+
+            def Hf(t):
+                t = np.asarray(t, float)
+                x = (CAP_AF - t * CAP_EF) if fx == 0 else (-CAP_AB + t * CAP_EB)
+                return np.stack([x, sy * (CAP_B - t * CAP_SB), CAP_ZE + cap_h(t)], -1)
+            tt_ = np.linspace(-0.035, T_SAD, 400)
+            Hp = Hf(tt_)
+            sacc = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(Hp, axis=0), axis=1))])
+            Ltot = sacc[-1]
+            npc = max(1, int(round(Ltot / 0.75)))
+            cuts = np.linspace(0, Ltot, npc + 1)
+            cuts[1:-1] += rng.uniform(-0.05, 0.05, npc - 1)
+            for k in range(npc):
+                s0 = cuts[k] - (0.06 if k > 0 else 0.0)
+                s1 = cuts[k + 1]
+                ss = np.linspace(s0, s1, 12)
+                t = np.interp(ss, sacc, tt_)
+                H = Hf(t)
+                Tg = unit(Hf(t + 1e-3) - Hf(t - 1e-3))
+                se = np.arctan(cap_dh(np.maximum(t, 0)) / Rend)
+                sS = np.arctan(cap_dh(np.maximum(t, 0)) / CAP_SB)
+                nE = np.sin(se)[:, None] * oE + np.cos(se)[:, None] * Z3
+                nS = np.sin(sS)[:, None] * oS + np.cos(sS)[:, None] * Z3
+                eE = unit(np.cross(nE, Tg))
+                eE *= np.where((eE @ np.array([0, -sy, 0])) > 0, 1.0, -1.0)[:, None]
+                eS = unit(np.cross(nS, Tg))
+                eS *= np.where((eS @ -oE) > 0, 1.0, -1.0)[:, None]
+                wE = np.minimum(WL, np.abs(H[:, 1]) / np.maximum(np.abs(eE[:, 1]), 1e-3) - 0.004)
+                lift = seat(H, (eE, eS), (wE, np.full(len(H), WL)))
+                if k > 0:   # rides over the feathered head of the piece below (lap 6 cm, < 1 deg)
+                    lift = lift + 0.010 * (1 - (ss - s0) / (s1 - s0))
+                apex = H + Z3 * lift[:, None]
+                if os.environ.get("MILL_DBG"):
+                    log("hip", fx, sy, k, "t", np.round(t[[0, -1]], 2), "lift", np.round(lift, 3), "wE", np.round(wE, 2),
+                        "hf-H", np.round(HF(H[:, 0], H[:, 1]) - H[:, 2], 3))
+                caps_V.append(v_cap(apex, eE, nE, wE, eS, nS, np.full(len(H), WL)))
+                gap_stats(apex, (eE, eS), (wE, np.full(len(H), WL)))
+                ch = apex[-1] - apex[0]
+                hh = H[-1] - H[0]
+                devs.append(math.degrees(math.acos(np.clip(ch @ hh / np.linalg.norm(ch) / np.linalg.norm(hh), -1, 1))))
+    # ---------------- ridge ----------------
+    sg = CAP_TMAX * D2R
+    xr = np.linspace(XR0 + 0.03, XR1 - 0.03, 12)
+    H = np.stack([xr, 0 * xr, np.full(12, CAP_ZE + CAP_RISE)], 1)
+    eA = np.repeat([[0, -math.cos(sg), -math.sin(sg)]], 12, 0)
+    nA = np.repeat([[0, -math.sin(sg), math.cos(sg)]], 12, 0)
+    eB = np.repeat([[0, math.cos(sg), -math.sin(sg)]], 12, 0)
+    nB = np.repeat([[0, math.sin(sg), math.cos(sg)]], 12, 0)
+    wR = np.full(12, 0.165)
+    lift = seat(H, (eA, eB), (wR, wR))
+    ridge_apex = H + Z3 * lift[:, None]
+    caps_V.append(v_cap(ridge_apex, eA, nA, wR, eB, nB, wR))
+    gap_stats(ridge_apex, (eA, eB), (wR, wR))
+    # ---------------- hood ridge ----------------
+    sl = math.atan2(HOOD_ZR - HOOD_ZE, HOOD_YW + 0.03)
+    xh = np.linspace(float(x_valley(0.0)) + 0.03, HOOD_XF + 0.05, 8)
+    H = np.stack([xh, 0 * xh, np.full(8, HOOD_ZR)], 1)
+    eA = np.repeat([[0, -math.cos(sl), -math.sin(sl)]], 8, 0)
+    nA = np.repeat([[0, -math.sin(sl), math.cos(sl)]], 8, 0)
+    eB = np.repeat([[0, math.cos(sl), -math.sin(sl)]], 8, 0)
+    nB = np.repeat([[0, math.sin(sl), math.cos(sl)]], 8, 0)
+    wH = np.full(8, 0.15)
+    lift = seat(H, (eA, eB), (wH, wH))
+    caps_V.append(v_cap(H + Z3 * lift[:, None], eA, nA, wH, eB, nB, wH))
+    g = np.array(gaps)
+    log("CAP cappings: %d hip pieces, max deviation from hip line %.2f deg; seat gap median %.3f, 90%% %.3f m"
+        % (len(devs), max(devs), np.median(g), np.percentile(g, 90)))
+    for pair in caps_V:
+        for V in pair:
+            HF.add(to_cap_local(V))
+    # ---------------- lead hip-end saddles over the ridge ends ----------------
+    apex_z = {}
+    for fx in (0, 1):
+        Rend = CAP_EF if fx == 0 else CAP_EB
+        xin = (XR1 - 0.11) if fx == 0 else (XR0 + 0.11)
+        rows = []
+        for t in np.linspace(0.85, 1.0, 9):
+            xh_ = (CAP_AF - t * CAP_EF) if fx == 0 else (-CAP_AB + t * CAP_EB)
+            yh = CAP_B - t * CAP_SB
+            pts = np.array([[xin, yh], [xh_, yh], [xh_, -yh], [xin, -yh]])
+            seg = np.linalg.norm(np.diff(pts, axis=0), axis=1)
+            acc = np.concatenate([[0], np.cumsum(seg)])
+            u = np.linspace(0, acc[-1], 31)
+            xy = np.stack([np.interp(u, acc, pts[:, 0]), np.interp(u, acc, pts[:, 1])], 1)
+            z = np.maximum(HF(xy[:, 0], xy[:, 1], r=2), cap_z(xy[:, 0], xy[:, 1]) + 0.03)
+            z = np.convolve(np.pad(z, 2, mode="edge"), np.ones(5) / 5, mode="valid")
+            z = np.maximum(z, HF(xy[:, 0], xy[:, 1], r=1)) + 0.004
+            rows.append(np.stack([xy[:, 0], xy[:, 1], z], 1))
+        G = np.array(rows)
+        apex_z[fx] = float(G[-1, :, 2].max())
+        Gb = G - np.array([0, 0, 0.004])
+        fl = fx == 1
+        add_grid(P_ir, "M_lead", capw(G), flip=not fl)
+        add_grid(P_ir, "M_lead", capw(Gb), flip=fl)
+        add_grid(P_ir, "M_lead", capw(np.stack([Gb[0], G[0]], 0)), flip=fl)
+        add_grid(P_ir, "M_lead", capw(np.stack([Gb[:, 0], G[:, 0]], 1)), flip=not fl)
+        add_grid(P_ir, "M_lead", capw(np.stack([Gb[:, -1], G[:, -1]], 1)), flip=fl)
+    # ---------------- knob on a square plinth at the rear ridge end ----------------
+    zp = apex_z[1] - 0.03
+    blocks_world(P_fr, "M_timber", capw(np.array([[XR0 + 0.02, 0.0, zp + 0.04]])),
+                 frame_mats(capw(np.array([[1.0, 0, 0]])), capw(np.array([[0, 1.0, 0]])), np.array([[0, 0, 1.0]])),
+                 [[0.075, 0.075, 0.04]], c=0.008, T=T_BLK)
+    prof = np.array([(0.0, 0.0), (0.06, 0.0), (0.062, 0.015), (0.045, 0.035), (0.04, 0.055), (0.065, 0.10),
+                     (0.067, 0.13), (0.047, 0.18), (0.02, 0.225), (0.0, 0.24)])
+    P, T = lathe(prof[None], 16)
+    P = xform(P, euler([0.8 * D2R], [-1.2 * D2R], [0.0]), capw(np.array([[XR0 + 0.02, 0.0, zp + 0.08]])))
+    P_fr.add(P, T, mat="M_timber", smooth="all")
+
+
 def build_cap(parts):
     P_sh, P_fr, P_ir = parts["cap_shingles"], parts["cap_frame"], parts["cap_iron"]
     rng = RNG("cap")
@@ -2777,6 +3014,7 @@ def build_cap(parts):
         t += 0.12 * math.cos(sig) / CAP_SB * rng.uniform(0.96, 1.04)
     courses = [courses[0]] + courses
     nsh = 0
+    nsliver = 0
     for ci, tb in enumerate(courses):
         starter = ci == 0
         for fi, (o, e, R) in enumerate(faces):
@@ -2818,9 +3056,10 @@ def build_cap(parts):
             ee = np.cross(tt, nn)
             P = shingle_local(rng, L, wl * rng.uniform(0.97, 1.03, N), rng.uniform(0.016, 0.02, N),
                               np.full(N, 0.007), jag=0.01, curl=0.01, cup=0.003)
-            Rl = rotm([0, 0, 1], -beta) @ rotm([0, 1, 0], rng.normal(0, 1.2 * D2R, N))
+            Rl = rotm([0, 0, 1], -beta) @ rotm([0, 1, 0], np.clip(rng.normal(0, 1.0, N), -2.5, 2.5) * D2R)
             ctr = np.stack([xc, yc, zb], 1) + nn * ((ob + ot) / 2 + rng.uniform(-0.002, 0.003, N))[:, None]
             Wl = xform(P, frame_mats(tt, nn, ee) @ Rl, ctr)
+            W0 = Wl.copy()
             # clamp to the hip lines
             if fi < 2:
                 tx = (CAP_AF - Wl[:, :, 0]) / CAP_EF if fi == 0 else (CAP_AB + Wl[:, :, 0]) / CAP_EB
@@ -2838,34 +3077,12 @@ def build_cap(parts):
                 Wl[:, :, 0] = xn
             Wl[:, :, 2] = np.minimum(Wl[:, :, 2], CAP_ZE + CAP_RISE + 0.03)
             keep = (~under) & (rng.random(N) > 0.015)
+            kk = sliver_keep(W0, Wl, tt, ee)
+            nsliver += int((keep & ~kk).sum())
+            keep &= kk
             P_sh.add(capw(Wl[keep]), T_SHK, Pl=P[keep], mat="M_roof_shingle", smooth="bevel")
             nsh += keep.sum()
-    log("cap shingles", nsh)
-    # ---- hip boards, ridge roll, rear knob ----
-    vprof = np.array([(0.095, -0.085), (0.095, -0.064), (0.0, 0.032), (-0.095, -0.064), (-0.095, -0.085),
-                      (0.0, 0.006)])
-    for fx in (0, 1):
-        for sy in (-1, 1):
-            # hip saddle: 3-4 separate boards with butt joints, each slightly off line
-            nseg = int(rng.integers(3, 5))
-            cuts = np.sort(np.concatenate([[-0.04, 1.0], rng.uniform(0.15, 0.85, nseg - 1)]))
-            for q in range(nseg):
-                tt = np.linspace(cuts[q] + 0.006, cuts[q + 1] - 0.006, 7)
-                x = (CAP_AF - tt * CAP_EF) if fx == 0 else (-CAP_AB + tt * CAP_EB)
-                y = sy * (CAP_B - tt * CAP_SB)
-                z = CAP_ZE + cap_h(tt) + 0.058 + rng.uniform(-0.004, 0.006) + lowfreq(tt, rng, 0.004)
-                P, T = sweep(capw(np.stack([x, y, z], 1))[None], vprof * [rng.uniform(0.92, 1.05), 1.0],
-                             up=(0, 0, 1))
-                P_fr.add(P, T, mat="M_timber_weathered", smooth="bevel")
-    xr = np.linspace(XR0 - 0.06, XR1 + 0.06, 6)
-    path = capw(np.stack([xr, np.zeros(6), CAP_ZE + CAP_RISE + 0.05 + lowfreq(xr, rng, 0.006)], 1))[None]
-    P, T = sweep(path, vprof, up=(0, 0, 1))
-    P_fr.add(P, T, mat="M_timber_weathered", smooth="bevel")
-    prof = np.array([(0.075, 0.0), (0.078, 0.02), (0.052, 0.045), (0.046, 0.065), (0.07, 0.11), (0.072, 0.14),
-                     (0.05, 0.19), (0.022, 0.235), (0.0, 0.25)])
-    P, T = lathe(prof[None], 16)
-    P = xform(P, euler([1.0 * D2R], [-1.5 * D2R], [0.0]), capw(np.array([[XR0 - 0.02, 0.0, CAP_ZE + CAP_RISE + 0.06]])))
-    P_fr.add(P, T, mat="M_timber", smooth="all")
+    log("cap shingles", nsh, "slivers culled", nsliver)
     # ---- hood (gablet) over the windshaft neck ----
     yv = np.linspace(0, HOOD_YW + 0.05, 8)
     for s in (-1, 1):
@@ -2899,6 +3116,7 @@ def build_cap(parts):
             ctr = np.stack([xl + 0.075 + (ci % 2) * 0.07, s * yc, hood_z(yc) + 0.02], 1)
             Rr = np.repeat(frame_mats(tt[None], nn[None], ee[None]), N, 0) @ rotm([0, 0, 1], np.full(N, -0.06))
             Wl = xform(P, Rr, ctr)
+            W0h = Wl.copy()
             Wl[:, :, 0] = np.clip(Wl[:, :, 0], x_valley(Wl[:, :, 1]) + 0.035, HOOD_XF + 0.05)
             # never cross the hood ridge: clip at the ridge line and keep the vertex on its own plane
             yo_ = Wl[:, :, 1].copy()
@@ -2906,6 +3124,9 @@ def build_cap(parts):
             Wl[:, :, 2] += -(HOOD_ZR - HOOD_ZE) * (s * yn_ - s * yo_) / (HOOD_YW + 0.03)
             Wl[:, :, 1] = yn_
             keep = Wl[:, :, 0].max(1) > x_valley(Wl[:, :, 1]).max(1) + 0.06
+            kk = sliver_keep(W0h, Wl, tt, ee)
+            nsliver += int((keep & ~kk).sum())
+            keep &= kk
             P_sh.add(capw(Wl[keep]), T_SHK, Pl=P[keep], mat="M_roof_shingle", smooth="bevel")
         # lead valley flashing: folded strip lying on both roof planes under the shingle edges
         yy = np.linspace(0.0, HOOD_YW + 0.03, 12)
@@ -2925,11 +3146,8 @@ def build_cap(parts):
             cap_member(P_fr, "M_timber_weathered", [xb, s * (HOOD_YW - 0.03), zb], [xb, s * (HOOD_YW - 0.03),
                                                                                      HOOD_ZE + 0.0], 0.12, 0.025,
                        up=(0, s, 0), c=0.005, rng=rng, bow=0.003)
-    # ridge of the hood (runs back into the main roof above the valley junction)
-    path = capw(np.stack([np.linspace(float(x_valley(0.0)) - 0.03, HOOD_XF + 0.05, 5), np.zeros(5),
-                          np.full(5, HOOD_ZR + 0.05)], 1))[None]
-    P, T = sweep(path, vprof * [0.75, 0.9], up=(0, 0, 1))
-    P_fr.add(P, T, mat="M_timber_weathered", smooth="bevel")
+    log("cap + hood shingles: slivers culled (< 5 cm wide after clamping)", nsliver)
+    build_cap_cappings(P_sh, P_fr, P_ir, rng)
     # front gable boards with a hole for the shaft
     zsh = HUB_Z - (HUB_D - HOOD_XF) * math.tan(TILT)
     rh = 0.215
