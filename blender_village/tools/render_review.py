@@ -9,7 +9,8 @@ the file are overridden with a neutral clay; only geometry is evaluated.
 
 Writes <out_dir>/<view>.png for each view plus <out_dir>/stats.json
 (triangle count, object count, bounding box, material slots, and the estimated
-share of hidden/buried triangles from hidden_tris.py, detailed in hidden.json).
+share of hidden/buried triangles from hidden_tris.py, detailed in hidden.json, and
+the mesh objects missing the mandatory "Mask" colour attribute).
 """
 import argparse
 import json
@@ -174,6 +175,10 @@ def main():
         stats["est_hidden_pct"] = None
         print("hidden_tris failed:", e)
     stats["material_slot_count"] = len(stats["materials"])
+    # Producer note 9: every mesh must carry a "Mask" colour attribute
+    stats["mask_attribute_missing"] = sorted(
+        o.name for o in meshes
+        if o.type == "MESH" and not o.name.startswith("_REVIEW") and "Mask" not in o.data.color_attributes)
 
     with open(os.path.join(a.out_dir, "stats.json"), "w") as f:
         json.dump(stats, f, indent=2)

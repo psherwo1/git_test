@@ -217,9 +217,33 @@ Remove or minimise geometry that can never be seen from outside the building, wh
 
 **Rules:**
 - Do not invent new slot names. Map anything new onto the closest palette entry.
-- The per-face `Mask` colour attribute (R sub-type, G wear, B per-piece random, A = 1) is optional but welcome for texture variation.
+- The `Mask` colour attribute is now MANDATORY. See producer note 9, whose channel layout supersedes the one given here earlier.
 - `stats.json` reports `material_slot_count`. The director treats any slot outside this palette as a must-fix, or more than 15 slots.
 
 ### Producer note 8: pace (applies to builders)
 
 Time-box each builder round to roughly 60-90 minutes of work. After the full review render, fix only blocking problems you find in it, then return your report. The director's next grade is the feedback loop. Open-ended self-polishing after the review render slows the whole production.
+
+### Producer note 9: MANDATORY `Mask` colour attribute (client requirement; applies from the next round on)
+
+**Why.** Texturing will use jointless Megascans-style surfaces (rock, wood grain, straw), applied with world-aligned (triplanar) projection in Unreal. The geometry supplies the stones, joints, shingles and planks. The material needs per-piece data so that every stone, shingle and plank doesn't show the same patch of texture.
+
+**Requirement.** Every mesh object carries a colour attribute named exactly `Mask`:
+- domain CORNER;
+- type BYTE_COLOR or FLOAT_COLOR;
+- set as both the active and the default (render) colour attribute, so it exports to Unreal as vertex colour.
+
+**Channels:**
+
+| Channel | Meaning | Rule |
+|---|---|---|
+| **R** | per-piece random, 0–1 | Constant across each individual piece (one stone, one shingle or shake, one plank, one rod, one thatch clump), and different between neighbours. Seeded and deterministic. |
+| **G** | wear / damage, 0–1, per piece | Higher on chipped, split, slipped, weathered or replaced pieces. Low on fresh dressed work. |
+| **B** | moss / dirt / damp, 0–1, may vary per vertex | High near ground contact and plinths, on upward-facing ledges, sills and roof butts, under drips and on shaded north faces. Low on sheltered vertical faces high up. |
+| **A** | reserved | 1.0 |
+
+**Applies to:**
+- all repeated-piece geometry: stones, shingles, shakes, planks, rods, thatch clumps, balusters, blades and boards;
+- every other mesh too. Use R = a per-object random, and fill G and B sensibly.
+
+**Enforcement.** `stats.json` lists `mask_attribute_missing`. Any object listed there is a must-fix.
