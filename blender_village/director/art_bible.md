@@ -269,3 +269,45 @@ Time-box each builder round to roughly 60-90 minutes of work. After the full rev
 - anything structurally attached.
 
 **Ground contact still matters.** The building's own footing must meet Z = 0 convincingly, so that it can sit on any terrain. A shallow (≤ 5 cm) buried skirt is allowed.
+
+### Producer note 11: detail-scale and decal rule (client requirement; applies in the kit phase, phase 2, onward)
+
+**Goal.** Better performance and cheap variation across 40–50 buildings.
+
+**Geometry KEEPS:**
+- all silhouette and edge detail;
+- every discrete piece (stones, shingles, shakes, planks, rods, thatch clumps, balusters, ironwork);
+- joints and recesses that cast real shadows;
+- anything with relief of about **2 cm or more**.
+- **Entrance exception:** within about 3 m of a main entrance, between 0 and 2.5 m high, keep relief of **1 cm or more** where it reads in grazing light at actor distance.
+
+**Geometry DROPS** (it goes to materials and decals instead) surface relief under those thresholds:
+- daub shrinkage cracks;
+- wood checks, splits, adze and saw marks, and grain;
+- chisel tooling;
+- chips and spalls under 2 cm;
+- straw striation grooves;
+- fine plank wear.
+
+Megascans-style normal and height maps on jointless surfaces supply these. Never model weathering (moss, damp, soot, streaks, stains, lichen, rust) as geometry. The `Mask` B channel covers macro moss and dirt. Decals cover the rest.
+
+**Decal anchors.** Every building, and every kit assembly, exports the places where decals naturally belong. This lets Unreal PCG place and vary them with a seed.
+
+- **In Blender:** a collection `DECAL_ANCHORS` of empties named `DA_<type>_<nnn>`. Each empty's −Z axis points into the surface it decorates, and each carries these custom properties:
+  - `decal_type`, one of: `crack`, `damp_rise`, `moss`, `soot`, `water_streak`, `rust_stain`, `plaster_patch`, `repair_patch`, `lichen`, `grime`;
+  - `size_w` and `size_h` in metres;
+  - `surface`, the palette material slot it sits on;
+  - `probability`, 0–1, the chance PCG uses it;
+  - `seed`.
+- **As a file:** `buildings/<id>/decal_anchors.json` holding the same data. It records position, normal, up, size, type, surface, probability and seed. Positions are in metres, building-local, Z up. State the units and axes in the file header.
+- **Placement logic must be physically plausible:**
+  - `damp_rise` and `moss` at the base and on north faces;
+  - `water_streak` under sills, eaves drips and the ends of the wheel and boom;
+  - `soot` above openings and smoke holes;
+  - `rust_stain` under ironwork;
+  - `crack` at the corners of openings, under lintels and at settlement points;
+  - `plaster_patch` and `repair_patch` scattered on daub and rendered walls;
+  - `lichen` on stone tops and weather faces.
+- **Count:** aim for about 40–120 anchors per hero building.
+
+**Still in force:** hidden triangles ≤ 15%, the material palette, `Mask`, and every other producer note. Triangles freed by this rule may go to silhouette and discrete-piece quality, or stay saved.

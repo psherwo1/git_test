@@ -39,6 +39,10 @@ Target: populate a village of 40-50 buildings.
 2. the tall tiered great hall with stacked conical roofs and dormer turrets (ref2 centre);
 3. a timber harbour house or boathouse on the waterfront (ref2 / ref3 right side).
 
+**Client decision (2026-10-16): the decal and detail-scale rule (producer note 11) applies in phase 2.** Every migrated hero and every kit variant must follow it and export decal anchors.
+
+**Signed-off phase-1 heroes are preserved** in `buildings/<id>/signoff_phase1/`. If a migrated hero cannot get back to a signed-off pass, the phase-1 version stays the deliverable.
+
 ## Phase 3: delivery
 
 - Export kit pieces and/or buildings for Unreal 5.8: FBX or USD, centimetre scale, Nanite-ready.
