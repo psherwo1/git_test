@@ -408,6 +408,28 @@ def stone(half, r_frac, segs, rng, amp=0.02, freq=3.0, flat_top=None, flat_bot=N
     return P, F
 
 
+def flagstone(lx, ly, th, rng, segs=30):
+    """flat irregular slab (top at z=0) with rounded arrises and a slightly domed, pitted top."""
+    seed = rng.randint(1, 100000)
+    ph = rng.uniform(0, 2 * np.pi)
+
+    def rf(t, z):
+        corners = 0.07 * np.abs(np.sin(rng_k * t + ph)) ** 0.5
+        return 1 + 0.13 * ring_noise(t, seed, 6, 1.0, 0.8) - corners
+
+    rng_k = rng.choice([2.5, 3.0, 3.5])
+    e = min(0.025, th * 0.3)
+    prof = [(0.0, -th), (0.86, -th), (0.97, -th + e * 0.8), (1.0, -e), (0.975, -e * 0.15), (0.93, 0.0),
+            (0.6, 0.004), (0.3, 0.006), (0.0, 0.007)]
+    V, F, uv, w = lathe(prof, segs, rfunc=rf)
+    V[:, 0] *= lx
+    V[:, 1] *= ly
+    top = V[:, 2] > -e * 0.5
+    off = rng.uniform(-50, 50, 3)
+    V[top, 2] += 0.006 * fbm(V[top] * 4 + off, 3)
+    return V, F
+
+
 def lathe(prof, segs, rfunc=None, phase=0.0):
     """revolve (r,z) profile ordered CCW in (r,z) (underside outward, outer surface upward)."""
     prof = np.asarray(prof, float)
@@ -1536,23 +1558,23 @@ def build_door(coll):
     V = xf(V, None, (0.0, yc, (SILL_TOP + 0.09) / 2))
     thr.add(V, F, "M_timber")
     # big flat step stone (top ~0.09)
-    P, F = stone(np.array([0.64, 0.34, 0.085]), 0.35, (8, 5, 3), rng, amp=0.01, freq=2.2, flat_top=0.07)
-    thr.add(xf(P, rotz(0.05), (0.04, FRONT_Y - 0.43, 0.09 - 0.07)), F, "M_stone")
+    P, F = flagstone(0.66, 0.36, 0.15, rng, segs=40)
+    thr.add(xf(P, rotz(0.05), (0.04, FRONT_Y - 0.44, 0.09)), F, "M_stone")
     # stepping-stone path
     ys = -4.62
     k = 0
-    while ys > -6.45:
+    while ys > -5.75:
         lx = rng.uniform(0.25, 0.42)
         ly = rng.uniform(0.2, 0.3)
         xo = 0.1 * math.sin(k * 1.9) + rng.uniform(-0.22, 0.22)
-        P, F = stone(np.array([lx, ly, 0.055]), 0.35, (6, 5, 3), rng, amp=0.01, freq=2.5, flat_top=0.045)
-        topz = rng.uniform(0.025, 0.045) + float(apron_height(np.array([xo]), np.array([ys - ly]))[0])
-        thr.add(xf(P, rotz(rng.uniform(-0.6, 0.6)), (xo, ys - ly, topz - 0.045)), F, "M_stone")
+        P, F = flagstone(lx, ly, 0.10, rng)
+        topz = rng.uniform(0.02, 0.04) + float(apron_height(np.array([xo]), np.array([ys - ly]))[0])
+        thr.add(xf(P, rotz(rng.uniform(-0.6, 0.6)) @ rotx(rng.uniform(-0.03, 0.03)), (xo, ys - ly, topz)), F, "M_stone")
         if rng.rand() < 0.6:
             lx2 = rng.uniform(0.16, 0.28)
-            P, F = stone(np.array([lx2, lx2 * 0.8, 0.05]), 0.4, (5, 5, 3), rng, amp=0.008, freq=3, flat_top=0.04)
+            P, F = flagstone(lx2, lx2 * 0.8, 0.09, rng)
             x2 = xo + (1 if rng.rand() < 0.5 else -1) * (lx + lx2 + 0.06)
-            thr.add(xf(P, rotz(rng.uniform(0, 3)), (x2, ys - ly * 1.2, topz - 0.055)), F, "M_stone")
+            thr.add(xf(P, rotz(rng.uniform(0, 3)), (x2, ys - ly * 1.2, topz - 0.012)), F, "M_stone")
         ys -= 2 * ly + rng.uniform(0.06, 0.14)
         k += 1
     # ---------------- door leaf: 6 boards + 2 ledges + brace, hung on the +X jamb, open 75 deg inward
