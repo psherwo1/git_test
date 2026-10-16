@@ -32,15 +32,16 @@ def log(*a):
 
 
 TAN22 = math.tan(math.radians(22.5))
-MAT_NAMES = ["M_stone", "M_stone_dressed", "M_mortar", "M_timber", "M_timber_weathered",
-             "M_roof_shingle", "M_roof_shake", "M_thatch", "M_iron", "M_lead", "M_glass",
-             "M_rubble", "M_moss_clump"]
-MAT_COL = {"M_stone": (0.55, 0.52, 0.47), "M_stone_dressed": (0.68, 0.66, 0.6),
-           "M_mortar": (0.6, 0.58, 0.52), "M_timber": (0.35, 0.25, 0.17),
-           "M_timber_weathered": (0.45, 0.42, 0.38), "M_roof_shingle": (0.38, 0.36, 0.3),
-           "M_roof_shake": (0.42, 0.37, 0.3), "M_thatch": (0.5, 0.43, 0.28),
-           "M_iron": (0.12, 0.12, 0.13), "M_lead": (0.4, 0.42, 0.44), "M_glass": (0.2, 0.25, 0.3),
-           "M_rubble": (0.5, 0.48, 0.44), "M_moss_clump": (0.25, 0.35, 0.15)}
+# shared 15-slot kit palette (producer note 7); only the slots a mesh uses are attached to it
+MAT_NAMES = ["M_stone", "M_stone_dressed", "M_rubble", "M_mortar", "M_daub", "M_wattle", "M_timber",
+             "M_timber_weathered", "M_roof_shingle", "M_roof_shake", "M_thatch", "M_iron", "M_lead", "M_earth",
+             "M_moss"]
+MAT_COL = {"M_stone": (0.55, 0.52, 0.47), "M_stone_dressed": (0.68, 0.66, 0.6), "M_rubble": (0.5, 0.48, 0.44),
+           "M_mortar": (0.6, 0.58, 0.52), "M_daub": (0.62, 0.55, 0.45), "M_wattle": (0.4, 0.32, 0.22),
+           "M_timber": (0.35, 0.25, 0.17), "M_timber_weathered": (0.45, 0.42, 0.38),
+           "M_roof_shingle": (0.38, 0.36, 0.3), "M_roof_shake": (0.42, 0.37, 0.3), "M_thatch": (0.5, 0.43, 0.28),
+           "M_iron": (0.12, 0.12, 0.13), "M_lead": (0.4, 0.42, 0.44), "M_earth": (0.33, 0.28, 0.2),
+           "M_moss": (0.25, 0.35, 0.15)}
 MATS = {}
 
 # ----------------------------------------------------------------------------------------------
@@ -133,11 +134,114 @@ class Acc:
 
 
 COLLS = {}
+CLIP_Z = -0.05          # nothing below 5 cm under the ground (producer notes 1 / 6)
+# per-object Mask defaults (producer note 9): (G wear base, G wear spread)
+WEAR_BY_MAT = {"M_stone_dressed": (0.08, 0.25), "M_iron": (0.25, 0.35), "M_lead": (0.1, 0.2),
+               "M_timber": (0.15, 0.4), "M_timber_weathered": (0.35, 0.45), "M_roof_shingle": (0.2, 0.5),
+               "M_roof_shake": (0.25, 0.5), "M_thatch": (0.25, 0.45), "M_mortar": (0.2, 0.3)}
 
 
-def finalize(acc, coll, smooth_deg=38.0, recalc=True):
+def _hash01(x, seed=0.0):
+    x = np.asarray(x, np.float64)
+    v = np.sin(x * 12.9898 + seed * 78.233 + 0.5) * 43758.5453
+    return v - np.floor(v)
+
+
+def island_labels(nv, edges):
+    """connected components of a mesh (label = smallest vertex index of the island); numpy min-propagation
+    with pointer jumping."""
+    lab = np.arange(nv, dtype=np.int64)
+    if len(edges) == 0:
+        return lab
+    a, b = edges[:, 0], edges[:, 1]
+    for _ in range(400):
+        m = np.minimum(lab[a], lab[b])
+        new = lab.copy()
+        np.minimum.at(new, a, m)
+        np.minimum.at(new, b, m)
+        for _ in range(6):
+            new = new[new]
+        if np.array_equal(new, lab):
+            break
+        lab = new
+    return lab
+
+
+def write_mask(me, seed=0.0):
+    """mandatory 'Mask' colour attribute (CORNER, byte): R per-piece random, G per-piece wear, B moss/damp,
+    A = 1. Pieces are the mesh islands."""
+    nv = len(me.vertices)
+    nl = len(me.loops)
+    if nv == 0 or nl == 0:
+        return
+    ed = np.zeros(len(me.edges) * 2, np.int32)
+    me.edges.foreach_get("vertices", ed)
+    lab = island_labels(nv, ed.reshape(-1, 2).astype(np.int64))
+    co = np.zeros(nv * 3, np.float32)
+    me.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    vn = np.zeros(nv * 3, np.float32)
+    me.vertices.foreach_get("normal", vn)
+    vn = vn.reshape(-1, 3)
+    lv = np.zeros(nl, np.int32)
+    me.loops.foreach_get("vertex_index", lv)
+    pm = np.zeros(len(me.polygons), np.int32)
+    me.polygons.foreach_get("material_index", pm)
+    ls = np.zeros(len(me.polygons), np.int32)
+    me.polygons.foreach_get("loop_total", ls)
+    lmat = np.repeat(pm, ls)
+    mnames = [m.name for m in me.materials]
+    R = _hash01(lab, seed)
+    wear_u = _hash01(lab, seed + 3.1)
+    gb = np.full(nl, 0.2)
+    gs = np.full(nl, 0.4)
+    for i, nm in enumerate(mnames):
+        b0, sp = WEAR_BY_MAT.get(nm, (0.15, 0.45))
+        sel = lmat == i
+        gb[sel], gs[sel] = b0, sp
+    G = np.clip(gb + gs * wear_u[lv] ** 1.6, 0, 1)
+    z = co[lv, 2]
+    n = vn[lv]
+    ground = np.clip(1.0 - z / 0.9, 0, 1) ** 1.3
+    upf = np.clip((n[:, 2] - 0.35) / 0.65, 0, 1) * (0.45 + 0.35 * np.clip(1 - z / 14.0, 0, 1))
+    north = np.clip(n[:, 1], 0, 1) * 0.3 * np.clip(1 - z / 8.0, 0, 1)
+    B = np.clip(np.maximum(ground, upf) + north + 0.08 * (_hash01(lab, seed + 7.7)[lv] - 0.5), 0, 1)
+    col = np.stack([R[lv], G, B, np.ones(nl)], 1).astype(np.float32)
+    at = me.color_attributes.new("Mask", "BYTE_COLOR", "CORNER")
+    at.data.foreach_set("color_srgb", col.ravel())
+    me.color_attributes.active_color_name = "Mask"
+    me.color_attributes.default_color_name = "Mask"
+
+
+def clean_mesh(me, clip_z=CLIP_Z, recalc=True):
+    """hygiene: clip at -5 cm, merge by distance (0.1 mm), dissolve degenerates, delete remaining zero-area faces."""
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    if clip_z is not None:
+        low = [v for v in bm.verts if v.co.z < clip_z]
+        for v in low:
+            v.co.z = clip_z
+        flat = [f for f in bm.faces if all(v.co.z <= clip_z + 1e-6 for v in f.verts)]
+        if flat:
+            bmesh.ops.delete(bm, geom=flat, context="FACES")
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-4)
+    bmesh.ops.dissolve_degenerate(bm, edges=bm.edges, dist=1e-4)
+    zero = [f for f in bm.faces if f.calc_area() < 1e-8]
+    if zero:
+        bmesh.ops.delete(bm, geom=zero, context="FACES")
+    loose = [v for v in bm.verts if not v.link_faces]
+    if loose:
+        bmesh.ops.delete(bm, geom=loose, context="VERTS")
+    if recalc:
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bm.to_mesh(me)
+    bm.free()
+    me.update()
+
+
+def build_mesh(acc, smooth_deg=38.0, recalc=True, clip_z=CLIP_Z, mask_seed=None):
+    """Acc -> cleaned bpy mesh with UVs, palette slots and the Mask attribute (no object)."""
     if acc.n == 0 or not acc.F:
-        log("  (empty)", acc.name)
         return None
     V = np.concatenate(acc.V)
     loops = np.concatenate([f.ravel() for f in acc.F])
@@ -155,18 +259,8 @@ def finalize(acc, coll, smooth_deg=38.0, recalc=True):
     me.polygons.foreach_set("loop_total", sizes)
     me.polygons.foreach_set("material_index", mats)
     me.update(calc_edges=True)
-    if recalc:
-        bm = bmesh.new()
-        bm.from_mesh(me)
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-        bm.to_mesh(me)
-        bm.free()
-        me.update()
-        loops = np.zeros(len(me.loops), np.int32)
-        me.loops.foreach_get("vertex_index", loops)
-        sizes = np.zeros(len(me.polygons), np.int32)
-        me.polygons.foreach_get("loop_total", sizes)
-    # UVs: explicit per-vertex UVs where given (grain aligned), otherwise box projection
+    # UVs: explicit per-vertex UVs where given (grain aligned), otherwise box projection; set before the cleanup
+    # so the loops carry them through it
     nrm = np.zeros(len(sizes) * 3, np.float32)
     me.polygons.foreach_get("normal", nrm)
     nrm = nrm.reshape(-1, 3)
@@ -181,12 +275,79 @@ def finalize(acc, coll, smooth_deg=38.0, recalc=True):
     uvl.data.foreach_set("uv", uv.astype(np.float32).ravel())
     for m in acc.mats:
         me.materials.append(MATS[m])
-    me.polygons.foreach_set("use_smooth", np.ones(len(sizes), bool))
+    clean_mesh(me, clip_z=clip_z, recalc=recalc)
+    me.polygons.foreach_set("use_smooth", np.ones(len(me.polygons), bool))
     me.set_sharp_from_angle(angle=math.radians(smooth_deg))
+    write_mask(me, seed=(sum(map(ord, acc.name)) % 997) * 0.37 if mask_seed is None else mask_seed)
+    return me
+
+
+def finalize(acc, coll, smooth_deg=38.0, recalc=True, clip_z=CLIP_Z):
+    me = build_mesh(acc, smooth_deg, recalc, clip_z)
+    if me is None:
+        log("  (empty)", acc.name)
+        return None
     ob = bpy.data.objects.new(acc.name, me)
     coll.objects.link(ob)
-    log(f"  {acc.name}: {len(V)} v, {acc.ntris()} tris")
+    log(f"  {acc.name}: {len(me.vertices)} v, {sum(len(p.vertices) - 2 for p in me.polygons)} tris")
     return ob
+
+
+# ----------------------------------------------------------------------------------------------
+# shared-mesh pools (producer notes 2 / 3): small variant pools placed as linked duplicates
+# ----------------------------------------------------------------------------------------------
+POOL_MESHES = {}         # key -> list of bpy meshes (variants)
+PLACEMENTS = []          # (pool key, variant index, 4x4 matrix, object name stem)
+
+
+def frame_matrix(origin, ex, ey, ez):
+    M = np.eye(4)
+    M[:3, 0], M[:3, 1], M[:3, 2], M[:3, 3] = ex, ey, ez, origin
+    return M
+
+
+def axis_matrix(p, axis, roll=0.0):
+    """local +Z -> axis at p (orthonormal frame, optional roll about the axis)."""
+    z = np.asarray(axis, float)
+    z = z / np.linalg.norm(z)
+    up = np.array([0, 0, 1.0]) if abs(z[2]) < 0.9 else np.array([1.0, 0, 0])
+    x = np.cross(up, z)
+    x /= np.linalg.norm(x)
+    y = np.cross(z, x)
+    c, s = math.cos(roll), math.sin(roll)
+    x, y = x * c + y * s, -x * s + y * c
+    return frame_matrix(np.asarray(p, float), x, y, z)
+
+
+def get_pool(key, builder, n_var):
+    """build (once) n_var variant meshes with builder(acc, variant_index) -> list of meshes."""
+    if key not in POOL_MESHES:
+        meshes = []
+        for i in range(n_var):
+            acc = Acc(f"KEEP_pool_{key}_v{i:02d}")
+            builder(acc, i)
+            meshes.append(build_mesh(acc, smooth_deg=40.0, clip_z=None, mask_seed=7.3 * i + len(key)))
+        POOL_MESHES[key] = meshes
+    return POOL_MESHES[key]
+
+
+def place(key, var, M, stem):
+    PLACEMENTS.append((key, int(var), np.asarray(M, float), stem))
+
+
+def realize_placements(coll):
+    """one object per placement, every object of a variant sharing that variant's mesh data."""
+    from mathutils import Matrix
+    counts = {}
+    for key, var, M, stem in PLACEMENTS:
+        meshes = POOL_MESHES[key]
+        me = meshes[var % len(meshes)]
+        counts[stem] = counts.get(stem, 0) + 1
+        ob = bpy.data.objects.new(f"{stem}_{counts[stem]:03d}", me)
+        ob.matrix_world = Matrix([list(r) for r in M])
+        coll.objects.link(ob)
+    log(f"  placements: {len(PLACEMENTS)} linked duplicates of {sum(len(v) for v in POOL_MESHES.values())} "
+        f"pooled meshes ({', '.join(f'{k}:{v}' for k, v in counts.items())})")
 
 
 # ----------------------------------------------------------------------------------------------
@@ -355,7 +516,7 @@ def axr(h, r, n):
 
 
 def build_stones(acc, S, mapfn, mat, rng, rough=1.0, nxy=5, premap=None, noise_amp=0.006, grid=None,
-                 dressed=False, wear=None, front_min=0.003, nz2=False):
+                 dressed=False, wear=None, front_min=0.003, nz2=False, side_depth=None):
     """S: dict of arrays sc, zc, hx, hy, f (front), back, r, rot, zcrs (course coord for mapfn).
     Optional per-stone: shl/shr (end-joint shear dx/dy of left/right ends), sbb/sbt (bed slopes dy/dx of
     bottom/top beds), pillow, tiltx/tilty (metres at the stone edge).
@@ -366,6 +527,9 @@ def build_stones(acc, S, mapfn, mat, rng, rough=1.0, nxy=5, premap=None, noise_a
         return
     hx, hy, f, back, r = [np.asarray(S[k], float) for k in ("hx", "hy", "f", "back", "r")]
     r = np.minimum(r, np.minimum(hx, hy) * 0.32)
+    if side_depth is not None:
+        # sides only reach side_depth behind the wall plane (1-2 cm into the mortar body); no back, no buried sides
+        back = np.minimum(back, side_depth)
     if grid is not None:
         X = axr(hx, r, grid[0])
         Y = axr(hy, r, grid[1])
@@ -981,7 +1145,7 @@ def rounded_outline(poly, rc, spacing):
 
 
 def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0.62, 0.3), noise_amp=0.006,
-                      front_min=0.003):
+                      front_min=0.003, side_depth=None):
     """Hero rubble: every stone built from its true (polygonal) outline with a rounded front arris, a split / cleaved
     face (1-2 large planes at 5-15 deg), chisel facets, chipped arrises and a low pillow. Rings: outline at the back,
     arris start, arris middle, face edge, then rings scaled toward the centroid and a centre fan."""
@@ -992,7 +1156,7 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
         r = float(min(S["r"][i], 0.3 * min(hx, hy), 0.02))
         r = max(r, 0.004)
         f = float(S["f"][i])
-        back = float(S["back"][i])
+        back = float(S["back"][i]) if side_depth is None else min(float(S["back"][i]), side_depth)
         nspl = int(_g(S, "spl", i))
         sd = rng.uniform(0, 100)
         # split planes (metric): z_off = -tan(a) * max(0, d.p - c)
@@ -1691,11 +1855,13 @@ def build_hall_masonry(coll):
                     abs(S["sbt"][i] - S["sbb"][i]) > 0.06 or abs(S["shl"][i] - S["shr"][i]) > 0.12))
     log(f"  hall hero stones {int(poly_n.sum())} (non-rectangular {npoly}), other {int((~hero & ~small).sum())}, "
         f"pins {int(small.sum())}")
-    build_poly_stones(acc, filt(S, poly_n), hall_map, "M_stone", np.random.default_rng(2020))
+    build_poly_stones(acc, filt(S, poly_n), hall_map, "M_stone", np.random.default_rng(2020), side_depth=0.018)
     # non-hero facets: N / NE / E / NW thinned (single side segment + chamfer band)
-    build_stones(acc, filt(S, ~hero & ~small), hall_map, "M_stone", rng, rough=1.0, nxy=5, noise_amp=0.008, nz2=True)
-    build_stones(acc, filt(S, small & hero), hall_map, "M_stone", rng, rough=0.8, nxy=5, noise_amp=0.005)
-    build_stones(acc, filt(S, small & ~hero), hall_map, "M_stone", rng, rough=0.8, nxy=4, noise_amp=0.005, nz2=True)
+    build_stones(acc, filt(S, ~hero & ~small), hall_map, "M_stone", rng, rough=1.0, nxy=5, noise_amp=0.008, nz2=True,
+                 side_depth=0.018)
+    build_stones(acc, filt(S, small & hero), hall_map, "M_stone", rng, rough=0.8, nxy=5, noise_amp=0.005, side_depth=0.018)
+    build_stones(acc, filt(S, small & ~hero), hall_map, "M_stone", rng, rough=0.8, nxy=4, noise_amp=0.005, nz2=True,
+                 side_depth=0.018)
     finalize(acc, coll, smooth_deg=28.0)
     finalize(accd, coll)
     finalize(JOINT_ACC, coll)
@@ -1784,7 +1950,8 @@ def build_hall_interior(coll):
 # ==============================================================================================
 # GENERIC ORIENTED BOXES (timber members, boards)
 # ==============================================================================================
-def obox(acc, O, EX, EY, EZ, LX, LY, LZ, r, mat, nx=4, ny=4, nz=4, deform=None, grain_uv=True):
+def obox(acc, O, EX, EY, EZ, LX, LY, LZ, r, mat, nx=4, ny=4, nz=4, deform=None, grain_uv=True, skip_back=False,
+         skip_front=False):
     """Boxes: x in [0,LX] along EX, y in [-LY/2,LY/2] along EY, z in [-LZ/2,LZ/2] along EZ."""
     O = np.atleast_2d(np.asarray(O, float))
     M = len(O)
@@ -1797,7 +1964,7 @@ def obox(acc, O, EX, EY, EZ, LX, LY, LZ, r, mat, nx=4, ny=4, nz=4, deform=None, 
     X = axn(np.zeros(M), LX, r, nx)
     Y = axn(-LY / 2, LY / 2, r, ny)
     Z = axn(-LZ / 2, LZ / 2, r, nz)
-    P, quads = rbox(X, Y, Z, r)
+    P, quads = rbox(X, Y, Z, r, skip_back=skip_back, skip_front=skip_front)
     if deform is not None:
         P = deform(P)
     W = O[:, None, :] + P[..., 0:1] * EX[:, None, :] + P[..., 1:2] * EY[:, None, :] + P[..., 2:3] * EZ[:, None, :]
@@ -1831,7 +1998,7 @@ def beam(acc, p0, p1, w, h, c, mat, up=(0, 0, 1), nx=4, deform=None):
 
 def hewn_member(acc, O, EX, EY, EZ, L, wy, wz, rng, mat="M_timber", chamfer=0.025, nf=3, st_len=0.05,
                 adze=0.004, adze_period=(0.07, 0.13), lean=(0.0, 0.0), swell=0.0, taper=0.0, wave=0.0,
-                checks=(), end_bevel=True, seed=0):
+                checks=(), end_bevel=True, seed=0, drop=()):
     """hand-hewn square timber along EX from O (length L), section wy (EY) x wz (EZ).
     Adze facets (scalloped, per face), lean (rad, EY/EZ), swell/taper (m), low-freq wave (m),
     modelled checks: dicts face(0:+EY,1:+EZ,2:-EY,3:-EZ), pos(-1..1 across), x0, x1 (0..1), depth, width."""
@@ -1917,37 +2084,68 @@ def hewn_member(acc, O, EX, EY, EZ, L, wy, wz, rng, mat="M_timber", chamfer=0.02
     a_ = i * m + j
     b_ = i * m + (j + 1) % m
     quads = np.stack([a_, a_ + m, b_ + m, b_], -1).reshape(-1, 4)
+    if drop:
+        # faces buried in masonry / under covering (face ids as for checks); the quads of a face are those whose
+        # two profile points both belong to it (chamfer strips between faces are kept)
+        jj = np.tile(np.arange(m), ns - 1)
+        bad = np.isin(fid[jj], drop) & np.isin(fid[(jj + 1) % m], drop) & (fid[jj] == fid[(jj + 1) % m])
+        quads = quads[~bad]
     caps = [np.arange(m)[None, :], ((ns - 1) * m + np.arange(m)[::-1])[None, :]]
     per = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(np.vstack([pts, pts[:1]]), axis=0), axis=1))])[:m]
     uv = np.stack([np.repeat(xs, m), np.tile(per, ns)], -1)
     acc.add(V.reshape(-1, 3), [quads] + caps, mat, uv=uv)
 
 
+def _peg_builder(rad, proud, embed):
+    def build(acc, i):
+        rr = np.random.default_rng(4000 + i)
+        n = 8
+        a = np.linspace(0, 2 * np.pi, n, endpoint=False) + rr.uniform(0, 0.4)
+        wob = 1 + rr.uniform(-0.08, 0.08, n)                       # hand-riven, slightly out of round
+        ring = lambda r_, z_: np.stack([r_ * wob * np.cos(a), r_ * wob * np.sin(a), np.full(n, z_)], 1)
+        top = proud * rr.uniform(0.85, 1.1)
+        dome = rr.uniform(0.25, 0.45)
+        V = np.concatenate([ring(rad * 0.97, -embed), ring(rad, top - 0.004), ring(rad * (0.92 - dome * 0.3), top - 0.001),
+                            ring(rad * 0.55, top + rad * dome * 0.15)])
+        q = []
+        for r_ in range(3):
+            for j in range(n):
+                q.append((r_ * n + j, r_ * n + (j + 1) % n, (r_ + 1) * n + (j + 1) % n, (r_ + 1) * n + j))
+        tilt = rr.normal(0, 0.12)
+        V[:, 0] += tilt * np.clip(V[:, 2] - top + 0.004, 0, None)      # axe-trimmed, slightly skew head
+        acc.add(V, [np.array(q), np.arange(3 * n, 4 * n)[None, :]], "M_timber")
+    return build
+
+
 def peg(acc, p, axis, rad=0.014, proud=0.016, embed=0.03, rng=None):
-    axis = np.asarray(axis, float)
-    axis = axis / np.linalg.norm(axis)
-    up = np.array([0, 0, 1.0]) if abs(axis[2]) < 0.9 else np.array([1.0, 0, 0])
-    path = np.array([p - axis * embed, p + axis * (proud - 0.004), p + axis * proud])
-    prof = np.stack([prof_circle(rad, 8), prof_circle(rad, 8), prof_circle(rad * 0.7, 8)])
-    V, F = sweep(path, up, prof)
-    acc.add(V, F, "M_timber")
+    """oak peg (pooled: 4 variants per size, placed as linked duplicates). acc is unused (kept for call sites)."""
+    key = f"peg_{int(rad * 1000)}_{int(proud * 1000)}"
+    get_pool(key, _peg_builder(rad, proud, embed), 4)
+    h = int(_hash01(np.array([p[0] * 31.0 + p[1] * 17.0 + p[2] * 7.0]))[0] * 4)
+    place(key, h, axis_matrix(p, axis, roll=h * 1.3), "KEEP_peg")
+
+
+def _nail_builder(rad, h):
+    def build(acc, i):
+        rr = np.random.default_rng(5000 + i)
+        prof = [(rad, -0.003), (rad, 0.0), (rad * rr.uniform(0.8, 0.9), h * 0.6), (rad * 0.45, h * rr.uniform(0.9, 1.0)),
+                (0.0, h * rr.uniform(0.95, 1.05))]
+        V, F = lathe(prof, 8, phase=rr.uniform(0, 0.8))
+        # hand-forged: faceted, slightly off-centre heads
+        V[:, 0] += rr.normal(0, 0.06) * V[:, 2]
+        V[:, :2] *= (1 + rr.uniform(-0.06, 0.06, (len(V), 1)) * (V[:, 2:3] > 0.001))
+        acc.add(V, F, "M_iron")
+    return build
 
 
 def nail_heads(acc, P, normal, rad=0.009, h=0.006, mat="M_iron"):
-    """domed nail heads at points P (N,3) on a surface with normal."""
+    """domed forged nail heads at points P (N,3) on a surface with normal (pooled linked duplicates)."""
     P = np.atleast_2d(P)
-    normal = np.asarray(normal, float)
-    normal = normal / np.linalg.norm(normal)
+    key = f"nail_{int(rad * 10000)}_{int(h * 10000)}"
+    get_pool(key, _nail_builder(rad, h), 4)
     for p in P:
-        prof = [(rad, -0.003), (rad, 0.0), (rad * 0.85, h * 0.6), (rad * 0.45, h * 0.95), (0.0, h)]
-        V, F = lathe(prof, 8)
-        # orient z->normal
-        z = normal
-        x = np.cross((0, 0, 1.0), z) if abs(z[2]) < 0.95 else np.array([1.0, 0, 0])
-        x = x / np.linalg.norm(x)
-        y = np.cross(z, x)
-        W = p + V[:, 0:1] * x + V[:, 1:2] * y + V[:, 2:3] * z
-        acc.add(W, F, mat)
+        v = int(_hash01(np.array([p[0] * 53.0 + p[1] * 29.0 + p[2] * 11.0]))[0] * 4)
+        place(key, v, axis_matrix(p, normal, roll=v * 0.7), "KEEP_nail")
 
 
 # ==============================================================================================
@@ -2526,8 +2724,10 @@ def build_cone(coll):
     log("  cone stones:", len(S["sc"]))
     small = (S["hx"] < 0.045) & (S["hy"] < 0.045)
     # budget: one side segment + chamfer band (the cone is never seen closer than ~6 m)
-    build_stones(acc, filt(S, ~small), cone_map_factory(), "M_stone", rng, rough=1.35, noise_amp=0.009, nz2=True)
-    build_stones(acc, filt(S, small), cone_map_factory(), "M_stone", rng, rough=0.9, nxy=4, noise_amp=0.005, nz2=True)
+    build_stones(acc, filt(S, ~small), cone_map_factory(), "M_stone", rng, rough=1.35, noise_amp=0.009, nz2=True,
+                 side_depth=0.022)
+    build_stones(acc, filt(S, small), cone_map_factory(), "M_stone", rng, rough=0.9, nxy=4, noise_amp=0.005, nz2=True,
+                 side_depth=0.022)
     finalize(acc, coll, smooth_deg=28.0)
     # mortar body (lathe) with noise
     accm = Acc("KEEP_cone_mortar")
@@ -2929,6 +3129,18 @@ def strap_widths(us, w0=0.050, w1=0.038, spear_w=0.080, u_sp=0.80):
     return wd
 
 
+def _pintle_builder(acc, i):
+    """forged knuckle eye round a pintle pin, with the square shank running into the jamb (local x)."""
+    rr = np.random.default_rng(6100 + i)
+    V, F = lathe([(0.017, -0.03), (0.0175, -0.026), (0.0175, 0.026), (0.017, 0.03)], 12, phase=rr.uniform(0, 0.5))
+    acc.add(V, F, "M_iron")
+    V, F = lathe([(0.009, -0.095), (0.009, 0.015), (0.012 + rr.uniform(0, 0.002), 0.02), (0.0, 0.025)], 10)
+    acc.add(V, F, "M_iron")
+    V, F = sweep(np.array([[0.0, 0, -0.045], [0.045, 0, -0.045], [0.088, 0, -0.045 + rr.normal(0, 0.002)]]),
+                 (0, 0, 1), prof_rect(0.018, 0.018, 0.003))
+    acc.add(V, F, "M_iron")
+
+
 def strap_hinge(acc, k, x_hinge, x_len, z, w_face, rng, nails_acc, a_ref=A_REF, direction=-1):
     """forged strap lying flat on the door face (6 mm proud), from the hinge edge; spear terminal; knuckle."""
     n = 40
@@ -2943,17 +3155,12 @@ def strap_hinge(acc, k, x_hinge, x_len, z, w_face, rng, nails_acc, a_ref=A_REF, 
     nrm = np.array([FN[k][0], FN[k][1], 0.0])
     V, F = sweep(path, nrm, profs)
     acc.add(V, F, "M_iron")
-    # knuckle (rolled eye) around the pintle at the hinge edge
+    # knuckle (rolled eye) + pintle + shank into the jamb: pooled forged part, placed as a linked duplicate
     kp = fmap(k, np.array([x_hinge + 0.012 * -direction]), np.array([z]), np.array([w_face - 0.01]), a_ref=a_ref)[0]
-    Vk, Fk = lathe([(0.017, -0.03), (0.017, 0.03)], 12, cx=kp[0], cy=kp[1], z0=z)
-    acc.add(Vk, Fk, "M_iron")
-    # pintle: vertical pin + shank into the jamb reveal
-    Vp, Fp = lathe([(0.009, -0.06), (0.009, 0.05), (0.012, 0.055), (0.0, 0.06)], 10, cx=kp[0], cy=kp[1], z0=z - 0.035)
-    acc.add(Vp, Fp, "M_iron")
-    sh0 = kp + np.array([0, 0, -0.045])
-    sh1 = fmap(k, np.array([x_hinge + 0.10 * -direction]), np.array([z - 0.045]), np.array([w_face - 0.01]), a_ref=a_ref)[0]
-    Vs, Fs = sweep(np.array([sh0, sh1]), (0, 0, 1), prof_rect(0.018, 0.018, 0.003))
-    acc.add(Vs, Fs, "M_iron")
+    get_pool("pintle", _pintle_builder, 3)
+    ex = np.array([FT[k][0], FT[k][1], 0.0]) * -direction
+    ez = np.array([0, 0, 1.0])
+    place("pintle", int(z * 10) % 3, frame_matrix(kp, ex, np.cross(ez, ex), ez), "KEEP_pintle")
     # nails along the strap
     nn = int(rng.integers(6, 9))
     ui = np.linspace(0.08, 0.86, nn)
@@ -3355,9 +3562,9 @@ def build_wing_walls(coll):
     # hero zone: the wing's south wall below 3.5 m (seen in the hero/front/actor shots)
     hero = (S["sc"] > S_SOUTH0 - 0.05) & (S["zc"] < 3.5) & ~small
     log(f"  wing hero stones {int(hero.sum())}, other {int((~hero & ~small).sum())}, pins {int(small.sum())}")
-    build_poly_stones(acc, filt(S, hero), wing_map, "M_stone", np.random.default_rng(2021), rough=1.1)
-    build_stones(acc, filt(S, ~hero & ~small), wing_map, "M_stone", rng, rough=1.1, nxy=5, noise_amp=0.008)
-    build_stones(acc, filt(S, small), wing_map, "M_stone", rng, rough=0.8, nxy=5, noise_amp=0.005)
+    build_poly_stones(acc, filt(S, hero), wing_map, "M_stone", np.random.default_rng(2021), rough=1.1, side_depth=0.018)
+    build_stones(acc, filt(S, ~hero & ~small), wing_map, "M_stone", rng, rough=1.1, nxy=5, noise_amp=0.008, side_depth=0.018)
+    build_stones(acc, filt(S, small), wing_map, "M_stone", rng, rough=0.8, nxy=5, noise_amp=0.005, side_depth=0.018)
     finalize(acc, coll, smooth_deg=28.0)
     # dressed quoins / jamb blocks of the plank door and the window: tooled faces, chipped arrises, out of square
     accq = Acc("KEEP_wing_dressed_stones")
@@ -3480,9 +3687,11 @@ def build_wing_door_window(coll):
         ui = np.array([0.08, 0.28, 0.48, 0.66, 0.9])
         nail_heads(acci, wl(xc - hw + 0.01 + ui * 0.70, zh + np.array([0.008, -0.008, 0.008, -0.008, 0.0]),
                             lw1 + 0.0032 + 0.006 * (1 - 0.15 * ui)), np.array([0, -1.0, 0]), rad=0.008)
-        kp = wl(np.array([xc - hw + 0.005]), np.array([zh]), np.array([lw1]))[0]
-        Vk, Fk = lathe([(0.015, -0.03), (0.015, 0.03)], 10, cx=kp[0], cy=kp[1], z0=zh)
-        acci.add(Vk, Fk, "M_iron")
+        kp = wl(np.array([xc - hw + 0.005]), np.array([zh]), np.array([lw1 - 0.008]))[0]
+        get_pool("pintle", _pintle_builder, 3)
+        ex = np.array([-1.0, 0, 0])
+        place("pintle", int(zh * 10) % 3, frame_matrix(kp, ex, np.cross(np.array([0, 0, 1.0]), ex),
+                                                       np.array([0, 0, 1.0])), "KEEP_pintle")
     # latch: thumb latch handle + bar
     hp = wl(np.array([xc + hw - 0.12]), np.array([1.05]), np.array([lw1]))[0]
     path = np.array([hp + np.array([0, 0, 0.09]), hp + np.array([0, -0.05, 0.06]), hp + np.array([0, -0.06, 0.0]),
@@ -4738,9 +4947,10 @@ def build_turret(coll):
     log("  turret stones", len(S["sc"]))
     small = (S["hx"] < 0.05) & (S["hy"] < 0.05)
     low = S["zc"] < 3.6
-    build_stones(acc, filt(S, ~small & low), tur_map, "M_stone", rng, rough=1.15, nxy=5, noise_amp=0.009)
-    build_stones(acc, filt(S, ~small & ~low), tur_map, "M_stone", rng, rough=1.15, nxy=5, noise_amp=0.009, nz2=True)
-    build_stones(acc, filt(S, small), tur_map, "M_stone", rng, rough=0.8, nxy=4, noise_amp=0.005, nz2=True)
+    build_stones(acc, filt(S, ~small & low), tur_map, "M_stone", rng, rough=1.15, nxy=5, noise_amp=0.009, side_depth=0.018)
+    build_stones(acc, filt(S, ~small & ~low), tur_map, "M_stone", rng, rough=1.15, nxy=5, noise_amp=0.009, nz2=True,
+                 side_depth=0.018)
+    build_stones(acc, filt(S, small), tur_map, "M_stone", rng, rough=0.8, nxy=4, noise_amp=0.005, nz2=True, side_depth=0.018)
     build_tooth_stones(acc, np.random.default_rng(1819))
     finalize(acc, coll, smooth_deg=28.0)
     accm = Acc("KEEP_turret_mortar")
@@ -4902,6 +5112,10 @@ def main():
     build_turret(subs["KEEP_turret"])
     log("ground")
     build_ground(subs["KEEP_ground"])
+    log("pooled linked duplicates")
+    pc = bpy.data.collections.new("KEEP_kit_instances")
+    root.children.link(pc)
+    realize_placements(pc)
     tot = 0
     for ob in bpy.data.objects:
         if ob.type == "MESH":

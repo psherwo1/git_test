@@ -418,3 +418,37 @@ Axis scores:
 - Buttress coping (u10): the dishing and spalls barely read at mid range. Deepen 2–3 spalls to 1.5–2.5 cm and break one slab end.
 - Door jamb and arcade pier blocks (u04, u14) still have softly waved outlines. Straighten the large edges and keep the wear to chips.
 - Props at mid range (v05) still read smooth. Increase the bow to 8–12 cm and make the 2 lower knots 5–7 cm.
+
+
+## CLIENT CORRECTION — board sail is a TAIL VANE (supersedes every earlier "sail A" instruction)
+
+The client, who owns the concept art, has clarified the rotor. The board panel seen on the left in ref1 (crops `mill_overall.png` and `mill_sails_wheel.png`) is **not** one of four sail arms in the plane of the fan wheel. It is a **fixed tail vane**, as on an American windpump. It sits on a boom running **back** from the cap along the wind-shaft axis, **behind** the fan wheel, and it steers the wheel into the wind.
+
+```
+SIDE VIEW (wind from the right)          TOP VIEW
+            /  upper brace
+  [BOARD]——|——O)  <- fan wheel (edge-on)   [BOARD]=====O====||  <- wheel
+   vane    | \\  lower brace                 (fixed; points downwind)
+           |  tower
+```
+
+### Required changes
+
+1. **Remove sail A from the rotor entirely.**
+   - The rotating assembly is the 16-blade annular fan wheel only: blades on the inner and outer rings, plus its radial spokes or arms from the hub to the rings.
+   - The bare stocks B, C and D may remain only if they read as the wheel's spokes or arms, as the grey diagonals do in the crop. They must not read as sail stocks waiting for sails.
+   - Keep the hub, poll end and ironwork.
+2. **Tail boom.**
+   - A horizontal boom on the wind-shaft axis, running from the rear of the cap away from the wheel, about 4.0–5.0 m long.
+   - Built as two parallel hewn rails about 0.12 × 0.10 m, with spacer blocks and iron bands, as the doubled boom in the crop shows.
+   - Braced by diagonal struts: one from the cap or the top of the tower up and out to the boom, and one from below up to the boom (the "/" and "\\" in the client sketch).
+   - It turns with the cap, not with the wheel.
+3. **Tail vane panel.**
+   - A vertical board panel in the plane of the boom (parallel to the wind), fixed to the outer 2.4–2.8 m of the boom.
+   - About 1.4 m tall at the inner end, flaring to about 2.0–2.3 m at the outer end. The boards fan slightly outward, as in the crop.
+   - Vertical or slightly fanned boards with battens, cleats, nails, a ragged outer edge and one cracked or replaced board.
+   - Reuse the existing sail A board and batten construction code where possible.
+4. **Composition.**
+   - Keep the cap yaw so that from the ref1 / u01 reference camera the vane appears to the LEFT of the tower, partly overlapping the left blades, as in `mill_overall.png`.
+   - From the front (looking straight at the wheel) the vane is edge-on and mostly hidden behind the wheel.
+   - The vane must clear the wheel, the tower and the props at every cap yaw.
