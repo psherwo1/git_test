@@ -973,6 +973,9 @@ def _vis_spawn_pool(procs, Vw, T, own):
     import multiprocessing as mp
     import os
     import sys
+    # unlike fork, every spawn worker holds its own copy of the BVH (several hundred MB for a 1M-triangle building),
+    # so cap the workers: several builds share one 16 GB desktop.  The result does not depend on the worker count.
+    procs = max(1, min(procs, int(os.environ.get("VILLAGE_CULL_PROCS", "2"))))
     saved = list(sys.path)
     norm = [os.path.normcase(p) for p in saved]
     blender = (os.path.normcase(os.sep + "bpy" + os.sep), os.path.normcase("Blender Foundation"))
