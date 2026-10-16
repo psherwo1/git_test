@@ -191,6 +191,11 @@ Remove or minimise geometry that can never be seen from outside the building, wh
 - **Interiors:** only the depth visible through openings, about 1.5 m. Close the rest off with simple dark blocker surfaces.
 - **Mill rotor:** keep the backs of sails and blades. They are visible from behind.
 
+**Never open holes when culling (lesson from the windmill, round 3).**
+- When covered parts of shingles, shakes, thatch or stones are removed, put a cheap continuous backing surface underneath: a sarking or deck plane, a wall core face, or a dark blocker. Then any gap, slipped piece or missing piece shows a solid surface, not sky or a black void.
+- A single low-poly backing plane costs almost nothing. It also lets you cull far more aggressively.
+- Before returning, check the roof and wall outlines for see-through pixels from several exterior cameras.
+
 **Reinvesting the savings.** Triangles saved should go into visible close-up detail: entrances, ground contact and eye-level walls. Never cut anything that affects the silhouette or a visible edge.
 
 ### Producer note 7: material slots (client requirement, revised: the limit is 15)

@@ -2047,7 +2047,7 @@ def build_collar_finial(coll):
 # plinth, rubble, apron, path
 # =============================================================================================
 R_PL_FACE = 3.76            # plinth outer face line (rough wall line, +-4 cm)
-STEP_C = (0.04, FRONT_Y - 0.44)       # step stone centre (x, y)
+STEP_C = (0.04, FRONT_Y - 0.50)       # step stone centre (x, y)
 APRON_RIM = 4.62
 R_FLOOR_EDGE = 3.36         # inside this radius the ground is the interior earth floor
 
@@ -2587,19 +2587,53 @@ def timber_box(acc, center, half, R=None, ch=0.02, segs=(1, 1, 1), noise=0.0, se
     acc.add(V, F, mat)
 
 
-def peg(acc, p, d, rng, r=0.015, proud=0.016, depth=0.05):
-    """whittled oak peg: irregular octagon, proud 1.5-1.8 cm with a domed, slightly split head."""
-    d = nrm(d)
-    proud = proud * rng.uniform(0.95, 1.12)
-    path = np.linspace(p - d * depth, p + d * proud, 5)
-    ang = 2 * np.pi * np.arange(8) / 8 + rng.uniform(0, 1)
-    rr = 1 + rng.uniform(-0.08, 0.08, 8)
+def R_y_to(d, hint=(0, 0, 1)):
+    """rotation whose local +Y axis points along d."""
+    y = nrm(np.asarray(d, float))
+    h = np.asarray(hint, float)
+    if abs(float(np.dot(h, y))) > 0.9:
+        h = np.array([1.0, 0, 0])
+    x = nrm(np.cross(y, h))
+    z = np.cross(x, y)
+    return np.stack([x, y, z], -1)
+
+
+def make_peg(acc, k):
+    """whittled oak peg (pool variant): irregular octagon, head proud 1.5-1.8 cm along local +Y with a
+    domed, slightly split head; only 1.2 cm of shank modelled inside the timber."""
+    rs = np.random.RandomState(6100 + k)
+    proud = rs.uniform(0.015, 0.018)
+    r = 0.015 * rs.uniform(0.9, 1.1)
+    path = np.linspace([0, -0.012, 0], [0, proud, 0], 4)
+    ang = 2 * np.pi * np.arange(8) / 8 + rs.uniform(0, 1)
+    rr = 1 + rs.uniform(-0.09, 0.09, 8)
     prof = np.stack([np.cos(ang) * rr, np.sin(ang) * rr], -1)
-    rad = np.full(5, r * rng.uniform(0.9, 1.1))
-    path, rad = chamfer_path(path, rad, 0.005)
-    up = (0, 0, 1) if abs(d[2]) < 0.9 else (1, 0, 0)
-    P, F, uv, w = tube(path, rad, 8, up=up, profile=prof)
+    path, rad = chamfer_path(path, np.full(4, r), 0.005)
+    P, F, uv, w = tube(path, rad, 8, up=(0, 0, 1), profile=prof)
+    top = P[:, 1] > proud - 0.004
+    P[top, 1] += 0.002 * rs.uniform(-1, 1) * np.sign(P[top, 0])          # split / skewed head
     acc.add(P, F, "M_timber", uv, w)
+
+
+def peg(p, d, rng):
+    mesh = pool_mesh("peg", rng.randint(6), make_peg, 28)
+    place_instance(mesh, "peg", R_y_to(d) @ rotx(0) @ np.eye(3), p)
+
+
+def make_nail_head(acc, k):
+    """forged nail head (pool variant), local +Y out of the iron, base at y=0."""
+    rs = np.random.RandomState(6200 + k)
+    rd = rs.uniform(0.0085, 0.0105)
+    prof = [(0.0, -0.004), (rd * 0.9, -0.004), (rd, 0.0), (rd, 0.0015), (rd * 0.66, 0.0042), (0.0, 0.0054)]
+    V, F, uv, w = lathe(prof, 8, rfunc=lambda t, z: 1 + 0.08 * np.sin(2 * t + k))
+    acc.add(np.stack([V[:, 0], V[:, 2], V[:, 1]], -1), [f[:, ::-1] for f in F], "M_iron")
+
+
+def make_clench(acc, k):
+    rs = np.random.RandomState(6300 + k)
+    V, F = rbox((0.004 * rs.uniform(0.9, 1.1), 0.003, 0.0045), 0.0012)
+    V[:, 2] += V[:, 1] * rs.uniform(-0.3, 0.3)
+    acc.add(V, F, "M_iron")
 
 
 def build_door(coll):
@@ -2610,44 +2644,48 @@ def build_door(coll):
     rng = np.random.RandomState(1212)
     yc = FRONT_Y + 0.11                       # frame centre plane
     POST_BASE = 0.355
+    RV = np.array([[0.0, 1, 0], [0, 0, 1], [1, 0, 0]])        # local X -> world Z (vertical member)
     for side in (-1, 1):
         x = side * 1.02
-        # pad stone under each door post
-        P, F = rock(np.array([0.27, 0.25, 0.22]), rng, round_r=0.03, facets=(4, 6), segs=(7, 7, 6), warp=0.08,
-                    amp=0.009, freq=3.0, flat_top=0.20, flat_bot=-0.2, face_bias=(0, -1, 0), bias_p=0.4,
-                    batter=0.03)
-        thr.add(xf(P, rotz(side * 0.2 + rng.uniform(-0.1, 0.1)), (side * 1.04, -3.62, POST_BASE - 0.20)), F, "M_stone")
-        # door posts (heavier, squared)
-        RV = np.array([[0.0, 1, 0], [0, 0, 1], [1, 0, 0]])        # local X -> world Z (vertical member)
-        wane_c = (3, 0) if side > 0 else (2, 1)                    # front-outer + back-outer arrises
+        # pad stone under each door post: rough boulder, irregular plan, flat bed for the post
+        V, F = shell_stone(0.25, 0.20, rng, "pad", 0.30, rr=(0.02, 0.045), dome=0.004, tilt=0.01, n_frac=2,
+                           frac_depth=(0.02, 0.05), n_th=48, noise=0.006, freq=5.0, side_bulge=0.03,
+                           flat_face=0.0, face_fr=(0.0, 0.4, 0.7, 0.9))
+        V[:, 2] += POST_BASE - 0.004
+        add_shell(thr, V, F, "plan", rotz(side * 0.2 + rng.uniform(-0.1, 0.1)), (side * 1.05, -3.62, 0.0), "M_stone")
+        # door posts (heavier, squared): front & door-side faces are hero faces, back face hidden
+        wane_c = (3, 0) if side > 0 else (2, 1)
         inner_f, outer_f = (1, 3) if side > 0 else (3, 1)
         hewn_member(fr, (x, yc, (POST_BASE + HEAD_Z) / 2), ((HEAD_Z - POST_BASE) / 2, 0.12, 0.11),
-                    rotz(side * 0.006) @ RV, rng, ch=0.02, wane=wane_c, n_checks=3, check_faces=(2, 2, outer_f, inner_f),
-                    ns=9, nc=6)
+                    rotz(side * 0.006) @ RV, rng, ch=0.02, wane=wane_c, n_checks=3,
+                    check_faces=(2, 2, outer_f, inner_f), ns=9, nc=6, hero=(2, outer_f), hidden=(0,))
         # inner jambs on the sill
         xj = side * 0.60
         hewn_member(fr, (xj, yc, (SILL_TOP + HEAD_Z) / 2), ((HEAD_Z - SILL_TOP) / 2, 0.10, 0.11),
                     rotz(side * 0.004) @ roty(side * 0.003) @ RV, rng, ch=0.018, wane=(2 if side > 0 else 3,),
-                    n_checks=2, check_faces=(2, inner_f), ns=8, nc=6)
+                    n_checks=2, check_faces=(2, inner_f), ns=8, nc=6, hero=(2, inner_f), hidden=(0,))
         # sole rail under the side panel, resting on the sill end
         hewn_member(fr, (side * 0.805, yc, (SILL_TOP + 0.405) / 2), (0.115, 0.075, (0.405 - SILL_TOP) / 2),
-                    np.eye(3), rng, ch=0.015, ns=6, nc=5, ds=0.015)
-        # return tie beam from the door post to the wall post
+                    np.eye(3), rng, ch=0.015, ns=6, nc=5, ds=0.015, hidden=(3,))
+        # return tie beam from the door post to the wall post (top under the roof, inner face hidden)
         wp = az_pt(WALL_POST_AZ_DOOR * side, R_WALL, 0)
         p0 = np.array([x, yc + 0.05, HEAD_Z + 0.11])
         p1 = np.array([wp[0], wp[1], HEAD_Z + 0.11])
         L = float(np.linalg.norm(p1 - p0))
         R = frame_R(p1 - p0, (0, 0, 1))
-        hewn_member(fr, (p0 + p1) / 2, (L / 2 + 0.1, 0.08, 0.10), R, rng, ch=0.02, wane=(0,), end_checks=1,
-                    sag=0.004, ns=6, nc=6)
-        # pegs: lintel -> door post and jamb tenons, sill tenons
+        mid = (p0 + p1) / 2
+        inner_side = 3 if float(np.dot(R[:, 1], -mid)) > 0 else 1
+        hewn_member(fr, mid, (L / 2 + 0.1, 0.08, 0.10), R, rng, ch=0.02, wane=(0,), end_checks=1,
+                    sag=0.004, ns=6, nc=6, hidden=(0, inner_side))
         for (px, pz, fy) in ((x - side * 0.03, HEAD_Z + 0.06, FRONT_Y - 0.009), (x + side * 0.045, HEAD_Z + 0.15, FRONT_Y - 0.009),
                              (xj, HEAD_Z + 0.07, FRONT_Y - 0.009), (xj - side * 0.03, SILL_TOP + 0.05, FRONT_Y + 0.004)):
-            peg(fr, np.array([px, fy, pz]), (0, -1, 0), rng)
-        peg(fr, p1 - R[:, 0] * 0.06 + np.array([0, 0, 0.10]), (0, 0, 1), rng)
-    # lintel on the door posts (front face slightly proud), slight sag
+            peg(np.array([px, fy, pz]), (0, -1, 0), rng)
+        pe = p1 - R[:, 0] * 0.12
+        peg(pe + R[:, 1] * (0.08 if inner_side == 1 else -0.08) * 1.0, R[:, 1] * (1 if inner_side == 1 else -1), rng)
+    # lintel on the door posts (front face proud), slight sag; top + back hidden
     hewn_member(fr, (0.0, yc - 0.008, HEAD_Z + 0.11), (1.15, 0.115, 0.11), np.eye(3), rng, ch=0.022,
-                wane=(1,), n_checks=2, check_faces=(1,), end_checks=2, sag=0.008, ns=9, nc=6)
+                wane=(1,), n_checks=2, check_faces=(1,), end_checks=2, sag=0.008, ns=9, nc=6,
+                hero=(1, 2), hidden=(0, 3))
     # infill above the lintel up to the rafters: short vertical boards
     xx = -1.05
     k = 0
@@ -2664,78 +2702,71 @@ def build_door(coll):
                        rotz(rng.uniform(-0.01, 0.01)), ch=0.006, segs=(1, 1, 2), seed=40 + k)
         xx += bw
         k += 1
-    # threshold stone + worn timber sill
-    P, F = rock(np.array([0.95, 0.30, 0.075]), rng, round_r=0.02, facets=(3, 5), segs=(14, 5, 3), warp=0.04,
-                amp=0.006, freq=2.5, flat_top=0.06, chips=4, face_bias=(0, -1, 0), bias_p=0.5)
-    thr.add(xf(P, rotz(0.01), (0.0, FRONT_Y + 0.12, 0.09 - 0.06)), F, "M_stone")
-    V, F = rbox((0.92, 0.13, (SILL_TOP - 0.09) / 2), 0.02, (14, 3, 1))
-    top = V[:, 2] > 0
-    V[top, 2] -= 0.018 * np.exp(-(V[top, 0] / 0.30) ** 2) * (0.55 + 0.45 * (V[top, 1] < 0))
-    V[:, 2] += 0.003 * np.sin(V[:, 0] * 9.0)
-    V = xf(V, None, (0.0, yc, (SILL_TOP + 0.09) / 2))
-    thr.add(V, F, "M_timber")
-    # big flat step stone (top ~0.09)
-    # big flat step stone: split slab with a flat, wear-dished top, chipped arrises, foot buried
-    hs = np.array([0.64, 0.37, 0.07])
-    rs_step = np.random.RandomState(1314)
-    P, F = rock(hs, rs_step, round_r=0.022, facets=(5, 7), segs=(16, 10, 3), warp=0.03, amp=0.004, freq=3.0,
-                chips=6, flat_top=hs[2] - 0.012, flat_bot=-hs[2] + 0.01, fillet=0.014, nz_w=0.12)
-    rq = (P[:, 0] / hs[0]) ** 2 + (P[:, 1] / hs[1]) ** 2
-    top_ = P[:, 2] > hs[2] * 0.4
-    P[top_, 2] -= 0.008 * np.clip(1 - rq[top_] * 1.1, 0, 1) ** 0.8
-    P = xf(P, rotz(0.05))
-    thr.add(P + [STEP_C[0], STEP_C[1], 0.095 - float(P[:, 2].max())], F, "M_stone")
-    # stepping-stone path: irregular flags laid one or two abreast, ~2.5 m out from the step
-    ys = -4.50
-    k = 0
-    n_flags = 0
-    while ys > -6.15:
-        ly = rng.uniform(0.15, 0.21)
-        two = rng.rand() < 0.75
-        xc = 0.08 * math.sin(k * 1.7) + rng.uniform(-0.12, 0.12)
-        if two:
-            lxa, lxb = rng.uniform(0.2, 0.3), rng.uniform(0.18, 0.28)
-            gap = rng.uniform(0.04, 0.09)
-            xs_ = [(xc - gap / 2 - lxa, lxa), (xc + gap / 2 + lxb, lxb)]
-        else:
-            lx = rng.uniform(0.28, 0.42)
-            xs_ = [(xc + rng.uniform(-0.1, 0.1), lx)]
-        for (xo, lx) in xs_:
-            lyy = ly * rng.uniform(0.85, 1.1)
-            yo = ys - ly + rng.uniform(-0.04, 0.04)
-            P, F = flagstone(lx, lyy, 0.10, rng)
-            topz = rng.uniform(0.006, 0.02) + max(float(apron_height(np.array([xo]), np.array([yo]))[0]), Z_MIN)   # bedded
-            thr.add(xf(P, rotz(rng.uniform(-0.35, 0.35)) @ rotx(rng.uniform(-0.012, 0.012)), (xo, yo, topz)), F, "M_stone")
-            n_flags += 1
-        ys -= 2 * ly + rng.uniform(0.04, 0.09)
-        k += 1
-    log("path flags:", n_flags)
-    # ---------------- door leaf: 6 boards + 2 ledges + brace, hung on the +X jamb, open 75 deg inward
-    # local frame: origin on the pintle axis, boards toward -x, outer face at y=+0.0065, inner toward +y
+    # threshold stone (front lip visible between the sill and the step stone)
+    V, F = shell_stone(0.98, 0.17, rng, "pad", 0.12, rr=(0.012, 0.03), dome=0.003, tilt=0.01, n_frac=2,
+                       frac_depth=(0.01, 0.03), n_th=56, noise=0.004, freq=4.0, side_bulge=0.01, flat_face=0.0)
+    V[:, 2] += 0.088
+    add_shell(thr, V, F, "plan", rotz(0.012), (0.0, FRONT_Y + 0.06, 0.0), "M_stone")
+
+    # worn timber sill: hewn, with a 2.2 cm trodden dip over the middle 0.6 m, a worn outer arris
+    # and end checks; underside (on the stone) and inner face hidden
+    sh = (SILL_TOP - 0.09) / 2
+
+    def sill_wear(V):
+        x = V[:, 0]
+        dip = np.exp(-np.abs(x / 0.36) ** 3.2)
+        top = smoothstep(-0.2 * sh, sh, V[:, 2])
+        V[:, 2] -= 0.022 * dip * top * (0.75 + 0.25 * smoothstep(0.13, -0.13, V[:, 1]))
+        front = smoothstep(-0.13 + 0.06, -0.13, V[:, 1]) * smoothstep(sh - 0.05, sh, V[:, 2] + 0.022 * dip)
+        V[:, 2] -= 0.012 * (0.4 + 0.6 * dip) * front
+        V[:, 1] += 0.008 * (0.4 + 0.6 * dip) * front
+        return V
+    hewn_member(thr, (0.0, yc, (SILL_TOP + 0.09) / 2), (0.92, 0.13, sh), np.eye(3), rng, ch=0.015,
+                end_checks=2, n_checks=1, check_faces=(0,), ns=8, nc=5, hero=(0, 1), hidden=(2, 3),
+                deform=sill_wear, mat="M_timber")
+
+    # ---------------- door leaf: 6 boards (16-30 cm) + 2 ledges + brace, open 75 deg inward
     LY = 0.024
     pivot = np.array([0.555, -3.50 - 0.0065 + 0.0015, 0.0])
     Rl = rotz(math.radians(-75.0))
     parts = []
-    widths = rng.uniform(0.16, 0.20, 6)
-    widths = widths / widths.sum() * (1.06 - 5 * 0.007)
+    for _ in range(200):
+        widths = rng.uniform(0.155, 0.30, 6)
+        widths = widths / widths.sum() * (1.06 - 5 * 0.009)
+        if widths.min() >= 0.155 and widths.max() <= 0.30:
+            break
     x = 0.02
     h0, h1 = SILL_TOP + 0.012, HEAD_Z + 0.035
+    cup_b = set(rng.choice(6, 2, replace=False).tolist())
+    edge_fns = [(rng.uniform(0, 100), rng.uniform(0, 100)) for _ in range(6)]
     for b in range(6):
         bw = widths[b]
         cx = -(x + bw / 2)
-        V, F = rbox((bw / 2, 0.0175, (h1 - h0) / 2), 0.006, (2, 1, 10))
-        V[:, 0] += 0.002 * np.sin(V[:, 2] * 3 + b)
-        V[:, 1] += 0.003 * np.sin(V[:, 2] * 1.7 + b * 2) * (V[:, 0] / bw)
-        V = V + [cx, LY, (h0 + h1) / 2 + rng.uniform(-0.006, 0.006)]
+        V, F = rbox((bw / 2, 0.0175, (h1 - h0) / 2), 0.006, (4, 1, 14))
+        zl = V[:, 2] / ((h1 - h0) / 2)
+        # gaps 0.5-1.5 cm varying along the length: each edge wanders +-3 mm
+        ea, eb = edge_fns[b]
+        right = V[:, 0] > 0
+        wl = 0.003 * n2(zl * 1.6, np.full(len(V), ea), 1500 + b)
+        wr = 0.003 * n2(zl * 1.6, np.full(len(V), eb), 1600 + b)
+        V[:, 0] += np.where(right, wr, wl) * np.clip(np.abs(V[:, 0]) / (bw / 2), 0, 1)
+        # uneven board ends +-1 cm
+        top_off = rng.uniform(-0.01, 0.01) + V[:, 0] * rng.uniform(-0.03, 0.03)
+        bot_off = rng.uniform(-0.008, 0.004)
+        V[:, 2] += np.where(zl > 0, top_off * (zl > 0.9), bot_off * (zl < -0.9))
+        if b in cup_b:                      # cupped board: edges lift 3-5 mm on the outer face
+            V[:, 1] -= rng.uniform(0.003, 0.005) * (2 * V[:, 0] / bw) ** 2
+        V[:, 1] += 0.002 * np.sin(V[:, 2] * 1.7 + b * 2) * (V[:, 0] / bw)
+        V = V + [cx, LY, (h0 + h1) / 2]
         parts.append((V, F, "M_timber"))
-        x += bw + 0.007
-    W = x - 0.007 - 0.02
-    for zl in (h0 + 0.32, h1 - 0.34):
+        x += bw + 0.009
+    W = x - 0.009 - 0.02
+    clench = []
+    for zl_ in (h0 + 0.32, h1 - 0.34):
         V, F = rbox((W / 2 - 0.04, 0.016, 0.075), 0.01, (4, 1, 1))
-        parts.append((V + [-0.02 - W / 2, LY + 0.0175 + 0.016, zl], F, "M_timber"))
-        for xn in np.linspace(-0.1, -W + 0.06, 6):      # clenched nail tips through the ledges
-            Vn, Fn = rbox((0.004, 0.003, 0.004), 0.0012)
-            parts.append((Vn + [xn, LY + 0.0175 + 0.032 + 0.003, zl + 0.03], Fn, "M_iron"))
+        parts.append((V + [-0.02 - W / 2, LY + 0.0175 + 0.016, zl_], F, "M_timber"))
+        for xn in np.linspace(-0.1, -W + 0.06, 6):
+            clench.append(np.array([xn, LY + 0.0175 + 0.032 + 0.003, zl_ + 0.03]))
     za_, zb_ = h0 + 0.32 + 0.06, h1 - 0.34 - 0.06
     p0 = np.array([-0.1, 0.0, za_])
     p1 = np.array([-W + 0.06, 0.0, zb_])
@@ -2744,34 +2775,43 @@ def build_door(coll):
     V, F = rbox((L / 2 - 0.02, 0.065, 0.016), 0.01, (4, 1, 1))
     V = xf(V, Rb, (p0 + p1) / 2 + [0, LY + 0.0175 + 0.016, 0])
     parts.append((V, F, "M_timber"))
-    # wooden latch bar + guide staple on the inner face near the free edge
     V, F = rbox((0.24, 0.016, 0.022), 0.006, (3, 1, 1))
     parts.append((V + [-W + 0.10, LY + 0.0175 + 0.05, 1.12], F, "M_timber"))
     V, F = rbox((0.03, 0.014, 0.04), 0.005)
     parts.append((V + [-W + 0.28, LY + 0.0175 + 0.014, 1.12], F, "M_timber"))
     for V, F, m in parts:
-        (iron if m == "M_iron" else leaf).add(xf(V, Rl, pivot), F, m)
+        leaf.add(xf(V, Rl, pivot), F, m)
+    for c_ in clench:
+        place_instance(pool_mesh("clench_nail", rng.randint(3), make_clench), "door_clench_nail", Rl,
+                       pivot + Rl @ c_)
     face_y = LY - 0.0175                 # outer face
-    for zh in (h0 + 0.30, h1 - 0.30):
+
+    def make_strap(acc_, k):
         Ls = 0.80
         outline = [(0.0, -0.026), (-Ls + 0.10, -0.023), (-Ls + 0.055, -0.038), (-Ls, 0.0),
                    (-Ls + 0.055, 0.038), (-Ls + 0.10, 0.023), (0.0, 0.026)]
         V, faces = prism(outline[::-1], 0.007)
-        V = np.stack([V[:, 0], face_y - V[:, 2], V[:, 1] + zh], -1)
-        iron.add(xf(V, Rl, pivot), faces, "M_iron", smooth=False)
-        # knuckle wrapped round the pintle
-        Pk, Fk, uvk, wk = tube(np.linspace([0, 0, zh - 0.03], [0, 0, zh + 0.03], 3), 0.014, 12, up=(1, 0, 0))
-        iron.add(xf(Pk, Rl, pivot), Fk, "M_iron", uvk, wk)
-        # pintle pin + square shank driven into the jamb back face
-        Pp, Fp, uvp, wpp = tube(np.linspace([0, 0, zh - 0.05], [0, 0, zh + 0.045], 3), 0.0075, 8, up=(1, 0, 0))
-        iron.add(Pp + pivot, Fp, "M_iron", uvp, wpp)
+        V = np.stack([V[:, 0], -V[:, 2], V[:, 1]], -1)
+        acc_.add(V, faces, "M_iron", smooth=False)
+
+    def make_knuckle(acc_, k):
+        Pk, Fk, uvk, wk = tube(np.linspace([0, 0, -0.03], [0, 0, 0.03], 3), 0.014, 12, up=(1, 0, 0))
+        acc_.add(Pk, Fk, "M_iron", uvk, wk)
+
+    def make_pintle(acc_, k):
+        Pp, Fp, uvp, wpp = tube(np.linspace([0, 0, -0.05], [0, 0, 0.045], 3), 0.0075, 8, up=(1, 0, 0))
+        acc_.add(Pp, Fp, "M_iron", uvp, wpp)
         V, F = rbox((0.009, 0.035, 0.009), 0.002)
-        iron.add(V + pivot + [0.0, -0.03, zh - 0.05], F, "M_iron")
+        acc_.add(V + [0.0, -0.03, -0.05], F, "M_iron")
+
+    for zh in (h0 + 0.30, h1 - 0.30):
+        place_instance(pool_mesh("hinge_strap", 0, make_strap), "door_hinge_strap", Rl, pivot + Rl @ np.array([0, face_y, zh]))
+        place_instance(pool_mesh("hinge_knuckle", 0, make_knuckle), "door_hinge_knuckle", Rl, pivot + Rl @ np.array([0, 0, zh]))
+        place_instance(pool_mesh("hinge_pintle", 0, make_pintle), "door_hinge_pintle", None, pivot + np.array([0, 0, zh]))
         for xn in (-0.07, -0.22, -0.38, -0.54, -0.68):
-            prof = [(0.0, 0.0), (0.009, 0.0), (0.009, 0.0018), (0.006, 0.0042), (0.0, 0.0052)]
-            Vn, Fn, uvn, wn = lathe(prof, 8)
-            Vn = np.stack([Vn[:, 0] + xn, face_y - 0.007 - Vn[:, 2], Vn[:, 1] + zh], -1)
-            iron.add(xf(Vn, Rl, pivot), Fn, "M_iron")
+            Rn = Rl @ np.array([[1.0, 0, 0], [0, -1, 0], [0, 0, -1]])      # head points out of the face (-y)
+            place_instance(pool_mesh("nail_head", rng.randint(3), make_nail_head), "door_nail",
+                           Rn @ rotz(0), pivot + Rl @ np.array([xn, face_y - 0.007, zh]))
     # ring pull with rose plate near the free edge
     plate = [(0.035 * math.cos(a), 0.035 * math.sin(a)) for a in np.linspace(0, 2 * np.pi, 13)[:-1]]
     V, faces = prism(plate, 0.005)
