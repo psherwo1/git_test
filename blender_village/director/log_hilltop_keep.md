@@ -898,3 +898,153 @@ All additive: new modules (`geom.py` and the components above); appended functio
 - Round-6 must-fixes 1 (roll-end shards at the turret), 5 (ridge comb density) and 6 (cushion upper course) are not addressed in this migration round; 2 (dressed blocks) and 3 (footing) are only partly helped by the note-11 drops; 4 (straw relief) is superseded by note 11.
 - The chunky cap hip boards bed on the butt peaks, so a 2-3 cm shadow gap shows under them between the courses at close range.
 - The variant's hidden share is 14.9 %, close to the 15 % limit.
+
+## Round 7 — score 8.3/10
+
+**Reviewed:** `renders/hilltop_keep/round_07/`: all 6 views (hero, front, side, back, aerial, actor_closeup), `stats.json` and `hidden.json`; the 7 builder close-ups in `round_07/builder_checks/`; the kit-variant 6-view set in `round_07/kit_variant/`; and 12 Director close-ups at 12 spp in `round_07/director_extra/`:
+- thatch_eye, thatch_north, wing_west_sw, wing_west_nw, ridge_comb, cushion
+- hinge_graze, footing_sw, wing_door, eave_under, lantern_mid, soot_ne_window
+
+Compared side by side with round 6 (the signed-off build) and with ref1 crops keep_overall, keep_cone_lantern_cap and keep_west_wing_turret.
+
+The Director also audited the `.blend`. `DECAL_ANCHORS` holds 104 empties, all with the 6 required custom properties, and `decal_anchors.json` matches them exactly (positions within 0.01 mm, normals and up vectors identical). Every anchor was ray-snapped against the evaluated scene to measure its offset from the surface, how well it lines up with the surface normal, and whether it faces outward.
+
+Rulings:
+- Producer note 11 applies. Lost straw striation, timber checks under 2 cm and dressed tooling are **not** penalised.
+- Ground dressing is not scored (producer note 10).
+
+**Stats:**
+- 282 objects, 1,123,849 tris (75 % of budget), est_hidden_pct 14.1 % (pass).
+- 11 slots, all from the palette (pass). `mask_attribute_missing` is empty (pass).
+- bbox 16.41 × 10.60 × 14.05 m, unchanged from the signed-off build. The finial tip is at 14.00 m.
+- 104 decal anchors (inside the 40–120 target).
+
+**Verdict: PASS (8.3, pass mark 8.2). The kit migration is faithful but brings no gain.**
+- **What went right:** the migration did not break the building.
+  - The silhouette, tiers, proportions and actor scale overlay round 6 in every view.
+  - Hygiene, budget, palette, Mask and hidden share all still pass.
+  - The build is a clean declarative assembly on `village_kit`, with a working variant.
+  - The ensemble item is done: both bell caps now carry the village's chunky shingles.
+- **Why it is not higher:**
+  - None of the round-6 must-fixes 1, 5 and 6 were touched. Items 2 and 3 are only partly helped by the note-11 drops.
+  - The chunky caps brought heavy rod-like hip boards that read as umbrella ribs at 30 m.
+  - The thatch eave roll is now a smooth fondant sausage right over the wing door at actor eye level.
+  - 8 of the 104 decal anchors are wrong: floating, buried, flipped, misoriented, interior or duplicated. That breaks producer note 11's "physically plausible placement" rule.
+- **Deliverable:** the migrated keep may replace `signoff_phase1/` as the kit-phase deliverable. The decal-anchor fixes (must-fix 1) are required next round.
+
+| Axis | Score |
+|---|---|
+| Silhouette | 8.5 (unchanged massing; cap hip ribs over-read in hero/front; cushion brim; sparse ridge crest) |
+| Proportion and scale | 9 |
+| Construction | 8.5 (W roll-end fillet shards persist; thatch slit and notch row) |
+| Detail and craft | 8.2 (fondant eave roll and regular sawtooth butts; soap-block dressed stone; kerb-box footing; rod hip boards) |
+| Age | 8.5 |
+| Technical | 8.6 (every producer-note metric passes; 8 defective decal anchors) |
+| **Overall** | **8.3** |
+
+**Strengths:**
+- **Faithful refactor.**
+  - Before note 11 was switched on, 52 of 55 unique meshes were vertex-identical to phase 1.
+  - The build is deterministic: 0 of 388 objects differ across two builds, and `decal_anchors.json` is byte-identical.
+  - The bbox and the finial tip at 14.00 m are unchanged.
+- **Producer notes:**
+  - 14.1 % hidden, 11 palette slots, Mask on every mesh, 0 needle and 0 zero-area faces.
+  - 25 pooled meshes with 231 linked duplicates.
+  - The note-11 savings are real: 173k tris dropped, mostly straw striation.
+- **Kit structure:** each component is `component(g, ..., seed)` with its own named objects, under one `KitParams` table. The variant (shorter wing, 52° thatch, 0.8× turret, cone top at 8.9 m) assembles cleanly with no visible seam errors in its 6 views.
+- **Shared shingle system:**
+  - Lantern cap: 167 units. Turret cap: 118 units.
+  - Units are 0.35–0.55 m wide with 3.4–4.2 cm butts and curled, slipped and missing units, matching the hut.
+  - The courses now read horizontally (lantern_mid), and the lead hats sit over the shingles with no poke-through.
+- **Decal anchors (mostly good).**
+  - 96 of 104 sit within 1–2.5 cm of the surface with normal alignment ≥ 0.9.
+  - The types are placed plausibly:
+    - rust_stain under every hinge terminal, pintle and ring pull;
+    - crack at the arch springing and crown, window corners and lintel ends;
+    - water_streak under sills, the lantern drip line and the cushion lip;
+    - lichen on sills, threshold, cone ledges and cushion faces;
+    - damp_rise all round the base, with probability 1.0 on north faces.
+  - Leaving out plaster_patch is correct: the keep has no rendered walls.
+- **Entrance, eave underside, cone masonry and collar comb** are as good as at sign-off (actor_closeup, eave_under, collar_comb).
+
+### Must-fix (priority order)
+
+1. **Decal anchors that break producer note 11's plausibility rule** (`oct_building_decals`; `DECAL_ANCHORS` + `decal_anchors.json`). Positions are building-local metres. "Into" means the empty's −Z.
+   - **`DA_soot_004` (2.80, 3.08, 2.46), floating.** Into is (−0.16, −0.16, +0.97), pointing up into nothing; there is no surface within 0.7 m (soot_ne_window). Put it on the NE facet stone face 0.10–0.30 m above the window lintel, into = (−0.71, −0.74, 0), ≤ 1 cm off the face.
+   - **`DA_damp_rise_018` (−1.90, −0.65, 0.26), interior.** It sits on `KEEP_hall_interior`, about 3.4 m inside the hall and invisible from every exterior and doorway camera. Delete it. Anchors must never land on interior or blocker surfaces.
+   - **`DA_crack_011` (−0.24, −3.92, 3.45), flipped.** Into is (0, 0, −1), but the face it hits points down (alignment −1.0). Move this plate-check crack onto the plate's outer vertical face on the S facet, into = (0, +1, 0) at z 3.55–3.65.
+   - **`DA_crack_008` (−7.92, 0.42, 1.10), misoriented.** Into is (−0.09, 0.29, −0.95), almost straight down. It is buried 7 cm, with alignment 0.40. It should match its twin `DA_crack_009`: into = (0, +1, 0) on the wing S wall face at y ≈ 0.40.
+   - **`DA_damp_rise_019` (−8.97, 5.13, 0.35) and `DA_damp_rise_020` (−10.61, 3.89, 0.35), misoriented.** These are north-side turret-foot anchors.
+     - Their normals are 56° and 76° off the radial normal from the turret centre (−8.55, 2.70), with alignment 0.47 and 0.16.
+     - 020 is also buried 10 cm.
+     - Fix: normal = radial, offset ≤ 1 cm.
+   - **`DA_moss_001` (3.57, 2.16, 0.23), buried 23 cm.** It is inside the NE footing (the hit face is perpendicular, alignment 0.06). Move it onto the top face of an N/NE footing stone, into = (0, 0, −1), ≤ 1 cm above the stone.
+   - **`DA_damp_rise_007` (3.41, −2.28, 0.24), buried 12 cm** behind a projecting footing face. Snap it to the face.
+   - **`DA_damp_rise_005` duplicates `DA_damp_rise_004`** at 2.7 cm spacing. Delete one.
+   - **Generator rule (kit-wide):** ray-snap every anchor to the first visible exterior surface along its normal, then:
+     - reject it if |offset| > 1.5 cm, if alignment with the surface normal is < 0.85, or if the hit object is an interior or blocker;
+     - drop a same-type anchor within 0.3 m of another.
+   - **Add:** 6–10 `moss` anchors on `M_thatch` (the N slope and the eave roll; ref1's wing thatch is the mossiest surface on the keep) and 2–3 on the cushion top (ref1's "mossy rounded ring"). The count stays inside 40–120.
+2. **Torn fillet shards and thatch tongues at both W eave-roll ends (round-6 must-fix 1, untouched).**
+   - **Where:**
+     - SW: stacked `KEEP_wing_fillet` plates standing out of the roll at about (−10.43, 1.55, 3.0) (wing_west_sw x 320–420 / y 280–500; builder_checks/wing_west_end x 100–200 / y 290–560).
+     - NW: a 0.3 m leaning plate at about (−10.46, 3.84, 2.96) (wing_west_nw x 790–900 / y 310–530).
+     - A ragged vertical thatch tongue at about (−10.16, 4.95, 2.97) (wing_west_nw x 400–520 / y 380–620).
+   - **Fix:**
+     - The fillet is one continuous flaunching band 4–8 cm thick that follows the thatch/turret intersection. No plate may stand more than 3 cm proud of the thatch surface.
+     - Each roll end tapers over 0.4–0.6 m into it with a closed, rounded cap.
+     - Course and roll tongues feather to zero thickness.
+     - No dark pixel may remain at either junction in wing_west_sw, wing_west_nw or builder_checks/wing_west_end.
+3. **Bell-cap hip boards read as rods or umbrella ribs** (`KEEP_cap_*` and `KEEP_turret_cap_*` hip boards; see builder_checks/lantern_cap.png, turret_cap.png, director_extra/lantern_mid.png, and hero/front at 30 m).
+   - **What is wrong:**
+     - Each hip carries 2–4 parallel round-section strips. On the left hips of lantern_cap they splay apart.
+     - The strips sit on the butt peaks with a 2–3 cm shadow gap, so they stand 6–10 cm proud.
+     - ref1 (keep_cone_lantern_cap) shows flush, quiet hip lines.
+   - **Fix:**
+     - Exactly one saddle pair per hip: flat boards 14–18 cm wide and 2.5–3.5 cm thick, rectangular section with 1 cm chamfers.
+     - Bed them on a tapered packing strip so the gap under the board is ≤ 1 cm, and keep them ≤ 5 cm proud of the shingle face.
+     - Delete every extra strip.
+4. **Thatch eave roll and course butts read as fondant and a CG sawtooth at actor distance** (`KEEP_wing_roof_thatch`, `KEEP_wing_roof_thatch_courses`; see director_extra/thatch_eye.png, thatch_north.png, builder_checks/thatch_s.png). Relief ≥ 2 cm is geometry under note 11, so this is in scope.
+   - **(a) Eave roll** (e.g. (−6.5, −0.19, 2.4), directly above the wing door at actor eye level). It is a smooth 0.5 m sausage; the claimed 2–3 cm bundle constrictions do not read.
+     - Bind it into bundles 0.25–0.40 m long, with constrictions 3–4 cm deep.
+     - Give each bundle a crown varying ±2–3 cm, and vary the roll diameter ±4 cm along its length.
+   - **(b) Course butts** are a regular constant-pitch zigzag.
+     - Clumps 10–25 cm wide (randomised, no constant pitch), crowned 2.5–4 cm.
+     - The butt line wanders ±3–5 cm, and 10–15 % of clumps are slipped 4–8 cm lower.
+   - **(c) Eave fringe** is still a row of eyelash pins (thatch_eye y 435–465). This carries round-6 item 4(c): use 4–10 cm tufts of 3–8 strands, 1.5–3 cm thick at the root, with 2–8 cm gaps and tips drooping 10–30°.
+   - **(d) Holes.**
+     - Close the dark slit at (−6.25, 0.26, 3.39) (thatch_eye x 715 / y 185–205).
+     - Close the row of dark notches at the course end at (−5.95, 0.03, 3.06) (thatch_eye x 730–920 / y 240–265).
+5. **Dressed stone still reads as soap blocks (round-6 must-fix 2, without the tooling part, which note 11 now moves to materials)** (`KEEP_hall_dressed_stones`; e.g. the right-jamb block at (1.08, −4.03, 1.27); see director_extra/hinge_graze.png x 890–1280, builder_checks/door.png).
+   - **What is wrong:** 3–4 cm round-overs on every arris, domed faces and no spalls.
+   - **Fix:**
+     - Faces flat with a dome ≤ 3 mm.
+     - A true 45° chamfer of 1.0–1.5 cm with split normals.
+     - 1–3 arris spalls of 2–5 cm on each of the 6 lowest blocks per jamb. These sit in the note-11 entrance zone, so relief of 1 cm or more must stay as geometry.
+6. **The footing now reads as flat-faced kerb boxes** (footing course in `KEEP_hall_wall_stones`, e.g. (−2.99, −2.93, 0.16); see director_extra/footing_sw.png).
+   - **What is wrong:** dropping the lumps cured the sandbag look but left 0.5–0.7 m blocks with single planar faces, parallel to the wall line.
+   - **Fix:**
+     - 2–3 planar split facets per exposed face, with 2–4 cm steps between them.
+     - Each face yawed ±5–10° off the wall line.
+     - 1–2 top-arris spalls of 3–6 cm per stone.
+     - Heights varying 0.25–0.45 m.
+7. **The wing ridge comb is still thin and sparse (round-6 must-fix 5, untouched)** (`KEEP_wing_ridge_comb`; see director_extra/ridge_comb.png).
+   - Spacing 0.08–0.15 m.
+   - Visible height 0.18–0.35 m.
+   - Shakes 6–10 cm wide and 3–5 cm thick, with about 70 % paired in V or X tufts.
+   - The rider log gets ±2 cm wobble and pegs every 0.6–0.9 m.
+8. **The cushion upper course is still a brim of flat slabs (round-6 must-fix 6, untouched)** (`KEEP_turret_corbel_collar`, e.g. (−9.65, 1.74, 6.39); see director_extra/cushion.png).
+   - On at least 70 % of the upper stones, crown the top by 3–6 cm and round the outer top arris over 6–10 cm.
+   - Delete any fragment under 4 cm thick at the ridge junction.
+
+**Nice-to-have:**
+- **Turret drum boards** show pure-black slits between boards at about (−9.36, 1.98, 6.67) (cushion.png x 435 / 550 / 650). Put a dark backing face behind the board belt, or close the gaps to 0.5–1.5 cm in front of a solid core.
+- **Course count on the lantern cap.** It now has about 7 courses from eave to apex against about 12 in ref1. Keep the chunky 0.35–0.55 m widths, but consider a cap-specific exposure of 0.24–0.28 m so the cap reads closer to ref1.
+- **Mixed normals.** `DA_moss_007` and `DA_crack_011` hit reversed faces on `KEEP_roof_skirt_boards` and `KEEP_hall_eave_plate`. Recalculate the normals on those open shells.
+- **Kit.** Pass the frame `g` to helpers instead of the `oct_frame.FR` module proxy (known gap). The variant's hidden share of 14.9 % leaves no margin; cull its blocker-adjacent courses to reach ≤ 14 %.
+
+**Rulings:**
+- Round-6 must-fix 4(a) and 4(b) (straw relief) are superseded by producer note 11 and closed. 4(c) and 4(d) carry into item 4 above.
+- Round-6 must-fix 2 loses its tooling clause under note 11. The arris and spall clauses remain (item 5).
+- The ensemble item for chunky cap shingles is closed. The hip-board side effect is item 3.
+- The migrated keep passes at 8.3 and may stand as the kit-phase deliverable. Must-fix 1 (decal anchors) must land next round.
