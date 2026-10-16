@@ -900,3 +900,299 @@ def make_stone(style, rng, half=None, **kw):
         segs = kw.pop("segs", (4, 4, 3))
         return fn(half, r_frac, segs, rng, **kw)
     return fn(half, rng, **kw)
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# kit 1.1.0 (hilltop keep migration): coursed-wall stones laid on a parametric wall surface
+# ---------------------------------------------------------------------------------------------------------------
+# These two styles work in SURFACE coordinates (u along the wall / course, v up the wall, w out of the wall face):
+# a wall component lays the stones out as records S (dict of per-stone arrays: sc, zc = centre in (u, v); hx, hy =
+# half sizes; f = face projection; back = side depth; r = arris; rot; zcrs = course coordinate; optional shl / shr
+# (end-joint shears), sbb / sbt (bed slopes), pillow, tiltx / tilty, cq0..cq3 / ca0..ca3 (knocked-off corners), kk /
+# kt (kinked top bed), spl (split planes), footx (field-stone footing), margin) and maps the returned local stones
+# onto its own surface (components.stone_wall.lay_stones / lay_poly_stones).
+#
+#   coursed       a WHOLE BATCH of flat-bedded rubble or dressed blocks at once (vectorised rounded boxes): coherent
+#                 joint shears shared with the neighbours, pillow, tilt, 0-4 split facets (0.6-3 cm at the arris),
+#                 arris chips; dressed=True: flat tooled faces, chips only at the corners.  Returns (P, quads):
+#                 P (M, V, 3) local (u, v, w) offsets from each stone's centre (in-plane rotation applied), quads
+#                 shared by every stone (core.geom.inst_faces).
+#   coursed_poly  ONE hero stone from its true polygonal outline (stone_outline): rounded front arris, 1-2 large
+#                 split planes, chipped arrises, low pillow; footing stones (footx) as split field stone.  Returns
+#                 (V, faces) local (u, v, w) offsets.
+#
+# Producer note 11 (min_relief, per stone for `coursed`): the face skin (value-noise undulation <= 1 cm, the mm
+# outline nibbling, dressed tooling / pick, the worn-rim dip) and every split facet / chip / footing lump shallower
+# than min_relief are NOT modelled.  The random draws are made all the same, so the stone layout and the kept
+# shape are identical with and without the rule (min_relief = 0 reproduces the phase-1 keep exactly).
+def stone_outline(S, i):
+    """CCW polygon (local u along, v up) of stone i of a stone record: sheared quadrilateral (shared joint slants /
+    bed slopes), optional big knocked-off corners (cq0..cq3: BL, BR, TR, TL) and an optional top-bed kink (kk)."""
+    def g_(k, d=0.0):
+        v = S.get(k)
+        return float(v[i]) if v is not None else d
+    hx, hy = float(S["hx"][i]), float(S["hy"][i])
+    shl, shr, sbb, sbt = g_("shl"), g_("shr"), g_("sbb"), g_("sbt")
+    C = [np.array([-hx - hy * shl, -hy - hx * sbb]), np.array([hx - hy * shr, -hy + hx * sbb]),
+         np.array([hx + hy * shr, hy + hx * sbt]), np.array([-hx + hy * shl, hy - hx * sbt])]
+    pts = []
+    for k in range(4):
+        cur, prv, nxt = C[k], C[k - 1], C[(k + 1) % 4]
+        c = g_(f"cq{k}")
+        if c > 0.004:
+            d1, d2 = prv - cur, nxt - cur
+            l1, l2 = np.linalg.norm(d1), np.linalg.norm(d2)
+            asp = g_(f"ca{k}", 1.0)
+            a = min(c * asp, 0.45 * l1)
+            b = min(c / max(asp, 0.3), 0.45 * l2)
+            pts.append(cur + d1 / l1 * a)
+            pts.append(cur + d2 / l2 * b)
+        else:
+            pts.append(cur)
+        if k == 2 and g_("kk") > 0.004:
+            t = g_("kt", 0.5)
+            q = C[2] * (1 - t) + C[3] * t
+            pts.append(q - np.array([0.0, g_("kk")]))
+    return np.array(pts)
+
+
+def coursed_batch(half, rng, S=None, rough=1.0, nxy=5, grid=None, dressed=False, wear=None, front_min=0.003,
+                  nz2=False, side_depth=None, noise_amp=0.006, min_relief=0.0):
+    """style 'coursed' (see the section comment).  `half` is unused (the sizes come from the record S); rng is a
+    numpy Generator; min_relief: scalar or per-stone array (producer note 11)."""
+    from .geom import ax4, ax5, axn, axr, fbm90, rbox_v, rot2
+    M = len(S["sc"])
+    hx, hy, f, back, r = [np.asarray(S[k], float) for k in ("hx", "hy", "f", "back", "r")]
+    r = np.minimum(r, np.minimum(hx, hy) * 0.32)
+    mr = np.broadcast_to(np.asarray(min_relief, float), (M,))[:, None]
+    keep = lambda depth: (np.asarray(depth, float) >= mr).astype(float)  # noqa: E731
+    if side_depth is not None:
+        back = np.minimum(back, side_depth)
+    if grid is not None:
+        X = axr(hx, r, grid[0])
+        Y = axr(hy, r, grid[1])
+    elif nxy == 7:
+        X = axn(-hx, hx, r, 7)
+        Y = axn(-hy, hy, r, 7)
+    else:
+        X = ax5(hx, r) if nxy == 5 else ax4(hx, r)
+        Y = ax5(hy, r) if nxy == 5 else ax4(hy, r)
+    Z = np.stack([-back, f - r, f], 1)
+    if nz2:
+        Z = np.stack([-back, f], 1)
+    P, quads = rbox_v(X, Y, Z, r, skip_back=True, round_back=False)
+    x, y, z = P[..., 0], P[..., 1], P[..., 2]
+    ux = np.clip(x / hx[:, None], -1, 1)
+    uy = np.clip(y / hy[:, None], -1, 1)
+    HX, HY = hx[:, None], hy[:, None]
+    co = rng.uniform(0, 1, (M, 12))
+    # outline: tiny end bow / bed wave only (absolute, clamped) -> joints stay tight
+    endp = (0.003 * co[:, 0:1] + 0.006 * (co[:, 1:2] - 0.5) * (uy + 1)) * rough
+    endn = (0.003 * co[:, 3:4] + 0.006 * (co[:, 4:5] - 0.5) * (uy + 1)) * rough
+    sh = np.where(ux > 0, endp, endn).clip(0, 0.006) * np.abs(ux) ** 4
+    x = x - np.sign(x) * sh
+    topw = (0.002 * co[:, 6:7] + 0.005 * (co[:, 7:8] - 0.5) * (ux + 1)) * rough
+    botw = (0.0015 * co[:, 8:9] + 0.004 * (co[:, 9:10] - 0.5) * (ux + 1)) * rough
+    shy = np.where(uy > 0, topw, botw).clip(0, 0.005) * np.abs(uy) ** 4
+    y = y - np.sign(y) * shy
+    # knocked-off corners: small (<= ~2 cm), in the face plane (the void is filled by pinning stones)
+    cc = rng.uniform(0, 1, (M, 8))
+    for ci_, (sx, sy) in enumerate(((1, 1), (1, -1), (-1, 1), (-1, -1))):
+        on = cc[:, ci_:ci_ + 1] < (0.12 if dressed else 0.35)
+        depth = np.where(on, np.minimum((0.006 + 0.016 * cc[:, 4 + ci_:5 + ci_]) * min(rough, 1.0) + 0.004,
+                                        0.3 * np.minimum(HX, HY)), 0.0)
+        ang = 0.3 + 0.4 * cc[:, 4 + ci_:5 + ci_]
+        e = (sx * x - HX) * ang + (sy * y - HY) * (1 - ang) + depth
+        e = np.maximum(e, 0.0)
+        x = x - sx * e * ang
+        y = y - sy * e * (1 - ang)
+    # broken-edge in-plane noise on the outline (mm scale: note 11 drops it)
+    on = fbm90(np.stack([x * 11.0, y * 11.0, np.broadcast_to(co[:, 11:12] * 77.0, x.shape)], -1), 2)
+    edge = np.clip(np.maximum(np.abs(ux), np.abs(uy)) - 0.6, 0, 1) * 2.5
+    ea, eb = (0.0015, 0.0012) if dressed else (0.003, 0.0025)
+    x = x - np.sign(x) * np.abs(on) * ea * rough * edge * keep(ea * rough)
+    y = y - np.sign(y) * np.abs(on) * eb * rough * edge * keep(eb * rough)
+    # coherent joint shears (neighbours share the same slanted joint / bed line)
+    shl = np.asarray(S.get("shl", np.zeros(M)), float)[:, None]
+    shr = np.asarray(S.get("shr", np.zeros(M)), float)[:, None]
+    sbb = np.asarray(S.get("sbb", np.zeros(M)), float)[:, None]
+    sbt = np.asarray(S.get("sbt", np.zeros(M)), float)[:, None]
+    x0_, y0_ = x.copy(), y.copy()
+    x = x0_ + y0_ * (shl * (1 - ux) * 0.5 + shr * (1 + ux) * 0.5)
+    y = y0_ + x0_ * (sbb * (1 - uy) * 0.5 + sbt * (1 + uy) * 0.5)
+    # face relief (front region only): pillow + tilt are the stone's shape
+    fw = np.clip((z + back[:, None] * 0.35) / (f[:, None] + back[:, None] * 0.35), 0, 1) ** 2
+    pil = np.asarray(S.get("pillow", np.full(M, 0.008)), float)[:, None]
+    tx = np.asarray(S.get("tiltx", np.zeros(M)), float)[:, None]
+    ty = np.asarray(S.get("tilty", np.zeros(M)), float)[:, None]
+    relief = pil * (1 - ux ** 2) * (1 - uy ** 2) + tx * ux + ty * uy
+    sid = np.broadcast_to(np.arange(M)[:, None] * 1.37 + co[:, 10:11] * 13.0, x.shape)
+    if dressed:
+        # flat-tooled face: sub-mm tooling undulation and pick texture (note 11: materials, not geometry)
+        und = 0.0012 * fbm90(np.stack([x * 7.0, y * 7.0, sid], -1), 2)
+        pick = np.abs(fbm90(np.stack([x * 38.0, y * 38.0, sid * 3.1], -1), 2))
+        dm = np.minimum(HX - np.abs(x0_), HY - np.abs(y0_))
+        inner = np.clip((dm - 0.015) / 0.03, 0, 1)
+        relief = relief + (und + inner * (0.0004 * pick)) * keep(0.0012)
+        facets = 0.0
+        nzv = 0.0
+    else:
+        nz = fbm90(np.stack([x * 16.0 + co[:, 11:12] * 50, y * 16.0, sid], -1), 3)
+        nz = nz + 0.6 * np.abs(fbm90(np.stack([x * 31.0, y * 31.0 + co[:, 10:11] * 40, sid * 0.52], -1), 2)) - 0.3
+        nzv = noise_amp * rough * nz * keep(noise_amp * rough)
+        # chisel / split facets: planar breaks 0.6-3 cm deep at the stone edge (kept when deep enough)
+        cr = rng.uniform(0, 1, (M, 16))
+        facets = 0.0
+        for i in range(4):
+            aa = np.cos(cr[:, i:i + 1] * 6.283)
+            bb = np.sin(cr[:, i:i + 1] * 6.283)
+            c0 = 0.2 + 0.55 * cr[:, 4 + i:5 + i]
+            dep = 0.006 + 0.024 * cr[:, 8 + i:9 + i] ** 1.2
+            dn = np.maximum(aa * ux + bb * uy - c0, 0.0) / np.maximum(1.0 - c0, 0.2)
+            facets = facets - dep * dn * rough * keep(dep * rough)
+    # arris chips: conchoidal dents on the edge (kept when at least min_relief deep)
+    nch = rng.integers(0, 3, M) if dressed else rng.integers(2, 5, M)
+    chips = np.zeros_like(x)
+    cp = rng.uniform(0, 1, (M, 4, 4))
+    for i in range(4):
+        act = (i < nch)[:, None]
+        t = cp[:, i, 0:1] * 4.0
+        side = np.floor(t).astype(int)
+        fr = t - side
+        if dressed:
+            fr = np.where(fr < 0.5, 0.0, 1.0)          # dressed work: chips only at the corners
+        ex = np.where(side == 0, -1 + 2 * fr, np.where(side == 1, 1.0, np.where(side == 2, 1 - 2 * fr, -1.0)))
+        ey = np.where(side == 0, -1.0, np.where(side == 1, -1 + 2 * fr, np.where(side == 2, 1.0, 1 - 2 * fr)))
+        px, py = ex * HX, ey * HY
+        rad = (0.015 + 0.015 * cp[:, i, 1:2]) if dressed else (0.01 + 0.02 * cp[:, i, 1:2])
+        if wear is not None:
+            rad = rad * (1 + 0.6 * np.asarray(wear, float)[:, None])
+        dep = rad * ((0.3 + 0.2 * cp[:, i, 2:3]) if dressed else (0.35 + 0.35 * cp[:, i, 2:3]))
+        act = act & (dep >= mr)
+        d = np.sqrt((x0_ - px) ** 2 + (y0_ - py) ** 2)
+        chips = np.minimum(chips, -np.where(act, dep * np.clip(1 - d / rad, 0, 1) ** 1.3, 0.0))
+    dz = relief + nzv + facets + chips
+    zf = z + fw * dz
+    zf = np.where(fw > 0.3, np.maximum(zf, front_min - (1 - fw) * 0.01), zf)      # never behind the mortar body
+    pull = np.clip(-chips, 0, 0.03) * 0.5 * fw                                    # chips nibble the outline
+    x = x - np.sign(x0_) * pull * (np.abs(ux) > 0.6)
+    y = y - np.sign(y0_) * pull * (np.abs(uy) > 0.6)
+    z = zf
+    if wear is not None:
+        # worn stones: 1.5 mm rim dip (note 11: below every threshold, materials carry it)
+        wv = np.asarray(wear, float)[:, None]
+        rim = np.clip(np.maximum(np.abs(ux), np.abs(uy)) - 0.75, 0, 1) * 4
+        z = z - fw * wv * 0.0015 * rim ** 2 * keep(0.0015)
+    rr = np.asarray(S.get("rot", np.zeros(M)), float)[:, None]
+    x, y = rot2(x, y, rr)
+    return np.stack([x, y, z], -1), quads
+
+
+def poly_rubble_stone(half, rng, S=None, i=0, rough=1.0, spacing=0.05, rings=(0.62, 0.3), noise_amp=0.006,
+                      front_min=0.003, side_depth=None, min_relief=0.0):
+    """style 'coursed_poly' (see the section comment): hero stone i of record S.  rng: numpy Generator."""
+    from .geom import fbm90, rot2, rounded_outline
+
+    def g_(k, d=0.0):
+        v = S.get(k)
+        return float(v[i]) if v is not None else d
+    keep = lambda depth: 1.0 if depth >= min_relief else 0.0  # noqa: E731
+    poly = stone_outline(S, i)
+    hx, hy = float(S["hx"][i]), float(S["hy"][i])
+    fx = g_("footx") > 0.5
+    r = float(min(S["r"][i], 0.3 * min(hx, hy), 0.02))
+    r = max(r, 0.004)
+    if fx:
+        r = float(min(0.035, 0.3 * min(hx, hy)))      # weathered field-stone shoulder, not a sawn arris
+    f = float(S["f"][i])
+    back = float(S["back"][i]) if side_depth is None else min(float(S["back"][i]), side_depth)
+    nspl = int(g_("spl"))
+    sd = rng.uniform(0, 100)
+    planes = []
+    th0 = rng.uniform(0, 2 * np.pi)
+    for ip in range(nspl):
+        # one dominant split plane over 40-70 % of the face; an optional smaller facet that never opposes it
+        th = th0 if ip == 0 else th0 + rng.choice([-1, 1]) * rng.uniform(0.35, 1.2)
+        dvec = np.array([math.cos(th), math.sin(th)])
+        ext = np.abs(poly @ dvec).max()
+        c0 = (rng.uniform(-0.25, 0.25) if ip == 0 else rng.uniform(0.3, 0.6)) * ext
+        ang = rng.uniform(5.0, 12.0) if ip == 0 else rng.uniform(8.0, 15.0)
+        if fx:
+            ang = rng.uniform(13.0, 22.0)
+        planes.append((dvec, c0, math.tan(math.radians(ang))))
+    maxdep = sum(t * max(0.0, np.abs(poly @ d).max() - c) for d, c, t in planes)
+    if fx and maxdep > 1.0 * f + 0.045:
+        sc_ = (1.0 * f + 0.045) / maxdep
+        planes = [(d, c, t * sc_) for d, c, t in planes]
+        maxdep *= sc_
+    f_eff = f + (min(0.5 * maxdep, 0.05) if fx else min(0.55 * maxdep, 0.03))
+    Q, N = rounded_outline(poly, rc=max(r * 1.08, 0.006), spacing=spacing)
+    nq = len(Q)
+    cen = Q.mean(0)
+    R0 = Q
+    R1 = Q
+    R3 = Q + N * r
+    rings_i = (0.86, 0.7, 0.54, 0.38, 0.22) if fx else rings
+    inner = [cen + (R3 - cen) * sc_ for sc_ in rings_i]
+    ring_xy = [R0, R1, R3] + inner + [cen[None, :]]
+    k_noise = keep(noise_amp * rough)
+    k_lump = keep(0.015)
+
+    def relief(xy):
+        x, y = xy[:, 0], xy[:, 1]
+        ux_ = np.clip((x - cen[0]) / max(hx, 1e-3), -1, 1)
+        uy_ = np.clip((y - cen[1]) / max(hy, 1e-3), -1, 1)
+        pil = g_("pillow", 0.004) * 0.25 * (1 - ux_ ** 2) * (1 - uy_ ** 2)
+        tilt = g_("tiltx") * x / max(hx, 1e-3) + g_("tilty") * y / max(hy, 1e-3)
+        nz = fbm90(np.stack([x * 7.0 + sd, y * 7.0, np.full(len(x), sd * 0.37)], -1), 2)
+        lump = 0.0
+        if fx:
+            # footing: broad +-1.5-2 cm lumps and hollows (note 11: kept only where >= the local threshold)
+            lump = 0.03 * fbm90(np.stack([x * 5.0 + sd * 1.7, y * 5.0, np.full(len(x), sd * 0.11)], -1), 2) * k_lump
+        fac = np.zeros(len(x))
+        for dvec, c0, tn in planes:
+            fac -= tn * np.maximum(xy @ dvec - c0, 0.0)
+        return pil + tilt + noise_amp * rough * nz * k_noise + fac + lump
+    # (2 chisel-facet draws kept for the random sequence; the facets themselves are below every threshold)
+    [(np.array([math.cos(a_), math.sin(a_)]), rng.uniform(0.55, 0.85), rng.uniform(0.004, 0.012))
+     for a_ in rng.uniform(0, 2 * np.pi, 2)]
+    nch = int(rng.integers(2, 5)) if not fx else int(rng.integers(4, 8))
+    chip_pts = Q[rng.integers(0, nq, nch)]
+    chip_rad = rng.uniform(0.012, 0.03, nch) if not fx else rng.uniform(0.03, 0.06, nch)
+
+    def extra(xy):
+        e = np.zeros(len(xy))
+        for cp_, cr_ in zip(chip_pts, chip_rad):
+            if cr_ * 0.5 < min_relief:
+                continue
+            dd = np.linalg.norm(xy - cp_, axis=1)
+            e -= cr_ * 0.5 * np.clip(1 - dd / cr_, 0, 1) ** 1.3
+        return e
+    Vr = []
+    for j, xy in enumerate(ring_xy):
+        if j == 0:
+            z = np.full(len(xy), -back)
+        else:
+            zf = f_eff + relief(xy) + extra(xy)
+            zf = np.maximum(zf, front_min)
+            z = zf - 0.75 * r if j == 1 else zf
+        Vr.append(np.column_stack([xy, z]))
+    V = np.vstack(Vr)
+    F = []
+    for j in range(len(ring_xy) - 2):
+        a0 = j * nq
+        b0 = (j + 1) * nq
+        k_ = np.arange(nq)
+        F.append(np.stack([a0 + k_, a0 + (k_ + 1) % nq, b0 + (k_ + 1) % nq, b0 + k_], 1))
+    c_idx = (len(ring_xy) - 1) * nq
+    a0 = (len(ring_xy) - 2) * nq
+    k_ = np.arange(nq)
+    F.append(np.stack([a0 + k_, a0 + (k_ + 1) % nq, np.full(nq, c_idx)], 1))
+    x, y = rot2(V[:, 0], V[:, 1], g_("rot"))
+    return np.stack([x, y, V[:, 2]], -1), F
+
+
+STYLES.update({
+    "coursed": dict(fn="coursed_batch", needs_half=False),
+    "coursed_poly": dict(fn="poly_rubble_stone", needs_half=False),
+})
