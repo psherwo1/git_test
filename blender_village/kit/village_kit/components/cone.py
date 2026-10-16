@@ -83,7 +83,8 @@ def sag_at(g, theta, s):
     f0, f1 = age.get("sag_eave_fade", (0.15, 0.9))
     env = smoothstep(f0, f1, s) * (1 - smoothstep(g._sag_s1 - 1.2, g._sag_s1 - 0.1, s))
     along = 0.8 + 0.2 * np.sin(s * 1.3 + g._sag_mod[k])            # a purlin-less span sags unevenly
-    return g._sag_amp[k] * along * np.sin(np.pi * u) ** 1.5 * env
+    span = 2 * np.pi * np.interp(s, g.PS, g.PR) / g.N_RAFT              # a short span (near the apex) sags less
+    return g._sag_amp[k] * along * np.clip(span / 0.9, 0.0, 1.0) * np.sin(np.pi * u) ** 1.5 * env
 
 
 def surf(g, theta, s):

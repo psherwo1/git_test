@@ -100,16 +100,17 @@ def post_profiles(g, ob, dz=0.04):
 def build_wall_plate(g, coll, seed=303):
     acc = g.acc("wall_plate", 40)
     rng = np.random.RandomState(seed)
-    joints = list(g.POST_AZ[::2][:7])           # 7 joints over every other post
+    joints = list(g.POST_AZ[::2])                # a scarf joint over every other post (7 on 14 posts)
+    nj = len(joints)
     joints.sort()
     hw, hh = 0.09, g.PLATE_H / 2
     ch = 0.022
     prof = np.array([[hw - ch, -hh], [hw, -hh + ch], [hw, hh - ch], [hw - ch, hh],
                      [-hw + ch, hh], [-hw, hh - ch], [-hw, -hh + ch], [-hw + ch, -hh]])
     zc = g.PLATE_BOT + hh
-    for k in range(7):
+    for k in range(nj):
         a0 = joints[k]
-        a1 = joints[(k + 1) % 7] + (2 * math.pi if k == 6 else 0)
+        a1 = joints[(k + 1) % nj] + (2 * math.pi if k == nj - 1 else 0)
         # overlap past the joints (scarf) by ~0.17 m each side
         e0 = a0 - 0.17 / g.R_WALL
         e1 = a1 + 0.17 / g.R_WALL

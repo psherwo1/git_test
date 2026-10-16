@@ -101,6 +101,7 @@ def build_building(spec):
     n = g.decals.build_collection()
     core.log(f"decal anchors: {n}")
     if spec.get("decal_json"):
+        os.makedirs(os.path.dirname(os.path.abspath(spec["decal_json"])), exist_ok=True)
         g.decals.export_json(spec["decal_json"], building=spec.get("building_id", spec["prefix"]),
                              extra=spec.get("decal_meta"))
     tris = g.triangles()

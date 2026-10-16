@@ -70,8 +70,8 @@ def round_building_decals(g, seed=8800, max_cracks=22):
         da.add_hit("soot", hit, (0.5, 0.4), probability=0.6, seed=int(rng.randint(1 << 30)),
                    surfaces={"M_roof_shingle"})
     # ---- door: soot over the head, streaks below the lintel ends, grime at hand height, rust under ironwork
-    D.above_opening(da, probe, (0.0, g.FRONT_Y), (0, -1, 0), 1.1, g.HEAD_Z, "soot", (1.0, 0.35),
-                    surfaces={"M_timber", "M_timber_weathered"}, rng=rng)
+    D.above_opening(da, probe, (0.0, g.FRONT_Y), (0, -1, 0), 1.1, g.HEAD_Z, "soot", (1.0, 0.25),
+                    surfaces={"M_timber", "M_timber_weathered"}, rng=rng, reach=0.2)     # from under the eave
     D.below_points(da, probe, [(-1.05, g.FRONT_Y, g.HEAD_Z + 0.02), (1.05, g.FRONT_Y, g.HEAD_Z + 0.02)],
                    [(0, -1, 0)] * 2, "water_streak", (0.12, 0.8), surfaces={"M_timber"}, rng=rng)
     D.opening_corners(da, probe, [(-0.62, g.FRONT_Y + 0.05, 1.05), (0.62, g.FRONT_Y + 0.05, 1.05),
