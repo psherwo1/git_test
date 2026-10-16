@@ -55,6 +55,16 @@ PREFLIGHT (check each item; fix what you can; ask me only for what needs me, suc
 P1. Location.
     - You should be running in C:\work\git_test, a clone of branch claude/blender-buildings-film-nfzv6a (possibly a shallow --depth 1 clone; that is fine).
     - If the clone is elsewhere, continue there, but warn me if the path is long (more than about 40 characters).
+    - If the repo is inside a OneDrive folder (for example C:\Users\parke\OneDrive\...), STOP and explain the risks:
+      - sync locks files mid-write, breaking builds and renders;
+      - Files On-Demand placeholders make reads fail;
+      - syncing .git can corrupt the repository;
+      - the path is too long.
+      Recommend re-cloning to C:\work\git_test. If I still choose OneDrive:
+      - put the venv OUTSIDE OneDrive (C:\venvs\bpyenv) and use that python everywhere;
+      - ask me to pause OneDrive sync for the whole run (OneDrive tray icon > Pause syncing; 24 hours max, so re-pause as needed);
+      - ask me to set the repo folder to "Always keep on this device";
+      - require LongPathsEnabled (P3) before installing bpy.
 P2. Git.
     - git status is clean.
     - git pull works.
@@ -77,7 +87,7 @@ SETUP TASKS (do these yourself, and report anything that needs me)
 1. git pull, and confirm the branch is up to date.
 2. Python.
    - I installed Python 3.13 from the Microsoft Store. It has no "py" launcher, so use python3.13.
-   - Create the venv at the repo root: python3.13 -m venv .bpyenv
+   - Create the venv at the repo root: python3.13 -m venv .bpyenv (or at C:\venvs\bpyenv if the repo is inside OneDrive, see P1; then use that path wherever .bpyenv appears below).
    - Install: .bpyenv\Scripts\python -m pip install bpy==5.1.2
    - If that fails (Store sandboxing, or Windows long-path errors), either enable long paths or use uv instead: winget install astral-sh.uv; uv venv .bpyenv --python 3.13; uv pip install --python .bpyenv\Scripts\python.exe bpy==5.1.2
    - Stay on bpy 5.1.2. Do NOT use my installed Blender 5.2 for the pipeline. It is fine for me to view files with.

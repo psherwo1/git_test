@@ -128,7 +128,7 @@ Tested target: Windows 10/11, AMD Ryzen 5 5600X, RTX 3060 12 GB.
      uv pip install --python .bpyenv\Scripts\python.exe bpy==5.1.2
      ```
      This replaces step 3.
-2. **Clone the branch:**
+2. **Clone the branch** to a short folder that is NOT inside OneDrive (for example C:\work). OneDrive sync locks files mid-write, makes placeholder reads fail, can corrupt .git, and makes the path too long:
    ```
    git clone -b claude/blender-buildings-film-nfzv6a https://github.com/psherwo1/git_test.git
    cd git_test
