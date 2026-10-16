@@ -787,7 +787,9 @@ class Acc:
                 at = me.attributes.new(nm_, "FLOAT", "POINT")
                 at.data.foreach_set("value", arr.astype(np.float32))
         if self.hygiene:
-            nanite_clean(me)
+            # hygiene=True -> nanite_clean; a callable hygiene(me) is a building's own hook (kit 1.1.0,
+            # e.g. geom.strict_clean), run at the same point (after validate, before the Mask is written)
+            (self.hygiene if callable(self.hygiene) else nanite_clean)(me)
         _mask.write_mask(me, b_fn=self.b_fn, moss=self.moss)
         return me
 

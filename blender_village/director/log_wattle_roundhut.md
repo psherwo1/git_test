@@ -1029,18 +1029,25 @@ Compared in all 6 views:
 ### Must-fix (priority order)
 
 1. **DAUB COAT READS AS FLAT BOARDS. THE NOTE-11 ENTRANCE EXCEPTION IS MISSING IN THE DAUB** (`components/daub.py` `build_daub()`, lines ~418-420 and 591-648). It is visible in director_extra/door_bay_r08 vs door_bay_r07, wall_rake_r08, actor_closeup.png (the bays left and right of the door) and side.png (the bays read as smooth planks between the posts).
-   - **Cause.** `k_fine = 0.0 if rule else 1.0` is global, so the palm-press dents (A 0.6-1.2 cm) and every other sub-2 cm term are zeroed even inside the entrance zone. The remaining bulge is `0.0062*clip(bul,±2.2)` (about ±1.4 cm over a wavelength of about 0.6 m) plus a sag of 1.2 cm or less, and that reads as a flat board in clay.
-   - **Fix, entrance zone** (plan distance ≤ 3.0 m from `(0, FRONT_Y)`, z ≤ 2.5 m: the door bay at az −20…−48° and the right-of-door bay at az +20…+48°).
+   - **Measured (Director ray profiles).** I took vertical profiles every 1 cm over z 0.9-2.3 and subtracted a 31 cm moving average, which leaves the hand-applied relief at wavelengths under about 30 cm. The figure is the mean 2.5-97.5 % residual span, r7 → r8:
+     - door bay: 9.5 → 5.4 mm (what remains is mostly the break edge);
+     - right-of-door bay: **6.1 → 1.5 mm**;
+     - side bays: 7.1 → 2.5 mm;
+     - back bays: 7.7 → 3.0 mm.
+     The total p5-p95 radial spread (2.0-3.0 cm) is only low-frequency bulge plus the post slits, so between posts the coat reads as a smooth turned board.
+   - **Cause.** `k_fine = 0.0 if rule else 1.0` is global, so the palm-press dents (A 0.6-1.2 cm) and every other short-wavelength term are zeroed even inside the entrance zone. What remains is `0.0062*clip(bul,±2.2)` at a wavelength of about 0.6 m, plus a sag of 1.2 cm or less.
+   - **Fix (a), entrance zone (producer-note-11 compliance).** The zone is plan distance ≤ 3.0 m from `(0, FRONT_Y)` and z ≤ 2.5 m: the door bay at az −20…−48° and the right-of-door bay at az +20…+48°.
      - Gate each relief term per vertex with `g.detail.scale(depth, p)` instead of the global `k_fine`.
-     - Keep palm-press dents at 1.0-1.5 cm deep, 7-12 cm across, about 5-7 per m², with their squeezed-up rims. Their density in r7 was right.
-   - **Fix, every bay.**
-     - Raise the low-frequency hand-applied bulge to 2.0-3.0 cm peak-to-peak at a wavelength of 0.3-0.8 m. That is relief note 11 keeps, and it carries the client's "slightly bulging coat, avoid flat board-like daub".
+     - Inside the zone, keep palm-press dents at 1.0-1.5 cm deep, 7-12 cm across, about 5-7 per m², with their squeezed-up rims. The r7 density was right; the r7 depths of 0.6-1.0 cm move up to 1.0 cm or more so they are kept.
+   - **Fix (b), every bay (client correction "avoid flat board-like daub").**
+     - Add sparse hand-applied lumps of 2.0-2.5 cm relief at a wavelength of 15-35 cm, about 2-3 per m². Note 11 keeps relief of 2 cm or more as geometry, so they are allowed.
      - Keep the sag belly at 1-1.5 cm.
-     - Do not reintroduce cracks or dabs; they stay decals.
+     - Do not reintroduce cracks or sub-2 cm dabs; they stay decals.
    - **Acceptance.**
-     - The ray-measured coat front (z 0.9-2.3) shows a p5-p95 spread of 2.0 cm or more per bay (r8 today is about 1.2-1.5 cm).
-     - In the entrance bays, at least 6 dents of 1 cm or more are visible in grazing light in a door_bay-style close-up.
-     - Re-check that hidden stays at 15 % or below.
+     - Same profile test: the high-pass span is 10 mm or more in the two entrance bays and 6 mm or more on every other intact bay.
+     - At least 6 dents of 1 cm or more read in grazing light in a door_bay-style close-up.
+     - side.png no longer reads as smooth planks between the posts.
+     - Hidden stays at 15 % or below.
 
 2. **ROOF OPEN JOINTS ROUGHLY DOUBLED AFTER THE CONE AGE PASS AND CULL** (`HUT_roof_shingles`, `components/cone.py` sag, `round_hidden_cull` on the shingles). It is visible in hero.png, front.png, side.png and back.png, where there are visibly more black vertical slits in the upper half of the cone, and in director_extra/roof_flank_r08 vs roof_flank_r07.
    - **Measured.**
