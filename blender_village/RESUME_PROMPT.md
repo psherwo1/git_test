@@ -1,6 +1,34 @@
 # Resume prompt for the desktop session
 
-Copy everything inside the fence below into a new Claude Code session started in the `git_test` folder on the desktop.
+## Before you paste: do these yourself on the desktop
+
+The session cannot do these, because they have to happen before it exists.
+
+1. **Install the tools.**
+   - Python 3.13: already done, from the Microsoft Store.
+   - Git for Windows (git-scm.com).
+   - Claude Code (the Desktop app or the CLI), signed in.
+   - An up-to-date NVIDIA driver for the RTX 3060.
+2. **Clone to a short path.** In PowerShell or a terminal:
+   ```
+   mkdir C:\work
+   cd C:\work
+   git clone --depth 1 -b claude/blender-buildings-film-nfzv6a https://github.com/psherwo1/git_test.git
+   ```
+   - It is about 1 GB shallow, or 2.2 GB with full history.
+   - Sign in to GitHub if asked, using an account that can push to psherwo1/git_test.
+   - Leave 5 GB or more free.
+3. **Open Claude Code in `C:\work\git_test`.**
+   - Desktop app: start a new session on that folder.
+   - Terminal: `cd C:\work\git_test` then `claude`.
+   - Choose a permission mode that lets it run commands and edit files without asking each time (auto or accept edits). Otherwise the multi-hour run stalls while you are away.
+4. **Paste the fenced block below.**
+
+The session checks and fixes the rest itself (section PREFLIGHT in the prompt): long paths, Git push access, the GPU driver, sleep settings, disk space, the venv and bpy.
+
+## The prompt
+
+Copy everything inside the fence below.
 
 ```
 You are taking over an in-progress production from a cloud Claude Code session. Work in this repository on branch claude/blender-buildings-film-nfzv6a. Use a workflow / multi-agent orchestration as described below. I am explicitly asking for it, as I did in the original session.
@@ -22,6 +50,28 @@ READ FIRST, IN THIS ORDER
 - blender_village/kit/village_kit/README.md and CHANGELOG.md (kit API and kit edit rules).
 - The latest sections of blender_village/director/log_*.md, including every CLIENT CORRECTION.
 Treat these files as the source of truth. Do not re-litigate decisions recorded there.
+
+PREFLIGHT (check each item; fix what you can; ask me only for what needs me, such as an admin prompt or a GitHub sign-in)
+P1. Location.
+    - You should be running in C:\work\git_test, a clone of branch claude/blender-buildings-film-nfzv6a (possibly a shallow --depth 1 clone; that is fine).
+    - If the clone is elsewhere, continue there, but warn me if the path is long (more than about 40 characters).
+P2. Git.
+    - git status is clean.
+    - git pull works.
+    - I can push: run `git push --dry-run origin claude/blender-buildings-film-nfzv6a`. If it fails, tell me how to authenticate (Git Credential Manager / GitHub sign-in).
+    - Set `git config core.longpaths true` for this repo.
+P3. Windows long paths.
+    - Check HKLM\SYSTEM\CurrentControlSet\Control\FileSystem LongPathsEnabled.
+    - If it is not 1, give me this one line to run in an Administrator PowerShell, and wait for me to confirm:
+      New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -Value 1 -PropertyType DWORD -Force
+P4. GPU.
+    - Run nvidia-smi and report the driver version and the RTX 3060.
+    - If nvidia-smi is missing, or the driver looks very old (older than about a year), tell me to update it before relying on GPU renders. CPU renders still work meanwhile.
+P5. Disk.
+    - At least 5 GB must be free on the repo's drive. Warn me if not.
+P6. Sleep.
+    - The run takes several hours. Run `powercfg /change standby-timeout-ac 0` so the PC does not sleep on mains power.
+    - Tell me you did it, and how to restore it later: `powercfg /change standby-timeout-ac <minutes>`.
 
 SETUP TASKS (do these yourself, and report anything that needs me)
 1. git pull, and confirm the branch is up to date.

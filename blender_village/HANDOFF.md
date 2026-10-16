@@ -166,4 +166,4 @@ After the decision, follow `director/production_plan.md`:
 
 ## 7. Resume prompt
 
-See `RESUME_PROMPT.md`. Paste its fenced block into the desktop session.
+See `RESUME_PROMPT.md`. Do its short "Before you paste" checklist (install the tools, clone to C:\work, open Claude Code there), then paste its fenced block. The session runs a PREFLIGHT for everything else.
