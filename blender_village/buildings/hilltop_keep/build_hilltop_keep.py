@@ -3938,17 +3938,17 @@ def build_wing_ridge(coll):
         nb_ = nS + nW
         nb_ /= np.linalg.norm(nb_)
         hp = np.column_stack([xy, z + (TH_BASE + 0.05) / CP_])
-        hp[:, 2] -= 0.30 * np.clip(1 - t[:, 0] / 0.16, 0, 1) ** 1.6
-        hp = hp[t[:, 0] >= 0.045]
+        hp[:, 2] -= 0.36 * np.clip(1 - t[:, 0] / 0.16, 0, 1) ** 1.6
+        hp = hp[t[:, 0] >= 0.02]
         # stop where the dome meets the fillet against the turret stone
         dt = tur_dist(hp[:, 0], hp[:, 1], hp[:, 2])
         stop = np.flatnonzero(dt < 0.10)
-        t = t[t[:, 0] >= 0.045]
+        t = t[t[:, 0] >= 0.02]
         i_end = int(stop[0]) if len(stop) else len(hp)
         hp = hp[:i_end]
         if len(hp) > 4:
             d_roll(acct, hp, HIP_DOME, HIP_VIS, 61 + sy, rng, up=nb_, var=0.02, sp=(0.012, 0.04),
-                   dep=(0.003, 0.012), taper=(0.0, 0.28))
+                   dep=(0.003, 0.012), taper=(0.32, 0.28))
             HIP_ENDS.append((hp[-1], (hp[-1] - hp[-2]) / np.linalg.norm(hp[-1] - hp[-2]), nb_))
     finalize(acc, coll)
     finalize(acct, coll, smooth_deg=70.0)

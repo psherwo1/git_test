@@ -336,7 +336,7 @@ def lowfreq(x, rng, amp, n=3, fmin=0.3, fmax=1.2):
 # Part = one Blender mesh object being accumulated
 # =============================================================================================
 MAT_NAMES = ["M_stone", "M_stone_dressed", "M_mortar", "M_rubble", "M_timber", "M_timber_weathered",
-             "M_roof_shingle", "M_roof_shake", "M_iron", "M_lead", "M_moss_clump"]
+             "M_roof_shingle", "M_roof_shake", "M_iron", "M_lead", "M_moss_clump", "M_soil"]
 
 
 def box_uv(Pl, faces):
@@ -3749,37 +3749,66 @@ def build_props(parts):
         hz = unit(np.array([axis[0], axis[1], 0]))
         side = unit(np.cross(axis, [0, 0, 1.0]))
         upv = np.cross(side, ax)
-        # ---- pole: 20 sides, dia 0.15 at the head -> 0.20 at the foot, 6-12 cm bow, checks, knots ----
-        n, m = 34, 20
-        t = np.linspace(-0.02, 1.06, n)
+        # ---- pole: 24 sides (+ check lips), rings every ~6.5 cm (1.5 cm over the foot), dia 0.15 -> 0.20,
+        # 6-12 cm bow; 2-3 real V checks, 2 adze flats + a bark-strip remnant, 4-6 knots with branch stubs ----
+        dt = 0.065 / Lp
+        t_main = np.arange(-0.02, 1.0 - 0.5 / Lp, dt)
+        t_foot = np.arange(t_main[-1] + 0.015 / Lp, 1.06, 0.015 / Lp)
+        t = np.concatenate([t_main, t_foot])
+        n = len(t)
         bow = rng.uniform(0.06, 0.12) * rng.choice([-1, 1])
         sag = rng.uniform(0.0, 0.03)
         cen = top + axis * t[:, None] + side * (bow * np.sin(np.clip(t, 0, 1) * PI))[:, None] \
             - upv * (sag * np.sin(np.clip(t, 0, 1) * PI))[:, None]
         rad = 0.075 + 0.025 * np.clip(t, 0, 1) + 0.003 * np.sin(t * 13 + idx) + 0.002 * np.sin(t * 31 + 2 * idx)
-        ang = np.linspace(0, 2 * PI, m, endpoint=False)
+        nck = int(rng.integers(2, 4))
+        ck_a = rng.uniform(0, 2 * PI) + np.arange(nck) * 2 * PI / nck + rng.uniform(-0.4, 0.4, nck)
+        base_a = np.linspace(0, 2 * PI, 24, endpoint=False)
+        extra = np.concatenate([[a - 0.115, a, a + 0.115] for a in ck_a]) % (2 * PI)
+        keep_b = np.array([np.min(np.abs((b - extra + PI) % (2 * PI) - PI)) > 0.06 for b in base_a])
+        ang = np.sort(np.concatenate([base_a[keep_b], extra]))
+        m = len(ang)
         ell = 1 + rng.uniform(-0.04, 0.04) * np.cos(2 * ang + rng.uniform(0, PI))
         R = rad[:, None] * ell[None, :]
-        # checking grooves: 3 long shallow splits along the grain
-        for _ in range(3):
-            jm = int(rng.integers(0, m))
-            j0 = int(rng.integers(3, n // 2))
-            j1 = min(n - 4, j0 + int(rng.integers(6, 14)))
-            depth = np.zeros(n)
-            depth[j0:j1] = np.sin(np.linspace(0, PI, j1 - j0)) * rng.uniform(0.006, 0.011)
-            R[:, jm] -= depth
-            R[:, (jm + 1) % m] -= depth * 0.35
-            R[:, (jm - 1) % m] -= depth * 0.35
-        # knots: local swellings where the branch stubs come out
+        sdist = (1 - t) * Lp                                    # distance from the foot (m)
+        # adze flats (+-1 cm) and a bark-strip remnant (proud 7 mm, ragged edges)
+        for _ in range(2):
+            af = rng.uniform(0, 2 * PI)
+            lf = rng.uniform(0.8, 1.4)
+            s0 = rng.uniform(1.0, Lp - lf - 0.5)
+            win = np.clip(np.minimum(sdist - s0, s0 + lf - sdist) / 0.15, 0, 1)
+            da = (ang[None, :] - af + PI) % (2 * PI) - PI
+            dep = rng.uniform(0.008, 0.012) * win
+            flat = (rad[:, None] - dep[:, None]) / np.maximum(np.cos(da), 0.3)
+            R = np.where(np.abs(da) < 1.2, np.minimum(R, flat), R)
+        ab = rng.uniform(0, 2 * PI)
+        lb = rng.uniform(0.5, 0.9)
+        s0 = rng.uniform(2.0, Lp - lb - 1.0)
+        inb = (sdist > s0) & (sdist < s0 + lb)
+        hw_b = 0.3 + 0.08 * np.sin(sdist * 17 + idx) + 0.05 * np.sin(sdist * 41)
+        da = np.abs((ang[None, :] - ab + PI) % (2 * PI) - PI)
+        R += 0.007 * (inb[:, None] & (da < hw_b[:, None]))
+        # V checks: 2.3 cm wide (lips at +-1.15 cm), 1.5-2.5 cm deep, 0.8-2 m long
+        checks = []
+        for a in ck_a:
+            j = int(np.argmin(np.abs((ang - a % (2 * PI) + PI) % (2 * PI) - PI)))
+            lc = rng.uniform(0.8, 2.0)
+            s0 = rng.uniform(0.8, Lp - lc - 0.8)
+            u = np.clip((sdist - s0) / lc, 0, 1)
+            dep = rng.uniform(0.015, 0.025) * np.sqrt(np.sin(u * PI))
+            R[:, j] -= dep
+            checks.append((s0, lc))
+        # knots: 4-6, at least 2 within 2.5 m of the foot
+        nk = int(rng.integers(4, 7))
+        kd = np.concatenate([rng.uniform(0.7, 2.4, 2), rng.uniform(3.0, Lp - 1.0, nk - 2)])
         knots = []
-        for _ in range(int(rng.integers(4, 7))):
-            tk = rng.uniform(0.12, 0.9)
+        for sk in kd:
+            tk = 1 - sk / Lp
             ak = rng.uniform(0, 2 * PI)
-            knots.append((tk, ak))
-            jt = np.argmin(np.abs(t - tk))
-            da = np.abs((ang - ak + PI) % (2 * PI) - PI)
-            for dj in (-1, 0, 1):
-                R[jt + dj] += 0.009 * np.exp(-(da / 0.45) ** 2) * (1.0 if dj == 0 else 0.45)
+            dk = rng.uniform(0.04, 0.07)
+            knots.append((tk, ak, dk))
+            dda = np.abs((ang - ak + PI) % (2 * PI) - PI)
+            R += 0.010 * np.exp(-(dda / 0.45) ** 2)[None, :] * np.exp(-((sdist - sk) / 0.07) ** 2)[:, None]
         ex = side
         ey = upv
         prof = np.stack([R * np.cos(ang)[None], R * np.sin(ang)[None]], -1)
@@ -3788,29 +3817,36 @@ def build_props(parts):
         face_pt = lean(face_map(k, np.array([0.0]), np.array([zatt]), np.array([0.064])))[0]
         dpl = (Pp - face_pt) @ nn_
         Pp -= np.clip(-dpl, 0, None)[..., None] * nn_
-        # foot: axe-cut bird's mouth - a vertical cut bearing on the chock's stop block, a level seat
-        stop = bot + hz * 0.0
+        # foot: three crisp axe-cut planes - heel cut bearing on the heel block, level seat on the sole,
+        # and a 45 deg bevel taking off the heel's top corner
+        stop = bot.copy()
         d1 = (Pp - stop) @ hz
         Pp -= np.clip(d1, 0, None)[..., None] * hz
-        d2 = Pp[..., 2] - Zf
-        Pp[..., 2] -= np.clip(d2, None, 0)
+        Pp[..., 2] = np.maximum(Pp[..., 2], Zf)
+        n_up = unit(np.array([0, 0, 1.0]) - ax[2] * ax)          # the pole's upper surface normal
+        n3 = unit(hz + n_up)
+        p3 = stop + np.array([0, 0, Zf + 0.135 - stop[2]])
+        d3 = (Pp - p3) @ n3
+        Pp -= np.clip(d3, 0, None)[..., None] * n3
         Pp = Pp.reshape(1, -1, 3)
         T = tmpl_rings(n, m, cap0=True, cap1=True)
         Pp = add_caps(Pp, T)
         T = orient(T, Pp[0])
         P_p.add(Pp, T, mat="M_timber_weathered", smooth="all")
-        # branch stubs (dia 3-5 cm, 2-4 cm proud), angled toward the tree top (the pole head)
-        for tk, ak in knots:
+        # branch stubs (dia 4-7 cm, 2-4 cm proud, axe-trimmed flat ends), angled toward the tree top
+        for tk, ak, dk in knots:
             jt = np.argmin(np.abs(t - tk))
             dirr = math.cos(ak) * ex + math.sin(ak) * ey
-            base = cen[jt] + dirr * (rad[jt] - 0.02)
-            out = unit(dirr * 0.8 - ax * 0.45)
-            ln = rad[jt] * 0.0 + 0.02 + rng.uniform(0.02, 0.04)
-            rk = rng.uniform(0.015, 0.025)
-            path = base + out * np.linspace(0, ln + 0.02, 4)[:, None]
-            prof_k = np.array([circle_prof(rk * f, 8) for f in (1.15, 1.0, 0.92, 0.8)])
+            base = cen[jt] + dirr * (rad[jt] - 0.015)
+            out = unit(dirr * 0.85 - ax * 0.35)
+            ln = 0.015 + rng.uniform(0.02, 0.04) / max(out @ dirr, 0.5)
+            path = base + out * np.linspace(0, ln, 4)[:, None]
+            prof_k = np.array([circle_prof(dk / 2 * f, 10) for f in (1.25, 1.05, 1.0, 0.96)])
             Pk, Tk = sweep(path[None], prof_k[None], up=ax)
             P_p.add(Pk, Tk, mat="M_timber_weathered", smooth="all")
+        nknot_foot = int(sum(1 for sk in kd if sk <= 2.5))
+        log("prop %d: %d rings x %d sides (ring spacing %.3f m), checks %s, knots %d (%d within 2.5 m of the foot)"
+            % (idx, n, m, dt * Lp, [(round(a, 2), round(b, 2)) for a, b in checks], nk, nknot_foot))
         # ---- head: timber cleat under the pole, collar lugs (clevis ears) and a through-bolt ----
         Lt = LEAN_R @ tt_
         latc = float((top - lean(face_map(k, np.array([0.0]), np.array([zatt]), np.array([0.0])))[0]) @ Lt)
@@ -3852,42 +3888,77 @@ def build_props(parts):
             ring = c + rr * (np.cos(a)[:, None] * ex + np.sin(a)[:, None] * ey)
             Pr, Tr = sweep(ring[None], rect_prof(0.006, 0.045, 0.002), up=ax, closed=True)
             P_i.add(Pr, Tr, mat="M_iron", smooth="bevel")
-        # ---- ground: sunk stone pad, notched timber chock, iron pin through the foot ----
+        # ---- ground: rough sunk stone pad, hewn sole + heel block forming the bird's mouth that receives
+        # the axe-cut foot, hewn cheeks with an iron pin through cheeks and foot ----
         ang_h = math.atan2(hz[1], hz[0])
-        Rh = rotm([0, 0, 1], [ang_h])[0]
-        Pst, Tst = stone_local(rng, [0.70], [0.52], [0.24], "flag", rot_deg=(0.6, 0.6, 3))
-        Rm = Rh @ frame_mats(np.array([[1.0, 0, 0]]), np.array([[0, 0, 1.0]]), np.array([[0, -1.0, 0]]))[0]
-        pad_c = bot - hz * 0.12
-        pad_c[2] = 0.09                       # pad top 9 cm above ground, 15 cm sunk
-        P_a.add(xform(Pst, Rm, pad_c[None]), Tst, Pl=Pst, mat="M_stone", smooth="bevel")
-        # notched chock: base (seat) + stop block behind the axe-cut foot + two cheeks; iron pin through
-        # cheeks and foot
-        base_c = bot - hz * 0.14
-        base_c[2] = 0.09 + 0.05
-        member(P_a, "M_timber", (base_c - hz * 0.27)[None], (base_c + hz * 0.27)[None], 0.30, 0.10, up=(0, 0, 1),
-               c=0.012, rng=rng, bow=0.003)
-        stop_c = bot + hz * 0.065
-        stop_c[2] = Zf + 0.08
-        member(P_a, "M_timber", (stop_c - side * 0.14)[None], (stop_c + side * 0.14)[None], 0.13, 0.16, up=(0, 0, 1),
-               c=0.012)
+        Rg = frame_mats(hz[None], unit(np.cross([0, 0, 1.0], hz))[None], np.array([[0, 0, 1.0]]))[0]
+        sv = Rg[:, 1]
+
+        def place(P, along, lat, z):
+            return xform(P, Rg, (bot + hz * along + sv * lat) * np.array([1, 1, 0]) + np.array([0, 0, z]))
+        # pad: irregular rough stone 0.55-0.75 m across, uneven top (+-2 cm), only 5-9 cm above ground
+        Lpad, Wpad = rng.uniform(0.62, 0.75), rng.uniform(0.55, 0.65)
+        Pst, Tst = stone_local(rng, [Lpad], [Wpad], [0.26], "boulder", rot_deg=(0.5, 0.5, 2))
+        u_ = Pst / np.array([Lpad / 2, 0.13, Wpad / 2])
+        Pst[:, :, 1] += 0.02 * noise_field(u_ * 1.2, rng, nterms=3, fmin=1.0, fmax=2.2) * np.clip(u_[:, :, 1] + 1, 0, 1) / 2
+        Rm = Rg @ frame_mats(np.array([[1.0, 0, 0]]), np.array([[0, 0, 1.0]]), np.array([[0, -1.0, 0]]))[0]
+        pad_c = (bot - hz * 0.10) * np.array([1, 1, 0]) + np.array([0, 0, 0.07])
+        Wpad_ = xform(Pst, Rm, pad_c[None])
+        P_a.add(Wpad_, Tst, Pl=Pst, mat="M_stone", smooth="all")
+        # sole bears on the pad's highest point under it
+        Zs0 = float(Wpad_[0, :, 2].max()) + 0.002
+        Zs1 = Zf
+        Ps, Ts = hewn_beam(rng, 0.56, 0.30, Zs1 - Zs0, nx=10, chamfer=(0.015, 0.025), checks=(0, 1),
+                           check_len=(0.2, 0.35), end_split=1)
+        P_a.add(place(Ps, -0.12, 0.0, (Zs0 + Zs1) / 2), Ts, Pl=Ps[0], mat="M_timber", smooth="bevel")
+        Ph, Th = hewn_beam(rng, 0.16, 0.30, 0.12, nx=6, chamfer=(0.015, 0.025), checks=(0, 0), end_split=1)
+        P_a.add(place(Ph, 0.003 + 0.08, 0.0, Zs1 + 0.06), Th, Pl=Ph[0], mat="M_timber", smooth="bevel")
+        # treenails through the heel block into the sole
+        prof_tn = np.array([(0.0, 0.0), (0.014, 0.0), (0.014, 0.008), (0.011, 0.013), (0.0, 0.014)])
+        Ptn, Ttn = lathe(np.repeat(prof_tn[None], 2, 0), 8)
+        P_a.add(Ptn + np.stack([place(np.array([[[0.0, 0, 0]]]), 0.083, l_, Zs1 + 0.12)[0, 0] for l_ in (-0.08, 0.08)])[:, None],
+                Ttn, mat="M_timber", smooth="all")
         # foot centre: axis point 12 cm above the seat
         tf = (top[2] - (Zf + 0.12)) / (top[2] - bot[2])
         foot_c = top + axis * tf + side * bow * math.sin(min(tf, 1.0) * PI)
         rf = 0.075 + 0.025 * min(tf, 1.0)
+        lat_f = float((foot_c - bot) @ sv)
+        along_f = float((foot_c - bot) @ hz)
         for sg in (-1, 1):
-            ch = foot_c + side * sg * (rf + 0.012 + 0.04) - hz * 0.10
-            ch[2] = Zf + 0.07
-            member(P_a, "M_timber", (ch - hz * 0.14)[None], (ch + hz * 0.14)[None], 0.08, 0.14, up=(0, 0, 1),
-                   c=0.01, rng=rng, bow=0.002)
+            Pc, Tc = hewn_beam(rng, 0.30, 0.07, 0.13, nx=7, chamfer=(0.015, 0.022), checks=(0, 0),
+                               end_split=-1 if sg > 0 else 1)
+            P_a.add(place(Pc, along_f - 0.06, lat_f + sg * (rf + 0.012 + 0.035), Zs1 + 0.065), Tc, Pl=Pc[0],
+                    mat="M_timber", smooth="bevel")
         pc = foot_c - hz * 0.06
-        pc[2] = Zf + 0.09
-        pin = np.stack([pc - side * (rf + 0.115), pc + side * (rf + 0.115)])
+        pc[2] = Zf + 0.075
+        pin = np.stack([pc - sv * (rf + 0.11), pc + sv * (rf + 0.11)])
         Ppn, Tpn = sweep(pin[None], circle_prof(0.012, 8), up=(0, 0, 1))
         P_a.add(Ppn, Tpn, mat="M_iron", smooth="all")
         for sg, q in ((-1, pin[0]), (1, pin[1])):
             Pb, Tb = lathe(np.array([[(0.0, 0.0), (0.024, 0.0), (0.022, 0.01), (0.012, 0.016), (0.0, 0.017)]]), 8)
-            Rb = frame_mats(hz[None], np.cross(side * sg, hz)[None], (side * sg)[None])
+            Rb = frame_mats(hz[None], np.cross(sv * sg, hz)[None], (sv * sg)[None])
             P_a.add(xform(Pb, Rb, q[None]), Tb, mat="M_iron", smooth="all")
+        # ring of 4-6 small half-buried stones and a soil lip round the pad
+        nr_ = int(rng.integers(4, 7))
+        aa = np.sort(rng.uniform(0, 2 * PI, nr_))
+        rr_ = rng.uniform(0.33, 0.42, nr_)
+        cs = np.stack([pad_c[0] + rr_ * np.cos(aa), pad_c[1] + rr_ * np.sin(aa), np.zeros(nr_)], 1)
+        sz = rng.uniform(0.06, 0.14, nr_)
+        Pr, Tr = stone_local(rng, sz * 1.2, sz * 0.9, sz * 0.7, "boulder", rot_deg=(8, 8, 10))
+        Pr[:, :, 1] += (sz * 0.35)[:, None]
+        Rr = euler(rng.normal(0, 0.15, nr_), rng.normal(0, 0.15, nr_), rng.uniform(0, 2 * PI, nr_))
+        cs[:, 2] = sz * rng.uniform(0.05, 0.2, nr_)
+        P_a.add(xform(Pr, Rr, cs), Tr, Pl=Pr, mat="M_stone", smooth="all")
+        a_l = np.linspace(0, 2 * PI, 33)[:-1]
+        rl = np.array([0.36, 0.40, 0.46, 0.52])
+        zl = np.array([-0.01, 0.035, 0.03, -0.01])
+        G = []
+        for r_, z_ in zip(rl, zl):
+            wob = 1 + 0.08 * np.sin(a_l * 3 + idx) + 0.05 * np.sin(a_l * 5 + 1.3 * idx)
+            G.append(np.stack([pad_c[0] + r_ * wob * np.cos(a_l), pad_c[1] + r_ * wob * np.sin(a_l) * 0.92,
+                               z_ * (1 + 0.3 * np.sin(a_l * 4 + idx))], 1))
+        G = np.array(G).transpose(1, 0, 2)
+        add_grid(P_a, "M_soil", G, wrap=True, flip=False)
         defs[idx] = (top, bot, k, zatt)
     # cross brace between the two long props at ~3 m with bolts
     def at_z(top, bot, z):
@@ -4114,7 +4185,7 @@ def main():
         wheel_blades=Part("MILL_wheel_blades", ["M_timber"]),
         wheel_spokes=Part("MILL_wheel_spokes", ["M_iron"]),
         props=Part("MILL_props", TW),
-        prop_anchors=Part("MILL_prop_anchors", ["M_stone", "M_timber", "M_iron"]),
+        prop_anchors=Part("MILL_prop_anchors", ["M_stone", "M_timber", "M_iron", "M_soil"]),
         prop_iron=Part("MILL_prop_iron", ["M_iron"]),
         moss=Part("MILL_moss_clumps", ["M_moss_clump"], angle=60.0),
     )
