@@ -2588,11 +2588,32 @@ def build_cap(parts):
     ZW = ZCT + 0.10                    # wheel axle (wheel dia 0.20 rolls on the curb top)
     ZSH = ZCT + 0.30                   # sheer centre (0.20 deep: bottom rests on the wheel tops)
     YS = 0.78
+    # sheers: ends project ~11 cm past the valance face through notched gaps, splayed (chamfered) ends with an
+    # end check (a split running in from the end grain and along the top for ~0.3 m)
+    T_SHR = tmpl_box(9, 5, 5)
+    SH_X = (-0.995, 0.972)
     for s in (-1, 1):
-        cap_member(P_fr, "M_timber", [-1.20, s * YS, ZSH], [0.98, s * YS, ZSH], 0.16, 0.20, c=0.02,
-                   rng=rng, bow=0.004)
-    for xx in (-0.95, 0.80):
-        cap_member(P_fr, "M_timber", [xx, -YS - 0.08, ZSH + 0.01], [xx, YS + 0.08, ZSH + 0.01], 0.15, 0.17, c=0.018)
+        x0, x1 = SH_X[0] + rng.uniform(-0.01, 0.01), SH_X[1] + rng.uniform(-0.01, 0.01)
+        L = x1 - x0
+        h = np.array([[L / 2, 0.08, 0.10]])
+        P = rbox(T_SHR, h, np.array([[0.02, 0.02, 0.02]]))
+        ux = P[:, :, 0] / h[0, 0]
+        uz = P[:, :, 2] / h[0, 2]
+        uy = P[:, :, 1] / h[0, 1]
+        endz = np.abs(ux) > 1 - 0.021 / h[0, 0]
+        # splayed end: the soffit is cut back 7 cm (sloping end face)
+        P[:, :, 0] -= np.sign(ux) * endz * 0.07 * (1 - uz) / 2
+        # end check: a split in the end grain from the pith to the top arris, and a short check on the top face
+        mid = np.abs(uy) < 0.01
+        P[:, :, 0] -= np.sign(ux) * (endz & mid) * np.clip(uz, 0, 1) * 0.03
+        top_near = (uz > 0.99) & mid & (np.abs(ux) > 0.6)
+        P[:, :, 2] -= top_near * 0.012 * np.clip((np.abs(ux) - 0.6) / 0.4, 0, 1)
+        P[:, :, 1] += rng.uniform(-0.004, 0.004) * (1 - ux ** 2)
+        Pc = np.stack([(x0 + x1) / 2 + P[:, :, 0], s * YS + P[:, :, 1], ZSH + P[:, :, 2]], -1)
+        P_fr.add(capw(Pc), T_SHR, Pl=P, mat="M_timber", smooth="bevel")
+    for xx in (-0.50, 0.50):            # cross beams lapped into the sheers, ends inside the valance ring
+        cap_member(P_fr, "M_timber", [xx, -YS - 0.075, ZSH + 0.01], [xx, YS + 0.075, ZSH + 0.01], 0.15, 0.17,
+                   c=0.018)
     # ---- cast-iron truck wheels (dia 0.20) with axle brackets hung from the sheers ----
     xw = math.sqrt(CURB_R ** 2 - YS ** 2)
     wprof = np.array([(0.0, -0.042), (0.034, -0.042), (0.036, -0.014), (0.078, -0.009), (0.084, -0.026),
@@ -2652,37 +2673,79 @@ def build_cap(parts):
         zz = deck_under(xx, yy) - 0.05
         P, T = sweep(capw(np.stack([xx, yy, zz], 1))[None], rect_prof(0.07, 0.1, 0.012), up=(0, 0, 1))
         P_fr.add(P, T, mat="M_timber", smooth="bevel")
-    # ---- valance: vertical board skirt hanging outside the curb (covers the wheel gap) ----
-    C = 2 * PI * (SKIRT_R + 0.0125)
-    ws = []
-    while sum(ws) < C:
-        ws.append(rng.uniform(0.13, 0.2))
-    ws = np.array(ws) * C / sum(ws)
-    a_c = (np.cumsum(ws) - ws / 2) / C * 2 * PI + 0.11
-    N = len(ws)
+    # ---- valance: vertical board skirt hanging outside the curb (covers the wheel gap). The boards are notched
+    # around the four sheer ends with 1 cm clearance: the ring leaves a gap where each sheer passes, filled by a
+    # short board below the sheer and one above it where there is room. ----
     rr = SKIRT_R + 0.0125
+    r_in, r_out = SKIRT_R, SKIRT_R + 0.025
+    blocks = []
+    for sy_ in (-1, 1):
+        for xe in SH_X:
+            angs = []
+            for rq in (r_in - 0.003, r_out + 0.003):
+                for yq in (sy_ * (YS - 0.08 - 0.01), sy_ * (YS + 0.08 + 0.01)):
+                    xq = math.copysign(math.sqrt(rq ** 2 - yq ** 2), xe)
+                    angs.append(math.atan2(yq, xq) % (2 * PI))
+            blocks.append((min(angs), max(angs)))
+    blocks.sort()
+    arcs = []                                  # (a0, a1, kind) kind 0 = free, 1 = sheer gap
+    for i, (b0, b1) in enumerate(blocks):
+        nb0 = blocks[(i + 1) % len(blocks)][0] + (2 * PI if i == len(blocks) - 1 else 0)
+        arcs.append((b0, b1, 1))
+        arcs.append((b1, nb0, 0))
+    gap = 0.004
+    vb = []                                    # (angle centre, arc width, z bottom, z top)
+    for a0, a1, kind in arcs:
+        S_ = (a1 - a0) * rr
+        if kind == 1:
+            ac = (a0 + a1) / 2
+            cx, cy = rr * math.cos(ac), rr * math.sin(ac)
+            zb = ZCT - 0.065 + rng.uniform(-0.01, 0.01)
+            vb.append((ac, S_ + 0.02, zb, ZSH - 0.10 - 0.01))     # under-board spans the notch (+1 cm laps)
+            zt = float(deck_under(np.array(cx), np.array(cy))) + 0.01
+            if zt - (ZSH + 0.11) > 0.03:
+                vb.append((ac, S_ + 0.02, ZSH + 0.10 + 0.01, zt))
+            continue
+        ws = []
+        while sum(ws) < S_ - 0.01:
+            ws.append(rng.uniform(0.13, 0.2))
+        ws = np.array(ws) * (S_ / sum(ws))
+        edges = a0 + np.concatenate([[0], np.cumsum(ws)]) / rr
+        for j in range(len(ws)):
+            ac = (edges[j] + edges[j + 1]) / 2
+            w = ws[j] - gap - (0.02 if j in (0, len(ws) - 1) else 0.0)      # 1 cm clearance at the sheers
+            if j == 0:
+                ac += 0.01 / rr
+            if j == len(ws) - 1:
+                ac -= 0.01 / rr
+            cx, cy = rr * math.cos(ac), rr * math.sin(ac)
+            zt = float(deck_under(np.array(cx), np.array(cy))) + 0.01
+            vb.append((ac, w, ZCT - 0.065 + rng.uniform(-0.012, 0.012), zt))
+    vb = np.array(vb)
+    a_c, ws, zbot, ztop = vb[:, 0], vb[:, 1], vb[:, 2], vb[:, 3]
+    N = len(vb)
     cx, cy = rr * np.cos(a_c), rr * np.sin(a_c)
-    ztop = deck_under(cx, cy) + 0.01
-    zbot = ZCT - 0.065 + rng.uniform(-0.012, 0.012, N)
     Lz = ztop - zbot
-    h = np.stack([Lz / 2, np.full(N, 0.0125), ws / 2 - 0.004], 1)
-    P = rbox(T_BRD, h, np.stack([np.full(N, 0.006), np.full(N, 0.005), np.full(N, 0.006)], 1))
+    h = np.stack([Lz / 2, np.full(N, 0.0125), ws / 2], 1)
+    P = rbox(T_BRD, h, np.stack([np.full(N, 0.006), np.full(N, 0.005), np.minimum(0.006, ws / 5)], 1))
     P[:, :, 1] += rng.uniform(-0.003, 0.003, N)[:, None]
     radv = np.stack([np.cos(a_c), np.sin(a_c), np.zeros(N)], 1)
     tanv = np.stack([-np.sin(a_c), np.cos(a_c), np.zeros(N)], 1)
     zv = np.repeat([[0, 0, 1.0]], N, 0)
     Rk = frame_mats(zv, radv, np.cross(zv, radv))
-    sk = rng.normal(0, 0.35, N) * D2R
+    sk = np.clip(rng.normal(0, 0.3, N), -0.5, 0.5) * D2R * (Lz > 0.2)
     Rk = Rk @ rotm([0, 1, 0], sk)
     ctr = np.stack([cx, cy, (ztop + zbot) / 2], 1)
     Wk = xform(P, Rk, ctr)
     P_fr.add(capw(Wk), T_BRD, Pl=P, mat="M_timber_weathered", smooth="bevel")
+    log("valance boards %d (4 sheer notches)" % N)
     # nail heads along the top (into the eave plate)
-    nl = np.stack([cx - np.sin(a_c) * 0.0, cy, ztop - 0.06], 1)
+    sel = Lz > 0.15
+    nl = np.stack([cx, cy, ztop - 0.06], 1)[sel]
     prof = np.array([(0.0, 0.0), (0.008, 0.0), (0.007, 0.003), (0.0, 0.005)])
-    Pn, Tn = lathe(np.repeat(prof[None], N, 0), 6)
-    Rn = frame_mats(tanv, zv, radv)
-    P_ir.add(capw(xform(Pn, Rn, nl + radv * 0.0125)), Tn, mat="M_iron", smooth="all")
+    Pn, Tn = lathe(np.repeat(prof[None], int(sel.sum()), 0), 6)
+    Rn = frame_mats(tanv[sel], zv[sel], radv[sel])
+    P_ir.add(capw(xform(Pn, Rn, nl + radv[sel] * 0.0125)), Tn, mat="M_iron", smooth="all")
     # ---- shingles (4 hipped faces) ----
     faces = [  # (o, e, run)
         (np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), CAP_EF),
