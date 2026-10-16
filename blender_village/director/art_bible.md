@@ -219,3 +219,7 @@ Remove or minimise geometry that can never be seen from outside the building, wh
 - Do not invent new slot names. Map anything new onto the closest palette entry.
 - The per-face `Mask` colour attribute (R sub-type, G wear, B per-piece random, A = 1) is optional but welcome for texture variation.
 - `stats.json` reports `material_slot_count`. The director treats any slot outside this palette as a must-fix, or more than 15 slots.
+
+### Producer note 8: pace (applies to builders)
+
+Time-box each builder round to roughly 60-90 minutes of work. After the full review render, fix only blocking problems you find in it, then return your report. The director's next grade is the feedback loop. Open-ended self-polishing after the review render slows the whole production.

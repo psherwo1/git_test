@@ -620,7 +620,7 @@ T_BRD_O3TB = tmpl_box(10, 3, 5, drop_back=True, yfront=True, drop={(0, 0), (0, 1
 T_BRD_O = tmpl_box(10, 4, 5, drop_back=True)  # cladding board without its (inner) back face
 T_BRD_OT = tmpl_box(10, 4, 5, drop_back=True, drop={(0, 1)})  # valance board: no back, no top end (under the deck)
 T_RUBF = tmpl_box(7, 4, 5)                    # free-standing rubble / boulders
-EYE_SOFFIT = 1.62                             # a soffit (downward face) below eye height never shows to a standing viewer
+EYE_SOFFIT = 1.0                              # a soffit (downward face) below 1 m: only a camera on the ground could see it
 T_PIN = tmpl_box(6, 3, 5, drop_back=True, yfront=True)     # pinning stones (open back)
 T_PIN_NB = tmpl_box(6, 3, 5, drop_back=True, yfront=True, drop={(2, 0)})   # ... below eye level: no soffit
 T_DRS = tmpl_box(8, 4, 6)                     # dressed blocks
@@ -1309,7 +1309,7 @@ class Wall:
             g[:, 1:] |= cov[:, :-1]
             g[:, :-1] |= cov[:, 1:]
             cov = g
-        unc = (~(cov | self.block)).astype(np.int32)
+        unc = (~cov).astype(np.int32)       # dressed / blocked work does not count: its joints need the skin
         S = np.zeros((self.nu + 1, self.nz + 1), np.int64)
         S[1:, 1:] = unc.cumsum(0).cumsum(1)
         ua, ub, za, zb = np.broadcast_arrays(ua, ub, za, zb)
@@ -1504,7 +1504,7 @@ class Wall:
             dm = self.mortar_d(ua, za)
             # skip stones whose sides are not exposed, or that sit on a mortar-depth step (footing ledge)
             dmo = self.mortar_d(ua, za - 0.03)
-            okst = (np.median(da - dm, 1) > 0.008) & (np.abs(dmo - dm).max(1) < 0.01) & \
+            okst = (np.median(da - dm, 1) > 0.001) & (np.abs(dmo - dm).max(1) < 0.01) & \
                 (np.abs(self.mortar_d(ua, za + 0.03) - dm).max(1) < 0.01)
             if not okst.any():
                 continue
@@ -1537,7 +1537,7 @@ class Wall:
             ii = ii % self.nu if self.period is not None else np.clip(ii, 0, self.nu - 1)
             kk = np.clip(((zo - self.z0) / self.cell).astype(int), 0, self.nz - 1)
             under = self.cov[ii, kk]                            # (N, m)
-            qk = ~(under & np.roll(under, -1, axis=1))
+            qk = np.ones_like(under)          # (all skirt quads kept: they form the joint floor in narrow joints)
             qq = (q[None] + (np.arange(N) * 2 * m)[:, None, None])[qk]
             if len(qq) == 0:
                 continue
@@ -1965,8 +1965,9 @@ def build_base(parts):
     us1 = us0 + 2 * PI / nth * RREF
     hid = WD.covered_rect(us0[:, None], us1[:, None], zs[None, :-1], zs[None, 1:])
     band = (zs[None, :-1] > Z_BAND0 - 0.01) & (zs[None, 1:] < Z_BAND1 + 0.01)
+    ledge = (zs[None, 1:] > 0.30) & (zs[None, :-1] < 0.50)      # footing ledge: no skirts there, keep the skin
     n0 = int(keep.sum())
-    keep &= ~(hid & ~band)
+    keep &= ~(hid & ~band & ~ledge)
     log("drum mortar skin: %d of %d cells hidden behind stone cover -> culled" % (n0 - int(keep.sum()), n0))
     add_grid(P_mo, "M_mortar", G, keep=keep, wrap=True, flip=False)
     return n
