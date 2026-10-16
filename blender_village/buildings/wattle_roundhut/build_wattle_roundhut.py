@@ -893,21 +893,33 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
     fn = {0: (0, 1), 1: (-1, 0), 2: (0, -1), 3: (1, 0)}
     disp = np.zeros((n, M))
     if adze:
+        # adze strokes: each face is worked in 2-3 overlapping lanes; every stroke leaves a shallow
+        # scoop 4-8 cm long, 2-6 mm deep, skewed across the lane, ending in a small ridge
         for c in range(4):
-            bnd = [-hl]
-            while bnd[-1] < hl:
-                bnd.append(bnd[-1] + rng.uniform(0.04, 0.08))
-            bnd = np.array(bnd)
-            dep = rng.uniform(0.003, 0.006, len(bnd))
-            tilt = rng.uniform(-0.5, 0.5, len(bnd))
-            k = np.clip(np.searchsorted(bnd, xs) - 1, 0, len(bnd) - 2)
-            tl = (xs - bnd[k]) / (bnd[k + 1] - bnd[k])
-            scoop = dep[k] * (1 - (2 * tl - 1) ** 2) ** 0.6
             js = np.where(face == c)[0]
-            disp[:, js] += scoop[:, None] * (1 + tilt[k][:, None] * across[js][None, :] * 0.6)
-            # corner points get half the scoop of the adjacent faces
+            nlane = rng.randint(2, 4)
+            edges = np.sort(np.concatenate([[-1.01, 1.01], rng.uniform(-0.5, 0.5, nlane - 1)]))
+            lane_scoop_mid = np.zeros(n)
+            for ln in range(nlane):
+                inl = (across[js] >= edges[ln]) & (across[js] < edges[ln + 1])
+                if not inl.any():
+                    continue
+                jl = js[inl]
+                bnd = [-hl - rng.uniform(0, 0.06)]
+                while bnd[-1] < hl + 0.1:
+                    bnd.append(bnd[-1] + rng.uniform(0.04, 0.08))
+                bnd = np.array(bnd)
+                dep = rng.uniform(0.002, 0.006, len(bnd)) * (rng.rand(len(bnd)) > 0.12)
+                skew = rng.uniform(-0.03, 0.03, len(bnd))
+                xe = xs[:, None] + skew[np.clip(np.searchsorted(bnd, xs) - 1, 0, len(bnd) - 2)][:, None] * across[jl][None, :]
+                k = np.clip(np.searchsorted(bnd, xe.ravel()) - 1, 0, len(bnd) - 2).reshape(xe.shape)
+                tl = np.clip((xe - bnd[k]) / (bnd[k + 1] - bnd[k]), 0, 1)
+                sc = dep[k] * (1 - (2 * tl - 1) ** 2) ** 0.5 * (0.6 + 0.4 * (1 - tl))
+                disp[:, jl] += sc
+                lane_scoop_mid += sc.mean(1) / nlane
+            # corner points get part of the adjacent face scoop
             for jc in range(c * (ns + nc), c * (ns + nc) + nc):
-                disp[:, jc] += 0.35 * scoop
+                disp[:, jc] += 0.35 * lane_scoop_mid
     # apply face displacement (inward along the face normal)
     for c in range(4):
         js = np.where(face == c)[0]
@@ -1081,8 +1093,12 @@ def weave_panel(rods, stakes_acc, pathf, s0, s1, z0, z1, seed, hide=None, n_stak
     z = z0 + rng.uniform(0.012, 0.03)
     row = 0
     tilt = rng.uniform(-0.01, 0.01) + slant
+    steep = abs(slant) > 0.1
+    if steep:          # rows start below the panel so the rising rods fill the bottom corner
+        z = z0 - max(0.0, tilt) * L + rng.uniform(0.0, 0.02)
+    z_stop = z1 - 0.02 - (min(0.0, tilt) * L if steep else 0.0)
     n_rods = 0
-    while z < z1 - 0.02:
+    while z < z_stop:
         u = rng.rand()
         nsub = 3 if u < 0.045 else (2 if u < 0.155 else 1)
         r_row = rng.uniform(*rod_r)
@@ -1126,6 +1142,14 @@ def weave_panel(rods, stakes_acc, pathf, s0, s1, z0, z1, seed, hide=None, n_stak
                     if rng.rand() < 0.55:
                         drift = drift + rng.uniform(-1, 1) * 0.009 * np.clip(1 - np.abs(ss - kp_) / 0.07, 0, 1) ** 1.5
                 zz = z + dz + dzz + drift + tilt * (ss - s0)
+                if steep:      # trim to the panel (ends die into the sole rail / lintel)
+                    ok = (zz > z0 - 0.012) & (zz < z1 + 0.012)
+                    if ok.sum() < 3:
+                        continue
+                    idx = np.where(ok)[0]
+                    sl = slice(idx[0], idx[-1] + 1)
+                    ss, zz, drift = ss[sl], zz[sl], drift[sl]
+                    n = len(ss)
                 if hide is not None and hide(ss, zz, 0.012).all():
                     continue
                 off = weave_offset(ss, st, signs, A)
