@@ -30,7 +30,7 @@ def build_profile(g):
     return s[keep], r[keep], z[keep], alpha[keep]
 
 
-AGE_DEFAULTS = dict(eave_wave=0.025, eave_wave_seed=33, sag=(0.010, 0.030), sag_seed=7177, sag_eave_fade=(0.15, 0.9))
+AGE_DEFAULTS = dict(eave_wave=0.025, eave_wave_seed=33, sag=(0.014, 0.034), sag_seed=7177, sag_eave_fade=(0.15, 0.9))
 """the ensemble-review age pass for a hut cone (art bible 1.7 / 6): an extra low-frequency eave wave (k <= 4,
 peak `eave_wave`, on top of the phase-1 +-2.5 cm wave -> +-3-5 cm overall), a 1-3 cm SAG of the shingle surface
 between every pair of rafters (sin^1.5 across the bay, its own amplitude per bay, faded in over the eave
@@ -50,6 +50,8 @@ def wave_z(theta, g=None):
         w = w + age.get("eave_wave", 0.0) / 1.25 * ring_noise(theta, age.get("eave_wave_seed", 33), 4, 1.0)
     # keep the eave over the door from dipping (door at az 0 => theta = -pi/2)
     dd = np.angle(np.exp(1j * (theta + np.pi / 2)))
+    if age:                 # the deeper aged wave must not pull the lip over the door below 2.40 m: flat-topped guard
+        w = np.where(w < 0.0, w * (1.0 - np.exp(-(dd / 0.42) ** 4)), w)
     return w + 0.02 * np.exp(-(dd / 0.35) ** 2) * (w < 0.0) * np.abs(w) / 0.02
 
 
@@ -84,7 +86,7 @@ def sag_at(g, theta, s):
     env = smoothstep(f0, f1, s) * (1 - smoothstep(g._sag_s1 - 1.2, g._sag_s1 - 0.1, s))
     along = 0.8 + 0.2 * np.sin(s * 1.3 + g._sag_mod[k])            # a purlin-less span sags unevenly
     span = 2 * np.pi * np.interp(s, g.PS, g.PR) / g.N_RAFT              # a short span (near the apex) sags less
-    return g._sag_amp[k] * along * np.clip(span / 0.9, 0.0, 1.0) * np.sin(np.pi * u) ** 1.5 * env
+    return g._sag_amp[k] * along * np.clip(span / 0.8, 0.0, 1.0) * np.sin(np.pi * u) ** 1.5 * env
 
 
 def surf(g, theta, s):

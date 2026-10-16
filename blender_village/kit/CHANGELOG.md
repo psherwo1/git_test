@@ -65,3 +65,17 @@
   - Hidden-geometry cull.
   - Decal anchors.
 - **Other buildings re-run:** none. No other building imports the kit yet.
+
+### Round-8 results for wattle_roundhut on 1.0.0
+
+| | Hero | `HUT_KIT_VARIANT` |
+|---|---|---|
+| Triangles | 744,105 | 662,300 |
+| est_hidden_pct | 7.7 % | 6.6 % |
+| Material slots | 10 | 10 |
+| Mask missing | none | none |
+| Needle / zero-area faces | 0 / 0 | — |
+| Decal anchors | 105 | 98 |
+| Deterministic rebuild | 0 of 229 objects differ | — |
+
+- The variant hut has a 2.9 m radius and a 2.60 m eave.
