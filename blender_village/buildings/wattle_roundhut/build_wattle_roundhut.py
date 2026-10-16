@@ -28,6 +28,7 @@ All randomness is seeded; the script is reproducible bit-for-bit.
 import math
 import os
 import time
+import zlib
 
 import bpy
 import numpy as np
@@ -172,9 +173,12 @@ class Acc:
     culled are dropped (producer note 6). By default everything more than 1.2 cm below the local ground
     (apron / interior floor) is culled."""
 
-    def __init__(self, name, sharp_angle=40.0, cull="ground"):
+    def __init__(self, name, sharp_angle=40.0, cull="ground", moss=None):
         self.name = name
         self.V, self.UV = [], []
+        self.MR, self.MG = [], []                     # Mask R (per-piece random), G (per-piece wear)
+        self.mrng = np.random.RandomState(zlib.crc32(name.encode()) & 0x7FFFFFFF)
+        self.moss = moss                              # None: B from world height / facing
         self.Fidx, self.Fsz, self.Fmat, self.Fsm, self.Fwrap = [], [], [], [], []
         self.n = 0
         self.mats = []
@@ -187,10 +191,15 @@ class Acc:
             self.mats.append(m)
         return self.mats.index(m)
 
-    def add(self, V, faces, mat, uv=None, wrap=False, smooth=True):
+    def add(self, V, faces, mat, uv=None, wrap=False, smooth=True, wear=None):
+        """one call = one piece (stone, shingle, rod, plank...) for the Mask attribute."""
         V = np.asarray(V, float).reshape(-1, 3)
         if len(V) == 0:
             return
+        r_ = self.mrng.rand()
+        g_ = self.mrng.uniform(0.1, 0.45) if wear is None else wear
+        self.MR.append(np.full(len(V), r_))
+        self.MG.append(np.full(len(V), g_))
         base = self.n
         m = self.mi(mat)
         if isinstance(faces, np.ndarray):
@@ -213,6 +222,19 @@ class Acc:
             self.UV.append(np.asarray(uv, float).reshape(-1, 2))
         self.n += len(V)
 
+    def mask_b(self, V, VN):
+        """moss / dirt / damp: high near the ground and on the plinth, on up-facing ledges and roof butts,
+        on shaded north faces; low on sheltered faces high up."""
+        if self.moss is not None:
+            return np.full(len(V), float(self.moss))
+        z = V[:, 2]
+        ground = np.clip(1.0 - z / 0.7, 0, 1) ** 1.5
+        up = np.clip(VN[:, 2], 0, 1)
+        north = np.clip(VN[:, 1], 0, 1) * 0.25
+        high = smoothstep(0.9, 2.6, z) * (1 - smoothstep(2.6, 3.2, z))      # sheltered wall under the eave
+        b = np.maximum(ground, 0.45 * up) + north - 0.2 * high
+        return np.clip(b + 0.06 * n2(V[:, 0] * 2.0, V[:, 1] * 2.0 + z, 77), 0, 1)
+
     def add_part(self, part, mat, smooth=True):
         self.add(part[0], part[1], mat, part[2] if len(part) > 2 else None,
                  wrap=part[3] if len(part) > 3 else False, smooth=smooth)
@@ -222,6 +244,8 @@ class Acc:
         if clamp and self.name != "HUT_ground_apron":
             V[:, 2] = np.maximum(V[:, 2], Z_MIN + 0.004)
         UVv = np.concatenate(self.UV)
+        MR = np.concatenate(self.MR)
+        MG = np.concatenate(self.MG)
         fidx = np.concatenate(self.Fidx)
         fsz = np.concatenate(self.Fsz)
         fmat = np.concatenate(self.Fmat)
@@ -243,7 +267,7 @@ class Acc:
         used = np.zeros(len(V), bool)
         used[fidx] = True
         remap = np.cumsum(used) - 1
-        V, UVv, fidx = V[used], UVv[used], remap[fidx]
+        V, UVv, MR, MG, fidx = V[used], UVv[used], MR[used], MG[used], remap[fidx]
         me = bpy.data.meshes.new(name or self.name)
         me.vertices.add(len(V))
         me.vertices.foreach_set("co", V.astype(np.float32).ravel())
@@ -283,6 +307,26 @@ class Acc:
         uvl.data.foreach_set("uv", luv.astype(np.float32).ravel())
         me.set_sharp_from_angle(angle=math.radians(self.sharp_angle))
         me.validate(clean_customdata=False)
+        # ---- producer note 9: 'Mask' colour attribute (CORNER, active + default/render)
+        VN = np.zeros(len(me.vertices) * 3, np.float32)
+        me.vertex_normals.foreach_get("vector", VN)
+        VN = VN.reshape(-1, 3)
+        Vm = np.zeros(len(me.vertices) * 3, np.float32)
+        me.vertices.foreach_get("co", Vm)
+        Vm = Vm.reshape(-1, 3).astype(float)
+        if len(Vm) == len(MR):
+            mr, mg = MR, MG
+        else:                                         # validate() changed the vertex set (rare)
+            mr = np.full(len(Vm), 0.5)
+            mg = np.full(len(Vm), 0.3)
+        mb = self.mask_b(Vm, VN)
+        li = np.zeros(len(me.loops), np.int32)
+        me.loops.foreach_get("vertex_index", li)
+        col = np.stack([mr[li], mg[li], mb[li], np.ones(len(li))], -1).astype(np.float32)
+        ca = me.color_attributes.new("Mask", "BYTE_COLOR", "CORNER")
+        ca.data.foreach_set("color", col.ravel())
+        me.color_attributes.active_color_name = "Mask"
+        me.color_attributes.default_color_name = "Mask"
         return me
 
     def build(self, coll):
@@ -301,11 +345,14 @@ INST_COLL = {}
 N_INST = [0]
 
 
+POOL_MOSS = {"rubble": 0.75, "chink": 0.6}
+
+
 def pool_mesh(pool, k, make, sharp=40.0):
     """k-th variant of a pool; make(acc, k) fills an Acc in local coords. Built once, reused."""
     key = (pool, k)
     if key not in POOLS:
-        acc = Acc(f"HUT_{pool}_v{k:02d}", sharp, cull=None)
+        acc = Acc(f"HUT_{pool}_v{k:02d}", sharp, cull=None, moss=POOL_MOSS.get(pool, 0.2))
         make(acc, k)
         POOLS[key] = acc.build_mesh(clamp=False)
     return POOLS[key]
@@ -919,7 +966,7 @@ def round_post(acc, base, top, rad, rng, sides=48, check=False, n_knots=None):
 
 def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_faces=(0, 1, 2, 3),
                 end_checks=0, sag=0.0, adze=True, mat="M_timber", ds=0.013, ns=7, nc=6, swell=0.008,
-                hero=(), hidden=(), deform=None, stride=7, caps=(True, True)):
+                hero=(), hidden=(), deform=None, stride=7, caps=(True, True), wear=None):
     """hand-hewn squared timber along local +X (half = (L/2, a, b)); R columns = local axes in world.
     Faces: 0:+z 1:-y 2:-z 3:+y.  Corners: 0:+y+z 1:-y+z 2:-y-z 3:+y-z.
     * adze scallops on every face: 3-6.5 mm deep, 4-8 cm long; on `hero` faces 6-12 mm deep, 5-9 cm
@@ -1125,7 +1172,7 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
     if deform is not None:
         V = deform(V)
     Vw = xf(V, R, center)
-    acc.add(Vw, Fl + ([cap0, fan0] if caps[0] else []) + ([cap1, fan1] if caps[1] else []), mat)
+    acc.add(Vw, Fl + ([cap0, fan0] if caps[0] else []) + ([cap1, fan1] if caps[1] else []), mat, wear=wear)
 
 
 def build_posts(coll):
@@ -2070,7 +2117,7 @@ def build_shingles(coll):
     B_WEDGE = 0.066
     OV = 0.065
 
-    def place(acc_, th_c, s_b, W, L, var, phi, lift, curl, base_fn, ys=None, closed=True):
+    def place(acc_, th_c, s_b, W, L, var, phi, lift, curl, base_fn, ys=None, closed=True, wear_=None):
         Pl, F, uv = shingle_mesh(W, L, var, curl=curl, ys=ys, bottom=closed, head=closed)
         x, y, z = Pl[:, 0], Pl[:, 1], Pl[:, 2]
         c, s_ = math.cos(phi), math.sin(phi)
@@ -2085,7 +2132,7 @@ def build_shingles(coll):
         xr = xr * np.clip(rcur / rb, 0.3, 1.0)
         off = base_fn(v) + z + lift * (1 - v)
         V = P0 + tt * xr[:, None] + n * off[:, None]
-        acc_.add(V, F, "M_roof_shingle", uv, smooth=True)
+        acc_.add(V, F, "M_roof_shingle", uv, smooth=True, wear=wear_)
 
     # ---- doubled starter course (underside seen from below at the eave)
     s_b = 0.012
@@ -2186,11 +2233,13 @@ def build_shingles(coll):
                 wb = Wi - wa - g
                 tha = thc - (Wi / 2 - wa / 2) / rb
                 thb = thc + (Wi / 2 - wb / 2) / rb
-                place(acc, tha, sb, wa, L, var, phi - 0.02, lift, curl, base_fn, closed=closed)
-                place(acc, thb, sb + 0.01, wb, L - 0.01, var, phi + 0.025, lift + 0.004, curl, base_fn, closed=closed)
+                place(acc, tha, sb, wa, L, var, phi - 0.02, lift, curl, base_fn, closed=closed, wear_=0.85)
+                place(acc, thb, sb + 0.01, wb, L - 0.01, var, phi + 0.025, lift + 0.004, curl, base_fn, closed=closed,
+                      wear_=0.9)
                 n_total += 2
                 continue
-            place(acc, thc, sb, Wi, L, var, phi, lift, curl, base_fn, closed=closed)
+            wr = 0.9 if r["slip"] > 0 else (0.55 + 0.2 * (k < 2) if k < 4 else None)
+            place(acc, thc, sb, Wi, L, var, phi, lift, curl, base_fn, closed=closed, wear_=wr)
             n_total += 1
     log("shingles:", n_total, "full-length (covered part visible):", n_full)
     SHINGLE_TOP["V"] = np.concatenate(acc.V + st_acc.V)
@@ -2605,8 +2654,8 @@ def plan_path():
             b = float(earth_base(np.array([xo]), np.array([yo]))[0])
             FLAGS.append(dict(kind="flag", c=(xo, yo), rot=rng.uniform(-0.4, 0.4), hu=lx, hv=lyy,
                               ext=max(lx, lyy) * 1.15, R=outline_radius(rng, "flag"),
-                              top=b + rng.uniform(0.018, 0.03), th=rng.uniform(0.085, 0.11),
-                              lip=rng.uniform(0.008, 0.014), lip_w=rng.uniform(0.05, 0.08),
+                              top=b + rng.uniform(0.022, 0.032), th=rng.uniform(0.085, 0.11),
+                              lip=rng.uniform(0.014, 0.02), lip_w=rng.uniform(0.05, 0.07),
                               seed=rng.randint(10 ** 5)))
         ys -= 2 * ly + rng.uniform(0.07, 0.13)
         k += 1
@@ -2806,7 +2855,13 @@ def build_rubble(coll):
         mesh = pool_mesh("rubble", k, make_rubble_variant)
         g = float(apron_height(np.array([x_]), np.array([y_]))[0])
         R = rotz(rng.uniform(0, 6.28)) @ rotx(rng.uniform(-0.15, 0.15)) @ roty(rng.uniform(-0.15, 0.15))
-        place_instance(mesh, "ground_rubble", R, (x_, y_, max(g - 0.004, Z_MIN + 0.0101 * sc)), scale=sc)
+        co = np.zeros(len(mesh.vertices) * 3)
+        mesh.vertices.foreach_get("co", co)
+        co = co.reshape(-1, 3)
+        lo_, hi_ = co.min(0), co.max(0)                     # review tools bound the local AABB corners
+        corners = np.array([[x, y, z] for x in (lo_[0], hi_[0]) for y in (lo_[1], hi_[1]) for z in (lo_[2], hi_[2])])
+        zmin_l = float(((corners @ R.T)[:, 2]).min()) * sc
+        place_instance(mesh, "ground_rubble", R, (x_, y_, max(g - 0.004, Z_MIN - zmin_l + 0.0005)), scale=sc)
     log("rubble instances:", len(pts))
 
 
@@ -3035,7 +3090,7 @@ def build_door(coll):
         return V
     hewn_member(thr, (0.0, yc, (SILL_TOP + 0.09) / 2), (0.92, 0.13, sh), np.eye(3), rng, ch=0.015,
                 end_checks=2, n_checks=1, check_faces=(0,), ns=8, nc=5, hero=(0, 1), hidden=(2, 3),
-                deform=sill_wear, mat="M_timber")
+                deform=sill_wear, mat="M_timber", wear=0.9)
 
     # ---------------- door leaf: 6 boards (16-30 cm) + 2 ledges + brace, open 75 deg inward
     LY = 0.024
@@ -3217,6 +3272,7 @@ def main():
         ob.data.calc_loop_triangles()
         tris += len(ob.data.loop_triangles)
     log(f"objects {len(obs)} (instances {N_INST[0]}, pooled meshes {len(POOLS)}) triangles {tris}")
+    bpy.context.preferences.filepaths.save_version = 0          # no .blend1 backups in the building folder
     bpy.ops.wm.save_as_mainfile(filepath=OUT, compress=True)
     log("saved", OUT, f"{os.path.getsize(OUT) / 1e6:.1f} MB")
 

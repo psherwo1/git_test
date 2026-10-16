@@ -269,3 +269,50 @@ It is now a solid game asset (rubric 8), but it is not yet close-up worthy:
 **Nice to have**
 - Low-poly moss cushions at the collar drip and a few door-side eave butts.
 - Slightly irregular rafter-end cuts: more saw/axe facets on 4–6 ends.
+
+## Round 3 — builder entry
+- Script `buildings/wattle_roundhut/build_wattle_roundhut.py` (deterministic: the geometry/transform hash matches across reruns; the build takes about 10 s). It saves `wattle_roundhut.blend` (23.5 MB, compressed, no `.blend1` backups). Renders are in `renders/wattle_roundhut/round_03/` (all 6 views at 32 spp, plus stats.json and hidden.json).
+- **Stats:**
+  - 1,083,921 tris, down from 1.466 M.
+  - **est_hidden_pct 14.2 %**, down from 46 %. Below ground 0 %.
+  - **material_slot_count 10**, all from the 15-slot palette, and the build asserts palette membership.
+  - `mask_attribute_missing` is empty.
+  - bbox min (-5.10, -7.48, -0.045), max (5.11, 5.21, 8.73).
+  - 168 objects: 23 unique meshes plus 145 linked duplicates from 32 pooled meshes, in the sub-collection `HUT_kit_instances`.
+- **Must-fix 1 (wattle):**
+  - Stakes are Ø2.8-3.6 cm, 3 per bay, jittered ±4 cm, leaning ±1.5° and set 2.2 cm back.
+  - Every rod wraps its stakes. The offset is stake_r + 1.24·rod_r + 3-5 mm, using a Hermite wrap with 30 % of the half-swing within 6 cm of each stake. By construction, no rod intersects a stake.
+  - Rods are Ø2.5-3.8 cm with 0-1 cm packing gaps, plus taper 1.0→0.55. Drift is ±1 rod diameter at 0.35-0.75 m wavelength.
+  - About 65 % of rows have staggered rod joints (≥0.3 m stagger, 0.18-0.32 m overlaps) with tips flicked 2-5 cm outward and capped.
+  - Rods are trimmed wherever the daub buries them. The inner skin is a single lumpy sheet 0.17 m behind the rod centreline, so the gaps read dark.
+- **Must-fix 2 (plinth):**
+  - New `shell_stone()`: irregular outlines (trap / D / tri, 5-8 corners, no parallel sides), domed and tilted faces, 1-2 crisp fracture planes (4.5-8 cm edge breaks) plus 3-5 split facets, and arris rounding of 0.8-5 cm that varies round each stone.
+  - One course, top about 0.33 m, earth banked about 5 cm, 22 % two-high with clearly smaller uppers.
+  - Door pad stones are irregular boulders with a flat bed.
+  - Chinking: a pool of 8 wedges, ray-tested against the stones so each one sits ≥2 cm behind both neighbouring faces and is placed only where an open joint shows it (44 placed).
+- **Must-fix 3 (flags and step):** non-convex 10-16-corner outlines with edge noise and notches, ±2 cm thickness, 1-3° tilt, arris 0.5-3 cm, 2.2-3.2 cm proud, and soft earth lips modelled into the apron. The apron now extends under the whole path, so no flag is off the earth. The step stone has a 1.6 cm wear dish.
+- **Must-fix 4 (entrance timber):**
+  - `hewn_member` gives hero faces adze scallops 6-12 mm deep and 5-9 cm long.
+  - Chamfers vary 1.5-3 cm along each member, and the wane comes and goes.
+  - Checks are 6-10 mm wide at the mouth, taper in width and depth, wander ±3 mm, and 60 % have a branch.
+  - Sill: a 2.2 cm trodden dip over the middle 0.6 m, a worn outer arris and end checks.
+  - Leaf boards are 16-30 cm wide, with gaps that vary along the length, ends uneven by ±1 cm, and 2 cupped boards.
+- **Must-fix 5 (daub):** the side patch is an irregular blob with a crumbled lower margin, thin spots and rods showing through. It feathers over about 12 cm. The ridging is broken into patches of 0.3 m or less with varying pitch and amplitude, only where the coat is thin.
+- **Must-fix 6 (floor seam):** the floor now runs under the sill in the door sector and steps down about 2.5 cm inside the sill, so the seam is gone.
+- **Must-fix 7 (apex):** the upper collar is a straight 54° cone (r 0.285→0.07 over 0.30 m) with its drip bead. The spindle is bead ring → tapered spindle → ring. The spike base is Ø0.19 with a knop ring 0.2 m up, then a straight taper.
+- **Producer notes 6 and 7, and must-fix 8:**
+  - Shingles are modelled as the exposed part plus 6.5 cm overlap. They are full length only where the covered part can be seen: under missing shingles, and in the back-arc window seen through the door. Undersides and heads are dropped above course 1. 16 pooled base shapes.
+  - Rods and stakes are open-backed shells with arcs that depend on height and how proud the rod sits.
+  - Posts are open at the back.
+  - Hidden faces of hewn members are closed with coarse quads.
+  - Rafters are eave stubs, full length only in the back arc. Purlins and battens are kept only where visible (eave gap / doorway).
+  - A dark roof blocker keeps the interior dark.
+  - Nothing is below -4.5 cm.
+  - Pools: pegs 6, nails 3, clench nails 3, hinge strap / knuckle / pintle, chinking 8, rubble 10.
+- **Producer note 9:** every mesh has a CORNER `Mask` (R per piece, G wear: higher on slipped or split shingles and the worn sill, B ground / up-facing / north dirt).
+- **Known gaps:**
+  - The flags read faintly in the frontal clay light.
+  - Stakes still show as thin verticals at close range.
+  - The apron margin hairline remains (waived r2).
+  - Instanced pieces carry transforms, and their Mask R is per variant, not per instance.
+  - Plinth top (0.33) and wattle base (0.345) are about 4 cm below spec §A, following the r2 note that the stones should be 0.2-0.3 m visible.
