@@ -327,8 +327,8 @@ def get_pool(key, builder, n_var):
         for i in range(n_var):
             acc = Acc(f"KEEP_pool_{key}_v{i:02d}")
             builder(acc, i)
-            meshes.append(build_mesh(acc, smooth_deg=40.0, clip_z=-0.04 if key == "rubble" else None,
-                                     mask_seed=7.3 * i + len(key), mask_ground=(key == "rubble")))
+            meshes.append(build_mesh(acc, smooth_deg=40.0, clip_z=None, mask_seed=7.3 * i + len(key),
+                                     mask_ground=False))
         POOL_MESHES[key] = meshes
     return POOL_MESHES[key]
 
@@ -1137,7 +1137,7 @@ def rough_footing(S, rng):
         S["sbt"][i] += t
         S["hy"][i] -= D / 2
         S["zc"][i] -= D / 2
-        S["pillow"][i] = rng.uniform(0.05, 0.08)
+        S["pillow"][i] = rng.uniform(0.08, 0.11)
         S["spl"][i] = 2
         # knock off 1-2 top corners (the field stone outline, not a sawn block)
         if all(S[f"cq{q}"][i] < 0.004 for q in range(4)) and "cq0" in S:
@@ -1145,8 +1145,10 @@ def rough_footing(S, rng):
                 S[f"cq{q}"][i] = min(rng.uniform(0.05, 0.12), 0.6 * float(S["hy"][i]), 0.4 * hx)
                 S[f"ca{q}"][i] = rng.uniform(0.6, 1.6)
         S["footx"][i] = 1.0
-        S["tiltx"][i] = rng.normal(0, 0.008)
-        S["tilty"][i] = rng.normal(0, 0.008)
+        S["tiltx"][i] = rng.normal(0, 0.010)
+        # round 6: the face leans back 1.5-3.5 cm toward the top (a field stone bedded on its broad side, not a
+        # plumb kerb face); the foot bulges out to the ground
+        S["tilty"][i] = -rng.uniform(0.015, 0.035)
     return S
 
 
@@ -1203,8 +1205,11 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
     for i in range(M):
         poly = stone_outline(S, i)
         hx, hy = float(S["hx"][i]), float(S["hy"][i])
+        fx = _g(S, "footx", i) > 0.5
         r = float(min(S["r"][i], 0.3 * min(hx, hy), 0.02))
         r = max(r, 0.004)
+        if fx:
+            r = float(min(0.035, 0.3 * min(hx, hy)))      # weathered field-stone shoulder, not a sawn arris
         f = float(S["f"][i])
         back = float(S["back"][i]) if side_depth is None else min(float(S["back"][i]), side_depth)
         nspl = int(_g(S, "spl", i))
@@ -1223,7 +1228,6 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
                 ang = rng.uniform(9.0, 16.0)
             planes.append((dvec, c0, math.tan(math.radians(ang))))
         maxdep = sum(t * max(0.0, np.abs(poly @ d).max() - c) for d, c, t in planes)
-        fx = _g(S, "footx", i) > 0.5
         if fx and maxdep > 0.7 * f + 0.02:
             # footing: keep every split plane inside the projection (never flattened back onto front_min)
             sc_ = (0.7 * f + 0.02) / maxdep
@@ -1237,9 +1241,10 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
         R1 = Q
         R2 = Q + N * (0.29 * r)
         R3 = Q + N * r
-        inner = [cen + (R3 - cen) * sc_ for sc_ in rings]
+        rings_i = (0.86, 0.7, 0.54, 0.38, 0.22) if fx else rings
+        inner = [cen + (R3 - cen) * sc_ for sc_ in rings_i]
         ring_xy = [R0, R1, R3] + inner + [cen[None, :]]
-        rho = [1.0, 1.0, 1.0] + list(rings) + [0.0]
+        rho = [1.0, 1.0, 1.0] + list(rings_i) + [0.0]
 
         def relief(xy, rh):
             x, y = xy[:, 0], xy[:, 1]
@@ -1249,6 +1254,9 @@ def build_poly_stones(acc, S, mapfn, mat, rng, rough=1.0, spacing=0.05, rings=(0
             tilt = _g(S, "tiltx", i) * x / max(hx, 1e-3) + _g(S, "tilty", i) * y / max(hy, 1e-3)
             # low-frequency face undulation only: the coarse ring topology must not show 'spokes'
             nz = fbm(np.stack([x * 7.0 + sd, y * 7.0, np.full(len(x), sd * 0.37)], -1), 2)
+            if fx:
+                # footing: broad 1-1.5 cm lumps and hollows (weathered field stone), plus the shoulder rolling off
+                nz = nz + 1.8 * fbm(np.stack([x * 3.2 + sd * 1.7, y * 3.2, np.full(len(x), sd * 0.11)], -1), 2)
             fac = np.zeros(len(x))
             for dvec, c0, tn in planes:
                 fac -= tn * np.maximum(xy @ dvec - c0, 0.0)
@@ -5466,6 +5474,9 @@ def corbel_cushion(acc, accm, center, spec=CUSH):
         st = []
         while th < th0 + 2 * np.pi - 1e-6:
             L = rng.uniform(*spec["stone_len"])
+            if c == 1:
+                # round 6: wider length spread on the upper course (no even 'tyre tread' rhythm)
+                L = rng.uniform(spec["stone_len"][0] * 0.85, spec["stone_len"][1] * 1.08)
             dth = (L + spec["joint"]) / r_ref
             if th0 + 2 * np.pi - (th + dth) < spec["stone_len"][0] / r_ref * 0.8:
                 dth = th0 + 2 * np.pi - th
@@ -5486,7 +5497,7 @@ def corbel_cushion(acc, accm, center, spec=CUSH):
             jt = spec["joint"] * rng.uniform(0.85, 1.2)
             dj = jt / (rb + 0.3)
             ta_, tb_ = ta + 0.5 * dj, tb - 0.5 * dj
-            off = rng.uniform(-0.04, 0.04) + float(wob(tm, c))
+            off = rng.uniform(-0.04, 0.04) * (1.5 if c == 1 else 1.0) + float(wob(tm, c))
             if c == 0:
                 proj = spec["proj_lo"][0] + (spec["proj_lo"][1] - spec["proj_lo"][0]) * f + off
                 zb = spec["z_base"] - spec["droop"] * f + rng.uniform(-0.015, 0.015)
@@ -5502,7 +5513,7 @@ def corbel_cushion(acc, accm, center, spec=CUSH):
                     if any(covers(a_, b_, t_) for t_ in tt):
                         zl = max(zl, z_)
                 zb = zl + spec["joint"] * rng.uniform(0.85, 1.15)
-                top = ztd + rng.uniform(-0.04, 0.02)
+                top = ztd + rng.uniform(-0.075, 0.03)
                 h = top - zb
                 if h > 0.34:
                     zb = top - 0.34
@@ -5567,6 +5578,14 @@ def corbel_cushion(acc, accm, center, spec=CUSH):
         tilt = math.tan(math.radians(rng.uniform(3, 6) * rng.choice([-1, 1])))
         pitch = math.tan(math.radians(rng.uniform(-3, 3)))
         bb = bb + tilt * Q[:, 0] + pitch * (Q[:, 2] - dep)
+        # round 6: each stone yawed 4-10 deg in plan (one end stands proud of its neighbour: a stepped, lumpy
+        # outline instead of a turned ring) and about half get a bellied outer face (2-4 cm)
+        wq = np.clip(Q[:, 2] / max(dep, 1e-3), 0.0, 1.0)
+        yaw = math.tan(math.radians(rng.uniform(4, 10))) * rng.choice([-1, 1])
+        r = r + yaw * Q[:, 0] * wq
+        if rng.uniform() < 0.55:
+            vb = np.clip(Q[:, 1] / max(h, 1e-3), 0.0, 1.0)
+            r = r + rng.uniform(0.02, 0.04) * (4 * vb * (1 - vb)) * wq ** 2
         thv = 0.5 * (sd["ta"] + sd["tb"]) + Q[:, 0] / r_out
         W = np.stack([cx + r * np.cos(thv), cy + r * np.sin(thv), sd["zb"] + bb], 1)
         acc.add(W, quads, "M_stone", uv=np.stack([Q[:, 0] + Q[:, 2], Q[:, 1]], 1))
@@ -5759,109 +5778,6 @@ def build_turret(coll):
     lead_hat(accf, TUR_C[0], TUR_C[1], apex, 0.19 * max(TS, 0.85), 0.16)
     finial(accf, (TUR_C[0], TUR_C[1], apex + 0.03), 0.8, 1.5, (-0.3, 1.0))
     finalize(accf, coll)
-
-
-# ==============================================================================================
-# GROUND CONTACT: scattered rubble
-# ==============================================================================================
-RUBBLE_SIZE = (0.08, 0.17, 0.28, 0.46)          # size classes of the rubble / boulder pool (4 variants each)
-
-
-def _rubble_builder(acc, i):
-    """rubble / boulder variant: lumpy sub-angular stone, pre-tilted and sunk 20-50 % into the ground (local z=0 is
-    the ground); everything below -4 cm is clipped away."""
-    rr = np.random.default_rng(8100 + i)
-    cls = i // 4
-    size = RUBBLE_SIZE[cls]
-    hx = size * rr.uniform(0.8, 1.2) / 2
-    hy = size * rr.uniform(0.6, 1.0) / 2
-    hz = size * rr.uniform(0.35, 0.6 if cls < 3 else 0.75) / 2
-    r_ = min(hx, hy, hz) * (0.45 if cls < 3 else 0.22)
-    n_ = 6 if cls < 2 else 9
-    P, qd = rbox(axn(np.array([-hx]), np.array([hx]), np.array([r_]), n_), axn(np.array([-hy]), np.array([hy]),
-                 np.array([r_]), n_), axn(np.array([-hz]), np.array([hz]), np.array([r_]), n_ - 1), np.array([r_]))
-    P = P[0]
-    P = P * (1 + (0.16 if cls < 3 else 0.05) * fbm(P / size * (3.0 if cls < 3 else 1.6) + i * 3.1, 2))[:, None]
-    # flat split facets (sub-angular, not a potato); boulders: one single mass with 4-5 cleaved faces
-    for _ in range(1 + (cls >= 2) + 3 * (cls >= 3)):
-        nn = rr.normal(0, 1, 3)
-        nn[2] = abs(nn[2]) * 0.6
-        nn /= np.linalg.norm(nn)
-        d0 = (P @ nn).max() - size * rr.uniform(0.06, 0.14)
-        d = P @ nn - d0
-        P = P - nn[None, :] * _softplus(d, 0.004 + 0.01 * size)[:, None]
-    x, y = rot2(P[:, 0], P[:, 1], rr.uniform(0, 2 * np.pi))
-    y2, z2 = rot2(y, P[:, 2], rr.normal(0, 0.2))
-    sink = rr.uniform(0.2, 0.5) * 2 * hz
-    z2 = z2 + hz - sink
-    acc.add(np.stack([x, y2, z2], 1), qd, "M_rubble")
-
-
-def build_ground(coll):
-    """scattered rubble (pooled variants) clustered at corners and pedestals, plus 1-2 half-buried boulders per wall
-    facet against the footing."""
-    rng = np.random.default_rng(1717)
-    get_pool("rubble", _rubble_builder, 4 * len(RUBBLE_SIZE))
-    pts = []
-    for c in range(8):
-        d, a = corner_dir(c)
-        for _ in range(rng.integers(3, 7)):
-            r = R_POST + rng.uniform(0.25, 0.75)
-            aa = a + rng.normal(0, 0.06)
-            pts.append((r * math.cos(aa), r * math.sin(aa)))
-    for _ in range(28):
-        t = rng.uniform(0, 1)
-        s_ = t * hall_L(0)
-        P = hall_map(np.array([s_]), np.array([0.0]), np.array([rng.uniform(0.2, 0.7)]), np.array([0.0]))[0]
-        pts.append((P[0], P[1]))
-    for _ in range(26):
-        s_ = rng.uniform(0, WING_LEN)
-        P = wing_map(np.array([s_]), np.array([0.0]), np.array([rng.uniform(0.15, 0.6)]), np.array([0.0]))[0]
-        pts.append((P[0], P[1]))
-    for _ in range(10):
-        a = rng.uniform(math.pi * 0.5, math.pi * 1.5)
-        r = float(tur_r(0.0)) + rng.uniform(0.15, 0.6)
-        pts.append((TUR_C[0] + r * math.cos(a), TUR_C[1] + r * math.sin(a)))
-    pts = np.array(pts)
-    u = rng.uniform(0, 1, len(pts))
-    cls = np.where(u < 0.6, 0, np.where(u < 0.9, 1, 2))
-    # boulders: 1-2 per hall facet (not inside the wing), 1 per wing wall run, 2 at the turret foot
-    bpts = []
-    for k in range(8):
-        for _ in range(int(rng.integers(1, 3))):
-            x_ = rng.uniform(-1.3, 1.3)
-            P = fmap(k, np.array([x_]), np.array([0.0]), np.array([0.0]), a_ref=A0 + rng.uniform(0.22, 0.32))[0]
-            bpts.append((P[0], P[1]))
-    for s_ in rng.uniform(0.3, WING_LEN - 0.3, 4):
-        P = wing_map(np.array([s_]), np.array([0.0]), np.array([rng.uniform(0.22, 0.3)]), np.array([0.0]))[0]
-        bpts.append((P[0], P[1]))
-    for a in rng.uniform(math.pi * 0.6, math.pi * 1.3, 2):
-        r = float(tur_r(0.0)) + rng.uniform(0.24, 0.32)
-        bpts.append((TUR_C[0] + r * math.cos(a), TUR_C[1] + r * math.sin(a)))
-    pts = np.concatenate([pts, np.array(bpts)])
-    cls = np.concatenate([cls, np.full(len(bpts), 3)])
-    # keep clear of the door step and wing door threshold, and outside walls
-    door = fmap(3, np.array([0.35]), np.array([0.0]), np.array([0.6]))[0]
-    keep = np.hypot(pts[:, 0] - door[0], pts[:, 1] - door[1]) > 1.1
-    keep &= np.hypot(pts[:, 0] - WDOOR["xc"], pts[:, 1] - (WY_S - 0.4)) > 0.9
-    ang = np.arctan2(pts[:, 1], pts[:, 0])
-    kk = np.round(ang / (np.pi / 4)) % 8
-    pp = pts[:, 0] * np.cos(kk * np.pi / 4) + pts[:, 1] * np.sin(kk * np.pi / 4)
-    keep &= pp > A0 + 0.08
-    keep &= ~((pts[:, 0] > WX_W - 0.08) & (pts[:, 0] < WX_E + 0.08) & (pts[:, 1] > WY_S - 0.08) & (pts[:, 1] < WY_N + 0.08))
-    keep &= tur_dist(pts[:, 0], pts[:, 1], np.zeros(len(pts))) > 0.08
-    pts, cls = pts[keep], cls[keep]
-    for i, (p_, c_) in enumerate(zip(pts, cls)):
-        v = int(c_) * 4 + int(rng.integers(0, 4))
-        sc = rng.uniform(0.85, 1.15)
-        yaw = rng.uniform(0, 2 * np.pi)
-        M = np.eye(4)
-        M[:3, 0] = (sc * math.cos(yaw), sc * math.sin(yaw), 0)
-        M[:3, 1] = (-sc * math.sin(yaw), sc * math.cos(yaw), 0)
-        M[:3, 2] = (0, 0, sc)
-        M[:3, 3] = (p_[0], p_[1], 0.0)
-        place("rubble", v, M, "KEEP_rubble" if c_ < 3 else "KEEP_boulder")
-    log(f"  rubble {int((cls < 3).sum())}, boulders {int((cls == 3).sum())}")
 
 
 # ==============================================================================================
@@ -6216,7 +6132,7 @@ def main():
     root = bpy.data.collections.new("KEEP")
     scn.collection.children.link(root)
     subs = {}
-    for nm in ("KEEP_hall", "KEEP_roof_skirt", "KEEP_tower", "KEEP_wing", "KEEP_turret", "KEEP_ground"):
+    for nm in ("KEEP_hall", "KEEP_roof_skirt", "KEEP_tower", "KEEP_wing", "KEEP_turret"):
         c = bpy.data.collections.new(nm)
         root.children.link(c)
         subs[nm] = c
@@ -6249,8 +6165,6 @@ def main():
     thatch_roof(subs["KEEP_wing"])
     log("turret")
     turret(subs["KEEP_turret"])
-    log("ground")
-    build_ground(subs["KEEP_ground"])
     log("pooled linked duplicates")
     pc = bpy.data.collections.new("KEEP_kit_instances")
     root.children.link(pc)

@@ -2767,6 +2767,37 @@ def build_door_and_interior(parts):
     X_, Y_ = np.meshgrid(xs_, ys_, indexing="ij")
     keep_ = np.hypot((X_[:-1, :-1] + X_[1:, 1:]) / 2, (Y_[:-1, :-1] + Y_[1:, 1:]) / 2) < RI + 0.25
     add_grid(P_int, "M_stone", np.stack([X_, Y_, np.full_like(X_, Z_TH - 0.004)], 2), keep=keep_, flip=False)
+    # round 6 (director r5 secondary): depth through the door - a worn oak floor sill across the inner end of the
+    # passage (its top arris catches the door light: the visible floor edge) and the foot of the ladder to the
+    # first floor, 1.0-1.5 m inside, right of the ajar leaf
+    rl = RNG("ladder")
+    y_sill = -(Rd + d1) - 0.07
+    member(P_int, "M_timber", np.array([[-XW + 0.02, y_sill, Z_TH - 0.032]]), np.array([[XW - 0.02, y_sill, Z_TH - 0.028]]),
+           0.15, 0.075, up=(0, 0, 1), c=0.012, rng=rl, bow=0.004)
+    y_ft = -Rd + 1.30
+    lean_ = 72.0 * D2R
+    run_ = (3.25 - Z_TH) / math.tan(lean_)
+    sx_ = (0.10, 0.52)
+    stile_a, stile_b = [], []
+    for k_, xs_l in enumerate(sx_):
+        xs_l += rl.uniform(-0.01, 0.01)
+        stile_a.append([xs_l, y_ft + rl.uniform(-0.01, 0.01), Z_TH - 0.01])
+        stile_b.append([xs_l + rl.uniform(-0.02, 0.02), y_ft + run_, 3.25])
+    stile_a, stile_b = np.array(stile_a), np.array(stile_b)
+    member(P_int, "M_timber", stile_a, stile_b, 0.10, 0.055, up=(1, 0, 0), c=0.014, rng=rl, bow=0.01, twist=0.03)
+    ra_, rb_ = [], []
+    z_r = Z_TH + 0.26
+    while z_r < 3.1:
+        f_ = (z_r - Z_TH) / (3.25 - Z_TH)
+        pa_ = stile_a[0] + (stile_b[0] - stile_a[0]) * f_
+        pb_ = stile_a[1] + (stile_b[1] - stile_a[1]) * f_
+        dz_ = rl.uniform(-0.012, 0.012)
+        ra_.append(pa_ + np.array([0.0, 0.0, dz_]))
+        rb_.append(pb_ + np.array([0.0, 0.0, -dz_]))
+        z_r += rl.uniform(0.27, 0.31)
+    member(P_int, "M_timber", np.array(ra_), np.array(rb_), 0.045, 0.040, up=(0, 0, 1), c=0.013, rng=rl, bow=0.006,
+           twist=0.1)
+    log("interior: floor sill at y %.2f, ladder foot %.2f m inside the door face, %d rungs" % (y_sill, 1.30, len(ra_)))
 
     # ---- door leaf (arch-topped plank door, hung ajar 26 deg inward) ----
     LEAF_W = 2 * (DOOR_CW + 0.055)
@@ -2862,85 +2893,10 @@ def build_door_and_interior(parts):
 
 
 T_GRUB = tmpl_box(9, 4, 9, drop={(1, 0)})        # settled ground stone: local y is UP, no bed face (buried)
-T_GRAV = tmpl_box(6, 3, 6, drop={(1, 0)})        # gravel / pebble (same convention, lighter)
 STYLE["ground"] = dict(rr=(0.06, 0.008, 0.015), ry=0.012, nxz=0.05, ny=0.008, pil=(0.0, 0.008), tap=0.15,
                        shear=0.12, T=T_GRUB, cuts=(3, 4), cutk=(0.78, 0.9), facets=(1, 2), hf=0.003, ftilt=0.45,
                        fshave=(0.01, 0.03))
-STYLE["gravel"] = dict(rr=(0.12, 0.003, 0.006), ry=0.004, nxz=0.05, ny=0.003, pil=(0.0, 0.003), tap=0.15,
-                       shear=0.12, T=T_GRAV, cuts=(2, 3), cutk=(0.75, 0.9), facets=(0, 1), hf=0.0, ftilt=0.5,
-                       fshave=(0.003, 0.008))
-# round 6: large half-buried ground stones - fracture-cut outline, crisp broken top arris (1-2 crisp edges,
-# 0.3-1.2 cm arris variation), 1-2 tilted split facets on the top, flat-ish beds
-T_GRUB_B = tmpl_box(13, 6, 13, drop={(1, 0)})
-STYLE["ground_big"] = dict(avar=(0.003, 0.012, 0.6), rr=(0.06, 0.006, 0.012), ry=0.010, nxz=0.04, ny=0.008,
-                           pil=(0.002, 0.012), tap=0.12, shear=0.10, T=T_GRUB_B, cuts=(3, 4), cutk=(0.8, 0.92),
-                           facets=(1, 2), hf=0.003, ftilt=0.35, fshave=(0.012, 0.035))
 R_UPRIGHT = frame_mats(np.array([[1.0, 0, 0]]), np.array([[0, 0, 1.0]]), np.array([[0, -1.0, 0]]))[0]
-
-
-def settled_stones(part, rng, xy, L, W, Hh, bury=(0.45, 0.65), style="ground", collar=(0.02, 0.04),
-                   collar_min=0.10, tilt=4.0, mat="M_rubble", z0=0.0, expose=None, tilt_range=None, expose_abs=None):
-    """Split stones settled into the ground (kit component): plan L x W, height Hh; 45-65 % of the height is
-    buried (nothing modelled deeper than the ground cut), angular fracture-cut outline, faceted top, 0.8-1.5 cm
-    arrises. Round 5: `expose` = (min, max) height of the stone's highest point above the ground (so no exposed
-    side is taller than that), `tilt_range` = (min, max) deg of bed tilt; stones larger than `collar_min` get a
-    CONCAVE soil collar (M_earth) that climbs the stone to its local surface height and runs out tangentially."""
-    N = len(xy)
-    P, T = stone_local(rng, L, W, Hh, style, rot_deg=(0, 0, 0))
-    bur = rng.uniform(*bury, N)
-    yaw = rng.uniform(0, 2 * PI, N)
-    if tilt_range is not None:
-        ta = rng.uniform(*tilt_range, N) * D2R
-        td = rng.uniform(0, 2 * PI, N)
-        R = euler(ta * np.cos(td), ta * np.sin(td), yaw) @ R_UPRIGHT
-    else:
-        R = euler(rng.normal(0, tilt * D2R, N), rng.normal(0, tilt * D2R, N), yaw) @ R_UPRIGHT
-    ctr = np.stack([xy[:, 0], xy[:, 1], Hh * (1 - bur) + z0], 1)
-    W_ = xform(P, R, ctr)
-    if expose is not None or expose_abs is not None:
-        ex_ = (rng.uniform(*expose, N) if expose_abs is None else np.asarray(expose_abs, float)) + \
-            np.broadcast_to(np.asarray(z0, float), (N,))
-        W_[:, :, 2] += (ex_ - W_[:, :, 2].max(1))[:, None]
-    part.add(W_, T, Pl=P, mat=mat, smooth="all", wear=0.6)
-    if collar is None:
-        return W_
-    for i in np.nonzero(np.maximum(L, W) > collar_min)[0]:
-        soil_collar(part, rng, W_[i], rng.uniform(*collar), (0.05, 0.09), i)
-    return W_
-
-
-def soil_collar(part, rng, Wi, hc, wout_r, seed_i=0, m=24, inset=0.93):
-    """Concave soil fillet (M_earth) round a bedded stone (kit component): the inner edge follows the stone's
-    ground outline (max radius per angular bin), climbs to just under the stone's local surface (at most hc),
-    and the profile z = h (1 - f)^2.6 runs out tangentially to the ground over wout_r (min, max) m."""
-    a = np.linspace(0, 2 * PI, m, endpoint=False)
-    prof_f = np.array([0.0, 0.08, 0.18, 0.31, 0.46, 0.63, 0.81, 1.0])
-    cxy = Wi[:, :2].mean(0)
-    dv = Wi[:, :2] - cxy
-    av = np.arctan2(dv[:, 1], dv[:, 0])
-    rv = np.hypot(dv[:, 0], dv[:, 1])
-    near_g = Wi[:, 2] > -0.02
-    rr = np.zeros(m)
-    zs_ = np.zeros(m)
-    for j in range(m):
-        sel = (np.abs((av - a[j] + PI) % (2 * PI) - PI) < PI / m * 1.6) & near_g
-        if sel.any():
-            k_ = np.argmax(np.where(sel, rv, -1))
-            rr[j] = rv[k_]
-            zs_[j] = Wi[k_, 2]
-    if (rr <= 0).any():
-        rr[rr <= 0] = np.median(rr[rr > 0]) if (rr > 0).any() else 0.1
-    rin = rr * inset
-    zin = np.clip(np.minimum(zs_ - 0.006, hc), -0.004, None)
-    wout = rng.uniform(*wout_r) * (1 + 0.25 * np.sin(a * 3 + rng.uniform(0, 6)) + 0.1 * np.sin(a * 5 + seed_i))
-    rows = []
-    for f in prof_f:
-        rad_ = rin + (rr * (1 - inset) + wout) * f
-        zf = zin * (1 - f) ** 2.6 if f < 1 else np.full(m, -0.003)
-        rows.append(np.stack([cxy[0] + rad_ * np.cos(a), cxy[1] + rad_ * np.sin(a), zf], 1))
-    G = np.stack(rows, 1)
-    nrm_ = np.cross(G[1, 0] - G[0, 0], G[0, 1] - G[0, 0])
-    add_grid(part, "M_earth", G, wrap=True, flip=bool(nrm_[2] < 0))
 
 
 def flag_outline(rf, Lf, Wf, m=96, front_facets=0):
@@ -2997,135 +2953,69 @@ def flag_outline(rf, Lf, Wf, m=96, front_facets=0):
     return np.array(pts), np.array(st), np.array(sid)
 
 
-def path_flags(part, rng, flags, step_index=0):
-    """Worn path flags set INTO the ground (kit component). flags: list of (cx, cy, L, W, z_high, thk).
-    Ordinary flags stand 1.0-2.5 cm proud on the high side and 0-1 cm on the low side (0.5-1 deg tilt); the
-    step stone keeps its height. 0.5-1 cm arris broken by chips, 1-2 crisp straight fracture edges, an M_earth
-    soil fillet 3-6 cm wide round every flag, gravel bedded in the joints (40-70 % buried)."""
-    outlines = []
-    for fi_, (cx, cy, Lf, Wf, ztop, thk) in enumerate(flags):
-        step = fi_ == step_index
-        O, st, sid = flag_outline(rng, Lf, Wf, front_facets=int(rng.integers(2, 4)) if step else 0)
-        mm = len(O)
-        rad = np.linalg.norm(O, axis=1)
-        if step:
-            ztf = np.full(mm, ztop)
-            tdir = np.array([1.0, 0.0])
-        else:
-            ta = rng.uniform(0, 2 * PI)
-            tdir = np.array([math.cos(ta), math.sin(ta)])
-            tilt = math.tan(rng.uniform(0.6, 1.0) * D2R)
-            proj = O @ tdir
-            ztf = ztop - tilt * (proj - proj.min())
-            ztf = np.maximum(ztf, 0.003)
-        # rings: interior (top undulation), arris insets, side down to the ground (no bed: it is buried)
-        inner_f = [0.18, 0.36, 0.52, 0.66, 0.78, 0.87, 0.94]
-        rings = []
-        for f in inner_f:
-            xy = O * f
-            zz = np.interp(xy @ tdir, O @ tdir, ztf) if not step else np.full(mm, ztop)
-            rings.append(np.concatenate([xy, zz[:, None]], 1))
-        # arris: 0.5-1.0 cm, crisp (<= 3 mm) along the straight fracture edges
-        d_ar = np.where(st, 0.003, rng.uniform(0.005, 0.010)) * (1 + 0.25 * np.sin(np.arange(mm) * 0.31 + fi_))
-        if step:        # round 6: the step's split front keeps a 0.5-1 cm arris (crisp, not a rolled nose)
-            d_ar = np.where(sid >= 0, rng.uniform(0.005, 0.009), d_ar)
-        dz_ar = np.where(st, 0.002, d_ar * 0.8)
-        dz_ar = np.where(sid >= 0, d_ar * 0.9, dz_ar)
-        for d_, dz_ in ((d_ar * 1.8, 0.0), (d_ar * 0.45, dz_ar * 0.45), (0.0 * d_ar, dz_ar)):
-            xy = O * (1 - d_ / rad)[:, None]
-            rings.append(np.concatenate([xy, (ztf - dz_)[:, None]], 1))
-        # round 6 (director r5 #3b): the side below the arris is ONE irregular split face - a kinked ring
-        # 0.8-1.5 cm under the arris wanders +-3 mm in and out; the soil fillet starts on this face >= 1.2 cm
-        # below the arris (no horizontal shelf). The step's front facets are planar with their own batter.
-        nrm2 = O / rad[:, None]
-        ph_s = rng.uniform(0, 2 * PI, 2)
-        jag = 0.0022 * np.sin(np.arange(mm) * 0.9 + ph_s[0]) + 0.0012 * np.sin(np.arange(mm) * 2.3 + ph_s[1])
-        def circ_smooth(v, k=5):
-            ker = np.ones(k) / k
-            return np.convolve(np.concatenate([v[-k:], v, v[:k]]), ker, mode="same")[k:-k]
-        jag *= 1 - 0.7 * circ_smooth(st.astype(float))
-        bat = np.zeros(mm)
-        if step:
-            for q in range(int(sid.max()) + 1):
-                bat[sid == q] = rng.uniform(0.004, 0.016)
-            bat = circ_smooth(circ_smooth(bat, 3), 3)        # facets meet on a kink, never a crack
-            jag *= 1 - circ_smooth((sid >= 0).astype(float))
-        zmid = ztf - dz_ar - rng.uniform(0.008, 0.015)
-        fmid = np.clip((ztf - dz_ar - zmid) / np.maximum(ztf - dz_ar + 0.03, 0.01), 0, 1)
-        rings.append(np.concatenate([O + nrm2 * (jag + bat * fmid)[:, None], zmid[:, None]], 1))
-        rings.append(np.concatenate([O + nrm2 * bat[:, None], np.full((mm, 1), -0.03)], 1))
-        Pf = np.array(rings)
-        nr_ = len(rings)
-        # round 5: low-frequency undulation of the whole worn top and arris (+-5-8 mm), not just the centre
-        topm = np.arange(nr_) < nr_ - 1
-        ph_ = rng.uniform(0, 2 * PI, 3)
-        un = rng.uniform(0.005, 0.0065) * np.sin(Pf[..., 0] * 4.1 + ph_[0]) * np.sin(Pf[..., 1] * 5.3 + ph_[1]) + \
-            0.0018 * np.sin(Pf[..., 0] * 9.5 - Pf[..., 1] * 7.7 + ph_[2])
-        if not step:
-            Pf[..., 2] += un * topm[:, None]
-            Pf[:-1, :, 2] = np.maximum(Pf[:-1, :, 2], 0.004)
-        else:           # round 6: the step's top undulates +-5 mm too (no cast-concrete plane)
-            Pf[..., 2] += un * (0.005 / 0.0083) * topm[:, None]
-        # 1-2 crisp spalls (1-2 cm deep) knocked off the exposed top arris: flat-bottomed scar with 1-vertex
-        # ramps, sloping back from the edge to nothing ~2 cm in
-        KA = len(inner_f)
-        for _ in range(int(rng.integers(1, 3))):
-            j0 = int(rng.integers(0, mm))
-            dj = np.abs((np.arange(mm) - j0 + mm // 2) % mm - mm // 2)
-            w_ = np.clip((rng.uniform(2.0, 4.0) - dj) / 1.0, 0, 1)
-            dep = min(rng.uniform(0.010, 0.020), 0.8 * float(Pf[KA, j0, 2]))
-            for k in (KA - 1, KA, KA + 1, KA + 2):
-                Pf[k, :, 2] -= w_ * dep * (0.25 if k == KA - 1 else 1.0)
-                Pf[k, :, :2] *= (1 - w_ * (0.03 if k >= KA else 0.0))[:, None]
-        Pf[KA + 3, :, 2] = np.minimum(Pf[KA + 3, :, 2], Pf[KA + 2, :, 2] - 0.004)   # split face stays below the arris
-        if step:
-            front = np.clip(-Pf[..., 1] / (Wf / 2), 0, 1) ** 3
-            hol = 0.026 * np.exp(-(Pf[..., 0] / 0.2) ** 2) * front
-            Pf[..., 2] -= hol * (np.arange(nr_) <= KA + 2)[:, None]
-        Pf[..., 0] += cx
-        Pf[..., 1] += cy
-        V = Pf.reshape(1, -1, 3)
-        Tf = tmpl_rings(nr_, mm, cap0=True, cap1=False)
-        V = add_caps(V, Tf)
-        Tf = orient_open(Tf, V[0])
-        part.add(V, Tf, mat="M_stone", smooth="bevel", wear=0.75)
-        outlines.append((O + np.array([cx, cy]), ztf, d_ar))
-        # soil fillet: from inside the side (just under the arris) out 3-6 cm to the ground, slightly concave
-        wf = rng.uniform(0.03, 0.06) * (1 + 0.3 * np.sin(np.arange(mm) * 0.2 + fi_))
-        nrm2 = O / rad[:, None]
-        zin = np.maximum(Pf[len(inner_f) + 2, :, 2] - rng.uniform(0.012, 0.02), 0.0) * (0.55 if step else 1.0)
-        # round 5: CONCAVE fillet 3-8 cm wide, z = zin (1 - f)^2.6, meeting the ground tangentially
-        wf = rng.uniform(0.03, 0.08) * (1 + 0.3 * np.sin(np.arange(mm) * 0.2 + fi_ + rng.uniform(0, 6)))
-        wf = np.clip(wf, 0.03, 0.08)
-        rows = []
-        side_off = bat * 0.5 if step else np.zeros(mm)
-        for f in (0.0, 0.1, 0.24, 0.42, 0.62, 0.82, 1.0):
-            off = -0.003 + side_off + (wf + 0.003) * f
-            zf = (zin + 0.005) * (1 - f) ** 2.6 - 0.005
-            rows.append(np.concatenate([O + nrm2 * off[:, None] + np.array([cx, cy]), zf[:, None]], 1))
-        G = np.stack(rows, 1)
-        nrm_ = np.cross(G[1, 0] - G[0, 0], G[0, 1] - G[0, 0])
-        add_grid(part, "M_earth", G, wrap=True, flip=bool(nrm_[2] < 0))
-    # round 6 (director r5 #3a): no strings of chips - 0-2 irregular 2-5 cm split chips per flag, half buried,
-    # set 4-12 cm off its edge line
-    gp, gs = [], []
-    for (O, _, _) in outlines:
-        c = O.mean(0)
-        for _ in range(int(rng.integers(0, 3))):
-            j = int(rng.integers(0, len(O)))
-            out = (O[j] - c) / np.linalg.norm(O[j] - c)
-            gp.append(O[j] + out * rng.uniform(0.04, 0.12) + rng.normal(0, 0.02, 2))
-            gs.append(rng.uniform(0.02, 0.05))
-    gp = np.array(gp).reshape(-1, 2)
-    gs = np.array(gs)
-    okg = np.hypot(gp[:, 0], gp[:, 1]) > R_BASE0 + 0.12
-    gp, gs = gp[okg], gs[okg]
-    Ng = len(gp)
-    if Ng:
-        settled_stones(part, rng, gp, gs * rng.uniform(1.0, 1.5, Ng), gs * rng.uniform(0.6, 0.95, Ng),
-                       gs * rng.uniform(0.5, 0.8, Ng), bury=(0.45, 0.55), style="gravel", collar=None,
-                       tilt_range=(8.0, 25.0))
-    log("path flags %d (tops %s), gravel in joints %d" % (len(flags), [round(float(o[1].max()), 3) for o in outlines], Ng))
+def door_step(part, rng, cx, cy, Lf, Wf, ztop):
+    """Door step built into the entrance (kit component; producer note 10 keeps only this): one split stone
+    bedded against the footing course under the threshold, level top at ztop with +-5 mm undulation, a split
+    front of 2-3 planar facets with a 0.5-1 cm arris, 1-2 crisp spalls, a worn hollow at the tread centre, and
+    a 3 cm buried skirt (no soil fillet, no loose stones: terrain is built in Unreal)."""
+    O, st, sid = flag_outline(rng, Lf, Wf, front_facets=int(rng.integers(2, 4)))
+    mm = len(O)
+    rad = np.linalg.norm(O, axis=1)
+    ztf = np.full(mm, ztop)
+    inner_f = [0.18, 0.36, 0.52, 0.66, 0.78, 0.87, 0.94]
+    rings = [np.concatenate([O * f, np.full((mm, 1), ztop)], 1) for f in inner_f]
+    d_ar = np.where(st, 0.003, rng.uniform(0.005, 0.010)) * (1 + 0.25 * np.sin(np.arange(mm) * 0.31))
+    d_ar = np.where(sid >= 0, rng.uniform(0.005, 0.009), d_ar)
+    dz_ar = np.where(st, 0.002, d_ar * 0.8)
+    dz_ar = np.where(sid >= 0, d_ar * 0.9, dz_ar)
+    for d_, dz_ in ((d_ar * 1.8, 0.0), (d_ar * 0.45, dz_ar * 0.45), (0.0 * d_ar, dz_ar)):
+        xy = O * (1 - d_ / rad)[:, None]
+        rings.append(np.concatenate([xy, (ztf - dz_)[:, None]], 1))
+    nrm2 = O / rad[:, None]
+    ph_s = rng.uniform(0, 2 * PI, 2)
+    jag = 0.0022 * np.sin(np.arange(mm) * 0.9 + ph_s[0]) + 0.0012 * np.sin(np.arange(mm) * 2.3 + ph_s[1])
+
+    def circ_smooth(v, k=5):
+        ker = np.ones(k) / k
+        return np.convolve(np.concatenate([v[-k:], v, v[:k]]), ker, mode="same")[k:-k]
+    jag *= 1 - 0.7 * circ_smooth(st.astype(float))
+    bat = np.zeros(mm)
+    for q in range(int(sid.max()) + 1):
+        bat[sid == q] = rng.uniform(0.004, 0.016)
+    bat = circ_smooth(circ_smooth(bat, 3), 3)        # facets meet on a kink, never a crack
+    jag *= 1 - circ_smooth((sid >= 0).astype(float))
+    zmid = ztf - dz_ar - rng.uniform(0.008, 0.015)
+    fmid = np.clip((ztf - dz_ar - zmid) / np.maximum(ztf - dz_ar + 0.03, 0.01), 0, 1)
+    rings.append(np.concatenate([O + nrm2 * (jag + bat * fmid)[:, None], zmid[:, None]], 1))
+    rings.append(np.concatenate([O + nrm2 * bat[:, None], np.full((mm, 1), -0.03)], 1))
+    Pf = np.array(rings)
+    nr_ = len(rings)
+    topm = np.arange(nr_) < nr_ - 1
+    ph_ = rng.uniform(0, 2 * PI, 3)
+    un = rng.uniform(0.005, 0.0065) * np.sin(Pf[..., 0] * 4.1 + ph_[0]) * np.sin(Pf[..., 1] * 5.3 + ph_[1]) + \
+        0.0018 * np.sin(Pf[..., 0] * 9.5 - Pf[..., 1] * 7.7 + ph_[2])
+    Pf[..., 2] += un * (0.005 / 0.0083) * topm[:, None]
+    KA = len(inner_f)
+    for _ in range(int(rng.integers(1, 3))):         # 1-2 crisp spalls off the exposed top arris
+        j0 = int(rng.integers(0, mm))
+        dj = np.abs((np.arange(mm) - j0 + mm // 2) % mm - mm // 2)
+        w_ = np.clip((rng.uniform(2.0, 4.0) - dj) / 1.0, 0, 1)
+        dep = min(rng.uniform(0.010, 0.020), 0.8 * float(Pf[KA, j0, 2]))
+        for k in (KA - 1, KA, KA + 1, KA + 2):
+            Pf[k, :, 2] -= w_ * dep * (0.25 if k == KA - 1 else 1.0)
+            Pf[k, :, :2] *= (1 - w_ * (0.03 if k >= KA else 0.0))[:, None]
+    Pf[KA + 3, :, 2] = np.minimum(Pf[KA + 3, :, 2], Pf[KA + 2, :, 2] - 0.004)
+    front = np.clip(-Pf[..., 1] / (Wf / 2), 0, 1) ** 3
+    hol = 0.026 * np.exp(-(Pf[..., 0] / 0.2) ** 2) * front
+    Pf[..., 2] -= hol * (np.arange(nr_) <= KA + 2)[:, None]
+    Pf[..., 0] += cx
+    Pf[..., 1] += cy
+    V = Pf.reshape(1, -1, 3)
+    Tf = tmpl_rings(nr_, mm, cap0=True, cap1=False)
+    V = add_caps(V, Tf)
+    Tf = orient_open(Tf, V[0])
+    part.add(V, Tf, mat="M_stone", smooth="bevel", wear=0.75)
+    log("door step: top %.3f m, %d front facets" % (float(Pf[:-1, :, 2].max()), int(sid.max()) + 1))
 
 
 def orient_open(T, P0):
@@ -3135,135 +3025,12 @@ def orient_open(T, P0):
     return flip_tmpl(T) if np.cross(b - a, c - a)[2] < 0 else T
 
 
-def hull_sdist(H, X):
-    """Signed distance (negative inside) from points X (n,2) to the convex CCW polygon H (k,2)."""
-    A = H
-    B = np.roll(H, -1, 0)
-    E = B - A
-    L2 = np.maximum((E ** 2).sum(1), 1e-12)
-    t = np.clip(((X[:, None, :] - A[None]) * E[None]).sum(2) / L2[None], 0, 1)
-    Q = A[None] + t[..., None] * E[None]
-    d = np.sqrt(((X[:, None, :] - Q) ** 2).sum(2)).min(1)
-    cr = E[None, :, 0] * (X[:, None, 1] - A[None, :, 1]) - E[None, :, 1] * (X[:, None, 0] - A[None, :, 0])
-    inside = (cr >= 0).all(1)
-    return np.where(inside, -d, d)
-
-
-def cluster_collar(part, stones, z_end=-0.005, cell=0.016):
-    """Round 6 (director r5 #1): ONE shared soil collar per rubble cluster, as a height field: round each
-    stone's ground outline (convex hull of its vertices at the ground cut) the soil climbs hc (0.6-3.5 cm)
-    and runs out over w (3-8 cm) as z = hc (1 - d / w)^2.6 - tangential to the ground, no crest, no step;
-    neighbouring stones share it (max of the profiles). Cells deep inside a stone (hidden) or flat on the
-    ground are not modelled. stones: list of (W (nv,3), hc, w)."""
-    hulls, hcs, ws = [], [], []
-    for W, hc, w in stones:
-        g = W[W[:, 2] < 0.012, :2]
-        if len(g) < 3:
-            continue
-        h_ = hull2d(g)
-        if len(h_) < 3:
-            continue
-        hulls.append(h_)
-        hcs.append(hc)
-        ws.append(w)
-    if not hulls:
-        return 0
-    allp = np.concatenate(hulls)
-    lo = allp.min(0) - max(ws) - 0.02
-    hi = allp.max(0) + max(ws) + 0.02
-    nx = int(math.ceil((hi[0] - lo[0]) / cell)) + 1
-    ny = int(math.ceil((hi[1] - lo[1]) / cell)) + 1
-    X, Y = np.meshgrid(lo[0] + np.arange(nx) * cell, lo[1] + np.arange(ny) * cell, indexing="ij")
-    pts = np.stack([X.ravel(), Y.ravel()], 1)
-    Z = np.zeros(len(pts))
-    inside_deep = np.zeros(len(pts), bool)
-    for h_, hc, w in zip(hulls, hcs, ws):
-        sd = hull_sdist(h_, pts)
-        prof = np.where(sd > 0, hc * np.clip(1 - sd / w, 0, 1) ** 2.6, hc + 0.3 * np.minimum(-sd, 0.03))
-        Z = np.maximum(Z, prof)
-        inside_deep |= sd < -0.03
-    Z = Z.reshape(nx, ny)
-    inside_deep = inside_deep.reshape(nx, ny)
-    flat = Z <= 1e-5
-    cf = flat[:-1, :-1] & flat[1:, :-1] & flat[:-1, 1:] & flat[1:, 1:]
-    ci = inside_deep[:-1, :-1] & inside_deep[1:, :-1] & inside_deep[:-1, 1:] & inside_deep[1:, 1:]
-    keep = ~cf & ~ci
-    G = np.stack([X, Y, Z + z_end], -1)
-    add_grid(part, "M_earth", G, keep=keep, flip=False)
-    return int(keep.sum())
-
-
 def build_ground(parts):
-    """Round 6 (director r5 #1): 45-60 rubble stones in 5 clusters hugging the footing course (0-0.6 m from the
-    drum face) at the -X prop side, the +X side, the rear and either side of the path; 8-12 of them are
-    0.20-0.45 m stones buried 40-60 % (6-15 cm proud, tilted beds, crisp fractured top arris), the rest
-    0.05-0.15 m buried 30-50 %; one shared, tangential soil collar per cluster. The open field stays clear."""
-    P_r = parts["rubble"]
-    rng = RNG("ground_rubble_r6")
-    r_face = R_BASE0 + 0.07                               # footing course face
-    # cluster centre azimuths (deg; 0 = front -Y, +90 = +X): prop side, +X side, rear, path left / right
-    clusters = [(-92.0, 11, 2), (88.0, 11, 2), (176.0, 10, 2), (-27.0, 10, 2), (27.0, 9, 2)]
-    allW, n_big, n_all = [], 0, 0
-    for ci_, (az, n, nb) in enumerate(clusters):
-        th0 = az * D2R
-        xy, big = [], []
-        sizes = np.concatenate([rng.uniform(0.22, 0.44, nb), np.exp(rng.uniform(np.log(0.05), np.log(0.15), n - nb))])
-        for q, sz in enumerate(sizes):
-            for _try in range(60):
-                if q < nb:
-                    dr = sz * 0.5 + rng.uniform(0.0, 0.12)                 # big ones lean on the footing
-                    du = rng.uniform(-0.45, 0.45)
-                else:
-                    dr = sz * 0.5 + rng.uniform(0.0, 0.55)
-                    du = rng.uniform(-0.75, 0.75)
-                th = th0 + du / r_face
-                rr_ = r_face + dr
-                c_ = np.array([rr_ * math.sin(th), -rr_ * math.cos(th)])
-                if abs(c_[0]) < 0.85 and c_[1] < 0:                       # keep the path clear
-                    continue
-                ok = all(np.hypot(*(c_ - xy[j])) > 0.5 * (sz + sizes[j]) * 0.92 for j in range(len(xy)))
-                if ok:
-                    xy.append(c_)
-                    big.append(q < nb)
-                    break
-        xy = np.array(xy)
-        big = np.array(big)
-        Nc = len(xy)
-        sz = sizes[:Nc]
-        stones = []
-        for sel, kind in ((big, "big"), (~big, "small")):
-            if not sel.any():
-                continue
-            ns = int(sel.sum())
-            L = sz[sel] * rng.uniform(1.0, 1.25, ns)
-            Wd = sz[sel] * rng.uniform(0.65, 0.9, ns)
-            if kind == "big":
-                bur = rng.uniform(0.40, 0.60, ns)
-                ex = rng.uniform(0.06, 0.15, ns)
-                Hh = np.clip(ex / (1 - bur), 0.10, 0.34)
-                W_ = settled_stones(P_r, rng, xy[sel], L, Wd, Hh, style="ground_big", collar=None,
-                                    expose_abs=np.minimum(ex, Hh * (1 - bur)), tilt_range=(6.0, 16.0), mat="M_rubble")
-                hc = rng.uniform(0.018, 0.035, ns)
-                wc = rng.uniform(0.05, 0.08, ns)
-                n_big += ns
-            else:
-                bur = rng.uniform(0.30, 0.50, ns)
-                Hh = sz[sel] * rng.uniform(0.45, 0.7, ns)
-                W_ = settled_stones(P_r, rng, xy[sel], L, Wd, Hh, bury=(0.30, 0.50), style="ground",
-                                    collar=None, tilt_range=(5.0, 20.0), mat="M_rubble")
-                hc = np.minimum(rng.uniform(0.006, 0.014, ns), 0.5 * W_[:, :, 2].max(1))
-                wc = rng.uniform(0.03, 0.05, ns)
-            for i in range(ns):
-                stones.append((W_[i], float(hc[i]), float(wc[i])))
-        ncell = cluster_collar(P_r, stones)
-        n_all += Nc
-        log("ground cluster %d (az %+.0f): %d stones (%d big), shared collar %d cells" % (ci_, az, Nc, int(big.sum()), ncell))
-    log("ground rubble %d settled split stones in %d clusters (%d of 0.20-0.45 m, 6-15 cm proud)"
-        % (n_all, len(clusters), n_big))
-    rf = RNG("path_flags")
-    dy_ = R_BASE0 - 2.60                                  # kit: the path starts at the drum's door
-    path_flags(P_r, rf, [(0.0, -2.95 - dy_, 1.25, 0.60, 0.075, 0.12), (0.15, -3.62 - dy_, 0.95, 0.62, 0.021, 0.10),
-                         (-0.2, -4.30 - dy_, 0.85, 0.60, 0.019, 0.095), (0.45, -4.85 - dy_, 0.60, 0.45, 0.017, 0.085)])
+    """Producer note 10 (round 6): loose ground stones, rubble clusters, path flags, gravel and soil aprons are
+    out of scope (terrain is built in Unreal) and are not modelled. Only the door step built into the entrance
+    remains; the footing course meets Z = 0 with a <= 5 cm buried skirt."""
+    dy_ = R_BASE0 - 2.60                                  # kit: the step sits at the drum's door
+    door_step(parts["step"], RNG("path_flags"), 0.0, -2.95 - dy_, 1.25, 0.60, 0.075)
 
 
 # =============================================================================================
@@ -4845,7 +4612,7 @@ def build_rotor(parts):
         fr = np.concatenate([[0], np.cumsum(fw)]) / fw.sum()
         for j in range(nb):
             h = np.array([[1.0, 0.01, 0.5]])
-            P = rbox(T_BRD, h, np.array([[0.006, 0.005, 0.01]]))
+            P = rbox(T_BRD, h, np.array([[0.006, 0.0028, 0.006]]))
             u = (P[:, :, 0] + 1.0) / 2.0
             v = P[:, :, 2] + 0.5
             fl = fr[j] + (fr[j + 1] - fr[j]) * v
@@ -4858,7 +4625,7 @@ def build_rotor(parts):
             if j in (0, nb - 1):
                 corner = np.clip((u - 0.93) / 0.07, 0, 1) * np.clip((np.abs(lat) - 0.7) / 0.3, 0, 1)
                 r = r - corner * rng.uniform(0.02, 0.04)
-            gap = 0.004
+            gap = 0.0025                  # round 6: 5 mm board gap (reads 0.5-1 cm with the arrises)
             l = (fl - 0.5) * Wd + np.where(v < 0.5, gap, -gap) + dW[2] * s_ * 0.5
             z = P[:, :, 1] + rng.uniform(-0.003, 0.003) + 0.003 * (2 * v - 1) ** 2
             Q = np.stack([r, l, z], -1)
@@ -5256,19 +5023,6 @@ def prop_foot(P_a, rng, bot, hz, Zf, idx, pole_at, heel=0.10):
         member(P_a, "M_iron", b1_[None], b2_[None], 0.03, 0.007, up=sv * sg, c=0.002)
         bolt_heads(P_a, np.stack([a_ + sv * sg * 0.004, b2_ + sv * sg * 0.004]),
                    np.stack([sv * sg, sv * sg]), rad=0.011, hgt=0.006, sides=8)
-    # ---- concave soil fillet round the pad, running out tangentially 0.16-0.24 m beyond it ----
-    hm = rng.uniform(0.022, 0.03)
-    soil_collar(P_a, rng, Wp[0], hm, (0.16, 0.24), idx, m=32, inset=0.95)
-    # ---- 3-5 split pebbles in the fillet, buried 40-60 % ----
-    c0 = Wp[0, :, :2].mean(0)
-    npb = int(rng.integers(3, 6))
-    ap = rng.uniform(0, 2 * PI, npb)
-    rp = 0.5 * max(Lpad, Wpad) + rng.uniform(0.03, 0.14, npb)
-    xy = c0 + np.stack([rp * np.cos(ap), rp * np.sin(ap)], 1)
-    fp = np.clip((rp - 0.5 * max(Lpad, Wpad)) / 0.2, 0, 1)
-    sz = rng.uniform(0.04, 0.08, npb)
-    settled_stones(P_a, rng, xy, sz * 1.2, sz * 0.9, sz * 0.55, bury=(0.4, 0.6), style="ground", collar=None,
-                   z0=hm * (1 - fp) ** 2.6, tilt=10.0)
     log("prop foot %d: pad top %.3f m, chock %.0f%% sunk into the notch (height %.3f), seat %.2f, heel %.2f"
         % (idx, float(Wp[0, :, 2].max()), 100 * sunk, Hc, Zf, Zf + heel))
 
@@ -5338,20 +5092,42 @@ def raking_prop(parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None):
     hw_b = 0.3 + 0.08 * np.sin(sdist * 17 + idx) + 0.05 * np.sin(sdist * 41)
     da = np.abs((ang[None, :] - ab + PI) % (2 * PI) - PI)
     R += 0.010 * (inb[:, None] & (da < hw_b[:, None]))
-    # V checks: 2.3 cm wide (lips at +-1.15 cm), 1.5-2.5 cm deep, 0.8-2 m long
+    # V checks (round 6, director r5 #4): each check is a tapering split - width 0 -> 1.5-2.5 cm -> 0 and depth
+    # 0 -> 1.2-2.2 cm -> 0 along its 0.3-0.8 m length (no two the same length), drifting +-5 deg off the grain
+    # (the V's bottom slides across the three check columns), plus one radial end-grain split at the butt
     checks = []
-    for a in ck_a:
-        j = int(np.argmin(np.abs((ang - a % (2 * PI) + PI) % (2 * PI) - PI)))
+    used_l = []
+    for ci, a in enumerate(ck_a):
+        jc = int(np.argmin(np.abs((ang - a % (2 * PI) + PI) % (2 * PI) - PI)))
+        jl, jr = (jc - 1) % m, (jc + 1) % m
+        for _t in range(20):
+            lc = rng.uniform(0.3, 0.8)
+            if all(abs(lc - q) > 0.06 for q in used_l):
+                break
+        used_l.append(lc)
         if len(checks) >= nck:              # foot checks: within the bottom 1.2 m
-            lc = rng.uniform(0.6, 0.9)
             s0 = rng.uniform(0.15, 1.2 - lc)
         else:
-            lc = rng.uniform(0.8, 2.0)
-            s0 = rng.uniform(0.5, 4.5 - lc) if len(checks) == 0 else rng.uniform(0.8, Lp - lc - 0.8)
+            s0 = rng.uniform(1.3, Lp - lc - 0.8)
         u = np.clip((sdist - s0) / lc, 0, 1)
-        dep = rng.uniform(0.015, 0.025) * np.sqrt(np.sin(u * PI))
-        R[:, j] -= dep
-        checks.append((s0, lc))
+        env = np.sin(u * PI) ** 1.3 * (1 + 0.15 * np.sin(u * 11 + ci))
+        dep = rng.uniform(0.012, 0.022) * env
+        drift = rng.uniform(-1.4, 1.4)          # ~ +-5 deg over the check's length (column units)
+        sl = np.clip(0.5 * drift * (2 * u - 1), -0.8, 0.8) * (u > 0) * (u < 1)
+        wfac = np.clip(env * rng.uniform(1.1, 1.4), 0, 1)                             # width taper
+        R[:, jc] -= dep * (1 - np.abs(sl))
+        R[:, jl] -= dep * np.clip(-sl, 0, 1) * wfac
+        R[:, jr] -= dep * np.clip(sl, 0, 1) * wfac
+        # narrow the open V toward its ends: the lip columns sag in only where the check is wide
+        R[:, jl] -= 0.002 * wfac * (u > 0) * (u < 1)
+        R[:, jr] -= 0.002 * wfac * (u > 0) * (u < 1)
+        checks.append((round(s0, 2), round(lc, 2)))
+    # end-grain split at the butt: deepest (2.5-3.5 cm) at the foot cut, closing 0.15-0.25 m up the pole
+    jb = int(np.argmin(np.abs((ang - (ck_a[0] + PI * 0.55) % (2 * PI) + PI) % (2 * PI) - PI)))
+    lsp = rng.uniform(0.15, 0.25)
+    usp = np.clip(1 - sdist / lsp, 0, 1)
+    R[:, jb] -= rng.uniform(0.025, 0.035) * usp ** 0.7
+    checks.append(("butt", round(lsp, 2)))
     # knots: 4-6, at least 2 within 2.5 m of the foot
     nk = int(rng.integers(4, 7))
     kd = np.concatenate([rng.uniform(0.7, 2.4, 2), rng.uniform(3.0, Lp - 1.0, nk - 2)])
@@ -5403,7 +5179,7 @@ def raking_prop(parts, top, bot, k, zatt, idx=0, rng=None, Zf=0.08, seed=None):
         P_p.add(Pk, Tk, mat="M_timber_weathered", smooth="all")
     nknot_foot = int(sum(1 for sk in kd if sk <= 2.5))
     log("prop %d: %d rings x %d sides (ring spacing %.3f m), checks %s, knots %d (%d within 2.5 m of the foot)"
-        % (idx, n, m, dt * Lp, [(round(a, 2), round(b, 2)) for a, b in checks], nk, nknot_foot))
+        % (idx, n, m, dt * Lp, checks, nk, nknot_foot))
     # ---- head: timber cleat under the pole, collar lugs (clevis ears) and a through-bolt ----
     Lt = LEAN_R @ tt_
     latc = float((top - lean(face_map(k, np.array([0.0]), np.array([zatt]), np.array([0.0])))[0]) @ Lt)
@@ -5907,7 +5683,7 @@ def new_parts(prefix="MILL"):
         interior=Part(X + "interior", ["M_stone", "M_timber", "M_mortar"]),
         door=Part(X + "door_leaf", TW),
         door_iron=Part(X + "door_iron", ["M_iron"]),
-        rubble=Part(X + "ground_rubble", ["M_rubble", "M_stone", "M_earth"], moss=0.1),
+        step=Part(X + "door_step", ["M_stone"], moss=0.1),
         curb=Part(X + "curb", ["M_timber", "M_mortar"]),
         apron_frame=Part(X + "apron_rafters", ["M_timber", "M_timber_weathered"]),
         apron=Part(X + "apron_shingles", ["M_roof_shake"]),
@@ -5924,7 +5700,7 @@ def new_parts(prefix="MILL"):
         wheel_blades=Part(X + "wheel_blades", ["M_timber"]),
         wheel_spokes=Part(X + "wheel_spokes", ["M_iron"]),
         props=Part(X + "props", TW),
-        prop_anchors=Part(X + "prop_anchors", ["M_stone", "M_timber_weathered", "M_iron", "M_earth", "M_rubble"],
+        prop_anchors=Part(X + "prop_anchors", ["M_stone", "M_timber_weathered", "M_iron", "M_earth"],
                           moss=0.1),
         prop_iron=Part(X + "prop_iron", ["M_iron"]),
         moss=Part(X + "moss_clumps", ["M_moss"], angle=60.0),
@@ -6008,7 +5784,7 @@ def main():
     tail_clearance(parts, lambda p, V: lean(V) if is_leaned(p) else V)
 
     total = 0
-    for k in ("rubble", "prop_anchors"):
+    for k in ("step", "prop_anchors"):
         parts[k].zmin = -0.005          # soil fillets / collars feather 4 mm into the ground (no crease)
     def ntris(me):
         lt = np.empty(len(me.polygons), np.int32)
