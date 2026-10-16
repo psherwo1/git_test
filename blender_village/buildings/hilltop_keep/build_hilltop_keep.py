@@ -3442,10 +3442,10 @@ def thatch_roll(acc, path, r0, seed, flat=0.8, seg=12, mat="M_thatch", bind=0.16
 # ---- eave roll: flattened, sheared D-section (q = inward horizontal from the eave line, v = up from the 2.40 lip)
 TH_BASE = CORE_T + 0.02                 # perpendicular height of the course baseline (course far ends) above the deck
 _ROLL_CTRL = np.array([
-    (0.95, 0.5425 + 1.0724 * 0.95), (0.55, 0.5425 + 1.0724 * 0.55), (0.25, 0.8106), (0.08, 0.616), (0.0, 0.517),
+    (0.45, 1.025), (0.36, 0.929), (0.25, 0.8106), (0.08, 0.616), (0.0, 0.517),
     (-0.06, 0.428), (-0.11, 0.330), (-0.135, 0.220), (-0.126, 0.118), (-0.088, 0.044), (-0.025, 0.008),
     (0.07, 0.0), (0.20, 0.012), (0.31, 0.055), (0.375, 0.15), (0.41, 0.30), (0.43, 0.44),
-    (0.55, 0.70), (0.90, 1.30)])
+    (0.47, 0.62), (0.47, 0.90)])
 # visible weight per control point (ribs / bulges are only applied where the roll can be seen)
 _ROLL_VIS = np.array([0, 0, 0.3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.8, 0.3, 0, 0], float)
 
@@ -3560,11 +3560,14 @@ def d_roll(acc, path, prof, vis, seed, rng, up=(0.0, 0.0, 1.0), var=0.03, sp=(0.
     return P
 
 
+EAVE_RC = 0.5
+
+
 def eave_path():
-    """plan path of the eave line N -> W -> S with rounded hipped corners (radius 0.32), at the 2.40 lip."""
+    """plan path of the eave line N -> W -> S with rounded hipped corners (radius EAVE_RC), at the 2.40 lip."""
     yS, yN, xW = WY_S - W_OVH, WY_N + W_OVH, WX_W - W_OVH
     xe = WX_E + W_OVH
-    rc = 0.32
+    rc = EAVE_RC
     pts = []
     for x in np.arange(xe, xW + rc, -0.02):
         pts.append((x, yN))
@@ -3585,7 +3588,7 @@ def eave_q(x, y):
     x = np.asarray(x, float)
     y = np.asarray(y, float)
     yS, yN, xW = WY_S - W_OVH, WY_N + W_OVH, WX_W - W_OVH
-    rc = 0.32
+    rc = EAVE_RC
     q = np.minimum(np.minimum(y - yS, yN - y), x - xW)
     cS = (x < xW + rc) & (y < yS + rc)
     q = np.where(cS, rc - np.hypot(x - (xW + rc), y - (yS + rc)), q)
@@ -3599,7 +3602,7 @@ def thatch_top_z(x, y):
     zt = wing_under(x, y) + (TH_BASE + 0.045) / CP_
     q = eave_q(x, y)
     zr = 2.40 + roll_top_v(q) + 0.0 * q
-    return np.where(q < -0.135, -1e9, np.where(q < 0.6, zr, zt))
+    return np.where(q < -0.135, -1e9, np.where(q < 0.4, zr, zt))
 
 
 def thatch_courses(acc, name, rng, lobe_w, seed, m_max=4.15, m0=0.64):
@@ -3709,6 +3712,7 @@ def thatch_courses(acc, name, rng, lobe_w, seed, m_max=4.15, m0=0.64):
         bad |= (plane_under(name, x_, y_) - wing_under(x_, y_)) > 0.05
         bad |= ~((x_ > WX_W - W_OVH - 0.12) & (x_ < WX_E + W_OVH + 0.04) & (y_ > WY_S - W_OVH - 0.12) &
                  (y_ < WY_N + W_OVH + 0.12))
+        bad |= eave_q(x_, y_) < 0.08
         zsq, ppq = skirt_z_at(Wf[q][..., 0], Wf[q][..., 1])
         deep = ((ppq < SKIRT.p_lip - 0.35) & (Wf[q][..., 2] < zsq - 0.04)).all(1)
         bad |= deep
@@ -3922,7 +3926,8 @@ def build_wing_ridge(coll):
     global HIP_ENDS
     HIP_ENDS = []
     for sy in (-1, 1):
-        corner = np.array([WX_W - W_OVH + 0.32 * 0.3, (WY_S - W_OVH + 0.32 * 0.3) if sy < 0 else (WY_N + W_OVH - 0.32 * 0.3)])
+        off = EAVE_RC * (1 - 1 / math.sqrt(2))
+        corner = np.array([WX_W - W_OVH + off, (WY_S - W_OVH + off) if sy < 0 else (WY_N + W_OVH - off)])
         apex = np.array([x_apex, WY_R])
         t = np.linspace(0, 1, 200)[:, None]
         xy = corner * (1 - t) + apex * t
@@ -3933,10 +3938,12 @@ def build_wing_ridge(coll):
         nb_ = nS + nW
         nb_ /= np.linalg.norm(nb_)
         hp = np.column_stack([xy, z + (TH_BASE + 0.05) / CP_])
-        hp[:, 2] -= 0.40 * np.clip(1 - t[:, 0] / 0.16, 0, 1) ** 1.6
+        hp[:, 2] -= 0.30 * np.clip(1 - t[:, 0] / 0.16, 0, 1) ** 1.6
+        hp = hp[t[:, 0] >= 0.045]
         # stop where the dome meets the fillet against the turret stone
         dt = tur_dist(hp[:, 0], hp[:, 1], hp[:, 2])
         stop = np.flatnonzero(dt < 0.10)
+        t = t[t[:, 0] >= 0.045]
         i_end = int(stop[0]) if len(stop) else len(hp)
         hp = hp[:i_end]
         if len(hp) > 4:
@@ -3960,14 +3967,19 @@ def build_wing_structure(coll):
     for y, sgn in ((WY_S, 1), (WY_N, -1)):
         beam(acc, np.array([WX_W + 0.1, y + sgn * 0.12, W_WALL_H + 0.1]), np.array([-3.95 if sgn > 0 else WX_E - 0.05,
              y + sgn * 0.12, W_WALL_H + 0.1]), 0.22, 0.2, 0.02, "M_timber", nx=10)
-    # rafter poles every ~0.6 m with battens across
+    # rafter poles every ~0.6 m with battens across; the pole feet sit on the wall plate and project 2-5 cm past
+    # its face into the eave gap behind the roll: chamfered / axe-cut ends, some checked
+    prng = np.random.default_rng(1517)
     for name in ("S", "N"):
         pl = PLANES[name]
+        m_wall = W_OVH / CP_
         for xr in np.arange(WX_W + 0.35, WX_E + 0.3, 0.62):
             xr2 = xr + rng.normal(0, 0.03)
-            m0, m1 = 0.16, 1.25
-            ms = np.linspace(m0, m1, 6)
+            proj = prng.uniform(0.02, 0.05)
+            m0 = m_wall - (proj + 0.01) / CP_
+            ms = np.concatenate([[m0, m0 + 0.012, m0 + 0.03, m0 + 0.06, m0 + 0.1], np.linspace(m0 + 0.25, m0 + 1.3, 8)])
             path = pl["o"](np.full_like(ms, xr2), ms) - pl["n"] * 0.12
+            path[:, 2] -= 0.004 * np.sin(np.linspace(0, 3, len(ms)))
             if thatch_cull(path.mean(0)[None], tol_skirt=False)[0]:
                 continue
             if tur_dist(path[:, 0], path[:, 1], path[:, 2]).min() < 0.15:
@@ -3975,7 +3987,27 @@ def build_wing_structure(coll):
             zs_, pp_ = skirt_z_at(path[:, 0], path[:, 1])
             if (pp_ < SKIRT.p_lip + 0.4).any():
                 continue
-            V, F = sweep(path, pl["n"], prof_circle(0.058 + rng.uniform(-0.006, 0.006), 9))
+            rr0 = 0.058 + prng.uniform(-0.007, 0.007)
+            npf = 12
+            ang = np.linspace(0, 2 * np.pi, npf, endpoint=False)
+            kch = int(prng.integers(0, npf)) if prng.uniform() < 0.6 else -1
+            chd = prng.uniform(0.012, 0.02)
+            dcut = (ms - m0) * CP_
+            profs = []
+            for i_, d_ in enumerate(dcut):
+                rad = rr0 * (0.78 if i_ == 0 else (0.94 if i_ == 1 else 1.0))
+                pr = np.stack([rad * np.cos(ang), rad * np.sin(ang)], 1) * (1 + 0.04 * np.sin(ang * 2 + xr))[:, None]
+                if kch >= 0 and d_ < 0.09:
+                    f_ = (1 - d_ / 0.09)
+                    pr[kch] *= 1 - chd / rad * f_
+                    pr[(kch + 6) % npf] *= 1 - 0.5 * chd / rad * f_ * (prng.uniform() < 0.5)
+                profs.append(pr)
+            V, F = sweep(path, pl["n"], np.stack(profs))
+            # axe-cut end: the end ring is skewed +-12 deg
+            tilt = math.tan(math.radians(prng.uniform(-12, 12)))
+            ax_ = path[1] - path[0]
+            ax_ /= np.linalg.norm(ax_)
+            V[:npf] += ax_ * (tilt * (V[:npf] - path[0]) @ np.cross(ax_, pl["n"]))[:, None]
             acc.add(V, F, "M_timber_weathered")
         for mb in (0.15, 0.45, 0.75):
             a = np.linspace(WX_W - 0.2, WX_E + W_OVH - 0.1, 30)
@@ -4099,20 +4131,6 @@ def build_wing_structure(coll):
                 tg = np.gradient(C, axis=0)
                 ups = ups - (ups * tg).sum(1, keepdims=True) * tg / np.maximum((tg * tg).sum(1, keepdims=True), 1e-9)
                 mortar_tube(C, ups, 0.085, 0.045, 77 + len(cur))
-    # ridge dome entering the turret body / under the cushion
-    if RIDGE_PATH is not None and len(RIDGE_PATH) > 4:
-        P = RIDGE_PATH
-        cur = []
-        for lat, dz in RIDGE_DOME[1:-2]:
-            Q = P + np.array([0, lat, dz])
-            dd = turret_outer(Q[:, 0], Q[:, 1], Q[:, 2])
-            k = np.flatnonzero(dd > 0)
-            if len(k):
-                cur.append(Q[k[0]])
-        if len(cur) > 3:
-            C = np.array(cur)
-            ups = np.tile(np.array([[1.0, 0, 0]]), (len(C), 1))
-            mortar_tube(C, ups, 0.085, 0.045, 91)
     # hip-roll ends bedded on the fillet: a mortar saddle joining the tapered roll end to the stone
     for pe, de, nb_ in HIP_ENDS:
         cen = pe + de * 0.05 - nb_ * 0.02

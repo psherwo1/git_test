@@ -529,6 +529,94 @@ def member(part, mat, a, b, w, d, up=(0, 0, 1), c=0.015, T=T_PLK, rng=None, bow=
 
 
 # =============================================================================================
+# Hewn timber (round 3): variable worn chamfers, adze scallops, long checks, split end grain
+# =============================================================================================
+_T_HEWN = {}
+
+
+def hewn_tmpl(nx):
+    if nx not in _T_HEWN:
+        _T_HEWN[nx] = tmpl_box(nx, 7, 7)
+    return _T_HEWN[nx]
+
+
+def hewn_beam(rng, L, w, d, nx=None, chamfer=(0.015, 0.03), adze=(0.003, 0.005), n_scallop=(2, 3),
+              checks=(1, 2), check_len=(0.5, 1.5), end_split=1, faces_check=(2, 1)):
+    """One hewn timber, local x = length (centred), y = width, z = depth. Returns (P (1,nv,3), T).
+    - chamfer radius varies along the length within `chamfer` (worn arrises),
+    - every long face carries 2-3 shallow concave adze scallops (`adze` deep),
+    - `checks`: 1-2 long checks (1 cm wide V, 1-1.5 cm deep) on the faces in `faces_check`
+      (axis index 1 = +-y faces, 2 = +-z faces),
+    - end_split: +1 / -1 / 0 -> a radial split in the end grain at that end."""
+    if nx is None:
+        nx = int(np.clip(L / 0.12, 8, 60))
+    T = hewn_tmpl(nx)
+    idx = T["idx"]
+    n = T["n"]
+    h = np.array([L / 2, w / 2, d / 2])
+    tx = idx[:, 0] / (n[0] - 1)
+    # chamfer radius per vertex (varies along the length, per arris)
+    rr = np.empty((len(idx), 3))
+    for a in range(3):
+        f = rng.uniform(0.5, 2.0, 2)
+        ph = rng.uniform(0, 2 * PI, 2)
+        k = 0.5 + 0.25 * np.sin(tx * f[0] * 2 * PI + ph[0]) + 0.25 * np.sin(tx * f[1] * 5 + ph[1])
+        rr[:, a] = chamfer[0] + (chamfer[1] - chamfer[0]) * k
+    rr[:, 0] = np.minimum(rr[:, 0], 0.02)
+    rr = np.minimum(rr, h[None] * 0.45)
+    P = np.empty((len(idx), 3))
+    for a in range(3):
+        na = n[a]
+        ia = idx[:, a]
+        t = -1 + 2 * (ia - 1) / max(na - 3, 1)
+        pos = np.where(ia == 0, -h[a], np.where(ia == na - 1, h[a], t * (h[a] - rr[:, a])))
+        P[:, a] = pos
+    inner = np.clip(P, -(h - rr), h - rr)
+    dd = (P - inner) / rr
+    nr = np.linalg.norm(dd, axis=1, keepdims=True)
+    P = inner + np.where(nr > 1e-9, dd / np.maximum(nr, 1e-9), 0) * rr
+    # centre-line lips 1 cm apart (y and z) -> narrow checks
+    for a in (1, 2):
+        P[idx[:, a] == 2, a] = -0.005
+        P[idx[:, a] == 4, a] = 0.005
+        P[idx[:, a] == 3, a] = 0.0
+    # adze scallops on the 4 long faces
+    for a in (1, 2):
+        for sgn in (-1, 1):
+            on = (idx[:, a] == (n[a] - 1 if sgn > 0 else 0))
+            dep = np.zeros(len(idx))
+            for _ in range(int(rng.integers(n_scallop[0], n_scallop[1] + 1))):
+                x0 = rng.uniform(-0.8, 0.8) * L / 2
+                hl = rng.uniform(0.15, 0.4) * min(1.0, L / 1.2)
+                dp = rng.uniform(*adze)
+                b = 3 - a
+                lat = P[:, b] / h[b]
+                dep = np.maximum(dep, dp * np.clip(1 - ((P[:, 0] - x0) / hl) ** 2, 0, 1) *
+                                 np.clip(1 - 0.5 * (lat - rng.uniform(-0.4, 0.4)) ** 2, 0, 1))
+            P[:, a] -= sgn * dep * on
+    # long checks
+    nck = int(rng.integers(checks[0], checks[1] + 1)) if checks else 0
+    for _ in range(nck):
+        a = int(rng.choice(faces_check))
+        sgn = rng.choice([-1, 1])
+        b = 3 - a
+        on = (idx[:, a] == (n[a] - 1 if sgn > 0 else 0)) & (idx[:, b] == 3)
+        lc = min(rng.uniform(*check_len), 0.8 * L)
+        x0 = rng.uniform(-L / 2 + lc / 2 + 0.05, L / 2 - lc / 2 - 0.05) if L > lc + 0.1 else 0.0
+        s_ = np.clip(1 - np.abs(P[:, 0] - x0) / (lc / 2), 0, 1)
+        P[:, a] -= sgn * on * rng.uniform(0.01, 0.015) * np.sqrt(s_)
+    # split end grain
+    if end_split:
+        e = idx[:, 0] == (n[0] - 1 if end_split > 0 else 0)
+        mid = idx[:, 1] == 3
+        up = np.clip(P[:, 2] / h[2] + 0.3, 0, 1)
+        P[:, 0] -= end_split * (e & mid) * (0.012 + 0.03 * up)
+        mid2 = idx[:, 2] == 3
+        P[:, 0] -= end_split * (e & mid2) * 0.012 * np.clip(P[:, 1] / h[1], 0, 1)
+    return P[None], T
+
+
+# =============================================================================================
 # Stones
 # =============================================================================================
 STYLE = {
@@ -2727,8 +2815,8 @@ def build_cap_cappings(P_sh, P_fr, P_ir, rng):
                 if fx == 0:     # front hips: the end-face leaf is cut to fit against the hood cheek
                     far = H + eE * wE[:, None]
                     near_hood = far[:, 0] > float(x_valley(HOOD_YW)) - 0.12
-                    wh = (np.abs(H[:, 1]) - (HOOD_YW + 0.07)) / np.maximum(np.abs(eE[:, 1]), 1e-3)
-                    wE = np.where(near_hood, np.clip(np.minimum(wE, wh), 0.06, None), wE)
+                    wh = (np.abs(H[:, 1]) - 0.452) / np.maximum(np.abs(eE[:, 1]), 1e-3)
+                    wE = np.where(near_hood, np.clip(np.minimum(wE, wh), 0.03, None), wE)
                 lift = np.full(len(H), SEAT)
                 if k > 0:   # rides over the feathered head of the piece below (lap 6 cm, < 1 deg)
                     lift = lift + 0.010 * (1 - (ss - s0) / (s1 - s0))
@@ -2826,6 +2914,32 @@ def build_cap_cappings(P_sh, P_fr, P_ir, rng):
         add_grid(P_ir, "M_lead", capw(np.stack([Gb[0], G[0]], 0)), flip=fl)
         add_grid(P_ir, "M_lead", capw(np.stack([Gb[:, 0], G[:, 0]], 1)), flip=not fl)
         add_grid(P_ir, "M_lead", capw(np.stack([Gb[:, -1], G[:, -1]], 1)), flip=fl)
+    # ---------------- lead aprons beside the hood cheeks (main front face, cheek -> hip capping) -----------
+    x_up = float(x_valley(HOOD_YW)) - 0.14
+    for sy in (-1, 1):
+        xs_ = np.linspace(x_up, HOOD_XF + 0.10, 16)
+        rows = []
+        for x in xs_:
+            t_h = (CAP_AF - x) / CAP_EF
+            y_hip = CAP_B - t_h * CAP_SB
+            ys_ = np.linspace(0.437, max(y_hip - 0.03, 0.47), 8)
+            zsurf = cap_z(np.full(8, x), ys_)
+            ramp = np.clip((x - x_up) / 0.10, 0, 1)
+            z = zsurf + 0.012 + (SEAT - 0.006 - 0.012) * ramp
+            if x > HOOD_XF - 0.03:      # dressed over the eave course below the hood front
+                z = np.maximum(z, HF(np.full(8, x), sy * ys_, r=1) + 0.004)
+            rows.append(np.stack([np.full(8, x), sy * ys_, z], 1))
+        G = np.array(rows)
+        Gb = G - np.array([0, 0, 0.004])
+        fl = sy < 0
+        add_grid(P_ir, "M_lead", capw(G), flip=fl)
+        add_grid(P_ir, "M_lead", capw(Gb), flip=not fl)
+        for edge in (G[0], G[-1]):
+            pass
+        add_grid(P_ir, "M_lead", capw(np.stack([Gb[0], G[0]], 0)), flip=not fl)
+        add_grid(P_ir, "M_lead", capw(np.stack([Gb[-1], G[-1]], 0)), flip=fl)
+        add_grid(P_ir, "M_lead", capw(np.stack([Gb[:, 0], G[:, 0]], 1)), flip=fl)
+        add_grid(P_ir, "M_lead", capw(np.stack([Gb[:, -1], G[:, -1]], 1)), flip=not fl)
     # ---------------- knob on a square plinth at the rear ridge end ----------------
     zp = apex_z[1] - 0.03
     blocks_world(P_fr, "M_timber", capw(np.array([[XR0 + 0.02, 0.0, zp + 0.04]])),
@@ -2851,13 +2965,16 @@ def build_cap(parts):
     YS = 0.78
     # sheers: ends project ~11 cm past the valance face through notched gaps, splayed (chamfered) ends with an
     # end check (a split running in from the end grain and along the top for ~0.3 m)
-    T_SHR = tmpl_box(9, 5, 5)
+    T_SHR = tmpl_box(9, 7, 5)
     SH_X = (-0.995, 0.972)
     for s in (-1, 1):
         x0, x1 = SH_X[0] + rng.uniform(-0.01, 0.01), SH_X[1] + rng.uniform(-0.01, 0.01)
         L = x1 - x0
         h = np.array([[L / 2, 0.08, 0.10]])
         P = rbox(T_SHR, h, np.array([[0.02, 0.02, 0.02]]))
+        yl = T_SHR["idx"][:, 1]
+        P[:, yl == 2, 1] = -0.005           # two edge loops 1 cm apart along the centre line (the check's lips)
+        P[:, yl == 4, 1] = 0.005
         ux = P[:, :, 0] / h[0, 0]
         uz = P[:, :, 2] / h[0, 2]
         uy = P[:, :, 1] / h[0, 1]
@@ -2866,7 +2983,7 @@ def build_cap(parts):
         P[:, :, 0] -= np.sign(ux) * endz * 0.07 * (1 - uz) / 2
         # end check: a split in the end grain from the pith to the top arris, and a short check on the top face
         mid = np.abs(uy) < 0.01
-        P[:, :, 0] -= np.sign(ux) * (endz & mid) * np.clip(uz, 0, 1) * 0.03
+        P[:, :, 0] -= np.sign(ux) * (endz & mid) * (0.012 + 0.03 * np.clip(uz + 0.3, 0, 1))
         top_near = (uz > 0.99) & mid & (np.abs(ux) > 0.6)
         P[:, :, 2] -= top_near * 0.012 * np.clip((np.abs(ux) - 0.6) / 0.4, 0, 1)
         P[:, :, 1] += rng.uniform(-0.004, 0.004) * (1 - ux ** 2)
@@ -3062,6 +3179,9 @@ def build_cap(parts):
             xc, yc = face_point(fi, tc, lc)
             if fi == 0:
                 under = (np.abs(yc) < HOOD_YW + 0.03) & (xc > x_valley(yc) - 0.06)
+                # strip beside the hood cheek (down to the hood front): dressed in a lead apron instead
+                under |= (np.abs(yc) > HOOD_YW - 0.06) & (xc > float(x_valley(HOOD_YW)) - 0.10) & \
+                    (xc < HOOD_XF - 0.02)
             else:
                 under = np.zeros(N, bool)
             # shingles whose centre lies past a hip line are not laid (no squashed slivers); the hip board
