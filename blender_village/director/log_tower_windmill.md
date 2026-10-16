@@ -452,3 +452,14 @@ SIDE VIEW (wind from the right)          TOP VIEW
    - Keep the cap yaw so that from the ref1 / u01 reference camera the vane appears to the LEFT of the tower, partly overlapping the left blades, as in `mill_overall.png`.
    - From the front (looking straight at the wheel) the vane is edge-on and mostly hidden behind the wheel.
    - The vane must clear the wheel, the tower and the props at every cap yaw.
+
+
+## CLIENT CORRECTION 2 — remove the sloping buttress (supersedes every earlier buttress instruction)
+
+The client has clarified that the sloping stone shape to the RIGHT of the mill in ref1 (`mill_overall.png`, `mill_stone_base.png`) is **terrain: the mountain or cliff rock behind the mill**. It is not part of the building.
+
+- **Delete** the sloping buttress and everything that exists only to support it: its masonry, its coping, its footing and its junction with the drum.
+- **Repair** the drum wall where the buttress met it, so the stonework, plinth and ground contact run continuously around the full circumference with no scar.
+- **Do not** replace it with any other structure.
+- **Rebalance the composition** using the props on the left and the tail vane. The mill must still read as ref1's mill from the reference camera, and the right side of the drum is now simply the arcaded drum wall.
+- **Spend** the triangles freed on the round-3/4 must-fix items. The entrance ground and the cap sarking come first.

@@ -1868,82 +1868,96 @@ def build_hall_masonry(coll):
     return S
 
 
+def mortar_sheet(acc, mapfn, s_edges, z_edges, near_fn, keep_fn, sub=5, w0=-0.004, w_amp=0.003, seed=0.0):
+    """recessed mortar body as a coarse cell sheet behind the stones (cells subdivided sub x sub only where
+    near_fn says so: openings, junctions); keep_fn(s, z) culls cells (openings, buried zones). Duplicate
+    corner vertices are welded in finalize."""
+    s_edges = np.asarray(s_edges, float)
+    z_edges = np.asarray(z_edges, float)
+    SA, ZA = np.meshgrid(s_edges[:-1], z_edges[:-1], indexing="ij")
+    SB, ZB = np.meshgrid(s_edges[1:], z_edges[1:], indexing="ij")
+    SA, ZA, SB, ZB = SA.ravel(), ZA.ravel(), SB.ravel(), ZB.ravel()
+    nr = near_fn(0.5 * (SA + SB), 0.5 * (ZA + ZB), SB - SA, ZB - ZA)
+    cells = [np.stack([SA[~nr], ZA[~nr], SB[~nr], ZB[~nr]], 1)]
+    if nr.any():
+        f = (np.arange(sub) / sub)
+        sa, za, sb, zb = SA[nr], ZA[nr], SB[nr], ZB[nr]
+        ds, dz = (sb - sa) / sub, (zb - za) / sub
+        for i in range(sub):
+            for j in range(sub):
+                cells.append(np.stack([sa + ds * i, za + dz * j, sa + ds * (i + 1), za + dz * (j + 1)], 1))
+    C = np.concatenate(cells)
+    keep = keep_fn(0.5 * (C[:, 0] + C[:, 2]), 0.5 * (C[:, 1] + C[:, 3]))
+    C = C[keep]
+    S4 = np.stack([C[:, 0], C[:, 2], C[:, 2], C[:, 0]], 1).ravel()
+    Z4 = np.stack([C[:, 1], C[:, 1], C[:, 3], C[:, 3]], 1).ravel()
+    W4 = w0 + w_amp * vnoise(np.stack([S4 * 2.1, Z4 * 2.1, np.full(len(S4), seed)], -1))
+    V = mapfn(S4, Z4, W4)
+    acc.add(V, np.arange(len(C) * 4).reshape(-1, 4), "M_mortar")
+    return len(C)
+
+
 def build_hall_mortar(coll):
     acc = Acc("KEEP_hall_wall_mortar")
-    Lr = hall_L(0.0)
-    ns = int(Lr / 0.06)
-    tt = np.unique(np.concatenate([np.linspace(0, 1, ns + 1), OT[(OB == 0)]]))
-    zs = np.linspace(-0.10, WALL_H, 37)
-    T, Z = np.meshgrid(tt, zs, indexing="ij")
-    S = T * hall_L(Z)
-    nzz = 0.004 * fbm(np.stack([T * 300, Z * 6, np.zeros_like(T)], -1), 2)
-    W = hall_map(S.ravel(), Z.ravel(), (-0.004 + nzz).ravel(), Z.ravel())
-    nt, nzr = T.shape
-    idx = np.arange(nt * nzr).reshape(nt, nzr)
-    a, b, c, d = idx[:-1, :-1], idx[1:, :-1], idx[1:, 1:], idx[:-1, 1:]
-    quads = np.stack([a, b, c, d], -1).reshape(-1, 4)
-    # remove cells in openings or inside the wing
-    tcm = 0.5 * (T[:-1, :-1] + T[1:, 1:])
-    zcm = 0.5 * (Z[:-1, :-1] + Z[1:, 1:])
-    keep = np.ones(tcm.shape, bool)
-    for op in OPENINGS:
-        k = op["k"]
-        xl = (tcm - k / 8.0) * hall_L(zcm)
-        keep &= ~open_contains(op, xl, zcm, m=0.03)
-    Pc = hall_map((tcm * hall_L(zcm)).ravel(), zcm.ravel(), np.zeros(tcm.size), zcm.ravel())
-    keep &= ~in_wing(Pc, margin=0.12, zpad=0.15).reshape(keep.shape)
-    acc.add(W, quads[keep.ravel()], "M_mortar")
-    # wall top (under the plate) and inner face, floor, ceiling
-    ang = np.linspace(0, 2 * np.pi, 9)[:-1] + math.radians(22.5)
-    ro = (apo(WALL_H) - 0.01) / math.cos(math.radians(22.5))
-    ri = INNER_APO / math.cos(math.radians(22.5))
-    for z, r0, r1 in ((WALL_H, ro, ri),):
-        V = np.concatenate([np.stack([r0 * np.cos(ang), r0 * np.sin(ang), np.full(8, z)], 1),
-                            np.stack([r1 * np.cos(ang), r1 * np.sin(ang), np.full(8, z)], 1)])
-        q = np.array([(i, (i + 1) % 8, 8 + (i + 1) % 8, 8 + i) for i in range(8)])
-        acc.add(V, q, "M_mortar")
+    # t = perimeter fraction; corner arcs of the rounded octagon are kept as knots
+    tt = np.unique(np.round(np.concatenate([np.linspace(0, 1, 89), OT[(OB == 0)]]), 6))
+    zs = np.concatenate([np.linspace(-0.05, WALL_H, 13)])
+
+    def near(t, z, dt, dz):
+        nr = np.zeros(len(t), bool)
+        for op in OPENINGS:
+            xl = (t - op["k"] / 8.0) * hall_L(z)
+            ext = op["hw"] + 0.55
+            ztop = op.get("z1", op.get("zs", 2.0) + op["hw"]) + 0.6
+            nr |= (np.abs(xl - op["xc"]) < ext) & (z > op["z0"] - 0.6) & (z < ztop)
+        return nr
+
+    def keep(t, z):
+        k = np.ones(len(t), bool)
+        for op in OPENINGS:
+            xl = (t - op["k"] / 8.0) * hall_L(z)
+            k &= ~open_contains(op, xl, z, m=0.03)
+        Pc = hall_map(t * hall_L(z), z, np.zeros(len(t)), z)
+        k &= ~in_wing(Pc, margin=0.12, zpad=0.15)
+        return k
+    n = mortar_sheet(acc, lambda t, z, w: hall_map(t * hall_L(z), z, w, z), tt, zs, near, keep, seed=1.0)
+    log(f"  hall mortar cells {n}")
     finalize(acc, coll)
 
 
 def build_hall_interior(coll):
-    """inner wall face, reveals through the wall, floor & ceiling (gives depth through openings)."""
+    """reveal tubes through the wall at every opening plus, behind each window, a simple dark blocker room
+    (floor, ceiling, side and back walls ~1.5 m deep): only the depth visible through the openings is modelled."""
     acc = Acc("KEEP_hall_interior")
-    # inner face: plumb octagon at INNER_APO with holes at openings
-    for k in range(8):
-        half = INNER_APO * TAN22
-        xs = np.linspace(-half, half, 23)
-        zs = np.linspace(0.12, WALL_H, 18)
-        X, Z = np.meshgrid(xs, zs, indexing="ij")
-        W = fmap(k, X.ravel(), Z.ravel(), np.zeros(X.size), a_ref=INNER_APO)
-        nxx, nzz = X.shape
-        idx = np.arange(nxx * nzz).reshape(nxx, nzz)
-        quads = np.stack([idx[:-1, :-1], idx[:-1, 1:], idx[1:, 1:], idx[1:, :-1]], -1).reshape(-1, 4)
-        xm = 0.5 * (X[:-1, :-1] + X[1:, 1:])
-        zm = 0.5 * (Z[:-1, :-1] + Z[1:, 1:])
-        keep = np.ones(xm.shape, bool)
-        for op in OPENINGS:
-            if op["k"] == k:
-                keep &= ~open_contains(op, xm, zm, m=0.16)
-        acc.add(W, quads[keep.ravel()], "M_mortar")
-    # reveal tubes: from the leaf/frame plane to the inner face, splayed
     for op in OPENINGS:
         k = op["k"]
         o1 = open_outline(op, grow=0.05)
         o2 = open_outline(op, grow=0.20)
+        if op["kind"] == "arch":
+            o1[:2, 1] = np.maximum(o1[:2, 1], 0.0)
+            o2[:2, 1] = np.maximum(o2[:2, 1], 0.0)
         n = len(o1)
         r1 = fmap(k, o1[:, 0], o1[:, 1], np.full(n, -op["depth"] + 0.005))
         r2 = fmap(k, o2[:, 0], o2[:, 1], np.zeros(n), a_ref=INNER_APO)
         V = np.concatenate([r1, r2])
         q = np.array([(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)])
         acc.add(V, q, "M_mortar")
-        # behind the dressed stones: short flange from face to leaf plane (inside the stones)
-    # floor and ceiling
-    ang = np.linspace(0, 2 * np.pi, 9)[:-1] + math.radians(22.5)
-    r = INNER_APO / math.cos(math.radians(22.5)) + 0.02
-    for z, flip in ((0.12, False), (WALL_H, True)):
-        V = np.stack([r * np.cos(ang), r * np.sin(ang), np.full(8, z)], 1)
-        f = np.arange(8)[None, :]
-        acc.add(V, f[:, ::-1] if flip else f, "M_stone" if z < 1 else "M_timber")
+        if op["kind"] == "arch":
+            continue            # the door leaf is closed: nothing behind it can be seen
+        # blocker room behind the window
+        xa, xb = op["xc"] - op["hw"] - 0.9, op["xc"] + op["hw"] + 0.9
+        z0, z1 = 0.12, WALL_H
+        a_in, a_bk = INNER_APO + 0.02, INNER_APO - 1.5
+        X = np.array([xa, xb, xb, xa, xa, xb, xb, xa])
+        Z = np.array([z0, z0, z1, z1, z0, z0, z1, z1])
+        Wv = np.array([0, 0, 0, 0, 1, 1, 1, 1], float)
+        P = np.stack([X, Z, Wv], 1)
+        V = np.concatenate([fmap(k, P[:4, 0], P[:4, 1], np.zeros(4), a_ref=a_in),
+                            fmap(k, P[4:, 0], P[4:, 1], np.zeros(4), a_ref=a_bk)])
+        # faces seen from the window: back wall, floor, ceiling, two sides
+        acc.add(V, [np.array([[4, 5, 6, 7]]), np.array([[3, 2, 6, 7]]), np.array([[0, 3, 7, 4]]),
+                    np.array([[1, 5, 6, 2]])], "M_mortar")
+        acc.add(V, [np.array([[0, 1, 5, 4]])], "M_stone")
     finalize(acc, coll)
 
 
@@ -2731,8 +2745,8 @@ def build_cone(coll):
     finalize(acc, coll, smooth_deg=28.0)
     # mortar body (lathe) with noise
     accm = Acc("KEEP_cone_mortar")
-    zs = np.linspace(4.5, 9.62, 60)
-    seg = 96
+    zs = np.linspace(4.5, 9.62, 30)
+    seg = 72
     rr = np.interp(zs, CONE_ZF, CONE_RF) - 0.004
     V, F = lathe(np.stack([rr, zs], 1), seg, cap_top=False, cap_bottom=False)
     th = np.arctan2(V[:, 1], V[:, 0])
@@ -3574,29 +3588,36 @@ def build_wing_walls(coll):
     wear = np.clip(1.0 - S2["zc"] / 0.8, 0, 1)
     build_stones(accq, S2, wing_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(26, 26), wear=wear)
     finalize(accq, coll)
-    # mortar body
+    # mortar body: coarse sheet, refined round the openings and the turret junction
     accm = Acc("KEEP_wing_wall_mortar")
-    ss = np.linspace(0, WING_LEN, int(WING_LEN / 0.06))
-    zs = np.linspace(-0.1, 3.8, 40)
-    Sg, Zg = np.meshgrid(ss, zs, indexing="ij")
-    W = wing_map(Sg.ravel(), Zg.ravel(), np.full(Sg.size, -0.004), Zg.ravel())
-    ns, nz = Sg.shape
-    idx = np.arange(ns * nz).reshape(ns, nz)
-    quads = np.stack([idx[:-1, :-1], idx[1:, :-1], idx[1:, 1:], idx[:-1, 1:]], -1).reshape(-1, 4)
-    sm = 0.5 * (Sg[:-1, :-1] + Sg[1:, 1:])
-    zm = 0.5 * (Zg[:-1, :-1] + Zg[1:, 1:])
-    keep = np.ones(sm.shape, bool)
-    for s0, s1, za, zb in wing_open_rects(False):
-        keep &= ~((sm > s0 + 0.04) & (sm < s1 - 0.04) & (zm > za + 0.04) & (zm < zb - 0.26))
-    zt = np.array([wing_ztop(s) for s in sm[:, 0]])
-    keep &= zm < zt[:, None] + 0.02
-    Pm = wing_map(sm.ravel(), zm.ravel(), np.zeros(sm.size), zm.ravel()).reshape(sm.shape + (3,))
-    keep &= tur_dist(Pm[..., 0], Pm[..., 1], Pm[..., 2]) > -0.18      # mortar body runs on behind the turret stones
-    ang = np.arctan2(Pm[..., 1], Pm[..., 0])
-    kk = np.round(ang / (np.pi / 4)) % 8
-    pp = Pm[..., 0] * np.cos(kk * np.pi / 4) + Pm[..., 1] * np.sin(kk * np.pi / 4)
-    keep &= pp > apo(Pm[..., 2]) - 0.05
-    accm.add(W, quads[keep.ravel()], "M_mortar")
+    knots = WS[np.flatnonzero(np.abs(np.diff(WN[:, 0])) + np.abs(np.diff(WN[:, 1])) > 1e-6)]
+    ss = np.unique(np.round(np.concatenate([np.linspace(0, WING_LEN, int(WING_LEN / 0.3) + 1), knots, knots + 0.01]), 5))
+    zs = np.linspace(-0.05, 3.8, 14)
+    rects = wing_open_rects(False)
+
+    def near(sm, zm, ds, dz):
+        nr = np.zeros(len(sm), bool)
+        for s0, s1, za, zb in rects:
+            nr |= (sm > s0 - 0.5) & (sm < s1 + 0.5) & (zm > za - 0.5) & (zm < zb + 0.5)
+        P = wing_map(sm, zm, np.zeros(len(sm)), zm)
+        nr |= np.abs(tur_dist(P[:, 0], P[:, 1], P[:, 2])) < 0.45
+        return nr
+
+    def keep(sm, zm):
+        k = np.ones(len(sm), bool)
+        for s0, s1, za, zb in rects:
+            k &= ~((sm > s0 + 0.04) & (sm < s1 - 0.04) & (zm > za + 0.04) & (zm < zb - 0.26))
+        zt = np.array([wing_ztop(s_) for s_ in sm])
+        k &= zm < zt + 0.02
+        Pm = wing_map(sm, zm, np.zeros(len(sm)), zm)
+        k &= tur_dist(Pm[:, 0], Pm[:, 1], Pm[:, 2]) > -0.18      # mortar body runs on behind the turret stones
+        ang = np.arctan2(Pm[:, 1], Pm[:, 0])
+        kk = np.round(ang / (np.pi / 4)) % 8
+        pp = Pm[:, 0] * np.cos(kk * np.pi / 4) + Pm[:, 1] * np.sin(kk * np.pi / 4)
+        k &= pp > apo(Pm[:, 2]) - 0.05
+        return k
+    n = mortar_sheet(accm, lambda s_, z_, w_: wing_map(s_, z_, w_, z_), ss, zs, near, keep, seed=2.0)
+    log(f"  wing mortar cells {n}")
     # reveals (door, window): tube through the wall
     for s0, s1, za, zb in wing_open_rects(False):
         dep = 0.62
@@ -4954,7 +4975,7 @@ def build_turret(coll):
     build_tooth_stones(acc, np.random.default_rng(1819))
     finalize(acc, coll, smooth_deg=28.0)
     accm = Acc("KEEP_turret_mortar")
-    zs = np.linspace(-0.1, TUR_Z_TOP + 0.02, 64)
+    zs = np.linspace(-0.05, TUR_Z_TOP + 0.02, 26)
     V, F = lathe(np.stack([tur_r(zs) - 0.004, zs], 1), 120, cx=TUR_C[0], cy=TUR_C[1], cap_bottom=False, cap_top=False)
     thv = np.arctan2(V[:, 1] - TUR_C[1], V[:, 0] - TUR_C[0])
     rv = tur_reff(thv, V[:, 2]) - 0.004

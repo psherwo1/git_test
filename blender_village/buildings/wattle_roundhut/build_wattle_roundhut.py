@@ -919,7 +919,7 @@ def round_post(acc, base, top, rad, rng, sides=48, check=False, n_knots=None):
 
 def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_faces=(0, 1, 2, 3),
                 end_checks=0, sag=0.0, adze=True, mat="M_timber", ds=0.013, ns=7, nc=6, swell=0.008,
-                hero=(), hidden=(), deform=None, stride=7):
+                hero=(), hidden=(), deform=None, stride=7, caps=(True, True)):
     """hand-hewn squared timber along local +X (half = (L/2, a, b)); R columns = local axes in world.
     Faces: 0:+z 1:-y 2:-z 3:+y.  Corners: 0:+y+z 1:-y+z 2:-y-z 3:+y-z.
     * adze scallops on every face: 3-6.5 mm deep, 4-8 cm long; on `hero` faces 6-12 mm deep, 5-9 cm
@@ -1097,9 +1097,9 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
     j1 = (j + 1) % M
     # profile segments belonging to hidden faces (from the last arc point of corner c to the first of c+1)
     hseg = np.zeros(M, bool)
-    for c in hidden:
-        js0 = c * (ns + nc) + nc - 1
-        for q in range(ns + 1):
+    for c in hidden:                  # the face plus the halves of its two corner arcs
+        js0 = c * (ns + nc) + nc - 1 - (nc - 1) // 2
+        for q in range(ns + 1 + 2 * ((nc - 1) // 2)):
             hseg[(js0 + q) % M] = True
     i = np.arange(n - 1)[:, None]
     jk = j[~hseg][None, :]
@@ -1125,7 +1125,7 @@ def hewn_member(acc, center, half, R, rng, ch=0.018, wane=(), n_checks=0, check_
     if deform is not None:
         V = deform(V)
     Vw = xf(V, R, center)
-    acc.add(Vw, Fl + [cap0, cap1, fan0, fan1], mat)
+    acc.add(Vw, Fl + ([cap0, fan0] if caps[0] else []) + ([cap1, fan1] if caps[1] else []), mat)
 
 
 def build_posts(coll):
@@ -2952,12 +2952,14 @@ def build_door(coll):
         inner_f, outer_f = (1, 3) if side > 0 else (3, 1)
         hewn_member(fr, (x, yc, (POST_BASE + HEAD_Z) / 2), ((HEAD_Z - POST_BASE) / 2, 0.12, 0.11),
                     rotz(side * 0.006) @ RV, rng, ch=0.02, wane=wane_c, n_checks=3,
-                    check_faces=(2, 2, outer_f, inner_f), ns=9, nc=6, hero=(2, outer_f), hidden=(0, inner_f))
+                    check_faces=(2, 2, outer_f, inner_f), ns=9, nc=6, hero=(2, outer_f), hidden=(0, inner_f),
+                    caps=(False, False))
         # inner jambs on the sill
         xj = side * 0.60
         hewn_member(fr, (xj, yc, (SILL_TOP + HEAD_Z) / 2), ((HEAD_Z - SILL_TOP) / 2, 0.10, 0.11),
                     rotz(side * 0.004) @ roty(side * 0.003) @ RV, rng, ch=0.018, wane=(2 if side > 0 else 3,),
-                    n_checks=2, check_faces=(2, inner_f), ns=8, nc=6, hero=(2, inner_f), hidden=(0, outer_f))
+                    n_checks=2, check_faces=(2, inner_f), ns=8, nc=6, hero=(2, inner_f), hidden=(0, outer_f),
+                    caps=(False, False))
         # sole rail under the side panel, resting on the sill end
         hewn_member(fr, (side * 0.805, yc, (SILL_TOP + 0.405) / 2), (0.115, 0.075, (0.405 - SILL_TOP) / 2),
                     np.eye(3), rng, ch=0.015, ns=5, nc=4, ds=0.02, hidden=(3,))
