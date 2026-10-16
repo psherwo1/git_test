@@ -193,29 +193,29 @@ Remove or minimise geometry that can never be seen from outside the building, wh
 
 **Reinvesting the savings.** Triangles saved should go into visible close-up detail: entrances, ground contact and eye-level walls. Never cut anything that affects the silhouette or a visible edge.
 
-### Producer note 7: material slots (client requirement; applies from the next round on)
+### Producer note 7: material slots (client requirement, revised: the limit is 15)
 
-**At most 10 material slots per building AND across the whole kit.** Every building and kit component uses only this shared palette:
+**At most 15 material slots across the whole kit, and so also per building.** Every building and kit component uses only this shared palette, which is the set already in use plus moss:
 
 | Slot | What goes on it |
 |---|---|
-| `M_stone` | all stone: rubble, dressed, plinth, scatter |
+| `M_stone` | stone |
+| `M_stone_dressed` | dressed stone |
+| `M_rubble` | rubble |
 | `M_mortar` | mortar, chinking |
 | `M_daub` | daub, plaster |
-| `M_timber` | all structural and joinery timber, weathered or not |
-| `M_roof_wood` | shingles and shakes |
-| `M_thatch` | thatch |
 | `M_wattle` | wattle rods |
-| `M_metal` | iron and lead |
-| `M_ground` | earth, apron, path |
+| `M_timber` | timber |
+| `M_timber_weathered` | weathered timber |
+| `M_roof_shingle` | shingles |
+| `M_roof_shake` | shakes |
+| `M_thatch` | thatch |
+| `M_iron` | iron |
+| `M_lead` | lead |
+| `M_earth` | earth, apron, path |
 | `M_moss` | moss clumps, if modelled |
 
 **Rules:**
-- Slots named in earlier rounds (`M_rubble`, `M_stone_dressed`, `M_timber_weathered`, `M_roof_shingle`, `M_roof_shake`, `M_iron`, `M_lead`, `M_earth`) must be remapped onto this palette.
-- To keep sub-type information for texturing, write a per-face colour attribute named `Mask`, using these channels:
-  - **R:** sub-type: 0 = default, 1 = dressed / weathered / shake / lead.
-  - **G:** wear amount 0–1.
-  - **B:** random per-piece value 0–1.
-  - **A:** reserved, 1.
-- Unreal material instances will read the `Mask` attribute.
-- `stats.json` reports `material_slot_count`. The director treats more than 10 slots, or any slot outside the palette, as a must-fix.
+- Do not invent new slot names. Map anything new onto the closest palette entry.
+- The per-face `Mask` colour attribute (R sub-type, G wear, B per-piece random, A = 1) is optional but welcome for texture variation.
+- `stats.json` reports `material_slot_count`. The director treats any slot outside this palette as a must-fix, or more than 15 slots.
