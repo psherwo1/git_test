@@ -1469,6 +1469,15 @@ def build_door_dressing(acc_d, op, rng):
             recs.append(dict(x=0.5 * (xa + xb), zc=zc, hx=0.5 * (xb - xa) - 0.006, hy=0.5 * (z1_ - z0_),
                              f=0.05 + rng.uniform(0, 0.012), back=back))
             DRESSED_POLYS[k].append([(xa, z0_), (xb, z0_), (xb, z1_), (xa, z1_)])
+    # recessed lime mortar in the jamb bed joints (1.2 cm back from the face and from the reveal)
+    for side in (-1, 1):
+        for i in range(1, 5):
+            zj = zz[i]
+            x_in = xc + side * hw
+            xa, xb = sorted([x_in + side * 0.012, x_in + side * 0.40])
+            wf_ = float(face_apo(k, x_in, zj)) - A_REF + 0.05 - 0.012
+            facet_obox(JOINT_ACC, k, xa, xb, zj - 0.0095, zj + 0.0095, leaf_apo - A_REF, wf_, 0.003, "M_mortar",
+                       nx=4, ny=3, nz=3)
     S = stone_rec([facet_s(k, r["x"], r["zc"]) for r in recs], [r["zc"] for r in recs],
                   [r["hx"] for r in recs], [r["hy"] for r in recs], [r["f"] for r in recs],
                   [r["back"] for r in recs], rng.uniform(0.008, 0.022, len(recs)),
@@ -1478,15 +1487,15 @@ def build_door_dressing(acc_d, op, rng):
     build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(30, 32), wear=wear)
     # voussoirs: irregular widths, thicker at the crown
     nv = 13
-    wts = rng.uniform(0.8, 1.2, nv)
-    wts[nv // 2] *= 1.15
+    wts = rng.permutation(np.linspace(0.78, 1.24, nv))
+    wts[nv // 2] = max(wts[nv // 2], 1.0) * 1.12
     th = math.pi - np.concatenate([[0], np.cumsum(wts) / wts.sum() * math.pi])
     vs = []
     for i in range(nv):
         ta, tb = th[i], th[i + 1]
         tm = 0.5 * (ta + tb)
         rin = hw
-        rout = hw + 0.31 + 0.05 * math.sin(tm) + rng.uniform(-0.015, 0.035) + (0.03 if i == nv // 2 else 0)
+        rout = hw + 0.31 + 0.05 * math.sin(tm) + rng.uniform(-0.03, 0.045) + (0.03 if i == nv // 2 else 0)
         rm = 0.5 * (rin + rout)
         hx = 0.5 * (ta - tb) * rm - 0.007
         zc_abs = zs + rm * math.sin(tm)
@@ -1496,6 +1505,22 @@ def build_door_dressing(acc_d, op, rng):
         poly = [(xc + rin * math.cos(a), zs + rin * math.sin(a)) for a in np.linspace(tb, ta, 5)] + \
                [(xc + rout * math.cos(a), zs + rout * math.sin(a)) for a in np.linspace(ta, tb, 5)]
         DRESSED_POLYS[k].append(poly)
+    # radial joints between voussoirs: mortar wedges recessed 1.2 cm from the face and the intrados
+    for i in range(1, nv):
+        tj = th[i]
+        r0_, r1_ = hw + 0.012, hw + 0.36
+        cs, sn = math.cos(tj), math.sin(tj)
+        tx, tz = -sn, cs
+        wf_ = float(face_apo(k, xc + 0.5 * (r0_ + r1_) * cs, zs + 0.5 * (r0_ + r1_) * sn)) - A_REF + 0.055 - 0.012
+        P8 = []
+        for rr_ in (r0_, r1_):
+            for dd_ in (-0.0095, 0.0095):
+                for ww_ in (leaf_apo - A_REF, wf_):
+                    P8.append((xc + rr_ * cs + dd_ * tx, zs + rr_ * sn + dd_ * tz, ww_))
+        P8 = np.array(P8)
+        Wp = fmap(k, P8[:, 0], P8[:, 1], P8[:, 2])
+        quads = np.array([(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)])
+        JOINT_ACC.add(Wp, quads, "M_mortar")
     vs = np.array(vs)
     S = stone_rec(np.zeros(nv), vs[:, 5], vs[:, 2], vs[:, 3], vs[:, 6], vs[:, 4],
                   rng.uniform(0.008, 0.022, nv), vs[:, 5], rng)
@@ -1622,10 +1647,15 @@ def hall_cull(S):
     return ~in_wing(P, margin=0.12, zpad=0.12)
 
 
+JOINT_ACC = None
+
+
 def build_hall_masonry(coll):
+    global JOINT_ACC
     rng = np.random.default_rng(101)
     acc = Acc("KEEP_hall_wall_stones")
     accd = Acc("KEEP_hall_dressed_stones")
+    JOINT_ACC = Acc("KEEP_hall_dressed_joint_mortar")
     for op in OPENINGS:
         if op["kind"] == "arch":
             build_door_dressing(accd, op, rng)
@@ -1664,6 +1694,7 @@ def build_hall_masonry(coll):
     build_stones(acc, filt(S, small & ~hero), hall_map, "M_stone", rng, rough=0.8, nxy=4, noise_amp=0.005, nz2=True)
     finalize(acc, coll, smooth_deg=28.0)
     finalize(accd, coll)
+    finalize(JOINT_ACC, coll)
     return S
 
 
@@ -2976,8 +3007,9 @@ def plank_leaf(acc, mapfn, x0, x1, zb0, zt_fn, w_front, thick, rng, widths, spli
 
         def wf(x, z, a=a, b=b, cup=cup, wo=wo, sd=sd):
             u = (np.asarray(x) - a) / (b - a)
-            grain = 0.0011 * fbm(np.stack([np.asarray(x) * 14.0, np.asarray(z) * 2.2, np.full(np.shape(x), sd * 1.7)], -1), 2)
-            adze = 0.0006 * np.sin(np.asarray(z) * 23.0 + sd) * np.cos(np.asarray(x) * 31.0)
+            grain = 0.0016 * fbm(np.stack([np.asarray(x) * 14.0, np.asarray(z) * 2.2, np.full(np.shape(x), sd * 1.7)], -1), 2)
+            grain = grain + 0.0007 * np.sin((np.asarray(x) - a) * 120.0 + 2.0 * n1(np.asarray(z) * 1.5, sd + 2))
+            adze = 0.0008 * np.sin(np.asarray(z) * 23.0 + sd) * np.cos(np.asarray(x) * 31.0)
             return w_front + wo - cup * (1 - (2 * np.clip(u, 0, 1) - 1) ** 2) + grain + adze
 
         def rr_z(z, rp=rp):
