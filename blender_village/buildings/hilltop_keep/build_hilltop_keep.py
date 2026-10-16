@@ -426,12 +426,12 @@ def build_stones(acc, S, mapfn, mat, rng, rough=1.0, nxy=5, premap=None, noise_a
     sid = np.broadcast_to(np.arange(M)[:, None] * 1.37 + co[:, 10:11] * 13.0, x.shape)
     if dressed:
         # tooled face: 2-5 mm undulation, punched/pitched centre inside a 2-3 cm drafted margin
-        und = 0.0035 * fbm(np.stack([x * 7.0, y * 7.0, sid], -1), 2)
-        pick = np.abs(vnoise(np.stack([x * 30.0, y * 30.0, sid * 3.1], -1)))
+        und = 0.0045 * fbm(np.stack([x * 7.0, y * 7.0, sid], -1), 2)
+        pick = np.abs(fbm(np.stack([x * 38.0, y * 38.0, sid * 3.1], -1), 2))
         dm = np.minimum(HX - np.abs(x0_), HY - np.abs(y0_))
         marg = np.asarray(S.get("margin", np.full(M, 0.025)), float)[:, None]
         inner = np.clip((dm - marg) / 0.008, 0, 1)
-        relief = relief + und + inner * (0.0015 + 0.0025 * pick) - (1 - inner) * 0.0008
+        relief = relief + und + inner * (0.003 + 0.004 * pick) - (1 - inner) * 0.0015
         facets = 0.0
         nzv = 0.0
     else:
@@ -439,18 +439,18 @@ def build_stones(acc, S, mapfn, mat, rng, rough=1.0, nxy=5, premap=None, noise_a
         nz = nz + 0.6 * np.abs(fbm(np.stack([x * 31.0, y * 31.0 + co[:, 10:11] * 40, sid * 0.52], -1), 2)) - 0.3
         nzv = noise_amp * rough * nz
         # chisel / split facets: 3 planar breaks per stone, 0.5-2.5 cm deep at the stone edge
-        cr = rng.uniform(0, 1, (M, 12))
+        cr = rng.uniform(0, 1, (M, 16))
         facets = 0.0
-        for i in range(3):
+        for i in range(4):
             aa = np.cos(cr[:, i:i + 1] * 6.283)
             bb = np.sin(cr[:, i:i + 1] * 6.283)
-            c0 = 0.25 + 0.55 * cr[:, 3 + i:4 + i]
-            dep = 0.005 + 0.020 * cr[:, 6 + i:7 + i] ** 1.3
+            c0 = 0.2 + 0.55 * cr[:, 4 + i:5 + i]
+            dep = 0.006 + 0.024 * cr[:, 8 + i:9 + i] ** 1.2
             # metric slope so the facet depth at the arris is 'dep'
             dn = np.maximum(aa * ux + bb * uy - c0, 0.0) / np.maximum(1.0 - c0, 0.2)
             facets = facets - dep * dn * rough
     # arris chips: 2-4 per stone, 1-3 cm, conchoidal dents on the edge
-    nch = rng.integers(2, 5, M)
+    nch = rng.integers(3, 6, M) if dressed else rng.integers(2, 5, M)
     chips = np.zeros_like(x)
     cp = rng.uniform(0, 1, (M, 4, 4))
     for i in range(4):
@@ -461,10 +461,10 @@ def build_stones(acc, S, mapfn, mat, rng, rough=1.0, nxy=5, premap=None, noise_a
         ex = np.where(side == 0, -1 + 2 * fr, np.where(side == 1, 1.0, np.where(side == 2, 1 - 2 * fr, -1.0)))
         ey = np.where(side == 0, -1.0, np.where(side == 1, -1 + 2 * fr, np.where(side == 2, 1.0, 1 - 2 * fr)))
         px, py = ex * HX, ey * HY
-        rad = 0.01 + 0.02 * cp[:, i, 1:2]
+        rad = (0.016 + 0.022 * cp[:, i, 1:2]) if dressed else (0.01 + 0.02 * cp[:, i, 1:2])
         if wear is not None:
             rad = rad * (1 + 0.6 * np.asarray(wear, float)[:, None])
-        dep = rad * (0.35 + 0.35 * cp[:, i, 2:3])
+        dep = rad * ((0.5 + 0.35 * cp[:, i, 2:3]) if dressed else (0.35 + 0.35 * cp[:, i, 2:3]))
         d = np.sqrt((x0_ - px) ** 2 + (y0_ - py) ** 2)
         chips = np.minimum(chips, -np.where(act, dep * np.clip(1 - d / rad, 0, 1) ** 1.3, 0.0))
     dz = relief + nzv + facets + chips
@@ -472,7 +472,7 @@ def build_stones(acc, S, mapfn, mat, rng, rough=1.0, nxy=5, premap=None, noise_a
     # never let the face sink behind the mortar body
     zf = np.where(fw > 0.3, np.maximum(zf, front_min - (1 - fw) * 0.01), zf)
     # chips also nibble the outline a little (broken arris)
-    pull = np.clip(-chips, 0, 0.02) * 0.5 * fw
+    pull = np.clip(-chips, 0, 0.03) * (0.8 if dressed else 0.5) * fw
     x = x - np.sign(x0_) * pull * (np.abs(ux) > 0.6)
     y = y - np.sign(y0_) * pull * (np.abs(uy) > 0.6)
     z = zf
@@ -833,7 +833,9 @@ W_PITCH = math.radians(47.0)
 W_TAN = math.tan(W_PITCH)
 W_OVH = 0.55
 W_RAFT = 2.40 + W_OVH * W_TAN          # thatch underside at outer wall line (eave lip at 2.40)
-TH_V = 0.40 / math.cos(W_PITCH)         # vertical thatch thickness
+CORE_T = 0.30                           # perpendicular thickness of the thatch core body under the courses
+TH_V = (CORE_T + 0.06) / math.cos(W_PITCH)   # vertical thickness to the mean course surface (~0.36-0.40 perp)
+TH_V_MIN = (CORE_T + 0.01) / math.cos(W_PITCH)  # vertical thickness to the lowest point of the course sawtooth
 TUR_C = np.array([-8.45, 3.0])
 TUR_Z_TOP = 5.92                 # top of the stone body (cushion sits on it)
 
@@ -1050,7 +1052,7 @@ def build_door_dressing(acc_d, op, rng):
                   [r["zc"] for r in recs], rng)
     dress_irregular(S, rng)
     wear = np.clip(1.1 - S["zc"] / 0.9, 0, 1)
-    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(22, 24), wear=wear)
+    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(30, 32), wear=wear)
     # voussoirs: irregular widths, thicker at the crown
     nv = 13
     wts = rng.uniform(0.8, 1.2, nv)
@@ -1085,7 +1087,7 @@ def build_door_dressing(acc_d, op, rng):
         zf = zs + R * np.sin(t)
         return facet_s(k, xf, SS["zcrs"][:, None]), zf
 
-    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, premap=premap, dressed=True, grid=(16, 18))
+    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, premap=premap, dressed=True, grid=(22, 24))
 
 
 def dress_irregular(S, rng, rot_sd=0.012):
@@ -1142,7 +1144,7 @@ def build_rect_dressing(acc_d, op, rng, sill_acc):
     S = stone_rec(facet_s(k, R[:, 0], R[:, 1]), R[:, 1], R[:, 2], R[:, 3], R[:, 4], R[:, 5],
                   rng.uniform(0.008, 0.014, len(R)), R[:, 1], rng)
     dress_irregular(S, rng)
-    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(18, 18))
+    build_stones(acc_d, S, hall_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(24, 24))
     build_sill(sill_acc, op, rng)
 
 
@@ -1222,7 +1224,7 @@ def build_hall_masonry(coll):
     hero = np.isin(fac, (2, 3, 4)) & (S["zc"] < 3.5)
     small = (S["hx"] < 0.05) & (S["hy"] < 0.05)
     log(f"  hall hero stones {int((hero & ~small).sum())}, other {int((~hero & ~small).sum())}, pins {int(small.sum())}")
-    build_stones(acc, filt(S, hero & ~small), hall_map, "M_stone", rng, rough=1.0, grid=(14, 10), noise_amp=0.007)
+    build_stones(acc, filt(S, hero & ~small), hall_map, "M_stone", rng, rough=1.0, grid=(14, 10), noise_amp=0.010)
     build_stones(acc, filt(S, ~hero & ~small), hall_map, "M_stone", rng, rough=1.0, nxy=5, noise_amp=0.008)
     build_stones(acc, filt(S, small), hall_map, "M_stone", rng, rough=0.8, nxy=5, noise_amp=0.005)
     finalize(acc, coll, smooth_deg=28.0)
@@ -1636,7 +1638,8 @@ def hip_boards(roof, acc, mat, rng, p_lo, p_hi, w, t, h0, piece=(0.8, 1.3), cull
 
 
 def eave_structure(roof, acc_r, acc_s, acc_f, rng, p_wall, z_plate_top, sheath_t, n_raft, rw, rd_tip,
-                   cull=None, fascia_h=0.18, fascia_t=0.04, soffit_w=(0.17, 0.24), mat_r="M_timber"):
+                   cull=None, fascia_h=0.18, fascia_t=0.04, soffit_w=(0.17, 0.24), mat_r="M_timber", scribe=None,
+                   fascia_joint=(2.5, 4.0), fascia_wave=0.0):
     """rafters (incl. jacks & hips), soffit/sheathing boards and fascia under an OctRoof eave."""
     pl = roof.p_lip
     sp = 2 * p_wall * TAN22 / n_raft
@@ -1683,32 +1686,69 @@ def eave_structure(roof, acc_r, acc_s, acc_f, rng, p_wall, z_plate_top, sheath_t
         W3, P = W3[keep], P[keep]
     acc_s.add(W3.reshape(-1, 3), inst_faces(quads, len(W3), P.shape[1]), "M_timber",
               uv=np.stack([P[..., 0], P[..., 1]], -1).reshape(-1, 2))
-    # fascia: vertical board at the lip, mitred at hips, follows the kicked eave
+    # fascia: boards at the lip, mitred at the hips, following the kicked eave; hand-fitted lengths with butt /
+    # scarf joints every 2.5-4 m, low-frequency wave; where an adjoining roof (wing thatch) rises over the eave the
+    # board is scribed down onto that surface and ends there (no floating cut ends)
     for k in range(8):
-        n = 24
-        xs = np.linspace(-pl * TAN22, pl * TAN22, n)
+        n = 40
+        xh = pl * TAN22
+        xs = np.linspace(-xh, xh, n)
+        # joints along this facet (absolute x positions)
+        cuts = []
+        xj = -xh + rng.uniform(0.6, 1.8)
+        while xj < xh - 0.6:
+            cuts.append(xj)
+            xj += rng.uniform(*fascia_joint)
+        xs = np.unique(np.concatenate([xs, np.array(cuts) - 0.004, np.array(cuts) + 0.004]))
+        n = len(xs)
         pf0, pf1 = pl - fascia_t, pl + 0.002
         top = roof.world(np.full(n, k), xs, np.full(n, pl), np.zeros(n))[:, 2] + 0.004
+        seg_id = np.searchsorted(np.array(cuts), xs)
+        wv = fascia_wave * n1(xs * 0.9 + k * 3.1, 77 + k) + 0.006 * (seg_id % 2) * fascia_wave / 0.02 \
+            + 0.004 * n1(seg_id * 1.7 + k, 91) * (fascia_wave > 0)
         V = []
         for pp in (pf0, pf1):
             for zoff in (-fascia_h, 0.0):
                 xx = np.clip(xs, -pp * TAN22, pp * TAN22)
                 S = roof.surf(np.full(n, k), xx, np.full(n, pp))
-                S[:, 2] = top + zoff
+                S[:, 2] = top + zoff + wv
                 V.append(S)
         V = np.stack(V, 1)  # n, 4 (inner-bot, inner-top, outer-bot, outer-top)
-        if cull is not None and cull(V.reshape(-1, 3).mean(0)[None])[0]:
-            continue
-        ring = [0, 2, 3, 1]   # loop around the section
-        Vr = V[:, ring, :]
-        i = np.arange(n - 1)[:, None]
-        jj = np.arange(4)[None, :]
-        a = i * 4 + jj
-        b = i * 4 + (jj + 1) % 4
-        quads = np.stack([a, b, b + 4, a + 4], -1).reshape(-1, 4)
-        caps = [np.array([[0, 3, 2, 1]]), ((n - 1) * 4 + np.array([[0, 1, 2, 3]]))]
-        acc_f.add(Vr.reshape(-1, 3), [quads] + caps, "M_timber",
-                  uv=np.stack([np.repeat(xs, 4), np.tile([0, 0.04, 0.22, 0.18], n)], -1))
+        if scribe is None:
+            if cull is not None and cull(V.reshape(-1, 3).mean(0)[None])[0]:
+                continue
+            keep = np.ones(n, bool)
+        else:
+            zt = scribe(V[:, 2, :2])
+            keep = zt < V[:, 1, 2] - 0.03
+            bot = np.maximum(V[:, [0, 2], 2], zt[:, None])
+            V[:, 0, 2], V[:, 2, 2] = bot[:, 0], bot[:, 1]
+        # split into board runs at joints and at buried sections
+        brk = np.zeros(n, bool)
+        for c in cuts:
+            brk |= np.isclose(xs, c + 0.004)
+        runs, cur = [], []
+        for i in range(n):
+            if not keep[i] or brk[i]:
+                if len(cur) >= 2:
+                    runs.append(cur)
+                cur = [i] if keep[i] else []
+            else:
+                cur.append(i)
+        if len(cur) >= 2:
+            runs.append(cur)
+        ring = [0, 2, 3, 1]
+        for run in runs:
+            Vr = V[run][:, ring, :]
+            m_ = len(run)
+            i = np.arange(m_ - 1)[:, None]
+            jj = np.arange(4)[None, :]
+            a = i * 4 + jj
+            b = i * 4 + (jj + 1) % 4
+            quads = np.stack([a, b, b + 4, a + 4], -1).reshape(-1, 4)
+            caps = [np.array([[0, 3, 2, 1]]), ((m_ - 1) * 4 + np.array([[0, 1, 2, 3]]))]
+            acc_f.add(Vr.reshape(-1, 3), [quads] + caps, "M_timber",
+                      uv=np.stack([np.repeat(xs[run], 4), np.tile([0, 0.04, 0.22, 0.18], m_)], -1))
 
 
 def _rafter(roof, acc, rng, k, xj, p0, p1, p_wall, z_plate, sheath_t, rw, rd_tip, hip, cull, mat):
@@ -1782,36 +1822,54 @@ def build_hall_frame(coll):
             continue
         ex = np.array([-math.sin(a), math.cos(a), 0.0])     # tangential
         ey = np.array([d[0], d[1], 0.0])                    # radial
-        # pedestal: dressed block with splayed foot
+        # pedestal: dressed block with splayed foot, tooled faces, chipped arrises, set ~1-2 deg out of square
         hp = 0.35
+        yaw = math.radians(rng.uniform(-2.0, 2.0))
+        exr = ex * math.cos(yaw) + ey * math.sin(yaw)
+        eyr = -ex * math.sin(yaw) + ey * math.cos(yaw)
+        chips = rng.uniform(0, 1, (4, 4))
+        psd = rng.uniform(0, 50)
 
-        def ped_def(P):
+        def ped_def(P, chips=chips, psd=psd):
             z = P[..., 0]
             s = 1 + 0.16 * np.clip(1 - z / 0.12, 0, 1) ** 1.5
             P = P.copy()
+            # tooled faces: 2-5 mm undulation + pitched face inside a drafted margin
+            und = 0.0035 * fbm(np.stack([P[..., 0] * 9 + psd, P[..., 1] * 9, P[..., 2] * 9], -1), 2)
+            ry, rz = np.abs(P[..., 1]) / 0.24, np.abs(P[..., 2]) / 0.24
+            on_y = ry > rz
+            marg = np.clip((np.minimum(np.where(on_y, rz, ry), 1 - z / 0.4) - 0.0) * 0.24 / 0.025, 0, 1)
+            nud = und + 0.002 * marg
+            P[..., 1] += np.where(on_y, np.sign(P[..., 1]) * nud, 0.0)
+            P[..., 2] += np.where(~on_y, np.sign(P[..., 2]) * nud, 0.0)
+            # arris chips (1-3 cm), mostly on the vertical arrises and the top edge
+            for c_ in chips:
+                sy, sz = (1 if c_[0] < 0.5 else -1), (1 if c_[1] < 0.5 else -1)
+                zc_ = 0.08 + 0.3 * c_[2]
+                rad = 0.012 + 0.02 * c_[3]
+                d = np.sqrt((P[..., 1] - sy * 0.24) ** 2 + (P[..., 2] - sz * 0.24) ** 2 + (z - zc_) ** 2)
+                dep = rad * 0.6 * np.clip(1 - d / rad, 0, 1) ** 1.2
+                P[..., 1] -= sy * dep
+                P[..., 2] -= sz * dep
             P[..., 1] *= s
             P[..., 2] *= s
-            P[..., 1] += 0.004 * np.sin(z * 9)
             return P
-        obox(acc_b, (P0 - np.array([0, 0, 0.05]))[None], up, ex, ey, hp + 0.05, 0.48, 0.48, 0.03, "M_stone_dressed",
-             nx=6, ny=5, nz=5, deform=ped_def)
-        # post: hewn, slight taper/swell, lean +-1 deg, checks
-        lean = rng.normal(0, 0.006, 2)
-        sw = rng.uniform(-0.008, 0.008)
-
-        def post_def(P, lean=lean, sw=sw):
-            z = P[..., 0]
-            u = z / (WALL_H - hp)
-            s = 1 + sw * np.sin(np.pi * u) - 0.015 * u
-            P = P.copy()
-            P[..., 1] = P[..., 1] * s + lean[0] * z
-            P[..., 2] = P[..., 2] * s + lean[1] * z
-            # a long shallow check (split) on the outer face
-            m = (P[..., 2] > 0.12) & (np.abs(P[..., 1] - 0.03) < 0.02) & (u > 0.15) & (u < 0.75)
-            P[..., 2] -= np.where(m, 0.006, 0.0)
-            return P
-        obox(acc_p, (P0 + np.array([0, 0, hp]))[None], up, ex, ey, WALL_H - hp, 0.28, 0.28, 0.03, "M_timber",
-             nx=12, ny=6, nz=6, deform=post_def)
+        obox(acc_b, (P0 - np.array([0, 0, 0.05]))[None], up, exr, eyr, hp + 0.05, 0.48, 0.48, 0.03, "M_stone_dressed",
+             nx=10, ny=12, nz=12, deform=ped_def)
+        # post: hand-hewn, +-1 deg lean, +-1 cm swell/taper, adze facets; modelled checks on the posts that
+        # flank the door (c=2, 3) and the post by the SW window (c=1)
+        checks = []
+        if c in (1, 2, 3):
+            checks.append(dict(face=1, pos=rng.uniform(-0.35, 0.35), x0=rng.uniform(0.08, 0.2), x1=rng.uniform(0.6, 0.85),
+                               depth=rng.uniform(0.022, 0.032), width=rng.uniform(0.012, 0.018)))
+            if c != 1:
+                checks.append(dict(face=0 if c == 2 else 2, pos=rng.uniform(-0.3, 0.3), x0=rng.uniform(0.35, 0.5),
+                                   x1=rng.uniform(0.8, 0.95), depth=rng.uniform(0.016, 0.024),
+                                   width=rng.uniform(0.009, 0.013)))
+        lean = np.clip(rng.normal(0, 0.009, 2), -0.0175, 0.0175)
+        hewn_member(acc_p, P0 + np.array([0, 0, hp - 0.01]), up, ex, ey, WALL_H - hp + 0.02, 0.28, 0.28, rng,
+                    chamfer=0.03, nf=6, st_len=0.035, adze=0.008, lean=tuple(lean), swell=rng.uniform(-0.01, 0.01),
+                    taper=rng.uniform(0.0, 0.01), wave=0.004, checks=checks, seed=40 + c)
         # knee braces into the two adjacent plate runs
         for side, fk in ((-1, c), (1, (c + 1) % 8)):
             t = np.array([FT[fk][0], FT[fk][1], 0.0])
@@ -1819,9 +1877,9 @@ def build_hall_frame(coll):
             base = np.array([d[0] * R_POST, d[1] * R_POST, 0.0])
             base = base - nk * (np.dot(base, nk) - (PLATE_APO + 0.02))
             dirv = -t if side < 0 else t
-            pa = base + dirv * 0.10 + np.array([0, 0, 2.55])
-            pc = base + dirv * 0.10 + np.array([0, 0, WALL_H - 0.02])
-            pb = base + dirv * 0.68 + np.array([0, 0, WALL_H + 0.02])
+            pa = base + dirv * 0.12 + np.array([0, 0, 2.78])
+            pc = base + dirv * 0.12 + np.array([0, 0, WALL_H - 0.04])
+            pb = base + dirv * 0.56 + np.array([0, 0, WALL_H + 0.02])
             us = np.linspace(0, 1, 14)
             ctrl = pc * 0.85 + 0.15 * (pa + pb) * 0.5
             path = ((1 - us) ** 2)[:, None] * pa + (2 * us * (1 - us))[:, None] * ctrl + (us ** 2)[:, None] * pb
@@ -1829,10 +1887,13 @@ def build_hall_frame(coll):
             path[-1] += np.array([0, 0, 0.05])
             wob = 0.006 * np.sin(us * 3.1 + c)
             path = path + wob[:, None] * nk
-            V, F = sweep(path, nk, prof_rect(0.14, 0.14, 0.022))
+            # chunky Y-bracket arm, slightly thicker at the root, adze-wobbled
+            nn_ = len(us)
+            profs = np.stack([prof_rect(0.17 * (1.12 - 0.12 * u_), 0.16 + 0.01 * math.sin(7 * u_ + c), 0.024) for u_ in us])
+            V, F = sweep(path, nk, profs)
             acc_k.add(V, F, "M_timber")
-            peg(acc_k, base + dirv * 0.07 + np.array([0, 0, 2.66]) + ey * 0.0 + nk * 0.155, nk)
-            peg(acc_k, base + dirv * 0.56 + np.array([0, 0, WALL_H + 0.10]) + nk * (PLATE_W / 2 + 0.02), nk)
+            peg(acc_k, base + dirv * 0.09 + np.array([0, 0, 2.86]) + nk * 0.165, nk)
+            peg(acc_k, base + dirv * 0.46 + np.array([0, 0, WALL_H + 0.10]) + nk * (PLATE_W / 2 + 0.02), nk)
     # eave plate: 8 runs, lap-jointed corners with projecting ends
     for k in range(8):
         n, t = FN[k], FT[k]
@@ -1851,8 +1912,10 @@ def build_hall_frame(coll):
             P[..., 2] += 0.006 * np.sin(P[..., 0] * 1.3 + k)
             return P
         A3 = np.array([cA[0], cA[1], WALL_H + PLATE_H / 2 + dz])
-        obox(acc_pl, (A3 + tv * 0.02)[None], tv, ey, np.array([0, 0, 1.0]), 2 * half - 0.04, PLATE_W, PLATE_H, 0.025,
-             "M_timber", nx=10, deform=pl_def)
+        hewn_member(acc_pl, A3 + tv * 0.02, tv, ey, np.array([0, 0, 1.0]), 2 * half - 0.04, PLATE_W, PLATE_H, rng,
+                    chamfer=0.025, nf=3, st_len=0.11, adze=0.004, wave=0.007, seed=60 + k,
+                    checks=[dict(face=1, pos=rng.uniform(-0.3, 0.3), x0=0.15, x1=0.7, depth=0.012, width=0.006)]
+                    if k in (2, 3, 4) else ())
         for end, sgn in ((cA, -1), (cB, 1)):
             zoff = PLATE_H / 4 if up_half else -PLATE_H / 4
             E3 = np.array([end[0], end[1], WALL_H + PLATE_H / 2 + zoff + dz])
@@ -1873,7 +1936,8 @@ def build_hall_frame(coll):
         ey = np.array([n[0], n[1], 0.0])
         c0 = n * (PLATE_APO + 0.02) - t * (half + 0.06)
         o = np.array([c0[0], c0[1], PLATE_TOP + RPLATE_H / 2 + rng.uniform(-0.003, 0.003)])
-        obox(acc_pl, o[None], tv, ey, np.array([0, 0, 1.0]), 2 * half + 0.12, 0.21, RPLATE_H, 0.02, "M_timber", nx=10)
+        hewn_member(acc_pl, o, tv, ey, np.array([0, 0, 1.0]), 2 * half + 0.12, 0.21, RPLATE_H, rng, chamfer=0.02,
+                    nf=2, st_len=0.13, adze=0.0035, wave=0.006, seed=70 + k)
         mid = n * (PLATE_APO + 0.02 + 0.105) + t * rng.uniform(-0.4, 0.4)
         peg(acc_pl, np.array([mid[0], mid[1], PLATE_TOP + 0.10]), ey)
     for a in (acc_b, acc_p, acc_k, acc_pl):
@@ -1883,8 +1947,8 @@ def build_hall_frame(coll):
 # ==============================================================================================
 # SKIRT ROOF (tier 1)
 # ==============================================================================================
-SKIRT = OctRoof(0.0, 0.0, p_lip=5.25, z_lip=3.735, d_pts=[0, 0.45, 1.0, 1.7, 2.2, 3.2],
-                a_pts=[23, 27, 32, 38, 44, 50], p_min=2.0, kick=0.022, kick_len=0.8, wave=0.022,
+SKIRT = OctRoof(0.0, 0.0, p_lip=5.25, z_lip=3.735, d_pts=[0, 0.4, 0.8, 1.2, 3.25],
+                a_pts=[25, 31, 37, 38, 39], p_min=2.0, kick=0.022, kick_len=0.8, wave=0.022,
                 sag=0.03, seed=3)
 SKIRT_SHEATH = 0.025
 COLLAR_P = 3.62
@@ -1920,9 +1984,14 @@ def build_skirt(coll):
                         frac_slip=0.025, curl=0.012, rot_sd=0.012)
     log("  skirt boards", n)
     hip_boards(SKIRT, acc_h, "M_roof_shingle", rng, SKIRT.p_lip + 0.03, 3.3, 0.13, 0.03, 0.065, cull=cull)
+    def scribe(XY):
+        x, y = XY[:, 0], XY[:, 1]
+        inside = (x > WX_W - W_OVH) & (x < WX_E + W_OVH) & (y > WY_S - W_OVH) & (y < WY_N + W_OVH)
+        return np.where(inside, wing_under(x, y) + TH_V_MIN + 0.02, -10.0)
     eave_structure(SKIRT, acc_r, acc_r, acc_r, rng, p_wall=PLATE_APO + PLATE_W / 2, z_plate_top=RAFTER_SEAT,
                    sheath_t=SKIRT_SHEATH, n_raft=6, rw=0.10, rd_tip=0.14,
-                   cull=lambda C: wing_roof_zone(C, 0.05) | in_wing(C, margin=-0.6, zpad=-0.5))
+                   cull=lambda C: wing_roof_zone(C, 0.05) | in_wing(C, margin=-0.6, zpad=-0.5), scribe=scribe,
+                   fascia_wave=0.02)
     finalize(acc, coll)
     finalize(acc_h, coll)
     finalize(acc_r, coll)
@@ -2020,7 +2089,7 @@ def build_collar(coll):
             dth = w / rb
             thc = th + dth / 2
             recs.append((layer, thc, w, rb, rng.uniform(0.03, 0.045), float(np.clip(rng.normal(0, 0.035), -0.06, 0.06)),
-                         rng.uniform(0.06, 0.30) * (1.0 if layer else 0.8), rng.integers(0, 4), rng.normal(0, 0.03)))
+                         rng.uniform(0.05, 0.25) * (1.0 if layer else 0.75), rng.integers(0, 4), rng.normal(0, 0.008)))
             th += dth * (1.0 if layer else 0.97) + rng.uniform(0.0, 0.004)
     R = np.array(recs, float)
     M = len(R)
@@ -2036,6 +2105,14 @@ def build_collar(coll):
     Lb = np.linalg.norm(D, axis=1)
     D /= Lb[:, None]
     L = Lb + tip
+    # shakes whose upper half lies under the wing thatch are buried there -> dropped (partly buried ones stay, scribed)
+    mid = B + D * (Lb * 0.6)[:, None]
+    fpw = (mid[:, 0] > WX_W - W_OVH) & (mid[:, 0] < WX_E + W_OVH) & (mid[:, 1] > WY_S - W_OVH) & (mid[:, 1] < WY_N + W_OVH)
+    buried = fpw & (mid[:, 2] < wing_under(mid[:, 0], mid[:, 1]) + TH_V_MIN)
+    keep = ~buried
+    layer, thc, w, rb, tb, butt, tip, kind, twist = [v[keep] for v in (layer, thc, w, rb, tb, butt, tip, kind, twist)]
+    B, T, D, Lb, L = B[keep], T[keep], D[keep], Lb[keep], L[keep]
+    M = len(thc)
     E = np.stack([-np.sin(thc), np.cos(thc), np.zeros(M)], 1)
     N = np.cross(E, D)
     N /= np.linalg.norm(N, axis=1, keepdims=True)
@@ -2049,17 +2126,20 @@ def build_collar(coll):
     # taper toward the top (converging circumference) + wedge thickness
     x = x * (1 - 0.22 * fu)
     h = h * (1 - 0.5 * fu) + tb[:, None] * 0.5 * (1 - fu)
-    # tips: 0 pointed, 1 split, 2 broken-diagonal, 3 ragged
-    tipz = np.clip((u - (L[:, None] - 0.22)) / 0.22, 0, 1)
+    # blunt broken / split ends (never pointed): 0 square-broken, 1 diagonal break 20-40 deg,
+    # 2 split (notch 3-7 cm down the middle, leaving two blunt prongs >=3 cm wide), 3 ragged square break
+    tipz = np.clip((u - (L[:, None] - 0.10)) / 0.10, 0, 1)
     xn = x / (w[:, None] / 2)
-    k0 = (kind == 0)[:, None]
-    k1 = (kind == 1)[:, None]
-    k2 = (kind == 2)[:, None]
-    x = np.where(k0, x * (1 - 0.8 * tipz ** 1.5), x)
-    u = np.where(k1 & (np.abs(xn) < 0.3), u - 0.16 * tipz, u)
-    u = np.where(k2, u - 0.08 * tipz * (xn + 1) * 0.5, u)
-    u = u - np.where((kind == 3)[:, None], 0.05 * tipz * np.abs(np.sin(xn * 5 + thc[:, None] * 30)), 0.0)
-    x = x + twist[:, None] * u * 0.15 * (u / L[:, None])
+    wl_ = w[:, None] * (1 - 0.22)
+    rs = np.random.default_rng(5051)
+    cang = np.radians(rs.uniform(20, 40, M)) * np.where(rs.uniform(0, 1, M) < 0.5, -1, 1)
+    notch = rs.uniform(0.03, 0.07, M)
+    u = u - np.where((kind == 1)[:, None], np.tan(np.abs(cang))[:, None] * (0.5 + 0.5 * np.sign(cang)[:, None] * xn)
+                     * wl_ * tipz, 0.0)
+    u = u - np.where((kind == 2)[:, None] & (np.abs(xn) < 0.22), notch[:, None] * tipz, 0.0)
+    u = u - np.where((kind == 3)[:, None] | (kind == 0)[:, None],
+                     0.012 * tipz * np.abs(np.sin(xn * 4.0 + thc[:, None] * 30)), 0.0)
+    x = x + twist[:, None] * u * (u / L[:, None])
     W = B[:, None, :] + u[..., None] * D[:, None, :] + x[..., None] * E[:, None, :] + h[..., None] * N[:, None, :]
     acc.add(W.reshape(-1, 3), inst_faces(quads, M, P.shape[1]), "M_roof_shake",
             uv=np.stack([x, u], -1).reshape(-1, 2))
@@ -2230,7 +2310,7 @@ def build_cap(coll, roof, prefix, rng, p_wall, z_plate, n_raft, p_top, expo, W, 
     log(f"  {prefix} shingles", n)
     hip_boards(roof, acch, "M_roof_shingle", rng, roof.p_lip + 0.02, p_top, 0.08, 0.02, 0.032, piece=(0.5, 0.8))
     eave_structure(roof, accs, accs, accs, rng, p_wall=p_wall, z_plate_top=z_plate, sheath_t=0.02, n_raft=n_raft,
-                   rw=0.07, rd_tip=0.09, fascia_h=0.11, fascia_t=0.03, soffit_w=(0.12, 0.17))
+                   rw=0.07, rd_tip=0.09, fascia_h=0.11, fascia_t=0.03, soffit_w=(0.12, 0.17), fascia_wave=0.006)
     # carved eave ring beam + corner brackets
     for k in range(8):
         phi = math.radians(45 * k) + roof.rot
@@ -2247,7 +2327,12 @@ def build_cap(coll, roof, prefix, rng, p_wall, z_plate, n_raft, p_top, expo, W, 
             m = np.abs(P[..., 2]) < 0.025
             P[..., 1] -= np.where(m & (P[..., 1] > 0), 0.012, 0)
             return P
-        beam(accs, ca - t3 * 0.1, cb + t3 * 0.1, 0.12, 0.12, 0.015, "M_timber", up=n3 * 0 + np.array([0, 0, 1]), nx=6)
+        # one hewn ring-beam piece per facet: butted at one corner, lapped 0.12 m past the other with a peg
+        dzk = rng.uniform(-0.008, 0.008) + (0.012 if k % 2 else -0.012)
+        Lk = float(np.linalg.norm(cb - ca)) + 0.13
+        hewn_member(accs, ca + t3 * 0.004 + np.array([0, 0, dzk]), t3, n3, np.array([0, 0, 1.0]), Lk, 0.12, 0.12, rng,
+                    chamfer=0.016, nf=2, st_len=0.08, adze=0.003, wave=0.003, seed=200 + k)
+        peg(accs, cb + t3 * 0.06 + n3 * 0.062 + np.array([0, 0, dzk]), n3, rad=0.011, proud=0.012)
         # bracket at the corner (curved), from the post below out to the hip rafter
         cd = np.array([*(rot2(*oct_corner(1.0, k, 1), roof.rot))])
         cd = np.array([cd[0], cd[1], 0]) / np.linalg.norm(cd)
@@ -2671,7 +2756,7 @@ def build_wing_walls(coll):
     S2 = stone_rec(R[:, 0], R[:, 1], R[:, 2], R[:, 3], R[:, 4], R[:, 5], rng.uniform(0.008, 0.022, len(R)), R[:, 1], rng)
     dress_irregular(S2, rng)
     wear = np.clip(1.0 - S2["zc"] / 0.8, 0, 1)
-    build_stones(accq, S2, wing_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(18, 18), wear=wear)
+    build_stones(accq, S2, wing_map, "M_stone_dressed", rng, rough=0.5, dressed=True, grid=(26, 26), wear=wear)
     finalize(accq, coll)
     # mortar body
     accm = Acc("KEEP_wing_wall_mortar")
@@ -2743,10 +2828,19 @@ def build_wing_door_window(coll):
         P[:, 2] += 0.003 * np.sin(P[:, 1] * 13 + seed) * (P[:, 2] > -0.25)
         return P
     # jambs, lintel, sill-beam
-    box(acc, xc - hw - fw, xc - hw, -0.02, z1 + fw, wf0, wf1, 0.02, "M_timber", ny=8, deform=adze)
-    box(acc, xc + hw, xc + hw + fw, -0.02, z1 + fw, wf0, wf1, 0.02, "M_timber", ny=8, deform=lambda P: adze(P, 2))
-    box(acc, xc - hw - fw - 0.22, xc + hw + fw + 0.24, z1 + 0.005, z1 + 0.235, wf0 - 0.05, wf1 + 0.17, 0.025, "M_timber",
-        nx=8, deform=lambda P: adze(P, 4))
+    # hand-hewn jambs and lintel (adze facets, slight lean/wave, a modelled check in the lintel face)
+    EXo, EYo, EZo = np.array([1.0, 0, 0]), np.array([0, 0, 1.0]), np.array([0, -1.0, 0])
+    for jx, sd_ in ((xc - hw - fw / 2, 1), (xc + hw + fw / 2, 2)):
+        hewn_member(acc, wl(jx, -0.02, 0.5 * (wf0 + wf1)), np.array([0, 0, 1.0]), EXo, EZo, z1 + fw + 0.02, fw,
+                    wf1 - wf0, rng, chamfer=0.022, nf=3, st_len=0.05, adze=0.004,
+                    lean=(rng.normal(0, 0.006), 0.0), swell=rng.uniform(-0.006, 0.006), seed=500 + sd_,
+                    checks=[dict(face=1, pos=rng.uniform(-0.3, 0.3), x0=0.2, x1=0.7, depth=0.012, width=0.006)])
+    lw0, lw1_ = wf0 - 0.05, wf1 + 0.17
+    hewn_member(acc, wl(xc - hw - fw - 0.22, z1 + 0.12, 0.5 * (lw0 + lw1_)), EXo, EYo, EZo,
+                2 * hw + 2 * fw + 0.46, 0.23, lw1_ - lw0, rng, chamfer=0.025, nf=4, st_len=0.04, adze=0.005,
+                wave=0.006, seed=510,
+                checks=[dict(face=1, pos=0.15, x0=0.12, x1=0.62, depth=0.018, width=0.009),
+                        dict(face=1, pos=-0.4, x0=0.55, x1=0.9, depth=0.010, width=0.005)])
     for xx in (xc - hw - fw / 2, xc + hw + fw / 2):
         for zz in (z1 + 0.12,):
             p = wl(np.array([xx]), np.array([zz]), np.array([wf1 + 0.17]))[0]
@@ -2813,7 +2907,6 @@ def build_wing_door_window(coll):
 # wing thatch
 # ----------------------------------------------------------------------------------------------
 SP_, CP_ = math.sin(W_PITCH), math.cos(W_PITCH)
-CORE_T = 0.25                                  # perpendicular thickness of the thatch body under the top layer
 PLANES = {
     "S": dict(o=lambda a, m: np.stack([a, (WY_S - W_OVH) + m * CP_, 2.40 + m * SP_], -1), n=np.array([0, -SP_, CP_]),
               a_rng=(WX_W - W_OVH - 0.3, WX_E + W_OVH)),
@@ -2839,14 +2932,18 @@ def thatch_cull(C, tol_skirt=True):
     ang = np.arctan2(y, x)
     kk = np.round(ang / (np.pi / 4)) % 8
     pp = x * np.cos(kk * np.pi / 4) + y * np.sin(kk * np.pi / 4)
-    bad |= pp < apo(np.clip(z, 0, WALL_H)) + 0.02
     zs = SKIRT.zb(pp)
+    # inside the hall's plan: only what lies below the skirt sheathing (walls, plates, rafters) is culled; thatch
+    # above the skirt runs on over it until it meets the collar / cone
+    bad |= (pp < apo(np.clip(z, 0, WALL_H)) + 0.02) & (z < np.maximum(zs - 0.02, RAFTER_SEAT + 0.1))
     if tol_skirt:
         wt = wing_top(x, y)
         bad |= (pp < SKIRT.p_lip + 0.08) & (wt < zs + 0.07) & (z > zs - 0.27)
     r = np.hypot(x, y)
     bad |= (r < np.interp(z, CONE_ZF, CONE_RF) + 0.12) & (z > 4.4)
-    bad |= (r < COLLAR_P / 0.93 + 0.1) & (z > 4.5) & (z < COLLAR_TOP_Z + 0.3) & (r > np.interp(z, [4.6, COLLAR_TOP_Z], [3.6, 2.9]) - 0.15)
+    # under the shake collar: the thatch runs on under the collar shakes (shakes buried in the thatch are dropped);
+    # only cull what would pass through the collar backing frustum
+    bad |= (z > 4.5) & (z < COLLAR_TOP_Z + 0.1) & (r < np.interp(z, [4.6, COLLAR_TOP_Z], [3.5, 2.95]) - 0.10)
     return bad
 
 
@@ -2862,21 +2959,29 @@ def runs_of(P, ok, min_len=3):
     return runs
 
 
-def thatch_roll(acc, path, r0, seed, flat=0.8, seg=12, mat="M_thatch"):
-    """lumpy bound thatch roll along a path (constrictions every ~0.34 m, irregular section)."""
+def thatch_roll(acc, path, r0, seed, flat=0.8, seg=12, mat="M_thatch", bind=0.16, stri=0.0, step=0.05):
+    """lumpy bound thatch roll along a path (constrictions every ~0.34 m, irregular section).
+    stri > 0: strand striations wrapping the roll (grooves every 1.5-3 cm along the path, depth = stri)."""
     path = np.asarray(path, float)
     d = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(path, axis=0), axis=1))])
     if d[-1] < 0.1:
         return
-    n = max(4, int(d[-1] / 0.05))
+    n = max(4, int(d[-1] / step))
     ds = np.linspace(0, d[-1], n)
     P = np.stack([np.interp(ds, d, path[:, i]) for i in range(3)], 1)
-    bind = 0.84 + 0.16 * np.clip(np.abs(np.sin(np.pi * ds / 0.34 + seed)) * 2.2, 0, 1)
-    rr = r0 * bind * (1 + 0.12 * n1(ds * 1.3, seed))
+    bnd = (1 - bind) + bind * np.clip(np.abs(np.sin(np.pi * ds / 0.34 + seed)) * 2.2, 0, 1)
+    rr = r0 * bnd * (1 + 0.12 * n1(ds * 1.3, seed))
+    # ends taper and round off (rolls die into the neighbouring roll / surface instead of ending as flat caps)
+    te = min(0.3, d[-1] * 0.3)
+    endf = np.minimum(np.clip(ds / te, 0, 1), np.clip((d[-1] - ds) / te, 0, 1))
+    rr = rr * (0.45 + 0.55 * np.sqrt(np.clip(1 - (1 - endf) ** 2, 0, 1)))
     a = np.linspace(0, 2 * np.pi, seg, endpoint=False)
     profs = []
     for i in range(n):
-        lump = 1 + 0.16 * vnoise(np.stack([np.cos(a) * 1.7 + ds[i] * 4.0, np.sin(a) * 1.7, np.full(seg, seed * 3.3)], -1))
+        lump = 1 + 0.10 * fbm(np.stack([np.cos(a) * 1.7 + ds[i] * 4.0, np.sin(a) * 1.7, np.full(seg, seed * 3.3)], -1), 2)
+        if stri > 0:
+            ph = ds[i] / 0.022 + 2.5 * n1(np.full(seg, ds[i]) * 2.0 + a * 0.4, seed + 5)
+            lump = lump - (stri / r0) * np.clip(np.cos(np.pi * ph) * 1.6 - 0.6, 0, 1) * (0.6 + 0.4 * np.sin(a) ** 2)
         profs.append(np.stack([rr[i] * np.cos(a) * lump, rr[i] * flat * np.sin(a) * lump], 1))
     V, F = sweep(P, (0, 0, 1), np.stack(profs))
     acc.add(V, F, mat)
@@ -2897,7 +3002,7 @@ def thatch_courses(acc, name, rng, clump_w, seed, m_max=4.15):
     dM = o(np.array([0.0]), np.array([e]))[0] - o(np.array([0.0]), np.array([0.0]))[0]
     flip = np.dot(np.cross(dA, dM), nrm) < 0
     s0 = 0.02
-    m = -0.06
+    m = 0.20                     # the eave course rests on the heavy eave roll
     ci = 0
     step_prev, E_prev = 0.08, 0.30
     nq_tot = 0
@@ -2911,7 +3016,7 @@ def thatch_courses(acc, name, rng, clump_w, seed, m_max=4.15):
         bnd = np.array(bnd)
         nc = len(bnd) - 1
         cen = 0.5 * (bnd[:-1] + bnd[1:])
-        ext_c = np.clip(0.04 + rng.uniform(-0.04, 0.04, nc) + 0.012 * rng.normal(0, 1, nc), 0.0, 0.09)
+        ext_c = np.clip(0.035 + rng.uniform(-0.035, 0.035, nc) + 0.01 * rng.normal(0, 1, nc), 0.0, 0.075)
         spl = np.tan(np.radians(np.clip(rng.normal(0, 4.5, nc), -8, 8)))
         # columns: boundary, centre, boundary, centre, ..., boundary
         A = np.empty(2 * nc + 1)
@@ -2922,26 +3027,24 @@ def thatch_courses(acc, name, rng, clump_w, seed, m_max=4.15):
         ext = np.empty(2 * nc + 1)
         ext[1::2] = ext_c
         nb_ext = np.minimum(np.concatenate([[ext_c[0]], ext_c]), np.concatenate([ext_c, [ext_c[-1]]]))
-        ext[0::2] = 0.25 * nb_ext + rng.uniform(0, 0.008, nc + 1)
+        ext[0::2] = 0.55 * nb_ext + rng.uniform(0, 0.008, nc + 1)
         sp = np.empty(2 * nc + 1)
         sp[1::2] = spl
         sp[0::2] = 0.5 * (np.concatenate([[spl[0]], spl]) + np.concatenate([spl, [spl[-1]]]))
-        gd = np.where(kind, -rng.uniform(0.0, 0.004, 2 * nc + 1), rng.uniform(0.005, 0.010, 2 * nc + 1))
+        gd = np.where(kind, -rng.uniform(-0.002, 0.009, 2 * nc + 1), rng.uniform(0.005, 0.010, 2 * nc + 1))
         wave = 0.05 * n1(A * 0.45, seed * 100 + ci)
         stp = step * (1 + 0.18 * n1(A * 0.9, seed * 100 + ci + 50))
         mi = m + wave
         lower_top = s0 + 0.58 * step_prev
         if ci == 0:
-            low = np.full_like(A, -0.13)
+            ext = np.minimum(ext, 0.05)
+            low = np.full_like(A, -0.025)
         else:
             low = s0 + lower_top * 0 + 0.58 * step_prev * np.clip(ext / max(E_prev - 0.13, 0.05), 0, 1)
         mb = mi - ext
         top = s0 + 0.93 * stp
-        rows_m = np.stack([mb, mb + 0.010, mi - 0.25 * ext + 0.022, mi + 0.13, mi + E + 0.05], 1)
-        rows_h = np.stack([low - 0.012, low + 0.45 * (top - low), top, s0 + 0.58 * stp, np.full_like(A, s0 - 0.006)], 1)
-        if ci == 0:
-            rows_m[:, 0] -= 0.07
-            rows_m[:, 1] -= 0.035
+        rows_m = np.stack([mb, mb + 0.016, mi - 0.35 * ext + 0.03, mi + 0.13, mi + E + 0.05], 1)
+        rows_h = np.stack([low - 0.012, low + 0.32 * (top - low), top, s0 + 0.58 * stp, np.full_like(A, s0 - 0.006)], 1)
         # striations: boundary columns grooved (fade toward the strand tips), fine fibre noise
         rows_h = rows_h - gd[:, None] * np.array([0.3, 0.7, 1.0, 1.0, 0.6])[None, :]
         Am = np.repeat(A[:, None], 5, 1)
@@ -2952,6 +3055,10 @@ def thatch_courses(acc, name, rng, clump_w, seed, m_max=4.15):
         fib = 0.003 * vnoise(np.stack([Am * 60.0, rows_m * 4.0, np.full_like(Am, seed + ci * 0.37)], -1))
         H = rows_h + lf + fib + CORE_T
         W = o(Am, rows_m) + H[..., None] * nrm
+        # where the hall skirt is the upper roof, the thatch is squashed under its sheathing (never culled -> no holes)
+        zs_, pp_ = skirt_z_at(W[..., 0], W[..., 1])
+        under = (pp_ < SKIRT.p_lip + 0.06) & (wing_top(W[..., 0], W[..., 1]) < zs_ + 0.07)
+        W[..., 2] = np.where(under, np.minimum(W[..., 2], zs_ - 0.05 - 0.008 * (ci % 3)), W[..., 2])
         ncol = len(A)
         idx = np.arange(ncol * 5).reshape(ncol, 5)
         q = np.stack([idx[:-1, :-1], idx[1:, :-1], idx[1:, 1:], idx[:-1, 1:]], -1).reshape(-1, 4)
@@ -2959,7 +3066,7 @@ def thatch_courses(acc, name, rng, clump_w, seed, m_max=4.15):
             q = q[:, ::-1]
         C = W.reshape(-1, 3)[q].mean(1)
         x_, y_ = C[:, 0], C[:, 1]
-        bad = thatch_cull(C)
+        bad = thatch_cull(C, tol_skirt=False)
         bad |= (plane_under(name, x_, y_) - wing_under(x_, y_)) > 0.10
         bad |= ~((x_ > WX_W - W_OVH - 0.12) & (x_ < WX_E + W_OVH + 0.04) & (y_ > WY_S - W_OVH - 0.12) &
                  (y_ < WY_N + W_OVH + 0.12))
@@ -3026,33 +3133,43 @@ def build_wing_roof(coll):
     finalize(accc, coll, smooth_deg=55.0, recalc=False)
     # --- eave rolls (rounded, lumpy) along S, N, W eaves
     def roll(path, rad):
-        thatch_roll(acc, path, rad, 5 + len(path), flat=0.85)
-    for name in ("S", "N", "W"):
-        pl = PLANES[name]
-        a = np.linspace(pl["a_rng"][0] + 0.3, pl["a_rng"][1], 70)
-        path = pl["o"](a, np.full_like(a, 0.16)) + pl["n"] * (CORE_T * 0.42)
-        path[:, 2] += 0.02 * n1(a * 0.8, 21)
-        ok = ~thatch_cull(path)
-        # keep within the footprint of this eave (hips)
-        if name in ("S", "N"):
-            ok &= path[:, 0] > WX_W - W_OVH + 0.15
-        else:
-            ok &= (path[:, 1] > WY_S - W_OVH + 0.15) & (path[:, 1] < WY_N + W_OVH - 0.15)
-        # split into runs
-        runs, cur = [], []
-        for i, o in enumerate(ok):
-            if o:
-                cur.append(path[i])
-            elif len(cur) > 2:
-                runs.append(np.array(cur))
-                cur = []
-            else:
-                cur = []
-        if len(cur) > 2:
+        thatch_roll(acc, path, rad, 5 + len(path), flat=0.9, bind=0.05, seg=16, stri=0.008, step=0.013)
+    # one continuous eave roll N -> W -> S, turning round the two hipped corners (no gaps at the hips)
+    pS, pN, pW = PLANES["S"], PLANES["N"], PLANES["W"]
+    cS = pS["o"](np.array([0.0]), np.array([0.10]))[0] + pS["n"] * 0.21
+    cN = pN["o"](np.array([0.0]), np.array([0.10]))[0] + pN["n"] * 0.21
+    cW = pW["o"](np.array([0.0]), np.array([0.10]))[0] + pW["n"] * 0.21
+    ze = cS[2]
+    xw, ys, yn = cW[0], cS[1], cN[1]
+    xe = pS["a_rng"][1]
+    corners = np.array([(xe, yn, ze), (xw, yn, ze), (xw, ys, ze), (xe, ys, ze)])
+    poly = []
+    for i in range(3):
+        a, b = corners[i], corners[i + 1]
+        L = np.linalg.norm(b - a)
+        nn = max(int(L / 0.05), 2)
+        for t in np.linspace(0, 1, nn, endpoint=(i == 2)):
+            poly.append(a + (b - a) * t)
+    path = np.array(poly)
+    for _ in range(6):                       # round the corners (Chaikin-like relaxation)
+        path[1:-1] = 0.25 * path[:-2] + 0.5 * path[1:-1] + 0.25 * path[2:]
+    sd_ = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(path, axis=0), axis=1))])
+    path[:, 2] += 0.02 * n1(sd_ * 0.8, 21)
+    ok = ~thatch_cull(path)
+    runs, cur = [], []
+    for i, o in enumerate(ok):
+        if o:
+            cur.append(path[i])
+        elif len(cur) > 2:
             runs.append(np.array(cur))
-        for r_ in runs:
-            roll(r_, 0.205)
-    finalize(acc, coll)
+            cur = []
+        else:
+            cur = []
+    if len(cur) > 2:
+        runs.append(np.array(cur))
+    for r_ in runs:
+        roll(r_, 0.24)
+    finalize(acc, coll, smooth_deg=80.0)
 
 
 def build_wing_ridge(coll):
@@ -3075,43 +3192,66 @@ def build_wing_ridge(coll):
             cur = 0
     path = path[best[0]:best[1]]
     # ridge roll (thatch)
-    thatch_roll(acc, path, 0.21, 71, flat=0.8, seg=14)
+    thatch_roll(acc, path, 0.21, 71, flat=0.8, seg=16, bind=0.04)
     # ridge-rider log
     lp = path + np.array([0, 0, 0.21])
     V, F = sweep(lp, (0, 0, 1), prof_circle(0.07, 10))
     acc.add(V, F, "M_timber_weathered")
-    # comb: splayed split sticks crossing over the log, pegged
-    x = path[0, 0] + 0.05
-    x_end = path[-1, 0] - 0.05
+    # comb: crossed split shakes in V/X pairs straddling the ridge-rider log, each leaning 20-35 deg to either
+    # side, 0.3-0.5 m above the crossing, irregular spacing 0.15-0.3 m, blunt split/broken ends
+    x = path[0, 0] + rng.uniform(0.05, 0.12)
+    x_end = path[-1, 0] - 0.06
     recs = []
     while x < x_end:
-        for side in (-1, 1):
-            L = rng.uniform(0.62, 0.88)
-            ang = math.radians(rng.uniform(20, 34))
-            recs.append((x + rng.normal(0, 0.015), side, L, ang, rng.uniform(0.07, 0.13), rng.uniform(0.022, 0.034),
-                         rng.integers(0, 3), rng.normal(0, 0.05)))
-        x += rng.uniform(0.11, 0.17)
-    R = np.array(recs, float)
-    M = len(R)
-    xb, side, L, ang, wd, th, kind, tw = [R[:, i] for i in range(8)]
-    zc = np.interp(xb, path[:, 0], path[:, 2])
-    base = np.stack([xb, WY_R - side * np.sin(ang) * 0.28, zc - np.cos(ang) * 0.12], 1)
-    D = np.stack([tw * 0.3, side * np.sin(ang), np.cos(ang)], 1)
-    D /= np.linalg.norm(D, axis=1, keepdims=True)
-    E = np.stack([np.ones(M), np.zeros(M), np.zeros(M)], 1)
+        psi = math.radians(rng.choice([-1, 1]) * rng.uniform(12, 38))
+        hdir = np.array([math.sin(psi), math.cos(psi), 0.0])
+        zc = float(np.interp(x, path[:, 0], path[:, 2])) + 0.21 + 0.06
+        u = rng.uniform()
+        sides = (-1, 1) if u > 0.10 else ((rng.choice([-1, 1]),))
+        for side in sides:
+            lean = math.radians(rng.uniform(20, 35))
+            D = side * math.sin(lean) * hdir + math.cos(lean) * np.array([0, 0, 1.0])
+            D += np.array([rng.normal(0, 0.06), 0, 0])
+            D /= np.linalg.norm(D)
+            Lup = rng.uniform(0.30, 0.50)
+            Ldn = rng.uniform(0.16, 0.26)
+            cross = np.array([x + rng.normal(0, 0.012), WY_R + rng.normal(0, 0.01), zc + rng.normal(0, 0.012)])
+            recs.append((cross - D * Ldn, D, Lup + Ldn, rng.uniform(0.06, 0.10), rng.uniform(0.018, 0.028),
+                         int(rng.integers(0, 3)), math.radians(rng.uniform(20, 40)) * rng.choice([-1, 1]),
+                         rng.uniform(0.02, 0.05)))
+        x += rng.uniform(0.15, 0.30)
+    M = len(recs)
+    base = np.array([r[0] for r in recs])
+    D = np.array([r[1] for r in recs])
+    L = np.array([r[2] for r in recs])
+    wd = np.array([r[3] for r in recs])
+    th = np.array([r[4] for r in recs])
+    kind = np.array([r[5] for r in recs])
+    cang = np.array([r[6] for r in recs])
+    notch = np.array([r[7] for r in recs])
+    # width runs horizontally, perpendicular to the leaning plane (broad face seen from the side of the ridge)
+    E = np.cross(D, np.stack([np.zeros(M), np.zeros(M), np.ones(M)], 1))
+    En = np.linalg.norm(E, axis=1, keepdims=True)
+    E = np.where(En > 1e-3, E / np.maximum(En, 1e-6), np.array([[1.0, 0, 0]]))
     Nn = np.cross(E, D)
-    rr = np.full(M, 0.006)
-    X = ax4(wd / 2, rr)
-    Y = axn(np.zeros(M), L, rr, 7)
+    rr = np.full(M, 0.005)
+    X = axn(-wd / 2, wd / 2, rr, 6)
+    Y = axn(np.zeros(M), L, rr, 8)
     Z = ax4(th / 2, rr)
     P, qd = rbox(X, Y, Z, rr)
     x_, u, h = P[..., 0], P[..., 1], P[..., 2]
-    tip = np.clip((u - (L[:, None] - 0.14)) / 0.14, 0, 1)
-    x_ = np.where((kind == 0)[:, None], x_ * (1 - 0.9 * tip), x_)
-    x_ = np.where((kind == 1)[:, None], x_ * (1 - 0.6 * tip), x_)
-    u = np.where((kind == 2)[:, None], u - 0.06 * tip * (x_ / (wd[:, None] / 2) + 1), u)
+    xn = x_ / (wd[:, None] / 2)
+    tip = np.clip((u - (L[:, None] - 0.12)) / 0.12, 0, 1)
+    # blunt ends: 0 square-broken (ragged), 1 diagonal break 20-40 deg, 2 split with a notch down the middle
+    u = u - np.where((kind == 1)[:, None], np.tan(np.abs(cang))[:, None] * (0.5 + 0.5 * np.sign(cang)[:, None] * xn)
+                     * wd[:, None] * tip, 0.0)
+    u = u - np.where((kind == 2)[:, None] & (np.abs(xn) < 0.3), notch[:, None] * tip, 0.0)
+    u = u - 0.008 * tip * np.abs(np.sin(xn * 4.0 + L[:, None] * 37.0))
+    # split shakes taper slightly in thickness toward the top; slight twist
+    h = h * (1 - 0.3 * u / L[:, None])
     Wc = base[:, None, :] + u[..., None] * D[:, None, :] + x_[..., None] * E[:, None, :] + h[..., None] * Nn[:, None, :]
     acc.add(Wc.reshape(-1, 3), inst_faces(qd, M, P.shape[1]), "M_roof_shake", uv=np.stack([x_, u], -1).reshape(-1, 2))
+    log("  ridge comb shakes", M)
     # pegs through the log every ~0.9 m
     for xx in np.arange(path[0, 0] + 0.3, path[-1, 0], 0.9):
         zz = np.interp(xx, path[:, 0], path[:, 2]) + 0.21
@@ -3122,7 +3262,7 @@ def build_wing_ridge(coll):
         b = np.array([x_apex, WY_R, W_RAFT + (WY_R - WY_S) * W_TAN])
         t = np.linspace(0, 1, 30)[:, None]
         hp = a * (1 - t) + b * t
-        hp[:, 2] += TH_V - 0.02
+        hp[:, 2] += TH_V - 0.05
         ok = ~thatch_cull(hp, tol_skirt=False)
         runs, cur = [], []
         for i, o in enumerate(ok):
@@ -3136,7 +3276,7 @@ def build_wing_ridge(coll):
         if len(cur) > 2:
             runs.append(np.array(cur))
         for r_ in runs:
-            thatch_roll(acc, r_, 0.14, 61 + len(r_), flat=0.85)
+            thatch_roll(acc, r_, 0.12, 61 + len(r_), flat=0.8, bind=0.05)
     finalize(acc, coll)
 
 
@@ -3161,12 +3301,16 @@ def build_wing_structure(coll):
                 continue
             if (np.hypot(path[:, 0] - TUR_C[0], path[:, 1] - TUR_C[1]) - tur_r(path[:, 2])).min() < 0.15:
                 continue
+            zs_, pp_ = skirt_z_at(path[:, 0], path[:, 1])
+            if (pp_ < SKIRT.p_lip + 0.4).any():
+                continue
             V, F = sweep(path, pl["n"], prof_circle(0.058 + rng.uniform(-0.006, 0.006), 9))
             acc.add(V, F, "M_timber_weathered")
         for mb in (0.15, 0.45, 0.75):
             a = np.linspace(WX_W - 0.2, WX_E + W_OVH - 0.1, 30)
             path = pl["o"](a, np.full_like(a, mb)) - pl["n"] * 0.04
             ok = ~thatch_cull(path, tol_skirt=False) & (np.hypot(path[:, 0] - TUR_C[0], path[:, 1] - TUR_C[1]) > tur_r(path[:, 2]) + 0.12)
+            ok &= skirt_z_at(path[:, 0], path[:, 1])[1] > SKIRT.p_lip + 0.4
             if ok.sum() < 3:
                 continue
             path = path[ok]
@@ -3180,7 +3324,7 @@ def build_wing_structure(coll):
         def f(z):
             r = tur_r(z)
             x, y = TUR_C[0] + r * math.cos(th), TUR_C[1] + r * math.sin(th)
-            return z - (float(wing_under(x, y)) + TH_V - 0.03), x, y
+            return z - (float(wing_under(x, y)) + TH_V_MIN + 0.02), x, y
         if f(lo)[0] > 0 or f(hi)[0] < 0:
             pts.append(None)
             continue
@@ -3229,6 +3373,64 @@ def build_wing_structure(coll):
     if len(pts) > 3:
         pts = np.array(pts)
         thatch_roll(accf, pts - np.array([0, 0, 0.03]), 0.06, 53, flat=0.75, seg=10, mat="M_mortar")
+    # lead flashing in the valley where the hall skirt roof and the wing thatch intersect
+    for k in range(1, 8):
+        P_ = []
+        for x in np.linspace(-SKIRT.p_lip * TAN22, SKIRT.p_lip * TAN22, 160):
+            ps = np.linspace(SKIRT.p_lip + 0.02, max(abs(x) / TAN22 + 0.05, 3.0), 120)
+            Sp = SKIRT.surf(np.full(len(ps), k), np.full(len(ps), x), ps)
+            xx, yy = Sp[:, 0], Sp[:, 1]
+            inside = (xx > WX_W - W_OVH) & (xx < WX_E + W_OVH) & (yy > WY_S - W_OVH) & (yy < WY_N + W_OVH)
+            zt = np.where(inside, wing_under(xx, yy) + TH_V_MIN + 0.03, -10.0)
+            d = Sp[:, 2] + SKIRT_SHEATH - zt
+            hit = np.flatnonzero((d[:-1] > 0) & (d[1:] <= 0))
+            if len(hit) == 0 or not inside[hit[0]]:
+                P_.append(None)
+                continue
+            i = hit[0]
+            f = d[i] / (d[i] - d[i + 1])
+            q = Sp[i] * (1 - f) + Sp[i + 1] * f
+            P_.append(q + np.array([0, 0, 0.035]))
+        runs, cur = [], []
+        for q in P_ + [None]:
+            if q is None:
+                if len(cur) > 4:
+                    runs.append(np.array(cur))
+                cur = []
+            else:
+                cur.append(q)
+        for r_ in runs:
+            thatch_roll(accf, r_, 0.12, 57 + k, flat=0.28, seg=10, mat="M_lead", bind=0.0)
+    # lead flashing where the wing thatch dies into the shake collar (collar surface line butt -> top)
+    P_ = []
+    for th in np.linspace(0, 2 * np.pi, 720, endpoint=False):
+        kf = int(np.round(th / (math.pi / 4))) % 8
+        delta = (th - kf * math.pi / 4 + math.pi) % (2 * math.pi) - math.pi
+        rb = COLLAR_P / math.cos(delta) + 0.06
+        zb = float(skirt_z_at(np.array([rb * math.cos(th)]), np.array([rb * math.sin(th)]))[0][0]) + 0.13
+        t = np.linspace(0, 1, 80)
+        rr_ = rb + (COLLAR_TOP_R + 0.07 - rb) * t
+        zz_ = zb + (COLLAR_TOP_Z - zb) * t
+        xx, yy = rr_ * math.cos(th), rr_ * math.sin(th)
+        inside = (xx > WX_W - W_OVH) & (xx < WX_E + W_OVH) & (yy > WY_S - W_OVH) & (yy < WY_N + W_OVH)
+        d = zz_ - np.where(inside, wing_under(xx, yy) + TH_V_MIN + 0.04, -10.0)
+        hit = np.flatnonzero((d[:-1] < 0) & (d[1:] >= 0))
+        if len(hit) == 0 or not inside[hit[0]]:
+            P_.append(None)
+            continue
+        i = hit[0]
+        f = -d[i] / (d[i + 1] - d[i])
+        P_.append(np.array([xx[i] + (xx[i + 1] - xx[i]) * f, yy[i] + (yy[i + 1] - yy[i]) * f, zz_[i] + (zz_[i + 1] - zz_[i]) * f]))
+    runs, cur = [], []
+    for q in P_ + [None]:
+        if q is None:
+            if len(cur) > 4:
+                runs.append(np.array(cur))
+            cur = []
+        else:
+            cur.append(q)
+    for r_ in runs:
+        thatch_roll(accf, r_, 0.12, 97, flat=0.35, seg=10, mat="M_lead", bind=0.0)
     finalize(accf, coll)
 
 
@@ -3318,7 +3520,7 @@ def turret_cull(C):
     C = np.asarray(C, float)
     x, y, z = C[..., 0], C[..., 1], C[..., 2]
     fp = (x > WX_W - W_OVH) & (x < WX_E + W_OVH) & (y > WY_S - W_OVH) & (y < WY_N + W_OVH)
-    bad = fp & (z > wing_under(x, y) - 0.06) & (z < wing_top(x, y) + 0.01)
+    bad = fp & (z > wing_under(x, y) - 0.06) & (z < wing_under(x, y) + TH_V_MIN - 0.02)
     bad |= in_wing(C, margin=0.0, zpad=0.0)
     return bad
 
@@ -3366,11 +3568,18 @@ def build_turret(coll):
         obox(accd, o[None], ex / np.linalg.norm(ex), t3, n3, z1 - z0 + 0.08, wd - 0.012, 0.028, 0.006,
              "M_timber_weathered", nx=4, ny=4, nz=3)
         th += dth
-    for zz, rr_, sz in ((z0 + 0.04, 1.08, 0.12), (z1 - 0.05, 1.08, 0.1)):
-        V, F = lathe([(rr_ - sz / 2, zz - sz / 2), (rr_ + sz / 2, zz - sz / 2), (rr_ + sz / 2, zz + sz / 2),
-                      (rr_ - sz / 2, zz + sz / 2), (rr_ - sz / 2, zz - sz / 2)], 48, cx=TUR_C[0], cy=TUR_C[1],
-                     cap_bottom=False, cap_top=False)
-        accd.add(V, F, "M_timber")
+    # sill & head rings: 8 hewn straight pieces each, butt-jointed at every facet corner, pegged
+    for ri, (zz, rr_, sz) in enumerate(((z0 + 0.04, 1.08, 0.12), (z1 - 0.05, 1.08, 0.1))):
+        apo_r = rr_ * math.cos(math.radians(22.5)) + 0.03
+        for k in range(8):
+            phi = math.radians(45 * k + 11.0 * ri)
+            n3 = np.array([math.cos(phi), math.sin(phi), 0])
+            t3 = np.array([-math.sin(phi), math.cos(phi), 0])
+            half = apo_r * TAN22
+            o = np.array([TUR_C[0], TUR_C[1], zz + rng.uniform(-0.006, 0.006)]) + n3 * apo_r - t3 * (half - 0.004)
+            hewn_member(accd, o, t3, n3, np.array([0, 0, 1.0]), 2 * half + sz * 0.45, sz, sz, rng, chamfer=0.014,
+                        nf=2, st_len=0.08, adze=0.003, wave=0.003, seed=300 + k + 10 * ri)
+            peg(accd, o + t3 * (2 * half + sz * 0.2) + n3 * (sz / 2), n3, rad=0.01, proud=0.01)
     V = np.stack([TUR_C[0] + 1.1 * np.cos(np.linspace(0, 2 * np.pi, 24, endpoint=False)),
                   TUR_C[1] + 1.1 * np.sin(np.linspace(0, 2 * np.pi, 24, endpoint=False)), np.full(24, z1)], 1)
     accd.add(V, np.arange(24)[None, ::-1], "M_timber")
@@ -3492,7 +3701,10 @@ def main():
         if ob.type == "MESH":
             tot += sum(len(p.vertices) - 2 for p in ob.data.polygons)
     log(f"objects {len(bpy.data.objects)}  triangles {tot}")
+    bpy.context.preferences.filepaths.save_version = 0      # no .blend1 backups next to the deliverable
     bpy.ops.wm.save_as_mainfile(filepath=OUT, compress=True)
+    if os.path.exists(OUT + "1"):
+        os.remove(OUT + "1")
     log("saved", OUT, f"{os.path.getsize(OUT) / 1e6:.1f} MB")
 
 
