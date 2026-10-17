@@ -1,0 +1,67 @@
+﻿
+OBJ LONG_round_wall_stones             polys   97477  min (1.0, -3.89, -0.05)  max (8.45, 3.85, 6.35)
+OBJ LONG_round_wall_mortar             polys    2534  min (1.04, -3.7, -0.05)  max (8.3, 3.69, 6.34)
+OBJ LONG_round_wall_frames             polys    1014  min (4.57, -3.65, 1.12)  max (8.23, 3.62, 4.54)
+OBJ LONG_round_wall_dressed            polys     433  min (4.66, -3.69, 1.01)  max (8.29, 3.66, 3.62)
+OBJ LONG_round_wall_reveals            polys      20  min (4.77, -3.62, 1.12)  max (8.22, 3.58, 4.38)
+OBJ LONG_round_wall_blockers           polys      25  min (4.23, -3.33, 0.45)  max (7.9, 3.33, 4.65)
+OBJ LONG_body_wall_stones              polys  102114  min (-8.59, -2.8, -0.05)  max (2.29, 2.79, 4.9)
+OBJ LONG_body_wall_quoins              polys    1048  min (-8.42, -2.64, -0.03)  max (-7.86, 2.62, 2.78)
+OBJ LONG_body_wall_mortar              polys    3670  min (-8.39, -2.61, -0.05)  max (2.3, 2.59, 4.93)
+OBJ LONG_body_wall_frames              polys    2252  min (-6.5, -2.63, 0.12)  max (0.84, 2.61, 2.46)
+OBJ LONG_body_wall_dressed             polys     364  min (-6.42, -2.87, -0.04)  max (0.76, 2.66, 1.22)
+OBJ LONG_body_wall_ironwork            polys     223  min (-2.87, -2.55, 0.41)  max (-1.93, -2.54, 1.91)
+OBJ LONG_body_wall_reveals             polys      16  min (-6.3, -2.62, 1.17)  max (0.64, 2.6, 1.93)
+OBJ LONG_body_wall_blockers            polys      20  min (-6.67, -2.28, 0.5)  max (1.01, 2.26, 2.2)
+OBJ LONG_body_roof_deck                polys     312  min (-8.79, -3.06, 2.41)  max (2.68, 3.04, 4.99)
+OBJ LONG_body_roof_rafters             polys     901  min (-8.78, -3.03, 2.3)  max (1.23, 3.02, 4.97)
+OBJ LONG_body_roof_covering            polys   13594  min (-8.83, -3.3, 2.43)  max (2.52, 3.29, 5.52)
+OBJ LONG_body_roof_eave_roll           polys    5542  min (-8.89, -3.32, 2.41)  max (3.17, 3.3, 3.02)
+OBJ LONG_body_roof_ridge               polys    1039  min (-8.88, -0.38, 5.17)  max (1.09, 0.36, 5.56)
+OBJ LONG_body_roof_comb                polys    3430  min (-8.76, -0.36, 5.09)  max (0.8, 0.37, 5.71)
+OBJ LONG_body_roof_wall_abutment       polys    1988  min (0.93, -3.45, 2.6)  max (3.26, 3.44, 5.66)
+OBJ LONG_rafters                       polys    2312  min (0.49, -4.08, 5.89)  max (8.75, 4.14, 9.89)
+OBJ LONG_purlin_rings                  polys       1  min (2.41, 2.41, 6.82)  max (2.59, 2.55, 6.83)
+OBJ LONG_battens                       polys     305  min (0.4, -4.2, 5.93)  max (8.83, 4.21, 7.54)
+OBJ LONG_roof_shingles                 polys   52706  min (0.33, -4.28, 5.99)  max (8.89, 4.28, 10.13)
+OBJ LONG_roof_starter                  polys    2955  min (0.37, -4.23, 5.96)  max (8.85, 4.24, 6.4)
+OBJ LONG_roof_underlap                 polys    3660  min (0.39, -4.2, 5.98)  max (8.82, 4.22, 10.09)
+OBJ LONG_roof_blocker                  polys    1088  min (1.2, -3.4, 6.61)  max (8.04, 2.92, 10.06)
+OBJ LONG_roof_soffit_deck              polys    1296  min (0.51, -4.09, 6.0)  max (8.73, 4.1, 6.94)
+OBJ LONG_cap_collar                    polys    6433  min (3.96, -0.65, 10.1)  max (5.25, 0.64, 10.73)
+OBJ LONG_apex_blocker                  polys     400  min (3.69, -0.93, 9.5)  max (5.53, 0.91, 10.62)
+OBJ LONG_finial                        polys     672  min (4.38, -0.26, 10.68)  max (4.84, 0.24, 11.34)
+OBJ LONG_eave_fill                     polys     480  min (1.08, -3.54, 6.29)  max (8.14, 3.52, 6.81)
+ROUND CENTRE LONG_round_wall_stones 4.722 -0.021
+ISLANDS LONG_body_roof_eave_roll       n=    3  floating>1cm: 0  []
+ISLANDS LONG_body_roof_ridge           n=   15  floating>1cm: 14  [(2.9, (-8.44, -0.01, 5.47), 36), (2.7, (-5.64, 
+-0.01, 5.47), 36), (2.2, (-4.94, -0.01, 5.47), 36), (2.1, (0.66, -0.01, 5.47), 36), (2.0, (-0.04, -0.01, 5.47), 36), 
+(2.0, (-0.74, -0.01, 5.47), 36)]
+ISLANDS LONG_body_roof_comb            n=  140  floating>1cm: 74  [(4.3, (-7.49, -0.04, 5.58), 30), (4.2, (-5.41, 
+-0.03, 5.6), 27), (4.2, (-2.26, -0.03, 5.59), 30), (4.2, (-7.34, -0.03, 5.58), 30), (4.2, (-7.61, -0.02, 5.58), 30), 
+(4.1, (-8.28, 0.03, 5.59), 30)]
+ISLANDS LONG_body_roof_wall_abutment   n=    5  floating>1cm: 0  []
+DEVICE GPU
+SHOT j01_s_eave_end_west_eye
+SHOT j02_s_eave_end_east_eye
+SHOT j03_n_eave_end_west_eye
+SHOT j04_n_eave_end_east_eye
+SHOT j05_s_eave_end_tele
+SHOT j06_n_eave_end_tele
+SHOT j07_s_soffit_lookup
+SHOT j08_n_soffit_lookup
+SHOT j09_s_slope_crane
+SHOT j10_n_slope_crane
+SHOT j11_ridge_into_drum
+SHOT j12_ridge_tele_s_crane
+SHOT j13_s_flaunch_tele
+SHOT j14_n_flaunch_tele
+SHOT j15_junction_top_down
+SHOT j16_drum_over_roof_n_crane
+SHOT j17_cone_eave_lookup_e
+SHOT j18_drum_eye_figure_s
+SHOT j19_drum_ene_upper_win
+SHOT j20_drum_se_upper_win
+SHOT j21_gap_above_ridge_w_eye
+
+
