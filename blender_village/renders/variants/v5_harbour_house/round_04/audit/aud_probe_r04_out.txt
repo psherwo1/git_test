@@ -1,0 +1,31 @@
+﻿00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+MESH objects 70  all objects 185
+collections {'DECAL_ANCHORS': 115, 'HARB': 70, 'HARB_kit_instances': 0}
+triangles (evaluated) 707889
+materials 9 ['M_iron', 'M_lead', 'M_mortar', 'M_roof_shake', 'M_roof_shingle', 'M_stone', 'M_stone_dressed', 'M_timber', 'M_timber_weathered'] outside palette: []
+non-identity transforms []
+Mask missing/bad []
+BVH built 707889
+DECAL_ANCHORS empties 115 missing props [] json count 115 115
+anchor name sets equal True
+anchors with no surface within 20 cm behind them 0 []
+  repair_patch  n=  7 z   1.24..  5.56
+  lichen        n= 14 z  -0.04..  4.55
+  damp_rise     n= 16 z  -0.72..  7.20
+  soot          n=  7 z   2.36..  8.55
+  crack         n= 21 z   1.07..  5.39
+  water_streak  n= 13 z   0.73..  8.57
+  rust_stain    n=  4 z   0.24..  1.69
+  moss          n= 33 z  -0.70.. 10.78
+DOOR hall land door [(0.15, 0.12, 'HARB_hall_dressed'), (0.3, 5.514, 'HARB_roof_rafters'), (0.5, 99.0, None), (0.75, 99.0, None), (1.0, 99.0, None), (1.3, 99.0, None)]
+   opening head (ray up 15 cm inside the face): 2.22 HARB_hall_frames
+   threshold (ray down at the face): 0.12 HARB_hall_dressed
+DOOR wing S door [(0.15, 0.12, 'HARB_wing_dressed'), (0.3, 2.591, 'HARB_wing_roof_deck'), (0.5, 99.0, None), (0.75, 99.0, None), (1.0, 99.0, None), (1.3, 99.0, None)]
+   opening head (ray up 15 cm inside the face): 2.22 HARB_wing_frames
+   threshold (ray down at the face): 0.12 HARB_wing_dressed
+islands total 6291
+islands whose 2 cm-inflated AABB touches no other island: 0
+CORNER (-1.608,3.427) rafter verts near 70, inside bargeboard 0, max depth 0.000 m, rafter z min 2.732604503631592
+CORNER (5.392,-5.773) rafter verts near 70, inside bargeboard 0, max depth 0.000 m, rafter z min 2.74444580078125
+CORNER (5.392,3.427) rafter verts near 70, inside bargeboard 0, max depth 0.000 m, rafter z min 2.7302591800689697
+DONE

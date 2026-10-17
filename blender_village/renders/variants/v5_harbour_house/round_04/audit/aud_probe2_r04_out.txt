@@ -1,0 +1,54 @@
+﻿00:00.546  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+COMB MAIN ridge (along Y) rays (1, 0, 0): enclosed see-through cells 524 (5 mm), slits 28, slit widths cm: max 2.0, >=2 cm: 1, >=3 cm: 0; tallest column 12.5 cm
+    first slit positions (u): [-3.83, -3.375, -2.985, -2.39, -1.975, -1.575, -1.155, -0.37, 0.545, 1.36, 1.545, 2.07, 2.38, 3.045]
+COMB MAIN ridge (along Y) rays (-1, 0, 0): enclosed see-through cells 524 (5 mm), slits 28, slit widths cm: max 2.0, >=2 cm: 1, >=3 cm: 0; tallest column 12.5 cm
+    first slit positions (u): [-3.83, -3.375, -2.985, -2.39, -1.975, -1.575, -1.155, -0.37, 0.545, 1.36, 1.545, 2.07, 2.38, 3.045]
+COMB WING ridge (along X) rays (0, 1, 0): enclosed see-through cells 150 (5 mm), slits 9, slit widths cm: max 1.5, >=2 cm: 0, >=3 cm: 0; tallest column 11.5 cm
+    first slit positions (u): [-8.1, -8.095, -7.735, -7.73, -7.24, -7.235, -6.3, -6.16, -5.825, -5.82, -5.815, -5.675, -5.405, -5.4]
+COMB WING ridge (along X) rays (0, -1, 0): enclosed see-through cells 150 (5 mm), slits 9, slit widths cm: max 1.5, >=2 cm: 0, >=3 cm: 0; tallest column 11.5 cm
+    first slit positions (u): [-8.1, -8.095, -7.735, -7.73, -7.24, -7.235, -6.3, -6.16, -5.825, -5.82, -5.815, -5.675, -5.405, -5.4]
+SLIPFOOT W slip wall (x -0.608): 26840 rays z -0.035..0.40, 2563 go > 25 cm past the face
+     (0.99, -0.035, -1.69, 'HARB_hall_stones')
+     (1.0, -0.035, -1.69, 'HARB_hall_stones')
+     (1.01, -0.035, -1.69, 'HARB_hall_stones')
+     (1.01, -0.03, -1.69, 'HARB_hall_stones')
+     (1.02, -0.035, -1.69, 'HARB_hall_stones')
+     (1.02, -0.03, -1.69, 'HARB_hall_stones')
+     (1.02, -0.025, -1.69, 'HARB_hall_stones')
+     (1.02, -0.02, -1.7, 'HARB_hall_stones')
+     (1.02, -0.015, -1.7, 'HARB_hall_stones')
+     (1.02, -0.01, -1.71, 'HARB_hall_stones')
+     (1.02, -0.005, -1.71, 'HARB_hall_stones')
+     (1.03, -0.035, -1.69, 'HARB_hall_stones')
+     deepest hit x -1.76  misses 0
+SLIPFOOT E slip wall (x 4.392): 26840 rays z -0.035..0.40, 2602 go > 25 cm past the face
+     (0.73, -0.035, None, None)
+     (0.73, -0.03, None, None)
+     (0.74, -0.035, None, None)
+     (0.74, -0.03, None, None)
+     (0.74, -0.025, None, None)
+     (0.74, -0.02, None, None)
+     (0.74, -0.015, None, None)
+     (0.74, -0.01, None, None)
+     (0.74, -0.005, None, None)
+     (0.75, -0.035, None, None)
+     (0.75, -0.03, None, None)
+     (0.75, -0.025, None, None)
+     deepest hit x 5.5  misses 110
+RING radial hits 36000
+   az   0- 30: hit radius min 2.132 max 4.000
+   az  30- 60: hit radius min 2.079 max 3.999
+   az  60- 90: hit radius min 2.115 max 2.291
+   az  90-120: hit radius min 2.078 max 2.289
+   az 120-150: hit radius min 2.077 max 2.291
+   az 150-180: hit radius min 2.079 max 2.291
+   az 180-210: hit radius min 2.077 max 2.289
+   az 210-240: hit radius min 2.077 max 2.291
+   az 240-270: hit radius min 2.114 max 2.291
+   az 270-300: hit radius min 2.078 max 2.289
+   az 300-330: hit radius min 2.079 max 2.291
+   az 330-360: hit radius min 2.078 max 3.996
+RING rays that reach r < 1.85 m (inside the belt line): 0 []
+RING down-rays from 8.0 m at r 2.05/2.15/2.25 (first hit):
+    [((2.25, 'HARB_tower_top_ring'), 171), ((2.15, 'HARB_tower_top_ring'), 73), ((2.15, 'HARB_tower_stones'), 66), ((2.05, 'HARB_tower_top_frames'), 40), ((2.15, 'HARB_tower_top_frames'), 40), ((2.05, 'HARB_tower_frames'), 7), ((2.15, 'HARB_roof_wall_abutment'), 1)]
+DONE

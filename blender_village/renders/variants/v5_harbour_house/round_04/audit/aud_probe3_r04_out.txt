@@ -1,0 +1,17 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+down-ray at x -0.55 y 1.5 -> None
+down-ray at x -0.4 y 1.5 -> None
+down-ray at x 4.33 y 1.5 -> None
+down-ray at x 4.2 y 1.5 -> None
+down-ray at x 1.9 y 1.5 -> None
+SLOT W: share of y positions with a ray > 10 cm deep, by z:
+    -0.039:0.62 -0.033:0.23 -0.027:0.19 -0.021:0.17 -0.015:0.16 -0.009:0.14 -0.003:0.14 +0.003:0.09 +0.009:0.09 +0.015:0.09 +0.021:0.09 +0.027:0.09 +0.033:0.09 +0.039:0.09 +0.045:0.09 +0.051:0.09 +0.057:0.09 +0.063:0.09 +0.069:0.09 +0.075:0.09 +0.081:0.09 +0.087:0.09 +0.093:0.09 +0.099:0.09
+   tallest open column 14.0 cm; columns with >= 2 cm open height: 109 of 624 (17% of the wall length)
+   rays reaching > 0.95 m past the face (through the 1 m of masonry): 1164; max z of those -0.0009999999999999662
+   highest z with a > 10 cm deep ray: 0.099
+SLOT E: share of y positions with a ray > 10 cm deep, by z:
+    -0.039:0.52 -0.033:0.21 -0.027:0.20 -0.021:0.19 -0.015:0.19 -0.009:0.17 -0.003:0.16 +0.003:0.09 +0.009:0.09 +0.015:0.09 +0.021:0.09 +0.027:0.09 +0.033:0.09 +0.039:0.09 +0.045:0.09 +0.051:0.09 +0.057:0.09 +0.063:0.09 +0.069:0.09 +0.075:0.09 +0.081:0.09 +0.087:0.09 +0.093:0.09 +0.099:0.09
+   tallest open column 14.0 cm; columns with >= 2 cm open height: 120 of 624 (19% of the wall length)
+   rays reaching > 0.95 m past the face (through the 1 m of masonry): 1224; max z of those -0.0009999999999999662
+   highest z with a > 10 cm deep ray: 0.099
+DONE

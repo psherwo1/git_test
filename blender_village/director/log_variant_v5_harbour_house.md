@@ -985,3 +985,195 @@ this round with one rebuild. Nothing else was done (no nice-to-haves).
 - A small dark triangle remains between the tie end and the verge soffit over each pier (`r4_pier_W_out`). It was
   there in round 3 and is not new.
 - The review tool's ground plane is at the bed.
+## v5_harbour_house round 4 — score 8.3/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only, no ground dressing (note
+10), no surface-detail requests (note 12). Binding: producer notes 1-17, every CLIENT DIRECTION entry above (ref4 is
+the primary reference), the PRODUCER NOTE of 13:48 and **the CLIENT DIRECTION of 14:10** (pitch 48-50 deg, `ridge_sag`
+0.45-0.55, 7.0 m hall, heavier sweep and overhang, comb top at least about 7.8 m, eave walls not raised; "time matters").
+No CLIENT DIRECTION or PRODUCER NOTE was added after the round-4 builder entry.
+
+**Reviewed:**
+- All six `round_04` views, `stats.json`, `hidden.json`, `decal_anchors.json` (115 anchors plus the validation block),
+  the eight builder extras, the recipe (175 lines, every plan coordinate now derived from `DIM`) and the Round 4 note in
+  `kit/changes/v5_harbour_house.md`.
+- No kit module was touched in round 4: the newest files in `kit/village_kit/` are `cruck.py` 13:11, `waterfront.py` 13:11
+  and `rubble_walls.py` 13:09, all round 3. So the hash rule does not apply.
+- Director extras in `renders/variants/v5_harbour_house/round_04/director_extra/` (`dir_render_r04.py`):
+  - the round-3 camera set re-used and moved with the geometry (slip centre unchanged at x 1.892, jambs at -0.608 / 4.392,
+    hall faces at -1.608 / 5.392, tower axis at x -1.808), 31 shots;
+  - 10 new roof shots (z01-z10): the W arris column, all four eave/verge corners, the ridge sag, the E soffit, the
+    water gable from the jetty, the tie end / verge triangle, the roof-wing-tower nook from above, and a ref4 side angle;
+  - 30 red twins, with enclosed-red counts in `redcount_r04.txt` (`dir_redcount_r04.py`);
+  - an eave-corner probe in `probe_r04_out.txt` (`dir_probe_r04.py`).
+
+**Director-verified compliance:** 707,889 tris (cap 1 M), 13.6 % hidden (1.8 % below the datum), 9 palette slots,
+`mask_attribute_missing` empty, 70 objects, bbox 17.59 x 17.17 x 15.94 m.
+
+**The round-3 must-fix (the client's broader, slumped roof, as revised at 14:10), checked:**
+
+| asked (14:10) | built | director check | result |
+|---|---|---|---|
+| hall 7.0 m | `half=3.5`, widened toward +X only (`xw=0.2`) | the roof covering spans x -2.39 to 6.18 (7.0 m plus 2 x 0.70 m overhang plus the sweep) | met |
+| pitch 48-50 deg | 49 deg | the moss anchors on the slope carry normal z 0.656 = cos 49 deg | met |
+| `ridge_sag` 0.45-0.55 | 0.50 (comb 7.96 m at the gables, 6.65 m at mid-length) | z04, x34, `side.png`: a clear saddle between the turned finials | met |
+| heavier, deeper sweep and overhang, verge flare kept | 0.70 m overhang, sweep 0.40 m over 1.5 m, flare 0.42 m over 2.33 m | x23, z05, x34: the eave kicks out flat over the last 1.5 m; the eave lip is at 2.85-2.92 m | met |
+| comb top at least about 7.8 m, walls not raised | 7.96 m; `wall_z` 3.35 | the probe gives the apex finial tips at 8.82 m; the arch crown is at 3.07 m, under the 3.41 m tie | met |
+| compare with ref4 | `r4_roof_ne` | x01, y14, z10 put side by side with ref4 | see axis 1 |
+
+**Every round-3 waterline fix still holds** at the moved slip mouth:
+- y01, y06, y07: the posts stand on the dressed responds;
+- y11, y12, z01: the corner quoins are bonded, and the W arris column in z01_red shows no enclosed red inside the quay
+  outline (the 17,912 enclosed px are the jetty X-brace bays);
+- y01_red, y11_red, y12_red: 0 enclosed red;
+- x16, `r4_pier_*_out`: the tie is seated on the top quoin course;
+- the partition-end pinholes are down to 6 px in total (x19_red; round 3 had about 13 px each).
+
+| axis | score | reason |
+|---|---|---|
+| 1 Silhouette and massing | 8.4 | This is the change round 3 lacked, and it lands. From the side (`side.png`, x34, z04) and at the ref4 three-quarter angle (x01, y14, z10), the hall is now ref4's building: a broad, low-slung shingle roof that dominates the walls (roof 4.6 m over 3.35 m walls), with a visible saddle between gable apexes that kick up on flared bargeboards, and eaves that sweep out flat. Under the roof sit the rubble boat hall, the heavy timber water gable over the boat arch, and the round tower with a boarded top under a mossy cone and spike. The swept saddle also separates it from the v3 longhouse at thumbnail size (x02, y15), which was round 3's main distinctness worry. Held below 8.5 for two reasons. Square-on from the water (`back.png`, x15, z06) it is still an upright gable, broader, with flared skirts; ref4's slump is mostly a three-quarter read, so I accept that, and the builder was right not to drop `wall_z` unasked. And the land elevation (`front.png`, x03) is still rubble gable plus round tower. |
+| 2 Proportion and actor scale | 8.3 | Unchanged and right: both doors are 1.00 x 2.10 m on built-in thresholds (x03), the windows are 0.55 m at 1.30 m sills, and the wing eave sits 2.50 m over a 2.22 m head. No door sits under the 2.88 m side eave lip. The boat opening is wider (5.0 m clear, about 4.2 m between the responds at water level), with the crown at 3.07 m. The slip is still only 3.2 m deep. |
+| 3 Construction logic | 8.4 | The roof sits on the wall heads (deck + 2 cm, z05), carried on rafter tails over a plate. The tie bears 1-6 mm on the pier quoins. The arch stays under the tie because the walls were not raised. Every round-3 bearing is intact at the new span. Left over: the posts stand 4 cm off the slip-wall face (y09; closed behind, black in the twin), the jetty X-braces and waling stand about 1 cm off the piles, and at the four main eave/verge corners the verge rafter tail drops 15 cm below the bargeboard foot (axis 4). |
+| 4 Seams and junctions | 8.2 | The red twins are clean at every module junction: roof/tower x07, x08, x10 and z08 (0 enclosed); wing/tower x09 (36 px of distant eave sky); both eaves x23 and x24 (only sky between comb pieces); both apexes x21 and x25 (the 7,252 px in x25 are the open sky pocket between the verge and the tower top, not a hole); the corners z02, z03 and z09 (3-25 px). The builder's seal probe is at 0 leaks on both `wall_abutment`s. **New with the deeper sweep:** at all four main-roof corners the eave/verge end is untidy at eye level. The probe gives the bargeboard foot at z 2.87-2.88, cut level, while the straight verge rafter tail (`HARB_roof_rafters`) projects to z 2.73 below and outside it at a different angle (z02, z03, z09, x22), and a dark slot runs along the eave between the soffit board and the starter course (backed, black in the twins). Still open from round 3: the quay's raw free ends (x27, x28), the boxy lead tabs in the nook (x10), and the 4 cm post slot. None is see-through. |
+| 5 Distinctness and reuse | 8.4 | The best modularity evidence so far. A 1.0 m wider, 9 deg lower, twice as slumped hall was done with **values only**, and every module re-fitted itself from `DIM`. `stone_quay` re-bonded the moved slip-mouth corners. `cruck_frame` re-spanned the tie, the arch and the responds. `path_stone_wall` re-topped the walls to the new deck, with `flush_runs` kept. Both `wall_abutment`s re-sealed. The soft `GableRoof` options carried a much stronger setting with no new code. Round 3's must-fix on hard-coded run distances is done: `S_W` / `S_S` / `S_E`, `QUAY`, `JETTY`, the moorings, the ladder and `DOOR_X` all derive from `DIM`. It still reads as the same village (the same rubble, shingle, cone, finials and lead). **Family verdict:** genuinely reusable, not one-off code dressed as modules. The timber half is proven by the round-2 barn smoke; the waterfront half has now been re-parameterised once with no code changes. It still lacks a second recipe at a different orientation, and `pile_deck` accepts only `land="S"` / `"N"`. Those are the first jobs of the boathouse design, not blockers here. |
+| 6 Technical compliance | 8.5 | 707,889 tris, 13.6 % hidden (better than round 3's 14.2 %), 9 palette slots, `Mask` everywhere, deterministic, and the datum is recorded in the anchors JSON. 115 anchors, physically plausible: damp and moss on the quay water faces at -0.35 to -0.72, lichen on the copings, streaks under the cone eave and the sills, moss on the roof slope at 49 deg normals. Minor, carried over: roof moss is only on the -X slope (the `moss_normal="slope"` choice), three damp/moss anchors sit at the foot of the tower's timber belt at 7.2 m (plausible as a splash ledge), and the house pools nothing (dog plates and door irons are unique, note 3). The process is also good: the builder found the 14:10 direction mid-round and applied it in one rebuild. |
+
+**Verdict: 8.3/10, PASSED (pass mark 8.2), subject to the independent audit.** The client's broader, slumped roof is in,
+with the 14:10 values (7.0 m, 49 deg, 0.50 m sag, 0.70 m swept eaves, 7.96 m comb), and from the side and the ref4
+three-quarter angle the hall now reads as ref4's heavy, dominant roof. It was done as a pure recipe-parameter change,
+and every waterline fix, seal and bearing re-fitted itself and still checks out. That is strong proof that the family is
+modular. Nothing open is see-through, floating or against a producer note. What remains is polish at the eave/verge
+corners and the quay ends, plus the boathouse proof of the waterfront half.
+
+**Strengths**
+- The roof finally matches ref4: a broad, low, saddle-backed shingle roof with kicked gable apexes, flared bargeboards
+  and flat swept eaves (x34, z04, z10, y14).
+- The resize took values only. Twelve plan coordinates now derive from `DIM`, and `stone_quay`, `cruck_frame`,
+  `path_stone_wall`, `wall_abutment` and the soft `GableRoof` re-fitted without a code change. The hash rule is not
+  needed (no kit file is newer than round 3).
+- The waterline is intact at the moved slip mouth: the posts are on the responds, the corners are quoin-bonded, the
+  quay faces have 0 enclosed red, and the tie is seated.
+- The red twins are clean at every roof/tower, wing/tower, eave and apex junction. The seal probe is at 0 leaks.
+- The budget improved while the roof grew: 13.6 % hidden, 708 k tris, 9 slots, full `Mask`.
+
+**Must-fix:** none open. The round-3 must-fix (the client's broader, slumped roof) is closed, and nothing found in this
+round breaks a producer note or a client direction.
+
+**Nice-to-have (carry into the boathouse / barn recipe; each is a kit change and inherits there)**
+1. **Main-roof eave/verge corners (`linear_roof` verge="board" with `eave_sweep`).** At the four corners (final x -2.3
+   / 6.1, y -6.2 / 3.9, z 2.7-3.0; z02, z03, z09, x22), the straight verge rafter tail projects 15 cm below and outside
+   the level-cut bargeboard foot.
+   - When `eave_sweep > 0`, skip or clip the verge rafter tail behind the bargeboard's inner face.
+   - Cut the bargeboard foot plumb on the eave fascia line, so it caps the swept eave end.
+   - Defaults unchanged, so no hash re-run.
+2. Close the dark slot along the swept eave between the soffit board and the starter course (z05, z09). Seat the
+   starter course on the eave board, or drop a fascia strip.
+3. `stone_quay(ends=)`: "return" or "squared" free ends at x -4.81 / 8.79 (x27, x28).
+4. A boathouse smoke recipe (about 30 lines) that runs `cruck_frame` + `stone_quay` + `pile_deck` at a different size
+   and a rotated orientation, and `pile_deck` with `land="E"` / `"W"`, seated braces and waling, and pooled dog plates
+   (note 3).
+5. `wall_abutment`: end the lead flashing at the eave lip, not in boxy tabs (x10).
+6. The 4 cm post-to-slip-wall slot (y09) and a deeper slip (4.5-5 m) with a landing ledge.
+7. Roof moss on both slopes (or on the true north slope after placement); `tools/render_review.py --ground_z` for the
+   2.5 m float in the clay views.
+
+## v5_harbour_house round 4 — sign-off audit: UPHELD
+
+The independent auditor checked the Art Director's round-4 pass (8.3/10) on the note-12 MODULARITY RUBRIC, pass mark 8.2.
+The audit covers geometry only, with no ground dressing (note 10) and no surface-detail requests (note 12). It is binding on
+producer notes 1-17, every CLIENT DIRECTION entry above (ref4 is the primary reference) and the 14:10 roof direction. No
+CLIENT DIRECTION or PRODUCER NOTE was added after the round-4 grade.
+
+**Reviewed:**
+- the six `round_04` views, the 8 builder extras and the 41 director extras with their 30 red twins, plus `redcount_r04.txt` and `probe_r04_out.txt`;
+- `stats.json`, `hidden.json`, `decal_anchors.json`, the recipe (175 lines), ref4 and ref1-ref3.
+
+**My scripts** are read-only bpy, one process at a time, in `renders/variants/v5_harbour_house/round_04/audit/`:
+- `aud_probe_r04.py`: compliance, anchors, door clearance, islands, and the verge rafter against the bargeboard;
+- `aud_ring_r04.py`: 32 black / red-world see-through renders at 2560 x 1440. Sixteen are at eye level (z 1.7, 13 m out) and sixteen are crane views (z 6.0, 11 m out), all round the building. Enclosed red is sized in world units from the rim depth;
+- `aud_probe2_r04.py` and `aud_probe3_r04.py`: the ridge comb, the slip-wall foot and the tower foot ring;
+- `aud_recipe_match_r04.py`: whether the recipe matches the blend;
+- `tools/hidden_tris.py`, re-run on its own.
+
+### Hard requirements (measured on the saved blend)
+
+| requirement | measured | result |
+|---|---|---|
+| ≤ 1,000,000 tris | 707,889 evaluated triangles (`stats.json` agrees) | PASS |
+| ≤ 15 slots, palette only | 9 slots: `M_iron`, `M_lead`, `M_mortar`, `M_roof_shake`, `M_roof_shingle`, `M_stone`, `M_stone_dressed`, `M_timber`, `M_timber_weathered`. None is outside the palette. | PASS |
+| est_hidden_pct ≤ 15 | 13.6 % in `stats.json`. My independent `hidden_tris.py` re-run (20,000 samples) gives **13.8 %**, with 1.9 % below ground. | PASS |
+| `mask_attribute_missing` empty | Empty. All 70 meshes have `Mask` as CORNER BYTE_COLOR, set as both the active and the render colour. All transforms are identity. | PASS |
+| DECAL_ANCHORS + json, plausible | The collection holds 115 empties with all six properties. The JSON has 115 anchors with the same names and carries the datum and the dims. **0 of 115** anchors have no surface within 20 cm behind them. Heights are plausible: damp and moss at -0.72 to -0.04 on the quay faces, lichen on the copings, rust 0.24-1.69 m under the door irons, cracks 1.07-5.39 m, streaks up to 8.57 m under the cone eave. | PASS |
+| door clearance ≥ 2.30 m | I cast up-rays from above the thresholds, 0.05-1.20 m out, across ±0.55 m. **Wing S door:** the lowest overhead is the wing rafter tails at **2.464 m** (0.20 m out), then the deck at 2.59 and the covering lip at 2.64; the door head is at 2.22. **Hall land door:** it sits under the gable, and the lowest overhead is the verge deck / rafters at 5.56 m. | PASS |
+| no see-through gap, floating piece or clipping > 2 cm at a module junction (ground / 6 m cameras) | **Floating:** I split the 70 meshes into 6,291 loose islands; none has a 2 cm-inflated bounding box that touches no other island. **Clipping:** at all three free main-roof eave corners, 0 verge-rafter vertices sit inside the bargeboard. **See-through:** the 32-camera ring found no real hole at any module junction (details below). | PASS |
+| hash rule | No kit file is newer than round 3 (`cruck.py` 13:11:54 is the newest). The `v5r3_hash` rebuilds of all seven buildings started at 13:09:34, after the last `rubble_walls.py` edit at 13:09:21, so the round-3 match stands. Round 4 changed the recipe only. | PASS (not triggered) |
+| new family = reusable kit modules | The recipe only imports and calls kit modules: `stone_quay`, `round_stone_body`, `path_stone_wall(flush_runs)`, `cruck_frame`, `path_timber_wall`, `linear_roof` / `GableRoof` soft options, `wall_abutment`, `board_belt`, `cone_roof`, `finial`, `round_eave_fill`, `pile_deck`, `ladder`, `composite_*`. The 1.0 m widening was values only. The barn smoke recipe exists. | PASS |
+
+**Recipe and blend provenance.**
+- `build_v5_harbour_house.py` was saved at 14:20:29, about 2.4 minutes after the final build started (14:18:05; the blend was saved at 14:30:53). So the build ran on the recipe as it was before that last save.
+- I checked that the current recipe still describes the blend:
+  - the `DIM` in `decal_anchors.json` is identical to the recipe's;
+  - the recipe's `MAIN` and `WING` roofs, imported without building, predict the blend's deck undersides to a mean of 1.3 mm and at most 5.4 mm over 77 and 35 sample points.
+- The late save therefore did not change the geometry I measured, but it was not rebuilt.
+
+### See-through ring: what was found (none blocking)
+
+1. **Ridge comb (`linear_roof` `_ridge_comb`).**
+   - **What the ring found:** 43 enclosed patches on the main ridge and 18 on the wing ridge. They are vertical sky slits between the crossed comb shakes, hanging down from the crest line, about 6-14 cm tall.
+   - **Measured:** horizontal rays on a 5 mm grid, square-on to both ridges, give slits of **at most 2.0 cm** (one at 2.0 cm, the rest smaller). The wing slits are at most 1.5 cm. The tallest is 12.5 cm.
+   - **Why it is not blocking:** the crest stands 16 cm proud of a closed deck, so these are gaps between its teeth, not a hole through the roof. They sit at the 2 cm threshold.
+   - **Fix:** a kit nice-to-have below.
+2. **Slip-wall and pier feet over the quay (the `path_stone_wall` / `stone_quay` junction).**
+   - **What the ring found:** in the red twins, 3-6 cm patches at z -0.05 to 0.13, at the E slip-wall foot (x 4.39) and the W slip-wall foot (x -0.73 / -0.90).
+   - **Measured:** horizontal rays from the slip show that in about 5-14 % of each wall's length a slot up to about 4 cm high, between z -0.04 and 0.00, runs right through the 1 m of masonry: 1,164 rays on the W side, 1,224 on the E. None does above z -0.001. The constant 9 % above z 0 is the cruck posts in front of the wall, not a gap.
+   - **Why it is not blocking:** the slots come out on the land side below the Z = 0 ground datum, so with terrain in place they are backed and are not see-through. They show red only because the red twin has no terrain.
+   - **Nice-to-have:** start the flush footing course and the wall core at the coping top (-0.04), not just above it.
+3. **Tower stone top / `board_belt` foot ring (z 6.9).**
+   - **What the ring found:** 2-3 px pockets at the tower's limbs.
+   - **Measured:** radial rays at 1-degree steps over z 6.70-7.20 never get inside r 2.077 m, and none reaches the belt line.
+   - **Verdict:** these are silhouette pockets, not a gap.
+4. **Other:**
+   - the 7 k-18 k px regions in g06 / g07 / c06 / c07 are the open jetty X-brace bays;
+   - the sky pocket between the tower and the land-gable verge (x25) is open space;
+   - the partition-end pinhole is 0.7 cm wide;
+   - mortar triple-point pinholes on the slip walls (x28_red, 1-3 px) are about 1 cm or less.
+
+### Director's grade, re-checked
+
+| axis | director | auditor | note |
+|---|---|---|---|
+| 1 Silhouette and massing | 8.4 | 8.3 | Agreed from the side (`side.png`, x34, z04) and the ref4 three-quarter (x01): the broad, slumped, swept roof now dominates. From the water (`back.png`) it is still an upright gable, and from the land (`front.png`, x03) it is still rubble gable plus round tower. |
+| 2 Proportion and actor scale | 8.3 | 8.3 | Both doors are 1.00 x 2.10 m on 0.12 m thresholds (heads at 2.22 m). The wing eave is at 2.46 m. |
+| 3 Construction logic | 8.4 | 8.3 | Everything is carried; no floating island was found. The 4 cm post-to-wall slot and the slip-wall foot slots (closed by the terrain, not by masonry) take a little off. |
+| 4 Seams and junctions | 8.2 | 8.2 | Every module junction is closed. Seal probe 0 leaks. Red twins clean. My ring found no real junction hole. Open but non-blocking: the verge rafter tail 15 cm below the bargeboard foot (no interpenetration), comb slits up to 2.0 cm and the foot slots. |
+| 5 Distinctness and reuse | 8.4 | 8.4 | Agreed: the widening was values only and every module re-fitted itself. It reads as the same village. |
+| 6 Technical compliance | 8.5 | 8.5 | Every hard number verified independently. |
+
+**Verdict: UPHELD at 8.3/10, the same as the Art Director's grade; my lowest axis is 8.2 (seams), above the 8.2 pass mark.** Every hard requirement holds
+on measured evidence. The client's 14:10 roof direction is built as asked: 7.0 m, 49 deg, 0.50 m sag, 0.70 m swept eaves,
+comb 7.96 m, walls not raised. The family is genuine reusable kit code. The director missed three things: the comb slits,
+the slip-wall foot slots and the recipe's late save. All three are measured above, and none breaks a hard requirement in the
+placed context.
+
+**Blocking issues:** none.
+
+**Carry into the boathouse / barn (kit, defaults unchanged; added to the director's nice-to-have list):**
+1. `linear_roof._ridge_comb`: close the crest. Raise the overlap from `w * 0.92` to about `w * 0.80`, or put a thin ridge board behind the crest, so no sky slit shows between the shakes. They are up to 2.0 cm square-on now and wider at oblique angles.
+2. `path_stone_wall(flush_runs)` on `stone_quay`: seat the flush footing course and the wall core down to the coping top. This removes the ≤ 4 cm through-slot at z -0.04 to 0.00 that only the terrain now hides.
+3. Rebuild once the recipe file is final, so the saved blend and the recipe have the same timestamp order (process).
+
+## PRODUCER NOTE (2026-10-17, session 2, 14:58): round 4 ACCEPTED
+
+Director 8.3 (pass mark 8.2) and the independent audit upheld it. 707,889 tris, 13.6 % hidden, 9 palette slots, 115 decal anchors. The deliverable is `buildings/variants/v5_harbour_house/` (recipe, .blend, decal_anchors.json). No more rounds.
+
+The nice-to-haves from the grade and the audit carry into the boathouse / barn design as kit fixes:
+- the swept eave/verge corners;
+- the eave slot;
+- `stone_quay(ends=)`;
+- the ridge-comb slits;
+- the `wall_abutment` lead tabs;
+- `pile_deck` E / W;
+- the post slot;
+- a deeper slip;
+- moss on both slopes;
+- `render_review --ground_z`.

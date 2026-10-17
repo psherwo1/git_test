@@ -1,0 +1,46 @@
+﻿
+00:00.750  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+SHOT x01_ref4_angle
+SHOT x02_thumb_45m
+SHOT x03_land_door_eye
+SHOT x04_tower_hall_gable_junction
+SHOT x05_tower_wing_S_junction
+SHOT x07_main_roof_tower_land
+SHOT x08_main_roof_tower_west
+SHOT x09_wing_roof_tower_S
+SHOT x10_wing_roof_tower_N_nook
+SHOT x12_tower_top_foot_ring
+SHOT x15_water_gable_from_water
+SHOT x16_tie_bearing_E_pier
+SHOT x19_slip_interior
+SHOT x21_apex_water_finial_blades
+SHOT x22_E_eave_corner_water
+SHOT x23_E_eave_lookup
+SHOT x24_W_eave_lookup
+SHOT x25_land_verge_apex
+SHOT x26_wing_free_gable
+SHOT x27_quay_W_end_pier
+SHOT x28_quay_E_end_jetty
+SHOT x30_jetty_deck_to_quay
+SHOT x34_side_elevation_eye
+SHOT y01_slip_mouth_water_level_nowater
+SHOT y06_E_post_foot_close
+SHOT y07_W_post_foot_close
+SHOT y09_post_to_slipwall_gap
+SHOT y11_E_corner_diag_nowater
+SHOT y12_W_corner_diag_nowater
+SHOT y14_ref4_angle_high
+SHOT y15_land_three_quarter_eye
+SHOT z01_W_arris_column_graze_nowater
+SHOT z02_NE_eave_verge_corner
+SHOT z03_SE_eave_verge_corner_land
+SHOT z04_ridge_sag_side_high
+SHOT z05_E_soffit_midlength
+SHOT z06_water_gable_from_jetty_eye
+SHOT z07_W_tie_end_verge_triangle
+SHOT z08_roof_wing_tower_from_above
+SHOT z09_NW_eave_verge_corner_water
+SHOT z10_ref4_side_compare
+
+
