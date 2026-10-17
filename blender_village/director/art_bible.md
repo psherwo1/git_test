@@ -348,3 +348,18 @@ Client's words: "there is no LED volume in use here. This is an amateur hobby pr
 - **Dropped:** the requirement that any combination of modules be clean, and the 40-50-building variant generator.
 - Each design is a curated recipe, reviewed as a building on its own merits, with the modularity rubric (note 12) still applied. Junction fixes are made as each design needs them and stay reusable in the kit.
 - See the production plan (phase 2 and phase 3) for the reframed decision and scope.
+
+### Producer note 15: CLIENT RULE — new structures at most 1,000,000 triangles (2026-10-16)
+
+Client's words: "Keep the new structures to a one million triangle limit".
+
+- **Every new structure** (every kit variant and every curated design from now on) must render at **1,000,000 triangles or fewer**, as counted by `stats.json` `triangles`. This supersedes the 1.5 M per-building limit for new structures.
+- The three signed-off heroes keep their current counts (keep 1.17 M, windmill 1.15 M, hut 0.88 M).
+- Over the cap is a **hard requirement failure** for the director and the auditor, the same as hidden % or the palette.
+- How to get under it without losing what the camera sees, in priority order:
+  1. drop hidden and near-hidden geometry;
+  2. coarsen stone and shingle tessellation on faces seen only from mid-distance (above about 4 m, roof tops);
+  3. reuse pooled pieces rather than unique ones.
+  
+  Never cut silhouette, entrance or ground-contact detail (note 4).
+- At the time of this note: v3 longhouse 0.47 M and v2 tiered hall 0.95 M comply; v1 watchtower 1.06 M and v4 mill-house 1.38 M are over.

@@ -305,3 +305,5 @@ global), every public component is `component(g, <its dimensions>=None, seed=Non
 with `g.set(...)`, which re-derives the dependent ones.  Note 11 is a frame option (`detail_rule`); every relief
 switch keeps its random draws, so turning it off reproduces the shapes.
 
+
+> **Producer note 15 (client rule, 2026-10-16):** every new structure must be at most **1,000,000 triangles** (`stats.json` `triangles`).
