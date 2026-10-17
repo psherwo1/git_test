@@ -49,6 +49,9 @@ SHOTS = {
         "actor_closeup": actor_closeup((-8.887384414672852, -4.278973579406738, -0.05000000074505806),
                                        (8.887384414672852, 4.278973579406738, 7.644298553466797)) + (0,),
         "d23_door_closeup": ((-2.4, -5.6, 1.65), (-2.4, -2.6, 1.25), 35, 0),
+        # extra director cameras (exact): the SE stack at eye level from 3 m, the soffit look-up under the roll
+        "d46_s_east_stack_eye3m": ((4.2, -5.0, 1.65), (2.35, -3.05, 2.6), 50, 0),
+        "d07_s_soffit_lookup": ((1.9, -4.0, 1.45), (2.4, -2.9, 2.6), 28, 0),
         # slow-pan frame: eye level, 8 m out from the south wall (y -2.6), the SE crossing right of centre
         "pan8m_front": ((0.6, -10.6, 1.65), (1.3, -3.0, 2.3), 35, 0),
         # the same frame during a quick pan (60 deg/s, 24 fps, 180 deg shutter -> 1.25 deg of blur)
@@ -58,6 +61,7 @@ SHOTS = {
         "a08_turE_apron_N_flank": ((7.4, 3.0, 6.0), (5.0, 1.3, 4.3), 55, 0),
         "c13_turE_cheek_S_lookup": ((6.7, -2.6, 1.9), (5.8, -1.2, 3.4), 35, 0),
         "c17_turE_cheek_S_tight": ((6.55, -2.05, 3.3), (5.85, -1.22, 3.45), 45, 0),
+        "c22_turE_cheek_S_bottom_lookup": ((6.4, -2.2, 2.2), (5.85, -1.25, 3.1), 40, 0),
         "actor_closeup": actor_closeup((-6.141589164733887, -6.1409759521484375, -0.05000000074505806),
                                        (7.336888790130615, 6.141299724578857, 18.508424758911133)) + (0,),
         "o01_door_closeup": ((0.9, -7.6, 1.6), (0.0, -5.0, 1.2), 35, 0),
