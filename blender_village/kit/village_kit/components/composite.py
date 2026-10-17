@@ -1100,15 +1100,26 @@ def footprint_views(g, dists=(0.5, 1.5, 3.5), heights=(0.3, 1.0, 1.65, 2.3), spa
     return np.concatenate([V, review_cameras(lo, hi)])
 
 
-def composite_hidden_cull(g, targets=None, procs=4, views="lean", min_polys=0):
+BACKED_PARTS = ("_covering", "_comb", "_boards", "_stones", "_frame", "_soffit", "_joists", "roof_shingles",
+                "roof_starter", "_quoins", "_ring")
+"""kit 1.12 (v5 round 2; folded from the retired timber_finish.CULL_PARTS): parts that always have a closed backing
+behind them (roof deck, wall / belt backing, mortar body) -- composite_hidden_cull(parts=BACKED_PARTS) culls only
+these, so the cull can never open a hole (producer note 6)."""
+
+
+def composite_hidden_cull(g, targets=None, procs=4, views="lean", min_polys=0, parts=None):
     """KIT COMPONENT (post step): delete the polygons no review / actor / crane / door viewpoint can see on every
     building mesh except the backing surfaces (BACKING) and the pooled instances (producer note 6).
     views: "lean" (round 2 default, LEAN_VIEWS), "full" (the round-1 set) or a footprint_views kwargs dict;
-    min_polys: only ray-test objects with at least this many polygons (the small ones cost time, save little)."""
+    min_polys: only ray-test objects with at least this many polygons (the small ones cost time, save little).
+    kit 1.12 (None = old): parts=(name fragments, ...) -- only the objects whose names contain one of them are
+    targets (e.g. BACKED_PARTS: the timber / waterfront family's backed parts)."""
     if targets is None:
         targets = [o.name for o in _meshes(g)
                    if o.data.users == 1 and not any(b in o.name for b in BACKING)
                    and len(o.data.polygons) >= min_polys]
+        if parts is not None:
+            targets = [nm for nm in targets if any(p in nm for p in parts)]
     if views == "lean":
         # roof coverings (ROOF_PARTS) are tested from the actor loops at head / eave height, the crane loop and the
         # review cameras; walls, openings and timbers also from the knee-height loops and the door views
@@ -1149,7 +1160,134 @@ def recenter(g):
 # =================================================================================================================
 # producer note 11: decal anchors
 # =================================================================================================================
-def composite_decals(g, seed=1201, door_lichen="jamb", south_moss=False, walk_gate=True, moss_normal="hit"):
+def composite_decals(g, seed=1201, door_lichen="jamb", south_moss=False, walk_gate=True, moss_normal="hit",
+                     timber=False, waterfront=False):
+    """kit 1.12 (v5 round 2; False = old): timber=True adds timber_anchors (timber walls, cruck frames, board belts;
+    folded from the retired timber_finish), waterfront=True adds waterfront_anchors (quay water faces and piles in
+    the waterline band only).  See _composite_decals for the rest."""
+    da = _composite_decals(g, seed=seed, door_lichen=door_lichen, south_moss=south_moss, walk_gate=walk_gate,
+                           moss_normal=moss_normal)
+    if timber:
+        timber_anchors(g, seed=seed + 300)
+    if waterfront:
+        waterfront_anchors(g, seed=seed + 600)
+    return da
+
+
+def _timber_probe(g):
+    from ..decals import SurfaceProbe
+    return SurfaceProbe(_meshes(g))
+
+
+TIMBER_SURF = ("M_timber", "M_timber_weathered")
+
+
+def timber_anchors(g, seed=1501):
+    """kit 1.12: note-11 anchors on the timber family: damp_rise / moss at a timber wall's sill line (north faces
+    likelier), repair / grime on its faces, soot over timber openings, water_streak under their sills, rust under
+    the shutter / leaf straps, grime beside timber doors; on a cruck frame: water_streak under the tie beam and the
+    arch, damp at the jamb posts' feet; on a board belt: water_streak under the cone eave, damp over its foot ring."""
+    from ..decals import above_opening, below_points
+    da = g.decals
+    sh = np.asarray(getattr(g, "SHIFT", np.zeros(3)), float)
+    rng = np.random.RandomState(seed)
+    probe = _timber_probe(g)
+    ez = np.array([0.0, 0.0, 1.0])
+    n0 = len(da.items)
+
+    def cast(p, n, typ, size, prob=None, reach=0.6):
+        hit = probe.cast(p + n * reach, -n, 2 * reach)
+        if hit is None or hit["surface"] not in TIMBER_SURF:
+            return None
+        return da.add(typ, hit["pos"], hit["normal"], size, hit["surface"], prob, seed=int(rng.randint(1 << 30)))
+    ops = [o for o in getattr(g, "OPENINGS", []) if o.get("timber")]
+    for w in getattr(g, "TIMBER_WALLS", []):
+        pm = w["map"]
+        for s in np.arange(0.7, pm.total - 0.3, 1.6):
+            O, t, n = pm.frame(s)
+            p = O + sh + ez * (w["floor"] + 0.16)
+            north = n[1] > 0.5
+            cast(p, n, "moss" if (north and rng.uniform() < 0.5) else "damp_rise",
+                 (rng.uniform(0.7, 1.1), rng.uniform(0.3, 0.45)), min(1.0, 0.55 + 0.3 * north))
+        for s in np.arange(1.3, pm.total - 0.5, 2.9):
+            O, t, n = pm.frame(s)
+            z = rng.uniform(w["floor"] + 0.9, max(w["floor"] + 1.0, w["top"] - 0.5))
+            cast(O + sh + ez * z, n, "repair_patch" if rng.uniform() < 0.6 else "grime",
+                 (rng.uniform(0.3, 0.55), rng.uniform(0.3, 0.5)))
+    for op in ops:
+        O, t, n = op["O"] + sh, op["t"], op["n"]
+        hw = op["width"] / 2
+        above_opening(da, probe, O, n, op["width"] + 0.2, op["head"] + 0.02, "soot",
+                      size=(op["width"] + 0.3, 0.45), surfaces=TIMBER_SURF, rng=rng)
+        if op["kind"] == "window":
+            below_points(da, probe, [O + ez * (op["z0"] - 0.32) + n * 0.03], [n], "water_streak",
+                         size=(op["width"] * 0.8, 0.6), surfaces=TIMBER_SURF, rng=rng)
+        else:
+            for sg in (-1, 1):
+                cast(O + t * sg * (hw + 0.55) + ez * (op["z0"] + 0.9), n, "grime", (0.35, 0.9), 0.7)
+    for cf in getattr(g, "CRUCKS", []):
+        O, t, n = cf["O"] + sh, cf["t"], cf["n"]
+        for s in np.linspace(-cf["half"] * 0.7, cf["half"] * 0.7, 4):
+            below_points(da, probe, [O + t * s + ez * (cf["tie_z"] - 0.05) + n * 0.05], [n], "water_streak",
+                         size=(0.25, 0.7), surfaces=TIMBER_SURF, rng=rng)
+        for sg in (-1, 1):
+            cast(O + t * sg * (cf["clear"] / 2 - 0.12) + ez * 0.35 - n * 0.15, n, "damp_rise", (0.3, 0.5), 0.8)
+    for nm, b in getattr(g, "BELTS", {}).items():
+        c = np.array([b["center"][0], b["center"][1], 0.0]) + sh
+        for az in np.radians(np.arange(15.0, 360.0, 45.0)):
+            nn = np.array([math.sin(az), -math.cos(az), 0.0])
+            cast(c + nn * b["r"] + ez * (b["z1"] - 0.35), nn, "water_streak", (0.2, 0.6), 0.6)
+            if rng.uniform() < 0.5:
+                cast(c + nn * b["r"] + ez * (b["z0"] + 0.3), nn, "damp_rise" if nn[1] <= 0.4 else "moss",
+                     (0.5, 0.3), 0.6)
+    log(f"timber anchors: {len(da.items) - n0}")
+    return da
+
+
+def waterfront_anchors(g, seed=1801, band=(-0.9, 0.0)):
+    """kit 1.12: note-11 anchors at the waterline ONLY on water faces (producer notes 6 / 11): damp_rise / moss on the
+    quay water faces (waterfront.stone_quay publishes them on g.QUAYS) and on the piles (g.DECKS), between band[0]
+    and band[1] m; lichen on the quay's coping tops."""
+    from ..decals import tops
+    da = g.decals
+    sh = np.asarray(getattr(g, "SHIFT", np.zeros(3)), float)
+    rng = np.random.RandomState(seed)
+    probe = _timber_probe(g)
+    ez = np.array([0.0, 0.0, 1.0])
+    STONE = ("M_stone", "M_stone_dressed", "M_mortar")
+    n0 = len(da.items)
+    for q in getattr(g, "QUAYS", []):
+        for pm in q["water"]:
+            for s in np.arange(0.6, pm.total - 0.4, 1.9):
+                O, t, n = pm.frame(s)
+                z = rng.uniform(band[0] + 0.15, band[1] - 0.2)
+                p = O + sh + ez * z
+                hit = probe.cast(p + n * 0.6, -n, 1.2)
+                if hit is None or hit["surface"] not in STONE or not (band[0] <= hit["pos"][2] <= band[1]):
+                    continue
+                da.add("damp_rise" if rng.uniform() < 0.6 else "moss", hit["pos"], hit["normal"],
+                       (rng.uniform(0.8, 1.3), 0.5), hit["surface"], 0.8, seed=int(rng.randint(1 << 30)))
+            for s in np.arange(1.1, pm.total - 0.5, 3.3):
+                O, t, n = pm.frame(s)
+                tops(da, probe, [O + sh - n * 0.15 + ez * 0.2], "lichen", size=(0.3, 0.2), surfaces=STONE, rng=rng,
+                     h_from=0.25)
+    for dk in getattr(g, "DECKS", []):
+        for k, (x, y) in enumerate(dk["piles"]):
+            if k % 2:
+                continue
+            az = rng.uniform(0, 2 * math.pi)
+            dvec = np.array([math.cos(az), math.sin(az), 0.0])
+            p = np.array([x, y, 0.0]) + sh + ez * rng.uniform(band[0] + 0.2, band[1] - 0.3)
+            hit = probe.cast(p + dvec * 0.6, -dvec, 1.2)
+            if hit is None or hit["surface"] not in TIMBER_SURF:
+                continue
+            da.add("damp_rise" if rng.uniform() < 0.6 else "moss", hit["pos"], hit["normal"], (0.25, 0.6),
+                   hit["surface"], 0.8, seed=int(rng.randint(1 << 30)))
+    log(f"waterfront anchors: {len(da.items) - n0}")
+    return da
+
+
+def _composite_decals(g, seed=1201, door_lichen="jamb", south_moss=False, walk_gate=True, moss_normal="hit"):
     """anchors on the composite's surfaces, all ray-snapped onto the built meshes (decals.SurfaceProbe), physically
     placed: damp_rise / moss at the wall feet (more and likelier on north faces), lichen on footing tops, quoins and
     weather (W / N) faces, water_streak under sills and the cone eave drip, soot over the door and windows, rust under

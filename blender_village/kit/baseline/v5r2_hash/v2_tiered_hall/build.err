@@ -1,0 +1,2 @@
+C:\GitHubDesktop\git_test\blender_village\buildings\variants\v2_tiered_hall\..\..\..\kit\village_kit\components\tier_flashing.py:470: RuntimeWarning: invalid value encountered in subtract
+  dz = row[:-1] - row[1:]                       # fall per radial sample

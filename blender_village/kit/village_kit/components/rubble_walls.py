@@ -39,6 +39,12 @@ RUBBLE_CFG = dict(footing=0.30, ch=(0.09, 0.19), p_tall=0.08, len=(0.20, 0.62), 
 """the village's flat-bedded coursed rubble (art bible 3; the keep's annex table): courses 8-25 cm, stones
 20-62 cm (through-stones to 0.9 m), wandering beds, pinch-outs, stepped footing projecting 3.5-9.5 cm."""
 
+RUBBLE_LARGE = dict(ch=(0.11, 0.23), len=(0.26, 0.72),
+                    ch_mix=[(0.22, 0.11, 0.14), (0.40, 0.14, 0.18), (0.28, 0.18, 0.22), (0.10, 0.22, 0.25)])
+"""kit 1.12 (v5 round 2; a cfg= override, nothing reads it by default): the same rubble with the larger courses and
+longer stones of the bible's range (the drum family's note-15 setting, README section 4) -- ~30 % fewer stones on a
+long hall wall, for path_stone_wall(cfg=RUBBLE_LARGE) / round_stone_body(cfg=RUBBLE_LARGE)."""
+
 
 class PathMap:
     """surface map of a plan polyline (see module doc).  path: (x, y) points, interior on the left."""
@@ -77,8 +83,8 @@ class PathMap:
         return out
 
 
-def _quoin_courses(rng, z_top, h_rng=(0.24, 0.34), long_short=(0.50, 0.28)):
-    z = -0.04
+def _quoin_courses(rng, z_top, h_rng=(0.24, 0.34), long_short=(0.50, 0.28), z0=-0.04):
+    z = z0
     out = []
     k = 0
     while z < z_top - 0.08:
@@ -93,13 +99,29 @@ def _quoin_courses(rng, z_top, h_rng=(0.24, 0.34), long_short=(0.50, 0.28)):
 
 
 def path_stone_wall(g, name, path, top=2.75, top_fn=None, openings=(), clip=None, seed=31, cfg=None, quoins=True,
-                    proj=0.025, hero_s=None):
+                    proj=0.025, hero_s=None, base=None, clip_z=None):
     """KIT COMPONENT (see module doc).
     path      plan polyline [(x, y), ...], interior on the left (so the outward normal is on the right)
     top       wall-head height (flat); top_fn(x, y) -> height overrides it per point (a gable under a roof deck)
     openings  [(s, spec), ...]  door / window specs (components.wall_openings) centred at path distance s
     clip      clip(P) -> bool: stones / mortar whose centre is inside another body are dropped (junctions)
-    hero_s    (s0, s1): the run laid with hero polygonal stones (the entrance face); default: the footing only"""
+    hero_s    (s0, s1): the run laid with hero polygonal stones (the entrance face); default: the footing only
+    base      kit 1.12 (v5 round 2; None = -0.10, the land wall's buried footing): the course base z -- a quay /
+              harbour wall standing on the bed (waterfront.stone_quay) starts at the bed
+    clip_z    kit 1.12 (None = the kit's -5 cm land clip): the finalize clip height (a quay wall: just under the bed)"""
+    if base is not None or clip_z is not None:
+        return _path_stone_wall_based(g, name, path, top, top_fn, openings, clip, seed, cfg, quoins, proj, hero_s,
+                                      -0.10 if base is None else float(base), clip_z)
+    return _path_stone_wall_based(g, name, path, top, top_fn, openings, clip, seed, cfg, quoins, proj, hero_s,
+                                  None, None)
+
+
+def _path_stone_wall_based(g, name, path, top, top_fn, openings, clip, seed, cfg, quoins, proj, hero_s, base,
+                           clip_z):
+    """path_stone_wall's body; base / clip_z None = the kit 1.11 literals (-0.10 / -0.05 mortar foot / CLIP_Z)."""
+    z_base = -0.10 if base is None else base
+    z_mfoot = -0.05 if base is None else base + 0.05
+    fin = {} if clip_z is None else dict(clip_z=clip_z)
     pm = PathMap(path)
     rng = np.random.default_rng(seed)
     cfg = dict(RUBBLE_CFG, seed=seed, **(cfg or {}))
@@ -121,7 +143,10 @@ def path_stone_wall(g, name, path, top=2.75, top_fn=None, openings=(), clip=None
     Q = []
     if quoins:
         for (sc, ia, ib) in pm.corners():
-            Q.append((sc, ia, ib, _quoin_courses(qrng, ztop_s(sc))))
+            if base is None:
+                Q.append((sc, ia, ib, _quoin_courses(qrng, ztop_s(sc))))
+            else:
+                Q.append((sc, ia, ib, _quoin_courses(qrng, ztop_s(sc), z0=z_base + 0.06)))
 
     def excl(z0, z1, zm):
         out = [(a, b) for (a, b, za, zb) in rects if z1 > za and z0 < zb]
@@ -133,13 +158,13 @@ def path_stone_wall(g, name, path, top=2.75, top_fn=None, openings=(), clip=None
         return out
     runs = [(float(pm.S[i]), float(pm.S[i + 1])) for i in range(len(pm.L))]
     srange = lambda zm: runs  # noqa: E731
-    S = layout_wall(rng, srange, -0.10, z_top, excl, cfg, ztop_fn=ztop_s)
+    S = layout_wall(rng, srange, z_base, z_top, excl, cfg, ztop_fn=ztop_s)
     hero = S["foot"] > 0.5
     if hero_s is not None:
         hero |= (S["sc"] > hero_s[0]) & (S["sc"] < hero_s[1]) & (S["zc"] < 2.4)
     S = polygonize(S, hero, np.random.default_rng(seed + 1))
     S = rough_footing(S, np.random.default_rng(seed + 2))
-    pins, _, _ = fill_voids(S, srange, excl, -0.10, z_top, rng, cfg, ztop_fn=ztop_s, label=name)
+    pins, _, _ = fill_voids(S, srange, excl, z_base, z_top, rng, cfg, ztop_fn=ztop_s, label=name)
     S = cat_stones(S, pins)
     if clip is not None:
         P = pm(S["sc"], S["zc"], np.zeros(len(S["sc"])))
@@ -158,7 +183,7 @@ def path_stone_wall(g, name, path, top=2.75, top_fn=None, openings=(), clip=None
                side_depth=0.018)
     lay_stones(acc, filt(S, small), pm, "M_stone", rng, relief=relief, rough=0.8, nxy=4, noise_amp=0.005,
                side_depth=0.018)
-    finalize(acc, g.coll, smooth_deg=28.0)
+    finalize(acc, g.coll, smooth_deg=28.0, **fin)
     # quoins: solid dressed blocks, long and short faces alternating, 2.5 cm proud of both faces
     if Q:
         accq = Acc(pre + "_quoins")
@@ -173,13 +198,16 @@ def path_stone_wall(g, name, path, top=2.75, top_fn=None, openings=(), clip=None
                 O = O + dA * qrng.uniform(-0.006, 0.006)
                 obox(accq, O[None], dA, nA, ez, la + proj, lb + proj, h, qrng.uniform(0.012, 0.02), "M_stone_dressed",
                      nx=5, ny=5, nz=4)
-        finalize(accq, g.coll, smooth_deg=30.0)
+        finalize(accq, g.coll, smooth_deg=30.0, **fin)
     # mortar body: coarse sheet, refined round the openings, open inside them, following the (gable) top
     accm = Acc(pre + "_mortar")
     se = [np.linspace(a, b, max(2, int((b - a) / 0.3) + 1)) for (a, b) in runs]
     knots = [c for r in cuts for c in (r[0], r[1])]
     ss = np.unique(np.round(np.concatenate(se + [np.array(knots)] if knots else se), 5))
-    zs = np.linspace(-0.05, z_top + 0.02, max(4, int((z_top + 0.07) / 0.3) + 1))
+    if base is None:
+        zs = np.linspace(-0.05, z_top + 0.02, max(4, int((z_top + 0.07) / 0.3) + 1))
+    else:
+        zs = np.linspace(z_mfoot, z_top + 0.02, max(4, int((z_top + 0.02 - z_mfoot) / 0.3) + 1))
     zs = np.unique(np.round(np.concatenate([zs] + [np.array([r[2], r[3]]) for r in cuts]), 5))
 
     def near(sm, zm, ds, dz):
@@ -201,7 +229,7 @@ def path_stone_wall(g, name, path, top=2.75, top_fn=None, openings=(), clip=None
             k &= ~clip(pm(sm, zm, np.zeros(len(sm))))
         return k
     n_m = mortar_sheet(accm, pm, ss, zs, near, keep, sub=3, seed=float(seed % 17))
-    finalize(accm, g.coll, recalc=False)
+    finalize(accm, g.coll, recalc=False, **fin)
     log(f"  {pre}: mortar cells {n_m}")
     # openings
     accs = opening_accs(g, name)

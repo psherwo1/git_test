@@ -1,0 +1,18 @@
+﻿00:00.579  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\barn_smoke\barn_smoke.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village/tools/render_review.py:111: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:405
++ ... arn_smoke'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village/tools/render_review.py:127: DeprecationWarning: 'World.use_nodes' is 
+expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.672  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.719  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\barn_smoke\renders\hero.png'
+00:08.532  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\barn_smoke\renders\side.png'
+00:12.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\barn_smoke\renders\actor_closeup.png'
+REVIEW_STATS {"objects": 36, "triangles": 213231, "bbox_min": [-4.684999942779541, -3.341850757598877, -0.05000000074505806], "bbox_max": [4.684999942779541, 3.341850757598877, 7.656435012817383], "size_m": [9.369999885559082, 6.683701515197754, 7.706435203552246], "materials": ["M_iron", "M_lead", "M_mortar", "M_roof_shake", "M_roof_shingle", "M_stone", "M_stone_dressed", "M_timber", "M_timber_weathered"], "est_hidden_pct": 14.7, "est_hidden_triangles": 31291, "material_slot_count": 9, "mask_attribute_missing": []}

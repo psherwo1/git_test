@@ -116,9 +116,14 @@ def _room(acc, lm, x0, x1, z0, z1, w0, w1, mat):
         _quad_strip(acc, P, mat, c)
 
 
-def build_opening(g, sp, O, t, n, accs, rng, label=""):
+def build_opening(g, sp, O, t, n, accs, rng, label="", host=None):
     """build one opening (door / window spec) at frame (O, t, n) into accs (see module doc).  kit 1.8.0: sp may be a
-    components.openings spec (resolved to family "wall")."""
+    components.openings spec (resolved to family "wall").
+    kit 1.12 (v5 round 2; None = the masonry opening, unchanged): host=dict(...) -- the opening sits in a TIMBER
+    wall (components.timber_walls, the cruck infill, a board belt): see TIMBER_HOST and _build_timber_opening.  sp is
+    then the timber family's resolved dict (timber_walls.resolve_timber)."""
+    if host is not None:
+        return _build_timber_opening(g, sp, O, t, n, accs, rng, label, host)
     from .openings import resolve
     sp = resolve(sp, "wall")
     O = np.asarray(O, float)
@@ -193,6 +198,223 @@ def build_opening(g, sp, O, t, n, accs, rng, label=""):
               "M_timber_weathered")
         rec.update(z0=z0, z1=z1, head=z1 + f + sp["lintel"], sill=z0 - f, threshold=None,
                    lintel_w=sp["width"] + 2 * (f + 0.20))
+    if not hasattr(g, "OPENINGS"):
+        g.OPENINGS = []
+    g.OPENINGS.append(rec)
+    return rec
+
+
+# =================================================================================================================
+# kit 1.12 (v5 round 2): the TIMBER host -- the same opening builder for doors, windows and large boat / barn doors
+# in a timber wall (it replaces timber_walls' private opening builder: one opening builder in the kit)
+# =================================================================================================================
+TIMBER_HOST = dict(face=0.0, floor=0.0, head_max=None, plate_top=None, plate_w=None, head_rule="clamp", ground=0.0,
+                   casing=False)
+"""host keys: face = w of the visible wall face beside the opening (cladding front); floor = absolute z of the
+storey floor (sill-beam top); head_max = absolute z of the storey head's underside (the wall plate): no opening member
+may cross it; plate_top / plate_w = the plate's top z and (w0, w1) range (for head_rule "trim"); head_rule = what a
+door / boat door taller than its storey does: "clamp" (the clear height is clamped so the PLATE is the lintel, the
+leaves stop 1 cm under it, no separate head beam) or "trim" (the plate is cut between the jambs and the head beam
+replaces it flush, at the plate's own depth and top: rec["plate_cut"]); anything else raises.  ground = the wall's
+ground z (a door more than 1.2 m above it is a loading hatch, not an entrance); casing = cased openings (clad
+walls)."""
+
+
+def _pintle(g, acc_fallback, P, ex, k):
+    """the kit's forged pintle (plank_doors.make_pintle), pooled (note 3) as a linked duplicate at P: its shank runs
+    along ex (into the jamb), the pin vertical."""
+    from .plank_doors import make_pintle
+    ez = np.array([0.0, 0.0, 1.0])
+    ex = np.asarray(ex, float)
+    ex = ex - ez * float(ex @ ez)
+    ex = ex / np.linalg.norm(ex)
+    ey = np.cross(ez, ex)
+    pools = getattr(g, "pools", None)
+    if pools is None or getattr(pools, "collection", None) is None:
+        raise ValueError("timber opening: the pintle pool needs the frame's kit_instances collection")
+    me = pools.mesh("pintle", int(k) % 3, make_pintle, sharp=40.0)
+    pools.place(me, "pintle", np.stack([ex, ey, ez], 1), P)
+    _ = acc_fallback
+
+
+def _strap(acc, mapfn, n, x_h, x_len, z, w, direction):
+    """a forged strap lying flat at w (its back), from the hinge edge x_h along `direction` (+-1), spear end
+    (plank_doors.strap_widths), 6 mm thick."""
+    from .plank_doors import strap_widths
+    us = np.linspace(0, 1, 16)
+    xs = x_h + direction * us * x_len
+    wd = strap_widths(us, w0=0.045, w1=0.034, spear_w=0.065)
+    path = mapfn(xs, np.full_like(xs, z), np.full_like(xs, w + 0.0035))
+    V, F = sweep(path, n, np.stack([prof_rect(max(w_, 0.012), 0.007, 0.002) for w_ in wd]))
+    acc.add(V, F, "M_iron")
+
+
+def _leaf(acc, mapfn, rng, x0, x1, z0, z1, w_front, thick, n_planks, mat="M_timber_weathered"):
+    """a vertical-plank leaf / shutter (plank_doors.plank_leaf, the kit's ONE plank leaf)."""
+    from .plank_doors import plank_leaf
+    widths = rng.uniform(0.75, 1.25, max(1, int(n_planks)))
+    plank_leaf(acc, mapfn, x0, x1, z0, lambda x: np.full(np.shape(x), z1), w_front, thick, rng, widths, mat=mat,
+               nv=12, seed=int(rng.integers(1000)))
+
+
+def _build_timber_opening(g, sp, O, t, n, accs, rng, label, host):
+    """build_opening(host=...): a door, window (with open plank shutters) or large boat / barn door in a timber wall.
+    sp: the timber family's dict (kind "door" / "window" / "boat"; width, height, threshold / sill above the floor,
+    jamb (face, depth), head, ... see timber_walls.TIMBER_OPENING).  Every leaf and shutter is the kit's plank leaf,
+    every hinge a forged strap ON THE LEAF from its hinge edge, with the kit's pooled pintle in the jamb.
+    Returns the record (also appended to g.OPENINGS) with z1 = the EFFECTIVE clear head."""
+    h = dict(TIMBER_HOST)
+    h.update(host)
+    O = np.asarray(O, float)
+    t = np.asarray(t, float) / np.linalg.norm(t)
+    n = np.asarray(n, float) / np.linalg.norm(n)
+    ez = np.array([0.0, 0.0, 1.0])
+
+    def lm(x, z, w):
+        return O + x * t + z * ez + w * n
+
+    def mapfn(x, z, w):
+        x, z, w = np.broadcast_arrays(np.asarray(x, float), np.asarray(z, float), np.asarray(w, float))
+        return O[None] + x.ravel()[:, None] * t + z.ravel()[:, None] * ez + w.ravel()[:, None] * n
+    kind = sp["kind"]
+    hw = sp["width"] / 2
+    jw, jd = sp["jamb"]
+    face, floor = float(h["face"]), float(h["floor"])
+    cased = bool(h["casing"]) or kind == "boat"
+    jo = face + (0.02 if cased else 0.0)                        # the jamb's front
+    tim, iron, room = accs["timber"], accs["iron"], accs["blocker"]
+    rec = dict(kind="door" if kind in ("door", "boat") else "window", label=label, O=O.copy(), t=t, n=n,
+               width=sp["width"], height=sp["height"], timber=True, style=kind)
+    if kind == "window":
+        cz0 = floor + sp["sill"]
+        cz1 = cz0 + sp["height"]
+        rail, hd = sp.get("rail", 0.14), sp["head"]
+        if h["head_max"] is not None and cz1 + hd > float(h["head_max"]) + 1e-6:
+            raise ValueError(f"timber window {label}: its head {cz1 + hd:.2f} crosses the storey head "
+                             f"{float(h['head_max']):.2f}; lower the sill or the height")
+        for a, b in ((-hw - jw, -hw), (hw, hw + jw)):
+            _box(tim, lm, t, n, a, b, cz0 - rail, cz1 + hd, -jd, jo, 0.012, "M_timber")
+        _box(tim, lm, t, n, -hw - jw - 0.04, hw + jw + 0.04, cz1, cz1 + hd, -jd, jo + 0.012, 0.01, "M_timber", nx=5)
+        _box(tim, lm, t, n, -hw - jw - 0.05, hw + jw + 0.05, cz0 - 0.05, cz0, -jd, jo + 0.06, 0.01, "M_timber", nx=5)
+        f = sp["frame"]
+        wf0, wf1 = -jd + 0.04, -jd + 0.04 + f
+        for (xa, xb, za, zb) in ((-hw, -hw + f, cz0, cz1), (hw - f, hw, cz0, cz1), (-hw, hw, cz0, cz0 + f),
+                                 (-hw, hw, cz1 - f, cz1)):
+            _box(tim, lm, t, n, xa, xb, za, zb, wf0, wf1, 0.006, "M_timber")
+        zm = 0.5 * (cz0 + cz1)
+        _box(tim, lm, t, n, -0.02, 0.02, cz0 + f, cz1 - f, wf0 + 0.01, wf1 - 0.01, 0.005, "M_timber")
+        _box(tim, lm, t, n, -hw + f, hw - f, zm - 0.02, zm + 0.02, wf0 + 0.01, wf1 - 0.01, 0.005, "M_timber")
+        rec.update(z0=cz0, z1=cz1, head=cz1 + hd, sill=cz0 - 0.05, threshold=None, lintel_w=sp["width"] + 2 * jw)
+        if sp.get("shutters"):
+            # two open plank shutters lying back on the wall face beside the casing: the hinge is the casing's outer
+            # edge, the straps lie ON the shutter ledges running OUTWARD from it, the pintle runs into the jamb
+            sw = hw + 0.03
+            wb = max(face, jo) + 0.006                         # shutter back on the face
+            st = 0.028
+            for k, sgn in enumerate((-1, 1)):
+                xh = sgn * (hw + jw)
+                xa, xb = sorted((xh, xh + sgn * sw))
+                _leaf(tim, mapfn, rng, xa, xb, cz0 - 0.03, cz1 + 0.03, wb + st, st, 3)
+                for zz in (cz0 + 0.08, cz1 - 0.14):
+                    _box(tim, lm, t, n, xa + 0.02, xb - 0.02, zz, zz + 0.07, wb + st, wb + st + 0.022, 0.006,
+                         "M_timber_weathered")
+                    _strap(iron, mapfn, n, xh, 0.72 * sw, zz + 0.035, wb + st + 0.022, sgn)
+                    _pintle(g, iron, lm(xh, zz + 0.035 + 0.045, wb + 0.012), -sgn * t, k)
+        _room(room, lm, -hw - 0.35, hw + 0.35, cz0 - 0.6, cz1 + 0.35, -jd + 0.03, -jd - sp.get("room", 1.0),
+              "M_timber_weathered")
+    else:
+        cz0 = floor + sp["threshold"]
+        cz1 = cz0 + sp["height"]
+        hd = sp["head"]
+        hm = h["head_max"]
+        head_beam = True
+        if hm is not None and cz1 + hd > float(hm) + 1e-6:
+            rule = sp.get("head_rule") or h["head_rule"]
+            hm = float(hm)
+            if rule == "clamp":
+                if hm - cz0 < (1.80 if kind == "boat" else 2.0):
+                    raise ValueError(f"timber {kind} {label}: clamped under the storey head it would be only "
+                                     f"{hm - cz0:.2f} m tall; raise the storey or use head_rule='trim'")
+                cz1, head_beam = hm, False                       # the plate is the lintel
+            elif rule == "trim":
+                pt, pw_ = h["plate_top"], h["plate_w"]
+                if pt is None or pw_ is None or float(pt) - cz1 < 0.15:
+                    raise ValueError(f"timber {kind} {label}: head_rule 'trim' needs a head beam >= 0.15 m between "
+                                     f"the clear head {cz1:.2f} and the plate top {pt}")
+                rec["plate_cut"] = (-hw - jw, hw + jw)
+            else:
+                raise ValueError(f"timber {kind} {label}: the opening head {cz1 + hd:.2f} m crosses the storey head "
+                                 f"{hm:.2f} m (head_rule {rule!r}: 'clamp' or 'trim')")
+        jz0 = floor - 0.01
+        jz1 = (cz1 + hd) if head_beam else float(hm) - 0.002
+        if "plate_cut" in rec:
+            jz1 = float(h["plate_top"])
+        for a, b in ((-hw - jw, -hw), (hw, hw + jw)):
+            _box(tim, lm, t, n, a, b, jz0, jz1, -jd, jo, 0.012, "M_timber")
+        if head_beam:
+            if "plate_cut" in rec:                      # flush with the plate it replaces: its depth and top
+                w0, w1 = h["plate_w"]
+                _box(tim, lm, t, n, -hw - jw, hw + jw, cz1, float(h["plate_top"]), w0, w1, 0.014, "M_timber", nx=6)
+            else:
+                hb = sp.get("bearing", 0.04) if kind == "boat" else 0.04
+                _box(tim, lm, t, n, -hw - jw - hb, hw + jw + hb, cz1, cz1 + hd, -jd, jo + 0.012, 0.014, "M_timber",
+                     nx=6)
+        lt = sp.get("leaf_t", 0.045)
+        if kind == "door":
+            lw1 = jo - sp.get("leaf_set", 0.06)
+            _leaf(tim, mapfn, rng, -hw - 0.012, hw + 0.012, cz0 + 0.004, cz1 + 0.010 - (0.02 if not head_beam else 0),
+                  lw1, lt, sp.get("planks", 5))
+            for k, zs in enumerate((cz0 + 0.30, cz1 - 0.32)):
+                _strap(iron, mapfn, n, -hw + 0.01, sp["width"] * 0.72, zs, lw1, 1)
+                _pintle(g, iron, lm(-hw - 0.004, zs + 0.045, lw1 - 0.01), -t, k)
+            _box(iron, lm, t, n, hw - 0.20, hw - 0.04, cz0 + 1.00, cz0 + 1.03, lw1, lw1 + 0.018, 0.004, "M_iron")
+        else:                                          # boat / barn door: ledged and braced leaves, ledges outside
+            nl = int(sp.get("leaves", 2))
+            lw1 = jo - 0.05
+            top = cz1 + 0.015 if head_beam else cz1 - 0.01
+            edges = np.linspace(-hw - 0.015, hw + 0.015, nl + 1)
+            for li in range(nl):
+                a, b = edges[li] + (0.004 if li else 0.0), edges[li + 1] - (0.004 if li < nl - 1 else 0.0)
+                _leaf(tim, mapfn, rng, a, b, cz0 + 0.005, top, lw1, lt, max(3, int(round((b - a) / 0.22))))
+                zl = np.linspace(cz0 + 0.22, top - 0.30, int(sp.get("ledges", 3)))
+                hinge_left = li == 0 if nl > 1 else True
+                for k, zz in enumerate(zl):
+                    _box(tim, lm, t, n, a + 0.03, b - 0.03, zz, zz + 0.18, lw1, lw1 + 0.035, 0.008,
+                         "M_timber_weathered", nx=5)
+                    xh, dr = (a, 1) if hinge_left else (b, -1)
+                    _strap(iron, mapfn, n, xh - dr * 0.01, 0.62 * (b - a), zz + 0.09, lw1 + 0.035, dr)
+                    _pintle(g, iron, lm(xh - dr * 0.03, zz + 0.09 + 0.045, lw1 + 0.02), -dr * t, k + 3 * li)
+                for k in range(len(zl) - 1):              # Z braces rising from the hinge side
+                    za, zb = zl[k] + 0.18, zl[k + 1]
+                    sa, sb = (a + 0.10, b - 0.10) if hinge_left else (b - 0.10, a + 0.10)
+                    p0, p1 = lm(sa, za + 0.02, lw1 + 0.0175), lm(sb, zb - 0.02, lw1 + 0.0175)
+                    d = p1 - p0
+                    L = float(np.linalg.norm(d))
+                    obox(tim, p0[None], d / L, np.cross(n, d / L), n, L, 0.15, 0.035, 0.008, "M_timber_weathered",
+                         nx=5)
+            _box(iron, lm, t, n, -0.03, 0.03, cz0 + 1.05, cz0 + 1.25, lw1 + 0.035, lw1 + 0.05, 0.004, "M_iron")
+        _room(room, lm, -hw - 0.3, hw + 0.3, cz0 - 0.002, cz1 + 0.3, -jd + 0.03, -jd - sp.get("room", 1.4),
+              "M_timber_weathered")
+        rec.update(z0=cz0, z1=cz1, head=(cz1 + hd) if head_beam else cz1, sill=None, threshold=cz0,
+                   lintel_w=sp["width"] + 2 * jw, head_rule=None if head_beam and "plate_cut" not in rec else
+                   ("trim" if "plate_cut" in rec else "clamp"))
+        if cz0 - float(h["ground"]) > 1.2:
+            rec.update(kind="hatch", sill=cz0)
+        if sp.get("steps_to") is not None:                 # built-in dressed-stone steps down to the ground
+            gz = float(sp["steps_to"])
+            nst = int(math.ceil((cz0 - gz - 0.02) / sp.get("rise", 0.17)))
+            if nst > 0:
+                rise = (cz0 - gz) / nst
+                for k in range(nst):
+                    ztop = gz + (k + 1) * rise - (0.01 if k == nst - 1 else 0.0)
+                    depth = (nst - k) * sp.get("tread", 0.32)
+                    _box(accs["dressed"], lm, t, n, -hw - jw - 0.10 + 0.02 * k, hw + jw + 0.10 - 0.02 * k,
+                         ztop - rise - 0.04, ztop, -0.06, depth, 0.02, "M_stone_dressed", nx=6)
+                rec["steps"] = dict(n=nst, rise=rise, tread=sp.get("tread", 0.32))
+        if rec.get("head_rule"):
+            from ..core import log
+            log(f"  timber {kind} {label}: head rule {rec['head_rule']}: effective clear head {cz1:.3f} m "
+                f"(clear height {cz1 - cz0:.3f} m)")
     if not hasattr(g, "OPENINGS"):
         g.OPENINGS = []
     g.OPENINGS.append(rec)

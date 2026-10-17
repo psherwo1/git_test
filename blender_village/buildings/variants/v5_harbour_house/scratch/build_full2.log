@@ -1,0 +1,126 @@
+﻿[    0.2s] -- crib_quay
+[    0.2s]   HARB_quay_posts: 224 verts, 216 faces
+[    0.2s]   HARB_quay_sheathing: 784 verts, 490 faces
+[    0.2s]   HARB_quay_cap: 464 verts, 456 faces
+[    0.2s]   HARB_quay_fill: 32 verts, 40 faces
+[    0.2s]   HARB_quay_blocker: 32 verts, 24 faces
+[    0.2s]   HARB_quay: crib quay 7.00 x 11.15 m, bed -2.50
+[    0.2s] -- masonry_wall
+[    0.5s]   plinth visible mortar 26.7% -> 1.6% after 193 pinning stones
+[    0.5s]   HARB_plinth: stones 231 (hero 38, pins 32)
+[    0.9s]   HARB_plinth_stones: 22528 verts, 20746 faces
+[    0.9s]   HARB_plinth_quoins: 410 verts, 400 faces
+[    0.9s]   HARB_plinth_mortar: 388 verts, 288 faces
+[    0.9s]   HARB_plinth: mortar cells 288
+[    0.9s] -- timber_storeys
+[    1.0s]   HARB_storey0_frame: 3216 verts, 3114 faces
+[    1.1s]   HARB_storey0_boards: 9152 verts, 7920 faces
+[    1.1s]   HARB_storey0_blocker: 224 verts, 232 faces
+[    1.2s]   HARB_storey0_openings: 7020 verts, 6918 faces
+[    1.2s]   HARB_storey0_ironwork: 2112 verts, 2040 faces
+[    1.2s]   HARB_storey0_blockers: 64 verts, 40 faces
+[    1.2s]   HARB_storey0_steps: 240 verts, 234 faces
+[    1.2s]   HARB_storey0: timber wall (post_plank), 4 runs, 8 openings
+[    1.2s]   HARB_storey0_jetty_joists: 616 verts, 594 faces
+[    1.2s]   HARB_storey0_jetty_rims: 312 verts, 306 faces
+[    1.2s]   HARB_storey0_jetty_soffit: 1212 verts, 1170 faces
+[    1.2s]   HARB_storey0_jetty: floor band at z 3.05-3.25, jetty {'S': 0.5}
+[    1.5s]   HARB_storey1_frame: 2152 verts, 2082 faces
+[    1.7s]   HARB_storey1_boards: 15140 verts, 13860 faces
+[    1.7s]   HARB_storey1_blocker: 686 verts, 706 faces
+[    1.7s]   HARB_storey1_openings: 5928 verts, 5856 faces
+[    1.8s]   HARB_storey1_ironwork: 1672 verts, 1614 faces
+[    1.8s]   HARB_storey1_blockers: 56 verts, 35 faces
+[    1.8s]   HARB_storey1: timber wall (board_batten), 4 runs, 7 openings
+[    1.8s] -- linear_roof
+[    1.8s]   HARB_roof_deck: 315 verts, 292 faces
+[    1.8s]   HARB_roof_rafters: 1904 verts, 1836 faces
+[    3.0s]   HARB_roof_covering: 98980 verts, 85289 faces
+[    3.0s]   HARB_roof: 730 shingle pieces
+[    3.1s]   HARB_roof_comb: 7300 verts, 7008 faces
+[    3.1s] -- verge_boards
+[    3.1s]   HARB_roof_verge_boards: 728 verts, 726 faces
+[    3.1s]   HARB_roof_verge_boards: 8 verge boards / horns on 2 verges
+[    3.1s] -- pile_deck
+[    3.2s]   HARB_deck_piles: 680 verts, 552 faces
+[    3.2s]   HARB_deck_structure: 2116 verts, 2052 faces
+[    3.2s]   HARB_deck_planks: 2392 verts, 2334 faces
+[    3.2s]   HARB_deck_fascia: 420 verts, 430 faces
+[    3.2s]   HARB_deck_ironwork: 896 verts, 864 faces
+[    3.2s]   HARB_deck: deck 5.60 x 7.07 m, 16 piles, 29 planks
+[    3.2s] -- ladder
+[    3.2s]   HARB_ladder: 304 verts, 246 faces
+[    3.2s] -- timber_hidden_cull
+[    3.5s]   visibility: 348768 tris, 281 viewpoints
+[   45.5s]   visibility cull HARB_plinth_stones: -7012 of 20746 polygons
+[   56.2s]   visibility cull HARB_storey0_frame: -1642 of 3114 polygons
+[   94.9s]   visibility cull HARB_storey0_boards: -6492 of 7920 polygons
+[  109.0s]   visibility cull HARB_storey0_openings: -1965 of 6918 polygons
+[  111.1s]   visibility cull HARB_storey0_jetty_joists: -281 of 594 polygons
+[  115.7s]   visibility cull HARB_storey0_jetty_soffit: -675 of 1170 polygons
+[  124.2s]   visibility cull HARB_storey1_frame: -1025 of 2082 polygons
+[  176.0s]   visibility cull HARB_storey1_boards: -5941 of 13860 polygons
+[  188.7s]   visibility cull HARB_storey1_openings: -1462 of 5856 polygons
+[  340.5s]   visibility cull HARB_roof_covering: -17130 of 85289 polygons
+[  374.0s]   visibility cull HARB_roof_comb: -3467 of 7008 polygons
+[  374.3s]   visibility cull HARB_roof_verge_boards: -17 of 726 polygons
+[  374.4s] hidden-geometry cull: -47109 polygons on 12 objects
+[  374.4s] -- recenter
+[  374.4s] recentred by (-0.000, -2.730); plan bbox 7.20 x 18.06 m, height 9.91 m
+[  374.4s] -- guards
+[  374.5s]   clearance gate HARB storey0_1: door head 2.60 m, eave lip over it 3.048 m at (0.0, -7.38) on HARB_storey0_jetty_joists (rule >= 2.60 m, 25 stations): PASS
+[  374.5s]   clearance gate HARB storey0_5: door head 3.00 m, eave lip over it 7.576 m at (-1.3, 2.07) on HARB_roof_rafters (rule >= 3.00 m, 25 stations): PASS
+[  374.7s] composite decals: 19 anchors before the gate
+[  375.0s] timber decals: 112 timber / waterfront anchors (total 131 before the gate)
+[  375.2s] decal anchor check (applied): checked 131, snapped 26, max_move 0.054, renormal 0, shrunk 8, no_surface 12, wrong_surface 4, excluded 0, occluded 0, footprint 7, duplicate 5, kept 103
+[  375.2s]     DA_lichen_001: footprint off the surface (n.n0 1.00) ['HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint']
+[  375.2s]     DA_lichen_002: footprint off the surface (n.n0 1.00) ['HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint', 'HARB_plint']
+[  375.2s]     DA_damp_rise_003: footprint off the surface (n.n0 1.00) ['HARB_store', 'HARB_store', 'HARB_store', 'HARB_store', 'HARB_store', 'HARB_store', '-', '-', '-']
+[  375.2s]     DA_rust_stain_005: no surface within 6 cm
+[  375.2s]     DA_rust_stain_006: no surface within 6 cm
+[  375.2s]     DA_soot_002: footprint off the surface (n.n0 1.00) ['HARB_store', 'HARB_store', 'HARB_store', 'HARB_store', 'HARB_store', 'HARB_store', 'HARB_store', 'HARB_store', 'HARB_store']
+[  375.2s]     DA_rust_stain_007: within 0.30 m of another rust_stain
+[  375.2s]     DA_rust_stain_009: within 0.30 m of another rust_stain
+[  375.2s]     DA_rust_stain_010: no surface within 6 cm
+[  375.2s]     DA_rust_stain_011: no surface within 6 cm
+[  375.2s]     DA_rust_stain_012: no surface within 6 cm
+[  375.2s]     DA_rust_stain_013: no surface within 6 cm
+[  375.2s]     DA_rust_stain_014: no surface within 6 cm
+[  375.2s]     DA_rust_stain_015: no surface within 6 cm
+[  375.2s]     DA_rust_stain_018: within 0.30 m of another rust_stain
+[  375.2s]     DA_rust_stain_019: no surface within 6 cm
+[  375.2s]     DA_rust_stain_020: no surface within 6 cm
+[  375.2s]     DA_rust_stain_021: no surface within 6 cm
+[  375.2s]     DA_rust_stain_022: no surface within 6 cm
+[  375.2s]     DA_soot_010: hit M_roof_shingle (HARB_roof_covering), declared M_timber_weathered
+[  375.2s]     DA_soot_011: hit M_roof_shingle (HARB_roof_covering), declared M_timber_weathered
+[  375.2s]     DA_rust_stain_032: within 0.30 m of another rust_stain
+[  375.2s]     DA_rust_stain_033: within 0.30 m of another rust_stain
+[  375.2s]     DA_soot_013: hit M_roof_shingle (HARB_roof_covering), declared M_timber_weathered
+[  375.2s]     DA_soot_014: hit M_roof_shingle (HARB_roof_covering), declared M_timber_weathered
+[  375.2s]     DA_moss_014: footprint off the surface (n.n0 1.00) ['HARB_deck_', 'HARB_deck_', 'HARB_deck_', 'HARB_deck_', 'HARB_deck_', 'HARB_deck_', '-', '-', '-']
+[  375.2s]     DA_damp_rise_019: footprint off the surface (n.n0 1.00) ['HARB_deck_', 'HARB_deck_', 'HARB_deck_', 'HARB_deck_', 'HARB_deck_', 'HARB_deck_', '-', '-', '-']
+[  375.2s]     DA_moss_016: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'HARB_deck_', 'HARB_deck_', 'HARB_deck_', '-', '-', '-']
+[  375.2s] decal anchors: 103
+[  375.6s] uv grain (kit 1.10.0): 35 meshes, 1990 timber / shingle pieces (116 round, 563 sloped sheets), 104663 grain faces re-projected, 680 collapsed faces repaired
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_deck_ironwork: 18 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_deck_piles: 2 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_deck_planks: 51 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_deck_structure: 36 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_plinth_stones: 13 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_quay_blocker: 1 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_quay_cap: 6 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_1 -> HARB_quay_fill: 1 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_quay_fill: 1 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_1 -> HARB_storey0_blocker: 1 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_storey0_blocker: 1 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_1 -> HARB_storey0_blockers: 1 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_1 -> HARB_storey0_frame: 3 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_storey0_frame: 2 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_1 -> HARB_storey0_ironwork: 21 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_storey0_ironwork: 24 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_5 -> HARB_storey0_openings: 24 faces
+[  375.7s]   walked tops (Mask B <= 0.04): storey0_1 -> HARB_storey0_steps: 27 faces
+[  375.7s] objects 35 (instances 0, pooled meshes 0) triangles 254626
+Info: Saved as "v5_harbour_house.blend"
+[  375.8s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend 6.5 MB

@@ -37,8 +37,25 @@ class GableRoof:
 
     def __init__(self, x0, x1, half, wall_z, pitch_deg=40.0, overhang=0.45, verge=(0.40, 0.40), origin=(0.0, 0.0),
                  yaw_deg=0.0, deck_t=0.035, thick=0.30, step=0.10, exposure=0.30, ridge_roll=(0.36, 0.20),
-                 name="roof"):
+                 name="roof", ridge_sag=0.0, eave_sag=0.0, eave_sweep=0.0, sweep_len=1.0, verge_flare=0.0,
+                 flare_len=1.6, wave=0.0, wave_seed=33):
+        """kit 1.12 (v5 round 2, note 17 "soft, organic lines"; all 0 = the straight roof, bit-identical):
+        ridge_sag      m the ridge drops at mid-length (parabolic, 0 at the covering's ends), fading to eave_sag at the lip
+        eave_sag       m the eave lines drop at mid-length
+        eave_sweep     m the eave lip is lifted (bell-cast / swept eave), fading quadratically over sweep_len m (plan)
+                       in from the lip -- the slope flattens toward the eave
+        verge_flare    m a FREE verge (overhang > 0) is lifted at the apex, fading over flare_len m along the ridge and
+                       toward the eave: the verge / bargeboard line curves up to the apex (ref4)
+        wave           m low-frequency +-wave out-of-true over the whole roof (art bible 6: ridges / eaves +-2-5 cm)
+        The softness is ONE vertical warp field dz(x, y) applied by to_world (and removed by to_local), so every part
+        linear_roof builds and every query (keep_out, top_depth, under_soffit, under_z_world) follows it."""
         self.name = name
+        self.ridge_sag, self.eave_sag = float(ridge_sag), float(eave_sag)
+        self.eave_sweep, self.sweep_len = float(eave_sweep), float(sweep_len)
+        self.verge_flare, self.flare_len = float(verge_flare), float(flare_len)
+        self.wave, self.wave_seed = float(wave), int(wave_seed)
+        self.warped = any(abs(v) > 0 for v in (self.ridge_sag, self.eave_sag, self.eave_sweep, self.verge_flare,
+                                                self.wave))
         self.x0, self.x1 = float(x0), float(x1)
         self.half = float(half)
         self.wall_z = float(wall_z)
@@ -66,6 +83,8 @@ class GableRoof:
         out = P.copy()
         out[..., 0] = self.origin[0] + c * P[..., 0] - s * P[..., 1]
         out[..., 1] = self.origin[1] + s * P[..., 0] + c * P[..., 1]
+        if getattr(self, "warped", False) and P.shape[-1] >= 3:
+            out[..., 2] = P[..., 2] + self.warp_z(P[..., 0], P[..., 1])
         return out
 
     def to_local(self, P):
@@ -75,7 +94,45 @@ class GableRoof:
         out = P.copy()
         out[..., 0] = c * dx + s * dy
         out[..., 1] = -s * dx + c * dy
+        if getattr(self, "warped", False) and P.shape[-1] >= 3:
+            out[..., 2] = P[..., 2] - self.warp_z(out[..., 0], out[..., 1])
         return out
+
+    # ---- kit 1.12 (v5 round 2): the soft-line warp field ----------------------------------------------------------
+    def warp_z(self, x, y):
+        """vertical offset (m) of the warped roof at local (x, y); 0 for a straight roof (see __init__)."""
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        dz = np.zeros(x.shape)
+        if not getattr(self, "warped", False):
+            return dz
+        ay = np.abs(y)
+        f_y = np.clip(1.0 - ay / self.Y, 0.0, 1.0)                    # 1 at the ridge, 0 at the lip
+        if self.ridge_sag or self.eave_sag:
+            hl = max(0.5 * (self.xb - self.xa), 1e-6)
+            t = np.clip((x - 0.5 * (self.xa + self.xb)) / hl, -1.0, 1.0)
+            dz -= (1.0 - t * t) * (self.ridge_sag * f_y + self.eave_sag * (1.0 - f_y))
+        if self.eave_sweep:
+            k = np.clip(1.0 - np.clip(self.Y - ay, 0.0, None) / max(self.sweep_len, 1e-6), 0.0, 1.0)
+            dz += self.eave_sweep * k * k
+        if self.verge_flare:
+            for xe, free in ((self.xa, self.v0 > 0), (self.xb, self.v1 > 0)):
+                if free:
+                    k = np.clip(1.0 - np.abs(x - xe) / max(self.flare_len, 1e-6), 0.0, 1.0)
+                    dz += self.verge_flare * k * k * f_y ** 1.5
+        if self.wave:
+            dz += self.wave * n2(x * 0.35, y * 0.30, self.wave_seed)
+        return dz
+
+    def under_z_world(self, P):
+        """kit 1.12: deck underside height (WORLD z, warp included) over world plan points P (n, 2|3) -- what a wall
+        under this roof stops at (the warped version of under_z(to_local(P)[:, 1]))."""
+        P = np.atleast_2d(np.asarray(P, float))
+        Q = np.zeros((len(P), 3))
+        Q[:, :2] = P[:, :2]
+        c, s = math.cos(self.yaw), math.sin(self.yaw)
+        dx, dy = Q[:, 0] - self.origin[0], Q[:, 1] - self.origin[1]
+        xl, yl = c * dx + s * dy, -s * dx + c * dy
+        return self.under_z(yl) + self.warp_z(xl, yl)
 
     def dir_world(self, d):
         c, s = math.cos(self.yaw), math.sin(self.yaw)
@@ -734,6 +791,9 @@ def _deck(roof, acc, clip_local=None):
     t = roof.deck_t
     xs = np.linspace(roof.xa, roof.xb, max(2, int((roof.xb - roof.xa) / 0.5) + 1))
     us = np.array([0.0, roof.ovh / math.cos(roof.p), roof.U * 0.5, roof.U])
+    if getattr(roof, "warped", False):              # kit 1.12: the warp is curved across the slope; follow it
+        us = np.unique(np.concatenate([us, np.linspace(0.0, roof.U, 13)]))
+        xs = np.unique(np.concatenate([xs, np.linspace(roof.xa, roof.xb, max(2, int((roof.xb - roof.xa) / 0.25) + 1))]))
     for sg in (-1, 1):
         X, Uu = np.meshgrid(xs, us, indexing="ij")
         top = roof.surf(X, Uu, sg, 0.0)
@@ -795,8 +855,108 @@ def _rafters(roof, acc, rng, spacing=0.62, skip=None, verge_apex=False):
         log(f"  {roof.name} rafters: {n_skip} tails skipped (they would run into another body)")
 
 
+VERGE_BOARD = dict(t=0.045, below=0.07, above=0.05, gap=0.005, foot_curl=0.05, n_u=None)
+"""kit 1.12 (v5 round 2; folded from the retired timber_roof.verge_boards, WITHOUT its crossed horns): the bargeboard
+of a free verge -- thickness t, from `below` m under the deck to `above` m over the covering top, `gap` off the
+covering's end, mitred on the ridge plane; foot_curl: its eave foot turns up this much over the last 0.4 m (a soft,
+rolled foot, note 17).  It is laid in the roof's local frame, so it follows the roof's warp (sag / sweep / flare)."""
+
+
+def _verge_boards(roof, acc, rng, ends=None, t=0.045, below=0.07, above=0.05, gap=0.005, foot_curl=0.05, n_u=None):
+    """bargeboards on the free verges (see VERGE_BOARD); returns the number of boards."""
+    o_bot = -roof.deck_t - below
+    o_top = float(getattr(roof, "T0", 0.06)) + above
+    cp, sp_ = math.cos(roof.p), math.sin(roof.p)
+    ends = ends or tuple(e for e, v in (("lo", roof.v0), ("hi", roof.v1)) if v > 0)
+    n = 0
+    for end in ends:
+        xe = roof.xa if end == "lo" else roof.xb
+        sx = -1.0 if end == "lo" else 1.0
+        for sg in (-1, 1):
+            u_end = lambda o: (roof.Y + o * sp_) / cp  # noqa: E731  the ridge plane (mitre) at offset o
+            nu = n_u or max(8, int(roof.U / 0.20) + 2)
+            us = np.linspace(-0.03, u_end(o_top) + 0.01, nu)
+            ring = []
+            for (dx, o) in ((0.0, o_bot), (0.0, o_top), (t, o_top), (t, o_bot)):
+                x = xe + sx * (gap + dx)
+                uu = np.minimum(us, u_end(o))
+                curl = foot_curl * np.clip(1.0 - (uu + 0.03) / 0.40, 0.0, 1.0) ** 2
+                ring.append(roof.surf(np.full(nu, x), uu, sg, np.full(nu, o) + curl))
+            V = np.stack(ring, 1).reshape(-1, 3)                       # (nu * 4)
+            F = []
+            for i in range(nu - 1):
+                for j in range(4):
+                    a, b = i * 4 + j, i * 4 + (j + 1) % 4
+                    F.append((a, b, b + 4, a + 4))
+            F = [np.array(F), np.array([[3, 2, 1, 0]]), np.array([[(nu - 1) * 4 + j for j in range(4)]])]
+            q = V[np.array(F[0][0])]
+            ctr = V[:8].mean(0)                                         # the board's centre at its first station
+            if float(np.cross(q[1] - q[0], q[3] - q[0]) @ (q.mean(0) - ctr)) < 0:
+                F = [f[:, ::-1] for f in F]
+            acc.add(roof.to_world(V), F, "M_timber", wear=float(rng.uniform(0.3, 0.6)))
+            n += 1
+    return n
+
+
+def _apex_finials(g, roof, pre, ends=None, hat_r=0.24, hat_pitch_deg=44.0, scale=0.55, lean_deg=1.0, seed=7):
+    """kit 1.12 (v5 round 2, note 16): the village finial on a gable apex -- the keep's turned / spike finial
+    (finial.turned_finial) over a fitted lead hat (finial.lead_hat, its drip fitted over the comb / covering / verge
+    board vertices under it), at every free verge apex.  -> <P>_<roof>_apex_cap_collar (M_lead), _apex_finial."""
+    import bpy
+    from .finial import lead_hat, turned_finial
+    ends = ends or tuple(e for e, v in (("lo", roof.v0), ("hi", roof.v1)) if v > 0)
+    cover = []
+    for part in ("covering", "comb", "verge"):
+        ob = bpy.data.objects.get(f"{pre}_{part}")
+        if ob is not None and ob.type == "MESH" and len(ob.data.vertices):
+            co = np.zeros(len(ob.data.vertices) * 3)
+            ob.data.vertices.foreach_get("co", co)
+            cover.append(co.reshape(-1, 3))
+    cover = np.concatenate(cover) if cover else np.zeros((0, 3))
+    hat, fin = Acc(pre + "_apex_cap_collar", 50.0), Acc(pre + "_apex_finial", 45.0)
+    rng = np.random.default_rng(seed)
+    tips = []
+    for end in ends:
+        xe = roof.xa if end == "lo" else roof.xb
+        sx = -1.0 if end == "lo" else 1.0
+        x_c = xe + sx * 0.02
+        c = roof.to_world(np.array([[x_c, 0.0, roof.ref_z(0.0)]]))[0]
+        near = cover[np.hypot(cover[:, 0] - c[0], cover[:, 1] - c[1]) < hat_r + 0.05] if len(cover) else cover
+        z_apex = (float(near[:, 2].max()) if len(near) else c[2] + 0.2) + 0.01
+        h0 = hat_r * math.tan(math.radians(hat_pitch_deg))
+        z_top = lead_hat(hat, c[0], c[1], z_apex, hat_r, h0, seg=28, cover=near if len(near) else None, clear=0.015)
+        ld = rng.uniform(0, 2 * math.pi)
+        turned_finial(fin, (c[0], c[1], z_top - 0.01), scale=scale, lean_deg=lean_deg,
+                      lean_dir=(math.cos(ld), math.sin(ld)), seg=24)
+        tips.append(z_top - 0.01 + 1.45 * scale)
+    finalize(hat, g.coll, smooth_deg=50.0)
+    finalize(fin, g.coll, smooth_deg=45.0)
+    log(f"  {pre}: apex finials on {len(ends)} gable(s), tips {', '.join(f'{z:.2f}' for z in tips)}")
+    return tips
+
+
+def _roof_edges(g, roof, pre, rng, clip, verge, apex_finial):
+    """kit 1.12: the optional verge board and apex finials of a linear roof (see linear_roof)."""
+    if verge == "board":
+        acc = Acc(pre + "_verge", 30)
+        kw = dict(VERGE_BOARD)
+        kw.update(getattr(roof, "verge_kw", None) or {})
+        n = _verge_boards(roof, acc, rng, **kw)
+        if clip is not None:
+            acc.cull = clip
+        finalize(acc, g.coll, smooth_deg=30.0)
+        log(f"  {pre}: {n} verge boards")
+    elif verge is not None:
+        raise ValueError(f"linear_roof: verge {verge!r}; None or 'board'")
+    if apex_finial == "turned":
+        _apex_finials(g, roof, pre)
+    elif apex_finial is not None:
+        raise ValueError(f"linear_roof: apex_finial {apex_finial!r}; None or 'turned'")
+
+
 def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_cone=None, thatch_style="courses",
-                abut_wall_in=0.10, rafter_skip=None, ridge_caps=False, verge_apex=False):
+                abut_wall_in=0.10, rafter_skip=None, ridge_caps=False, verge_apex=False, verge=None,
+                apex_finial=None):
     """KIT COMPONENT: a straight gable roof from its GableRoof spec (see module doc).  clip(P_world, margin=0) -> bool
     marks vertices inside another body; faces wholly inside are dropped from the covering, ridge, comb and rafters,
     and deck faces more than 10 cm inside it.  abut_cone=(cx, cy): the roof runs into the cone of the round frame g
@@ -809,7 +969,12 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
     round wall a roof runs into: composite.inside_round(..., depth=-0.04)) are not built (_rafters(skip=...));
     ridge_caps=True ("courses" thatch) -- the ridge roll gets a rounded end <= 5 cm past each free verge face and the
     verge face covers the roll's section there (_ridge_roll(end_caps=...), _verge_faces(ridge_cover=True));
-    verge_apex=True -- the verge rafters meet in a crossed apex (no pocket under the deck at the gable apex)."""
+    verge_apex=True -- the verge rafters meet in a crossed apex (no pocket under the deck at the gable apex).
+    kit 1.12 (v5 round 2; defaults = old): verge="board" -- a bargeboard on every free verge (VERGE_BOARD, folded
+    from the retired timber_roof.verge_boards; it follows the roof's warp, so a GableRoof(verge_flare=...) gives the
+    curved, apex-flared bargeboard), -> <P>_<roof>_verge; apex_finial="turned" -- the village's turned / spike
+    finial over a fitted lead hat on every free gable apex (_apex_finials).  The soft-line options themselves (ridge
+    sag, eave sweep / bell-cast, verge flare, out-of-true wave) are GableRoof parameters."""
     if abut_cone is not None and clip is None:
         from .roof_junction import inside_cone
         cc = inside_cone(g, center=abut_cone)
@@ -824,8 +989,11 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
                 return cc(V, margin) & (np.hypot(V[:, 0] - c0[0], V[:, 1] - c0[1]) < r_in - margin)
     rng = np.random.default_rng(seed)
     if covering == "thatch" and thatch_style == "courses":
-        return _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=rafter_skip, ridge_caps=ridge_caps,
-                                    verge_apex=verge_apex)
+        out = _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=rafter_skip, ridge_caps=ridge_caps,
+                                   verge_apex=verge_apex)
+        if verge is not None or apex_finial is not None:
+            _roof_edges(g, roof, f"{g.prefix}_{roof.name}", rng, clip, verge, apex_finial)
+        return out
     pre = f"{g.prefix}_{roof.name}"
     if not hasattr(g, "LINEAR_ROOFS"):
         g.LINEAR_ROOFS = {}
@@ -837,7 +1005,10 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
         deck.cull = lambda V: clip(V, margin=0.10)
     finalize(deck, g.coll, smooth_deg=30.0)
     raf = Acc(pre + "_rafters")
-    _rafters(roof, raf, rng)
+    if rafter_skip is not None or verge_apex:          # kit 1.12: the round-5 options on the plain path too
+        _rafters(roof, raf, rng, skip=rafter_skip, verge_apex=verge_apex)
+    else:
+        _rafters(roof, raf, rng)
     if clip is not None:
         raf.cull = clip
     finalize(raf, g.coll, smooth_deg=30.0)
@@ -865,6 +1036,8 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
         if clip is not None:
             cb.cull = clip
         finalize(cb, g.coll, smooth_deg=40.0)
+    if verge is not None or apex_finial is not None:
+        _roof_edges(g, roof, pre, rng, clip, verge, apex_finial)
     return roof
 
 

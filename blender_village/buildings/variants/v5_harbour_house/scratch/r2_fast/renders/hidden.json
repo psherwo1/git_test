@@ -1,0 +1,376 @@
+{
+  "triangles": 997934,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 34.7,
+  "est_hidden_triangles": 346407,
+  "est_below_ground_pct": 7.6,
+  "objects": [
+    {
+      "object": "HARB_quay_0_stones",
+      "est_triangles": 67859,
+      "est_hidden_triangles": 67610,
+      "hidden_pct_of_object": 99.6
+    },
+    {
+      "object": "HARB_hall_stones",
+      "est_triangles": 259213,
+      "est_hidden_triangles": 65738,
+      "hidden_pct_of_object": 25.4
+    },
+    {
+      "object": "HARB_roof_covering",
+      "est_triangles": 196592,
+      "est_hidden_triangles": 62745,
+      "hidden_pct_of_object": 31.9
+    },
+    {
+      "object": "HARB_wing_roof_covering",
+      "est_triangles": 59002,
+      "est_hidden_triangles": 20956,
+      "hidden_pct_of_object": 35.5
+    },
+    {
+      "object": "HARB_tower_stones",
+      "est_triangles": 116134,
+      "est_hidden_triangles": 19210,
+      "hidden_pct_of_object": 16.5
+    },
+    {
+      "object": "HARB_wing_stones",
+      "est_triangles": 80458,
+      "est_hidden_triangles": 18337,
+      "hidden_pct_of_object": 22.8
+    },
+    {
+      "object": "HARB_roof_comb",
+      "est_triangles": 13596,
+      "est_hidden_triangles": 7235,
+      "hidden_pct_of_object": 53.2
+    },
+    {
+      "object": "HARB_roof_shingles",
+      "est_triangles": 48524,
+      "est_hidden_triangles": 6985,
+      "hidden_pct_of_object": 14.4
+    },
+    {
+      "object": "HARB_partition_boards",
+      "est_triangles": 8482,
+      "est_hidden_triangles": 6860,
+      "hidden_pct_of_object": 80.9
+    },
+    {
+      "object": "HARB_hall_quoins",
+      "est_triangles": 12848,
+      "est_hidden_triangles": 6736,
+      "hidden_pct_of_object": 52.4
+    },
+    {
+      "object": "HARB_water_gable_blocker",
+      "est_triangles": 3991,
+      "est_hidden_triangles": 3866,
+      "hidden_pct_of_object": 96.9
+    },
+    {
+      "object": "HARB_hall_mortar",
+      "est_triangles": 7983,
+      "est_hidden_triangles": 3742,
+      "hidden_pct_of_object": 46.9
+    },
+    {
+      "object": "HARB_tower_top_boards",
+      "est_triangles": 6736,
+      "est_hidden_triangles": 3492,
+      "hidden_pct_of_object": 51.9
+    },
+    {
+      "object": "HARB_roof_deck",
+      "est_triangles": 3617,
+      "est_hidden_triangles": 3368,
+      "hidden_pct_of_object": 93.1
+    },
+    {
+      "object": "HARB_wing_roof_comb",
+      "est_triangles": 5114,
+      "est_hidden_triangles": 3368,
+      "hidden_pct_of_object": 65.9
+    },
+    {
+      "object": "HARB_hall_frames",
+      "est_triangles": 7609,
+      "est_hidden_triangles": 3243,
+      "hidden_pct_of_object": 42.6
+    },
+    {
+      "object": "HARB_wing_roof_wing_abutment",
+      "est_triangles": 4365,
+      "est_hidden_triangles": 2494,
+      "hidden_pct_of_object": 57.1
+    },
+    {
+      "object": "HARB_jetty_structure",
+      "est_triangles": 2370,
+      "est_hidden_triangles": 2370,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_wing_quoins",
+      "est_triangles": 4615,
+      "est_hidden_triangles": 2370,
+      "hidden_pct_of_object": 51.4
+    },
+    {
+      "object": "HARB_roof_soffit_deck",
+      "est_triangles": 2993,
+      "est_hidden_triangles": 2370,
+      "hidden_pct_of_object": 79.2
+    },
+    {
+      "object": "HARB_water_gable_boards",
+      "est_triangles": 3368,
+      "est_hidden_triangles": 2245,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "HARB_wing_mortar",
+      "est_triangles": 4116,
+      "est_hidden_triangles": 2120,
+      "hidden_pct_of_object": 51.5
+    },
+    {
+      "object": "HARB_quay_0_quoins",
+      "est_triangles": 2120,
+      "est_hidden_triangles": 2120,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_tower_top_frames",
+      "est_triangles": 2494,
+      "est_hidden_triangles": 1995,
+      "hidden_pct_of_object": 80.0
+    },
+    {
+      "object": "HARB_roof_rafters",
+      "est_triangles": 3243,
+      "est_hidden_triangles": 1871,
+      "hidden_pct_of_object": 57.7
+    },
+    {
+      "object": "HARB_roof_underlap",
+      "est_triangles": 3617,
+      "est_hidden_triangles": 1746,
+      "hidden_pct_of_object": 48.3
+    },
+    {
+      "object": "HARB_wing_roof_deck",
+      "est_triangles": 1621,
+      "est_hidden_triangles": 1621,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_wing_frames",
+      "est_triangles": 5862,
+      "est_hidden_triangles": 1621,
+      "hidden_pct_of_object": 27.7
+    },
+    {
+      "object": "HARB_roof_wall_abutment",
+      "est_triangles": 3243,
+      "est_hidden_triangles": 1496,
+      "hidden_pct_of_object": 46.2
+    },
+    {
+      "object": "HARB_tower_mortar",
+      "est_triangles": 3368,
+      "est_hidden_triangles": 1496,
+      "hidden_pct_of_object": 44.4
+    },
+    {
+      "object": "HARB_quay_0_mortar",
+      "est_triangles": 1496,
+      "est_hidden_triangles": 1496,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_tower_frames",
+      "est_triangles": 1871,
+      "est_hidden_triangles": 1372,
+      "hidden_pct_of_object": 73.3
+    },
+    {
+      "object": "HARB_roof_blocker",
+      "est_triangles": 2245,
+      "est_hidden_triangles": 1247,
+      "hidden_pct_of_object": 55.6
+    },
+    {
+      "object": "HARB_jetty_planks",
+      "est_triangles": 1247,
+      "est_hidden_triangles": 997,
+      "hidden_pct_of_object": 80.0
+    },
+    {
+      "object": "HARB_rafters",
+      "est_triangles": 3617,
+      "est_hidden_triangles": 997,
+      "hidden_pct_of_object": 27.6
+    },
+    {
+      "object": "HARB_water_gable_frame",
+      "est_triangles": 2993,
+      "est_hidden_triangles": 997,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "HARB_tower_top_ring",
+      "est_triangles": 2370,
+      "est_hidden_triangles": 997,
+      "hidden_pct_of_object": 42.1
+    },
+    {
+      "object": "HARB_cap_collar",
+      "est_triangles": 11102,
+      "est_hidden_triangles": 748,
+      "hidden_pct_of_object": 6.7
+    },
+    {
+      "object": "HARB_wing_dressed",
+      "est_triangles": 997,
+      "est_hidden_triangles": 623,
+      "hidden_pct_of_object": 62.5
+    },
+    {
+      "object": "HARB_eave_fill",
+      "est_triangles": 1122,
+      "est_hidden_triangles": 623,
+      "hidden_pct_of_object": 55.6
+    },
+    {
+      "object": "HARB_hall_dressed",
+      "est_triangles": 1372,
+      "est_hidden_triangles": 623,
+      "hidden_pct_of_object": 45.5
+    },
+    {
+      "object": "HARB_wing_roof_rafters",
+      "est_triangles": 1122,
+      "est_hidden_triangles": 623,
+      "hidden_pct_of_object": 55.6
+    },
+    {
+      "object": "HARB_jetty_ironwork",
+      "est_triangles": 623,
+      "est_hidden_triangles": 623,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_partition_frame",
+      "est_triangles": 498,
+      "est_hidden_triangles": 498,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_jetty_piles",
+      "est_triangles": 623,
+      "est_hidden_triangles": 498,
+      "hidden_pct_of_object": 80.0
+    },
+    {
+      "object": "HARB_roof_starter",
+      "est_triangles": 3243,
+      "est_hidden_triangles": 374,
+      "hidden_pct_of_object": 11.5
+    },
+    {
+      "object": "HARB_ladder",
+      "est_triangles": 498,
+      "est_hidden_triangles": 374,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "HARB_finial",
+      "est_triangles": 5114,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 2.4
+    },
+    {
+      "object": "HARB_tower_dressed",
+      "est_triangles": 124,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_wing_ironwork",
+      "est_triangles": 748,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "HARB_roof_apex_finial",
+      "est_triangles": 4116,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 3.0
+    },
+    {
+      "object": "HARB_wing_roof_apex_finial",
+      "est_triangles": 1871,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 6.7
+    },
+    {
+      "object": "HARB_battens",
+      "est_triangles": 374,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "HARB_tower_top_backing",
+      "est_triangles": 124,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_water_gable_pads",
+      "est_triangles": 498,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "HARB_purlin_rings",
+      "est_triangles": 124,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_hall_blockers",
+      "est_triangles": 124,
+      "est_hidden_triangles": 124,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HARB_wing_roof_apex_cap_collar",
+      "est_triangles": 498,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HARB_roof_verge",
+      "est_triangles": 1122,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HARB_roof_apex_cap_collar",
+      "est_triangles": 748,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HARB_hall_ironwork",
+      "est_triangles": 124,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}
