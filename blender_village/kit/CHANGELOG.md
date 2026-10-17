@@ -17,6 +17,8 @@
   `mask.clear_walked_tops` (README section 3a).  A UV change must keep the geometry hash; measure it with
   `tools/uv_audit.py` (grain, collapsed UVs, walked tops).
 
+Kit 1.11.0 merges the variant builders' modules (below); its reference table is in the 1.11.0 Verification section.
+
 **Reference builds at kit 1.10.1** (fingerprints in `kit/baseline/5_determinism/`; the keep and v3 were rebuilt 3x
 with identical hashes):
 
@@ -29,6 +31,213 @@ with identical hashes):
 | v2_tiered_hall | variant | 954,925 | 87ba64b7f9d4a746 |
 | v3_longhouse_roundend | variant | 483,508 (1.9.0 clearance fix) | 8a4e59687b3c7c4d (canonical c827824da304778d) |
 | v4_mixed | variant, accepted | 938,453 | 2e87caad61b68d34 |
+
+---
+
+## 1.11.0 (2026-10-17): variant-builder modules merged (producer)
+
+Phase-2 kit decision, client "Yes proceed", step 3.  The four variant builders -- v1 stone watchtower, v2 tiered
+hall, v3 longhouse with round end, v4 mill-house (`v4_mixed`) -- added modules and options under the kit edit rules
+during their rounds (kit 1.6.1 to 1.10.1).  This release merges them into one record; the full per-round records
+(signatures, proofs, hero and hash re-runs) stay in `kit/changes/<variant>.md`.  Names are the current ones (the
+1.8.0 renames in brackets).  The version numbers the notes proposed (1.7.0 for both v2 and v4, 1.7.1-1.7.3 and
+1.10.2 / 1.10.3 for v2) are superseded by this release.
+
+### New modules
+
+- **`components/tower_roof.py`** (v1 r1-r3): the head of a round stone tower -- `corbelled_parapet`,
+  `round_tower_roof` (bell-cast conical shingle roof on the hut's roof modules, via the `roof_frame` RoundFrame
+  sub-frame), `drum_ceiling`, and the fast drum cull (`drum_precull`, `drum_view_masks`, `drum_ray_cull`,
+  `tower_views_lite`, `tower_head_views`, `tower_hidden_cull`, `_close_pool`).  Used by v1; `roof_frame` also by v2's
+  round tiers.
+- **`components/tower_decals.py`** (v1 r1-r3): `round_tower_decals(_gated)`, `cabin_decals`, `BLOCKER_PARTS`,
+  `drop_blocker_anchors`: note-11 anchors for a rotor-less stone tower, never on note-6 blockers.  Used by v1.
+- **`components/square_cabin.py`** (v1 r2-r5): `square_cabin`: a square timber lookout cabin on any wall head (floor
+  on bearers and joists, knee-strut brackets on corbel pads, framed plank walls with lookouts, ceiling, closed bed
+  curb), roof by `pyramid_roof`.  Used by v1.
+- **`components/pyramid_roof.py`** (v1 r4-r5): `pyramid_roof`, `PyramidSurface`: a bell-cast N-sided pyramid roof
+  (bell, hip kick, sag) with closed deck, coursed kit shingles tucked under one closed saddle per hip, lead cap and
+  turned finial; `tip` from the built mesh.  Used by v1 (through `square_cabin`); since 1.8.0 also the engine of
+  `tier_roof.bell_tier` for non-octagonal tiers, which no building builds yet.
+- **`components/level_probe.py`** (v1 r5): `level_sky_probe` (`LevelSeeThroughError`), `cabin_bed_probe`: a level
+  see-through check for any horizontal junction band (floor sandwich, sole plate, jetty), the complement of the
+  seal probe.  Used by v1.
+- **Tier family** (v2 r1-r4): `tier_frame.py` (`TierFrame`, `Body`, `declare_bodies`, `roof_support`, `roof_z`, the
+  roof-to-roof rule `roof_clearance` / `RoofClearanceError`), `stone_body.py` (`stone_body`, `framed_openings`,
+  `coping_ledge`, quoins on polygon bodies), `tier_roof.py` (`bell_tier` / `round_tier`, `tier_finial`,
+  `roof_flashing`, `eave_deck_lap`, `drop_empty_meshes`, `PROFILES` / `ROUND_PROFILES`), `board_belt.py`
+  (`board_belt`), `tier_finish.py` (`tier_hidden_cull`, `tier_views`, `tier_decals`): a frame with no building in it,
+  bodies and roof tiers declared by a recipe and found by name.  Used by v2; `stone_body` is re-exported by
+  `masonry` (1.8.0).
+- **`components/round_roof_parts.py`** (v2 r3): `roof_deck`, `eave_closure`: the round cone's sarking deck and eave
+  frieze, promoted from `tower_roof`'s private helpers (now aliases; `eave.eave_closure(kind="ring")` since 1.8.0).
+  Used by v1 and v2.
+- **`components/seal_probe.py`** (v2 r4): `through_seal_probe`, `SealError`: the see-through check round a body
+  rising through a tier.  Used by v2; generalised in 1.9.0 as the `guards.seal_probe` guard for every building, and
+  its helpers are read by `guards`, `level_probe` and `tier_flashing`.
+- **`components/tier_flashing.py`** (v2 r5-r7): `dressed_flashing`, `eave_cheek`, `flashing_clip_check`
+  (`FlashingClipError`), `covering_envelope`, `masonry_envelope`, `masonry_meshes`, `flashing_lift`,
+  `self_intersections`, `near_layers`: a lead apron dressed on the covering's real upper envelope with closed
+  straight run ends, a cheek fitted to the masonry, and a build-failing clip / self / lift / near-layer check.  Used
+  by v2 (instead of `tier_roof.roof_flashing`, which is unchanged).
+- **`components/tier_cull.py`** (v2 r5): `tier_hidden_cull_lean`, `cap_views`: the tier cull with at most
+  `max_views` building views per object.  Used by v2.
+- **`components/linear_roof.py`** (v3 r1-r5): `GableRoof`, `linear_roof`: a straight gable roof over any
+  rectangular body (deck, rafters, layered thatch courses or kit shingles, D eave roll, closed verge faces, ridge
+  roll with rounded caps, comb), queryable as a solid (`keep_out`, `top_depth`, `eave_zone`).  Used by v3.
+- **`components/roof_junction.py`** (v3 r1-r5): `cone_abutment`, `abutment_curve`, `cone_nose_apron` (was
+  `end_apron`), `round_eave_fill`, `inside_cone`, `cone_ref_z`: a linear roof running into a `RoundFrame` cone
+  (traced junction line, closed lead flashing, end aprons) and the eave fill on a round stone wall head.  Used by v3
+  (the round-6 recipe); `eave.eave_closure(kind="fill")` reads `cone_ref_z`.
+- **`roof_junction.wall_abutment`** (v3 r8, a new function): the cylinder version of `cone_abutment` -- a
+  `GableRoof` running INTO a round wall that rises past its ridge: comb shakes near the face dropped, every roof part
+  trimmed behind the battered face, the roof / wall line traced, a fitted mortar flaunching, closed lead end aprons,
+  the junction registered with the seal guard; raises if the eaves would cross the cone's (that is `cone_abutment`).
+  It reuses v4's `junctions` pieces unchanged.  Used by the v3 round-8 redesign
+  (`redesign_r8_wip/build_v3_longhouse_roundend_r8.py`).
+- **`components/wall_openings.py`** (v3 r1): `door_spec`, `window_spec`, `build_opening`, `opening_rects`,
+  `opening_cut`: doors and windows for any masonry wall by a local frame (threshold, posts, lintel, plank leaf,
+  ironwork; sill, mullioned frame, reveal, blocker room).  Used by v3 (through `rubble_walls`).
+- **`components/rubble_walls.py`** (v3 r1, r8): `path_stone_wall` (coursed rubble along any plan polyline, quoins,
+  gable top, openings, clip), `round_stone_body` (battered round body, openings by azimuth), `PathMap`.  Used by v3;
+  re-exported by `masonry` (1.8.0).
+- **`components/ball_finial.py`** (v3 r1-r3): `ball_finial`, `apex_blocker`, `fine_hat`, `hat_fit_units`,
+  `cone_apex_z`: the stone ball finial over a fitted lead hat on a stone round end.  Used by v3.
+- **`components/composite.py`** (v3 r1-r8): assembly helpers for multi-body buildings -- `cone_roof` (with
+  `cone_soffit`, the cone keep-out / trim / soaker machinery `cone_keep_out`, `trim_units(_field)`, `cone_soakers`,
+  `soaker_support`, `drop_slivers`, `footprint_field`), `inside_box` / `inside_round`, `set_entrance`,
+  `footprint_views`, `composite_hidden_cull`, `recenter`, `composite_decals`, `mesh_islands`, `drop_units`.  Used by
+  v3.
+- **`village_kit/compound.py`** (v4 r1-r4): `Wing`, `build_compound`, `configure`, `patches_by_azimuth`,
+  `thin_anchors`, `dedupe_views`, `compound_views`, `compound_cull`, `wall_head_views`, `wall_head_band`: one
+  building from several family frames, one cull and one decal audit over all wings, protected wall-head bands.
+  Used by v4.
+- **`components/junctions.py`** (v4 r1-r3): `roof_tower_flashing`, `wall_tower_abutment`, `tower_of`,
+  `round_wall_of`, `tower_field`, `clip_at_tower`, `trim_wing_at_tower`, `ride_fillet`, `trace_roof_on_tower`,
+  `pole_plate_ledger`, `rafter_feet`, `rafter_bearings`, `wall_end_apron` (was `end_apron`): junction pieces between
+  bodies of different families (roof into tower, wall against tower).  Used by v4 and, through `wall_abutment`, v3.
+- **`components/round_apex.py`** (v4 r1): `turned_apex`: the keep's turned finial over a fitted lead hat on any
+  RoundFrame cone.  Used by v4.
+- **`village_kit/lod.py`** (v4 r4): `tmpl_lod`, `tmpl_lod_report`, `coarse_template`, `DRUM_LOD_PARTS`:
+  height-banded grid LOD for template-instanced pieces (outline, arrises and placement kept).  Used by v4 and v1
+  (round 5, note 15); `guards` ends its scope.
+
+### Optional parameters added to existing modules
+
+New functions in existing modules are listed here too.  "Existing" means the module existed before the builder's
+round; several are other builders' new modules.
+
+| module | parameter / function | added by | default keeps old behaviour? |
+|---|---|---|---|
+| `drum_frame` | `DrumFrame.WIN_DZ = None`, `BATTER_TOP = 4.6`, `WIN_SPEC = None`, `BAND_STYLE = "balustrade"`; `win_dz`, `win_list`, `WINDOW_FW`; `hw_window(dz=0.0, w=None)` | v1 r1-r2 | yes (the mill's windows unchanged) |
+| `drum_frame` | `drum_window_spec` (was `window_spec`; `openings.drum_window` since 1.8.0), `fit_window_courses` | v1 r2-r3 | new functions |
+| `drum_frame` | `drum_finish(checks=True)`: the rotor checks skip themselves when no rotor was built | v1 r3 | yes (the mill builds its rotor) |
+| `drum_wall` | `round_stone_drum(window_z=None, batter_top=None, window_size=None, lookouts=None, course_fit=True)`, `zones=dict(string=...)`, `arcade=dict(n=0)` = no arcade; per-window spec / `dz` in `build_slit_windows`, `_drum_openings`, `wall_core_backing`; empty-arcade guards in `build_base`, `build_band_cornice_and_finish` | v1 r1-r3 | yes (`course_fit` is read only with `window_size` / `lookouts`) |
+| `drum_wall`, `drum_band` | `lookout_room`; `string_course`, `string_course_profile` (`BAND_STYLE = "plain"`) | v1 r2 | new functions |
+| `tower_roof` | `tower_hidden_cull(precull=DRUM_PRECULL, lite=DRUM_PRECULL)` | v1 r2 | no: the fast cull is the default (`precull=(), lite=()` = round 1); only v1 |
+| `tower_decals` | `round_tower_decals(exclude=BLOCKER_PARTS)` | v1 r3 | no: blocker anchors dropped; only v1 |
+| `square_cabin` | `roof=`, `roof_fn=`, `finial_scale=0.80`, `bed_fill=True`, `bearers=None`, `bed_n=16`; `open_sill` 1.00 -> 1.10 | v1 r4-r5 | no (finial 1.4 -> 0.8, bed fill on, sill raised); only v1 |
+| `pyramid_roof` | `hip_tuck=None`, `hip_bed=0.30`; `coll=None` (1.8.0) | v1 r5 | no: the hip fix is on (`hip_tuck=0.012, hip_bed=0` = round 4); only v1 builds one |
+| `stone_body` | `stone_body(joint_lap=0.06, quoins=True)` | v2 r2 | no for polygon bodies (quoins); round bodies as before; only v2 |
+| `tier_roof` | `bell_tier(sides=None, deck_lap=True)`, `roof_flashing(drip=0.03)`, `ROUND_PROFILES["witch_hat"]`, `drop_empty_meshes`, `_register` | v2 r2-r4 | no (`deck_lap=False`, `drip=None` = kit 1.7.2); only v2 |
+| `tier_frame` | `roof_clearance`, `TierFrame.roof_clear = 0.50`, `roof_stack = 0.20` | v2 r3 | no: the rule is on (`roof_clear=None` off); only v2 |
+| `tier_finish` | `tier_hidden_cull(procs=None, seal=True, seal_kw=None)`, `cull_procs` | v2 r4 | no: workers per core, seal probe on; only v2 |
+| `tier_flashing` | `dressed_flashing(dress="tight", end_line=True, normal_t=6.0, lift_rays=True, ...)`, `eave_cheek(fit=True, top_cap=, apron_under=)`, `flashing_clip_check(self_check=True, others=True, tier=True, bodies=None, layer_tol=None)` | v2 r6-r7 | no (`dress="max"`, `fit=False` = round 5); only v2 |
+| `linear_roof` | `thatch_style="courses"`, `abut_wall_in=0.10`, `_eave_rolls(end_caps=True)`, `_verge_faces(roll_cover=0.012, ridge_cover=False)`; `ridge_caps=False`, `rafter_skip=None`, `verge_apex=False` | v3 r2-r5 | r2-r3 keywords no (`"clumps"`, `None` = round 1); r5 keywords yes; only v3 |
+| `roof_junction` | `cone_abutment(end="apron", sweep_end="crest", taper=None, fit_kept=False)`, `abutment_curve(ends=, crest_over=)`, `cone_nose_apron(w_in_kept=False, u_top=0.10)`, `section_meets_cone`, `round_eave_fill(z_bot="wall")` option | v3 r2-r5 | `end="apron"` no (`end="nose"` = round 1); the rest yes; only v3 |
+| `ball_finial` | `ball_finial(hat_drop=None, hat_pitch_deg=44.0, blocker=True, clear=0.02, hat_seg=40, fit=False)` | v3 r2-r3 | no for the hat / blocker (`hat_drop=0.34, blocker=False, clear=0.025` = round 1); `fit` yes; only v3 |
+| `composite` | `cone_roof(soffit=True, abut_roof=None, abut_*, abut=None)`, `composite_hidden_cull(views="lean")`, `composite_decals(door_lichen="jamb", south_moss=False, walk_gate=True, moss_normal="hit")`, `cone_soffit(cut=None)`, `cone_keep_out(...)` keywords, `inside_box(z_fn=None)` | v3 r2-r8 | r2 / r4 soffit, views and decal defaults no (`soffit=False`, `views="full"`, `door_lichen="threshold"`, ...); r4-r8 keep-out keywords yes; only v3 |
+| `rubble_walls` | `round_stone_body(open_z=None)` | v3 r8 | yes |
+| `anchor_validate` (shared, heroes import it) | `validate_anchors(walk_zones=None, walk_types=("lichen", "moss"), walk_up_dot=0.7)` | v3 r4 | yes (heroes re-run) |
+| `conical_roof` | `build_eave_closure`: `f"{g.prefix}_roof_..."` lookup (was literal `HUT_`) | v4 r1 | yes (bug fix; `eave.eave_closure(kind="door")` since 1.8.0) |
+| `conical_roof` | `build_eave_closure(thickness=0.03)` | v4 r2 | **no**: closed 3 cm band, hut +1,736 tris (below) |
+| `conical_roof`, `doors` | frame attributes `g.EAVE_CLOSURE_DOOR_HALF_DEG`, `g.DOOR_INFILL_DECK`, `g.SH_RING_STEP` | v4 r4 | yes when absent (since 1.9.0 the first two are set by `RoundFrame(steep_door="auto")` on cones > 52 deg) |
+| `daub`, `plinth` | `g.DAUB_GRID`, `g.PLINTH_DENSE` | v4 r4 | yes when absent |
+| `tmplmesh` | `LOD_HOOK = None`, `BatchAcc.add(_lod=True)` | v4 r4 | yes with no rule registered |
+| `rotor_checks` | `rotor_clearance` / `tail_clearance`: absent or empty parts skipped | v4 r1 | yes (bug fix; the mill has props) |
+| `tail_vane` | `tail_boom`: iron bands within 10 cm of / past the boom end skipped | v4 r1 | yes for the hero; not for the mill KIT_VARIANT (below) |
+| `core` | `_vis_pre_bpy_path`, `_vis_map_watched`; workers stopped instead of joined | v4 r2 | yes (spawn-pool management only, cull results identical) |
+| `compound` | `Wing(eye_heights=(1.0, 1.65))`, `compound_cull(wall_head=True)`, spec keys `cull_max_views=260`, `cull_procs=4`, `cull_wall_head=True` | v4 r2-r4 | no (`eye_heights=()` = round 3); only v4 |
+| `junctions` | `roof_tower_flashing(ledger=True, trim=True, section="ride", bearing="corbels", apron_closed=True, ...)`, `wall_end_apron(closed_lip=False)` | v4 r2-r3 | no (`section="flaunch"`, `bearing="ledger"` = rounds 1 / 2); only v4 (and v3's `wall_abutment`) |
+
+### Behaviour changes to existing defaults
+
+- **`conical_roof.build_eave_closure(thickness=0.03)`** (v4 r2, director must-fix 4): the eave closure became a
+  closed 3 cm band by default.  It moved the hut by **+1,736 triangles** (876,619 -> 878,355; v4's note estimated
+  "about 1,900").  This **broke the edit rule** "never change the behaviour of an existing function another building
+  uses" (v4's note records it under "Existing module changed").  It was accepted by the producer in 1.10.1 as an improvement
+  (closed pieces, note 1): 878,355 is the hut's kit reference; the delivered hut is still the phase-1 version.
+- **`tail_vane.tail_boom`** (v4 r1 bug fix): the mill hero (`boom_end` -6.08) keeps all five bands, but the mill
+  KIT_VARIANT (`boom_end` -5.6) loses its floating -5.92 band.  A visible change to a variant output, accepted as a
+  bug fix (the band floated past the boom).
+- **`core._vis_spawn_pool`** returns a `ProcessPoolExecutor` since 1.6.1: v1's `tower_roof.drum_ray_cull` called
+  `close()` / `join()` on it and died; fixed on v1's side (`tower_roof._close_pool`), no kit default reverted.
+- **Defaults moved inside a design's own modules** (`tower_roof`, `tower_decals`, `square_cabin`, `pyramid_roof`,
+  the tier family, `linear_roof`, `roof_junction`, `ball_finial`, `composite`, `compound`, `junctions`): the table
+  above marks them "no".  Each note records the keyword that gives the old behaviour, and grep plus the hash re-runs
+  (`kit/baseline/v1r5_hash/`, `v3_r5_hash/`, `v3_r6_hash/`, `v3_r8_hash/`) showed no other building reaching them.
+  v1 r5 changed `pyramid_roof`'s defaults on purpose; it is the only caller (`tier_roof._pyramid_tier` imports it
+  lazily for tier side counts no building uses).
+- Already recorded elsewhere: the 1.9.0 `steep_door="auto"` flags (v4's door-head fix now set by the frame), and the
+  1.8.0 `bell_tier(sides=None)` pyramid engine for non-octagonal polygon bodies (v2 r3's `ValueError` for those is
+  gone).
+
+### Known limitations
+
+- v3: `path_stone_wall` has no batter (its quoins are solid boxes); `round_stone_body` batters at 2.5 deg by default
+  (`batter_deg`; the round-8 recipe uses 1.5).
+- v3: `cone_abutment` handles a roof whose ridge is horizontal and meets the cone on its near end.  The cylinder case
+  (a round WALL taller than the roof) now exists as `roof_junction.wall_abutment` (round 8 of the longhouse
+  redesign): built, grading in progress.
+- v3: the `linear_roof` "courses" style is thatch only (the shingle covering is unchanged); `cone_nose_apron` reads
+  the `GableRoof.ROLL` section (a covering without a roll gets a nominal nose).
+- v3: the main recipe `buildings/variants/v3_longhouse_roundend/build_v3_longhouse_roundend.py` still imports and
+  calls `composite.cone_cut_cover` (round 7), which round 8 removed from the kit; it cannot build against this kit
+  until it is restored to round 6 (the client-cleared state) or replaced by the round-8 recipe.
+- v3: v3's body thatch reads 55 % up / 44 % down slope in `analyze_uv_grain.py` (1.10.0, cause not investigated).
+- v1: `square_cabin(struts=False)` has no dragon beams, so the bearer band on the +-X sides beyond the curb is closed
+  only by the curb; `cabin_bed_probe` would catch a gap.
+- v2: the kit's 0.05 m flashing lift / foot gates are not met on the delivered recipe (drip lift up to 0.083 m on
+  `tur_nw`, upstand foot up to 0.097 m on the turrets' upslope back gutter); the recipe passes `max_lift=0.09,
+  max_foot=0.10, layer_tol=0.001`.  `tier_flashing`'s `foot_d`, `adaptive`, `blunt_drip` are experimental, off.
+- v4: the "house roof / mill tower" seal-probe junction is still opted out in the recipe (1.9.0, 13 of ~23k rays),
+  queued for `junctions.roof_tower_flashing`.
+- UV determinism (v3 r6 note): `uvgrain.regrain_mesh` sign-fixes the PCA major axis but not `B1`; the fix
+  (`B1 = _sign_fix(B1)`) changes every building's UV hash, so it is left to a producer step.
+- Resolved and dropped: v1's ~10 min drum-rubble cull (round-2 fast cull); the `HUT_` hard-coded names in
+  `build_eave_closure` (v4 r1 fix); "no hero triangle count can move" (v3 r4 edited the shared `anchor_validate`
+  with defaults off, and the heroes were re-run).
+
+### Status of the designs that use them
+
+| Design | Status | Round | Triangles |
+|---|---|---|---|
+| v1_stone_watchtower | accepted, 8.5 | 5 | 937,933 (note 15 met; was 1,057,164) |
+| v2_tiered_hall | accepted by client decision (director 8.2); lookdev mitigation: a darker, grimier turret-apron lead (`lookdev/scripts/apply_lookdev.py`, `OBJECT_GRIME`) | 7 | 980,405 (the 954,925 once quoted in `HANDOFF.md` / `production_plan.md` was round 4's count; corrected) |
+| v3_longhouse_roundend | **accepted**, 8.3, audit upheld: the round-8 redesign (`wall_abutment`); round 6 archived in `round06_archive/` | 8 | 617,342 |
+| v4_mixed | accepted, 8.4 | 4 | 938,453 |
+
+### Verification
+
+All seven rebuilt from the 1.11.0 kit (with v3's round-8 edits to `roof_junction`, `rubble_walls` and `composite`) into
+`kit/baseline/6_r8kit_check/` (`tools/build_baseline.ps1 -MaxParallel 2`, fingerprints `<id>.json` there). Every
+geometry, UV and mask hash equals the building's accepted / reference build: the heroes and v4 equal the 1.10.1 table
+above; v1, v2 and v3 equal their committed accepted `.blend` (`tools/geom_hash.py`). The v3 rebuild is also round 8's
+determinism check (identical to the graded build).
+
+**Reference builds at kit 1.11.0** (the reference table for the HASH RULE from now on):
+
+| Building | State | Triangles | Geometry | UV | Mask |
+|---|---|---|---|---|---|
+| hilltop_keep | kit reference (phase 1 is the deliverable) | 1,166,874 | `3e2a219a5901afc5` = | `10326b66883e3031` | `cacc4885b10b1370` |
+| wattle_roundhut | kit reference (phase 1 is the deliverable) | 878,355 | `7e5e7c2df5c4d367` = | `c97c88e742be4887` | `46bb1454fa4d264e` |
+| tower_windmill | signed off (kit r8) | 1,146,243 | `89bf4a2a2c60e049` = | `b006e70c2dc4750b` | `3c0753f38798dad6` |
+| v1_stone_watchtower | accepted r5 | 937,933 | `465c7b1b8a7dbb22` | `eadfb3aacdd78b6d` | `37235edc68b2377f` |
+| v2_tiered_hall | accepted r7 (client decision) | 980,405 | `9522f17ed8b09646` | `e3e6c05a78940663` | `252e24bcf02ccdf5` |
+| v3_longhouse_roundend | accepted r8 | 617,342 | `38ff44b686efd26b` | `ba1118a58beca64f` | `e8e670cd18148d95` |
+| v4_mixed | accepted r4 | 938,453 | `2e87caad61b68d34` = | `230f3672711b12d4` | `07a9171c30138f67` |
+
+(`=`: unchanged from the 1.10.1 table. Build times: 210-576 s, 2 at a time.)
 
 ---
 

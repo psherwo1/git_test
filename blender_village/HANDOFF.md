@@ -52,7 +52,7 @@ This file lets a new Claude Code session pick up the work with full continuity. 
 | wattle_roundhut | Phase-1 version is the signed-off deliverable. The kit build (878,355 tris) is the reference |
 | v4_mixed (mill-house) | **ACCEPTED** (round 4, 8.4, 938,453 tris) |
 | v1_stone_watchtower (square cabin) | **ACCEPTED** (round 5, 8.5, 937,933 tris) |
-| v2_tiered_hall (approved building 2) | **ACCEPTED by client decision** (round 7, director 8.2, 954,925 tris): the remaining junction defects are judged not worth more effort after the textured test (lookdev/junction_test/REPORT.md). Optional lookdev polish: darker, textured lead on the turret aprons |
+| v2_tiered_hall (approved building 2) | **ACCEPTED by client decision** (round 7, director 8.2, 980,405 tris): the remaining junction defects are judged not worth more effort after the textured test (lookdev/junction_test/REPORT.md). Optional lookdev polish: darker, textured lead on the turret aprons |
 | v3_longhouse_roundend (approved building 1) | **Redesign IN PROGRESS** (see below). The last complete build is round 6 (director 8.1) |
 
 **Kit: 1.10.1.**

@@ -1590,3 +1590,8 @@ The must-fixes below are what closes the junction family for good.
 
 Client's words, after the textured junction test (lookdev/junction_test/REPORT.md): "Honestly I think it's fine and my audience won't notice or care. Not worth wasting effort on." The round-7 build (954,925 tris) is accepted. No further rounds.
 
+
+## PRODUCER NOTE (2026-10-17, session 2): triangle count and lead mitigation
+
+- The accepted round-7 build has **980,405** triangles (its builder entry, and the kit 1.11.0 rebuild in `kit/baseline/6_r8kit_check/`, hash-identical to the committed .blend). The 954,925 quoted in the acceptance note above was round 4's count.
+- The client chose the lookdev mitigation: darker, grimier lead on the turret aprons (and, for consistency, the drum and lantern flashings): `lookdev/scripts/apply_lookdev.py` `OBJECT_GRIME`; before / after in `lookdev/junction_test/renders/v2_lead_mitigation/`.

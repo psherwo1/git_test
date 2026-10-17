@@ -1,0 +1,1269 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\6_r8kit_check\\tower_windmill\\tower_windmill.blend",
+ "objects": {
+  "MILL_apron_rafters": {
+   "tris": 17664,
+   "geometry": "519ef37086772061",
+   "uv": "8165734ac912da86",
+   "mask": "32992eb9c44167e7"
+  },
+  "MILL_apron_shingles": {
+   "tris": 21840,
+   "geometry": "146ec7b5dd274bbb",
+   "uv": "85498c8b03959e89",
+   "mask": "e8cfc4b25dc11730"
+  },
+  "MILL_arcade_backs": {
+   "tris": 63766,
+   "geometry": "2e777c8bf39fb982",
+   "uv": "796e831edde40424",
+   "mask": "c65e4781de60cd3c"
+  },
+  "MILL_arcade_dressed": {
+   "tris": 169119,
+   "geometry": "f6e0590c73f70c43",
+   "uv": "743fc7969bf028ad",
+   "mask": "5e1782ddc49ddeaf"
+  },
+  "MILL_baluster_001": {
+   "tris": 1192,
+   "geometry": "444b2b19c761be50",
+   "uv": "a08c94aa6eda12fe",
+   "mask": "8499915e26cadd08"
+  },
+  "MILL_baluster_002": {
+   "tris": 480,
+   "geometry": "62fb8161cb0ef3c8",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_003": {
+   "tris": 480,
+   "geometry": "529562deea427098",
+   "uv": "cf0633cceb1b8b20",
+   "mask": "d2f7b978c5120570"
+  },
+  "MILL_baluster_004": {
+   "tris": 480,
+   "geometry": "1a382b3f465ba441",
+   "uv": "12b402dcdac75a42",
+   "mask": "c2d367878d74369b"
+  },
+  "MILL_baluster_005": {
+   "tris": 480,
+   "geometry": "579f57fdcf808119",
+   "uv": "14e6c46543a0da9f",
+   "mask": "8deec4f061c96336"
+  },
+  "MILL_baluster_006": {
+   "tris": 480,
+   "geometry": "034fef7cb84c94be",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_007": {
+   "tris": 480,
+   "geometry": "32c791240922f61d",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_008": {
+   "tris": 480,
+   "geometry": "1ad410cd78b29ede",
+   "uv": "12b402dcdac75a42",
+   "mask": "c2d367878d74369b"
+  },
+  "MILL_baluster_009": {
+   "tris": 424,
+   "geometry": "02861ca00496f2b1",
+   "uv": "31fe532eca38002d",
+   "mask": "8f5b36e10247a827"
+  },
+  "MILL_baluster_010": {
+   "tris": 480,
+   "geometry": "05f722eb05b1bef8",
+   "uv": "b712c49ec0d57d17",
+   "mask": "5f74c7456a2f01ec"
+  },
+  "MILL_baluster_011": {
+   "tris": 452,
+   "geometry": "ad2ba2b179202ad2",
+   "uv": "8bcb9f2e8d45d3f3",
+   "mask": "1546d63791073b46"
+  },
+  "MILL_baluster_012": {
+   "tris": 480,
+   "geometry": "b6c32cdf90edf580",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_013": {
+   "tris": 480,
+   "geometry": "61b752e8cc329744",
+   "uv": "12b402dcdac75a42",
+   "mask": "c2d367878d74369b"
+  },
+  "MILL_baluster_014": {
+   "tris": 424,
+   "geometry": "b5e811366c719cb2",
+   "uv": "f9fe099a36d1f227",
+   "mask": "d91bf2e112df4425"
+  },
+  "MILL_baluster_015": {
+   "tris": 452,
+   "geometry": "7327435aeae6f981",
+   "uv": "745eb73bd9499023",
+   "mask": "c7c1b8a2ed7bfe8a"
+  },
+  "MILL_baluster_016": {
+   "tris": 480,
+   "geometry": "f713040ae9afc42f",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_017": {
+   "tris": 1192,
+   "geometry": "76dc308f81dc299c",
+   "uv": "a08c94aa6eda12fe",
+   "mask": "8499915e26cadd08"
+  },
+  "MILL_baluster_018": {
+   "tris": 1192,
+   "geometry": "f36b75a592f00458",
+   "uv": "a08c94aa6eda12fe",
+   "mask": "8499915e26cadd08"
+  },
+  "MILL_baluster_019": {
+   "tris": 480,
+   "geometry": "0cd7ef0a32b5a0d8",
+   "uv": "14e6c46543a0da9f",
+   "mask": "8deec4f061c96336"
+  },
+  "MILL_baluster_020": {
+   "tris": 480,
+   "geometry": "1a2db4e3f66c4237",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_021": {
+   "tris": 480,
+   "geometry": "eb894974d8459753",
+   "uv": "12b402dcdac75a42",
+   "mask": "c2d367878d74369b"
+  },
+  "MILL_baluster_022": {
+   "tris": 244,
+   "geometry": "1a285421c9a7b3d2",
+   "uv": "9fbbaa5477b9b04a",
+   "mask": "b77e44880037d671"
+  },
+  "MILL_baluster_023": {
+   "tris": 480,
+   "geometry": "6779bd50afd9f4be",
+   "uv": "b712c49ec0d57d17",
+   "mask": "5f74c7456a2f01ec"
+  },
+  "MILL_baluster_024": {
+   "tris": 480,
+   "geometry": "b7e977251ae88fbd",
+   "uv": "cf0633cceb1b8b20",
+   "mask": "d2f7b978c5120570"
+  },
+  "MILL_baluster_025": {
+   "tris": 480,
+   "geometry": "0f08d91df1328a56",
+   "uv": "14e6c46543a0da9f",
+   "mask": "8deec4f061c96336"
+  },
+  "MILL_baluster_026": {
+   "tris": 480,
+   "geometry": "8b79d6a5f60b3965",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_027": {
+   "tris": 480,
+   "geometry": "5937dfa8a7fd980c",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_028": {
+   "tris": 480,
+   "geometry": "db24faa9e79bb95a",
+   "uv": "cf0633cceb1b8b20",
+   "mask": "d2f7b978c5120570"
+  },
+  "MILL_baluster_029": {
+   "tris": 480,
+   "geometry": "7d7b596bd5040ddb",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_030": {
+   "tris": 480,
+   "geometry": "75f781f004b5cf54",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_031": {
+   "tris": 480,
+   "geometry": "a071ebe575ae08a3",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_032": {
+   "tris": 480,
+   "geometry": "f880514cea5cc072",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_033": {
+   "tris": 480,
+   "geometry": "6e5bdcdd9a3a47fa",
+   "uv": "b712c49ec0d57d17",
+   "mask": "5f74c7456a2f01ec"
+  },
+  "MILL_baluster_034": {
+   "tris": 452,
+   "geometry": "85d1fca0c64e3b1c",
+   "uv": "8bcb9f2e8d45d3f3",
+   "mask": "1546d63791073b46"
+  },
+  "MILL_baluster_035": {
+   "tris": 480,
+   "geometry": "d4b93054ce0303f6",
+   "uv": "b712c49ec0d57d17",
+   "mask": "5f74c7456a2f01ec"
+  },
+  "MILL_baluster_036": {
+   "tris": 424,
+   "geometry": "89e088718f4d78e5",
+   "uv": "f9fe099a36d1f227",
+   "mask": "d91bf2e112df4425"
+  },
+  "MILL_baluster_037": {
+   "tris": 480,
+   "geometry": "fa0e9d8d9ed5fd31",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_038": {
+   "tris": 424,
+   "geometry": "9a05148024d9e633",
+   "uv": "f9fe099a36d1f227",
+   "mask": "d91bf2e112df4425"
+  },
+  "MILL_baluster_039": {
+   "tris": 480,
+   "geometry": "fdbb3fdaf4bc618a",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_040": {
+   "tris": 424,
+   "geometry": "0f43af688ea772d6",
+   "uv": "f9fe099a36d1f227",
+   "mask": "d91bf2e112df4425"
+  },
+  "MILL_baluster_041": {
+   "tris": 480,
+   "geometry": "d53fa47c5721ba9f",
+   "uv": "14e6c46543a0da9f",
+   "mask": "8deec4f061c96336"
+  },
+  "MILL_baluster_042": {
+   "tris": 480,
+   "geometry": "a38f8428bf94fc11",
+   "uv": "b712c49ec0d57d17",
+   "mask": "5f74c7456a2f01ec"
+  },
+  "MILL_baluster_043": {
+   "tris": 424,
+   "geometry": "7b29852e1f50025d",
+   "uv": "31fe532eca38002d",
+   "mask": "8f5b36e10247a827"
+  },
+  "MILL_baluster_044": {
+   "tris": 480,
+   "geometry": "9b5229b61c9781f3",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_045": {
+   "tris": 480,
+   "geometry": "1bb49f95804e0081",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_046": {
+   "tris": 480,
+   "geometry": "69d1a0f878214172",
+   "uv": "14e6c46543a0da9f",
+   "mask": "8deec4f061c96336"
+  },
+  "MILL_baluster_047": {
+   "tris": 424,
+   "geometry": "7df7cb1292dde8b7",
+   "uv": "31fe532eca38002d",
+   "mask": "8f5b36e10247a827"
+  },
+  "MILL_baluster_048": {
+   "tris": 452,
+   "geometry": "1530042f632b5ce5",
+   "uv": "745eb73bd9499023",
+   "mask": "c7c1b8a2ed7bfe8a"
+  },
+  "MILL_baluster_049": {
+   "tris": 480,
+   "geometry": "50bc4214dd348922",
+   "uv": "14e6c46543a0da9f",
+   "mask": "8deec4f061c96336"
+  },
+  "MILL_baluster_050": {
+   "tris": 452,
+   "geometry": "a7d759bb0e488271",
+   "uv": "8bcb9f2e8d45d3f3",
+   "mask": "1546d63791073b46"
+  },
+  "MILL_baluster_051": {
+   "tris": 452,
+   "geometry": "093f84caad5422b1",
+   "uv": "745eb73bd9499023",
+   "mask": "c7c1b8a2ed7bfe8a"
+  },
+  "MILL_baluster_052": {
+   "tris": 480,
+   "geometry": "9f90eb05d38e3b65",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_053": {
+   "tris": 480,
+   "geometry": "b1fd003ba1f438a0",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_054": {
+   "tris": 244,
+   "geometry": "918e4e14e4385027",
+   "uv": "9fbbaa5477b9b04a",
+   "mask": "b77e44880037d671"
+  },
+  "MILL_baluster_055": {
+   "tris": 424,
+   "geometry": "af32bf6176b4b30d",
+   "uv": "f9fe099a36d1f227",
+   "mask": "d91bf2e112df4425"
+  },
+  "MILL_baluster_056": {
+   "tris": 452,
+   "geometry": "77df0da61251c9f0",
+   "uv": "8bcb9f2e8d45d3f3",
+   "mask": "1546d63791073b46"
+  },
+  "MILL_baluster_057": {
+   "tris": 424,
+   "geometry": "ea22a3d17af642a8",
+   "uv": "f9fe099a36d1f227",
+   "mask": "d91bf2e112df4425"
+  },
+  "MILL_baluster_058": {
+   "tris": 452,
+   "geometry": "1629e027076d7576",
+   "uv": "745eb73bd9499023",
+   "mask": "c7c1b8a2ed7bfe8a"
+  },
+  "MILL_baluster_059": {
+   "tris": 480,
+   "geometry": "0a1b87eaa7cdab3a",
+   "uv": "82792c855ae435ec",
+   "mask": "be9131576c0adaa0"
+  },
+  "MILL_baluster_060": {
+   "tris": 424,
+   "geometry": "05156f39c8c73031",
+   "uv": "31fe532eca38002d",
+   "mask": "8f5b36e10247a827"
+  },
+  "MILL_baluster_061": {
+   "tris": 452,
+   "geometry": "124ab8cf7383cb05",
+   "uv": "745eb73bd9499023",
+   "mask": "c7c1b8a2ed7bfe8a"
+  },
+  "MILL_baluster_062": {
+   "tris": 480,
+   "geometry": "852309edd331b32a",
+   "uv": "cf0633cceb1b8b20",
+   "mask": "d2f7b978c5120570"
+  },
+  "MILL_baluster_063": {
+   "tris": 480,
+   "geometry": "0623442a32974169",
+   "uv": "12b402dcdac75a42",
+   "mask": "c2d367878d74369b"
+  },
+  "MILL_baluster_064": {
+   "tris": 480,
+   "geometry": "ce07272202a65e77",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_065": {
+   "tris": 480,
+   "geometry": "188dcaa52a739412",
+   "uv": "14e6c46543a0da9f",
+   "mask": "8deec4f061c96336"
+  },
+  "MILL_baluster_066": {
+   "tris": 424,
+   "geometry": "b7218f0902aa41a5",
+   "uv": "f9fe099a36d1f227",
+   "mask": "d91bf2e112df4425"
+  },
+  "MILL_baluster_067": {
+   "tris": 480,
+   "geometry": "713b0a57f78a2447",
+   "uv": "df02095110dd9b3a",
+   "mask": "5a6fc388f26c8f75"
+  },
+  "MILL_baluster_068": {
+   "tris": 244,
+   "geometry": "df020482ee6e0061",
+   "uv": "9fbbaa5477b9b04a",
+   "mask": "b77e44880037d671"
+  },
+  "MILL_baluster_069": {
+   "tris": 452,
+   "geometry": "f92d60908d366a06",
+   "uv": "745eb73bd9499023",
+   "mask": "c7c1b8a2ed7bfe8a"
+  },
+  "MILL_base_dressed": {
+   "tris": 48337,
+   "geometry": "296b54a1c6ba667d",
+   "uv": "9a75746e116c2a02",
+   "mask": "148463e87ea08706"
+  },
+  "MILL_base_mortar": {
+   "tris": 50112,
+   "geometry": "a2a915c3da6d20e7",
+   "uv": "6b5df1adba7d304b",
+   "mask": "d50600fbe78c9060"
+  },
+  "MILL_base_stones": {
+   "tris": 389408,
+   "geometry": "b695ba61d7de4063",
+   "uv": "f205a598b9119aea",
+   "mask": "8dd3606b671e1c3e"
+  },
+  "MILL_cap_frame": {
+   "tris": 24512,
+   "geometry": "fa24e8c3a64be54f",
+   "uv": "07c0e469adb1479d",
+   "mask": "498e8efd20f7fac9"
+  },
+  "MILL_cap_iron": {
+   "tris": 3396,
+   "geometry": "26b8324e6ce71bf1",
+   "uv": "90392d6db1519d6a",
+   "mask": "417e94028fe8c3c8"
+  },
+  "MILL_cap_shingles": {
+   "tris": 18287,
+   "geometry": "1690c13c3a6541a0",
+   "uv": "825673ed1cc31777",
+   "mask": "546a8d9e19cba43a"
+  },
+  "MILL_corbel_070": {
+   "tris": 1048,
+   "geometry": "0d45106b5d5e571d",
+   "uv": "103195948c18c6be",
+   "mask": "ed91eaa249338c22"
+  },
+  "MILL_corbel_071": {
+   "tris": 1048,
+   "geometry": "434d1b49e2c38a1b",
+   "uv": "7034c7df819d1a7e",
+   "mask": "98e57314c42a9e08"
+  },
+  "MILL_corbel_072": {
+   "tris": 1048,
+   "geometry": "a3df66a8730392a7",
+   "uv": "76062d2fcba88ee4",
+   "mask": "acd2b855ce4a523b"
+  },
+  "MILL_corbel_073": {
+   "tris": 1048,
+   "geometry": "a2702215f519f09a",
+   "uv": "98543c9ad3b11700",
+   "mask": "b574b0a6c1e27b71"
+  },
+  "MILL_corbel_074": {
+   "tris": 1048,
+   "geometry": "36811dab7dfd92e2",
+   "uv": "4f4644259b13f6f1",
+   "mask": "9261db3cdde1c41f"
+  },
+  "MILL_corbel_075": {
+   "tris": 1048,
+   "geometry": "d59dd73fc3003e2a",
+   "uv": "103195948c18c6be",
+   "mask": "ed91eaa249338c22"
+  },
+  "MILL_corbel_076": {
+   "tris": 1048,
+   "geometry": "d890fa1f4d498aee",
+   "uv": "7034c7df819d1a7e",
+   "mask": "98e57314c42a9e08"
+  },
+  "MILL_corbel_077": {
+   "tris": 1048,
+   "geometry": "578519c61d61fdfd",
+   "uv": "467aa79be207f3b7",
+   "mask": "7ced066bedcc3f14"
+  },
+  "MILL_corbel_078": {
+   "tris": 1048,
+   "geometry": "f92947d24418b43a",
+   "uv": "467aa79be207f3b7",
+   "mask": "7ced066bedcc3f14"
+  },
+  "MILL_corbel_079": {
+   "tris": 1048,
+   "geometry": "c43f4ed777af8f6c",
+   "uv": "98543c9ad3b11700",
+   "mask": "b574b0a6c1e27b71"
+  },
+  "MILL_corbel_080": {
+   "tris": 1048,
+   "geometry": "e941d8074aeb3229",
+   "uv": "98543c9ad3b11700",
+   "mask": "b574b0a6c1e27b71"
+  },
+  "MILL_corbel_081": {
+   "tris": 1048,
+   "geometry": "9581cc2ce6349335",
+   "uv": "103195948c18c6be",
+   "mask": "ed91eaa249338c22"
+  },
+  "MILL_corbel_082": {
+   "tris": 1048,
+   "geometry": "eaeb866423e667f1",
+   "uv": "7034c7df819d1a7e",
+   "mask": "98e57314c42a9e08"
+  },
+  "MILL_corbel_083": {
+   "tris": 1048,
+   "geometry": "6d0af185d851c772",
+   "uv": "467aa79be207f3b7",
+   "mask": "7ced066bedcc3f14"
+  },
+  "MILL_corbel_084": {
+   "tris": 1048,
+   "geometry": "4e284febbdd88c7e",
+   "uv": "467aa79be207f3b7",
+   "mask": "7ced066bedcc3f14"
+  },
+  "MILL_corbel_085": {
+   "tris": 1048,
+   "geometry": "987d6f57298009b8",
+   "uv": "76062d2fcba88ee4",
+   "mask": "acd2b855ce4a523b"
+  },
+  "MILL_corbel_086": {
+   "tris": 1048,
+   "geometry": "a369494e83c0c855",
+   "uv": "98543c9ad3b11700",
+   "mask": "b574b0a6c1e27b71"
+  },
+  "MILL_corbel_087": {
+   "tris": 1048,
+   "geometry": "3106ba5e2ba3dc65",
+   "uv": "103195948c18c6be",
+   "mask": "ed91eaa249338c22"
+  },
+  "MILL_corbel_088": {
+   "tris": 1048,
+   "geometry": "7cebb8ba404605f0",
+   "uv": "103195948c18c6be",
+   "mask": "ed91eaa249338c22"
+  },
+  "MILL_corbel_089": {
+   "tris": 1048,
+   "geometry": "c86e009ac806433d",
+   "uv": "7034c7df819d1a7e",
+   "mask": "98e57314c42a9e08"
+  },
+  "MILL_corbel_090": {
+   "tris": 1048,
+   "geometry": "0162b95431cdb544",
+   "uv": "76062d2fcba88ee4",
+   "mask": "acd2b855ce4a523b"
+  },
+  "MILL_corbel_091": {
+   "tris": 1048,
+   "geometry": "867d6337a020638d",
+   "uv": "98543c9ad3b11700",
+   "mask": "b574b0a6c1e27b71"
+  },
+  "MILL_corbel_092": {
+   "tris": 1048,
+   "geometry": "bd7fd2a833025871",
+   "uv": "98543c9ad3b11700",
+   "mask": "b574b0a6c1e27b71"
+  },
+  "MILL_corbel_093": {
+   "tris": 1048,
+   "geometry": "20cfc7d01b42b7a9",
+   "uv": "103195948c18c6be",
+   "mask": "ed91eaa249338c22"
+  },
+  "MILL_corbel_094": {
+   "tris": 1048,
+   "geometry": "bfbc0e746c6ff044",
+   "uv": "7034c7df819d1a7e",
+   "mask": "98e57314c42a9e08"
+  },
+  "MILL_corbel_095": {
+   "tris": 1048,
+   "geometry": "c66ff7c659727b78",
+   "uv": "7034c7df819d1a7e",
+   "mask": "98e57314c42a9e08"
+  },
+  "MILL_corbel_096": {
+   "tris": 1048,
+   "geometry": "ac9dfb09a9b7f5e9",
+   "uv": "467aa79be207f3b7",
+   "mask": "7ced066bedcc3f14"
+  },
+  "MILL_corbel_097": {
+   "tris": 1048,
+   "geometry": "841543ac75b4960d",
+   "uv": "98543c9ad3b11700",
+   "mask": "b574b0a6c1e27b71"
+  },
+  "MILL_corbel_098": {
+   "tris": 1048,
+   "geometry": "e2de928749d3524d",
+   "uv": "4f4644259b13f6f1",
+   "mask": "9261db3cdde1c41f"
+  },
+  "MILL_corbel_099": {
+   "tris": 1048,
+   "geometry": "faccf38ac4f36bef",
+   "uv": "4f4644259b13f6f1",
+   "mask": "9261db3cdde1c41f"
+  },
+  "MILL_corbel_100": {
+   "tris": 1048,
+   "geometry": "c4ab1b323ea4157c",
+   "uv": "7034c7df819d1a7e",
+   "mask": "98e57314c42a9e08"
+  },
+  "MILL_corbel_101": {
+   "tris": 1048,
+   "geometry": "3206309bd21d994f",
+   "uv": "467aa79be207f3b7",
+   "mask": "7ced066bedcc3f14"
+  },
+  "MILL_corbel_102": {
+   "tris": 1048,
+   "geometry": "b607b20b25aa11f1",
+   "uv": "76062d2fcba88ee4",
+   "mask": "acd2b855ce4a523b"
+  },
+  "MILL_corbel_103": {
+   "tris": 1048,
+   "geometry": "4341e2e922c5da4f",
+   "uv": "98543c9ad3b11700",
+   "mask": "b574b0a6c1e27b71"
+  },
+  "MILL_corbel_104": {
+   "tris": 1048,
+   "geometry": "2f92da05cca00d4b",
+   "uv": "4f4644259b13f6f1",
+   "mask": "9261db3cdde1c41f"
+  },
+  "MILL_corbel_105": {
+   "tris": 1048,
+   "geometry": "cebdad4c800e8e8f",
+   "uv": "103195948c18c6be",
+   "mask": "ed91eaa249338c22"
+  },
+  "MILL_corbel_106": {
+   "tris": 1048,
+   "geometry": "ebfd76bace9228ac",
+   "uv": "103195948c18c6be",
+   "mask": "ed91eaa249338c22"
+  },
+  "MILL_corbel_107": {
+   "tris": 1048,
+   "geometry": "b329de03e8a3a51c",
+   "uv": "7034c7df819d1a7e",
+   "mask": "98e57314c42a9e08"
+  },
+  "MILL_corbel_108": {
+   "tris": 1048,
+   "geometry": "abd2a9ac9d7911e2",
+   "uv": "76062d2fcba88ee4",
+   "mask": "acd2b855ce4a523b"
+  },
+  "MILL_corbel_109": {
+   "tris": 1048,
+   "geometry": "b4e518cc44ff54a2",
+   "uv": "76062d2fcba88ee4",
+   "mask": "acd2b855ce4a523b"
+  },
+  "MILL_door_iron": {
+   "tris": 2884,
+   "geometry": "952d607766bb119a",
+   "uv": "7e5ed87c6f88c5de",
+   "mask": "f55ed50b479bfe51"
+  },
+  "MILL_door_leaf": {
+   "tris": 9540,
+   "geometry": "acec126082c9d18f",
+   "uv": "a10b3965b7775cab",
+   "mask": "a66453cbd90f9c48"
+  },
+  "MILL_door_step": {
+   "tris": 2231,
+   "geometry": "4172617c5cbac990",
+   "uv": "c38cee3cda36408f",
+   "mask": "5a583a0e6e8427b5"
+  },
+  "MILL_door_surround": {
+   "tris": 45907,
+   "geometry": "0b061de08d3e8d6a",
+   "uv": "558945aaa7469c30",
+   "mask": "aaf60e2c8e731b8f"
+  },
+  "MILL_interior": {
+   "tris": 6544,
+   "geometry": "e1e7abeabf769816",
+   "uv": "b3e97b9c8523415e",
+   "mask": "5ce9781e31f6ea6d"
+  },
+  "MILL_poll_end": {
+   "tris": 692,
+   "geometry": "93b0c2ee5ffc5152",
+   "uv": "8cd448665950c8df",
+   "mask": "5dda1d2fea375f90"
+  },
+  "MILL_prop_anchors": {
+   "tris": 10127,
+   "geometry": "59450172655abd16",
+   "uv": "88923423f36924ad",
+   "mask": "81c6804095d11d9a"
+  },
+  "MILL_prop_iron": {
+   "tris": 4152,
+   "geometry": "a04e3446bba0f3bb",
+   "uv": "f9f570ad7ebfcf6d",
+   "mask": "c56b5899efb50684"
+  },
+  "MILL_props": {
+   "tris": 66721,
+   "geometry": "1f38d0cf436aba38",
+   "uv": "f334384d9f2f1214",
+   "mask": "93ee4d1950104e60"
+  },
+  "MILL_rotor_bolt_110": {
+   "tris": 36,
+   "geometry": "286c72bffda8363a",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_111": {
+   "tris": 36,
+   "geometry": "345e3e81bf26dbe0",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_112": {
+   "tris": 36,
+   "geometry": "c5d824cbc6719c21",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_113": {
+   "tris": 36,
+   "geometry": "5ed31e43722c95fe",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_114": {
+   "tris": 36,
+   "geometry": "f53e6e69b7901368",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_115": {
+   "tris": 36,
+   "geometry": "5198cced0f81fe90",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_116": {
+   "tris": 36,
+   "geometry": "9b24d2c441ffc168",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_117": {
+   "tris": 36,
+   "geometry": "5bfd067cb51e7ba8",
+   "uv": "d7ad48c8c15bd03e",
+   "mask": "b5fdddec11dfb082"
+  },
+  "MILL_rotor_bolt_118": {
+   "tris": 36,
+   "geometry": "94a599c71e1c0197",
+   "uv": "d7ad48c8c15bd03e",
+   "mask": "b5fdddec11dfb082"
+  },
+  "MILL_rotor_bolt_119": {
+   "tris": 36,
+   "geometry": "4082146d6023cd8c",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_120": {
+   "tris": 36,
+   "geometry": "65bc2cad59c1d58e",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_121": {
+   "tris": 36,
+   "geometry": "4a70dfed26abec7d",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_122": {
+   "tris": 36,
+   "geometry": "4a2b91b54a57516a",
+   "uv": "d7ad48c8c15bd03e",
+   "mask": "b5fdddec11dfb082"
+  },
+  "MILL_rotor_bolt_123": {
+   "tris": 36,
+   "geometry": "2a3295b6fd9b7d52",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_124": {
+   "tris": 36,
+   "geometry": "9e84156b06371450",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_125": {
+   "tris": 36,
+   "geometry": "6570fa2173282b7b",
+   "uv": "d7ad48c8c15bd03e",
+   "mask": "b5fdddec11dfb082"
+  },
+  "MILL_rotor_bolt_126": {
+   "tris": 36,
+   "geometry": "d5c6799de7c4af91",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_127": {
+   "tris": 36,
+   "geometry": "405dec17db9a46de",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_128": {
+   "tris": 36,
+   "geometry": "3a028a868626c271",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_129": {
+   "tris": 36,
+   "geometry": "9a5eaa694c2e61f5",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_130": {
+   "tris": 36,
+   "geometry": "5bc4fb46dd167d8e",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_131": {
+   "tris": 36,
+   "geometry": "634f4897f7ff0a8a",
+   "uv": "d7ad48c8c15bd03e",
+   "mask": "b5fdddec11dfb082"
+  },
+  "MILL_rotor_bolt_132": {
+   "tris": 36,
+   "geometry": "6c255d7f627a9c04",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_133": {
+   "tris": 36,
+   "geometry": "236203a987f71f39",
+   "uv": "d7ad48c8c15bd03e",
+   "mask": "b5fdddec11dfb082"
+  },
+  "MILL_rotor_bolt_134": {
+   "tris": 36,
+   "geometry": "4915f729b34bbb72",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_135": {
+   "tris": 36,
+   "geometry": "5149f1633d607f9b",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_136": {
+   "tris": 36,
+   "geometry": "1b764208d5ab7e80",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_137": {
+   "tris": 36,
+   "geometry": "b4cf7e0ae827db85",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_138": {
+   "tris": 36,
+   "geometry": "2a2ce78e688f7d60",
+   "uv": "d7ad48c8c15bd03e",
+   "mask": "b5fdddec11dfb082"
+  },
+  "MILL_rotor_bolt_139": {
+   "tris": 36,
+   "geometry": "c2a78076940fc85c",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_140": {
+   "tris": 36,
+   "geometry": "c607a7e76c154b10",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_rotor_bolt_141": {
+   "tris": 36,
+   "geometry": "ff4baeb2259fd4e7",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_rotor_bolt_142": {
+   "tris": 36,
+   "geometry": "90d67031e59fa3b0",
+   "uv": "a69ab5ea1e78bc64",
+   "mask": "49cd186c2b402365"
+  },
+  "MILL_rotor_bolt_143": {
+   "tris": 36,
+   "geometry": "b42c66341098c1b5",
+   "uv": "56e0be0b5684025c",
+   "mask": "6874436c07fff138"
+  },
+  "MILL_rotor_bolt_144": {
+   "tris": 36,
+   "geometry": "81c9bc5b8251275a",
+   "uv": "56e0be0b5684025c",
+   "mask": "6874436c07fff138"
+  },
+  "MILL_rotor_bolt_145": {
+   "tris": 36,
+   "geometry": "b896bc46f84e88fb",
+   "uv": "a69ab5ea1e78bc64",
+   "mask": "49cd186c2b402365"
+  },
+  "MILL_rotor_bolt_146": {
+   "tris": 36,
+   "geometry": "ebae8b5ca77f2e9b",
+   "uv": "56e0be0b5684025c",
+   "mask": "6874436c07fff138"
+  },
+  "MILL_rotor_bolt_147": {
+   "tris": 36,
+   "geometry": "34408edec48da91e",
+   "uv": "56e0be0b5684025c",
+   "mask": "6874436c07fff138"
+  },
+  "MILL_rotor_bolt_148": {
+   "tris": 36,
+   "geometry": "d5de01a9a7d2fe08",
+   "uv": "a69ab5ea1e78bc64",
+   "mask": "49cd186c2b402365"
+  },
+  "MILL_rotor_bolt_149": {
+   "tris": 36,
+   "geometry": "2fe50737feef2246",
+   "uv": "56e0be0b5684025c",
+   "mask": "6874436c07fff138"
+  },
+  "MILL_rotor_bolt_150": {
+   "tris": 36,
+   "geometry": "bc7a888e53878344",
+   "uv": "a69ab5ea1e78bc64",
+   "mask": "49cd186c2b402365"
+  },
+  "MILL_rotor_bolt_151": {
+   "tris": 36,
+   "geometry": "153009368cbbd6e1",
+   "uv": "56e0be0b5684025c",
+   "mask": "6874436c07fff138"
+  },
+  "MILL_rotor_bolt_152": {
+   "tris": 36,
+   "geometry": "ee150fb6d72f6baf",
+   "uv": "a69ab5ea1e78bc64",
+   "mask": "49cd186c2b402365"
+  },
+  "MILL_rotor_bolt_153": {
+   "tris": 36,
+   "geometry": "2e227b8efec43943",
+   "uv": "56e0be0b5684025c",
+   "mask": "6874436c07fff138"
+  },
+  "MILL_rotor_bolt_154": {
+   "tris": 36,
+   "geometry": "75c00dfcafe7fcb9",
+   "uv": "56e0be0b5684025c",
+   "mask": "6874436c07fff138"
+  },
+  "MILL_rotor_bolt_155": {
+   "tris": 36,
+   "geometry": "17f3592de9824d5b",
+   "uv": "a69ab5ea1e78bc64",
+   "mask": "49cd186c2b402365"
+  },
+  "MILL_rotor_bolt_156": {
+   "tris": 36,
+   "geometry": "b755ddc9f365d7a3",
+   "uv": "56e0be0b5684025c",
+   "mask": "6874436c07fff138"
+  },
+  "MILL_rotor_bolt_157": {
+   "tris": 36,
+   "geometry": "2759541b3cbfc665",
+   "uv": "a69ab5ea1e78bc64",
+   "mask": "49cd186c2b402365"
+  },
+  "MILL_rotor_iron": {
+   "tris": 4784,
+   "geometry": "bd26530758e96638",
+   "uv": "c583f818a3d3f791",
+   "mask": "56e77126eff5b60d"
+  },
+  "MILL_tail_bolt_158": {
+   "tris": 36,
+   "geometry": "f72b4d6f748a65f2",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_tail_bolt_159": {
+   "tris": 36,
+   "geometry": "dc1a3727aaf9e991",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_tail_bolt_160": {
+   "tris": 36,
+   "geometry": "1eb737f04ec1d517",
+   "uv": "577810d83e5a311c",
+   "mask": "268dfb6f14fb050b"
+  },
+  "MILL_tail_bolt_161": {
+   "tris": 36,
+   "geometry": "8882aa2723bcdf1a",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_tail_bolt_162": {
+   "tris": 36,
+   "geometry": "9685048188895624",
+   "uv": "577810d83e5a311c",
+   "mask": "268dfb6f14fb050b"
+  },
+  "MILL_tail_bolt_163": {
+   "tris": 36,
+   "geometry": "14f9e8bbff7fbec1",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_tail_bolt_164": {
+   "tris": 36,
+   "geometry": "87c884cc2627082d",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_tail_bolt_165": {
+   "tris": 36,
+   "geometry": "feaa3fc7881ed94b",
+   "uv": "577810d83e5a311c",
+   "mask": "268dfb6f14fb050b"
+  },
+  "MILL_tail_bolt_166": {
+   "tris": 36,
+   "geometry": "b19b7ce517f1a6c2",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_tail_bolt_167": {
+   "tris": 36,
+   "geometry": "9a3e8cb25282b68e",
+   "uv": "577810d83e5a311c",
+   "mask": "268dfb6f14fb050b"
+  },
+  "MILL_tail_bolt_168": {
+   "tris": 36,
+   "geometry": "11310a0b9eabf906",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_tail_bolt_169": {
+   "tris": 36,
+   "geometry": "a68f5679876c6401",
+   "uv": "577810d83e5a311c",
+   "mask": "268dfb6f14fb050b"
+  },
+  "MILL_tail_bolt_170": {
+   "tris": 36,
+   "geometry": "1aca2c3acd742899",
+   "uv": "577810d83e5a311c",
+   "mask": "268dfb6f14fb050b"
+  },
+  "MILL_tail_bolt_171": {
+   "tris": 36,
+   "geometry": "22e160a9d87b24f2",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_tail_bolt_172": {
+   "tris": 36,
+   "geometry": "f85284c4bb4d358a",
+   "uv": "d7ad48c8c15bd03e",
+   "mask": "b5fdddec11dfb082"
+  },
+  "MILL_tail_bolt_173": {
+   "tris": 36,
+   "geometry": "be39de3bd7c24c5f",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_tail_bolt_174": {
+   "tris": 36,
+   "geometry": "dac9583692acf939",
+   "uv": "457835aeee320377",
+   "mask": "46ffb1afeb6eefa9"
+  },
+  "MILL_tail_bolt_175": {
+   "tris": 36,
+   "geometry": "5a5e5b071751b5cc",
+   "uv": "d8a6ccf5fd57ee17",
+   "mask": "a6c2f9f5019ce1ec"
+  },
+  "MILL_tail_boom": {
+   "tris": 7920,
+   "geometry": "9752fad356e87fe9",
+   "uv": "cc5842540440fa88",
+   "mask": "346248a00f427bd1"
+  },
+  "MILL_tail_iron": {
+   "tris": 4152,
+   "geometry": "1f3995558cc21101",
+   "uv": "1729a19effedd3a4",
+   "mask": "7089c31caf4f0b47"
+  },
+  "MILL_tail_vane": {
+   "tris": 5412,
+   "geometry": "b75bbe2eb089b2f9",
+   "uv": "ab8d337bcb32d616",
+   "mask": "f13e3e35add67c0c"
+  },
+  "MILL_tower_boards": {
+   "tris": 29356,
+   "geometry": "5bd84e5559062940",
+   "uv": "f8b321231363781c",
+   "mask": "8ebb0b4faaebc1d8"
+  },
+  "MILL_tower_frame": {
+   "tris": 12514,
+   "geometry": "c93766158c09c502",
+   "uv": "5d536d2b31dc2f29",
+   "mask": "4b2916010a64934d"
+  },
+  "MILL_tower_iron": {
+   "tris": 1520,
+   "geometry": "444ba77b92ef3858",
+   "uv": "9abebdf3460808c6",
+   "mask": "8b741d88e4b41b2f"
+  },
+  "MILL_wall_core": {
+   "tris": 10958,
+   "geometry": "d35e557dc3d35cea",
+   "uv": "fccb66661f787268",
+   "mask": "7134357395c26c76"
+  },
+  "MILL_wheel_arm_A": {
+   "tris": 1488,
+   "geometry": "c53aa98a30d1fc3f",
+   "uv": "838fe5e4c24112c6",
+   "mask": "3ecb4db28e0a96d9"
+  },
+  "MILL_wheel_arm_B": {
+   "tris": 1488,
+   "geometry": "c72721208c3b76f9",
+   "uv": "37353381d730c548",
+   "mask": "e6b450eb812b8692"
+  },
+  "MILL_wheel_arm_C": {
+   "tris": 1488,
+   "geometry": "d8181c833c72b4b5",
+   "uv": "b1e5371c06a12ea5",
+   "mask": "dd0d7d757b5cb975"
+  },
+  "MILL_wheel_arm_D": {
+   "tris": 1488,
+   "geometry": "fa3d43819d0fc6f7",
+   "uv": "31dc3d4c88f849f4",
+   "mask": "4d7d07e6bd1fff18"
+  },
+  "MILL_wheel_blades": {
+   "tris": 21048,
+   "geometry": "f229e931848dc1a8",
+   "uv": "0a8b30b9d2d697b8",
+   "mask": "2bf2c5cf27d7c93f"
+  },
+  "MILL_wheel_rim": {
+   "tris": 5120,
+   "geometry": "9720f846f56b5d2a",
+   "uv": "d19084bdf223e533",
+   "mask": "b729e169dc16f083"
+  },
+  "MILL_wheel_spokes": {
+   "tris": 4000,
+   "geometry": "b6fbdcd214050269",
+   "uv": "2afc244b70ae9607",
+   "mask": "18fd165f663765b7"
+  },
+  "MILL_windshaft": {
+   "tris": 320,
+   "geometry": "e700f6f495f0f051",
+   "uv": "6dc0016c55656f09",
+   "mask": "7d21dec983c1bf41"
+  }
+ },
+ "triangles": 1146243,
+ "geometry": "89bf4a2a2c60e049",
+ "uv": "b006e70c2dc4750b",
+ "mask": "3c0753f38798dad6"
+}
