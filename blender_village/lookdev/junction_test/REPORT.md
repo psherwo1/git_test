@@ -50,3 +50,13 @@ Quick r2 look test for the client: how visible the known roof-junction defects a
 **Camera sources:**
 - longhouse: `renders/variants/v3_longhouse_roundend/round_06/director_extra/dir_render6.py`;
 - hall: the director's round-7 camera scripts were in the old session's scratchpad, not in the repo; their cameras are reproduced in `jt_shots.py`.
+
+## Session 2: the client's lead mitigation for the tiered hall (2026-10-17)
+
+The client accepted the hall at round 7 with darker, grimier lead on the turret aprons. `apply_lookdev.py` (r2) now
+reads a per-object `lookdev_grime` (set from `OBJECT_GRIME`, full hall object names): value x 0.6, saturation x 0.7,
+dark run-off streaks, slightly rougher, and a faint hammered-sheet normal. It is applied to both turret aprons and
+their cheeks and, for consistency, to the hall's drum and lantern flashings. Other buildings' lead is unchanged.
+Result (`renders/v2_lead_mitigation/`, before / after): the sunlit turret apron reads as dark weathered lead instead
+of a pale band; the stepped drip-edge outline is still there (geometry), with much less contrast. UE: a per-mesh
+material-instance scalar.

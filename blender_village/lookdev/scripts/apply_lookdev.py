@@ -459,7 +459,10 @@ def mat_lead(mat):
     grime = g.math("MULTIPLY", a["mask"], 2.5, clamp=True)
     col = g.mix(grime, col, (0.12, 0.12, 0.12, 1.0) if r1 else (0.065, 0.065, 0.065, 1.0))
     col, rough = wear(g, c, col, a["rough"], light=0.1, rough_add=0.1)
-    finish(g, c, col, rough, None, metallic=0.2, rough_min=0.7, rough_max=0.95)
+    normal = None
+    if not r1:
+        col, rough, normal = lead_grime(g, col, rough)
+    finish(g, c, col, rough, normal, nstrength=0.5, metallic=0.2, rough_min=0.7, rough_max=0.95)
 
 
 def mat_moss(mat, earth=False):
@@ -508,6 +511,17 @@ DRESSED_VALUE_R1, DRESSED_VALUE_R2 = 1.15, 0.805  # HSV value on the softened li
 OBJECT_DARKEN = {  # object-name suffix -> 'lookdev_darken' (r2); UE: a per-mesh material-instance scalar
     "_wheel_blades": 0.45,
 }
+# The client's mitigation for the tiered hall (accepted at round 7, 2026-10-17): the sunlit turret lead aprons read as
+# a pale sawtooth band in the junction test, so they get darker, grimier lead with a hammered-sheet normal.
+OBJECT_GRIME = {  # object-name suffix -> 'lookdev_grime' (r2, M_lead only); UE: a per-mesh material-instance scalar
+    "HALL_skirt1_tur_e_flashing": 1.0,
+    "HALL_skirt1_tur_nw_flashing": 1.0,
+    "HALL_skirt1_tur_e_flashing_cheek": 1.0,
+    "HALL_skirt1_tur_nw_flashing_cheek": 1.0,
+    # the hall's other roof-into-body flashings, so the darker turret aprons do not sit next to pale lead bands
+    "HALL_skirt1_drum_flashing": 1.0,
+    "HALL_skirt2_lantern_flashing": 1.0,
+}
 
 
 def obj_darken(g, col):
@@ -518,6 +532,28 @@ def obj_darken(g, col):
     v = g.math("SUBTRACT", 1.0, d)
     s = g.math("MULTIPLY_ADD", d, -0.3, 1.0)
     return g.hsv(col, 0.5, s, v)
+
+
+def lead_grime(g, col, rough):
+    """Per-object lead grime from the object's custom property 'lookdev_grime' (absent = 0 = unchanged): value
+    x (1 - 0.4 k), dark run-off streaks (object-space noise stretched along Z), rougher, and a hammered-sheet normal
+    (a tangent-space colour nudged off flat by noise) so the sheet no longer reads as one pale flat band."""
+    k = g.out(g.node("ShaderNodeAttribute", attribute_type="OBJECT", attribute_name="lookdev_grime"), "Fac")
+    col = g.hsv(col, 0.5, g.math("MULTIPLY_ADD", k, -0.3, 1.0), g.math("MULTIPLY_ADD", k, -0.4, 1.0))
+    tc = g.node("ShaderNodeTexCoord")
+    st = g.node("ShaderNodeTexNoise")
+    st.inputs["Scale"].default_value = 6.0
+    st.inputs["Detail"].default_value = 6.0
+    g.link(g.vmath("MULTIPLY", tc.outputs["Object"], (1.0, 1.0, 0.25)), st.inputs["Vector"])
+    streak = g.math("MULTIPLY", g.maprange(g.out(st, "Fac"), 0.45, 0.7, interp="SMOOTHSTEP"), k)
+    col = g.mix(g.math("MULTIPLY", streak, 0.8), col, (0.035, 0.035, 0.033, 1.0))
+    rough = g.math("MULTIPLY_ADD", streak, 0.1, _val(g, rough) if rough.type == "RGBA" else rough, clamp=True)
+    hm = g.node("ShaderNodeTexNoise")
+    hm.inputs["Scale"].default_value = 28.0
+    hm.inputs["Detail"].default_value = 3.0
+    g.link(tc.outputs["Object"], hm.inputs["Vector"])
+    normal = g.mix(g.math("MULTIPLY", k, 0.25), (0.5, 0.5, 1.0, 1.0), g.out(hm, "Color"))
+    return col, rough, normal
 
 
 def world_noise(g, scale, lo, hi, amount):
@@ -678,6 +714,10 @@ if LOOK == "r2":
             if o.name.endswith(suffix):
                 o["lookdev_darken"] = d
                 print("lookdev_darken", o.name, d)
+        for suffix, k in OBJECT_GRIME.items():
+            if o.name.endswith(suffix):
+                o["lookdev_grime"] = k
+                print("lookdev_grime", o.name, k)
 
 done = []
 for m in bpy.data.materials:
