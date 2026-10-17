@@ -1,18 +1,20 @@
 """v5_harbour_house (HARB) -- approved building 3, round 3: the ref4 harbour boat hall.  A declarative RECIPE: every
 piece is a village_kit module; the building is dimensions + the order of the steps.  Round 3: the cruck pads stand
 on dressed responds to the bed (cruck_frame respond_z), the quay walls' footing is flush (path_stone_wall
-flush_runs), and the quay's convex corners are quoin-bonded on a never-culled backing (stone_quay).
+flush_runs), and the quay's convex corners are quoin-bonded on a never-culled backing (stone_quay).  Round 4: the
+client's broader, slumped hall roof (7.0 m at 49 deg, 0.50 m ridge sag, 0.70 m swept eaves), a parameter change:
+every plan coordinate (the hall, slip, quay, jetty, ladder, moorings, door and run distances) derives from DIM.
 
 Run:  python -I build_v5_harbour_house.py  -> v5_harbour_house.blend + decal_anchors.json (next to this file)
       HARB_FAST=1 skips the hidden-geometry cull (quick looks only); HARB_OUT=<path.blend> writes elsewhere.
 
 Datum: quay / landward ground Z = 0 (the quay coping and the wall footings at -0.04); harbour bed Z = -2.5.  Built
 with the round tower's axis at the origin, then recentred on the plan bounding box (the build log's shift).
-  hall     coursed rubble boat hall 6.0 x 9.2 m (path_stone_wall), eave walls ~3.3 m, a 58 deg kit-shingle gable roof
+  hall     coursed rubble boat hall 7.0 x 9.2 m (path_stone_wall), eave walls ~3.3 m, a 49 deg kit-shingle gable roof
            with a sagging ridge, swept eaves and apex-flared bargeboards (GableRoof soft options), turned finials on
            lead hats at both gables; the land gable carries the door
   water    the water gable: stone piers + a heavy cruck / arched-brace frame with a pointed inner
-           arch and plank infill (cruck_frame) over a 4.6 m
+           arch and plank infill (cruck_frame) over a 5.0 m
   gable    arched boat opening; the slip runs into the hall (boats moor inside) behind a boarded partition
   tower    a round rubble tower at the landward corner (round_stone_body) with a 1.7 m timber top storey (board_belt on a
            plain body: boards, foot and head rings, four lookouts) under a mossy kit-shingle cone (cone_roof) with the
@@ -49,16 +51,22 @@ BID = "v5_harbour_house"
 # ---- the ONE dimension tables: the tower's RoundFrame (cone) and the rest of the building ----------------------
 KIT = KitParams(radius=2.10, eave_z=8.60, overhang=0.50, pitch_deg=52.0, collar_r=0.62,
                 cone_age=age_defaults(**AGE_R10), detail_rule=True)
-DIM = KitParams(r_tower=2.30, batter=1.5, stone_top=6.90, hx=3.2, hy=4.8, half=3.0, len=9.2, wall_z=3.35, pitch=58.0,
-                bay=3.2, clear=4.6, pier=0.7, quay_z=-0.04, bed=-2.5, wing_x0=-6.3, wing_half=1.7, wing_z=2.85)
-HX, HY, HALF, QZ = DIM["hx"], DIM["hy"], DIM["half"], DIM["quay_z"]
+# round 4 (client must-fix "broader, slumped roof" + CLIENT DIRECTION 14:10): the hall is 7.0 m wide at 49 deg with a
+# 0.50 m ridge sag, a deeper overhang and a heavier swept eave.  It widens toward +X only (xw = the hall's west face,
+# kept at 0.2 against the tower); the eave walls are not raised; everything else derives from DIM.
+DIM = KitParams(r_tower=2.30, batter=1.5, stone_top=6.90, xw=0.2, hy=4.8, half=3.5, len=9.2, wall_z=3.35, pitch=49.0,
+                ridge_sag=0.50, bay=3.2, clear=5.0, quay_z=-0.04, bed=-2.5, wing_x0=-6.3, wing_half=1.7, wing_z=2.85)
+HALF, HY, QZ = DIM["half"], DIM["hy"], DIM["quay_z"]
+HX = DIM["xw"] + HALF                                        # the hall's ridge line (3.7)
 Y0, Y1 = HY - DIM["len"] / 2, HY + DIM["len"] / 2            # land gable / water gable faces (0.2 / 9.4)
-XW, XE = HX - HALF, HX + HALF                                # hall side faces (0.2 / 6.2)
-XJ0, XJ1 = HX - DIM["clear"] / 2, HX + DIM["clear"] / 2      # the arch jambs (0.9 / 5.5)
+XW, XE = HX - HALF, HX + HALF                                # hall side faces (0.2 / 7.2)
+XJ0, XJ1 = HX - DIM["clear"] / 2, HX + DIM["clear"] / 2      # the arch jambs (1.2 / 6.2)
 YP = Y1 - DIM["bay"]                                         # the bay partition / slip head (6.2)
-MAIN = GableRoof(x0=Y0, x1=Y1, half=HALF, wall_z=DIM["wall_z"], pitch_deg=DIM["pitch"], overhang=0.45,
-                 verge=(0.35, 0.50), origin=(HX, 0.0), yaw_deg=90.0, name="roof", ridge_sag=0.24, eave_sag=0.08,
-                 eave_sweep=0.28, sweep_len=1.0, verge_flare=0.36, flare_len=2.0, wave=0.02, wave_seed=41)
+K = HALF / 3.0                                               # the soft-roof options scale with the span (round-3 = 1)
+MAIN = GableRoof(x0=Y0, x1=Y1, half=HALF, wall_z=DIM["wall_z"], pitch_deg=DIM["pitch"], overhang=0.70,
+                 verge=(0.35, 0.50), origin=(HX, 0.0), yaw_deg=90.0, name="roof", ridge_sag=DIM["ridge_sag"],
+                 eave_sag=0.10, eave_sweep=0.40, sweep_len=1.5, verge_flare=0.36 * K, flare_len=2.0 * K,
+                 wave=0.02, wave_seed=41)
 WING = GableRoof(x0=DIM["wing_x0"], x1=0.0, half=DIM["wing_half"], wall_z=DIM["wing_z"], pitch_deg=50.0,
                  overhang=0.35, verge=(0.40, 0.0), name="wing_roof", ridge_sag=0.14, eave_sweep=0.18, sweep_len=0.8,
                  verge_flare=0.24, flare_len=1.4, wave=0.015, wave_seed=43)
@@ -69,10 +77,12 @@ HALL = [(XJ0, YP), (XJ0, Y1), (XW, Y1), (XW, Y0), (XE, Y0), (XE, Y1), (XJ1, Y1),
 ON_QUAY = (0, 1, 5, 6)                       # the slip walls and water piers stand flush on the quay: flush footing
 WING_PATH = [(-0.3, DIM["wing_half"]), (DIM["wing_x0"], DIM["wing_half"]), (DIM["wing_x0"], -DIM["wing_half"]),
              (-0.3, -DIM["wing_half"])]
-QUAY = [(9.6, Y1), (XJ1, Y1), (XJ1, YP), (XJ0, YP), (XJ0, Y1), (-3.0, Y1)]   # every run a water face
-JETTY = [(7.2, 9.0, Y1, Y1 + 5.0)]
-S_W, S_S, S_E = 3.2 + 0.7, 3.2 + 0.7 + 9.2, 3.2 + 0.7 + 9.2 + 6.0              # path distance at the W / S / E runs
-DOOR_X = 4.3
+QUAY = [(XE + 3.4, Y1), (XJ1, Y1), (XJ1, YP), (XJ0, YP), (XJ0, Y1), (XW - 3.2, Y1)]   # every run a water face
+XJT = XE + 1.0                                                # the jetty's west edge (it runs XJT .. XJT + 1.8)
+JETTY = [(XJT, XJT + 1.8, Y1, Y1 + 5.0)]
+S_W = DIM["bay"] + HALF - DIM["clear"] / 2                    # path distance at the W / S / E runs
+S_S, S_E = S_W + DIM["len"], S_W + DIM["len"] + 2 * HALF
+DOOR_X = HX + 1.1                                             # the land-gable door, 1.1 m east of the ridge line
 HALL_OPENINGS = [(S_S + DOOR_X - XW, door_spec(width=1.0, height=2.10)),
                  (S_S + HX - XW, window_spec(width=0.45, height=0.55, sill=4.50)),
                  (S_E + 2.2, window_spec(sill=1.30)), (S_E + 4.8, window_spec(sill=1.30)),
@@ -140,8 +150,8 @@ def steps():
         (finial, dict(style="spike")),
         (round_eave_fill, dict(z_bot=None, r_off=-0.03)),
         (pile_deck, dict(name="jetty", rects=JETTY, deck_z=QZ, bed_z=DIM["bed"], land="S", land_z=-0.45,
-                         first_row=0.75, moor=[(7.4, Y1 + 4.8), (8.8, Y1 + 4.8)])),
-        (ladder, dict(name="ladder", top=(8.1, Y1 + 5.0, QZ), out=(0.0, 1.0), z_bot=DIM["bed"])),
+                         first_row=0.75, moor=[(XJT + 0.2, Y1 + 4.8), (XJT + 1.6, Y1 + 4.8)])),
+        (ladder, dict(name="ladder", top=(XJT + 0.9, Y1 + 5.0, QZ), out=(0.0, 1.0), z_bot=DIM["bed"])),
     ] + ([] if os.environ.get("HARB_FAST") else [(composite_hidden_cull, dict(min_polys=200))]) + [recenter]
 
 

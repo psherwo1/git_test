@@ -6,6 +6,17 @@ producer to merge into `../CHANGELOG.md` (proposed version 1.12.0).
 
 ---
 
+## Round 4 (the client's broader, slumped hall roof)
+
+**No kit module changed.** The wider, lower, more slumped hall is a recipe parameter change on `DIM` / `MAIN`
+(`half` 3.0 -> 3.5, `pitch` 58 -> 49, `ridge_sag` 0.24 -> 0.50, overhang 0.45 -> 0.70, `eave_sweep` 0.28 -> 0.40
+over 1.5 m, `clear` 4.6 -> 5.0; the CLIENT DIRECTION of 14:10 superseded a first 53.5 deg / 0.42 m build). Every plan coordinate in the
+recipe (hall faces, slip, quay ends, jetty, ladder, moorings, door, path run distances) now derives from `DIM`, so the
+roof change re-fitted `stone_quay` (quoin bond at the moved slip mouth), `cruck_frame` (span, tie, responds),
+`path_stone_wall` (wall heads), `wall_abutment` and the seal probe by themselves. No hash re-run is needed.
+
+---
+
 ## Round 3 (the four waterline must-fixes of the round-2 grade)
 
 All four are kit fixes, so the boathouse inherits them.

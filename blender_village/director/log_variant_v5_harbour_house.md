@@ -903,3 +903,85 @@ Keep every round-3 waterline fix, and re-verify only what the roof change touche
 - No re-runs that the change does not need. The hash rule only applies if a shared module is touched; this is a recipe change.
 - Reuse existing probe scripts and camera setups.
 - **Art Director:** grade round 4 promptly, re-using the round-3 camera set and probes where the geometry did not change. Judge the roof against ref4.
+
+## v5_harbour_house round 4 — builder entry
+
+**Built:** the client's broader, slumped hall roof, as a recipe parameter change only, with every round-3 waterline
+fix kept. I read the CLIENT DIRECTION after the round-2 grade, the PRODUCER NOTE of 13:48 and the round-3 grade before
+starting. I re-read the log before this entry and found the **CLIENT DIRECTION of 14:10**, which superseded my first
+build (7.0 m at 53.5 deg, `ridge_sag` 0.42; its renders are kept in `scratch/r4_full/renders_53p5/`). I applied it in
+this round with one rebuild. Nothing else was done (no nice-to-haves).
+
+- **Recipe:** `buildings/variants/v5_harbour_house/build_v5_harbour_house.py` (175 lines, 151 non-blank non-comment).
+  It writes `v5_harbour_house.blend` (19.2 MB, compressed) and `decal_anchors.json` (115 anchors).
+- **Renders:** `renders/variants/v5_harbour_house/round_04/` (all six views, `--samples 24`), with `stats.json` and
+  `hidden.json`. The builder close-ups (the round-3 camera set, moved with the slip mouth) are in
+  `round_04/builder_extra/`: `r4_slip_mouth`, `r4_corner_W`, `r4_corner_E`, `r4_gable`, `r4_pier_W_out`,
+  `r4_pier_W_in`, `r4_pier_E_out` and `r4_roof_ne` (a high three-quarter from the water side, the ref4 angle).
+- **Datum (unchanged):** quay and landward ground at Z = 0, coping and footings at -0.04, bed at -2.5. The recentre
+  shift is now **(-1.808, -5.973)** (round 3: -1.308), because the hall and quay grew 1.0 m toward +X. The review
+  tool's ground plane is still at the bed, so the main views float the building by 2.5 m (the tool, not the model).
+
+### The roof change
+
+| | round 3 | round 4 | asked |
+|---|---|---|---|
+| hall width (`half`) | 6.0 m (3.0) | **7.0 m (3.5)** | 7.0 m (14:10) |
+| pitch | 58 deg | **49 deg** | 48-50 deg (14:10) |
+| `ridge_sag` | 0.24 m | **0.50 m** | 0.45-0.55 m (14:10) |
+| eave overhang | 0.45 m | **0.70 m** | deeper (14:10) |
+| `eave_sweep` / `sweep_len` | 0.28 / 1.0 m | **0.40 / 1.5 m** | heavier (14:10) |
+| `verge_flare` / `flare_len` | 0.36 / 2.0 m | 0.42 / 2.33 m (scaled with the span) | kept |
+| `eave_sag` | 0.08 | 0.10 | — |
+| comb top at the gables | 8.69 m | **7.96 m** | at least about 7.8 m (14:10) |
+| comb at mid-length | 7.75 m | 6.42 m | (the slump) |
+| finial tips | 9.57 m | 8.82 m | — |
+| eave wall height (`wall_z`) | 3.35 m | 3.35 m, **not raised** | not raised (14:10) |
+| boat opening (`clear`) | 4.6 m | **5.0 m** (about 4.2 m between the responds) | optional 5.0 |
+
+- **It widens toward +X only.** `DIM` now carries `xw=0.2` (the hall's west face against the tower) and derives
+  `HX = xw + half`, so the tower abutments move as little as possible. The roof now meets the tower over z 2.67-6.22
+  (round 3: 2.65-7.14), still under the tower's stone top at 6.90.
+- **Everything derives from `DIM`:** the run distances `S_W = bay + half - clear/2`, `S_S = S_W + len`,
+  `S_E = S_S + 2*half`; the `QUAY` ends (`XE + 3.4`, `XW - 3.2`); the `JETTY` rect, the moorings and the ladder from
+  `XJT = XE + 1.0`; and `DOOR_X = HX + 1.1`. The unused `DIM["pier"]` and `DIM["hx"]` literals are gone, and
+  `ridge_sag` is in `DIM`. A boathouse can be widened or narrowed by changing `half`.
+- The cruck follows `half`: the tie spans ±3.14 m at 3.41-3.73 m, the arch runs 2.00 -> 3.07 m (R 2.72) under the tie,
+  the collar is at 5.62 m and the apex at 7.51 m, with 46 infill boards. The boat arch stays under the tie because the
+  eave walls were not raised.
+
+### Re-verified (only what the roof change touches)
+
+| check | result |
+|---|---|
+| seal probe on both `wall_abutment`s | roof / tower: 51,507 rays, **0 leaks**; wing roof / tower: 57,393 rays, **0 leaks** |
+| clearance gate | **PASS** at both doors: hall door (land gable) 5.63 m eave lip; wing door 2.50 m (unchanged) |
+| quay hole scans at the moved slip mouth (`scratch/probe_r4.py`, the round-3 probe re-derived from the new `DIM`) | outer E, both slip returns and the slip head: **0 pass-through**. On the outer W face, 4 of 7,885 rays: all in the one column 5 cm from the W arris, at bed-joint heights. They travel along a return-run bed joint and stop on `HARB_quay_backing_blocker` 3.57 m in, so they are not see-through. The round-3 blend gives 3 on the same column (`scratch/r4_corner_col.py`). The round-3 grid never sampled 5 cm from the arris. |
+| corner bond at the moved slip mouth | "2 convex corner(s) quoin-bonded". Diagonal rays: none past the arris on either corner. |
+| cruck posts on the responds | the horizontal rays hit the respond face at every station from -2.40 to -0.05 on both sides; the ray down from each post foot hits masonry |
+| tie bearing on the new pier quoins | on the pre-cull blend (the final blend's culled hidden faces make the downward rays meaningless): the tie bears **1-6 mm** on the quoin tops over about 0.4 m of each pier. The 0.13-0.41 m readings are rays falling into the vertical joints between top-course quoins, as in round 3. `r4_pier_W_out` / `r4_pier_E_out` show the tie seated on the top course. |
+| footing overhang | 0 footing hits above -0.30 off the flush faces (the only hits are the partition sill and the respond pad, by design) |
+| hidden | **13.6 %** (round 3: 14.2 %), under the 15 % limit |
+| triangles | **707,889** (cap 1,000,000) |
+| slots / Mask | 9 palette slots; `mask_attribute_missing` none |
+| objects | 70 (unchanged) |
+| hash rule | **not needed**: no kit module was touched (recipe only). Noted in `kit/changes/v5_harbour_house.md` (Round 4). |
+
+### Stats (round_04 `stats.json`)
+
+707,889 tris, 13.6 % hidden (96,007 tris), 9 slots, 70 objects. The bbox is 17.59 x 17.17 x 15.94 m (the plan is
+1.0 m wider in X). The build took 12.8 min with the cull. The kit gate kept 115 of 178 decal anchors.
+
+### Known gaps
+
+- From the water (`back.png`) the hall still reads as a gable with a lighter, lower hat, rather than ref4's fully
+  sagging gable. The silhouette is broader and the slump is clear from the side (`side.png`) and from `r4_roof_ne`.
+  A further step would need a lower `wall_z`. That would also lower the tie, and the boat arch under it (crown now
+  3.07 m), so I did not do it unasked.
+- The quay's free ends are still cut ends.
+- The responds narrow the water-level clear width (now about 4.2 m).
+- The posts stand 4 cm off the slip-wall face.
+- The two partition-end pinholes are still open (round-3 nice-to-have, not attempted per 14:10).
+- A small dark triangle remains between the tie end and the verge soffit over each pier (`r4_pier_W_out`). It was
+  there in round 3 and is not new.
+- The review tool's ground plane is at the bed.
