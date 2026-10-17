@@ -36,6 +36,24 @@ Target: populate a village of 40-50 buildings from 12-15 unique curated designs 
 - **The kit works:** proceed with the kit, variant generator and Unreal export. *Reframed by note 14:* author the remaining curated designs from the kit (12-15 in total; the 3 heroes and the 4 variants already exist), then export with instance layouts and placement-variation tooling instead of a 40-50 generator.
 - **The kit does NOT break apart into a usable kit (or only partly):** build **3 new custom hero buildings**. Client permission was given on 2026-10-16. They go through the same director-led loop and the same producer notes, and reuse any kit parts that do work.
 
+**KIT DECISION (2026-10-17, judged under notes 12-15).** Full texts: `director/kit_feasibility_director.md` and `director/kit_feasibility_technical.md`.
+
+| Reviewer | Verdict | Core reasoning |
+|---|---|---|
+| Art Director | **partial** | The architecture is real: 4 families plus a compound layer, short declarative recipes, deterministic, with working kit checks. But only v4 is fully accepted, and the vocabulary is only half covered: everything is round or stone, with **no timber or rectangular family** (harbour and waterfront houses, gabled timber halls, boathouses, jettied buildings), no L/T plans and no dormers. About 12-14 designs are possible, in about 8 silhouette families. |
+| Technical director | **kit_works** | The architecture is proven: 4 new types from 22-104-line recipes, all passing the director, every fix in a reusable module, rebuilds identical. The TD also built a new rubble barn in about 30 lines that worked first time (332k tris). The weak points are coverage (timber and waterfront, add-ons, pairwise junctions) and consolidation (duplicate frames, culls, decal recipes, eave closures, opening APIs; the keep family's global FR proxy; unsafe opt-in defaults; README stuck at 1.2.0; no exporter). All of them are fixed by adding to the kit, not by rebuilding it. About 12 designs are possible today. |
+
+**Both reviewers recommend the same course:**
+- proceed with the kit as the note-14 toolbox, and do **not** fall back to bespoke custom heroes (approved buildings 1 and 2 already exist as kit variants v3 and v2);
+- build approved building 3, the timber harbour house, as a new **timber, rectangular and waterfront kit family**;
+- **consolidate** the kit and turn its guard-rails on by default;
+- add the note-14 add-ons (lean-to, porch, chimney, dormer, gable valley);
+- close v1, v2 and v3 through audits (v1 under 1 M triangles);
+- update the README;
+- build the exporter, then the UE lookdev test.
+
+**Client decision on the split verdict: pending** (the client asked to be consulted if the decision is ambiguous).
+
 **Approved new buildings**, chosen to widen the village's vocabulary and taken from the concept art (client-confirmed on 2026-10-16):
 1. the stone longhouse ending in a round building with a mossy conical shingle roof (ref1, lower middle);
 2. the tall tiered great hall with stacked conical roofs and dormer turrets (ref2 centre);
