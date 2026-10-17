@@ -189,3 +189,22 @@ def dentil_corbels(g, rc, zc, n=40, n_var=6, proj=0.18):
                                                         [rc.normal(0, 0.01)])[0]
         place_instance(g, g.prefix + "_corbel_%03d" % i, "corbel_%d" % var[i], R, yv * Rr + np.array([0, 0, zc]))
     log("dentil corbels %d placements from %d shared variants" % (n, n_var))
+
+
+def string_course_profile(h=0.25, proj=0.07, drip=0.014):
+    """(y outward from the wall face, z up from the course bed) of a plain dressed string course: a vertical face
+    `proj` proud of the wall, a weathered (sloped) top that sheds water off the face, and a drip lip hanging `drip`
+    below the bed at the nose (clear of the walling below), so rain drops off instead of running down the wall."""
+    p = proj
+    return [(-0.06, 0.0), (p - 0.026, 0.0), (p - 0.018, -drip), (p - 0.004, -drip), (p, -0.004), (p, h - 0.07),
+            (p - 0.01, h - 0.058), (0.004, h - 0.008), (-0.06, h)]
+
+
+def string_course(g, part, rng, z0, z1, proj=0.07, drip=0.014, seg=(0.55, 0.9), skip=()):
+    """KIT COMPONENT (v1_stone_watchtower r2): a plain dressed projecting string course (no balusters) round a drum
+    from z0 to z1 (0.2-0.3 m): coursed profile blocks (drum_wall.profile_course), `proj` proud with a weathered top
+    and a drip.  The storey mark of a tower; the mill's balustrade band stays drum_wall's default band."""
+    from .drum_wall import profile_course
+    prof = string_course_profile(z1 - z0, proj, drip)
+    profile_course(g, part, "M_stone_dressed", rng, z0, prof, seg=seg, skip=skip, top_back=0.03)
+    log("string course z %.2f..%.2f, projection %.3f m, drip %.3f m" % (z0, z1, proj, drip))

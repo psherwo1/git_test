@@ -176,7 +176,7 @@ def build_eave_closure(g, coll, r_off=0.075, door_half=None, n_az=240):
     from mathutils import Vector
     from mathutils.bvhtree import BVHTree
     bv = []
-    for nm in ("HUT_roof_shingles", "HUT_roof_starter"):
+    for nm in (f"{g.prefix}_roof_shingles", f"{g.prefix}_roof_starter"):   # kit 1.7 (v4_mixed): was "HUT_" only
         me = bpy.data.objects[nm].data
         bv.append(BVHTree.FromPolygons([v.co[:] for v in me.vertices], [p_.vertices[:] for p_ in me.polygons]))
     cs_p, sn_p = math.cos(g.PITCH), math.sin(g.PITCH)

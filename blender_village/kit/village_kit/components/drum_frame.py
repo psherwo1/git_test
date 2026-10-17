@@ -46,6 +46,10 @@ class DrumFrame(Building):
         self.DOOR_RING = (0.18, 0.215)
         self.WIN_AZ = [70 * D2R, -130 * D2R]
         self.WIN = dict(cw=0.08, z0=1.30, z1=1.85, jz=[1.30, 1.56, 1.85], fw=[(0.17, 0.21), (0.21, 0.17)])
+        self.WIN_DZ = None            # kit changes v1_stone_watchtower (optional): per-window height offsets (m)
+        self.BATTER_TOP = 4.6         # kit changes v1_stone_watchtower (optional): the batter stops at this z
+        self.WIN_SPEC = None          # v1_stone_watchtower r2 (optional): one window_spec() per WIN_AZ entry
+        self.BAND_STYLE = "balustrade"  # v1_stone_watchtower r2 (optional): "plain" = drum_band.string_course
         self.ARCH_AZ = [(18 + 36 * k) * D2R for k in range(10)]
         self.ARCH = dict(cw=0.36, z0=2.92, zs=3.64, ring=(0.15, 0.165), fw=0.17, jz=[2.92, 3.28, 3.64])
         self.Z_BAND0, self.Z_BAL0, self.Z_BAL1, self.Z_BAND1 = 2.55, 2.65, 2.82, 2.92
@@ -141,7 +145,8 @@ class DrumFrame(Building):
         self.R_DOOR = float(R_out(self, 1.0))
         self.RREF = self.R_BASE0 - 0.07
         self.DZ = self.Z_CORN0 - 4.05
-        self.OPENINGS = ([(0.0, partial(hw_door, self))] + [(a, partial(hw_window, self)) for a in self.WIN_AZ]
+        self.OPENINGS = ([(0.0, partial(hw_door, self))]
+                         + [(a, partial(hw_window, self, dz=dz, w=w)) for a, w, dz in win_list(self)]
                          + [(a, partial(hw_arch, self)) for a in self.ARCH_AZ])
         self.AP_A = math.atan2(self.AP_ZT - self.AP_ZE, self.AP_RE - self.AP_RT)
         self.TW_TAPER = (self.TW_A0 - self.TW_A1) / (self.TW_Z1 - self.TW_Z0)
@@ -279,7 +284,50 @@ from ..split_stones import (stone_local)  # noqa: F401
 
 
 def R_out(g, z):
-    return g.R_BASE0 - (g.R_BASE0 - g.R_BASE1) * np.clip(z, 0, 4.6) / g.Z_BATTER
+    return g.R_BASE0 - (g.R_BASE0 - g.R_BASE1) * np.clip(z, 0, getattr(g, "BATTER_TOP", 4.6)) / g.Z_BATTER
+
+
+def win_dz(g):
+    """kit changes v1_stone_watchtower: the height offset of every slit window (g.WIN_DZ; None = all 0, the mill's
+    windows at WIN z0..z1)."""
+    dz = getattr(g, "WIN_DZ", None)
+    return [0.0] * len(g.WIN_AZ) if dz is None else [float(d) for d in dz]
+
+
+def win_list(g):
+    """v1_stone_watchtower r2: every window of the drum as (azimuth rad, spec dict, dz).  Without g.WIN_SPEC every
+    window uses the frame's g.WIN (the mill's slit) shifted by win_dz(); with it, window k uses g.WIN_SPEC[k]
+    (absolute heights, dz 0)."""
+    spec = getattr(g, "WIN_SPEC", None)
+    if spec is None:
+        return [(a, g.WIN, dz) for a, dz in zip(g.WIN_AZ, win_dz(g))]
+    return [(a, s, 0.0) for a, s in zip(g.WIN_AZ, spec)]
+
+
+WINDOW_FW = dict(slit=[(0.17, 0.21), (0.21, 0.17)], lookout=[(0.20, 0.26), (0.26, 0.20)])
+"""jamb-block face widths (left, right) per jamb course, alternating course by course."""
+
+
+def window_spec(clear_w=0.16, clear_h=0.55, sill=1.30, kind="slit", fw=None, lintel_h=None, course_h=0.30,
+                splay=0.22, room=1.5):
+    """KIT (v1_stone_watchtower r2): a drum window of any size, as a dict build_slit_windows / hw_window /
+    inside_clear / the wall core read.  clear_w x clear_h is the clear opening, `sill` its bottom (m above ground).
+    kind "slit": a splayed embrasure closed 0.62 m in (the mill's slit, `splay` = half width at the back);
+    kind "lookout": a straight reveal through the wall and a closed dark room `room` m deep behind the face
+    (producer note 6).  The jamb courses (about `course_h` each), the sill / lintel sizes and the rubble keep-out
+    bands are derived from the clear size, so a slit, a stair light and a lookout come from one module."""
+    cw = clear_w / 2.0
+    z0, z1 = float(sill), float(sill) + clear_h
+    n = max(2, int(round(clear_h / course_h)))
+    jz = [float(z) for z in np.linspace(z0, z1, n + 1)]
+    fw = fw or WINDOW_FW["lookout" if kind == "lookout" else "slit"]
+    fmax = max(max(p) for p in fw)
+    lh = lintel_h if lintel_h is not None else (0.18 if kind == "slit" else 0.24)
+    sill_w = 2 * (cw + fmax) + 0.04
+    lintel_w = 2 * (cw + fmax) + 0.16
+    return dict(kind=kind, cw=cw, z0=z0, z1=z1, jz=jz, fw=fw, splay=splay, room=room, sill_w=sill_w,
+                lintel_w=lintel_w, lintel_h=lh, z_sill=z0 - 0.065, z_lintel=z1 + 0.005 + lh / 2,
+                zb=z0 - 0.13, zt=z1 + lh + 0.015, hw_sill=sill_w / 2, hw_jamb=cw + fmax + 0.01, hw_lintel=lintel_w / 2)
 
 
 def cyl_place(g, P, th, zc, yoff, Rfun=None):
@@ -344,12 +392,15 @@ def hw_door(g, z):
     return out
 
 
-def hw_window(g, z):
-    z = np.asarray(z, float)
+def hw_window(g, z, dz=0.0, w=None):
+    """half width the rubble leaves free round a window at height z (sill band, jambs, lintel band).  w: the
+    window's spec (window_spec; None = g.WIN, the mill's slit, whose bands are the literal numbers)."""
+    W = g.WIN if w is None else w
+    z = np.asarray(z, float) - dz
     out = np.zeros_like(z)
-    out = np.where((z >= 1.17) & (z < g.WIN["z0"]), 0.31, out)
-    out = np.where((z >= g.WIN["z0"]) & (z < g.WIN["z1"]), g.WIN["cw"] + 0.22, out)
-    out = np.where((z >= g.WIN["z1"]) & (z < 2.04), 0.37, out)
+    out = np.where((z >= W.get("zb", 1.17)) & (z < W["z0"]), W.get("hw_sill", 0.31), out)
+    out = np.where((z >= W["z0"]) & (z < W["z1"]), W.get("hw_jamb", W["cw"] + 0.22), out)
+    out = np.where((z >= W["z1"]) & (z < W.get("zt", 2.04)), W.get("hw_lintel", 0.37), out)
     return out
 
 
@@ -459,9 +510,9 @@ def inside_clear(g, th, z):
     x, ok = lat(0.0)
     if ok and abs(x) < g.DOOR_CW and g.Z_TH - 0.2 <= z <= g.ZS_DOOR + math.sqrt(max(g.DOOR_CW ** 2 - x ** 2, 0)):
         return True
-    for a in g.WIN_AZ:
+    for a, W, dz in win_list(g):
         x, ok = lat(a)
-        if ok and abs(x) < g.WIN["cw"] and g.WIN["z0"] <= z <= g.WIN["z1"]:
+        if ok and abs(x) < W["cw"] and W["z0"] + dz <= z <= W["z1"] + dz:
             return True
     for a in g.ARCH_AZ:
         x, ok = lat(a)

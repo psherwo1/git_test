@@ -48,6 +48,8 @@ def tail_boom(g, parts, x0=None, x1=None, z=None, seed="tail"):
     # iron bands round the rail pair, each with a through-bolt (hex heads both sides)
     hb, hh = g.TB_YC + g.TB_RW / 2 + 0.003, g.TB_RH / 2 + 0.003
     for xb_ in (-1.92, -2.62, -3.30, -4.75, -5.92):
+        if xb_ < x1 + 0.10:          # kit 1.7 (v4_mixed): a shorter boom drops the bands past its end (they floated)
+            continue
         zc_ = float(zb(xb_))
         loop = []
         cr = 0.01

@@ -40,6 +40,8 @@ def tail_clearance(g, parts, xf, res=0.02):
     tail = np.concatenate([xf(parts[k], part_samples(parts[k], res)) for k in ("tail_boom", "tail_vane", "tail_iron")])
     tr, th = rz(tail)
     for k in ("tower_boards", "tower_frame", "tower_iron", "props", "prop_iron"):
+        if not parts[k].V:          # kit 1.7 (v4_mixed): a part never built (a mill without props) is skipped
+            continue
         sr, sh = rz(xf(parts[k], part_samples(parts[k], res)))
         best = 9.9
         for zlo in np.arange(th.min(), th.max(), 0.25):
@@ -106,7 +108,8 @@ def rotor_clearance(g):
     log("lowest rotating point z = %.3f m (apron top %.2f m, ground 0)" % (lowest, g.AP_ZT))
     rotor_internal_report(g, parts)
     P = g.prefix
-    ok = min(clr[P + "_apron_shingles"], clr[P + "_props"], clr[P + "_tail_vane"]) >= 0.30
+    # kit 1.7 (v4_mixed): a part that was never built (a mill without props) is absent from clr -> no constraint
+    ok = min(clr.get(P + "_apron_shingles", 9.9), clr.get(P + "_props", 9.9), clr.get(P + "_tail_vane", 9.9)) >= 0.30
     log("CLEARANCE CHECK wheel vs apron/props/tail >= 0.30 m: %s" % ("PASS" if ok else "FAIL"))
     tail_clearance(g, parts, xf)
     g.clearance = dict(clr, lowest=lowest, ok=ok)

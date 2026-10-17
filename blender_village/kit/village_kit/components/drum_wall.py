@@ -18,7 +18,7 @@ from .drum_band import (baluster_row, dentil_corbels)  # noqa: F401
 from .drum_door import (arched_door)  # noqa: F401
 from .drum_frame import (relief_door, relief_far, relief_min, FOOT_PIN_Z, MORTAR_RECESS, R_out, arcade_params, arch_set, cyl_place, door_params,
     drum_mortar_d, drum_to_wall, drum_to_world, free_fn_drum, free_on_circle, inside_clear, kpart, open_place,
-    wall_relief)  # noqa: F401
+    wall_relief, win_dz, win_list, window_spec)  # noqa: F401
 from ..split_stones import (STYLE, conchoidal, stone_local)  # noqa: F401
 from ..tmplmesh import (D2R, EYE_SOFFIT, PI, RING2, T_PIN, T_PIN_NB, T_RUB3, T_RUB3_HI, T_RUB3_HI_NB, T_RUB3_NB,
     T_RUB3_XHI, T_RUB3_XHI_NB, add_caps, add_grid, chamfer_dt, hull2d, log, noise_field, orient, perm_tmpl,
@@ -737,7 +737,7 @@ def build_base(g, parts):
     log("plain rubble: %d stones, %d pinch-outs" % (len(S["uc"]), S["n_pinch"]))
     # 4. arcade zone: round 6 - the piers are laid by blind_arcade() as coursed long-and-short dressed blocks
     # (arcade_piers); without an arcade the zone is plain coursed ashlar
-    if not g.ARCH_AZ:
+    if not g.ARCH_AZ and g.ARCH["zs"] > g.Z_BAND1 + 0.05:    # (v1_stone_watchtower: no empty ashlar zone)
         S = coursing(rng, g.Z_BAND1, g.ARCH["zs"], free_fn_drum(g, rng), hr=(0.2, 0.25), hbig=0.25, p_big=0.0,
                      lr=(0.24, 0.45), p_tall=0.0, p_pin=0.0, wob=0.0, joint=(0.01, 0.016))
         n += emit_drum_stones(g, P_st, "M_stone", rng, S, "ashlar", 0.012, bulge=False, wall=WD, tilt=False)
@@ -757,46 +757,97 @@ def build_slit_windows(g, parts):
     P_dr, P_mo = parts["dressed"], parts["mortar"]
     # ---- dressed: slit windows ----
     rw = g.RNG("windows")
-    for k, th in enumerate(g.WIN_AZ):
-        fw = g.WIN["fw"][k]
-        Rw_ = float(R_out(g, 1.6))
-        mrw = float(relief_min(g, [Rw_ * math.sin(th), -Rw_ * math.cos(th), 1.6])[0])     # producer note 11
-        jam = {-1: [(g.WIN["jz"][0], g.WIN["jz"][1], fw[0]), (g.WIN["jz"][1], g.WIN["jz"][2], fw[1])],
-               1: [(g.WIN["jz"][0], g.WIN["jz"][1], fw[1]), (g.WIN["jz"][1], g.WIN["jz"][2], fw[0])]}
+    for k, (th, Wn, dz) in enumerate(win_list(g)):      # (v1_stone_watchtower r2: per-window specs, window_spec)
+        spec = "zb" in Wn                                 # a window_spec(); g.WIN keeps the mill's literal numbers
+        fw = Wn["fw"][k % len(Wn["fw"])]                 # (v1_stone_watchtower: any number of windows)
+        zmid = 0.5 * (Wn["z0"] + Wn["z1"]) if spec else 1.575
+        Rw_ = float(R_out(g, zmid + 0.025 + dz))
+        mrw = float(relief_min(g, [Rw_ * math.sin(th), -Rw_ * math.cos(th), zmid + 0.025 + dz])[0])  # note 11
+        jz = [z_ + dz for z_ in Wn["jz"]]                 # (v1_stone_watchtower: dz = the window's height offset)
+        nc = len(jz) - 1                                  # jamb courses (2 for the mill's slit), faces alternating
+        jam = {-1: [(jz[i], jz[i + 1], fw[i % 2]) for i in range(nc)],
+               1: [(jz[i], jz[i + 1], fw[(i + 1) % 2]) for i in range(nc)]}
         for s, bl in jam.items():
             for (z0, z1, w) in bl:
                 P, T = stone_local(rw, [w], [z1 - z0 - 0.012], [0.32], "dressed", rot_deg=(0.2, 0.2, 0.3), min_relief=mrw)
-                W = open_place(g, P, np.array([th]), np.array([s * (g.WIN["cw"] + w / 2)]), np.array([(z0 + z1) / 2]),
+                W = open_place(g, P, np.array([th]), np.array([s * (Wn["cw"] + w / 2)]), np.array([(z0 + z1) / 2]),
                                np.array([0.02]))
                 P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="bevel")
         # sill with drip (projects 6 cm) and lintel
-        P, T = stone_local(rw, [0.62], [0.12], [0.40], "dressed", rot_deg=(0.2, 0.3, 0.2), min_relief=mrw)
+        P, T = stone_local(rw, [Wn.get("sill_w", 0.62)], [0.12], [0.40], "dressed", rot_deg=(0.2, 0.3, 0.2),
+                           min_relief=mrw)
         P[:, :, 2] += np.where(P[:, :, 2] > 0, -0.02 * np.clip(P[:, :, 1] + 0.1, 0, 1) * 6, 0)
-        W = open_place(g, P, np.array([th]), np.array([0.0]), np.array([1.235]), np.array([0.06]))
+        W = open_place(g, P, np.array([th]), np.array([0.0]), np.array([Wn.get("z_sill", 1.235) + dz]),
+                       np.array([0.06]))
         P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="bevel")
-        P, T = stone_local(rw, [0.74], [0.18], [0.34], "dressed", rot_deg=(0.2, 0.2, 0.4), min_relief=mrw)
-        W = open_place(g, P, np.array([th]), np.array([0.0]), np.array([1.945]), np.array([0.02]))
+        P, T = stone_local(rw, [Wn.get("lintel_w", 0.74)], [Wn.get("lintel_h", 0.18)], [0.34], "dressed",
+                           rot_deg=(0.2, 0.2, 0.4), min_relief=mrw)
+        W = open_place(g, P, np.array([th]), np.array([0.0]), np.array([Wn.get("z_lintel", 1.945) + dz]),
+                       np.array([0.02]))
         P_dr.add(W, T, Pl=P, mat="M_stone_dressed", smooth="bevel")
-        # splayed embrasure behind the slit (closed, dark): sides, sill, head and back (mortar)
         cth, sth = math.cos(th), math.sin(th)
-        Rz = float(R_out(g, 1.575))
+        Rz = float(R_out(g, zmid + dz))
+        if Wn.get("kind", "slit") == "lookout":            # straight reveal + a closed dark room behind (note 6)
+            lookout_room(g, th, Wn, Rz)
+            continue
+        # splayed embrasure behind the slit (closed, dark): sides, sill, head and back (mortar)
 
-        def wpt(x, d, z):
+        def wpt(x, d, z, cth=cth, sth=sth, Rz=Rz):
             return [x * cth + (Rz + d) * sth, x * sth - (Rz + d) * cth, z]
 
-        z0, z1 = g.WIN["z0"], g.WIN["z1"]
-        cw = g.WIN["cw"]
+        z0, z1 = Wn["z0"] + dz, Wn["z1"] + dz
+        cw = Wn["cw"]
+        sp = Wn.get("splay", 0.22)
         for s in (-1, 1):
             G = np.array([[wpt(s * cw, -0.30, z0), wpt(s * cw, -0.30, z1)],
-                          [wpt(s * 0.22, -0.62, z0), wpt(s * 0.22, -0.62, z1)]])
+                          [wpt(s * sp, -0.62, z0), wpt(s * sp, -0.62, z1)]])
             add_grid(P_mo, "M_mortar", G, flip=(s < 0))
         for zz, fl in ((z0, True), (z1 + 0.06, False)):
-            G = np.array([[wpt(-cw, -0.30, zz), wpt(-0.22, -0.62, zz)],
-                          [wpt(cw, -0.30, zz), wpt(0.22, -0.62, zz)]])
+            G = np.array([[wpt(-cw, -0.30, zz), wpt(-sp, -0.62, zz)],
+                          [wpt(cw, -0.30, zz), wpt(sp, -0.62, zz)]])
             add_grid(P_mo, "M_mortar", G, flip=fl)
-        G = np.array([[wpt(-0.22, -0.62, z0), wpt(-0.22, -0.62, z1 + 0.06)],
-                      [wpt(0.22, -0.62, z0), wpt(0.22, -0.62, z1 + 0.06)]])
+        G = np.array([[wpt(-sp, -0.62, z0), wpt(-sp, -0.62, z1 + 0.06)],
+                      [wpt(sp, -0.62, z0), wpt(sp, -0.62, z1 + 0.06)]])
         add_grid(P_mo, "M_mortar", G, flip=False)
+
+
+def _quad(part, mat, a, b, c, d, toward):
+    """one quad a-b-c-d facing the point `toward`."""
+    a, b, c, d = (np.asarray(v, float) for v in (a, b, c, d))
+    n = np.cross(b - a, d - a)
+    flip = float(np.dot(n, np.asarray(toward, float) - (a + b + c + d) / 4)) < 0
+    add_grid(part, mat, np.array([[a, d], [b, c]]), flip=flip)
+
+
+def lookout_room(g, th, W, Rz, wall=0.66, side=0.30, head=0.30):
+    """KIT (v1_stone_watchtower r2): what a lookout window (window_spec kind "lookout") shows behind its dressed
+    surround -- a straight mortar reveal through the wall (from behind the jambs to `wall` m in) and a closed dark
+    room to W["room"] m behind the face (boarded floor flush with the sill, boarded ceiling, plastered sides and
+    back), `side` m wider each side and `head` m higher than the opening, so the look in meets solid surfaces at
+    the depth producer note 6 asks for, never the hollow drum.  Object <PREFIX>_lookout_rooms (not culled)."""
+    part = kpart(g, g.parts, "lookout_rooms", ["M_mortar", "M_timber"])
+    cth, sth = math.cos(th), math.sin(th)
+
+    def wpt(x, d, z):
+        return [x * cth + (Rz + d) * sth, x * sth - (Rz + d) * cth, z]
+
+    cw = W["cw"]
+    zs, zh = W["z0"] - 0.005, W["z1"] + 0.005             # sill-stone top, lintel underside
+    d0, d1, d2 = -0.29, -wall, -W.get("room", 1.5)
+    xr, zr = cw + side, zh + head
+    tube = wpt(0.0, 0.5 * (d0 + d1), 0.5 * (zs + zh))
+    for s in (-1, 1):                                     # reveal sides
+        _quad(part, "M_mortar", wpt(s * cw, d0, zs), wpt(s * cw, d1, zs), wpt(s * cw, d1, zh), wpt(s * cw, d0, zh), tube)
+    _quad(part, "M_mortar", wpt(-cw, d0, zs), wpt(cw, d0, zs), wpt(cw, d1, zs), wpt(-cw, d1, zs), tube)
+    _quad(part, "M_mortar", wpt(-cw, d0, zh), wpt(cw, d0, zh), wpt(cw, d1, zh), wpt(-cw, d1, zh), tube)
+    room = wpt(0.0, 0.5 * (d1 + d2), 0.5 * (zs + zr))
+    _quad(part, "M_timber", wpt(-xr, d1, zs), wpt(xr, d1, zs), wpt(xr, d2, zs), wpt(-xr, d2, zs), room)   # floor
+    _quad(part, "M_timber", wpt(-xr, d1, zr), wpt(xr, d1, zr), wpt(xr, d2, zr), wpt(-xr, d2, zr), room)   # ceiling
+    for s in (-1, 1):
+        _quad(part, "M_mortar", wpt(s * xr, d1, zs), wpt(s * xr, d2, zs), wpt(s * xr, d2, zr), wpt(s * xr, d1, zr), room)
+    _quad(part, "M_mortar", wpt(-xr, d2, zs), wpt(xr, d2, zs), wpt(xr, d2, zr), wpt(-xr, d2, zr), room)     # back
+    for (xa, xb, za, zb) in ((-xr, -cw, zs, zr), (cw, xr, zs, zr), (-cw, cw, zh, zr)):                      # inner face
+        _quad(part, "M_mortar", wpt(xa, d1, za), wpt(xb, d1, za), wpt(xb, d1, zb), wpt(xa, d1, zb), room)
 
 
 def blind_arcade_build(g, parts):
@@ -954,20 +1005,25 @@ def build_band_cornice_and_finish(g, parts):
     # ---- band: strings, back panel, balusters ----
     rb = g.RNG("band")
     skip_b = ()
-    # profiles stop 5 cm inside the wall face (nothing modelled deeper)
-    prof_lo = [(-0.05, 0), (0.10, 0), (0.12, 0.018), (0.12, 0.08), (0.105, 0.097), (-0.05, 0.10)]
-    prof_up = [(-0.05, 0), (0.08, 0), (0.10, 0.018), (0.10, 0.082), (0.088, 0.098), (-0.05, 0.10)]
-    profile_course(g, P_dr, "M_stone_dressed", rb, g.Z_BAND0, prof_lo, skip=skip_b)
-    profile_course(g, P_dr, "M_stone_dressed", rb, g.Z_BAL1, prof_up, skip=skip_b, top_back=0.065)
-    Rm = float(R_out(g, g.Z_BAL0))
-    u0b = rb.uniform(0, 2 * PI * Rm)
-    spans = [(u0b, u0b + 2 * PI * Rm)]
-    S = coursing(rb, g.Z_BAL0, g.Z_BAL1, lambda zb, zt: spans, hr=(0.17, 0.17), p_big=0, lr=(0.3, 0.55), p_tall=0,
-                 p_pin=0, wob=0, joint=(0.008, 0.014), Dr=(0.05, 0.06))
-    th = S["uc"] / R_out(g, S["zc"])
-    P, T = stone_local(rb, S["L"], S["H"], S["D"], "ashlar", min_relief=relief_far(g))
-    P_dr.add(cyl_place(g, P, th, S["zc"], np.full(len(th), -0.03)), T, Pl=P, mat="M_stone_dressed", smooth="bevel")
-    baluster_row(g, rb, spans, g.Z_BAL0, g.Z_BAL1)
+    if getattr(g, "BAND_STYLE", "balustrade") == "plain":     # v1_stone_watchtower r2: a plain string course
+        from .drum_band import string_course
+        string_course(g, P_dr, rb, g.Z_BAND0, g.Z_BAND1)
+    else:
+        # profiles stop 5 cm inside the wall face (nothing modelled deeper)
+        prof_lo = [(-0.05, 0), (0.10, 0), (0.12, 0.018), (0.12, 0.08), (0.105, 0.097), (-0.05, 0.10)]
+        prof_up = [(-0.05, 0), (0.08, 0), (0.10, 0.018), (0.10, 0.082), (0.088, 0.098), (-0.05, 0.10)]
+        profile_course(g, P_dr, "M_stone_dressed", rb, g.Z_BAND0, prof_lo, skip=skip_b)
+        profile_course(g, P_dr, "M_stone_dressed", rb, g.Z_BAL1, prof_up, skip=skip_b, top_back=0.065)
+        Rm = float(R_out(g, g.Z_BAL0))
+        u0b = rb.uniform(0, 2 * PI * Rm)
+        spans = [(u0b, u0b + 2 * PI * Rm)]
+        S = coursing(rb, g.Z_BAL0, g.Z_BAL1, lambda zb, zt: spans, hr=(0.17, 0.17), p_big=0, lr=(0.3, 0.55),
+                     p_tall=0, p_pin=0, wob=0, joint=(0.008, 0.014), Dr=(0.05, 0.06))
+        th = S["uc"] / R_out(g, S["zc"])
+        P, T = stone_local(rb, S["L"], S["H"], S["D"], "ashlar", min_relief=relief_far(g))
+        P_dr.add(cyl_place(g, P, th, S["zc"], np.full(len(th), -0.03)), T, Pl=P, mat="M_stone_dressed",
+                 smooth="bevel")
+        baluster_row(g, rb, spans, g.Z_BAL0, g.Z_BAL1)
 
     # ---- cornice (raised: 4.17 - 4.62) ----
     rc = g.RNG("cornice")
@@ -1011,9 +1067,10 @@ def build_band_cornice_and_finish(g, parts):
             hid = wl.covered_rect(X[:-1, :-1], X[1:, :-1], Z[:-1, :-1], Z[:-1, 1:])
             add_grid(P_mo, "M_mortar", a_world(X, Z, a_mort(X, Z)), keep=~hid, flip=False)
     arch_walls = [w for w in g.walls if w.name == "arch"]
-    fr = np.mean([w.mortar_fraction()[0] for w in arch_walls])
-    log("WALL arcade backs: mean visible mortar %.1f%%, widest void %.3f m" %
-        (100 * fr, max(w.max_void() for w in arch_walls)))
+    if arch_walls:                                      # (v1_stone_watchtower: a drum without an arcade)
+        fr = np.mean([w.mortar_fraction()[0] for w in arch_walls])
+        log("WALL arcade backs: mean visible mortar %.1f%%, widest void %.3f m" %
+            (100 * fr, max(w.max_void() for w in arch_walls)))
 
     # ---- mortar core (outer skin): recessed 2.2 cm (4.5 cm raked in the bottom 0.6 m), +-5 mm relief ----
     nth = 288
@@ -1069,7 +1126,18 @@ def wall_core_backing(g, part, z0, z1, d_out=None, depth=0.30, nth=180, nz=9):
     add_grid(part, "M_mortar", G, keep=keep, wrap=True, flip=False)
     Ri = R_out(g, Z) + d_out - depth
     Gi = np.stack([Ri * np.sin(TH), -Ri * np.cos(TH), Z], -1)
-    add_grid(part, "M_mortar", Gi[::4], wrap=True, flip=False)
+    ki = None                                            # v1_stone_watchtower r2: holed for lookout reveals only
+    look = [(a, W) for a, W, dz in win_list(g) if W.get("kind") == "lookout"]
+    if look:
+        t4 = ths[::4]
+        hc = PI / len(t4)
+        ki = np.ones((len(t4), nz - 1), bool)
+        for a, W in look:
+            ang = math.asin(min((W["cw"] + 0.05) / float(np.mean(Ri)), 0.99))
+            near = np.abs((t4 + hc - a + PI) % (2 * PI) - PI) < hc + ang
+            inz = (zs[1:] > W["z0"] - 0.05) & (zs[:-1] < W["z1"] + 0.05)
+            ki &= ~(near[:, None] & inz[None, :])
+    add_grid(part, "M_mortar", Gi[::4], keep=ki, wrap=True, flip=False)
     for j, fl in ((0, True), (nz - 1, False)):          # bottom annulus faces down, top faces up
         A = np.stack([G[::4, j], Gi[::4, j]], 1)
         add_grid(part, "M_mortar", A, wrap=True, flip=fl)
@@ -1081,15 +1149,53 @@ def wall_core_backing(g, part, z0, z1, d_out=None, depth=0.30, nth=180, nz=9):
 # public kit components
 # =============================================================================================
 def round_stone_drum(g, r_base=None, r_top=None, height=None, zones=None, door=None, arcade=None, windows=None,
-                     seed=None):
+                     seed=None, window_z=None, batter_top=None, window_size=None, lookouts=None):
     """Battered round rubble drum with a balustrade band, a blind arcade and a corbelled cornice (kit component).
     Radius r_base at the ground battering to r_top, cornice top at `height`; zones=dict(band=(z0, z_bal0, z_bal1,
     z1)) places the balustrade band (lower string course, baluster row, upper string course); `door` / `arcade` are
     the arched_door() / blind_arcade() parameters; `windows` the slit-window azimuths (deg).  Lays the projecting
     footing course, the coursed rubble (wandering beds, pinch-outs, through-stones, pinning stones in every void,
     concave mortar strike), the dressed work, the mortar skin and the wall-core backing.  Writes <PREFIX>_base_stones
-    / _base_mortar / _base_dressed, the door, slit-window and arcade objects and the pooled balusters / corbels."""
+    / _base_mortar / _base_dressed, the door, slit-window and arcade objects and the pooled balusters / corbels.
+
+    Optional (kit changes v1_stone_watchtower; None keeps the mill's behaviour):
+      window_z    per-window slit bottom heights (m, one per `windows` azimuth): slits stacked up a tall drum
+      batter_top  height (m) up to which the wall batters (default 4.6 m); "full" = the whole drum, so a tall
+                  tower batters evenly from r_base to r_top.  arcade=dict(n=0, ...) builds a drum with no arcade.
+    Optional (v1_stone_watchtower round 2; None keeps the old behaviour):
+      window_size (clear_w, clear_h) of every slit (drum_frame.window_spec: jamb courses, sill, lintel and rubble
+                  keep-out derived from it); sills at window_z (or the frame's slit sill)
+      lookouts    dict(n=4, az0=0.0 | az=[deg...], w=0.55, h=0.85, sill=7.1, room=1.5): lookout windows (kind
+                  "lookout": dressed jambs / sill / lintel, straight reveal, closed dark room behind -- lookout_room)
+      zones=dict(string=(z0, z1)) instead of band=: a plain dressed string course (drum_band.string_course) in
+                  place of the balustrade band; arcade=dict(n=0) alone (no z_sill / size) is "no arcade"."""
     kw = {}
+    if zones and "string" in zones:
+        zs0, zs1 = zones["string"]
+        zones = dict(zones, band=(zs0, zs0, zs1, zs1))
+        kw["BAND_STYLE"] = "plain"
+    if window_size is not None or lookouts is not None:
+        az_w = list(windows) if windows is not None else [a / D2R for a in g.WIN_AZ]
+        cw_, ch_ = window_size if window_size is not None else (2 * g.WIN["cw"], g.WIN["z1"] - g.WIN["z0"])
+        sills = list(window_z) if window_z is not None else [g.WIN["z0"]] * len(az_w)
+        assert len(sills) == len(az_w), "window_z needs one height per window"
+        spec = [window_spec(cw_, ch_, s_) for s_ in sills]
+        if lookouts:
+            lk = dict(dict(n=4, az0=0.0, w=0.55, h=0.85, sill=7.1, room=1.5), **lookouts)
+            az_l = list(lk["az"]) if lk.get("az") is not None else [lk["az0"] + 360.0 / lk["n"] * i
+                                                                    for i in range(lk["n"])]
+            az_w += az_l
+            spec += [window_spec(lk["w"], lk["h"], lk["sill"], kind="lookout", room=lk["room"]) for _ in az_l]
+        windows, window_z = az_w, None
+        kw["WIN_SPEC"] = spec
+        kw["WIN_DZ"] = None
+    if batter_top is not None:
+        kw["BATTER_TOP"] = (height - 0.57 if height is not None else g.Z_BATTER) if batter_top == "full" \
+            else float(batter_top)
+    if window_z is not None:
+        n_w = len(windows) if windows is not None else len(g.WIN_AZ)
+        assert len(window_z) == n_w, "window_z needs one height per window"
+        kw["WIN_DZ"] = [float(z_) - g.WIN["z0"] for z_ in window_z]
     if r_base is not None:
         kw["R_BASE0"] = r_base
     if r_top is not None:
@@ -1104,6 +1210,8 @@ def round_stone_drum(g, r_base=None, r_top=None, height=None, zones=None, door=N
     g.set(**kw)
     if door:
         door_params(g, **door)
+    if arcade and arcade.get("n") == 0:                  # v1_stone_watchtower r2: "no arcade" needs no sizes
+        arcade = dict(dict(z_sill=g.Z_BAND1, clear_w=0.72, clear_h=0.36), **arcade)
     if arcade:
         arcade_params(g, **arcade)
     with g.seeded(seed):
@@ -1131,9 +1239,9 @@ def _drum_openings(g, margin):
     out = []
     top = g.ZS_DOOR + g.DOOR_CW
     out.append((0.0, float(R_out(g, top)), g.DOOR_CW + margin, -1e9, g.ZS_DOOR, True))
-    for a in g.WIN_AZ:
-        out.append((float(a), float(R_out(g, g.WIN["z1"])), g.WIN["cw"] + margin, g.WIN["z0"] - margin,
-                    g.WIN["z1"] + margin, False))
+    for a, W, dz in win_list(g):
+        out.append((float(a), float(R_out(g, W["z1"] + dz)), W["cw"] + margin, W["z0"] + dz - margin,
+                    W["z1"] + dz + margin, False))
     for a in g.ARCH_AZ:
         out.append((float(a), float(R_out(g, g.ARCH["zs"] + g.ARCH["cw"])), g.ARCH["cw"] + margin,
                     g.ARCH["z0"] - margin, g.ARCH["zs"], True))
