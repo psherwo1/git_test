@@ -885,3 +885,21 @@ re-seals, with nothing else.
 - Shutters on a few stone-wall windows (the brief's "small shuttered windows").
 - A deeper slip (4.5-5 m) with a timber landing ledge.
 - `tools/render_review.py --ground_z` (producer tool): the six main views still float the building 2.5 m.
+
+## CLIENT DIRECTION (2026-10-17, session 2, 14:10): push the roof closer to ref4, IN ROUND 4; time matters
+
+The client saw the early round-4 previews (`scratch/r4_fast/renders/`, 14:03). The deeper sag is right, but from the water the hall still reads as an upright gable. The client agreed with pushing it further toward ref4's broad, heavy, slumped hat, and added: **"time matters here: do not spend time that can be avoided, and the earlier a correct result is obtained, the better."**
+
+**Round-4 fixer: apply this in THIS round,** even if a full build with 52-54 deg is already done. It is recipe values only, so one rebuild:
+- **pitch about 48-50 deg** (not 52-54), **`ridge_sag` about 0.45-0.55 m**, the hall at the full **7.0 m** width;
+- a heavier, deeper **`eave_sweep`** and overhang, so the roof reads thick and dominant, and the **verge flare** kept;
+- **the ridge band is relaxed** to a comb top of at least about 7.8 m. Do not raise the eave walls: the boat arch has to stay under the tie;
+- compare a side view and a water-side view against `reference/ref4_harbour_boathouse_concept.jpg` before the final render.
+
+Keep every round-3 waterline fix, and re-verify only what the roof change touches: the seal probe on both `wall_abutment`s, the door clearances, hidden <= 15 %, and <= 1 M tris.
+
+**Everyone (time matters):**
+- No nice-to-haves this round.
+- No re-runs that the change does not need. The hash rule only applies if a shared module is touched; this is a recipe change.
+- Reuse existing probe scripts and camera setups.
+- **Art Director:** grade round 4 promptly, re-using the round-3 camera set and probes where the geometry did not change. Judge the roof against ref4.
