@@ -1,0 +1,15 @@
+﻿GRAIN M_timber             area    204.7  along   8.9%  across  35.7%  [of judged  18.0%; sheets  103.1]  (per piece: along   8.9%)  | roof    11.1: up  64.1%  down  19.6%  | m/UV 1.00
+GRAIN M_timber_weathered   area    263.7  along  26.6%  across   4.9%  [of judged  83.0%; sheets  178.2]  (per piece: along  26.6%)  | roof    71.2: up  84.0%  down   5.0%  | m/UV 1.00
+GRAIN M_roof_shingle       area     96.0  along  13.1%  across   5.7%  [of judged  66.9%; sheets   77.1]  (per piece: along  13.1%)  | roof    77.1: up  91.0%  down   0.0%  | m/UV 1.01
+COLLAPSED objects >= 1% area at ratio<0.2: 5 of 29; worst max 22.87%
+   WATCH_cabin_corbels                       22.87%  {'M_stone_dressed': 22.867}
+   WATCH_cabin_frame                         14.93%  {'M_timber': 16.389, 'M_timber_weathered': 0.182}
+   WATCH_cabin_boards                         8.59%  {'M_timber_weathered': 8.587}
+   WATCH_cabin_shingles                       4.71%  {'M_roof_shingle': 4.712}
+   WATCH_cabin_struts                         2.95%  {'M_timber_weathered': 2.946}
+WALKED tops in door zones: area 2.452 m2, B max 1.000, area with B > 0.05: 2.452 m2  (pooled door hardware in the zones, not walked pieces: 0 objects, 0.0000 m2, B max 0.000)
+   drum_door        WATCH_door_iron                  faces    50 area   0.009 B max 0.729 mean 0.666 >0.05 0.009
+   drum_door        WATCH_door_leaf                  faces    30 area   0.048 B max 0.714 mean 0.634 >0.05 0.048
+   drum_door        WATCH_door_step                  faces   866 area   0.760 B max 1.000 mean 1.000 >0.05 0.760
+   drum_door        WATCH_door_surround              faces   292 area   0.697 B max 1.000 mean 0.934 >0.05 0.697
+   drum_door        WATCH_interior                   faces    88 area   0.939 B max 1.000 mean 1.000 >0.05 0.939

@@ -1,0 +1,22 @@
+# Sign-off audit: tower_windmill round 5 (director score 9/10). Result: REJECTED
+
+NOTE: items about ground rubble, path flags and loose stones are now OUT OF SCOPE (producer note 10). Delete those objects instead of fixing them.
+
+- The hard client requirements pass, so they are not the reason for rejecting. material_slot_count is 11 and all 11 slots are in the note-7 palette. est_hidden_pct is 13.0 (at most 15) and mask_attribute_missing is empty. The 9 is rejected because the close-up zones the producer names (note 4) still show obvious CG tells on camera. The rubric says a 9 needs everything in 8 fixed, including 'entrance not yet close-up worthy' and 'edges too clean'. The Director's own log says 'a production designer would flag each of them in the actor close-up'. That is the rubric's definition of an 8, not a 9.
+
+- GROUND RUBBLE (z03, actor_closeup, hero). Every scattered stone is a 1-3 cm flake set in a 10-20 cm crater collar with a raised outer rim, which reads as footprints or blisters in the soil. Rebuild as 45-60 stones in 4-6 clusters hugging the footing. Include 8-12 stones of 0.20-0.45 m that stand 6-15 cm proud, with tilted beds and fractured tops. Collars should be only 3-8 cm wide, run out tangentially and have no crest. Acceptance: no halo outline from z03 or actor_closeup, and at least 5 stones read as solid half-buried rocks.
+
+- FOOTING COURSE (z03, eye level at the drum base). The bed joints at z 0.25-0.45 m hold rows of 3-6 identical rectangular chips spaced like teeth. The footing stones are rounded soap bars with melted top arrises. Use 0-2 irregular wedge pinners per joint, 3-8 cm long and rotated ±20°, with no repeats. Give the footing stones flat beds and crisp fracture edges like the z01 drum stones, and keep the 5-10 cm projection.
+
+- ENTRANCE GROUND (x03, actor_closeup). Each path flag has a dotted string of 5-10 near-evenly spaced cube chips along its edge. Each flag edge also shows a two-step rolled arris plus a horizontal shelf. The outside step stone is a smooth curved kerb with a uniform rounded nose and reads as cast concrete. Fix: at most 0-2 irregular buried chips per flag; one irregular split side face 1-3 cm tall; a step with 2-3 planar split facets, 1-2 crisp spalls and ±5 mm top undulation. Keep the riser at 18 cm or less.
+
+- DOOR SURROUND SPALLS (x02, b_door_jambs). The jamb blocks show rectangular stepped notches and thin flaps standing proud of the block outline. Examples are the right jamb at about 1.35 m and the left jamb at about 1.0 m and 1.5 m. This sits directly beside the actor's head and hand. Spalls must be conchoidal scoops, 1-3 cm deep and fading to 0, never pushing outward and with no rectangular corners. Apply the same fix to the arcade jambs and piers.
+
+- PROP FEET (x04, actor_closeup left). The chocks are clean rectangular boxes with 90° edges and dark vertical slots where the notch is wider than the chock. The iron dogs are round rods standing off the pole. The pole checks are long, parallel, uniform flutes that read as milled grooves. Fix: hewn tapered wedge chocks with adze facets 6-12 mm deep and a notch gap of 5 mm or less, packed with soil. Seat the dogs flat. Make the checks tapering, 0.3-0.8 m long and of varied length, and add an end-grain split at each butt.
+
+- ARCADE PIERS (x12, actor_closeup). All 10 piers are the same tiled 2x3 grid of near-square ashlar slabs with aligned vertical joints, which is obvious CG repetition. The pier right of the +X arch also has an open dark slit joint at z ≈ 3.5. Lay the piers as coursed long-and-short dressed blocks matched to the spandrel courses, with the layout differing per pier. Close the void.
+
+- NANITE HYGIENE (producer note 1, technical axis). 4,579 needle triangles with altitude below 0.1 mm remain (3,641 of them in MILL_base_stones), plus 16 quads under 1e-8 m². The slivers were nudged just past the builder's area threshold rather than removed. Run remove_doubles and dissolve_degenerate, or collapse short edges, at the end of each mesh build. Report the altitude-based count and the area-based count as 0.
+
+- SECONDARY (fix together with the above): the view through the door is pitch black, so the entrance has no plausible depth. Add a visible floor edge and a ladder foot 1.0-1.5 m inside. Close the wheel-blade board gaps to 0.5-1 cm so the blades read as solid paddles, as in mill_sails_wheel. Break the near-regular grid of the cap shingles.
+

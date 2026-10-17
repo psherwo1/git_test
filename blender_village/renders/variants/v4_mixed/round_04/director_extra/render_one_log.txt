@@ -1,0 +1,39 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v4_mixed\v4_mixed.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_one
+sided_r04.py:81: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:14 char:180
++ ... ython.exe"; & $py "$d\dir_render_onesided_r04.py" "C:\GitHubDesktop\g ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_onesided_r04.py:
+120: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w.use_nodes = True
+00:00.735  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:01.438  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\r01_eave_end_front_eye_onesided_red.png'
+DEVICE GPU
+WROTE r01_eave_end_front_eye
+00:02.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\r02b_eave_end_front_lookup_onesided_red.png'
+WROTE r02b_eave_end_front_lookup
+00:02.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\a02_house_door_actor_onesided_red.png'
+WROTE a02_house_door_actor
+00:03.079  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\a07_house_eave_closure_west_onesided_red.png'
+WROTE a07_house_eave_closure_west
+00:03.657  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h01_wall_head_west_4m_onesided_red.png'
+WROTE h01_wall_head_west_4m
+00:04.204  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h03_wall_head_nw_4m_onesided_red.png'
+WROTE h03_wall_head_nw_4m
+00:04.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h07_wall_head_south_west_4m_onesided_red.png'
+WROTE h07_wall_head_south_west_4m
+00:05.313  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\d01_door_head_lookup_onesided_red.png'
+WROTE d01_door_head_lookup
+00:05.860  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\d02_door_head_cheek_west_onesided_red.png'
+WROTE d02_door_head_cheek_west
+00:06.360  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\L01_drum_east_eye_3m_onesided_red.png'
+WROTE L01_drum_east_eye_3m
+00:06.860  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\L05_smock_apron_cap_mid_onesided_red.png'
+WROTE L05_smock_apron_cap_mid
+00:07.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\t02_overview_junction_mid_onesided_red.png'
+WROTE t02_overview_junction_mid

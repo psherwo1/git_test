@@ -1,0 +1,8 @@
+﻿GRAIN M_timber             area    344.7  along  57.8%  across   0.4%  [of judged  98.9%; sheets  142.0]  (per piece: along  57.8%)  | roof   122.2: up  60.2%  down   0.6%  | m/UV 1.00
+GRAIN M_timber_weathered   area    391.3  along  18.9%  across   0.0%  [of judged  99.9%; sheets  317.2]  (per piece: along  18.9%)  | roof   152.0: up  89.9%  down   0.3%  | m/UV 1.00
+GRAIN M_roof_shingle       area    491.8  along  17.6%  across   6.3%  [of judged  69.0%; sheets  366.7]  (per piece: along  17.6%)  | roof   367.7: up 100.0%  down   0.0%  | m/UV 0.97
+COLLAPSED objects >= 1% area at ratio<0.2: 0 of 87; worst max 0.02%
+WALKED tops in door zones: area 0.955 m2, B max 0.039, area with B > 0.05: 0.000 m2  (pooled door hardware in the zones, not walked pieces: 3 objects, 0.0003 m2, B max 0.200)
+   hall_door        HALL_nail_004                    faces     4 area   0.000 B max 0.039 mean 0.039 >0.05 0.000
+   hall_door        HALL_openings_iron               faces    15 area   0.005 B max 0.039 mean 0.039 >0.05 0.000
+   hall_door        HALL_openings_sill               faces     6 area   0.950 B max 0.039 mean 0.039 >0.05 0.000

@@ -1,0 +1,26 @@
+00:00.687  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\r2_src\wattle_roundhut.blend"
+00:01.093  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:19.312  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\wattle_roundhut\hero.png'
+00:33.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\wattle_roundhut\front.png'
+01:01.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\wattle_roundhut\entrance_closeup.png'
+01:28.203  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\wattle_roundhut\wall_closeup.png'
+look r2 | bark PROXY (rough_wood)
+hidden objects: 98 []
+building bounds (-4.19, -4.59, -0.04) (4.19, 4.2, 8.73)
+rebuilt palette materials: ['M_daub', 'M_earth', 'M_iron', 'M_lead', 'M_mortar', 'M_roof_shingle', 'M_stone', 'M_timber', 'M_timber_weathered', 'M_wattle']
+sky type MULTIPLE_SCATTERING
+devices [('NVIDIA GeForce RTX 3060', 'CUDA', False), ('AMD Ryzen 5 5600X 6-Core Processor', 'CPU', False), ('NVIDIA GeForce RTX 3060', 'OPTIX', True)]
+door: HUT_door_leaf (-0.02, -2.9, 1.26)
+camera hero (-12.54, -19.35, 8.38)
+camera front (0.0, -24.06, 6.43)
+camera entrance_closeup (0.88, -8.24, 1.7)
+daub patch centre (-1.66, -3.09, 0.77)
+camera wall_closeup (-2.43, -5.65, 1.5)
+Info: Saved as "wattle_roundhut_lookdev.blend"
+Info: Total files 23 | Changed 23 | Failed 0
+Info: Saved "wattle_roundhut_lookdev.blend"
+saved C:\GitHubDesktop\git_test\blender_village\lookdev\r2_src\wattle_roundhut_lookdev.blend
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\wattle_roundhut\hero.png
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\wattle_roundhut\front.png
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\wattle_roundhut\entrance_closeup.png
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\wattle_roundhut\wall_closeup.png

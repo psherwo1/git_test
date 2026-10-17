@@ -1,0 +1,357 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\v3_r6_hash\\v1_stone_watchtower\\v1_stone_watchtower.blend",
+ "objects": {
+  "WATCH_base_dressed": {
+   "tris": 30019,
+   "geometry": "a90b634b27a320cb",
+   "uv": "7dfc9e67aea3a78a",
+   "mask": "de0ec7beda95343c"
+  },
+  "WATCH_base_mortar": {
+   "tris": 63516,
+   "geometry": "d20a3278f60afc55",
+   "uv": "0ed7789c02e033ac",
+   "mask": "f8b92cf6ba06245a"
+  },
+  "WATCH_base_stones": {
+   "tris": 622137,
+   "geometry": "42c90163b6180cfa",
+   "uv": "86f9dd527edbf877",
+   "mask": "2a973a75de309da8"
+  },
+  "WATCH_cabin_boards": {
+   "tris": 11988,
+   "geometry": "228f0769b8f92b4f",
+   "uv": "a6f3441c461d6ec3",
+   "mask": "b9957857cd6e7c69"
+  },
+  "WATCH_cabin_ceiling": {
+   "tris": 108,
+   "geometry": "ac44401681e7bf79",
+   "uv": "25064e1eb83c32e7",
+   "mask": "a4ddde7da8585d24"
+  },
+  "WATCH_cabin_corbels": {
+   "tris": 432,
+   "geometry": "8a5af6f0b7feeeb4",
+   "uv": "4d94f5dcb0c327e8",
+   "mask": "e6dfcc10b4132977"
+  },
+  "WATCH_cabin_finial": {
+   "tris": 1678,
+   "geometry": "66eca5f873297cf9",
+   "uv": "1f687c3a46fda017",
+   "mask": "7be5efde64118f75"
+  },
+  "WATCH_cabin_floor": {
+   "tris": 4108,
+   "geometry": "d28ed97eb7a12441",
+   "uv": "80da951aa66ff09a",
+   "mask": "117b64bf5b153c34"
+  },
+  "WATCH_cabin_frame": {
+   "tris": 4320,
+   "geometry": "d463470f9cc9ef3f",
+   "uv": "5c431547e19a0896",
+   "mask": "bb8e992cc541d905"
+  },
+  "WATCH_cabin_hips": {
+   "tris": 1616,
+   "geometry": "1887973f55afc715",
+   "uv": "768e77329f7051f4",
+   "mask": "65994886c23f2c8a"
+  },
+  "WATCH_cabin_lead": {
+   "tris": 108,
+   "geometry": "a301dada5e2a8302",
+   "uv": "a045c0b53ccd644d",
+   "mask": "840f5e2d258ada9a"
+  },
+  "WATCH_cabin_roof_deck": {
+   "tris": 2304,
+   "geometry": "d82180e8963459be",
+   "uv": "027ec5c24ca3d85b",
+   "mask": "4af6ce7609739006"
+  },
+  "WATCH_cabin_roof_frame": {
+   "tris": 4464,
+   "geometry": "7b127a1a96ef02de",
+   "uv": "f3aa03b19a0bee4b",
+   "mask": "1f857cafbc0f41bf"
+  },
+  "WATCH_cabin_shingles": {
+   "tris": 71340,
+   "geometry": "ba66ebd1e066373e",
+   "uv": "bfecbc806dd03885",
+   "mask": "b95ff61f527d6da3"
+  },
+  "WATCH_cabin_struts": {
+   "tris": 432,
+   "geometry": "dcf283d3e89bc3aa",
+   "uv": "4c33f5d4a79d9896",
+   "mask": "11ca14463c42a3ab"
+  },
+  "WATCH_ceiling": {
+   "tris": 720,
+   "geometry": "c70bf5932be50fba",
+   "uv": "d0c1a0c37fce97d6",
+   "mask": "00289886feb2d37f"
+  },
+  "WATCH_corbel_001": {
+   "tris": 1048,
+   "geometry": "e9d858b766e3df78",
+   "uv": "c63025c040c3f8f8",
+   "mask": "bf3bed859ea4c1ec"
+  },
+  "WATCH_corbel_002": {
+   "tris": 1048,
+   "geometry": "f93cbe902538d8f1",
+   "uv": "c17dd31725248482",
+   "mask": "16e16a88ee57916b"
+  },
+  "WATCH_corbel_003": {
+   "tris": 1048,
+   "geometry": "6b6567e0698d8787",
+   "uv": "c17dd31725248482",
+   "mask": "16e16a88ee57916b"
+  },
+  "WATCH_corbel_004": {
+   "tris": 1048,
+   "geometry": "1b52c9b42e0c560f",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_005": {
+   "tris": 1048,
+   "geometry": "4025014f05aa179d",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_006": {
+   "tris": 1048,
+   "geometry": "1ea73461d65f3386",
+   "uv": "cb5d605f341aacac",
+   "mask": "3fa0c05abd2fdc33"
+  },
+  "WATCH_corbel_007": {
+   "tris": 1048,
+   "geometry": "ef1fa9aad40f89a9",
+   "uv": "cb5d605f341aacac",
+   "mask": "3fa0c05abd2fdc33"
+  },
+  "WATCH_corbel_008": {
+   "tris": 1048,
+   "geometry": "6c37e20674664787",
+   "uv": "c17dd31725248482",
+   "mask": "16e16a88ee57916b"
+  },
+  "WATCH_corbel_009": {
+   "tris": 1048,
+   "geometry": "4623b0f36aa170f9",
+   "uv": "c17dd31725248482",
+   "mask": "16e16a88ee57916b"
+  },
+  "WATCH_corbel_010": {
+   "tris": 1048,
+   "geometry": "c8828a494af37995",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_011": {
+   "tris": 1048,
+   "geometry": "198956c5205302c8",
+   "uv": "0c6b4dd94882c5f4",
+   "mask": "5287b36c92b96045"
+  },
+  "WATCH_corbel_012": {
+   "tris": 1048,
+   "geometry": "2e40a8611d14b416",
+   "uv": "0c6b4dd94882c5f4",
+   "mask": "5287b36c92b96045"
+  },
+  "WATCH_corbel_013": {
+   "tris": 1048,
+   "geometry": "7609a92af7042be4",
+   "uv": "cb5d605f341aacac",
+   "mask": "3fa0c05abd2fdc33"
+  },
+  "WATCH_corbel_014": {
+   "tris": 1048,
+   "geometry": "bf4464509f3dc5b5",
+   "uv": "c63025c040c3f8f8",
+   "mask": "bf3bed859ea4c1ec"
+  },
+  "WATCH_corbel_015": {
+   "tris": 1048,
+   "geometry": "5ed961005fff7e91",
+   "uv": "c17dd31725248482",
+   "mask": "16e16a88ee57916b"
+  },
+  "WATCH_corbel_016": {
+   "tris": 1048,
+   "geometry": "6735e181c932c1b0",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_017": {
+   "tris": 1048,
+   "geometry": "05099db6d538b238",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_018": {
+   "tris": 1048,
+   "geometry": "8cf5f23dbad6d6cf",
+   "uv": "cb5d605f341aacac",
+   "mask": "3fa0c05abd2fdc33"
+  },
+  "WATCH_corbel_019": {
+   "tris": 1048,
+   "geometry": "84f5e174f14b8299",
+   "uv": "cb5d605f341aacac",
+   "mask": "3fa0c05abd2fdc33"
+  },
+  "WATCH_corbel_020": {
+   "tris": 1048,
+   "geometry": "58aca7961b8ce49f",
+   "uv": "c63025c040c3f8f8",
+   "mask": "bf3bed859ea4c1ec"
+  },
+  "WATCH_corbel_021": {
+   "tris": 1048,
+   "geometry": "33e4b6822091abe6",
+   "uv": "c17dd31725248482",
+   "mask": "16e16a88ee57916b"
+  },
+  "WATCH_corbel_022": {
+   "tris": 1048,
+   "geometry": "d3e60a21a53a5437",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_023": {
+   "tris": 1048,
+   "geometry": "7169a43f071daf98",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_024": {
+   "tris": 1048,
+   "geometry": "3a22594044d28db3",
+   "uv": "0c6b4dd94882c5f4",
+   "mask": "5287b36c92b96045"
+  },
+  "WATCH_corbel_025": {
+   "tris": 1048,
+   "geometry": "fcecde37d3441eea",
+   "uv": "c63025c040c3f8f8",
+   "mask": "bf3bed859ea4c1ec"
+  },
+  "WATCH_corbel_026": {
+   "tris": 1048,
+   "geometry": "f50a041b49bd971a",
+   "uv": "c63025c040c3f8f8",
+   "mask": "bf3bed859ea4c1ec"
+  },
+  "WATCH_corbel_027": {
+   "tris": 1048,
+   "geometry": "bd562d6db6791bfd",
+   "uv": "c17dd31725248482",
+   "mask": "16e16a88ee57916b"
+  },
+  "WATCH_corbel_028": {
+   "tris": 1048,
+   "geometry": "b59a7128a1a1df7a",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_029": {
+   "tris": 1048,
+   "geometry": "7aa8fceec5c66107",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_030": {
+   "tris": 1048,
+   "geometry": "adef8f886051297d",
+   "uv": "0c6b4dd94882c5f4",
+   "mask": "5287b36c92b96045"
+  },
+  "WATCH_corbel_031": {
+   "tris": 1048,
+   "geometry": "f7250dc3fc18c376",
+   "uv": "c63025c040c3f8f8",
+   "mask": "bf3bed859ea4c1ec"
+  },
+  "WATCH_corbel_032": {
+   "tris": 1048,
+   "geometry": "452fa71cd2c26ec0",
+   "uv": "c17dd31725248482",
+   "mask": "16e16a88ee57916b"
+  },
+  "WATCH_corbel_033": {
+   "tris": 1048,
+   "geometry": "789252e0736fda6c",
+   "uv": "f1e58806318e5808",
+   "mask": "f44f34a450a304ab"
+  },
+  "WATCH_corbel_034": {
+   "tris": 1048,
+   "geometry": "7741033744d6a224",
+   "uv": "8f01e8d3b6c02ccc",
+   "mask": "bea3d4b6c89b4e6d"
+  },
+  "WATCH_corbel_035": {
+   "tris": 1048,
+   "geometry": "e4f83c5f84f768d5",
+   "uv": "0c6b4dd94882c5f4",
+   "mask": "5287b36c92b96045"
+  },
+  "WATCH_corbel_036": {
+   "tris": 1048,
+   "geometry": "1b08fcdbe88fdb8e",
+   "uv": "0c6b4dd94882c5f4",
+   "mask": "5287b36c92b96045"
+  },
+  "WATCH_door_iron": {
+   "tris": 2884,
+   "geometry": "7022033ee20cb72f",
+   "uv": "509e6e0d59bdccc8",
+   "mask": "aeb6754592c27ac5"
+  },
+  "WATCH_door_leaf": {
+   "tris": 9540,
+   "geometry": "101e9a01412c5fda",
+   "uv": "bef40ae347088417",
+   "mask": "57bc7385ba8ca040"
+  },
+  "WATCH_door_step": {
+   "tris": 2231,
+   "geometry": "bba8cb65f5c69ff1",
+   "uv": "4bd09f07923d3f93",
+   "mask": "9ed0801f21ef27bc"
+  },
+  "WATCH_door_surround": {
+   "tris": 44322,
+   "geometry": "45ef4097636a2a37",
+   "uv": "e9dc2430f699eb51",
+   "mask": "edd2f9791c45bb9e"
+  },
+  "WATCH_interior": {
+   "tris": 6416,
+   "geometry": "badfa7d75afac775",
+   "uv": "6cbcb20607457885",
+   "mask": "0fa47907a8aa2511"
+  },
+  "WATCH_wall_core": {
+   "tris": 15522,
+   "geometry": "aead12eadbf2e437",
+   "uv": "f295e404a2a1566c",
+   "mask": "b219f3443c17113b"
+  }
+ },
+ "triangles": 937933,
+ "geometry": "465c7b1b8a7dbb22",
+ "uv": "eadfb3aacdd78b6d",
+ "mask": "37235edc68b2377f"
+}

@@ -1,0 +1,219 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\v1r5_hash\\v3_longhouse_roundend\\v3_longhouse_roundend.blend",
+ "objects": {
+  "LONG_apex_blocker": {
+   "tris": 720,
+   "geometry": "1bcd340ba70a0837",
+   "uv": "99f1a75146d9f3a2",
+   "mask": "0a9418b433ec41c3"
+  },
+  "LONG_battens": {
+   "tris": 402,
+   "geometry": "66e3ce277660f62f",
+   "uv": "d49f37f00991a302",
+   "mask": "6f4df3d95d2a5baf"
+  },
+  "LONG_body_roof_abutment": {
+   "tris": 2988,
+   "geometry": "8e5bdd4e5f5bf27e",
+   "uv": "fd1f16b4af4e53b4",
+   "mask": "c9c3174aeea63540"
+  },
+  "LONG_body_roof_cheek": {
+   "tris": 268,
+   "geometry": "05a724388afd145a",
+   "uv": "1c61372c1dbc6e74",
+   "mask": "9b97aaf09b86e49f"
+  },
+  "LONG_body_roof_comb": {
+   "tris": 8454,
+   "geometry": "eab14478c3d8ae8b",
+   "uv": "73705c41662bb9b4",
+   "mask": "bb49727c9f3e7dcf"
+  },
+  "LONG_body_roof_covering": {
+   "tris": 29109,
+   "geometry": "1ff19ca413e727ff",
+   "uv": "5edb56fee9856217",
+   "mask": "7485ea49f2e91db7"
+  },
+  "LONG_body_roof_deck": {
+   "tris": 668,
+   "geometry": "cdd6520480bbf113",
+   "uv": "a61365fa13f6960d",
+   "mask": "492f2f7e858b5f9c"
+  },
+  "LONG_body_roof_eave_roll": {
+   "tris": 11104,
+   "geometry": "6cf71a4d2a9da010",
+   "uv": "56aa81e6c25d33a6",
+   "mask": "7dfab0b29630f889"
+  },
+  "LONG_body_roof_rafters": {
+   "tris": 1910,
+   "geometry": "50509b212e3e0cb2",
+   "uv": "6c542140b3a8fe3f",
+   "mask": "4445a789e8b40488"
+  },
+  "LONG_body_roof_ridge": {
+   "tris": 2464,
+   "geometry": "7a25bcf43f1bac1a",
+   "uv": "e3ab3444bcaef41c",
+   "mask": "9a14b5ba5cea1794"
+  },
+  "LONG_body_wall_blockers": {
+   "tris": 40,
+   "geometry": "e8ddd4ce3f959066",
+   "uv": "13f710d9a7b1b424",
+   "mask": "e93e586d8d14ef5a"
+  },
+  "LONG_body_wall_dressed": {
+   "tris": 728,
+   "geometry": "ced95998485731a3",
+   "uv": "9108bfcc9c442a6e",
+   "mask": "21709ddb12b56b40"
+  },
+  "LONG_body_wall_frames": {
+   "tris": 4554,
+   "geometry": "ba6131bd9b4b2bdb",
+   "uv": "e1f0606aeaee15f2",
+   "mask": "86b32f57ad2298c8"
+  },
+  "LONG_body_wall_ironwork": {
+   "tris": 462,
+   "geometry": "1ff38dac46192fc9",
+   "uv": "ab2b0b4b78c69a50",
+   "mask": "efcff3c08e9a8f19"
+  },
+  "LONG_body_wall_mortar": {
+   "tris": 7344,
+   "geometry": "f1ed2b7ebf64131e",
+   "uv": "1b907b45c146afd4",
+   "mask": "1567ddc677ca61c4"
+  },
+  "LONG_body_wall_quoins": {
+   "tris": 2094,
+   "geometry": "192df7cecdb5745c",
+   "uv": "c05621e27e922545",
+   "mask": "43245ea68bec9503"
+  },
+  "LONG_body_wall_reveals": {
+   "tris": 32,
+   "geometry": "6914b7733829e46b",
+   "uv": "ac267cd5cab081bc",
+   "mask": "e9a1933e515b381b"
+  },
+  "LONG_body_wall_stones": {
+   "tris": 198486,
+   "geometry": "55fc992e0028b36e",
+   "uv": "87b69cdbda8569f7",
+   "mask": "f829da224580d2e7"
+  },
+  "LONG_cap_collar": {
+   "tris": 12862,
+   "geometry": "2d60614c432c67dc",
+   "uv": "7ce7c16ddbd3c235",
+   "mask": "a2a50766edbfbbf0"
+  },
+  "LONG_cone_soakers": {
+   "tris": 1116,
+   "geometry": "70afb05f9a1df376",
+   "uv": "94f5e84bffb49bb3",
+   "mask": "c9f3782be8e3ac52"
+  },
+  "LONG_eave_fill": {
+   "tris": 728,
+   "geometry": "5d6748d9ef07a53e",
+   "uv": "39b6ecae809b4ca6",
+   "mask": "844cfe715f83dbe9"
+  },
+  "LONG_finial": {
+   "tris": 1280,
+   "geometry": "8500d1a85ae3d068",
+   "uv": "1451d9086ee03833",
+   "mask": "8f2d9dac513b9208"
+  },
+  "LONG_purlin_rings": {
+   "tris": 20,
+   "geometry": "256c09474ebe6e7f",
+   "uv": "63e08c6fa55b759f",
+   "mask": "664c6c03e7bfa12d"
+  },
+  "LONG_rafters": {
+   "tris": 3617,
+   "geometry": "18ece85f2ed1768a",
+   "uv": "29f72290da387a60",
+   "mask": "4700c2df82e99572"
+  },
+  "LONG_roof_blocker": {
+   "tris": 2176,
+   "geometry": "a1ab375c5597b93e",
+   "uv": "ab0bf06d15df72e3",
+   "mask": "26099292cbc60372"
+  },
+  "LONG_roof_shingles": {
+   "tris": 84133,
+   "geometry": "d8866687dfd7ed5b",
+   "uv": "7943c6d1624d418a",
+   "mask": "ab0d94ec761a9e78"
+  },
+  "LONG_roof_soffit_deck": {
+   "tris": 1780,
+   "geometry": "7eea240469895ebe",
+   "uv": "a78dafda3ee060c5",
+   "mask": "0318ce3582d36929"
+  },
+  "LONG_roof_starter": {
+   "tris": 4219,
+   "geometry": "77d621ef122d4238",
+   "uv": "a341b368515fc8ca",
+   "mask": "b4c208bd40ed781d"
+  },
+  "LONG_roof_underlap": {
+   "tris": 5753,
+   "geometry": "833e58c97dc827fd",
+   "uv": "985a4c075a8b9f66",
+   "mask": "af24f9ee0796a8a0"
+  },
+  "LONG_round_wall_blockers": {
+   "tris": 20,
+   "geometry": "4c12f3967807162a",
+   "uv": "930807816eef32ca",
+   "mask": "cf9d8851fcd8dd02"
+  },
+  "LONG_round_wall_dressed": {
+   "tris": 320,
+   "geometry": "36e6b47300ed458d",
+   "uv": "665895e9f0db06ab",
+   "mask": "cc5df4446360e950"
+  },
+  "LONG_round_wall_frames": {
+   "tris": 804,
+   "geometry": "d1b28acc5cf9785c",
+   "uv": "7385c595fbaae8a5",
+   "mask": "aad5675fcc6f25b5"
+  },
+  "LONG_round_wall_mortar": {
+   "tris": 4502,
+   "geometry": "bedcf102d3e35b57",
+   "uv": "e148d93b9ce7bd11",
+   "mask": "ca323a63ff2d3b65"
+  },
+  "LONG_round_wall_reveals": {
+   "tris": 16,
+   "geometry": "33406bfd96d89a30",
+   "uv": "0a21fc09e9fb9ba9",
+   "mask": "6c8d7578f53b82bc"
+  },
+  "LONG_round_wall_stones": {
+   "tris": 84618,
+   "geometry": "c7e208b82ea46fe3",
+   "uv": "dee32f21eb04c1bf",
+   "mask": "fd5c16850fb77fcb"
+  }
+ },
+ "triangles": 479791,
+ "geometry": "26b91b3f1df9d1be",
+ "uv": "88c83b4eaa7e97c2",
+ "mask": "ede04d04dde34071"
+}

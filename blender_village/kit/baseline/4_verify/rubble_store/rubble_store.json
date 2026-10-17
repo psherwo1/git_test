@@ -1,0 +1,93 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\4_verify\\rubble_store\\rubble_store.blend",
+ "objects": {
+  "STORE_roof_comb": {
+   "tris": 5292,
+   "geometry": "c9648eb40f386a26",
+   "uv": "1cc6be2edfd30e89",
+   "mask": "04714d453cbdb111"
+  },
+  "STORE_roof_covering": {
+   "tris": 20780,
+   "geometry": "d0c57ffb1864549d",
+   "uv": "eaf9d51b316165dc",
+   "mask": "2acb7587047441e8"
+  },
+  "STORE_roof_deck": {
+   "tris": 416,
+   "geometry": "85607a7873055b83",
+   "uv": "6eb91a6c2e124c70",
+   "mask": "d71e8de1ee57b201"
+  },
+  "STORE_roof_eave_roll": {
+   "tris": 7532,
+   "geometry": "97a935dbbbed5ff4",
+   "uv": "2ba2ee02d42b23df",
+   "mask": "979e6de5c9d8d42d"
+  },
+  "STORE_roof_rafters": {
+   "tris": 1354,
+   "geometry": "520df050d56d4964",
+   "uv": "1dc96a27f4aa41bc",
+   "mask": "7d7c558334d16fc5"
+  },
+  "STORE_roof_ridge": {
+   "tris": 1386,
+   "geometry": "721db327e787c9fc",
+   "uv": "107a8e314ca86968",
+   "mask": "364721f92c3470ac"
+  },
+  "STORE_walls_blockers": {
+   "tris": 10,
+   "geometry": "bbfcd24cf2efd060",
+   "uv": "145fb864fe47ae53",
+   "mask": "300bda54d3278525"
+  },
+  "STORE_walls_dressed": {
+   "tris": 252,
+   "geometry": "7fca191e0efa656b",
+   "uv": "1940bea886190ebe",
+   "mask": "ed920481f706e074"
+  },
+  "STORE_walls_frames": {
+   "tris": 3318,
+   "geometry": "7cf7868ac6b7538a",
+   "uv": "3367919032cf05eb",
+   "mask": "4f00aa3ddfaf2bd3"
+  },
+  "STORE_walls_ironwork": {
+   "tris": 456,
+   "geometry": "bbeaf6477b9a8eab",
+   "uv": "410ecad27b21e1d1",
+   "mask": "6ea393aef5e0a320"
+  },
+  "STORE_walls_mortar": {
+   "tris": 4774,
+   "geometry": "c1f2d85d5a921da2",
+   "uv": "73ec84bcae4df50c",
+   "mask": "432acdd9578b4a8c"
+  },
+  "STORE_walls_quoins": {
+   "tris": 3324,
+   "geometry": "e6df76636d6513b3",
+   "uv": "08ecf157425aef9d",
+   "mask": "6d265e47b533cc93"
+  },
+  "STORE_walls_reveals": {
+   "tris": 8,
+   "geometry": "2725c074ae09f56f",
+   "uv": "dd6c954628f67e51",
+   "mask": "8a08121203911a6d"
+  },
+  "STORE_walls_stones": {
+   "tris": 140861,
+   "geometry": "5011b95e153ed64b",
+   "uv": "13b455f06d567e69",
+   "mask": "13af99802c248406"
+  }
+ },
+ "triangles": 189763,
+ "geometry": "06877aa2cecd36f0",
+ "uv": "a401badcf54387ab",
+ "mask": "25eec6bd41d1517c"
+}

@@ -1,0 +1,533 @@
+{
+ "penetration_into_drum": {
+  "LONG_body_roof_covering": {
+   "max_depth_m": 0.0241,
+   "n_gt_3cm": 0,
+   "n_gt_5cm": 0,
+   "n_gt_10cm": 0,
+   "n_gt_15cm": 0,
+   "n_verts": 15604
+  },
+  "LONG_body_roof_eave_roll": {
+   "max_depth_m": 0.0253,
+   "n_gt_3cm": 0,
+   "n_gt_5cm": 0,
+   "n_gt_10cm": 0,
+   "n_gt_15cm": 0,
+   "n_verts": 6056
+  },
+  "LONG_body_roof_ridge": {
+   "max_depth_m": 0.0192,
+   "n_gt_3cm": 0,
+   "n_gt_5cm": 0,
+   "n_gt_10cm": 0,
+   "n_gt_15cm": 0,
+   "n_verts": 1150
+  },
+  "LONG_body_roof_comb": {
+   "max_depth_m": -0.2537,
+   "n_gt_3cm": 0,
+   "n_gt_5cm": 0,
+   "n_gt_10cm": 0,
+   "n_gt_15cm": 0,
+   "n_verts": 4555
+  },
+  "LONG_body_roof_deck": {
+   "max_depth_m": 0.0346,
+   "n_gt_3cm": 12,
+   "n_gt_5cm": 0,
+   "n_gt_10cm": 0,
+   "n_gt_15cm": 0,
+   "n_verts": 347,
+   "deepest_at": [
+    2.684,
+    3.044,
+    2.432
+   ]
+  },
+  "LONG_body_roof_rafters": {
+   "max_depth_m": -0.4311,
+   "n_gt_3cm": 0,
+   "n_gt_5cm": 0,
+   "n_gt_10cm": 0,
+   "n_gt_15cm": 0,
+   "n_verts": 1227
+  },
+  "LONG_body_roof_wall_abutment": {
+   "max_depth_m": 0.0402,
+   "n_gt_3cm": 408,
+   "n_gt_5cm": 0,
+   "n_gt_10cm": 0,
+   "n_gt_15cm": 0,
+   "n_verts": 2001,
+   "deepest_at": [
+    3.12,
+    3.26,
+    2.896
+   ]
+  },
+  "LONG_body_wall_stones": {
+   "max_depth_m": 0.1777,
+   "n_gt_3cm": 172,
+   "n_gt_5cm": 111,
+   "n_gt_10cm": 26,
+   "n_gt_15cm": 10,
+   "n_verts": 117929,
+   "deepest_at": [
+    2.284,
+    2.576,
+    1.978
+   ]
+  },
+  "LONG_body_wall_mortar": {
+   "max_depth_m": 0.2337,
+   "n_gt_3cm": 30,
+   "n_gt_5cm": 30,
+   "n_gt_10cm": 30,
+   "n_gt_15cm": 30,
+   "n_verts": 4164,
+   "deepest_at": [
+    2.303,
+    2.587,
+    0.0
+   ]
+  }
+ },
+ "visible_deep_roof_verts": {
+  "LONG_body_roof_covering": {
+   "tested": 0,
+   "visible": 0,
+   "examples": []
+  },
+  "LONG_body_roof_eave_roll": {
+   "tested": 0,
+   "visible": 0,
+   "examples": []
+  },
+  "LONG_body_roof_ridge": {
+   "tested": 0,
+   "visible": 0,
+   "examples": []
+  },
+  "LONG_body_roof_comb": {
+   "tested": 0,
+   "visible": 0,
+   "examples": []
+  },
+  "LONG_body_roof_deck": {
+   "tested": 12,
+   "visible": 0,
+   "examples": []
+  },
+  "LONG_body_roof_rafters": {
+   "tested": 0,
+   "visible": 0,
+   "examples": []
+  },
+  "LONG_body_roof_wall_abutment": {
+   "tested": 400,
+   "visible": 0,
+   "examples": []
+  }
+ },
+ "leak_rays": 745302,
+ "leak_count": 0,
+ "leak_cells": [],
+ "floating": {
+  "LONG_body_roof_wall_abutment": {
+   "islands_near_drum": 5,
+   "floating": [],
+   "n_floating": 0
+  },
+  "LONG_body_roof_covering": {
+   "islands_near_drum": 4,
+   "floating": [
+    {
+     "n_verts": 10,
+     "gap_m": 0.028,
+     "centre": [
+      1.321,
+      2.204,
+      3.546
+     ]
+    }
+   ],
+   "n_floating": 1
+  },
+  "LONG_body_roof_eave_roll": {
+   "islands_near_drum": 3,
+   "floating": [],
+   "n_floating": 0
+  },
+  "LONG_body_roof_ridge": {
+   "islands_near_drum": 2,
+   "floating": [
+    {
+     "n_verts": 36,
+     "gap_m": 0.021,
+     "centre": [
+      0.658,
+      -0.006,
+      5.474
+     ]
+    }
+   ],
+   "n_floating": 1
+  },
+  "LONG_body_roof_comb": {
+   "islands_near_drum": 6,
+   "floating": [],
+   "n_floating": 0
+  },
+  "LONG_body_roof_rafters": {
+   "islands_near_drum": 2,
+   "floating": [],
+   "n_floating": 0
+  },
+  "LONG_body_roof_deck": {
+   "islands_near_drum": 1,
+   "floating": [],
+   "n_floating": 0
+  },
+  "LONG_purlin_rings": {
+   "islands_near_drum": 1,
+   "floating": [
+    {
+     "n_verts": 4,
+     "gap_m": 0.087,
+     "centre": [
+      2.499,
+      2.478,
+      6.828
+     ]
+    }
+   ],
+   "n_floating": 1
+  }
+ },
+ "cone_clearance_min": [
+  {
+   "gap_m": 0.241,
+   "roof_part": "LONG_body_roof_comb",
+   "cone_part": "LONG_battens",
+   "at": [
+    0.477,
+    -0.04,
+    5.706
+   ]
+  },
+  {
+   "gap_m": 0.247,
+   "roof_part": "LONG_body_roof_comb",
+   "cone_part": "LONG_battens",
+   "at": [
+    0.477,
+    0.022,
+    5.698
+   ]
+  },
+  {
+   "gap_m": 0.248,
+   "roof_part": "LONG_body_roof_comb",
+   "cone_part": "LONG_battens",
+   "at": [
+    0.477,
+    -0.05,
+    5.7
+   ]
+  },
+  {
+   "gap_m": 0.254,
+   "roof_part": "LONG_body_roof_comb",
+   "cone_part": "LONG_battens",
+   "at": [
+    0.477,
+    0.033,
+    5.692
+   ]
+  },
+  {
+   "gap_m": 0.259,
+   "roof_part": "LONG_body_roof_comb",
+   "cone_part": "LONG_battens",
+   "at": [
+    0.504,
+    0.027,
+    5.706
+   ]
+  },
+  {
+   "gap_m": 0.265,
+   "roof_part": "LONG_body_roof_comb",
+   "cone_part": "LONG_battens",
+   "at": [
+    0.504,
+    0.037,
+    5.699
+   ]
+  },
+  {
+   "gap_m": 0.273,
+   "roof_part": "LONG_body_roof_comb",
+   "cone_part": "LONG_battens",
+   "at": [
+    0.507,
+    -0.038,
+    5.704
+   ]
+  },
+  {
+   "gap_m": 0.274,
+   "roof_part": "LONG_body_roof_comb",
+   "cone_part": "LONG_battens",
+   "at": [
+    0.511,
+    0.023,
+    5.698
+   ]
+  }
+ ],
+ "cone_min_z": {
+  "LONG_roof_shingles": 5.99,
+  "LONG_roof_starter": 5.965,
+  "LONG_roof_underlap": 5.983,
+  "LONG_rafters": 5.893,
+  "LONG_battens": 5.93,
+  "LONG_roof_soffit_deck": 5.997,
+  "LONG_eave_fill": 6.286,
+  "LONG_roof_blocker": 6.608,
+  "LONG_purlin_rings": 6.823
+ },
+ "thatch_max_z_under_cone": 5.706,
+ "door_overhead_min": [
+  {
+   "z": 0.12,
+   "side": -0.5,
+   "out": 0.05,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "z": 0.12,
+   "side": -0.4,
+   "out": 0.05,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "z": 0.12,
+   "side": -0.2,
+   "out": 0.05,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "z": 0.12,
+   "side": 0.0,
+   "out": 0.05,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "z": 0.12,
+   "side": 0.1,
+   "out": 0.05,
+   "hit": "LONG_body_wall_dressed"
+  }
+ ],
+ "door_approach_blocked": [
+  {
+   "side": -0.45,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "side": -0.35,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "side": -0.25,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "side": -0.15,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "side": -0.05,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "side": 0.05,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "side": 0.15,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "side": 0.25,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "side": 0.35,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  },
+  {
+   "side": 0.45,
+   "z": 0.1,
+   "dist": 1.74,
+   "hit": "LONG_body_wall_dressed"
+  }
+ ],
+ "door_entrance": {
+  "name": "body_wall_3",
+  "origin": [
+   -2.39171,
+   -2.60641,
+   0.0
+  ],
+  "out": [
+   0.0,
+   -1.0,
+   0.0
+  ],
+  "width": 1.0,
+  "head": 2.22
+ },
+ "mask_missing": [],
+ "decal_json_top": [
+  "format",
+  "building",
+  "units",
+  "space",
+  "axes",
+  "decal_types",
+  "count",
+  "counts",
+  "anchors",
+  "kit_params",
+  "body",
+  "validation"
+ ],
+ "decal_n": 89,
+ "decal_kinds": {
+  "damp_rise": 10,
+  "repair_patch": 3,
+  "moss": 28,
+  "lichen": 11,
+  "soot": 9,
+  "crack": 20,
+  "water_streak": 5,
+  "rust_stain": 1,
+  "grime": 2
+ },
+ "decal_far_from_surface": [],
+ "decal_n_far": 0,
+ "decal_example": {
+  "name": "DA_damp_rise_001",
+  "type": "damp_rise",
+  "position": [
+   8.18917,
+   0.88637,
+   0.3201
+  ],
+  "normal": [
+   0.97204,
+   0.23337,
+   0.02616
+  ],
+  "up": [
+   -0.02544,
+   -0.00611,
+   0.99966
+  ],
+  "size": [
+   0.9227,
+   0.4208
+  ],
+  "surface": "M_mortar",
+  "probability": 0.6,
+  "seed": 218377012
+ },
+ "da_empties": 89,
+ "aprons": [
+  {
+   "n_verts": 60,
+   "bbox_min": [
+    3.065,
+    3.305,
+    2.616
+   ],
+   "bbox_max": [
+    3.258,
+    3.395,
+    2.956
+   ],
+   "depth_into_face_max": -0.016,
+   "outer_max": 0.033
+  },
+  {
+   "n_verts": 20,
+   "bbox_min": [
+    3.046,
+    3.306,
+    2.6
+   ],
+   "bbox_max": [
+    3.257,
+    3.437,
+    2.619
+   ],
+   "depth_into_face_max": -0.017,
+   "outer_max": 0.069
+  },
+  {
+   "n_verts": 60,
+   "bbox_min": [
+    3.065,
+    -3.408,
+    2.625
+   ],
+   "bbox_max": [
+    3.258,
+    -3.317,
+    2.965
+   ],
+   "depth_into_face_max": -0.027,
+   "outer_max": 0.045
+  },
+  {
+   "n_verts": 20,
+   "bbox_min": [
+    3.046,
+    -3.45,
+    2.609
+   ],
+   "bbox_max": [
+    3.257,
+    -3.318,
+    2.628
+   ],
+   "depth_into_face_max": -0.028,
+   "outer_max": 0.081
+  }
+ ],
+ "flaunching_depth_range": [
+  -0.128,
+  0.04
+ ]
+}

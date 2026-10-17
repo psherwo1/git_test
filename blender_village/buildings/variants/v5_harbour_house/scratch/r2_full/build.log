@@ -1,0 +1,249 @@
+﻿[    0.2s] -- set_entrance
+[    0.2s] -- stone_quay
+[    1.4s]   quay_0 visible mortar 6.7% -> 0.6% after 287 pinning stones
+[    1.4s]   HARB_quay_0: stones 304 (hero 17, pins 69)
+[    2.0s]   HARB_quay_0_stones: 35876 verts, 33412 faces
+[    2.0s]   HARB_quay_0_quoins: 1312 verts, 1280 faces
+[    2.0s]   HARB_quay_0_mortar: 702 verts, 616 faces
+[    2.0s]   HARB_quay_0: mortar cells 616
+[    2.0s]   HARB_quay: stone quay, 1 water face run(s) from the bed -2.50 to -0.04 m; 0 land run(s) left to the terrain
+[    2.0s] -- round_stone_body
+[    8.0s]   HARB_tower visible mortar 13.1% -> 8.5% after 538 pinning stones
+[    8.0s]   HARB_tower stones 1139
+[    8.9s]   HARB_tower_stones: 56011 verts, 46016 faces
+[    8.9s]   HARB_tower_mortar: 2295 verts, 2118 faces
+[    8.9s]   HARB_tower_frames: 1188 verts, 1170 faces
+[    8.9s]   HARB_tower_dressed: 372 verts, 360 faces
+[    8.9s]   HARB_tower_reveals: 24 verts, 12 faces
+[    8.9s]   HARB_tower_blockers: 24 verts, 15 faces
+[    8.9s] -- path_stone_wall
+[   69.3s]   hall visible mortar 18.0% -> 8.0% after 1001 pinning stones
+[   69.3s]   HARB_hall: stones 1973 (hero 197, pins 207)
+[   72.8s]   HARB_hall_stones: 131316 verts, 115609 faces
+[   72.9s]   HARB_hall_quoins: 5740 verts, 5600 faces
+[   76.5s]   HARB_hall_mortar: 4270 verts, 3774 faces
+[   76.5s]   HARB_hall: mortar cells 3774
+[   76.6s]   HARB_hall_frames: 3792 verts, 3729 faces
+[   76.6s]   HARB_hall_dressed: 576 verts, 558 faces
+[   76.6s]   HARB_hall_ironwork: 280 verts, 266 faces
+[   76.6s]   HARB_hall_reveals: 32 verts, 16 faces
+[   76.6s]   HARB_hall_blockers: 32 verts, 20 faces
+[   76.6s] -- path_stone_wall
+[   80.1s]   wing visible mortar 21.3% -> 7.2% after 419 pinning stones
+[   80.1s]   HARB_wing: stones 733 (hero 14, pins 66)
+[   80.7s]   HARB_wing_stones: 44400 verts, 38007 faces
+[   80.7s]   HARB_wing_quoins: 1722 verts, 1680 faces
+[   81.9s]   HARB_wing_mortar: 2094 verts, 1813 faces
+[   81.9s]   HARB_wing: mortar cells 1813
+[   82.0s]   HARB_wing_frames: 3000 verts, 2949 faces
+[   82.0s]   HARB_wing_dressed: 328 verts, 318 faces
+[   82.0s]   HARB_wing_ironwork: 280 verts, 266 faces
+[   82.0s]   HARB_wing_reveals: 16 verts, 8 faces
+[   82.0s]   HARB_wing_blockers: 16 verts, 10 faces
+[   82.0s] -- cruck_frame
+[   82.8s]   HARB_water_gable_frame: 1296 verts, 1259 faces
+[   82.9s]   HARB_water_gable_boards: 2670 verts, 2331 faces
+[   82.9s]   HARB_water_gable_blocker: 2092 verts, 2131 faces
+[   82.9s]   HARB_water_gable_pads: 96 verts, 80 faces
+[   82.9s]   HARB_water_gable: cruck / arched-brace frame: clear 4.60 m, arch 2.00 -> 3.12 m (R 2.38), tie 3.36-3.64 over +-2.79, collar 5.96, apex 8.28, 40 infill boards
+[   82.9s] -- path_timber_wall
+[   83.7s]   HARB_partition_frame: 180 verts, 174 faces
+[   83.7s]   HARB_partition_boards: 4388 verts, 4110 faces
+[   83.7s]   HARB_partition_blocker: 54 verts, 52 faces
+[   83.7s]   HARB_partition: timber wall (board_batten), 1 runs, 0 openings
+[   83.7s] -- linear_roof
+[   83.8s]   HARB_roof_deck: 2255 verts, 2212 faces
+[   83.8s]   roof rafters: 4 tails skipped (they would run into another body)
+[   83.8s]   HARB_roof_rafters: 1680 verts, 1620 faces
+[   85.6s]   HARB_roof_covering: 120270 verts, 103184 faces
+[   85.6s]   HARB_roof: 891 shingle pieces
+[   85.7s]   HARB_roof_comb: 7000 verts, 6720 faces
+[   85.7s]   HARB_roof_verge: 528 verts, 530 faces
+[   85.7s]   HARB_roof: 4 verge boards
+[   85.7s]   HARB_roof_apex_cap_collar: 338 verts, 338 faces
+[   85.7s]   HARB_roof_apex_finial: 1442 verts, 1442 faces
+[   85.7s]   HARB_roof: apex finials on 2 gable(s), tips 9.57, 9.57
+[   85.8s] -- wall_abutment
+[   86.2s]   wall_abutment: trimmed at the wall face: comb -0 (whole units within 0.15 m), deck 2212->2069, rafters 1620->1599, covering 103184->96273, comb 6720->6720, verge 530->444
+[   86.3s]   wall_abutment: run 0: 206 samples, azimuth 355.5..458.0 deg, z 2.98..6.84 (cone eave lip 7.90)
+[   86.3s]   HARB_roof_wall_abutment: 1602 verts, 1589 faces
+[   86.3s]   seal junction registered: roof / round wall (covering HARB_roof_covering, HARB_roof_eave_roll, HARB_roof_ridge; z 2.61-7.14)
+[   86.3s] -- linear_roof
+[   86.3s]   HARB_wing_roof_deck: 1485 verts, 1456 faces
+[   86.4s]   wing_roof rafters: 6 tails skipped (they would run into another body)
+[   86.4s]   HARB_wing_roof_rafters: 896 verts, 864 faces
+[   86.9s]   HARB_wing_roof_covering: 39650 verts, 34397 faces
+[   86.9s]   HARB_wing_roof: 298 shingle pieces
+[   87.0s]   HARB_wing_roof_comb: 4600 verts, 4416 faces
+[   87.0s]   HARB_wing_roof_verge: 128 verts, 129 faces
+[   87.0s]   HARB_wing_roof: 2 verge boards
+[   87.0s]   HARB_wing_roof_apex_cap_collar: 169 verts, 169 faces
+[   87.0s]   HARB_wing_roof_apex_finial: 721 verts, 721 faces
+[   87.0s]   HARB_wing_roof: apex finials on 1 gable(s), tips 6.14
+[   87.0s] -- wall_abutment
+[   87.3s]   wing_abutment: trimmed at the wall face: comb -1728 (whole units within 0.15 m), deck 1456->1098, rafters 864->864, covering 34397->26461, comb 2688->2688, verge 129->129
+[   87.3s]   wing_abutment: run 0: 282 samples, azimuth 110.5..251.0 deg, z 2.66..4.86 (cone eave lip 7.90)
+[   87.3s]   HARB_wing_roof_wing_abutment: 2134 verts, 2121 faces
+[   87.3s]   seal junction registered: wing_roof / round wall (covering HARB_wing_roof_covering, HARB_wing_roof_eave_roll, HARB_wing_roof_ridge; z 2.34-5.16)
+[   87.3s] -- board_belt
+[   87.4s]   HARB_tower_top_boards: 3380 verts, 2925 faces
+[   87.4s]   HARB_tower_top_backing: 129 verts, 128 faces
+[   87.4s]   HARB_tower_top_ring: 1792 verts, 1728 faces
+[   87.4s]   HARB_tower_top_frames: 1056 verts, 1064 faces
+[   87.4s]   HARB_tower_top_blockers: 16 verts, 10 faces
+[   87.4s] -- cone_roof
+[   87.5s]   HARB_rafters: 1978 verts, 1675 faces
+[   87.5s]   HARB_purlin_rings: 168 verts, 150 faces
+[   87.6s]   HARB_battens: 264 verts, 198 faces
+[   88.8s] shingles: 238 full-length (covered part visible): 68
+[   88.9s]   HARB_roof_shingles: 26610 verts, 23486 faces
+[   88.9s]   HARB_roof_starter: 2220 verts, 1924 faces
+[   90.8s] underlap strips: 235
+[   90.9s]   HARB_roof_underlap: 2820 verts, 1410 faces
+[   90.9s]   HARB_roof_blocker: 1124 verts, 1024 faces
+[   90.9s]   HARB_roof_soffit_deck: 1440 verts, 1296 faces
+[   90.9s] -- finial
+[   90.9s]   HARB_cap_collar: 5154 verts, 5210 faces
+[   91.0s]   HARB_finial: 2502 verts, 2640 faces
+[   91.0s] collar drip 10.551 fascia top 10.616 lower top 11.107 upper top 11.407 spindle top 11.790 tip 12.740
+[   91.0s] -- round_eave_fill
+[   91.0s]   HARB_eave_fill: 721 verts, 480 faces
+[   91.0s] -- pile_deck
+[   91.0s]   HARB_jetty_piles: 340 verts, 276 faces
+[   91.0s]   HARB_jetty_structure: 1440 verts, 1392 faces
+[   91.0s]   HARB_jetty_planks: 1120 verts, 1080 faces
+[   91.0s]   HARB_jetty_fascia: 212 verts, 218 faces
+[   91.0s]   HARB_jetty_ironwork: 448 verts, 432 faces
+[   91.0s]   HARB_jetty: deck 1.80 x 5.00 m, 8 piles, 20 planks
+[   91.0s] -- ladder
+[   91.0s]   HARB_ladder: 272 verts, 226 faces
+[   91.0s] -- composite_hidden_cull
+[   91.7s]   visibility: 932527 tris, 334 viewpoints
+[  113.8s]   visibility cull HARB_quay_0_stones: -2132 of 33412 polygons
+[  114.6s]   visibility cull HARB_quay_0_quoins: -81 of 1280 polygons
+[  182.0s]   visibility cull HARB_tower_stones: -6051 of 46016 polygons
+[  186.9s]   visibility cull HARB_tower_frames: -552 of 1170 polygons
+[  390.5s]   visibility cull HARB_hall_stones: -21856 of 115609 polygons
+[  409.3s]   visibility cull HARB_hall_quoins: -2937 of 5600 polygons
+[  420.9s]   visibility cull HARB_hall_frames: -1498 of 3729 polygons
+[  473.7s]   visibility cull HARB_wing_stones: -5613 of 38007 polygons
+[  477.4s]   visibility cull HARB_wing_quoins: -524 of 1680 polygons
+[  485.2s]   visibility cull HARB_wing_frames: -1138 of 2949 polygons
+[  489.5s]   visibility cull HARB_water_gable_frame: -519 of 1259 polygons
+[  502.6s]   visibility cull HARB_water_gable_boards: -1724 of 2331 polygons
+[  503.5s]   visibility cull HARB_partition_frame: -110 of 174 polygons
+[  530.5s]   visibility cull HARB_partition_boards: -2937 of 4110 polygons
+[  695.1s]   visibility cull HARB_roof_covering: -22851 of 96273 polygons
+[  718.0s]   visibility cull HARB_roof_comb: -3486 of 6720 polygons
+[  760.4s]   visibility cull HARB_wing_roof_covering: -6970 of 26461 polygons
+[  767.7s]   visibility cull HARB_wing_roof_comb: -1301 of 2688 polygons
+[  782.8s]   visibility cull HARB_tower_top_boards: -1519 of 2925 polygons
+[  790.0s]   visibility cull HARB_tower_top_ring: -691 of 1728 polygons
+[  797.6s]   visibility cull HARB_tower_top_frames: -831 of 1064 polygons
+[  799.1s]   visibility cull HARB_purlin_rings: -139 of 150 polygons
+[  821.0s]   visibility cull HARB_roof_shingles: -2230 of 23486 polygons
+[  823.2s]   visibility cull HARB_roof_starter: -140 of 1924 polygons
+[  823.2s] hidden-geometry cull: -87830 polygons on 24 objects
+[  823.2s] -- recenter
+[  823.2s] recentred by (-1.247, -5.973); plan bbox 17.53 x 17.17 m, height 12.74 m
+[  823.2s] -- guards
+[  823.7s]   clearance gate HARB hall_0: door head 2.22 m, eave lip over it 5.500 m at (3.553, -6.073) on HARB_roof_rafters (rule >= 2.30 m, 25 stations): PASS
+[  823.7s]   clearance gate HARB wing_0: door head 2.22 m, eave lip over it 2.474 m at (-4.847, -7.823) on HARB_wing_roof_rafters (rule >= 2.30 m, 25 stations): PASS
+[  825.6s]   seal probe [see-through] roof / round wall: 7716 points, 43538 rays, 543 grazing pass(es), 0 leak(s)
+[  827.2s]   seal probe [see-through] wing_roof / round wall: 9490 points, 56770 rays, 687 grazing pass(es), 0 leak(s)
+[  827.2s]   seal probe: 100308 rays on 2 junction(s) in 3.5 s
+[  827.9s] composite decals: 147 anchors before the gate
+[  828.6s] timber anchors: 24
+[  829.2s] waterfront anchors: 18
+[  829.9s] decal anchor check (applied): checked 189, snapped 3, max_move 0.031, renormal 0, shrunk 21, no_surface 6, wrong_surface 5, excluded 27, occluded 1, footprint 43, duplicate 0, kept 107
+[  829.9s]     DA_moss_001: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_']
+[  829.9s]     DA_damp_rise_001: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_damp_rise_002: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_damp_rise_003: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_damp_rise_004: footprint off the surface (n.n0 1.00) ['HARB_hall_', 'HARB_hall_', '-', 'HARB_hall_', 'HARB_hall_', '-', '-', 'HARB_hall_', '-']
+[  829.9s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['HARB_hall_', 'HARB_hall_', '-', '-', 'HARB_hall_', '-', 'HARB_hall_', 'HARB_hall_', '-']
+[  829.9s]     DA_repair_patch_001: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_damp_rise_006: footprint off the surface (n.n0 1.00) ['HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower']
+[  829.9s]     DA_damp_rise_007: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', '-', '-', '-']
+[  829.9s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['-', 'HARB_wing_', 'HARB_wing_', 'HARB_tower', 'HARB_wing_', 'HARB_tower', 'HARB_tower', '-', '-']
+[  829.9s]     DA_damp_rise_009: on backing mesh HARB_tower_mortar
+[  829.9s]     DA_water_streak_001: no surface within 6 cm
+[  829.9s]     DA_water_streak_002: hit M_stone (HARB_tower_stones), declared M_mortar
+[  829.9s]     DA_water_streak_003: hit M_stone (HARB_tower_stones), declared M_mortar
+[  829.9s]     DA_water_streak_004: hit M_stone (HARB_tower_stones), declared M_mortar
+[  829.9s]     DA_damp_rise_010: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_damp_rise_011: footprint off the surface (n.n0 1.00) ['HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_']
+[  829.9s]     DA_damp_rise_012: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_']
+[  829.9s]     DA_damp_rise_013: footprint off the surface (n.n0 1.00) ['HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', '-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_']
+[  829.9s]     DA_damp_rise_014: footprint off the surface (n.n0 1.00) ['HARB_hall_', 'HARB_hall_', '-', 'HARB_hall_', 'HARB_hall_', '-', 'HARB_hall_', 'HARB_hall_', '-']
+[  829.9s]     DA_damp_rise_015: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_damp_rise_016: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_']
+[  829.9s]     DA_damp_rise_017: footprint off the surface (n.n0 1.00) ['HARB_hall_', 'HARB_hall_', '-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', '-', 'HARB_hall_', 'HARB_hall_']
+[  829.9s]     DA_damp_rise_019: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_damp_rise_020: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_lichen_004: footprint off the surface (n.n0 1.00) ['-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_']
+[  829.9s]     DA_lichen_006: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_repair_patch_005: footprint off the surface (n.n0 1.00) ['HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_']
+[  829.9s]     DA_repair_patch_006: footprint off the surface (n.n0 1.00) ['HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_']
+[  829.9s]     DA_repair_patch_007: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_damp_rise_022: on backing mesh HARB_wing_mortar
+[  829.9s]     DA_moss_002: on backing mesh HARB_wing_mortar
+[  829.9s]     DA_damp_rise_025: footprint off the surface (n.n0 1.00) ['-', 'HARB_wing_', 'HARB_wing_', 'HARB_tower', 'HARB_wing_', 'HARB_wing_', 'HARB_tower', '-', '-']
+[  829.9s]     DA_water_streak_005: footprint off the surface (n.n0 1.00) ['HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower']
+[  829.9s]     DA_crack_003: footprint off the surface (n.n0 1.00) ['HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower']
+[  829.9s]     DA_soot_002: on backing mesh HARB_tower_mortar
+[  829.9s]     DA_water_streak_006: no surface within 6 cm
+[  829.9s]     DA_crack_006: footprint off the surface (n.n0 1.00) ['HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower', 'HARB_tower']
+[  829.9s]     DA_crack_007: on backing mesh HARB_tower_mortar
+[  829.9s]     DA_crack_008: on backing mesh HARB_tower_mortar
+[  829.9s]     DA_water_streak_007: no surface within 6 cm
+[  829.9s]     DA_grime_001: footprint off the surface (n.n0 1.00) ['-', 'HARB_hall_', '-', '-', 'HARB_hall_', '-', '-', 'HARB_hall_', '-']
+[  829.9s]     DA_water_streak_009: no surface within 6 cm
+[  829.9s]     DA_water_streak_010: on backing mesh HARB_hall_mortar
+[  829.9s]     DA_grime_003: footprint off the surface (n.n0 1.00) ['HARB_wing_', 'HARB_wing_', '-', 'HARB_wing_', 'HARB_wing_', '-', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_']
+[  829.9s]     DA_grime_004: footprint off the surface (n.n0 1.00) ['-', 'HARB_wing_', '-', '-', 'HARB_wing_', '-', '-', 'HARB_wing_', '-']
+[  829.9s]     DA_lichen_012: footprint off the surface (n.n0 1.00) ['HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_']
+[  829.9s]     DA_crack_024: on backing mesh HARB_wing_mortar
+[  829.9s]     DA_crack_025: footprint off the surface (n.n0 1.00) ['HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_']
+[  829.9s]     DA_crack_026: on backing mesh HARB_wing_mortar
+[  829.9s]     DA_crack_027: footprint off the surface (n.n0 1.00) ['-', 'HARB_wing_', '-', '-', 'HARB_wing_', '-', '-', 'HARB_wing_', '-']
+[  829.9s]     DA_crack_028: on backing mesh HARB_wing_mortar
+[  829.9s]     DA_water_streak_013: on backing mesh HARB_wing_mortar
+[  829.9s]     DA_crack_029: footprint off the surface (n.n0 1.00) ['HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_', 'HARB_wing_']
+[  829.9s]     DA_lichen_013: footprint off the surface (n.n0 1.00) ['HARB_quay_', '-', '-', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', '-', '-', 'HARB_quay_']
+[  829.9s]     DA_lichen_014: buried: occluded within 15 cm
+[  829.9s]     DA_lichen_015: footprint off the surface (n.n0 1.00) ['HARB_hall_', '-', '-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', '-', '-', 'HARB_hall_']
+[  829.9s]     DA_lichen_016: footprint off the surface (n.n0 1.00) ['-', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_']
+[  829.9s]     DA_lichen_017: footprint off the surface (n.n0 1.00) ['-', '-', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_']
+[  829.9s]     DA_lichen_018: footprint off the surface (n.n0 1.00) ['-', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', '-', '-', '-']
+[  829.9s]     DA_lichen_020: footprint off the surface (n.n0 1.00) ['HARB_hall_', 'HARB_hall_', '-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', '-', '-', 'HARB_hall_']
+[  829.9s]     DA_lichen_023: footprint off the surface (n.n0 1.00) ['-', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', 'HARB_hall_', '-']
+[  829.9s]     DA_moss_032: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'HARB_parti', 'HARB_parti', 'HARB_parti', 'HARB_parti', 'HARB_parti', 'HARB_parti']
+[  829.9s]     DA_damp_rise_026: footprint off the surface (n.n0 1.00) ['HARB_parti', 'HARB_parti', 'HARB_parti', 'HARB_parti', 'HARB_parti', 'HARB_parti', '-', '-', '-']
+[  829.9s]     DA_water_streak_014: on backing mesh HARB_tower_mortar
+[  829.9s]     DA_water_streak_015: on backing mesh HARB_tower_mortar
+[  829.9s]     DA_water_streak_017: no surface within 6 cm
+[  829.9s]     DA_water_streak_018: no surface within 6 cm
+[  829.9s]     DA_water_streak_019: footprint off the surface (n.n0 1.00) ['HARB_water', 'HARB_water', 'HARB_water', 'HARB_water', 'HARB_water', 'HARB_water', '-', '-', '-']
+[  829.9s]     DA_water_streak_020: on backing mesh HARB_tower_top_backing
+[  829.9s]     DA_damp_rise_030: on backing mesh HARB_roof_deck
+[  829.9s]     DA_water_streak_024: footprint off the surface (n.n0 1.00) ['-', 'HARB_batte', '-', '-', 'HARB_batte', '-', '-', 'HARB_batte', '-']
+[  829.9s]     DA_moss_034: on backing mesh HARB_tower_top_backing
+[  829.9s]     DA_water_streak_025: hit M_roof_shingle (HARB_roof_starter), declared M_timber_weathered
+[  829.9s]     DA_water_streak_026: hit M_roof_shingle (HARB_roof_underlap), declared M_timber_weathered
+[  829.9s]     DA_water_streak_027: footprint off the surface (n.n0 1.00) ['-', 'HARB_batte', '-', '-', 'HARB_batte', '-', '-', 'HARB_batte', '-']
+[  829.9s]     DA_damp_rise_033: footprint off the surface (n.n0 1.00) ['HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', '-', '-', '-']
+[  829.9s]     DA_damp_rise_037: footprint off the surface (n.n0 1.00) ['HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', '-', '-', '-']
+[  829.9s]     DA_damp_rise_038: on backing mesh HARB_quay_0_mortar
+[  829.9s]     DA_damp_rise_039: footprint off the surface (n.n0 1.00) ['HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_']
+[  829.9s]     DA_moss_037: footprint off the surface (n.n0 1.00) ['HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_', 'HARB_quay_']
+[  829.9s]     DA_moss_038: footprint off the surface (n.n0 1.00) ['HARB_jetty', 'HARB_jetty', '-', 'HARB_jetty', 'HARB_jetty', '-', '-', 'HARB_jetty', '-']
+[  829.9s] decal anchors: 107
+[  831.0s] uv grain (kit 1.10.0): 70 meshes, 2343 timber / shingle pieces (60 round, 1026 sloped sheets), 148549 grain faces re-projected, 3681 collapsed faces repaired
+[  831.3s]   walked tops (Mask B <= 0.04): hall_0 -> HARB_hall_dressed: 9 faces
+[  831.3s]   walked tops (Mask B <= 0.04): hall_0 -> HARB_hall_ironwork: 35 faces
+[  831.3s]   walked tops (Mask B <= 0.04): wing_0 -> HARB_wing_dressed: 9 faces
+[  831.3s]   walked tops (Mask B <= 0.04): wing_0 -> HARB_wing_ironwork: 35 faces
+[  831.3s] objects 70 (instances 0, pooled meshes 0) triangles 756343
+Info: Saved as "v5_harbour_house.blend"
+[  831.4s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r2_full\v5_harbour_house.blend 20.3 MB

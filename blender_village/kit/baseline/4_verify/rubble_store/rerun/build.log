@@ -1,0 +1,65 @@
+[    0.2s] -- masonry_wall
+[   15.8s]   walls visible mortar 19.2% -> 8.9% after 608 pinning stones
+[   15.8s]   STORE_walls: stones 1557 (hero 24, pins 168)
+[   17.2s]   STORE_walls_stones: 92404 verts, 78863 faces
+[   17.2s]   STORE_walls_quoins: 2624 verts, 2560 faces
+[   17.5s]   STORE_walls_mortar: 2767 verts, 2387 faces
+[   17.5s]   STORE_walls: mortar cells 2387
+[   17.6s]   STORE_walls_frames: 2604 verts, 2559 faces
+[   17.6s]   STORE_walls_dressed: 204 verts, 198 faces
+[   17.6s]   STORE_walls_ironwork: 280 verts, 266 faces
+[   17.7s]   STORE_walls_reveals: 8 verts, 4 faces
+[   17.7s]   STORE_walls_blockers: 8 verts, 5 faces
+[   17.7s] -- linear_roof
+[   17.7s]   STORE_roof_deck: 225 verts, 208 faces
+[   17.7s]   STORE_roof_rafters: 1344 verts, 1296 faces
+[   17.9s]   STORE_roof_covering: 13836 verts, 12663 faces
+[   18.0s]   STORE_roof_eave_roll: 4964 verts, 4688 faces
+[   18.0s]   STORE_roof: 26 continuous thatch courses + eave rolls + verge faces
+[   18.0s]   STORE_roof_ridge: 766 verts, 734 faces
+[   18.1s]   STORE_roof_comb: 4900 verts, 4704 faces
+[   18.1s] -- hidden_cull
+[   18.3s]   visibility: 219730 tris, 216 viewpoints
+[   63.3s]   visibility cull STORE_walls_stones: -7855 of 78863 polygons
+[   66.3s]   visibility cull STORE_walls_quoins: -898 of 2560 polygons
+[   69.6s]   visibility cull STORE_walls_frames: -924 of 2559 polygons
+[   69.8s]   visibility cull STORE_walls_dressed: -72 of 198 polygons
+[   70.0s]   visibility cull STORE_walls_ironwork: -46 of 266 polygons
+[   72.5s]   visibility cull STORE_roof_rafters: -619 of 1296 polygons
+[   77.9s]   visibility cull STORE_roof_covering: -1516 of 12663 polygons
+[   80.5s]   visibility cull STORE_roof_eave_roll: -956 of 4688 polygons
+[   80.8s]   visibility cull STORE_roof_ridge: -51 of 734 polygons
+[   86.9s]   visibility cull STORE_roof_comb: -2058 of 4704 polygons
+[   86.9s] hidden-geometry cull: -14995 polygons on 10 objects
+[   86.9s] -- recenter
+[   86.9s] recentred by (+0.001, -0.001); plan bbox 7.28 x 6.03 m, height 6.53 m
+[   86.9s] -- guards
+[   87.0s]   clearance gate STORE walls_0: door head 2.22 m, eave lip over it 2.479 m at (-1.699, -2.601) on STORE_roof_rafters (rule >= 2.30 m, 25 stations): PASS
+[   87.2s] composite decals: 41 anchors before the gate
+[   87.4s] decal anchor check (applied): checked 41, snapped 0, max_move 0.001, renormal 0, shrunk 3, no_surface 1, wrong_surface 0, excluded 0, occluded 0, footprint 18, duplicate 0, kept 22
+[   87.4s]     DA_damp_rise_001: footprint off the surface (n.n0 1.00) ['STORE_wall', 'STORE_wall', '-', 'STORE_wall', 'STORE_wall', 'STORE_wall', '-', '-', 'STORE_wall']
+[   87.4s]     DA_damp_rise_002: footprint off the surface (n.n0 1.00) ['-', '-', 'STORE_wall', 'STORE_wall', 'STORE_wall', '-', 'STORE_wall', '-', '-']
+[   87.4s]     DA_damp_rise_003: footprint off the surface (n.n0 0.37) ['STORE_wall', '-', '-', '-', 'STORE_wall', '-', '-', '-', '-']
+[   87.4s]     DA_damp_rise_004: footprint off the surface (n.n0 1.00) ['-', 'STORE_wall', '-', '-', 'STORE_wall', '-', 'STORE_wall', 'STORE_wall', '-']
+[   87.4s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', '-', '-', '-']
+[   87.4s]     DA_damp_rise_006: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall']
+[   87.4s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall']
+[   87.4s]     DA_lichen_002: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'STORE_wall', 'STORE_wall', '-', '-', '-', '-']
+[   87.4s]     DA_soot_001: footprint off the surface (n.n0 1.00) ['STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall']
+[   87.4s]     DA_crack_002: footprint off the surface (n.n0 1.00) ['STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall']
+[   87.4s]     DA_water_streak_001: no surface within 5 cm
+[   87.4s]     DA_lichen_010: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', 'STORE_wall', '-']
+[   87.4s]     DA_moss_004: footprint off the surface (n.n0 1.00) ['-', 'STORE_roof', 'STORE_roof', '-', 'STORE_roof', 'STORE_roof', '-', 'STORE_roof', 'STORE_roof']
+[   87.4s]     DA_moss_005: footprint off the surface (n.n0 1.00) ['-', 'STORE_roof', '-', '-', 'STORE_roof', '-', '-', 'STORE_roof', '-']
+[   87.4s]     DA_moss_006: footprint off the surface (n.n0 1.00) ['-', 'STORE_roof', 'STORE_roof', '-', 'STORE_roof', 'STORE_roof', '-', 'STORE_roof', 'STORE_roof']
+[   87.4s]     DA_moss_007: footprint off the surface (n.n0 1.00) ['-', 'STORE_roof', '-', '-', 'STORE_roof', 'STORE_roof', '-', 'STORE_roof', 'STORE_roof']
+[   87.4s]     DA_moss_008: footprint off the surface (n.n0 1.00) ['-', 'STORE_roof', 'STORE_roof', '-', 'STORE_roof', 'STORE_roof', '-', 'STORE_roof', 'STORE_roof']
+[   87.4s]     DA_moss_009: footprint off the surface (n.n0 1.00) ['-', 'STORE_roof', 'STORE_roof', '-', 'STORE_roof', 'STORE_roof', '-', 'STORE_roof', 'STORE_roof']
+[   87.4s]     DA_moss_010: footprint off the surface (n.n0 1.00) ['-', 'STORE_roof', '-', '-', 'STORE_roof', '-', '-', 'STORE_roof', '-']
+[   87.4s] decal anchors: 22
+[   87.6s] uv grain (kit 1.10.0): 14 meshes, 201 timber / shingle pieces (2 round, 40 sloped sheets), 5460 grain faces re-projected, 372 collapsed faces repaired
+[   87.6s]   walked tops (Mask B <= 0.04): walls_0 -> STORE_walls_dressed: 6 faces
+[   87.6s]   walked tops (Mask B <= 0.04): walls_0 -> STORE_walls_ironwork: 35 faces
+[   87.6s] objects 14 (instances 0, pooled meshes 0) triangles 189763
+Info: Saved as "rubble_store.blend"
+[   87.7s] saved C:\GitHubDesktop\git_test\blender_village\kit\baseline\4_verify\rubble_store\rerun\rubble_store.blend 5.0 MB

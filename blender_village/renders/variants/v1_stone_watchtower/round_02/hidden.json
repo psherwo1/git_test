@@ -1,0 +1,412 @@
+{
+  "triangles": 1106412,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 11.8,
+  "est_hidden_triangles": 131109,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "WATCH_base_stones",
+      "est_triangles": 713082,
+      "est_hidden_triangles": 56703,
+      "hidden_pct_of_object": 8.0
+    },
+    {
+      "object": "WATCH_wall_core",
+      "est_triangles": 18947,
+      "est_hidden_triangles": 16181,
+      "hidden_pct_of_object": 85.4
+    },
+    {
+      "object": "WATCH_base_mortar",
+      "est_triangles": 64310,
+      "est_hidden_triangles": 14383,
+      "hidden_pct_of_object": 22.4
+    },
+    {
+      "object": "WATCH_door_surround",
+      "est_triangles": 42043,
+      "est_hidden_triangles": 7606,
+      "hidden_pct_of_object": 18.1
+    },
+    {
+      "object": "WATCH_roof_deck",
+      "est_triangles": 7883,
+      "est_hidden_triangles": 4702,
+      "hidden_pct_of_object": 59.6
+    },
+    {
+      "object": "WATCH_base_dressed",
+      "est_triangles": 73576,
+      "est_hidden_triangles": 4010,
+      "hidden_pct_of_object": 5.5
+    },
+    {
+      "object": "WATCH_roof_shingles",
+      "est_triangles": 63480,
+      "est_hidden_triangles": 3872,
+      "hidden_pct_of_object": 6.1
+    },
+    {
+      "object": "WATCH_interior",
+      "est_triangles": 4287,
+      "est_hidden_triangles": 3595,
+      "hidden_pct_of_object": 83.9
+    },
+    {
+      "object": "WATCH_door_leaf",
+      "est_triangles": 9957,
+      "est_hidden_triangles": 3595,
+      "hidden_pct_of_object": 36.1
+    },
+    {
+      "object": "WATCH_parapet_stones",
+      "est_triangles": 29596,
+      "est_hidden_triangles": 2627,
+      "hidden_pct_of_object": 8.9
+    },
+    {
+      "object": "WATCH_cap_collar",
+      "est_triangles": 10787,
+      "est_hidden_triangles": 1383,
+      "hidden_pct_of_object": 12.8
+    },
+    {
+      "object": "WATCH_parapet_mortar",
+      "est_triangles": 3180,
+      "est_hidden_triangles": 1383,
+      "hidden_pct_of_object": 43.5
+    },
+    {
+      "object": "WATCH_roof_underlap",
+      "est_triangles": 4563,
+      "est_hidden_triangles": 1383,
+      "hidden_pct_of_object": 30.3
+    },
+    {
+      "object": "WATCH_door_iron",
+      "est_triangles": 3457,
+      "est_hidden_triangles": 968,
+      "hidden_pct_of_object": 28.0
+    },
+    {
+      "object": "WATCH_rafters",
+      "est_triangles": 2489,
+      "est_hidden_triangles": 691,
+      "hidden_pct_of_object": 27.8
+    },
+    {
+      "object": "WATCH_roof_starter",
+      "est_triangles": 5670,
+      "est_hidden_triangles": 691,
+      "hidden_pct_of_object": 12.2
+    },
+    {
+      "object": "WATCH_parapet_coping",
+      "est_triangles": 2212,
+      "est_hidden_triangles": 553,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "WATCH_corbel_043",
+      "est_triangles": 1106,
+      "est_hidden_triangles": 414,
+      "hidden_pct_of_object": 37.5
+    },
+    {
+      "object": "WATCH_corbel_048",
+      "est_triangles": 1659,
+      "est_hidden_triangles": 414,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "WATCH_eave_closure",
+      "est_triangles": 968,
+      "est_hidden_triangles": 414,
+      "hidden_pct_of_object": 42.9
+    },
+    {
+      "object": "WATCH_corbel_036",
+      "est_triangles": 1936,
+      "est_hidden_triangles": 414,
+      "hidden_pct_of_object": 21.4
+    },
+    {
+      "object": "WATCH_ceiling",
+      "est_triangles": 414,
+      "est_hidden_triangles": 414,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "WATCH_peg_016",
+      "est_triangles": 414,
+      "est_hidden_triangles": 414,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "WATCH_corbel_054",
+      "est_triangles": 1244,
+      "est_hidden_triangles": 276,
+      "hidden_pct_of_object": 22.2
+    },
+    {
+      "object": "WATCH_corbel_055",
+      "est_triangles": 1244,
+      "est_hidden_triangles": 276,
+      "hidden_pct_of_object": 22.2
+    },
+    {
+      "object": "WATCH_corbel_027",
+      "est_triangles": 1244,
+      "est_hidden_triangles": 276,
+      "hidden_pct_of_object": 22.2
+    },
+    {
+      "object": "WATCH_peg_020",
+      "est_triangles": 276,
+      "est_hidden_triangles": 276,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "WATCH_corbel_026",
+      "est_triangles": 1106,
+      "est_hidden_triangles": 276,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "WATCH_corbel_041",
+      "est_triangles": 968,
+      "est_hidden_triangles": 276,
+      "hidden_pct_of_object": 28.6
+    },
+    {
+      "object": "WATCH_peg_006",
+      "est_triangles": 414,
+      "est_hidden_triangles": 276,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "WATCH_corbel_030",
+      "est_triangles": 829,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "WATCH_corbel_053",
+      "est_triangles": 1383,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 10.0
+    },
+    {
+      "object": "WATCH_finial",
+      "est_triangles": 5117,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 2.7
+    },
+    {
+      "object": "WATCH_battens",
+      "est_triangles": 138,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "WATCH_corbel_050",
+      "est_triangles": 968,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "WATCH_corbel_029",
+      "est_triangles": 1244,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 11.1
+    },
+    {
+      "object": "WATCH_lookout_rooms",
+      "est_triangles": 276,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "WATCH_corbel_035",
+      "est_triangles": 1797,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 7.7
+    },
+    {
+      "object": "WATCH_corbel_032",
+      "est_triangles": 829,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "WATCH_corbel_038",
+      "est_triangles": 829,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "WATCH_corbel_028",
+      "est_triangles": 1244,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 11.1
+    },
+    {
+      "object": "WATCH_corbel_051",
+      "est_triangles": 829,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "WATCH_corbel_042",
+      "est_triangles": 968,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "WATCH_corbel_024",
+      "est_triangles": 968,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "WATCH_peg_008",
+      "est_triangles": 138,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "WATCH_peg_012",
+      "est_triangles": 138,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "WATCH_corbel_031",
+      "est_triangles": 414,
+      "est_hidden_triangles": 138,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "WATCH_corbel_023",
+      "est_triangles": 553,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_037",
+      "est_triangles": 691,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_door_step",
+      "est_triangles": 1659,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_022",
+      "est_triangles": 1106,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_052",
+      "est_triangles": 691,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_044",
+      "est_triangles": 1383,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_040",
+      "est_triangles": 1106,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_039",
+      "est_triangles": 1244,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_034",
+      "est_triangles": 1383,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_045",
+      "est_triangles": 829,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_049",
+      "est_triangles": 553,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_025",
+      "est_triangles": 691,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_peg_014",
+      "est_triangles": 138,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_056",
+      "est_triangles": 1106,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_046",
+      "est_triangles": 553,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_047",
+      "est_triangles": 691,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_wall_plate",
+      "est_triangles": 414,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_peg_018",
+      "est_triangles": 138,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_033",
+      "est_triangles": 138,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "WATCH_corbel_021",
+      "est_triangles": 691,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

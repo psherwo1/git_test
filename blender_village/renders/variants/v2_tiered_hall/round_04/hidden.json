@@ -1,0 +1,682 @@
+{
+  "triangles": 954925,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 11.3,
+  "est_hidden_triangles": 108025,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "HALL_skirt1_deck_lap",
+      "est_triangles": 21247,
+      "est_hidden_triangles": 13846,
+      "hidden_pct_of_object": 65.2
+    },
+    {
+      "object": "HALL_hall_stones",
+      "est_triangles": 139299,
+      "est_hidden_triangles": 7758,
+      "hidden_pct_of_object": 5.6
+    },
+    {
+      "object": "HALL_skirt1_drum_flashing",
+      "est_triangles": 13130,
+      "est_hidden_triangles": 6923,
+      "hidden_pct_of_object": 52.7
+    },
+    {
+      "object": "HALL_skirt1_shingles",
+      "est_triangles": 138583,
+      "est_hidden_triangles": 5490,
+      "hidden_pct_of_object": 4.0
+    },
+    {
+      "object": "HALL_skirt2_roof_deck",
+      "est_triangles": 7520,
+      "est_hidden_triangles": 4535,
+      "hidden_pct_of_object": 60.3
+    },
+    {
+      "object": "HALL_tur_e_cap_roof_deck",
+      "est_triangles": 8355,
+      "est_hidden_triangles": 3939,
+      "hidden_pct_of_object": 47.1
+    },
+    {
+      "object": "HALL_hall_mortar",
+      "est_triangles": 5729,
+      "est_hidden_triangles": 3819,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "HALL_skirt2_lantern_flashing",
+      "est_triangles": 6087,
+      "est_hidden_triangles": 3819,
+      "hidden_pct_of_object": 62.7
+    },
+    {
+      "object": "HALL_skirt1_structure",
+      "est_triangles": 22321,
+      "est_hidden_triangles": 3342,
+      "hidden_pct_of_object": 15.0
+    },
+    {
+      "object": "HALL_drum_mortar",
+      "est_triangles": 3939,
+      "est_hidden_triangles": 3342,
+      "hidden_pct_of_object": 84.8
+    },
+    {
+      "object": "HALL_tur_nw_cap_roof_deck",
+      "est_triangles": 7520,
+      "est_hidden_triangles": 3222,
+      "hidden_pct_of_object": 42.9
+    },
+    {
+      "object": "HALL_tur_e_stones",
+      "est_triangles": 87614,
+      "est_hidden_triangles": 2745,
+      "hidden_pct_of_object": 3.1
+    },
+    {
+      "object": "HALL_cap_roof_deck",
+      "est_triangles": 6803,
+      "est_hidden_triangles": 2387,
+      "hidden_pct_of_object": 35.1
+    },
+    {
+      "object": "HALL_hall_quoins",
+      "est_triangles": 60518,
+      "est_hidden_triangles": 2267,
+      "hidden_pct_of_object": 3.7
+    },
+    {
+      "object": "HALL_skirt2_roof_underlap",
+      "est_triangles": 4297,
+      "est_hidden_triangles": 2267,
+      "hidden_pct_of_object": 52.8
+    },
+    {
+      "object": "HALL_drum_stones",
+      "est_triangles": 59682,
+      "est_hidden_triangles": 2148,
+      "hidden_pct_of_object": 3.6
+    },
+    {
+      "object": "HALL_tur_e_mortar",
+      "est_triangles": 4297,
+      "est_hidden_triangles": 2029,
+      "hidden_pct_of_object": 47.2
+    },
+    {
+      "object": "HALL_skirt1_tur_nw_flashing",
+      "est_triangles": 2864,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "HALL_tur_nw_stones",
+      "est_triangles": 47984,
+      "est_hidden_triangles": 1790,
+      "hidden_pct_of_object": 3.7
+    },
+    {
+      "object": "HALL_skirt2_roof_shingles",
+      "est_triangles": 65292,
+      "est_hidden_triangles": 1671,
+      "hidden_pct_of_object": 2.6
+    },
+    {
+      "object": "HALL_tur_nw_cap_cap_collar",
+      "est_triangles": 10504,
+      "est_hidden_triangles": 1671,
+      "hidden_pct_of_object": 15.9
+    },
+    {
+      "object": "HALL_skirt1_tur_e_flashing",
+      "est_triangles": 2864,
+      "est_hidden_triangles": 1551,
+      "hidden_pct_of_object": 54.2
+    },
+    {
+      "object": "HALL_skirt1_deck",
+      "est_triangles": 2984,
+      "est_hidden_triangles": 1551,
+      "hidden_pct_of_object": 52.0
+    },
+    {
+      "object": "HALL_cap_cap_collar",
+      "est_triangles": 12772,
+      "est_hidden_triangles": 1432,
+      "hidden_pct_of_object": 11.2
+    },
+    {
+      "object": "HALL_tur_nw_mortar",
+      "est_triangles": 2745,
+      "est_hidden_triangles": 1193,
+      "hidden_pct_of_object": 43.5
+    },
+    {
+      "object": "HALL_tur_e_cap_cap_collar",
+      "est_triangles": 11339,
+      "est_hidden_triangles": 1074,
+      "hidden_pct_of_object": 9.5
+    },
+    {
+      "object": "HALL_skirt2_roof_starter",
+      "est_triangles": 5490,
+      "est_hidden_triangles": 1074,
+      "hidden_pct_of_object": 19.6
+    },
+    {
+      "object": "HALL_tur_e_cap_eave_closure",
+      "est_triangles": 1551,
+      "est_hidden_triangles": 1074,
+      "hidden_pct_of_object": 69.2
+    },
+    {
+      "object": "HALL_cap_roof_shingles",
+      "est_triangles": 48104,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 2.0
+    },
+    {
+      "object": "HALL_tur_e_cap_roof_underlap",
+      "est_triangles": 3580,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 26.7
+    },
+    {
+      "object": "HALL_skirt1_hips",
+      "est_triangles": 20292,
+      "est_hidden_triangles": 835,
+      "hidden_pct_of_object": 4.1
+    },
+    {
+      "object": "HALL_tur_nw_cap_eave_closure",
+      "est_triangles": 1074,
+      "est_hidden_triangles": 835,
+      "hidden_pct_of_object": 77.8
+    },
+    {
+      "object": "HALL_cap_eave_closure",
+      "est_triangles": 954,
+      "est_hidden_triangles": 835,
+      "hidden_pct_of_object": 87.5
+    },
+    {
+      "object": "HALL_tur_nw_coping",
+      "est_triangles": 1551,
+      "est_hidden_triangles": 716,
+      "hidden_pct_of_object": 46.2
+    },
+    {
+      "object": "HALL_openings_leaf",
+      "est_triangles": 954,
+      "est_hidden_triangles": 596,
+      "hidden_pct_of_object": 62.5
+    },
+    {
+      "object": "HALL_tur_nw_cap_roof_underlap",
+      "est_triangles": 2267,
+      "est_hidden_triangles": 596,
+      "hidden_pct_of_object": 26.3
+    },
+    {
+      "object": "HALL_tur_e_coping",
+      "est_triangles": 1074,
+      "est_hidden_triangles": 596,
+      "hidden_pct_of_object": 55.6
+    },
+    {
+      "object": "HALL_tur_e_cap_roof_shingles",
+      "est_triangles": 35332,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 1.4
+    },
+    {
+      "object": "HALL_cap_roof_underlap",
+      "est_triangles": 3700,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 12.9
+    },
+    {
+      "object": "HALL_skirt1_band",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_tur_nw_cap_roof_shingles",
+      "est_triangles": 22560,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 1.6
+    },
+    {
+      "object": "HALL_openings_backing",
+      "est_triangles": 358,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_tur_e_cap_finial",
+      "est_triangles": 4893,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 7.3
+    },
+    {
+      "object": "HALL_skirt2_eave_closure",
+      "est_triangles": 954,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 37.5
+    },
+    {
+      "object": "HALL_cap_rafters",
+      "est_triangles": 2506,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "HALL_skirt2_rafters",
+      "est_triangles": 3222,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 11.1
+    },
+    {
+      "object": "HALL_tur_e_cap_rafters",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 18.8
+    },
+    {
+      "object": "HALL_tur_nw_cap_battens",
+      "est_triangles": 358,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "HALL_peg_021",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_tur_e_belt_boards",
+      "est_triangles": 954,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "HALL_peg_088",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_047",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_cap_battens",
+      "est_triangles": 358,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "HALL_peg_063",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_tur_e_belt_ring",
+      "est_triangles": 596,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "HALL_peg_076",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_058",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_skirt2_battens",
+      "est_triangles": 596,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "HALL_peg_010",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_044",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_042",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_055",
+      "est_triangles": 238,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_cap_roof_starter",
+      "est_triangles": 2626,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 4.5
+    },
+    {
+      "object": "HALL_cap_finial",
+      "est_triangles": 3461,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 3.4
+    },
+    {
+      "object": "HALL_tur_e_cap_roof_starter",
+      "est_triangles": 2626,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 4.5
+    },
+    {
+      "object": "HALL_tur_nw_cap_finial",
+      "est_triangles": 6326,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 1.9
+    },
+    {
+      "object": "HALL_peg_068",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_tur_nw_cap_roof_starter",
+      "est_triangles": 2148,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 5.6
+    },
+    {
+      "object": "HALL_skirt2_wall_plate",
+      "est_triangles": 835,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "HALL_tur_nw_belt_backing",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_049",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_013",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_043",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_066",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_051",
+      "est_triangles": 238,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HALL_peg_064",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_020",
+      "est_triangles": 238,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HALL_tur_e_belt_backing",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_081",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_048",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_061",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_024",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_056",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_052",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_059",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_069",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_087",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_032",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_012",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_tur_nw_cap_wall_plate",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_082",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_054",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_009",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HALL_peg_027",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_tur_nw_cap_rafters",
+      "est_triangles": 2506,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_lantern_ring",
+      "est_triangles": 596,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_openings_iron",
+      "est_triangles": 716,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_openings_frame",
+      "est_triangles": 1551,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_tur_e_cap_battens",
+      "est_triangles": 358,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_lantern_boards",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_tur_nw_belt_ring",
+      "est_triangles": 1313,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_peg_037",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_tur_e_cap_wall_plate",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_lantern_backing",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_tur_nw_belt_boards",
+      "est_triangles": 358,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_peg_039",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_cap_purlin_rings",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_openings_sill",
+      "est_triangles": 238,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_skirt2_purlin_rings",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_peg_034",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_nail_006",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HALL_nail_004",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

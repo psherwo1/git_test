@@ -1,0 +1,21 @@
+﻿00:04.546  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v3_longhouse_roundend\v3_longhouse_roundend.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village/tools/render_review.py:111: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:462
++ ... t=Get-Date; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe C: ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village/tools/render_review.py:127: DeprecationWarning: 'World.use_nodes' is 
+expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:05.343  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:21.546  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v3_longhouse_roundend\round_05\hero.png'
+00:34.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v3_longhouse_roundend\round_05\front.png'
+00:47.265  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v3_longhouse_roundend\round_05\side.png'
+00:53.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v3_longhouse_roundend\round_05\back.png'
+00:57.484  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v3_longhouse_roundend\round_05\aerial.png'
+01:02.093  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v3_longhouse_roundend\round_05\actor_closeup.png'
+REVIEW_STATS {"objects": 34, "triangles": 479497, "bbox_min": [-8.887384414672852, -4.278973579406738, -0.05000000074505806], "bbox_max": [8.887384414672852, 4.278973579406738, 7.644298553466797], "size_m": [17.774768829345703, 8.557947158813477, 7.69429874420166], "materials": ["M_iron", "M_lead", "M_mortar", "M_roof_shake", "M_roof_shingle", "M_stone", "M_stone_dressed", "M_thatch", "M_timber", "M_timber_weathered"], "est_hidden_pct": 13.3, "est_hidden_triangles": 63773, "material_slot_count": 10, "mask_attribute_missing": []}

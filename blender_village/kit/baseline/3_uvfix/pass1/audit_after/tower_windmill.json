@@ -1,0 +1,1327 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\3_uvfix\\tower_windmill\\tower_windmill.blend",
+ "entrances": [
+  {
+   "name": "drum_door",
+   "origin": [
+    0.0,
+    -2.6,
+    0.0
+   ],
+   "out": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "width": 1.05,
+   "head": 2.315
+  }
+ ],
+ "grain": {
+  "M_timber": {
+   "area": 229.336,
+   "along_pct": 65.9,
+   "across_pct": 0.5,
+   "judged_area": 152.403,
+   "sheet_area": 75.848,
+   "along_of_judged_pct": 99.2,
+   "piece_along_pct": 65.6,
+   "piece_across_pct": 0.5,
+   "roofarea": 71.368,
+   "upslope_pct": 61.9,
+   "downslope_pct": 1.7,
+   "m_per_uv_median": 1.0
+  },
+  "M_timber_weathered": {
+   "area": 130.073,
+   "along_pct": 97.9,
+   "across_pct": 0.3,
+   "judged_area": 128.172,
+   "sheet_area": 1.856,
+   "along_of_judged_pct": 99.3,
+   "piece_along_pct": 97.9,
+   "piece_across_pct": 0.3,
+   "roofarea": 18.925,
+   "upslope_pct": 73.5,
+   "downslope_pct": 8.4,
+   "m_per_uv_median": 1.0
+  },
+  "M_roof_shake": {
+   "area": 39.689,
+   "along_pct": 80.9,
+   "across_pct": 2.6,
+   "judged_area": 39.689,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 80.9,
+   "piece_along_pct": 80.9,
+   "piece_across_pct": 2.6,
+   "roofarea": 32.039,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.009
+  },
+  "M_roof_shingle": {
+   "area": 13.956,
+   "along_pct": 11.3,
+   "across_pct": 21.9,
+   "judged_area": 5.144,
+   "sheet_area": 8.812,
+   "along_of_judged_pct": 30.7,
+   "piece_along_pct": 11.3,
+   "piece_across_pct": 21.9,
+   "roofarea": 10.958,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.836
+  }
+ },
+ "grain_by_object": {
+  "MILL_apron_rafters|M_timber": {
+   "area": 70.941,
+   "along_pct": 14.3,
+   "across_pct": 0.2,
+   "judged_area": 10.263,
+   "sheet_area": 60.507,
+   "along_of_judged_pct": 98.8,
+   "piece_along_pct": 14.3,
+   "piece_across_pct": 0.2,
+   "roofarea": 32.789,
+   "upslope_pct": 97.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_apron_rafters|M_timber_weathered": {
+   "area": 14.565,
+   "along_pct": 99.5,
+   "across_pct": 0.5,
+   "judged_area": 14.565,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.5,
+   "piece_along_pct": 99.5,
+   "piece_across_pct": 0.5,
+   "roofarea": 0.982,
+   "upslope_pct": 28.7,
+   "downslope_pct": 34.3,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_apron_shingles|M_roof_shake": {
+   "area": 39.689,
+   "along_pct": 80.9,
+   "across_pct": 2.6,
+   "judged_area": 39.689,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 80.9,
+   "piece_along_pct": 80.9,
+   "piece_across_pct": 2.6,
+   "roofarea": 32.039,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.009
+  },
+  "MILL_cap_frame|M_timber": {
+   "area": 20.305,
+   "along_pct": 65.6,
+   "across_pct": 1.0,
+   "judged_area": 13.524,
+   "sheet_area": 6.755,
+   "along_of_judged_pct": 98.4,
+   "piece_along_pct": 61.6,
+   "piece_across_pct": 0.9,
+   "roofarea": 11.174,
+   "upslope_pct": 1.5,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_cap_frame|M_timber_weathered": {
+   "area": 13.304,
+   "along_pct": 95.4,
+   "across_pct": 0.4,
+   "judged_area": 12.765,
+   "sheet_area": 0.515,
+   "along_of_judged_pct": 99.4,
+   "piece_along_pct": 95.4,
+   "piece_across_pct": 0.4,
+   "roofarea": 3.685,
+   "upslope_pct": 62.7,
+   "downslope_pct": 1.7,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_cap_shingles|M_roof_shingle": {
+   "area": 13.956,
+   "along_pct": 11.3,
+   "across_pct": 21.9,
+   "judged_area": 5.144,
+   "sheet_area": 8.812,
+   "along_of_judged_pct": 30.7,
+   "piece_along_pct": 11.3,
+   "piece_across_pct": 21.9,
+   "roofarea": 10.958,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.836
+  },
+  "MILL_door_leaf|M_timber_weathered": {
+   "area": 6.563,
+   "along_pct": 99.2,
+   "across_pct": 0.6,
+   "judged_area": 6.56,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.3,
+   "piece_along_pct": 99.2,
+   "piece_across_pct": 0.6,
+   "roofarea": 0.199,
+   "upslope_pct": 45.4,
+   "downslope_pct": 2.1,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_interior|M_timber": {
+   "area": 3.098,
+   "along_pct": 98.8,
+   "across_pct": 0.6,
+   "judged_area": 3.085,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.2,
+   "piece_along_pct": 98.8,
+   "piece_across_pct": 0.6,
+   "roofarea": 0.774,
+   "upslope_pct": 61.8,
+   "downslope_pct": 11.5,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_prop_anchors|M_timber_weathered": {
+   "area": 0.878,
+   "along_pct": 83.4,
+   "across_pct": 3.4,
+   "judged_area": 0.878,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 83.4,
+   "piece_along_pct": 83.4,
+   "piece_across_pct": 3.4,
+   "roofarea": 0.399,
+   "upslope_pct": 28.3,
+   "downslope_pct": 18.4,
+   "m_per_uv_median": 1.004
+  },
+  "MILL_props|M_timber_weathered": {
+   "area": 19.372,
+   "along_pct": 95.8,
+   "across_pct": 0.0,
+   "judged_area": 18.605,
+   "sheet_area": 0.757,
+   "along_of_judged_pct": 99.8,
+   "piece_along_pct": 95.8,
+   "piece_across_pct": 0.0,
+   "roofarea": 6.745,
+   "upslope_pct": 97.3,
+   "downslope_pct": 1.3,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_tail_boom|M_timber": {
+   "area": 0.221,
+   "along_pct": 36.5,
+   "across_pct": 1.1,
+   "judged_area": 0.083,
+   "sheet_area": 0.125,
+   "along_of_judged_pct": 96.8,
+   "piece_along_pct": 36.5,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.04,
+   "upslope_pct": 43.3,
+   "downslope_pct": 2.2,
+   "m_per_uv_median": 1.001
+  },
+  "MILL_tail_boom|M_timber_weathered": {
+   "area": 6.268,
+   "along_pct": 99.3,
+   "across_pct": 0.4,
+   "judged_area": 6.264,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.3,
+   "piece_along_pct": 99.3,
+   "piece_across_pct": 0.4,
+   "roofarea": 1.657,
+   "upslope_pct": 17.7,
+   "downslope_pct": 38.0,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_tail_vane|M_timber": {
+   "area": 0.912,
+   "along_pct": 99.1,
+   "across_pct": 0.9,
+   "judged_area": 0.912,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.1,
+   "piece_along_pct": 99.1,
+   "piece_across_pct": 0.9,
+   "roofarea": 0.008,
+   "upslope_pct": 40.4,
+   "downslope_pct": 9.8,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_tail_vane|M_timber_weathered": {
+   "area": 11.067,
+   "along_pct": 99.4,
+   "across_pct": 0.6,
+   "judged_area": 11.067,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.4,
+   "piece_along_pct": 99.4,
+   "piece_across_pct": 0.6,
+   "roofarea": 0.355,
+   "upslope_pct": 7.8,
+   "downslope_pct": 32.0,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_tower_boards|M_timber_weathered": {
+   "area": 43.637,
+   "along_pct": 98.4,
+   "across_pct": 0.1,
+   "judged_area": 43.053,
+   "sheet_area": 0.584,
+   "along_of_judged_pct": 99.7,
+   "piece_along_pct": 98.4,
+   "piece_across_pct": 0.1,
+   "roofarea": 0.578,
+   "upslope_pct": 66.5,
+   "downslope_pct": 30.2,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_tower_frame|M_timber": {
+   "area": 51.562,
+   "along_pct": 81.3,
+   "across_pct": 0.6,
+   "judged_area": 42.366,
+   "sheet_area": 8.461,
+   "along_of_judged_pct": 99.0,
+   "piece_along_pct": 81.3,
+   "piece_across_pct": 0.6,
+   "roofarea": 6.696,
+   "upslope_pct": 18.5,
+   "downslope_pct": 16.1,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_tower_frame|M_timber_weathered": {
+   "area": 1.271,
+   "along_pct": 99.5,
+   "across_pct": 0.1,
+   "judged_area": 1.266,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.9,
+   "piece_along_pct": 99.5,
+   "piece_across_pct": 0.1,
+   "roofarea": 0.593,
+   "upslope_pct": 79.6,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_wheel_arm_A|M_timber_weathered": {
+   "area": 3.285,
+   "along_pct": 99.4,
+   "across_pct": 0.4,
+   "judged_area": 3.285,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.4,
+   "piece_along_pct": 99.4,
+   "piece_across_pct": 0.4,
+   "roofarea": 0.898,
+   "upslope_pct": 97.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_wheel_arm_B|M_timber_weathered": {
+   "area": 3.284,
+   "along_pct": 97.1,
+   "across_pct": 0.4,
+   "judged_area": 3.284,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.1,
+   "piece_along_pct": 97.1,
+   "piece_across_pct": 0.4,
+   "roofarea": 0.97,
+   "upslope_pct": 84.4,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_wheel_arm_C|M_timber_weathered": {
+   "area": 3.282,
+   "along_pct": 97.3,
+   "across_pct": 2.6,
+   "judged_area": 3.282,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.3,
+   "piece_along_pct": 97.3,
+   "piece_across_pct": 2.6,
+   "roofarea": 0.957,
+   "upslope_pct": 90.9,
+   "downslope_pct": 8.2,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_wheel_arm_D|M_timber_weathered": {
+   "area": 3.297,
+   "along_pct": 99.4,
+   "across_pct": 0.5,
+   "judged_area": 3.297,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.4,
+   "piece_along_pct": 99.4,
+   "piece_across_pct": 0.5,
+   "roofarea": 0.908,
+   "upslope_pct": 88.9,
+   "downslope_pct": 2.7,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_wheel_blades|M_timber": {
+   "area": 81.304,
+   "along_pct": 99.5,
+   "across_pct": 0.5,
+   "judged_area": 81.304,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.5,
+   "piece_along_pct": 99.5,
+   "piece_across_pct": 0.5,
+   "roofarea": 19.549,
+   "upslope_pct": 52.6,
+   "downslope_pct": 0.1,
+   "m_per_uv_median": 1.0
+  },
+  "MILL_windshaft|M_timber": {
+   "area": 0.992,
+   "along_pct": 81.2,
+   "across_pct": 2.1,
+   "judged_area": 0.867,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 92.8,
+   "piece_along_pct": 81.2,
+   "piece_across_pct": 2.1,
+   "roofarea": 0.337,
+   "upslope_pct": 0.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  }
+ },
+ "collapsed": {
+  "MILL_apron_rafters": {
+   "objects": [
+    "MILL_apron_rafters"
+   ],
+   "area": 85.507,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_apron_shingles": {
+   "objects": [
+    "MILL_apron_shingles"
+   ],
+   "area": 39.689,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "MILL_arcade_backs": {
+   "objects": [
+    "MILL_arcade_backs"
+   ],
+   "area": 11.663,
+   "lt02": 0.0069,
+   "lt03": 0.0158,
+   "pct02": 0.059,
+   "by_mat": {
+    "M_stone": 0.059
+   }
+  },
+  "MILL_arcade_dressed": {
+   "objects": [
+    "MILL_arcade_dressed"
+   ],
+   "area": 27.501,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v10": {
+   "objects": [
+    "MILL_baluster_001",
+    "MILL_baluster_017",
+    "MILL_baluster_018"
+   ],
+   "area": 0.083,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v05": {
+   "objects": [
+    "MILL_baluster_002",
+    "MILL_baluster_006",
+    "MILL_baluster_012",
+    "MILL_baluster_026",
+    "MILL_baluster_029",
+    "MILL_baluster_031",
+    "MILL_baluster_032",
+    "MILL_baluster_037",
+    "MILL_baluster_044",
+    "MILL_baluster_053",
+    "MILL_baluster_059"
+   ],
+   "area": 0.066,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v08": {
+   "objects": [
+    "MILL_baluster_003",
+    "MILL_baluster_024",
+    "MILL_baluster_028",
+    "MILL_baluster_062"
+   ],
+   "area": 0.067,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v00": {
+   "objects": [
+    "MILL_baluster_004",
+    "MILL_baluster_008",
+    "MILL_baluster_013",
+    "MILL_baluster_021",
+    "MILL_baluster_063"
+   ],
+   "area": 0.067,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v04": {
+   "objects": [
+    "MILL_baluster_005",
+    "MILL_baluster_019",
+    "MILL_baluster_025",
+    "MILL_baluster_041",
+    "MILL_baluster_046",
+    "MILL_baluster_049",
+    "MILL_baluster_065"
+   ],
+   "area": 0.065,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v01": {
+   "objects": [
+    "MILL_baluster_007",
+    "MILL_baluster_016",
+    "MILL_baluster_020",
+    "MILL_baluster_027",
+    "MILL_baluster_030",
+    "MILL_baluster_039",
+    "MILL_baluster_045",
+    "MILL_baluster_052",
+    "MILL_baluster_064",
+    "MILL_baluster_067"
+   ],
+   "area": 0.071,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v09": {
+   "objects": [
+    "MILL_baluster_009",
+    "MILL_baluster_043",
+    "MILL_baluster_047",
+    "MILL_baluster_060"
+   ],
+   "area": 0.061,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v06": {
+   "objects": [
+    "MILL_baluster_010",
+    "MILL_baluster_023",
+    "MILL_baluster_033",
+    "MILL_baluster_035",
+    "MILL_baluster_042"
+   ],
+   "area": 0.07,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v07": {
+   "objects": [
+    "MILL_baluster_011",
+    "MILL_baluster_034",
+    "MILL_baluster_050",
+    "MILL_baluster_056"
+   ],
+   "area": 0.071,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v03": {
+   "objects": [
+    "MILL_baluster_014",
+    "MILL_baluster_036",
+    "MILL_baluster_038",
+    "MILL_baluster_040",
+    "MILL_baluster_055",
+    "MILL_baluster_057",
+    "MILL_baluster_066"
+   ],
+   "area": 0.058,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v02": {
+   "objects": [
+    "MILL_baluster_015",
+    "MILL_baluster_048",
+    "MILL_baluster_051",
+    "MILL_baluster_058",
+    "MILL_baluster_061",
+    "MILL_baluster_069"
+   ],
+   "area": 0.065,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_baluster_v11": {
+   "objects": [
+    "MILL_baluster_022",
+    "MILL_baluster_054",
+    "MILL_baluster_068"
+   ],
+   "area": 0.036,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_base_dressed": {
+   "objects": [
+    "MILL_base_dressed"
+   ],
+   "area": 36.31,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_base_mortar": {
+   "objects": [
+    "MILL_base_mortar"
+   ],
+   "area": 90.319,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "MILL_base_stones": {
+   "objects": [
+    "MILL_base_stones"
+   ],
+   "area": 60.065,
+   "lt02": 0.0365,
+   "lt03": 0.0479,
+   "pct02": 0.061,
+   "by_mat": {
+    "M_stone": 0.061
+   }
+  },
+  "MILL_cap_frame": {
+   "objects": [
+    "MILL_cap_frame"
+   ],
+   "area": 33.609,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_cap_iron": {
+   "objects": [
+    "MILL_cap_iron"
+   ],
+   "area": 1.964,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0,
+    "M_lead": 0.0
+   }
+  },
+  "MILL_cap_shingles": {
+   "objects": [
+    "MILL_cap_shingles"
+   ],
+   "area": 13.956,
+   "lt02": 0.0035,
+   "lt03": 0.024,
+   "pct02": 0.025,
+   "by_mat": {
+    "M_roof_shingle": 0.025
+   }
+  },
+  "MILL_corbel_v01": {
+   "objects": [
+    "MILL_corbel_070",
+    "MILL_corbel_075",
+    "MILL_corbel_081",
+    "MILL_corbel_087",
+    "MILL_corbel_088",
+    "MILL_corbel_093",
+    "MILL_corbel_105",
+    "MILL_corbel_106"
+   ],
+   "area": 0.089,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_corbel_v00": {
+   "objects": [
+    "MILL_corbel_071",
+    "MILL_corbel_076",
+    "MILL_corbel_082",
+    "MILL_corbel_089",
+    "MILL_corbel_094",
+    "MILL_corbel_095",
+    "MILL_corbel_100",
+    "MILL_corbel_107"
+   ],
+   "area": 0.089,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_corbel_v04": {
+   "objects": [
+    "MILL_corbel_072",
+    "MILL_corbel_085",
+    "MILL_corbel_090",
+    "MILL_corbel_102",
+    "MILL_corbel_108",
+    "MILL_corbel_109"
+   ],
+   "area": 0.09,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_corbel_v03": {
+   "objects": [
+    "MILL_corbel_073",
+    "MILL_corbel_079",
+    "MILL_corbel_080",
+    "MILL_corbel_086",
+    "MILL_corbel_091",
+    "MILL_corbel_092",
+    "MILL_corbel_097",
+    "MILL_corbel_103"
+   ],
+   "area": 0.086,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_corbel_v02": {
+   "objects": [
+    "MILL_corbel_074",
+    "MILL_corbel_098",
+    "MILL_corbel_099",
+    "MILL_corbel_104"
+   ],
+   "area": 0.091,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_corbel_v05": {
+   "objects": [
+    "MILL_corbel_077",
+    "MILL_corbel_078",
+    "MILL_corbel_083",
+    "MILL_corbel_084",
+    "MILL_corbel_096",
+    "MILL_corbel_101"
+   ],
+   "area": 0.089,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_door_iron": {
+   "objects": [
+    "MILL_door_iron"
+   ],
+   "area": 0.37,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_door_leaf": {
+   "objects": [
+    "MILL_door_leaf"
+   ],
+   "area": 6.563,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_door_step": {
+   "objects": [
+    "MILL_door_step"
+   ],
+   "area": 1.044,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone": 0.0
+   }
+  },
+  "MILL_door_surround": {
+   "objects": [
+    "MILL_door_surround"
+   ],
+   "area": 9.493,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "MILL_interior": {
+   "objects": [
+    "MILL_interior"
+   ],
+   "area": 29.82,
+   "lt02": 0.0,
+   "lt03": 0.0016,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0,
+    "M_stone": 0.0,
+    "M_timber": 0.0
+   }
+  },
+  "MILL_poll_end": {
+   "objects": [
+    "MILL_poll_end"
+   ],
+   "area": 2.817,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_prop_anchors": {
+   "objects": [
+    "MILL_prop_anchors"
+   ],
+   "area": 2.228,
+   "lt02": 0.0005,
+   "lt03": 0.0037,
+   "pct02": 0.022,
+   "by_mat": {
+    "M_earth": 0.0,
+    "M_iron": 0.0,
+    "M_stone": 0.035,
+    "M_timber_weathered": 0.017
+   }
+  },
+  "MILL_prop_iron": {
+   "objects": [
+    "MILL_prop_iron"
+   ],
+   "area": 2.768,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_props": {
+   "objects": [
+    "MILL_props"
+   ],
+   "area": 19.372,
+   "lt02": 0.0001,
+   "lt03": 0.0115,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_bolt_hex_v03": {
+   "objects": [
+    "MILL_rotor_bolt_110",
+    "MILL_rotor_bolt_114",
+    "MILL_rotor_bolt_120",
+    "MILL_rotor_bolt_123",
+    "MILL_rotor_bolt_124",
+    "MILL_rotor_bolt_128",
+    "MILL_rotor_bolt_129",
+    "MILL_rotor_bolt_132",
+    "MILL_rotor_bolt_134",
+    "MILL_rotor_bolt_136",
+    "MILL_rotor_bolt_137",
+    "MILL_rotor_bolt_139",
+    "MILL_rotor_bolt_141",
+    "MILL_tail_bolt_171",
+    "MILL_tail_bolt_175"
+   ],
+   "area": 0.004,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_bolt_hex_v01": {
+   "objects": [
+    "MILL_rotor_bolt_111",
+    "MILL_rotor_bolt_112",
+    "MILL_rotor_bolt_113",
+    "MILL_rotor_bolt_115",
+    "MILL_rotor_bolt_116",
+    "MILL_rotor_bolt_119",
+    "MILL_rotor_bolt_121",
+    "MILL_rotor_bolt_126",
+    "MILL_rotor_bolt_127",
+    "MILL_rotor_bolt_130",
+    "MILL_rotor_bolt_135",
+    "MILL_rotor_bolt_140",
+    "MILL_tail_bolt_158",
+    "MILL_tail_bolt_159",
+    "MILL_tail_bolt_161",
+    "MILL_tail_bolt_163",
+    "MILL_tail_bolt_164",
+    "MILL_tail_bolt_166",
+    "MILL_tail_bolt_168",
+    "MILL_tail_bolt_173",
+    "MILL_tail_bolt_174"
+   ],
+   "area": 0.003,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_bolt_hex_v02": {
+   "objects": [
+    "MILL_rotor_bolt_117",
+    "MILL_rotor_bolt_118",
+    "MILL_rotor_bolt_122",
+    "MILL_rotor_bolt_125",
+    "MILL_rotor_bolt_131",
+    "MILL_rotor_bolt_133",
+    "MILL_rotor_bolt_138",
+    "MILL_tail_bolt_172"
+   ],
+   "area": 0.004,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_bolt_hex_v04": {
+   "objects": [
+    "MILL_rotor_bolt_142",
+    "MILL_rotor_bolt_145",
+    "MILL_rotor_bolt_148",
+    "MILL_rotor_bolt_150",
+    "MILL_rotor_bolt_152",
+    "MILL_rotor_bolt_155",
+    "MILL_rotor_bolt_157"
+   ],
+   "area": 0.006,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_bolt_hex_v05": {
+   "objects": [
+    "MILL_rotor_bolt_143",
+    "MILL_rotor_bolt_144",
+    "MILL_rotor_bolt_146",
+    "MILL_rotor_bolt_147",
+    "MILL_rotor_bolt_149",
+    "MILL_rotor_bolt_151",
+    "MILL_rotor_bolt_153",
+    "MILL_rotor_bolt_154",
+    "MILL_rotor_bolt_156"
+   ],
+   "area": 0.006,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_rotor_iron": {
+   "objects": [
+    "MILL_rotor_iron"
+   ],
+   "area": 1.362,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_bolt_hex_v00": {
+   "objects": [
+    "MILL_tail_bolt_160",
+    "MILL_tail_bolt_162",
+    "MILL_tail_bolt_165",
+    "MILL_tail_bolt_167",
+    "MILL_tail_bolt_169",
+    "MILL_tail_bolt_170"
+   ],
+   "area": 0.002,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_tail_boom": {
+   "objects": [
+    "MILL_tail_boom"
+   ],
+   "area": 6.489,
+   "lt02": 0.0,
+   "lt03": 0.0007,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_tail_iron": {
+   "objects": [
+    "MILL_tail_iron"
+   ],
+   "area": 0.749,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_tail_vane": {
+   "objects": [
+    "MILL_tail_vane"
+   ],
+   "area": 11.979,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_tower_boards": {
+   "objects": [
+    "MILL_tower_boards"
+   ],
+   "area": 43.637,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_tower_frame": {
+   "objects": [
+    "MILL_tower_frame"
+   ],
+   "area": 52.834,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_tower_iron": {
+   "objects": [
+    "MILL_tower_iron"
+   ],
+   "area": 1.225,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_wall_core": {
+   "objects": [
+    "MILL_wall_core"
+   ],
+   "area": 84.096,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "MILL_wheel_arm_A": {
+   "objects": [
+    "MILL_wheel_arm_A"
+   ],
+   "area": 3.285,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_wheel_arm_B": {
+   "objects": [
+    "MILL_wheel_arm_B"
+   ],
+   "area": 3.284,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_wheel_arm_C": {
+   "objects": [
+    "MILL_wheel_arm_C"
+   ],
+   "area": 3.282,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_wheel_arm_D": {
+   "objects": [
+    "MILL_wheel_arm_D"
+   ],
+   "area": 3.297,
+   "lt02": 0.0,
+   "lt03": 0.0001,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "MILL_wheel_blades": {
+   "objects": [
+    "MILL_wheel_blades"
+   ],
+   "area": 81.304,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "MILL_wheel_rim": {
+   "objects": [
+    "MILL_wheel_rim"
+   ],
+   "area": 3.935,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_wheel_spokes": {
+   "objects": [
+    "MILL_wheel_spokes"
+   ],
+   "area": 0.757,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "MILL_windshaft": {
+   "objects": [
+    "MILL_windshaft"
+   ],
+   "area": 1.608,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0,
+    "M_timber": 0.0
+   }
+  }
+ },
+ "walked": [
+  {
+   "entrance": "drum_door",
+   "object": "MILL_door_iron",
+   "faces": 50,
+   "pooled": false,
+   "area": 0.0091,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "drum_door",
+   "object": "MILL_door_leaf",
+   "faces": 30,
+   "pooled": false,
+   "area": 0.0477,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "drum_door",
+   "object": "MILL_door_step",
+   "faces": 866,
+   "pooled": false,
+   "area": 0.7596,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "drum_door",
+   "object": "MILL_door_surround",
+   "faces": 430,
+   "pooled": false,
+   "area": 0.7059,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "drum_door",
+   "object": "MILL_interior",
+   "faces": 90,
+   "pooled": false,
+   "area": 0.9583,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  }
+ ]
+}

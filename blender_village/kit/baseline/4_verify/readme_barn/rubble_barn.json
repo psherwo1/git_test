@@ -1,0 +1,81 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\4_verify\\readme_barn\\rubble_barn.blend",
+ "objects": {
+  "BARN_roof_comb": {
+   "tris": 7834,
+   "geometry": "0100d405032b8880",
+   "uv": "4579175c0d06c359",
+   "mask": "ebbaef6e3df0d709"
+  },
+  "BARN_roof_covering": {
+   "tris": 131539,
+   "geometry": "4fa94d5ee5120403",
+   "uv": "66fd7604f8a8ba6d",
+   "mask": "5a8d3c5696e368c9"
+  },
+  "BARN_roof_deck": {
+   "tris": 556,
+   "geometry": "22aced203f68cfcb",
+   "uv": "9d0197554673912b",
+   "mask": "587724962326f55e"
+  },
+  "BARN_roof_rafters": {
+   "tris": 2098,
+   "geometry": "3a6a9d0d841785e9",
+   "uv": "7c7cfc24a512d70d",
+   "mask": "35aa3089d09dfb76"
+  },
+  "BARN_walls_blockers": {
+   "tris": 20,
+   "geometry": "477f351dc8acf2d8",
+   "uv": "1f2655def16cfb2e",
+   "mask": "a82578831dd90780"
+  },
+  "BARN_walls_dressed": {
+   "tris": 414,
+   "geometry": "d900e539779e55ee",
+   "uv": "62e4814395de530e",
+   "mask": "75ef81a579683c49"
+  },
+  "BARN_walls_frames": {
+   "tris": 3703,
+   "geometry": "b8ebe6244ce8d6a7",
+   "uv": "c1b7b255b9182855",
+   "mask": "ce98c75b5bed6963"
+  },
+  "BARN_walls_ironwork": {
+   "tris": 456,
+   "geometry": "7f5ba11839ad8817",
+   "uv": "4569c8488013a0ca",
+   "mask": "3257544df6bda1cd"
+  },
+  "BARN_walls_mortar": {
+   "tris": 6692,
+   "geometry": "22562c8016310fd3",
+   "uv": "05179018cba92d46",
+   "mask": "9cfaf90931d9e890"
+  },
+  "BARN_walls_quoins": {
+   "tris": 3402,
+   "geometry": "0826ed4fa5239e47",
+   "uv": "41e0cf29998bdd6a",
+   "mask": "ca46415ecfbea2b7"
+  },
+  "BARN_walls_reveals": {
+   "tris": 16,
+   "geometry": "2cc7de91677688cc",
+   "uv": "61f86e0517e495be",
+   "mask": "a1234532d59c2f71"
+  },
+  "BARN_walls_stones": {
+   "tris": 216695,
+   "geometry": "e92e36c1b96cb1f8",
+   "uv": "244fc76611a0c3a1",
+   "mask": "bfbe2ba01565228b"
+  }
+ },
+ "triangles": 373425,
+ "geometry": "0d422179e9ce233e",
+ "uv": "503879821ee69cfa",
+ "mask": "ddc16dd6e4dcd507"
+}

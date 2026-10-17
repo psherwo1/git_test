@@ -1,0 +1,266 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\4_verify\\v1_stone_watchtower\\v1_stone_watchtower.blend",
+ "entrances": [
+  {
+   "name": "drum_door",
+   "origin": [
+    0.0,
+    -2.48,
+    0.0
+   ],
+   "out": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "width": 1.05,
+   "head": 2.315
+  }
+ ],
+ "grain": {
+  "M_timber": {
+   "area": 218.50167074191623,
+   "judge": 112.89151992985627,
+   "along": 111.6320061445854,
+   "across": 1.2575669054471428,
+   "roof": 11.055359869572426,
+   "up": 4.399840643552084,
+   "down": 0.6461696486922843,
+   "per_obj": {
+    "WATCH_cabin_roof_frame": [
+     15.777,
+     15.777,
+     14.739,
+     3.972,
+     3.318
+    ],
+    "WATCH_cabin_floor": [
+     64.084,
+     46.603,
+     46.497,
+     2.817,
+     0.026
+    ],
+    "WATCH_cabin_frame": [
+     77.496,
+     47.426,
+     47.33,
+     3.248,
+     0.547
+    ],
+    "WATCH_cabin_ceiling": [
+     50.247,
+     0.0,
+     0.0,
+     0.244,
+     0.03
+    ],
+    "WATCH_interior": [
+     3.098,
+     3.085,
+     3.066,
+     0.774,
+     0.478
+    ],
+    "WATCH_ceiling": [
+     7.799,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "scale": 1.0261969565278715,
+   "along_pct_of_slot": 51.0897723415762,
+   "along_pct_of_judged": 98.88431497241471,
+   "across_pct_of_judged": 1.113960469509593,
+   "unjudged_area": 105.61015081205996,
+   "up_pct": 39.79825799847301,
+   "down_pct": 5.84485404650401
+  },
+  "M_timber_weathered": {
+   "area": 268.8249345419382,
+   "judge": 89.07831623116014,
+   "along": 88.94264183373438,
+   "across": 0.12524533323826417,
+   "roof": 71.30055999670749,
+   "up": 69.43742711473189,
+   "down": 0.37115413486975896,
+   "per_obj": {
+    "WATCH_cabin_roof_deck": [
+     119.306,
+     0.0,
+     0.0,
+     59.374,
+     59.374
+    ],
+    "WATCH_cabin_hips": [
+     17.764,
+     17.764,
+     17.764,
+     8.571,
+     8.078
+    ],
+    "WATCH_cabin_floor": [
+     59.196,
+     0.0,
+     0.0,
+     0.33,
+     0.041
+    ],
+    "WATCH_cabin_struts": [
+     4.646,
+     4.578,
+     4.554,
+     1.386,
+     1.333
+    ],
+    "WATCH_cabin_frame": [
+     7.654,
+     7.641,
+     7.639,
+     0.744,
+     0.012
+    ],
+    "WATCH_cabin_boards": [
+     53.696,
+     52.535,
+     52.47,
+     0.697,
+     0.509
+    ],
+    "WATCH_door_leaf": [
+     6.563,
+     6.56,
+     6.515,
+     0.199,
+     0.09
+    ]
+   },
+   "scale": 1.000171879648525,
+   "along_pct_of_slot": 33.08571133302325,
+   "along_pct_of_judged": 99.84769088239871,
+   "across_pct_of_judged": 0.14060137027427624,
+   "unjudged_area": 179.74661831077805,
+   "up_pct": 97.38693092724428,
+   "down_pct": 0.5205486953915903
+  },
+  "M_roof_shingle": {
+   "area": 95.98420434022086,
+   "judge": 18.84313641354531,
+   "along": 4.170259808693528,
+   "across": 12.29547281048751,
+   "roof": 77.11298349056942,
+   "up": 77.10666461963406,
+   "down": 0.0007739534792094181,
+   "per_obj": {
+    "WATCH_cabin_shingles": [
+     95.984,
+     18.843,
+     4.17,
+     77.113,
+     77.107
+    ]
+   },
+   "scale": 0.9665045602416018,
+   "along_pct_of_slot": 4.344735508679982,
+   "along_pct_of_judged": 22.131452626409658,
+   "across_pct_of_judged": 65.25173166845495,
+   "unjudged_area": 77.14106792667555,
+   "up_pct": 99.99180569775758,
+   "down_pct": 0.0010036616976492282
+  }
+ },
+ "collapsed": {
+  "objects_ge_1pct": 0,
+  "worst": [
+   [
+    "WATCH_base_stones",
+    0.06
+   ],
+   [
+    "WATCH_wall_core",
+    0.0
+   ],
+   [
+    "WATCH_interior",
+    0.0
+   ],
+   [
+    "WATCH_door_surround",
+    0.0
+   ],
+   [
+    "WATCH_door_step",
+    0.0
+   ]
+  ],
+  "objects_ge_1pct_wholeface": 0,
+  "worst_wholeface": [
+   [
+    "WATCH_wall_core",
+    0.0
+   ],
+   [
+    "WATCH_interior",
+    0.0
+   ],
+   [
+    "WATCH_door_surround",
+    0.0
+   ]
+  ]
+ },
+ "walk": [
+  {
+   "name": "drum_door",
+   "area": 2.478010342398777,
+   "faces": 1408,
+   "b_max": 0.13563336431980133,
+   "bad_area": 0.022948871585718296,
+   "bad": [
+    [
+     "WATCH_door_leaf",
+     0.0148,
+     0.117,
+     0.9,
+     1.123
+    ],
+    [
+     "WATCH_door_iron",
+     0.0082,
+     0.136,
+     0.989,
+     1.192
+    ]
+   ],
+   "objs": {
+    "WATCH_interior": {
+     "area": 0.9388,
+     "b_max": 0.003,
+     "z_max": 0.15
+    },
+    "WATCH_door_leaf": {
+     "area": 0.0625,
+     "b_max": 0.117,
+     "z_max": 1.123
+    },
+    "WATCH_door_iron": {
+     "area": 0.02,
+     "b_max": 0.1356,
+     "z_max": 1.193
+    },
+    "WATCH_door_step": {
+     "area": 0.7596,
+     "b_max": 0.003,
+     "z_max": 0.079
+    },
+    "WATCH_door_surround": {
+     "area": 0.6971,
+     "b_max": 0.003,
+     "z_max": 0.854
+    }
+   }
+  }
+ ]
+}

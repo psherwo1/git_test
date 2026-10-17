@@ -1,0 +1,3 @@
+﻿M_timber_weathered area 391.3 grain(V)-along-long-axis 19% across 0% | up-facing area 152.0: V points upslope 90% downslope 0% | metres per UV unit median 1.00
+M_timber area 344.7 grain(V)-along-long-axis 58% across 0% | up-facing area 122.2: V points upslope 60% downslope 1% | metres per UV unit median 1.00
+M_roof_shingle area 491.8 grain(V)-along-long-axis 18% across 6% | up-facing area 367.7: V points upslope 100% downslope 0% | metres per UV unit median 0.97

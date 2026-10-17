@@ -1,0 +1,1598 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\3_uvfix\\wattle_roundhut\\wattle_roundhut.blend",
+ "entrances": [
+  {
+   "name": "framed_door",
+   "origin": [
+    0.0,
+    -3.72,
+    0.0
+   ],
+   "out": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "width": 1.0,
+   "head": 2.28
+  }
+ ],
+ "grain": {
+  "M_timber_weathered": {
+   "area": 70.546,
+   "along_pct": 24.8,
+   "across_pct": 0.0,
+   "judged_area": 17.523,
+   "sheet_area": 52.943,
+   "along_of_judged_pct": 99.9,
+   "piece_along_pct": 24.8,
+   "piece_across_pct": 0.0,
+   "roofarea": 8.708,
+   "upslope_pct": 0.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "M_timber": {
+   "area": 62.718,
+   "along_pct": 94.8,
+   "across_pct": 0.8,
+   "judged_area": 60.223,
+   "sheet_area": 2.494,
+   "along_of_judged_pct": 98.7,
+   "piece_along_pct": 94.8,
+   "piece_across_pct": 0.8,
+   "roofarea": 3.256,
+   "upslope_pct": 47.3,
+   "downslope_pct": 17.2,
+   "m_per_uv_median": 1.001
+  },
+  "M_roof_shingle": {
+   "area": 202.593,
+   "along_pct": 22.6,
+   "across_pct": 1.5,
+   "judged_area": 49.617,
+   "sheet_area": 152.976,
+   "along_of_judged_pct": 92.2,
+   "piece_along_pct": 22.6,
+   "piece_across_pct": 1.5,
+   "roofarea": 146.512,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.015
+  }
+ },
+ "grain_by_object": {
+  "HUT_battens|M_timber_weathered": {
+   "area": 17.604,
+   "along_pct": 99.4,
+   "across_pct": 0.1,
+   "judged_area": 17.523,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.9,
+   "piece_along_pct": 99.4,
+   "piece_across_pct": 0.1,
+   "roofarea": 8.708,
+   "upslope_pct": 0.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_door_frame|M_timber": {
+   "area": 8.312,
+   "along_pct": 86.8,
+   "across_pct": 0.2,
+   "judged_area": 7.269,
+   "sheet_area": 1.043,
+   "along_of_judged_pct": 99.2,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 0.2,
+   "roofarea": 0.978,
+   "upslope_pct": 72.9,
+   "downslope_pct": 4.2,
+   "m_per_uv_median": 1.005
+  },
+  "HUT_door_leaf|M_timber": {
+   "area": 6.33,
+   "along_pct": 99.1,
+   "across_pct": 0.7,
+   "judged_area": 6.314,
+   "sheet_area": 0.016,
+   "along_of_judged_pct": 99.3,
+   "piece_along_pct": 99.1,
+   "piece_across_pct": 0.7,
+   "roofarea": 0.185,
+   "upslope_pct": 45.7,
+   "downslope_pct": 2.9,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_finial|M_timber": {
+   "area": 0.241,
+   "along_pct": 81.1,
+   "across_pct": 7.9,
+   "judged_area": 0.241,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 81.1,
+   "piece_along_pct": 81.1,
+   "piece_across_pct": 7.9,
+   "roofarea": 0.063,
+   "upslope_pct": 48.7,
+   "downslope_pct": 20.1,
+   "m_per_uv_median": 1.024
+  },
+  "HUT_peg_034|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_035|M_timber": {
+   "area": 0.005,
+   "along_pct": 86.4,
+   "across_pct": 1.2,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.4,
+   "piece_along_pct": 86.4,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 8.9,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_036|M_timber": {
+   "area": 0.005,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.002,
+   "upslope_pct": 7.9,
+   "downslope_pct": 4.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_037|M_timber": {
+   "area": 0.005,
+   "along_pct": 86.4,
+   "across_pct": 1.2,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.4,
+   "piece_along_pct": 86.4,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 8.9,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_038|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_039|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_040|M_timber": {
+   "area": 0.005,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.002,
+   "upslope_pct": 10.9,
+   "downslope_pct": 3.7,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_041|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.9,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.9,
+   "piece_along_pct": 87.9,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.1,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_042|M_timber": {
+   "area": 0.005,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.002,
+   "upslope_pct": 7.9,
+   "downslope_pct": 4.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_043|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_044|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_045|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_046|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_047|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.9,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.9,
+   "piece_along_pct": 87.9,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.1,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_048|M_timber": {
+   "area": 0.005,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.002,
+   "upslope_pct": 7.9,
+   "downslope_pct": 4.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_049|M_timber": {
+   "area": 0.005,
+   "along_pct": 86.4,
+   "across_pct": 1.2,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.4,
+   "piece_along_pct": 86.4,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 8.9,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_050|M_timber": {
+   "area": 0.005,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.002,
+   "upslope_pct": 10.9,
+   "downslope_pct": 3.7,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_051|M_timber": {
+   "area": 0.005,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.002,
+   "upslope_pct": 10.9,
+   "downslope_pct": 3.7,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_052|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.9,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.9,
+   "piece_along_pct": 87.9,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.1,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_053|M_timber": {
+   "area": 0.005,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.002,
+   "upslope_pct": 7.9,
+   "downslope_pct": 4.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_054|M_timber": {
+   "area": 0.005,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.002,
+   "upslope_pct": 7.9,
+   "downslope_pct": 4.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_055|M_timber": {
+   "area": 0.005,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.002,
+   "upslope_pct": 7.9,
+   "downslope_pct": 4.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_056|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.9,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.9,
+   "piece_along_pct": 87.9,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.1,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_057|M_timber": {
+   "area": 0.005,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.002,
+   "upslope_pct": 10.9,
+   "downslope_pct": 3.7,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_058|M_timber": {
+   "area": 0.005,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.002,
+   "upslope_pct": 10.9,
+   "downslope_pct": 3.7,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_059|M_timber": {
+   "area": 0.005,
+   "along_pct": 86.4,
+   "across_pct": 1.2,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.4,
+   "piece_along_pct": 86.4,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 8.9,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_060|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_061|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.9,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.9,
+   "piece_along_pct": 87.9,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.1,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_062|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.9,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.9,
+   "piece_along_pct": 87.9,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.1,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_063|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_064|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_065|M_timber": {
+   "area": 0.005,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.002,
+   "upslope_pct": 10.9,
+   "downslope_pct": 3.7,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_066|M_timber": {
+   "area": 0.005,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.002,
+   "upslope_pct": 10.9,
+   "downslope_pct": 3.7,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_067|M_timber": {
+   "area": 0.005,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 4.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_068|M_timber": {
+   "area": 0.005,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.002,
+   "upslope_pct": 10.9,
+   "downslope_pct": 3.7,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_069|M_timber": {
+   "area": 0.005,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.002,
+   "upslope_pct": 7.9,
+   "downslope_pct": 4.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_070|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.9,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.9,
+   "piece_along_pct": 87.9,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.1,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_peg_071|M_timber": {
+   "area": 0.005,
+   "along_pct": 86.4,
+   "across_pct": 1.2,
+   "judged_area": 0.005,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.4,
+   "piece_along_pct": 86.4,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 8.9,
+   "downslope_pct": 8.0,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_posts|M_timber": {
+   "area": 12.102,
+   "along_pct": 97.3,
+   "across_pct": 0.6,
+   "judged_area": 12.001,
+   "sheet_area": 0.101,
+   "along_of_judged_pct": 98.1,
+   "piece_along_pct": 97.3,
+   "piece_across_pct": 0.6,
+   "roofarea": 0.227,
+   "upslope_pct": 58.7,
+   "downslope_pct": 5.2,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_purlin_rings|M_timber": {
+   "area": 0.488,
+   "along_pct": 99.5,
+   "across_pct": 0.0,
+   "judged_area": 0.488,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.5,
+   "piece_along_pct": 99.5,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.193,
+   "upslope_pct": 0.2,
+   "downslope_pct": 0.1,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_rafters|M_timber": {
+   "area": 23.859,
+   "along_pct": 94.1,
+   "across_pct": 0.4,
+   "judged_area": 22.617,
+   "sheet_area": 1.242,
+   "along_of_judged_pct": 99.3,
+   "piece_along_pct": 94.1,
+   "piece_across_pct": 0.4,
+   "roofarea": 0.256,
+   "upslope_pct": 76.6,
+   "downslope_pct": 6.4,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_roof_blocker|M_timber_weathered": {
+   "area": 52.943,
+   "along_pct": 0.0,
+   "across_pct": 0.0,
+   "judged_area": 0.0,
+   "sheet_area": 52.943,
+   "along_of_judged_pct": 0.0,
+   "piece_along_pct": 0.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.0,
+   "upslope_pct": 0.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.011
+  },
+  "HUT_roof_shingles|M_roof_shingle": {
+   "area": 148.538,
+   "along_pct": 9.3,
+   "across_pct": 2.0,
+   "judged_area": 17.4,
+   "sheet_area": 131.139,
+   "along_of_judged_pct": 79.1,
+   "piece_along_pct": 9.3,
+   "piece_across_pct": 2.0,
+   "roofarea": 105.98,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.021
+  },
+  "HUT_roof_starter|M_roof_shingle": {
+   "area": 21.837,
+   "along_pct": 0.0,
+   "across_pct": 0.0,
+   "judged_area": 0.0,
+   "sheet_area": 21.837,
+   "along_of_judged_pct": 0.0,
+   "piece_along_pct": 0.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 9.449,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.018
+  },
+  "HUT_roof_underlap|M_roof_shingle": {
+   "area": 32.217,
+   "along_pct": 99.2,
+   "across_pct": 0.3,
+   "judged_area": 32.217,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.2,
+   "piece_along_pct": 99.2,
+   "piece_across_pct": 0.3,
+   "roofarea": 31.083,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.997
+  },
+  "HUT_threshold|M_timber": {
+   "area": 0.541,
+   "along_pct": 98.5,
+   "across_pct": 0.5,
+   "judged_area": 0.541,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.5,
+   "piece_along_pct": 98.5,
+   "piece_across_pct": 0.5,
+   "roofarea": 0.377,
+   "upslope_pct": 19.4,
+   "downslope_pct": 20.2,
+   "m_per_uv_median": 1.0
+  },
+  "HUT_wall_plate|M_timber": {
+   "area": 10.657,
+   "along_pct": 96.9,
+   "across_pct": 2.2,
+   "judged_area": 10.565,
+   "sheet_area": 0.093,
+   "along_of_judged_pct": 97.8,
+   "piece_along_pct": 96.9,
+   "piece_across_pct": 2.2,
+   "roofarea": 0.914,
+   "upslope_pct": 33.4,
+   "downslope_pct": 43.0,
+   "m_per_uv_median": 1.008
+  }
+ },
+ "collapsed": {
+  "HUT_battens": {
+   "objects": [
+    "HUT_battens"
+   ],
+   "area": 17.604,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "HUT_cap_collar": {
+   "objects": [
+    "HUT_cap_collar"
+   ],
+   "area": 6.298,
+   "lt02": 0.0,
+   "lt03": 0.4983,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_lead": 0.0
+   }
+  },
+  "HUT_daub": {
+   "objects": [
+    "HUT_daub"
+   ],
+   "area": 41.364,
+   "lt02": 0.0004,
+   "lt03": 0.0039,
+   "pct02": 0.001,
+   "by_mat": {
+    "M_daub": 0.001
+   }
+  },
+  "HUT_daub_interior": {
+   "objects": [
+    "HUT_daub_interior"
+   ],
+   "area": 47.721,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_daub": 0.0
+   }
+  },
+  "HUT_clench_nail_v01": {
+   "objects": [
+    "HUT_door_clench_nail_072",
+    "HUT_door_clench_nail_075",
+    "HUT_door_clench_nail_078",
+    "HUT_door_clench_nail_080",
+    "HUT_door_clench_nail_081",
+    "HUT_door_clench_nail_082"
+   ],
+   "area": 0.0,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_clench_nail_v00": {
+   "objects": [
+    "HUT_door_clench_nail_073",
+    "HUT_door_clench_nail_076",
+    "HUT_door_clench_nail_077",
+    "HUT_door_clench_nail_079",
+    "HUT_door_clench_nail_083"
+   ],
+   "area": 0.0,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_clench_nail_v02": {
+   "objects": [
+    "HUT_door_clench_nail_074"
+   ],
+   "area": 0.0,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_door_frame": {
+   "objects": [
+    "HUT_door_frame"
+   ],
+   "area": 8.312,
+   "lt02": 0.0,
+   "lt03": 0.0008,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_hinge_knuckle_v00": {
+   "objects": [
+    "HUT_door_hinge_knuckle_085",
+    "HUT_door_hinge_knuckle_093"
+   ],
+   "area": 0.006,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_hinge_pintle_v00": {
+   "objects": [
+    "HUT_door_hinge_pintle_086",
+    "HUT_door_hinge_pintle_094"
+   ],
+   "area": 0.01,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_hinge_strap_v00": {
+   "objects": [
+    "HUT_door_hinge_strap_084",
+    "HUT_door_hinge_strap_092"
+   ],
+   "area": 0.09,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_door_ironwork": {
+   "objects": [
+    "HUT_door_ironwork"
+   ],
+   "area": 0.019,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_door_leaf": {
+   "objects": [
+    "HUT_door_leaf"
+   ],
+   "area": 6.33,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_nail_head_v02": {
+   "objects": [
+    "HUT_door_nail_087",
+    "HUT_door_nail_091",
+    "HUT_door_nail_095",
+    "HUT_door_nail_098",
+    "HUT_door_nail_099"
+   ],
+   "area": 0.001,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_nail_head_v00": {
+   "objects": [
+    "HUT_door_nail_088",
+    "HUT_door_nail_089",
+    "HUT_door_nail_097"
+   ],
+   "area": 0.001,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_nail_head_v01": {
+   "objects": [
+    "HUT_door_nail_090",
+    "HUT_door_nail_096"
+   ],
+   "area": 0.001,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "HUT_door_panel_backing": {
+   "objects": [
+    "HUT_door_panel_backing"
+   ],
+   "area": 2.156,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_daub": 0.0
+   }
+  },
+  "HUT_eave_closure": {
+   "objects": [
+    "HUT_eave_closure"
+   ],
+   "area": 20.706,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_daub": 0.0
+   }
+  },
+  "HUT_finial": {
+   "objects": [
+    "HUT_finial"
+   ],
+   "area": 1.222,
+   "lt02": 0.0,
+   "lt03": 0.0295,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0,
+    "M_lead": 0.0,
+    "M_timber": 0.0
+   }
+  },
+  "HUT_floor": {
+   "objects": [
+    "HUT_floor"
+   ],
+   "area": 39.179,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_earth": 0.0
+   }
+  },
+  "HUT_hearth": {
+   "objects": [
+    "HUT_hearth"
+   ],
+   "area": 1.698,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone": 0.0
+   }
+  },
+  "HUT_peg_v04": {
+   "objects": [
+    "HUT_peg_034",
+    "HUT_peg_038",
+    "HUT_peg_039",
+    "HUT_peg_043",
+    "HUT_peg_044",
+    "HUT_peg_045",
+    "HUT_peg_046",
+    "HUT_peg_060",
+    "HUT_peg_063",
+    "HUT_peg_064",
+    "HUT_peg_067"
+   ],
+   "area": 0.005,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_peg_v02": {
+   "objects": [
+    "HUT_peg_035",
+    "HUT_peg_037",
+    "HUT_peg_049",
+    "HUT_peg_059",
+    "HUT_peg_071"
+   ],
+   "area": 0.005,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_peg_v03": {
+   "objects": [
+    "HUT_peg_036",
+    "HUT_peg_042",
+    "HUT_peg_048",
+    "HUT_peg_053",
+    "HUT_peg_054",
+    "HUT_peg_055",
+    "HUT_peg_069"
+   ],
+   "area": 0.005,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_peg_v01": {
+   "objects": [
+    "HUT_peg_040",
+    "HUT_peg_050",
+    "HUT_peg_051",
+    "HUT_peg_057",
+    "HUT_peg_058",
+    "HUT_peg_065",
+    "HUT_peg_066",
+    "HUT_peg_068"
+   ],
+   "area": 0.005,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_peg_v00": {
+   "objects": [
+    "HUT_peg_041",
+    "HUT_peg_047",
+    "HUT_peg_052",
+    "HUT_peg_056",
+    "HUT_peg_061",
+    "HUT_peg_062",
+    "HUT_peg_070"
+   ],
+   "area": 0.004,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_chink_v05": {
+   "objects": [
+    "HUT_plinth_chink_001"
+   ],
+   "area": 0.013,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "HUT_chink_v00": {
+   "objects": [
+    "HUT_plinth_chink_002",
+    "HUT_plinth_chink_005"
+   ],
+   "area": 0.012,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "HUT_chink_v04": {
+   "objects": [
+    "HUT_plinth_chink_003",
+    "HUT_plinth_chink_017",
+    "HUT_plinth_chink_030",
+    "HUT_plinth_chink_033"
+   ],
+   "area": 0.011,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "HUT_chink_v02": {
+   "objects": [
+    "HUT_plinth_chink_004",
+    "HUT_plinth_chink_014",
+    "HUT_plinth_chink_016",
+    "HUT_plinth_chink_018",
+    "HUT_plinth_chink_022",
+    "HUT_plinth_chink_026",
+    "HUT_plinth_chink_029",
+    "HUT_plinth_chink_031",
+    "HUT_plinth_chink_032"
+   ],
+   "area": 0.014,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "HUT_chink_v06": {
+   "objects": [
+    "HUT_plinth_chink_006",
+    "HUT_plinth_chink_007",
+    "HUT_plinth_chink_011"
+   ],
+   "area": 0.012,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "HUT_chink_v01": {
+   "objects": [
+    "HUT_plinth_chink_008",
+    "HUT_plinth_chink_023",
+    "HUT_plinth_chink_027"
+   ],
+   "area": 0.012,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "HUT_chink_v03": {
+   "objects": [
+    "HUT_plinth_chink_009",
+    "HUT_plinth_chink_019",
+    "HUT_plinth_chink_021",
+    "HUT_plinth_chink_024",
+    "HUT_plinth_chink_028"
+   ],
+   "area": 0.011,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "HUT_chink_v07": {
+   "objects": [
+    "HUT_plinth_chink_010",
+    "HUT_plinth_chink_012",
+    "HUT_plinth_chink_013",
+    "HUT_plinth_chink_015",
+    "HUT_plinth_chink_020",
+    "HUT_plinth_chink_025"
+   ],
+   "area": 0.009,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "HUT_plinth_stones": {
+   "objects": [
+    "HUT_plinth_stones"
+   ],
+   "area": 11.535,
+   "lt02": 0.0005,
+   "lt03": 0.0142,
+   "pct02": 0.004,
+   "by_mat": {
+    "M_stone": 0.004
+   }
+  },
+  "HUT_posts": {
+   "objects": [
+    "HUT_posts"
+   ],
+   "area": 12.102,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_purlin_rings": {
+   "objects": [
+    "HUT_purlin_rings"
+   ],
+   "area": 0.488,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_rafters": {
+   "objects": [
+    "HUT_rafters"
+   ],
+   "area": 23.859,
+   "lt02": 0.0,
+   "lt03": 0.0639,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_roof_blocker": {
+   "objects": [
+    "HUT_roof_blocker"
+   ],
+   "area": 52.943,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "HUT_roof_shingles": {
+   "objects": [
+    "HUT_roof_shingles"
+   ],
+   "area": 148.538,
+   "lt02": 0.0,
+   "lt03": 0.0191,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shingle": 0.0
+   }
+  },
+  "HUT_roof_starter": {
+   "objects": [
+    "HUT_roof_starter"
+   ],
+   "area": 21.837,
+   "lt02": 0.0,
+   "lt03": 0.0037,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shingle": 0.0
+   }
+  },
+  "HUT_roof_underlap": {
+   "objects": [
+    "HUT_roof_underlap"
+   ],
+   "area": 32.217,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shingle": 0.0
+   }
+  },
+  "HUT_step_stone": {
+   "objects": [
+    "HUT_step_stone"
+   ],
+   "area": 0.958,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone": 0.0
+   }
+  },
+  "HUT_threshold": {
+   "objects": [
+    "HUT_threshold"
+   ],
+   "area": 1.664,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone": 0.0,
+    "M_timber": 0.0
+   }
+  },
+  "HUT_wall_plate": {
+   "objects": [
+    "HUT_wall_plate"
+   ],
+   "area": 10.657,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "HUT_wattle_rods": {
+   "objects": [
+    "HUT_wattle_rods"
+   ],
+   "area": 6.148,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_wattle": 0.0
+   }
+  },
+  "HUT_wattle_stakes": {
+   "objects": [
+    "HUT_wattle_stakes"
+   ],
+   "area": 0.428,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_wattle": 0.0
+   }
+  }
+ },
+ "walked": [
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_clench_nail_073",
+   "faces": 9,
+   "pooled": true,
+   "area": 0.0,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_clench_nail_074",
+   "faces": 9,
+   "pooled": false,
+   "area": 0.0,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_clench_nail_075",
+   "faces": 9,
+   "pooled": true,
+   "area": 0.0,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_hinge_knuckle_085",
+   "faces": 1,
+   "pooled": true,
+   "area": 0.0006,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0006
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_hinge_pintle_086",
+   "faces": 10,
+   "pooled": true,
+   "area": 0.0013,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0013
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_hinge_strap_084",
+   "faces": 6,
+   "pooled": true,
+   "area": 0.0057,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0057
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_leaf",
+   "faces": 11,
+   "pooled": false,
+   "area": 0.0198,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_nail_087",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_nail_088",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_nail_089",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_nail_090",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_door_nail_091",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_floor",
+   "faces": 26,
+   "pooled": false,
+   "area": 1.171,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_peg_065",
+   "faces": 8,
+   "pooled": true,
+   "area": 0.001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.001
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_peg_070",
+   "faces": 11,
+   "pooled": true,
+   "area": 0.0012,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0012
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_step_stone",
+   "faces": 2019,
+   "pooled": false,
+   "area": 0.5451,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "framed_door",
+   "object": "HUT_threshold",
+   "faces": 2899,
+   "pooled": false,
+   "area": 0.4859,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  }
+ ]
+}

@@ -1,0 +1,844 @@
+{
+  "triangles": 1001818,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 12.8,
+  "est_hidden_triangles": 128483,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "MILL_base_stones",
+      "est_triangles": 488636,
+      "est_hidden_triangles": 61611,
+      "hidden_pct_of_object": 12.6
+    },
+    {
+      "object": "MILL_cap_shingles",
+      "est_triangles": 47586,
+      "est_hidden_triangles": 12021,
+      "hidden_pct_of_object": 25.3
+    },
+    {
+      "object": "MILL_base_mortar",
+      "est_triangles": 49089,
+      "est_hidden_triangles": 8390,
+      "hidden_pct_of_object": 17.1
+    },
+    {
+      "object": "MILL_base_dressed",
+      "est_triangles": 53472,
+      "est_hidden_triangles": 6762,
+      "hidden_pct_of_object": 12.6
+    },
+    {
+      "object": "MILL_tower_boards",
+      "est_triangles": 27174,
+      "est_hidden_triangles": 5760,
+      "hidden_pct_of_object": 21.2
+    },
+    {
+      "object": "MILL_cap_frame",
+      "est_triangles": 23918,
+      "est_hidden_triangles": 5134,
+      "hidden_pct_of_object": 21.5
+    },
+    {
+      "object": "MILL_apron_shingles",
+      "est_triangles": 61611,
+      "est_hidden_triangles": 4257,
+      "hidden_pct_of_object": 6.9
+    },
+    {
+      "object": "MILL_tower_frame",
+      "est_triangles": 11395,
+      "est_hidden_triangles": 3381,
+      "hidden_pct_of_object": 29.7
+    },
+    {
+      "object": "MILL_door_leaf",
+      "est_triangles": 9517,
+      "est_hidden_triangles": 3130,
+      "hidden_pct_of_object": 32.9
+    },
+    {
+      "object": "MILL_ground_rubble",
+      "est_triangles": 29428,
+      "est_hidden_triangles": 2629,
+      "hidden_pct_of_object": 8.9
+    },
+    {
+      "object": "MILL_props",
+      "est_triangles": 61737,
+      "est_hidden_triangles": 2128,
+      "hidden_pct_of_object": 3.4
+    },
+    {
+      "object": "MILL_apron_rafters",
+      "est_triangles": 16529,
+      "est_hidden_triangles": 1878,
+      "hidden_pct_of_object": 11.4
+    },
+    {
+      "object": "MILL_interior",
+      "est_triangles": 3381,
+      "est_hidden_triangles": 1878,
+      "hidden_pct_of_object": 55.6
+    },
+    {
+      "object": "MILL_prop_anchors",
+      "est_triangles": 6511,
+      "est_hidden_triangles": 1001,
+      "hidden_pct_of_object": 15.4
+    },
+    {
+      "object": "MILL_cap_iron",
+      "est_triangles": 2754,
+      "est_hidden_triangles": 1001,
+      "hidden_pct_of_object": 36.4
+    },
+    {
+      "object": "MILL_door_iron",
+      "est_triangles": 3255,
+      "est_hidden_triangles": 876,
+      "hidden_pct_of_object": 26.9
+    },
+    {
+      "object": "MILL_rotor_iron",
+      "est_triangles": 6386,
+      "est_hidden_triangles": 626,
+      "hidden_pct_of_object": 9.8
+    },
+    {
+      "object": "MILL_prop_iron",
+      "est_triangles": 5384,
+      "est_hidden_triangles": 626,
+      "hidden_pct_of_object": 11.6
+    },
+    {
+      "object": "MILL_wheel_blades",
+      "est_triangles": 23542,
+      "est_hidden_triangles": 500,
+      "hidden_pct_of_object": 2.1
+    },
+    {
+      "object": "MILL_tail_boom",
+      "est_triangles": 7263,
+      "est_hidden_triangles": 500,
+      "hidden_pct_of_object": 6.9
+    },
+    {
+      "object": "MILL_wheel_arm_A",
+      "est_triangles": 1252,
+      "est_hidden_triangles": 375,
+      "hidden_pct_of_object": 30.0
+    },
+    {
+      "object": "MILL_wheel_arm_D",
+      "est_triangles": 1627,
+      "est_hidden_triangles": 250,
+      "hidden_pct_of_object": 15.4
+    },
+    {
+      "object": "MILL_tail_iron",
+      "est_triangles": 3756,
+      "est_hidden_triangles": 250,
+      "hidden_pct_of_object": 6.7
+    },
+    {
+      "object": "MILL_baluster_065",
+      "est_triangles": 250,
+      "est_hidden_triangles": 250,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_wheel_arm_C",
+      "est_triangles": 2003,
+      "est_hidden_triangles": 250,
+      "hidden_pct_of_object": 12.5
+    },
+    {
+      "object": "MILL_tower_iron",
+      "est_triangles": 1502,
+      "est_hidden_triangles": 250,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "MILL_baluster_007",
+      "est_triangles": 626,
+      "est_hidden_triangles": 250,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "MILL_baluster_035",
+      "est_triangles": 626,
+      "est_hidden_triangles": 250,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "MILL_baluster_049",
+      "est_triangles": 250,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "MILL_wheel_rim",
+      "est_triangles": 5509,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 2.3
+    },
+    {
+      "object": "MILL_wheel_arm_B",
+      "est_triangles": 1502,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 8.3
+    },
+    {
+      "object": "MILL_baluster_032",
+      "est_triangles": 751,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "MILL_baluster_038",
+      "est_triangles": 751,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "MILL_baluster_054",
+      "est_triangles": 876,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "MILL_baluster_042",
+      "est_triangles": 751,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "MILL_baluster_009",
+      "est_triangles": 500,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "MILL_windshaft",
+      "est_triangles": 250,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "MILL_baluster_051",
+      "est_triangles": 876,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "MILL_baluster_034",
+      "est_triangles": 250,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "MILL_baluster_033",
+      "est_triangles": 626,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "MILL_baluster_063",
+      "est_triangles": 500,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "MILL_baluster_031",
+      "est_triangles": 375,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "MILL_baluster_015",
+      "est_triangles": 125,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_016",
+      "est_triangles": 125,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_005",
+      "est_triangles": 250,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "MILL_baluster_013",
+      "est_triangles": 125,
+      "est_hidden_triangles": 125,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_062",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_004",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_067",
+      "est_triangles": 1127,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_056",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_020",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_064",
+      "est_triangles": 626,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_048",
+      "est_triangles": 1001,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_028",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_027",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_012",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_tail_vane",
+      "est_triangles": 4132,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_003",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_004",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_037",
+      "est_triangles": 626,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_052",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_046",
+      "est_triangles": 876,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_039",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_036",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_068",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_019",
+      "est_triangles": 1252,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_040",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_060",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_023",
+      "est_triangles": 751,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_045",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_022",
+      "est_triangles": 751,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_wheel_spokes",
+      "est_triangles": 2754,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_070",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_024",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_017",
+      "est_triangles": 626,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_047",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_053",
+      "est_triangles": 751,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_029",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_001",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_008",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_044",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_030",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_011",
+      "est_triangles": 626,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_038",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_061",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_013",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_024",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_poll_end",
+      "est_triangles": 626,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_018",
+      "est_triangles": 1001,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_014",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_021",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_022",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_010",
+      "est_triangles": 626,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_058",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_006",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_069",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_026",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_030",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_046",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_027",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_tail_bolt_010",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_002",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_034",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_025",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_031",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_041",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_037",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_032",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_006",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_021",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_028",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_025",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_066",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_055",
+      "est_triangles": 500,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_059",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_022",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_033",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_057",
+      "est_triangles": 375,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_026",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_tail_bolt_003",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_027",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_023",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_016",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_020",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_007",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_009",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_011",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_005",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_037",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_039",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_015",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_014",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_000",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_036",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_005",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_baluster_000",
+      "est_triangles": 250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_corbel_035",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_tail_bolt_008",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_rotor_bolt_035",
+      "est_triangles": 125,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

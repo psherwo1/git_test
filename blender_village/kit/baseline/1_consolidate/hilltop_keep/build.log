@@ -1,0 +1,139 @@
+[    0.2s] -- oct_hall_walls
+[   12.2s]   hall visible mortar 18.6% -> 7.9% after 854 pinning stones
+[   12.2s]   hall stones: 1626
+[   12.2s]   hall hero stones 700 (non-rectangular 344), other 713, pins 213
+[   18.7s]   KEEP_hall_wall_stones: 148873 verts, 138422 faces
+[   19.1s]   KEEP_hall_dressed_stones: 31875 verts, 30086 faces
+[   19.1s]   KEEP_hall_dressed_joint_mortar: 544 verts, 504 faces
+[   19.1s]   hall mortar cells 3604
+[   19.2s]   KEEP_hall_wall_mortar: 4035 verts, 3604 faces
+[   19.2s]   KEEP_hall_interior: 100 verts, 54 faces
+[   19.2s] -- oct_hall_frame
+[   19.3s]   KEEP_hall_post_bases: 3456 verts, 3342 faces
+[   19.5s]   KEEP_hall_posts: 15632 verts, 15239 faces
+[   19.5s]   KEEP_hall_knee_braces: 1344 verts, 1272 faces
+[   19.6s]   KEEP_hall_eave_plate: 6314 verts, 5194 faces
+[   19.6s] -- arched_door
+[   19.8s]   KEEP_door_leaf: 7315 verts, 7323 faces
+[   19.8s]   KEEP_door_ironwork: 1477 verts, 1451 faces
+[   19.8s] -- hall_windows
+[   19.8s]   KEEP_hall_window_frames: 1008 verts, 972 faces
+[   19.8s] -- door_threshold
+[   19.8s]   KEEP_threshold: 784 verts, 732 faces
+[   19.8s] -- skirt_roof
+[   19.9s]   skirt boards 357
+[   20.1s]   KEEP_roof_skirt_deck: 998 verts, 872 faces
+[   20.7s]   KEEP_roof_skirt_boards: 22456 verts, 17864 faces
+[   20.7s]   KEEP_roof_skirt_hips: 4784 verts, 4692 faces
+[   20.8s]   KEEP_roof_skirt_structure: 12500 verts, 11114 faces
+[   20.8s] -- shake_collar
+[   20.9s]   collar shakes split: 10
+[   20.9s]   collar shakes 260
+[   21.2s]   KEEP_roof_collar_shakes: 38574 verts, 33984 faces
+[   21.3s]   KEEP_cone_ledge_slabs: 4428 verts, 4320 faces
+[   21.3s] -- stone_cone
+[   24.0s]   cone visible mortar 15.5% -> 10.8% after 229 pinning stones
+[   24.0s]   cone stones: 1776
+[   25.4s]   KEEP_cone_stones: 89266 verts, 71260 faces
+[   25.4s]   KEEP_cone_mortar: 1728 verts, 1656 faces
+[   25.4s] -- lantern
+[   25.4s]   KEEP_lantern_boards: 3668 verts, 3364 faces
+[   25.5s]   KEEP_lantern_frame: 2304 verts, 2222 faces
+[   25.5s] -- cone_cap
+[   25.6s]   KEEP_cap shingles 166
+[   25.7s]   KEEP_cap_deck: 1232 verts, 1168 faces
+[   26.3s]   KEEP_cap_shingles: 15947 verts, 14273 faces
+[   26.3s]   KEEP_cap_hips: 7808 verts, 7776 faces
+[   26.5s]   KEEP_cap_structure: 12488 verts, 11318 faces
+[   26.5s]   KEEP_finial_main: 1010 verts, 1010 faces
+[   26.5s] -- annex_walls
+[   32.4s]   wing visible mortar 20.6% -> 7.9% after 498 pinning stones
+[   32.4s]   wing stones 693
+[   32.4s]   wing hero stones 237, other 367, pins 89
+[   34.2s]   KEEP_wing_wall_stones: 58773 verts, 54407 faces
+[   34.4s]   KEEP_wing_dressed_stones: 12894 verts, 12092 faces
+[   34.4s]   wing mortar cells 1918
+[   34.5s]   KEEP_wing_wall_mortar: 2528 verts, 2080 faces
+[   34.5s] -- plank_door
+[   34.6s]   KEEP_wing_door: 9340 verts, 9232 faces
+[   34.6s]   KEEP_wing_door_ironwork: 946 verts, 922 faces
+[   34.6s]   (empty) KEEP_wing_window
+[   34.6s] -- annex_window
+[   34.6s]   (empty) KEEP_wing_door
+[   34.6s]   (empty) KEEP_wing_door_ironwork
+[   34.7s]   KEEP_wing_window: 568 verts, 551 faces
+[   34.7s] -- thatch_wing_roof
+[   34.9s]   thatch: 12 courses, 17449 quads
+[   35.0s]   KEEP_wing_roof_thatch_courses: 20802 verts, 17449 faces
+[   35.1s]   thatch core: top cells 2476/4199, underside 1413
+[   35.5s]   eave fringe tufts 569
+[   35.9s]   KEEP_wing_roof_thatch: 31786 verts, 29750 faces
+[   35.9s] -- ridge_comb
+[   36.0s]   ridge comb shakes 86
+[   36.0s]   KEEP_wing_ridge_comb: 2112 verts, 2102 faces
+[   36.0s]   KEEP_wing_roof_rolls: 1113 verts, 1002 faces
+[   36.0s] -- thatch_junctions
+[   36.0s]   KEEP_wing_roof_structure: 756 verts, 666 faces
+[   36.9s]   valley apron facet 3: 39 stations
+[   36.9s]   valley apron facet 3: 15 stations
+[   37.1s]   valley apron facet 4: 35 stations
+[   37.5s]   KEEP_wing_flashing: 1490 verts, 1476 faces
+[   37.5s]   KEEP_wing_fillet: 2052 verts, 2044 faces
+[   37.5s] -- side_turret
+[   44.4s]   KEEP_turret visible mortar 17.6% -> 11.0% after 559 pinning stones
+[   44.4s]   KEEP_turret stones 1140
+[   45.2s]   KEEP_turret_stones: 60575 verts, 50368 faces
+[   45.3s]   KEEP_turret_mortar: 2046 verts, 1826 faces
+[   45.3s]   cushion stones: 16 lower + 17 upper, 4 pinning stones
+[   45.4s]   KEEP_turret_corbel_collar: 12897 verts, 12236 faces
+[   45.4s]   KEEP_turret_corbel_mortar: 1439 verts, 1260 faces
+[   45.4s]   KEEP_turret_drum_backing: 96 verts, 48 faces
+[   45.5s]   KEEP_turret_drum: 3320 verts, 2721 faces
+[   45.6s]   KEEP_turret_cap shingles 114
+[   45.7s]   KEEP_turret_cap_deck: 1008 verts, 944 faces
+[   46.0s]   KEEP_turret_cap_shingles: 11062 verts, 9978 faces
+[   46.1s]   KEEP_turret_cap_hips: 7808 verts, 7776 faces
+[   46.2s]   KEEP_turret_cap_structure: 12208 verts, 11044 faces
+[   46.2s]   KEEP_finial_turret: 1010 verts, 1010 faces
+[   46.2s] -- oct_hidden_cull
+[   47.3s]   visibility: 1276186 tris, 220 viewpoints
+[   85.7s]   visibility cull KEEP_roof_collar_shakes: -4656 of 33984 polygons
+[  110.2s]   visibility cull KEEP_cap_structure: -3954 of 11318 polygons
+[  134.3s]   visibility cull KEEP_turret_cap_structure: -4044 of 11044 polygons
+[  142.3s]   visibility cull KEEP_turret_drum: -1330 of 2721 polygons
+[  162.7s]   visibility cull KEEP_cap_shingles: -3138 of 14273 polygons
+[  177.4s]   visibility cull KEEP_turret_cap_shingles: -2480 of 9978 polygons
+[  186.6s]   visibility cull KEEP_roof_skirt_boards: -1064 of 17864 polygons
+[  201.5s]   visibility cull KEEP_roof_skirt_structure: -2420 of 11114 polygons
+[  209.9s]   visibility cull KEEP_hall_eave_plate: -1682 of 5194 polygons
+[  224.7s]   visibility cull KEEP_cap_hips: -2722 of 7776 polygons
+[  239.7s]   visibility cull KEEP_turret_cap_hips: -2860 of 7776 polygons
+[  244.4s]   visibility cull KEEP_roof_skirt_hips: -820 of 4692 polygons
+[  249.6s]   visibility cull KEEP_lantern_boards: -986 of 3364 polygons
+[  255.3s]   visibility cull KEEP_lantern_frame: -1037 of 2222 polygons
+[  262.8s]   visibility cull KEEP_cone_ledge_slabs: -1019 of 4320 polygons
+[  263.3s]   visibility cull KEEP_wing_roof_structure: -118 of 666 polygons
+[  275.2s]   visibility cull KEEP_hall_posts: -2109 of 15239 polygons
+[  284.7s]   visibility cull KEEP_hall_post_bases: -1439 of 3342 polygons
+[  287.5s]   visibility cull KEEP_hall_knee_braces: -591 of 1272 polygons
+[  298.9s]   visibility cull KEEP_door_leaf: -2174 of 7323 polygons
+[  311.1s]   visibility cull KEEP_wing_door: -2214 of 9232 polygons
+[  311.8s]   visibility cull KEEP_wing_window: -143 of 551 polygons
+[  312.5s]   visibility cull KEEP_threshold: -118 of 732 polygons
+[  314.9s]   visibility cull KEEP_hall_window_frames: -599 of 972 polygons
+[  316.8s]   visibility cull KEEP_wing_ridge_comb: -387 of 2102 polygons
+[  342.1s]   visibility cull KEEP_turret_stones: -4028 of 50368 polygons
+[  367.5s]   visibility cull KEEP_wing_wall_stones: -4510 of 54407 polygons
+[  380.4s]   visibility cull KEEP_turret_corbel_collar: -2368 of 12236 polygons
+[  380.4s]   hidden-geometry cull: -55010 polygons
+[  381.7s]     decal anchor dropped: ('damp_rise', [-1.9, -0.65, 0.26], 'interior/blocker KEEP_hall_interior')
+[  381.7s]     decal anchor dropped: ('damp_rise', [-0.94, -4.19, 0.24], 'duplicate')
+[  381.7s]     decal anchor dropped: ('damp_rise', [-9.39, 0.4, 0.35], 'duplicate')
+[  381.7s]     decal anchor dropped: ('rust_stain', [-0.04, -3.69, 0.78], 'duplicate')
+[  381.7s]   decal anchors: 120 generated, 4 rejected by the plausibility gate
+[  381.7s]   decal anchors: 116 ({'damp_rise': 19, 'moss': 25, 'lichen': 16, 'water_streak': 13, 'soot': 6, 'rust_stain': 9, 'crack': 18, 'grime': 6, 'repair_patch': 4})
+[  382.9s] decal anchor check (report only): checked 116, snapped 0, max_move 0.000, renormal 0, shrunk 0, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 0, duplicate 0, kept 116
+[  382.9s] decal anchors: 116
+[  382.9s] objects 298 (instances 246, pooled meshes 24) triangles 1166874
+Info: Saved as "hilltop_keep.blend"
+[  383.0s] saved C:\GitHubDesktop\git_test\blender_village\kit\baseline\1_consolidate\hilltop_keep\hilltop_keep.blend 28.7 MB

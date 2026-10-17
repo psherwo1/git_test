@@ -1,0 +1,19 @@
+﻿00:00.563  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r2_fast\v5_harbour_house.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village/tools/render_review.py:111: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:302
++ ... tch {} } }; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village/tools/render_review.py:127: DeprecationWarning: 'World.use_nodes' is 
+expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.781  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.938  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r2_fast\renders\hero.png'
+00:08.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r2_fast\renders\front.png'
+00:12.641  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r2_fast\renders\back.png'
+00:16.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r2_fast\renders\aerial.png'
+REVIEW_STATS {"objects": 70, "triangles": 997934, "bbox_min": [-8.753124237060547, -8.587190628051758, -2.509999990463257], "bbox_max": [8.753124237060547, 8.587190628051758, 12.739508628845215], "size_m": [17.506248474121094, 17.174381256103516, 15.24950885772705], "materials": ["M_iron", "M_lead", "M_mortar", "M_roof_shake", "M_roof_shingle", "M_stone", "M_stone_dressed", "M_timber", "M_timber_weathered"], "est_hidden_pct": 34.7, "est_hidden_triangles": 346407, "material_slot_count": 9, "mask_attribute_missing": []}

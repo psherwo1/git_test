@@ -1,0 +1,93 @@
+[    0.1s] -- drystone_plinth
+[   11.3s] plinth kinds: {'slab': 15, 'block': 10, 'boulder': 11}
+[   11.3s] plinth stones: 36 two-high: 2 (6 %) fractured: 26
+[   12.7s]   HUT_plinth_stones: 115143 verts, 114148 faces
+[   12.9s] chinking: 33 of 105 candidate joints
+[   12.9s] -- round_daub_wall
+[   15.6s] rods: 393
+[   15.9s]   HUT_wattle_rods: 47748 verts, 37852 faces
+[   15.9s]   HUT_wattle_stakes: 450 verts, 316 faces
+[   15.9s]   HUT_door_panel_backing: 240 verts, 176 faces
+[   16.1s]   HUT_posts: 18540 verts, 17271 faces
+[   16.3s] plinth tops under the daub foot culled: 7357
+[   16.3s]   daub bay 0: grid 90 x 154, cracks 3
+[   16.4s]   daub bay 1: grid 90 x 154, cracks 4
+[   16.5s]   daub bay 2: grid 179 x 205, cracks 2
+[   16.8s]   daub bay 2: clumps 1
+[   16.9s]   daub bay 3: grid 59 x 109, cracks 4
+[   16.9s]   daub bay 4: grid 61 x 112, cracks 4
+[   17.0s]   daub bay 5: grid 174 x 146, cracks 2
+[   17.2s]   daub bay 5: clumps 2
+[   17.2s]   daub bay 6: grid 55 x 111, cracks 3
+[   17.3s]   daub bay 7: grid 61 x 112, cracks 3
+[   17.3s]   daub bay 8: grid 57 x 110, cracks 3
+[   17.4s]   daub bay 9: grid 55 x 112, cracks 3
+[   17.4s]   daub bay 10: grid 171 x 200, cracks 4
+[   17.8s]   daub bay 10: clumps 2
+[   17.8s]   daub bay 11: grid 88 x 156, cracks 2
+[   17.9s]   daub bay 12: grid 193 x 181, cracks 4
+[   18.0s]   daub bay 12: clumps 2
+[   18.0s] daub cracks: 0 flakes: 7 intact coat T mean 0.0648 p5 0.0525 p95 0.0804
+[   20.2s]   HUT_daub: 170225 verts, 166608 faces
+[   20.2s]   HUT_daub_interior: 7502 verts, 7230 faces
+[   20.2s] -- wall_plate
+[   20.3s]   HUT_wall_plate: 1584 verts, 1542 faces
+[   20.3s] -- conical_roof
+[   20.4s]   HUT_rafters: 3474 verts, 2916 faces
+[   20.5s]   HUT_purlin_rings: 392 verts, 350 faces
+[   20.5s]   HUT_battens: 504 verts, 378 faces
+[   23.2s] shingles: 598 full-length (covered part visible): 129
+[   23.7s]   HUT_roof_shingles: 65060 verts, 56398 faces
+[   23.7s]   HUT_roof_starter: 3540 verts, 3068 faces
+[   28.2s] underlap strips: 593
+[   28.2s]   HUT_roof_underlap: 7116 verts, 3558 faces
+[   28.2s]   HUT_roof_blocker: 1186 verts, 1088 faces
+[   28.5s]   HUT_eave_closure: 1440 verts, 1438 faces
+[   28.5s] -- finial
+[   28.5s]   HUT_cap_collar: 5154 verts, 5210 faces
+[   28.5s]   HUT_finial: 2502 verts, 2640 faces
+[   28.5s] collar drip 6.721 fascia top 6.786 lower top 7.443 upper top 7.743 spindle top 8.126 tip 8.726
+[   28.5s] -- door_step
+[   28.6s]   HUT_step_stone: 2689 verts, 2688 faces
+[   28.6s] -- framed_door
+[   30.4s]   HUT_door_frame: 59324 verts, 56888 faces
+[   30.4s]   HUT_door_leaf: 1756 verts, 1734 faces
+[   30.4s]   HUT_door_ironwork: 234 verts, 218 faces
+[   30.5s]   HUT_threshold: 14775 verts, 14707 faces
+[   30.5s] -- interior
+[   30.6s]   HUT_floor: 1728 verts, 1696 faces
+[   30.6s]   HUT_hearth: 965 verts, 849 faces
+[   30.6s] -- round_hidden_cull
+[   31.2s]   visibility: 999726 tris, 439 viewpoints
+[  178.9s]   visibility cull HUT_plinth_stones: -27868 of 106791 polygons
+[  233.7s]   visibility cull HUT_wattle_rods: -8054 of 37852 polygons
+[  258.9s]   visibility cull HUT_posts: -2943 of 17271 polygons
+[  306.0s]   visibility cull HUT_door_frame: -6457 of 56888 polygons
+[  334.8s]   visibility cull HUT_threshold: -5081 of 14707 polygons
+[  403.7s]   visibility cull HUT_roof_shingles: -3702 of 56398 polygons
+[  406.1s]   visibility cull HUT_roof_starter: -88 of 3068 polygons
+[  412.9s]   visibility cull HUT_wall_plate: -712 of 1542 polygons
+[  418.0s]   visibility cull HUT_rafters: -166 of 2916 polygons
+[  420.6s]   visibility cull HUT_purlin_rings: -238 of 350 polygons
+[  470.7s]   visibility cull HUT_daub: -6041 of 166608 polygons
+[  470.8s] hidden-geometry cull: -61350 polygons
+[  470.8s] -- guards
+[  471.3s]   clearance gate HUT framed_door: door head 2.28 m, eave lip over it 2.406 m at (-0.5, -4.02) on HUT_battens (rule >= 2.30 m, 24 stations): PASS
+[  472.1s] decal anchors placed: 104  {'damp_rise': 11, 'moss': 14, 'lichen': 9, 'water_streak': 7, 'soot': 5, 'grime': 4, 'rust_stain': 5, 'crack': 36, 'plaster_patch': 8, 'repair_patch': 5}
+[  473.2s] decal anchor check (applied): checked 104, snapped 41, max_move 0.125, renormal 1, shrunk 8, no_surface 0, wrong_surface 1, excluded 0, occluded 0, footprint 0, duplicate 4, strict 1, kept 98
+[  473.2s]     DA_rust_stain_001: strict gate: fp 5 of 9, mean-normal dot -0.999
+[  473.2s]     DA_crack_012: within 0.25 m of another crack
+[  473.2s]     DA_crack_019: within 0.25 m of another crack
+[  473.2s]     DA_crack_020: hit M_timber (HUT_wall_plate), declared M_daub
+[  473.2s]     DA_crack_021: within 0.25 m of another crack
+[  473.2s]     DA_crack_022: within 0.25 m of another crack
+[  473.2s] decal anchors: 98
+[  474.3s] uv grain (kit 1.10.0): 47 meshes, 1688 timber / shingle pieces (29 round, 622 sloped sheets), 135201 grain faces re-projected, 3524 collapsed faces repaired
+[  474.6s]   walked tops (Mask B <= 0.04): framed_door -> HUT_door_clench_nail_074: 9 faces
+[  474.6s]   walked tops (Mask B <= 0.04): framed_door -> HUT_door_leaf: 11 faces
+[  474.6s]   walked tops (Mask B <= 0.04): framed_door -> HUT_floor: 26 faces
+[  474.6s]   walked tops (Mask B <= 0.04): framed_door -> HUT_step_stone: 2019 faces
+[  474.6s]   walked tops (Mask B <= 0.04): framed_door -> HUT_threshold: 2899 faces
+[  474.6s] objects 124 (instances 99, pooled meshes 22) triangles 878355
+Info: Saved as "wattle_roundhut.blend"
+[  474.7s] saved C:\GitHubDesktop\git_test\blender_village\kit\baseline\v5r2_hash\wattle_roundhut\wattle_roundhut.blend 20.3 MB

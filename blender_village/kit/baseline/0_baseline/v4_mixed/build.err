@@ -1,0 +1,2 @@
+C:\GitHubDesktop\git_test\blender_village\buildings\variants\v4_mixed\..\..\..\kit\village_kit\components\mill_cap.py:194: RuntimeWarning: All-NaN slice encountered
+  st_gap.extend(list(np.nanmin(gg, 0)))
