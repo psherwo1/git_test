@@ -1,169 +1,97 @@
-# Handoff: continuing the village production on a desktop
+# Handoff: continuing the village production (updated 2026-10-17, desktop session 1 -> session 2)
 
-This file lets a new Claude Code session, for example on the client's RTX desktop, pick up the work with full continuity. Everything the production depends on is in this repository on branch `claude/blender-buildings-film-nfzv6a`.
+This file lets a new Claude Code session pick up the work with full continuity. Everything is in this repository on branch `claude/blender-buildings-film-nfzv6a`. **Treat the director files as the source of truth and do not re-litigate recorded client decisions.**
 
-## 1. What this project is
+## 1. What this project is (as corrected by the client)
 
-The client is building geometry-only hero buildings for an **Unreal Engine 5.8 (Nanite) LED-volume virtual production with real actors**. They are modelled in Blender to match the concept art in `reference/`.
+- A **hobby film production** aiming for a **high level of polish** (producer note 13). It targets **Unreal Engine 5.8 with Nanite**, renders offline (Movie Render Queue / path tracing), and has **no LED volume**.
+- Reference machine (the client's desktop): Ryzen 5 5600X, **16 GB RAM**, RTX 3060 12 GB, Windows 11. Repo at `C:\GitHubDesktop\git_test`.
+- A medieval **fjord village of 40-50 placements**, built from **12-15 curated unique designs** (note 14). The shared kit is the **authoring toolbox** for those designs. Variety across placements comes from instancing, rotation and mirroring, PCG decals on the exported anchors, per-instance `Mask` material variation, kit add-ons and set dressing.
+- **New structures are at most 1,000,000 triangles** (note 15, a hard requirement). The heroes keep their counts.
+- **Team method (the client asked for it explicitly):**
+  - one **Art Director** agent grades every round;
+  - an **independent audit** must uphold a pass;
+  - the pass mark is **8.2**, with decimal grades;
+  - building **variants** are graded on the note-12 **modularity rubric**: silhouette, proportion, construction, seams and junctions, distinctness and reuse, technical.
 
-**The team structure.** The client asked for one **Art Director agent** directing a team of builder agents. The director grades every round against the concept art. An **independent audit** must uphold a passing grade before sign-off. The client's current pass mark is **8.2/10**, set "for now".
+## 2. Read first, in this order
 
-The village will need **40–50 buildings**. Phase 2 is turning the three signed-off heroes into a **modular kit**.
+1. `director/production_plan.md`: phases, the sign-off record, the **variant table**, the **KIT DECISION**, and the client's approved plan.
+2. `director/art_bible.md`: the producer notes at the end, **1-15**, all binding. Note 12: modularity over detail. Note 13: no LED volume. Note 14: 12-15 curated designs. Note 15: 1 M triangle cap.
+3. `kit/village_kit/README.md` (rewritten for kit 1.9-1.10) and `kit/CHANGELOG.md`. The CHANGELOG holds the kit edit rules, the **HASH RULE** and the **reference fingerprint table at kit 1.10.1**.
+4. `director/kit_feasibility_director.md` and `director/kit_feasibility_technical.md`: the kit decision and the missing-module lists.
+5. The latest entries of `director/log_variant_*.md`. Every CLIENT DIRECTION and PRODUCER NOTE in them is binding.
+6. `director/megascans_shortlist.md`: the free texture set. The client downloaded the zips into `materials/`.
 
-## 2. Where everything is
+## 3. Client decisions (all binding; full text in the files above)
 
-| Path | What |
+- Pass mark 8.2 with an independent audit; geometry only. No ground dressing (note 10). Detail rules (note 11) and decal anchors.
+- **Note 12:** no more detail rounds; reusable modules that combine; modularity rubric.
+- **Note 13:** no LED volume; hobby production; high polish.
+- **Note 14:** the kit is a toolbox for 12-15 curated designs; the any-combination generator is dropped.
+- **Note 15:** new structures are at most 1 M triangles.
+- **Kit decision:** the Art Director said "partial" and the technical director "kit_works", recommending the same course. The client said **"Yes proceed"** to this plan, in order:
+  1. consolidation, guard-rails, README and the UV fix (**DONE**);
+  2. close v1, v2 and v3 through their audits (**done or decided, see section 4**);
+  3. **the timber, rectangular and waterfront kit family, built through the timber harbour house** (approved building 3), then a boathouse or barn (**NEXT**);
+  4. add-ons: lean-to, porch, chimney, dormer, gable-to-gable valley;
+  5. the Unreal exporter (FBX/USD, cm, Nanite, `Mask` as vertex colour, decal_anchors.json, Packed Level Actor / ISM layouts), then a UE 5.8 lookdev test.
+- **Watchtower:** the client's square-cabin crown design (accepted).
+- **Longhouse:** the client approved a **redesign**: raise the round end so the thatch abuts the drum WALL below the cone eave, so the eaves no longer cross. See the CLIENT DIRECTION at the end of `director/log_variant_v3_longhouse_roundend.md`.
+- **The client asked for a textured check** of whether the remaining junction defects are visible at ground level or in a quick pan.
+- Never modify `buildings/*/signoff_phase1/` or `buildings/tower_windmill/signoff_kit_r08/`.
+
+## 4. State at handoff (2026-10-17)
+
+**Designs (7 of 12-15):**
+
+| Design | State |
 |---|---|
-| `director/art_bible.md` | Style guide, grading rubric and **producer notes 1–11** (binding client rules, at the end) |
-| `director/production_plan.md` | Phases, decision rules, client approvals and the **sign-off record** |
-| `director/spec_<id>.md`, `director/log_<id>.md` | Per-building spec, plus the director's round-by-round grades and **CLIENT CORRECTION** sections |
-| `director/ensemble_log.md`, `director/log_variants.md`, `director/kit_feasibility.md` | Ensemble review, variant grades and the kit decision (once written) |
-| `buildings/<id>/build_<id>.py` | Deterministic build script, the source of truth. It saves `<id>.blend`, `decal_anchors.json` and `kit_variant/` |
-| `buildings/<id>/signoff_phase1/` | The signed-off phase-1 version. **Never modify it.** It is the fallback deliverable |
-| `kit/village_kit/` | The shared modular kit: README.md (the API), CHANGELOG.md (the **kit edit rules**) |
-| `tools/render_review.py` | Standard clay review renders and `stats.json` / `hidden.json`. Pass `--device GPU` on an NVIDIA RTX machine |
-| `tools/hidden_tris.py` | Hidden or buried triangle estimate |
-| `tools/check_env.py` | Checks that a new machine can continue (bpy, GPU, kit, deterministic rebuild) |
-| `workflows/kit_phase_resume.js` | Portable workflow that resumes phase 2 from saved state |
-| `workflows/kit_phase_original_cloud.js` | The original phase-2 workflow, for reference |
-| `renders/` | Every round's review renders. The director's close-ups are in `director_extra/` |
+| tower_windmill | **Signed off on the kit** (round 8, 9.0, audit upheld); snapshot in `signoff_kit_r08/` |
+| hilltop_keep | Phase-1 version is the signed-off deliverable. The kit build (1,166,874 tris) is the reference |
+| wattle_roundhut | Phase-1 version is the signed-off deliverable. The kit build (878,355 tris) is the reference |
+| v4_mixed (mill-house) | **ACCEPTED** (round 4, 8.4, 938,453 tris) |
+| v1_stone_watchtower (square cabin) | **ACCEPTED** (round 5, 8.5, 937,933 tris) |
+| v2_tiered_hall (approved building 2) | Director 8.2 in round 7. The audit rejected it: turret masonry passes through the lead apron upstands, up to 19 cm, about 4-5.6 m up. **Out of rounds.** The producer's view: it is not visible from ground level. **Client decision pending** on whether to accept it as is; the textured junction test informs it |
+| v3_longhouse_roundend (approved building 1) | **Redesign IN PROGRESS** (see below). The last complete build is round 6 (director 8.1) |
 
-## 3. Client decisions and corrections (all binding)
+**Kit: 1.10.1.**
+- **1.8.0:** consolidation. One API per concern (eave closure, polygon roofs with any number of sides, masonry, openings); `PlanFrame`; single cull and decal dispatch.
+- **1.9.0:** guard-rails on by default (`guards.py`: clearance, decal_validate, seal probe, steep-cone door flags, LOD scope) and a README rewrite.
+- **1.10.0:** the UV fix (`uvgrain.py`: grain along pieces, shingles up-slope, no collapsed UVs, no moss on walked tops).
+- **1.10.1:** deterministic needle repair. It fixed the keep's turret cap flipping winding.
+- **Afterwards:** variant builders added `tier_flashing`, `tier_cull`, `level_probe`, `square_cabin` and `pyramid_roof` upgrades (records in `kit/changes/*.md`). They are **not yet merged into the CHANGELOG**: merge them.
+- **Tools:**
+  - `tools/build_baseline.ps1`: rebuild buildings, at most 2-3 at once. From PowerShell use `-Only @('id1','id2')`; a comma list via `-File` does not work.
+  - `tools/geom_hash.py` (geometry, uv and mask hashes), `tools/geom_diff.py`, `tools/uv_audit.py`, `tools/check_headers.py`.
+  - The canonical (order-independent) hasher: `kit/baseline/4_verify/verify_tools/canon_hash.py`.
 
-The full text is in the art bible's producer notes and the per-building logs.
+**Texturing.**
+- Lookdev script: `lookdev/scripts/apply_lookdev.py` (`--look r2`). Renders: `lookdev/renders_r2/`, with compare sheets.
+- The keep looks good.
+- **To tune:**
+  - the roundhut's plaster: the trowel pattern still shows up close, so consider a less patterned clay texture;
+  - the longhouse's moss: too heavy and uniform;
+  - the dressed stone: slightly bright.
 
-**Target and scale**
-- Unreal 5.8 with Nanite. No manual LODs.
-- 40–50 buildings, built as a modular kit.
-- At most about 3 buildings within 10 m of actors.
+**Running when this session ended. Check the results; do NOT relaunch blindly.**
+1. **Longhouse redesign workflow** (`workflows/kit_close_variants.js`, only v3, from fix round 8, up to round 10). Journal: `C:\Users\parke\.claude\projects\C--GitHubDesktop-git-test-blender-village\8c996e45-b510-4dd2-9e8e-52ff37fff4ab\subagents\workflows\wf_d6ca71b9-1b3\journal.jsonl`. Progress is visible in `director/log_variant_v3_longhouse_roundend.md`: round 8+ builder entries and score headings. If it was stopped before finishing, write a continuation from the log state, as the earlier continuation scripts did: copy any audit verdicts from the journal into the log first, because fixers read the log.
+2. **Textured junction test** (one agent). Output: `lookdev/junction_test/renders/` and **`lookdev/junction_test/REPORT.md`**, with a verdict per defect on ground-level and pan visibility. If REPORT.md is missing, the agent did not finish; re-run it from `lookdev/junction_test/src/` (copies of hall r7 and longhouse r6).
 
-**Pass mark**
-- 8.2 (lowered from 10 → 9 → 8.2), with decimal grades.
+## 5. Practical notes for this machine
 
-**Geometry rules**
-- Hidden triangles **≤ 15%**.
-- When hidden geometry is culled, put **backing surfaces** behind it so no holes open.
-- Shared **15-slot material palette**, and no other material names.
-- A mandatory **`Mask` colour attribute**:
+- **Git:** there is no system git. Use GitHub Desktop's bundled git: `C:\GitHubDesktop\app-3.6.7\resources\app\git\cmd\git.exe`. Push auth works.
+  - In Windows PowerShell 5.1, commit messages containing double quotes break; use `git commit -F <file>`, written without a BOM (`[IO.File]::WriteAllText`).
+  - Commits end with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+- **Python:** `C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe` (bpy 5.1.2; `check_env.py` passed). Render flags: `--device GPU --gpu-backend OPTIX`. Do not use the installed Blender 5.2 for the pipeline.
+- **Memory:** builds take 4-10 min each. 16 GB RAM means at most 2-3 builds at once. On Windows the cull uses spawn workers, capped at 2 per build (`VILLAGE_CULL_PROCS`), and a dead worker fails over to single-process.
+- **Workflow agents:** a chat message the client sends mid-turn is relayed into running workflow agents. Every workflow prompt therefore starts with an AUTH preamble quoting the client's approvals; keep it. Send client direction to agents through the variant logs, **never** by SendMessage to a workflow agent: that spawned a second, conflicting builder once.
+- **Large files:** texture zips, extracted textures, lookdev .blend files, `kit/baseline/**/*.blend` and `lookdev/junction_test/src/` are git-ignored.
 
-  | Channel | Meaning |
-  |---|---|
-  | R | per-piece random |
-  | G | wear |
-  | B | moss / dirt / damp |
-  | A | 1 |
+## 6. One-time setup (DONE on the client's desktop; kept for reference)
 
-- **No ground dressing.** No loose stones, rubble, paths or aprons; they are not scored either.
-- **Producer note 11 (detail-scale rule).** Keep relief under about 2 cm out of geometry; the entrance exception keeps it down to 1 cm near entrances. Put weathering in decals. Export **DECAL_ANCHORS** and `decal_anchors.json` for Unreal PCG.
-
-**Windmill**
-- The board sail is a **fixed tail vane on a rear boom** behind the fan wheel.
-- The sloping "buttress" in the art is terrain, so it has been **removed**.
-
-**Roundhut**
-- Exterior is **mostly intact daub** (80–90%), with only small patches of exposed wattle.
-
-**Fallback approved**
-- If the kit is not viable, build **3 new custom buildings**:
-  1. the stone longhouse with a round end (ref1);
-  2. the tiered great hall (ref2);
-  3. the timber harbour house (ref2/ref3).
-
-**Texturing plan (context only)**
-- Jointless Megascans surfaces with world-aligned projection in Unreal, driven by `Mask`.
-
-## 4. State at handoff
-
-The cloud run was stopped on 2026-10-16 at 16:51 UTC, at the planned handoff point: both kit migrations had finished.
-
-**Phase 1** is complete. The three heroes are signed off, with the ensemble approved at 8.4. The phase-1 files are in `buildings/<id>/signoff_phase1/` and **remain the deliverables** until a kit version is signed off.
-
-**Phase 2, the modular kit (`kit/village_kit`, version 1.2.0, about 30 component modules):**
-
-| Hero | Kit round | Status | Next on resume |
-|---|---|---|---|
-| wattle_roundhut | 8 | Graded **8.4**, sign-off audit **REJECTED** (`director/audit_wattle_roundhut_r8.md`) | **Fix round 9**, then gate |
-| hilltop_keep | 7 | Graded **8.3** (pass); its sign-off audit was interrupted before it finished | **Audit round 7**; if rejected, fix round 8, then gate |
-| tower_windmill | 7 | Migration finished and rendered; **not yet graded** | **Gate from round 7** (grade, then audit) |
-
-**What the roundhut audit rejected:**
-- the entrance exception of producer note 11 is not wired into the daub, so the door-bay coat went flat;
-- the cone sag is applied per vertex, which opens the shingle joints;
-- some decal anchors are implausible.
-
-**Kit-level issues to fix once, for all buildings:**
-- the decal-anchor helper places some anchors badly (the keep also has 8 of 104 wrong);
-- the daub entrance exception is not wired in;
-- the cone age pass works per vertex instead of per piece.
-
-**The interrupted round-9 roundhut fixer.** Its partial edits to the 4 hut components were saved as `director/partial_fix_wattle_roundhut_r9.patch` and **reverted** from the kit. The windmill migrator's finished additions (`core.DetailRule.scale_v` and related, plus the changelog) were kept. After the revert, all three buildings rebuilt from the kit, with the triangle counts recorded below.
-
-**Not yet started:** the 4 kit variant buildings, and the kit feasibility decision.
-
-**Triangle counts in the latest renders:**
-
-| Building | Signed-off phase 1 | Kit version |
-|---|---|---|
-| hut | 1.31 M | 744 k |
-| keep | 1.30 M | 1.12 M |
-| windmill | 1.21 M | 1.13 M |
-
-All three kit versions are at 14.1 % hidden or less, on the palette, with Mask complete.
-
-
-## 5. Desktop setup (one time)
-
-Tested target: Windows 10/11, AMD Ryzen 5 5600X, RTX 3060 12 GB.
-
-**Blender version.** Keep the installed Blender 5.2 for viewing. The pipeline runs on **Blender 5.1.2 as a Python module** in its own venv, which does not touch the 5.2 install. 5.1.2 keeps the builds bit-identical to the signed-off versions.
-- 5.1.2 files open fine in 5.2.
-- Moving the pipeline to 5.2 later is a separate, deliberate task: rebuild everything and diff the results.
-
-1. **Install Git, and Python 3.13 (64-bit).** `bpy` 5.1 is built only for Python 3.13; Python 3.11 will not work. 3.13 installs side by side with any existing 3.11.
-   - Either run `winget install Python.Python.3.13`, or use the python.org installer. Afterwards `py -0` lists the installed versions.
-   - Or use `uv`, which avoids touching the system Python:
-     ```
-     winget install astral-sh.uv
-     uv venv .bpyenv --python 3.13
-     uv pip install --python .bpyenv\Scripts\python.exe bpy==5.1.2
-     ```
-     This replaces step 3.
-2. **Clone the branch** to a short folder that is NOT inside OneDrive (the client uses C:\GitHubDesktop\git_test). OneDrive sync locks files mid-write, makes placeholder reads fail, can corrupt .git, and makes the path too long:
-   ```
-   git clone -b claude/blender-buildings-film-nfzv6a https://github.com/psherwo1/git_test.git
-   cd git_test
-   ```
-3. **Create a venv with Blender as a module:**
-   ```
-   py -3.13 -m venv .bpyenv            (Microsoft Store Python has no py launcher: use python3.13 -m venv .bpyenv)
-   .bpyenv\Scripts\python -m pip install bpy==5.1.2
-   ```
-   On Linux/macOS, use `python3.13 -m venv .bpyenv` and `.bpyenv/bin/python`.
-4. **Check the environment.** It rebuilds the roundhut and must report ALL CHECKS PASSED:
-   ```
-   .bpyenv\Scripts\python blender_village\tools\check_env.py
-   ```
-   Note the `render_flags`, `python` and `root` values it prints. With an RTX 3060 the flags should be `--device GPU --gpu-backend OPTIX`.
-5. **Start Claude Code in the `git_test` folder**, either with the Claude Desktop app or `claude` in a terminal. Paste the resume prompt from section 7.
-
-## 6. How the workflow is resumed
-
-`workflows/kit_phase_resume.js` contains the same Art Director, builder, audit and grading prompts as the cloud run. It takes these arguments:
-- `root`: absolute path to `blender_village`;
-- `py`: absolute path to the venv python;
-- `render_flags`: from check_env;
-- `hero_results`: what is already done;
-- `heroes_to_gate`: any hero whose kit regrade still needs to run, as `[{"id": ..., "round": N}]`. The gate starts by grading that round's existing renders.
-
-It then runs:
-1. the hero gates, if any;
-2. the four kit variants, with director grades and up to 3 fix rounds;
-3. the kit feasibility decision, by the director and a technical director independently.
-
-After the decision, follow `director/production_plan.md`:
-- if the kit **works**: phase 3, the variant generator and Unreal export;
-- if it does **not work**: the 3 approved new buildings through the same director loop.
+Python 3.13 (Microsoft Store), venv `.bpyenv` with `bpy==5.1.2`, `tools/check_env.py` ALL CHECKS PASSED, GPU OptiX confirmed. Sleep on AC is disabled; to restore it, run `powercfg /change standby-timeout-ac <minutes>`. LongPathsEnabled is still 0; the client chose to skip it for now.
 
 ## 7. Resume prompt
 
-See `RESUME_PROMPT.md`. Do its short "Before you paste" checklist (install the tools, clone to C:\GitHubDesktop\git_test, open Claude Code there), then paste its fenced block. The session runs a PREFLIGHT for everything else.
+See `RESUME_PROMPT.md`.

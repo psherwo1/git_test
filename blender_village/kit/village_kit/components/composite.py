@@ -464,7 +464,7 @@ def _outline_smooth(M, AA, SS, r_ref, iters):
 
 
 def cone_soakers(g, units_V, roofs, reach=0.30, lap=0.035, cell=0.02, z0=0.002, t=0.006, mat="M_lead",
-                 name="cone_soakers", always=(), carry=None, seat=None, smooth=0, covered=None, keep_lap=0.06):
+                 name="cone_soakers", always=(), carry=None, seat=None, smooth=0):
     """KIT COMPONENT (round 4, part of cone_keep_out(soakers=True)): ONE continuous lead soaker sheet on a RoundFrame
     cone's reference surface under every covering unit the keep-out dropped within `reach` m of the roof it meets
     (|GableRoof.top_depth| <= reach), each footprint grown by `lap` so the sheet runs under the neighbouring kept
@@ -482,12 +482,7 @@ def cone_soakers(g, units_V, roofs, reach=0.30, lap=0.035, cell=0.02, z0=0.002, 
         sheet turns down (ramped over ~4 cells) and lies on it, so its free lower edge is a closed edge resting on
         the soffit boarding;
       smooth: outline smoothing iterations (_outline_smooth) -- the raster footprint's stair corners are traced
-        into a clean line and the sheet is built as one quad per cell (no long run quads, no T-junctions).
-    round 7 (default off = round 6):
-      covered(P, n) -> bool per cell: something lies over the cell (e.g. _covered_fn: a ray along the normal meets a
-        kept unit or the other roof's covering); cells covered AND more than `keep_lap` m from every uncovered cell
-        are not built -- they are never seen (in round 6 the visibility cull removed 87 % of the saddle, 1,110 s
-        single-process), so the visible sheet is unchanged."""
+        into a clean line and the sheet is built as one quad per cell (no long run quads, no T-junctions)."""
     from ..geom import Acc, finalize
     from .cone import az2th, s_at_r, surf_frame
     near = [np.asarray(V, float) for V in always if len(V)]
@@ -530,21 +525,6 @@ def cone_soakers(g, units_V, roofs, reach=0.30, lap=0.035, cell=0.02, z0=0.002, 
         n_cut = int((~ok).sum())
         M[ci[~ok], cj[~ok]] = False
         log(f"  cone soakers: {n_cut} of {len(ci)} cells carried by nothing, clipped")
-    if covered is not None and M.any():                # round 7: cells under kept covering, beyond keep_lap
-        ci, cj = np.nonzero(M)
-        Pc, _ts, _tt, nc = surf_frame(g, az2th(np.mod(ac[ci], 2 * np.pi)), sc[cj])
-        cov = np.zeros(M.shape, bool)
-        cov[ci, cj] = np.asarray(covered(Pc + nc * (z0 + t + 0.002), nc), bool)
-        near_open = M & ~cov
-        k = max(1, int(np.ceil(keep_lap / cell)))
-        for _ in range(k):                             # grow the uncovered cells by keep_lap (8-neighbour)
-            p = np.pad(near_open, 1)
-            near_open = (p[1:-1, 1:-1] | p[:-2, 1:-1] | p[2:, 1:-1] | p[1:-1, :-2] | p[1:-1, 2:]
-                         | p[:-2, :-2] | p[2:, 2:] | p[:-2, 2:] | p[2:, :-2])
-        n0 = int(M.sum())
-        M &= near_open
-        log(f"  cone soakers: {n0 - int(M.sum())} of {n0} cells under kept covering (beyond {keep_lap:.2f} m), "
-            "not built")
     if not M.any():
         return None
     if carry is not None or seat is not None or smooth:
@@ -758,428 +738,9 @@ def _cone_foot(g, P, iters=2):
     return S0, n, ((P - S0) * n).sum(1)
 
 
-# =================================================================================================================
-# round 7: support pass, lean saddle, and the closed cover over a cut course section
-# =================================================================================================================
-def _mesh_world(ob):
-    """round 7: (world vertices, loop-triangle vertex indices) of a mesh object."""
-    me = ob.data
-    me.calc_loop_triangles()
-    co = np.zeros(len(me.vertices) * 3)
-    me.vertices.foreach_get("co", co)
-    co = co.reshape(-1, 3)
-    M = np.array(ob.matrix_world)
-    co = co @ M[:3, :3].T + M[:3, 3]
-    lt = np.zeros(len(me.loop_triangles) * 3, np.int64)
-    me.loop_triangles.foreach_get("vertices", lt)
-    return co, lt.reshape(-1, 3)
-
-
-def region_soup(obs, lo, hi, labels=None):
-    """KIT HELPER (round 7): the triangles of mesh objects `obs` whose bounding box meets the box [lo, hi], as a
-    BVH -> (bvh, owner object index per triangle, island id per triangle).  labels {object name: per-vertex island
-    label} gives the island ids of those objects (unique over the soup: object offset + label, offsets recorded in
-    the dict `base` when given); every other object is one id."""
-    from mathutils.bvhtree import BVHTree
-    lo, hi = np.asarray(lo, float), np.asarray(hi, float)
-    Vs, Ts, own, isl = [], [], [], []
-    nv, nid = 0, 0
-    base = labels.setdefault("__base__", {}) if labels is not None else {}
-    for k, ob in enumerate(obs):
-        co, lt = _mesh_world(ob)
-        if not len(lt):
-            continue
-        c = co[lt]
-        m = (c.min(1) <= hi).all(1) & (c.max(1) >= lo).all(1)
-        if not m.any():
-            continue
-        lt = lt[m]
-        if labels is not None and ob.name in labels:
-            lab = np.asarray(labels[ob.name])
-            ids = lab[lt[:, 0]] + nid
-            base[ob.name] = nid
-            nid += int(lab.max()) + 1
-        else:
-            ids = np.full(len(lt), nid)
-            nid += 1
-        Vs.append(co)
-        Ts.append(lt + nv)
-        own.append(np.full(len(lt), k))
-        isl.append(ids)
-        nv += len(co)
-    if not Ts:
-        return None, np.zeros(0, np.int64), np.zeros(0, np.int64)
-    V, T = np.concatenate(Vs), np.concatenate(Ts)
-    return (BVHTree.FromPolygons(V.tolist(), T.tolist(), all_triangles=True, epsilon=0.0),
-            np.concatenate(own), np.concatenate(isl))
-
-
-def _covered_fn(obs, reach=0.12, pad=0.3):
-    """round 7: covered(P, n) -> bool per point: a ray from P along n meets one of `obs` within `reach` m (a kept
-    unit lies over the point).  The BVH is built on the first call, cropped to the queried points."""
-    from mathutils import Vector
-    st = {}
-
-    def covered(P, n):
-        P, n = np.asarray(P, float), np.asarray(n, float)
-        if not len(P):
-            return np.zeros(0, bool)
-        if "bvh" not in st:
-            st["bvh"] = region_soup(obs, P.min(0) - pad, P.max(0) + pad)[0]
-        bvh = st["bvh"]
-        if bvh is None:
-            return np.zeros(len(P), bool)
-        return np.array([bvh.ray_cast(Vector(p), Vector(d), reach)[0] is not None for p, d in zip(P, n)], bool)
-    return covered
-
-
-def drop_unsupported(obs, mark, tol=0.005, support=None, passes=3, pad=0.10):
-    """KIT HELPER (round 7): delete every unit (connected island) of the mesh objects `obs` that has a vertex marked
-    by mark(V world) -> bool and NO vertex within `tol` m of any other geometry (another island of the same object,
-    or any object in `support`; default every mesh in the scene) -- a unit left floating once what carried it was
-    cut, dropped or clipped.  Repeated (`passes`) so a unit carried only by a dropped one goes too.
-    -> {object name: polygons removed}; the centre and gap of each dropped unit are logged."""
-    import bpy
-    from mathutils import Vector
-    obs = [o for o in obs if o is not None and o.type == "MESH" and len(o.data.vertices)]
-    support = support if support is not None else [o for o in bpy.context.scene.objects if o.type == "MESH"]
-    out = {}
-    for _ in range(passes):
-        cand, labels = {}, {}
-        lo, hi = np.full(3, np.inf), np.full(3, -np.inf)
-        for ob in obs:
-            co, _lt = _mesh_world(ob)
-            mk = np.asarray(mark(co), bool)
-            if not mk.any():
-                continue
-            lab = mesh_islands(ob.data)
-            labels[ob.name] = lab
-            hit = np.unique(lab[mk])
-            cand[ob.name] = (co, lab, hit)
-            sel = np.isin(lab, hit)
-            lo, hi = np.minimum(lo, co[sel].min(0)), np.maximum(hi, co[sel].max(0))
-        if not cand:
-            break
-        sup = list(dict.fromkeys(list(support) + obs))
-        bvh, _own, isl = region_soup(sup, lo - pad, hi + pad, labels=labels)
-        if bvh is None:
-            break
-        base = labels["__base__"]                       # the id offsets region_soup gave each object
-        n_drop = 0
-        for name, (co, lab, hit) in cand.items():
-            order = np.argsort(lab, kind="stable")
-            groups = np.split(order, np.flatnonzero(np.diff(lab[order])) + 1)
-            bad = np.zeros(len(co), bool)
-            hit_set = set(int(x) for x in hit)
-            for grp in groups:
-                L = int(lab[grp[0]])
-                if L not in hit_set or name not in base:
-                    continue
-                me_id = base[name] + L
-                ok = False
-                for v in co[grp]:
-                    for _loc, _nr, idx, _d in bvh.find_nearest_range(Vector(v), tol):
-                        if idx is not None and int(isl[idx]) != me_id:
-                            ok = True
-                            break
-                    if ok:
-                        break
-                if not ok:
-                    bad[grp] = True
-                    c = co[grp].mean(0)
-                    log(f"  unsupported: {name} unit at ({c[0]:.2f}, {c[1]:.2f}, {c[2]:.2f}) dropped")
-            if bad.any():
-                k = drop_units(bpy.data.objects[name], lambda P, _b=bad: _b if len(P) == len(_b) else
-                               np.zeros(len(P), bool), rule="any")
-                out[name] = out.get(name, 0) + k
-                n_drop += k
-        if not n_drop:
-            break
-    return out
-
-
-def _filter_max(h, k=1):
-    """running max over +-k along axis 0."""
-    out = h.copy()
-    for s in range(1, k + 1):
-        out[s:] = np.maximum(out[s:], h[:-s])
-        out[:-s] = np.maximum(out[:-s], h[s:])
-    return out
-
-
-def _cut_chains(g, surface, zone, s_range=(-0.15, 2.5), ds=0.01, n_az=2400, link=0.08):
-    """round 7: the cut line of a RoundFrame cone covering on its reference surface, inside `zone`: per slope row
-    the zero crossings of surface(P) in azimuth (bisection-refined), linked row to row into polylines.
-    -> [array (n, 3) world points ordered up the slope]."""
-    from .cone import az2th, surf
-    ss = np.arange(s_range[0], s_range[1], ds)
-    az = np.linspace(0.0, 2 * np.pi, n_az, endpoint=False)
-    AZ, SS = np.meshgrid(az, ss, indexing="ij")
-    P = surf(g, az2th(AZ).ravel(), SS.ravel())
-    F = np.asarray(surface(P), float).reshape(AZ.shape)
-    Z = np.asarray(zone(P), bool).reshape(AZ.shape)
-    F2 = np.roll(F, -1, 0)
-    cr = (np.sign(F) != np.sign(F2)) & (Z | np.roll(Z, -1, 0)) & np.isfinite(F) & np.isfinite(F2)
-    ii, jj = np.nonzero(cr)
-    if not len(ii):
-        return []
-    a_lo, a_hi = az[ii].copy(), az[ii] + 2 * np.pi / n_az
-    f_lo = F[ii, jj].copy()
-    s_ = ss[jj]
-    for _ in range(22):
-        am = 0.5 * (a_lo + a_hi)
-        fm = np.asarray(surface(surf(g, az2th(am), s_)), float)
-        same = np.sign(fm) == np.sign(f_lo)
-        a_lo, f_lo, a_hi = np.where(same, am, a_lo), np.where(same, fm, f_lo), np.where(same, a_hi, am)
-    Pc = surf(g, az2th(0.5 * (a_lo + a_hi)), s_)
-    order = np.lexsort((ii, jj))
-    chains, open_ = [], []                              # open_: (chain index, last point, last row)
-    for k in order:
-        j, p = int(jj[k]), Pc[k]
-        best, bd = None, link
-        for ci, (last, row) in enumerate(open_):
-            if last is None or row != j - 1:
-                continue
-            d = float(np.linalg.norm(p - last))
-            if d < bd:
-                best, bd = ci, d
-        if best is None:
-            chains.append([p])
-            open_.append((p, j))
-        else:
-            chains[best].append(p)
-            open_[best] = (p, j)
-    return [np.array(c) for c in chains if len(c) >= 4]
-
-
-def _resample(C, step):
-    d = np.r_[0.0, np.cumsum(np.linalg.norm(np.diff(C, axis=0), axis=1))]
-    n = max(2, int(round(d[-1] / step)) + 1)
-    u = np.linspace(0.0, d[-1], n)
-    return np.stack([np.interp(u, d, C[:, k]) for k in range(3)], 1)
-
-
-def cone_cut_cover(g, mat="M_lead", t=0.012, lap=0.06, step=0.025, gap=0.003, drop_max=0.12, foot=0.03,
-                   e_max=0.08, drop_free=0.005, min_len=0.10, band_u=0.30, reach=0.40, name="cone_cut_cover"):
-    """KIT COMPONENT (round 7, post step after cone_roof(abut_top_trim=True) / cone_abutment): ONE closed lead
-    cover (a capping) over the cut section of a RoundFrame cone's eave courses where they yield to a GableRoof --
-    the layered shingle / starter / batten / rafter ends that the footprint cut (g.CONE_CUT) leaves standing on the
-    eave roll.  Generic over any cone and GableRoof:
-      line: driven from the cut FIELD, not from kept-unit adjacency -- the zero line of g.CONE_CUT's surface field
-        on the cone's reference surface, within `band_u` slope m of the roof's eave (the roll), traced row by row
-        (_cut_chains) and joined into runs; at each station (every `step` m) the kept stack's outer edge is found
-        by rays along the surface normal searched up to `reach` m into the kept side (units dropped whole end short
-        of the field's line), and the line is moved onto the outermost edge in a +-2 station window;
-      section (BVH rays): a flat top at the stack's highest point in the window (+ gap) from `lap` m up-slope of
-        the edge, its upper edge dressed down onto the courses; down across the cut face, clear of whatever still
-        stands past it (up to e_max); then onto the roof / roll / apron / saddle below with a `foot` m turn-out, or,
-        where nothing lies within `drop_max` m under the stack, turned under the stack's lowest layer;
-      closed slab of thickness t, closed end faces.
-    drop_free (m, > 0): first drop_unsupported() over the cone's covering, structure and saddle near the cut in the
-    roof's eave band (units left floating once the lead or units under them were clipped).
-    -> <P>_cone_cut_cover (or None)"""
-    import bpy
-    from mathutils import Vector
-    from ..geom import Acc, finalize
-    cut = getattr(g, "CONE_CUT", None)
-    if cut is None:
-        log("  cone cut cover: no g.CONE_CUT (cone_keep_out(top_trim=True) not run), skipped")
-        return None
-    roofs = cut["roofs"]
-    obj = lambda nm: bpy.data.objects.get(f"{g.prefix}_{nm}")    # noqa: E731
-    layers = [obj(nm) for nm in COVER_UNITS + STRUCT_FACES]
-    layers = [o for o in layers if o is not None and o.type == "MESH"]
-
-    def band(V, u_w=None):
-        V = np.asarray(V, float)
-        m = np.zeros(len(V), bool)
-        for r in roofs:
-            L = r.to_local(V)
-            zb = r.eave_zone(V) if u_w is None else np.abs(L[:, 1]) > r.Y - u_w * math.cos(r.p)
-            m |= zb & (L[:, 0] > r.xa - 0.06) & (L[:, 0] < r.xb + 0.06) & (L[:, 2] < r.z_ridge)
-        return m
-    if drop_free:
-        near_cut = lambda V: band(V) & (np.asarray(cut["field"](V), float) < 0.15)   # noqa: E731
-        dropped = drop_unsupported(layers + [obj("cone_soakers")], near_cut, tol=float(drop_free))
-        if dropped:
-            log("  cone cut cover: unsupported units dropped: " + ", ".join(f"{k} {v}" for k, v in dropped.items()))
-    chains = _cut_chains(g, cut["surface"], lambda P: band(P, band_u) & np.asarray(cut["zone"](P), bool))
-    chains = _join_chains(chains, 0.08)
-    if not chains:
-        log("  cone cut cover: no cut line in the eave band")
-        return None
-    allP = np.concatenate(chains)
-    scene = [o for o in bpy.context.scene.objects if o.type == "MESH" and not o.name.endswith(name)]
-    bvh, own, _isl = region_soup(scene, allP.min(0) - 0.8, allP.max(0) + 0.8)
-    lay_idx = {k for k, o in enumerate(scene) if o in layers}
-    LV = []
-    for o in layers:
-        co, _lt = _mesh_world(o)
-        m = ((co > allP.min(0) - 0.6) & (co < allP.max(0) + 0.6)).all(1)
-        LV.append(co[m])
-    LV = np.concatenate(LV) if LV else np.zeros((0, 3))
-
-    def ray(o, d, dist, layers_only=False):
-        loc, _nr, idx, dd = bvh.ray_cast(Vector(o), Vector(d), dist)
-        if loc is None:
-            return None
-        if layers_only and int(own[idx]) not in lay_idx:
-            return None
-        return dd
-    acc = Acc(f"{g.prefix}_{name}", 30)
-    n_runs, n_st, n_land, n_capped = 0, 0, 0, 0
-    W_s = np.arange(-0.06, reach + 1e-9, 0.01)
-    W_top = np.linspace(0.0, lap, 4)
-    for C in chains:
-        C = _resample(C, step)
-        for _ in range(2):                              # light smoothing of the traced line
-            C[1:-1] = 0.25 * C[:-2] + 0.5 * C[1:-1] + 0.25 * C[2:]
-        S, n, _o = _cone_foot(g, C)
-        T = np.gradient(S, axis=0)
-        T -= n * (T * n).sum(1)[:, None]
-        T /= np.maximum(np.linalg.norm(T, axis=1), 1e-9)[:, None]
-        b = np.cross(n, T)
-        sgn = np.sign(np.sum(np.asarray(cut["surface"](S + 0.02 * b), float)
-                             - np.asarray(cut["surface"](S - 0.02 * b), float)))
-        b = b * (sgn if sgn != 0 else 1.0)              # b points to the kept side
-        N = len(S)
-        # the kept stack's outer edge at each station (first layer hit searching into the kept side)
-        w_e = np.full(N, np.nan)
-        for i in range(N):
-            for w in W_s:
-                if ray(S[i] + b[i] * w + n[i] * 0.6, -n[i], 1.2, layers_only=True) is not None:
-                    w_e[i] = w
-                    break
-        kept = np.isfinite(w_e)
-        w_l = np.where(kept, w_e, np.inf)
-        w_line = w_l.copy()
-        for s_ in (1, 2):                               # outermost edge in a +-2 station window
-            w_line[s_:] = np.minimum(w_line[s_:], w_l[:-s_])
-            w_line[:-s_] = np.minimum(w_line[:-s_], w_l[s_:])
-        w_line = np.where(np.isfinite(w_line), w_line, 0.0)
-        S2 = S + b * w_line[:, None]
-        Htop = np.zeros((N, len(W_top)))
-        h_lapend = np.zeros(N)
-        for i in range(N):
-            for k, w in enumerate(W_top):
-                dd = ray(S2[i] + b[i] * w + n[i] * 0.6, -n[i], 1.2)
-                Htop[i, k] = 0.6 - dd if dd is not None else -1.0
-            dd = ray(S2[i] + b[i] * (lap + 0.015) + n[i] * 0.6, -n[i], 1.2)
-            h_lapend[i] = 0.6 - dd if dd is not None else Htop[i, -1]
-        h_cap = _filter_max(np.where(kept, Htop.max(1), -1.0), 2) + gap
-        h_cap = np.where(h_cap < -0.5, Htop.max(1) + gap, h_cap)
-        prof = np.zeros((N, 5, 2))
-        for i in range(N):
-            Q = LV - S2[i]
-            u, w, h = Q @ T[i], Q @ b[i], Q @ n[i]
-            near = np.abs(u) < 0.6 * step + 0.01
-            st = near & (w >= 0.0) & (w < 0.04) & (h < h_cap[i])
-            h_sb = float(h[st].min()) if st.any() else h_cap[i] - 0.03
-            dd = ray(S2[i] + b[i] * 0.01 - n[i] * 0.4, n[i], 0.4 + h_cap[i], layers_only=True)
-            if dd is not None:                          # the stack's lowest layer seen from below
-                h_sb = min(h_sb, dd - 0.4)
-            e = gap
-            lower = ("wrap", h_sb)
-            for _ in range(3):
-                dd = ray(S2[i] - b[i] * (e + t + 0.003) + n[i] * h_cap[i], -n[i], h_cap[i] - (h_sb - drop_max))
-                lower = (("land", min(h_cap[i] - dd, h_cap[i] - 0.02)) if dd is not None else ("wrap", h_sb))
-                pr = near & (w < -e + 0.001) & (w > -0.15) & (h > lower[1] + 0.003) & (h < h_cap[i])
-                if not pr.any():
-                    break
-                e_new = float(-w[pr].min()) + gap
-                if e_new > e_max:
-                    n_capped += 1
-                    e_new = e_max
-                if e_new <= e + 1e-4:
-                    break
-                e = e_new
-            prof[i, 0] = (lap + 0.015, min(h_lapend[i] + gap, h_cap[i] - 0.004))
-            prof[i, 1] = (lap, h_cap[i])
-            prof[i, 2] = (-e, h_cap[i])
-            if lower[0] == "land":
-                n_land += kept[i]
-                dd2 = ray(S2[i] - b[i] * (e + t + foot) + n[i] * (lower[1] + 0.03), -n[i], 0.08)
-                h2 = lower[1] + 0.03 - dd2 if dd2 is not None else lower[1]
-                prof[i, 3] = (-e, lower[1] + gap)
-                prof[i, 4] = (-e - foot, min(h2, lower[1] + 0.01) + gap)
-            else:
-                prof[i, 3] = (-e, lower[1] - gap)
-                prof[i, 4] = (0.02, lower[1] - gap)
-        log(f"  cut line: {N} stations {S[0].round(2)} -> {S[-1].round(2)}, stack edge (cm) "
-            + " ".join(f"{100 * x:.0f}" if np.isfinite(x) else "-" for x in w_e))
-        d = np.diff(np.concatenate([[0], kept.astype(int), [0]]))
-        for i0, i1 in zip(np.flatnonzero(d == 1), np.flatnonzero(d == -1)):
-            if (i1 - i0 - 1) * step < min_len:
-                continue
-            Vr, Fr = _cover_sweep(S2[i0:i1], b[i0:i1], n[i0:i1], prof[i0:i1], t)
-            acc.add(Vr, Fr, mat, wear=0.4)
-            n_runs += 1
-            n_st += i1 - i0
-    if not n_runs:
-        log("  cone cut cover: no kept course section over the cut line")
-        return None
-    log(f"  cone cut cover: {n_runs} run(s), {n_st} stations ({n_land} landing on the roof / roll / lead, "
-        f"{n_st - n_land} turned under), {n_capped} stations with something standing > {e_max:.2f} m past the cut")
-    return finalize(acc, g.coll, smooth_deg=30.0, recalc=True)
-
-
-def _join_chains(chains, tol):
-    """round 7: join traced polylines end to start (either direction) where their ends lie within tol m."""
-    chains = [np.asarray(c, float) for c in chains]
-    joined = True
-    while joined and len(chains) > 1:
-        joined = False
-        for a in range(len(chains)):
-            for b_ in range(len(chains)):
-                if a == b_:
-                    continue
-                A, B = chains[a], chains[b_]
-                for A2, B2 in ((A, B), (A, B[::-1]), (A[::-1], B)):
-                    if np.linalg.norm(A2[-1] - B2[0]) < tol:
-                        chains[a] = np.concatenate([A2, B2])
-                        del chains[b_]
-                        joined = True
-                        break
-                if joined:
-                    break
-            if joined:
-                break
-    return chains
-
-
-def _cover_sweep(S, b, n, prof, t):
-    """round 7: a closed slab swept along stations S with per-station section `prof` (K, 2) in (b, n) -- the
-    inner (contact) line -- offset by t to its outer side (left of the travel direction).  -> (V, faces)"""
-    N, K, _ = prof.shape
-    outer = np.zeros_like(prof)
-    for i in range(N):
-        p = prof[i]
-        dseg = np.diff(p, axis=0)
-        dseg /= np.maximum(np.linalg.norm(dseg, axis=1), 1e-9)[:, None]
-        nseg = np.stack([dseg[:, 1], -dseg[:, 0]], 1)       # rotate -90 deg: the outer side
-        nv = np.zeros((K, 2))
-        nv[0], nv[-1] = nseg[0], nseg[-1]
-        nv[1:-1] = nseg[:-1] + nseg[1:]
-        nv /= np.maximum(np.linalg.norm(nv, axis=1), 1e-9)[:, None]
-        cosv = np.ones(K)
-        cosv[1:-1] = np.maximum((nv[1:-1] * nseg[:-1]).sum(1), 0.5)
-        outer[i] = p + nv * (t / cosv)[:, None]
-    loop = np.concatenate([prof, outer[:, ::-1]], 1)         # (N, 2K)
-    V = (S[:, None, :] + b[:, None, :] * loop[:, :, :1] + n[:, None, :] * loop[:, :, 1:]).reshape(-1, 3)
-    L = 2 * K
-    F = []
-    for i in range(N - 1):
-        for k in range(L):
-            F.append([i * L + k, i * L + (k + 1) % L, (i + 1) * L + (k + 1) % L, (i + 1) * L + k])
-    F = [np.array(F)]
-    F.append(np.arange(L)[::-1])
-    F.append(np.arange(L) + (N - 1) * L)
-    return V, F
-
-
 def cone_keep_out(g, roofs, lift=0.02, rule="tuck", tuck=0.15, trim=False, soffit_cut=False, soakers=False,
                   soaker_reach=0.30, top_trim=False, top_min_keep=0.2, top_rake_deg=None, top_sliver=0.0,
-                  soaker_carry=False, soaker_smooth=0, top_drop=(), top_footprint=0.0, soaker_lean=False):
+                  soaker_carry=False, soaker_smooth=0, top_drop=(), top_footprint=0.0):
     """KIT COMPONENT (round 3, after cone_roof): the cone yields to the linear roof(s) it meets -- the mirror of
     linear_roof(abut_cone=...).  The keep-out is each GableRoof's solid (deck, courses, eave roll, ridge roll; its
     vertical columns, linear_roof.GableRoof.keep_out) up to `lift` over its top and everything under it.  Covering
@@ -1210,12 +771,7 @@ def cone_keep_out(g, roofs, lift=0.02, rule="tuck", tuck=0.15, trim=False, soffi
     top_footprint (m, > 0 = on, with
     top_trim): the eave-band units are cut on footprint_field(field, margin=top_footprint) -- square to the cone
     along the line where its reference surface crosses the cut, so every course (whatever its height) ends on the
-    same line, and a unit kept whole above the cut can no longer end short of it in a stepped stack.
-    round 7 (default = round 6): soaker_lean=True -- the saddle skips the cells that something covers (a ray along
-    the cone normal meets a kept unit or the roof's covering within 0.6 m) beyond 6 cm from any exposed cell
-    (cone_soakers(covered=...)): the same visible sheet without the buried cells the visibility cull used to remove.
-    With top_trim the cut is recorded on g.CONE_CUT (field, surface field, zone, roofs) for the post step
-    cone_cut_cover (and its drop_unsupported pass)."""
+    same line, and a unit kept whole above the cut can no longer end short of it in a stepped stack."""
     import bpy
     roofs = roofs if isinstance(roofs, (list, tuple)) else [roofs]
 
@@ -1243,9 +799,7 @@ def cone_keep_out(g, roofs, lift=0.02, rule="tuck", tuck=0.15, trim=False, soffi
     removed = []
     field =roof_cut_field(roofs, lift=lift + 0.003, rake_deg=top_rake_deg) if top_trim else None
     rake = field is not None and top_rake_deg is not None
-    surface_field = field
     if field is not None and top_footprint:            # round 6: cut square to the cone on the footprint line
-        surface_field = (lambda P, _f=field, _m=float(top_footprint): np.asarray(_f(P), float) - _m)
         field = footprint_field(g, field, margin=float(top_footprint))
 
     def rake_mark(V):
@@ -1302,17 +856,13 @@ def cone_keep_out(g, roofs, lift=0.02, rule="tuck", tuck=0.15, trim=False, soffi
         else:
             out[nm] = drop_units(ob, inside, rule=rule)
     g.CONE_KEEP_OUT = inside
-    if field is not None:                              # round 7: the cut, for cone_cut_cover / drop_unsupported
-        g.CONE_CUT = dict(field=field, surface=surface_field, zone=zone_mark, roofs=roofs)
     if soakers and removed:
         log(f"  cut units: {len(removed)} removed parts are soaker footprints too")
     if soakers and (drop_sets or removed):
-        if soaker_carry or soaker_smooth or soaker_lean:   # round 6 / 7
+        if soaker_carry or soaker_smooth:              # round 6
             carry, seat = soaker_support(g, roofs) if soaker_carry else (None, None)
-            lean = dict(covered=_covered_fn([o for o in bpy.data.objects if o.type == "MESH"], reach=0.6)
-                        ) if soaker_lean else {}
             cone_soakers(g, drop_sets, roofs, reach=soaker_reach, always=removed, carry=carry, seat=seat,
-                         smooth=soaker_smooth, **lean)
+                         smooth=soaker_smooth)
         else:
             cone_soakers(g, drop_sets, roofs, reach=soaker_reach, always=removed)
     log("cone keep-out (" + ", ".join(r.name for r in roofs) + "): -" +
