@@ -1497,3 +1497,19 @@ Nice-to-haves to carry into the next design, as kit changes with unchanged defau
 - add an overlap check and thatch support;
 - add a two-light window option;
 - plus the round-4 list above.
+## CLIENT DIRECTION (2026-10-17, session 2, 16:35): the eyebrow dormer bigger and bolder, like ref4 (round 6)
+
+Client's words: "I want it to be bigger and bolder like the reference". Compare `reference/ref4b_eyebrow_dormer_markup.jpg` (the circled area) with `renders/variants/v5_harbour_house/round_05/director_extra/e01_brow_ref4_NW_high.png`. In ref4 the eyebrow is a big, pronounced swell that lifts a large part of the slope. Round 5's 2.2 x 0.72 m wave is a modest bump that gets lost on the big roof.
+
+**Round 6 (one round; time matters):**
+- **Size, as recipe values first:**
+  - the wave about **3.2-3.8 m wide** along the eave and about **1.1-1.4 m high**, with a lip of about 0.25-0.30 m;
+  - a longer plateau, and a fade that still ends before the comb;
+  - a larger two-light window, about **0.8-0.9 m wide x 0.55-0.70 m** clear, in a front that is correspondingly taller and wider.
+  - It must read boldly from the ref4 three-quarter angle and at 45 m. Compare with ref4b before the final render.
+- **Placement:** the same slope (facing the wing / tower). Re-centre it if needed so it stays clear of the tower `wall_abutment` and the wing roof. Door clearances must still pass.
+- **Kit fixes this needs (eyebrow option only, defaults unchanged, no hash re-run):**
+  1. **Tilt each lifted shingle to the local slope of the bump's curve,** so the flanks no longer shear the shingles into slivers. A bolder bump makes this visible.
+  2. **Limit the deck tear rows to the bump's span.** They run the whole roof length today: 5.3 k hidden triangles, and hidden is at 14.4 % against a 15 % limit.
+  3. **Inset the lifted eave board,** and close the plateau crescent and the front-end slots.
+- **Change nothing else.** Round 5 is kept as `*_r05_accepted.*`; never modify those files. Keep hidden <= 15 % and <= 1 M tris.
