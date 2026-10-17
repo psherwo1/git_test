@@ -2381,3 +2381,12 @@ Remaining marks, not blocking:
 - the window's left head corner nearly touches the lip;
 - from the high three-quarter the eye shrinks to a sliver;
 - the flank lip is one rolled course.
+## CLIENT DECISION (2026-10-17, session 2, 19:35): round 8 is the FINAL harbour house
+
+Client's words: "Round 8 is final". The deliverable is `buildings/variants/v5_harbour_house/` (identical to `*_r08_accepted.*`). No more rounds.
+
+Carried to the kit polish list for the next design:
+- the eyebrow's tower-side shoulder (stacked thin course edges);
+- the window's head-corner margin under the arch;
+- the single rolled flank lip;
+- plus the round-4 to round-7 lists above.
