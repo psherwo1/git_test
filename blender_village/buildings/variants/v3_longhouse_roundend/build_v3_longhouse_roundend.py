@@ -6,20 +6,22 @@ Run:  python build_v3_longhouse_roundend.py   -> v3_longhouse_roundend.blend + d
       LONG_FAST=1 skips the hidden-geometry ray test (quick looks only); LONG_OUT=<path.blend> writes elsewhere.
 
 Plan (built with the round end's centre at the origin, then recentred on the plan bounding box):
-  round end   round 8 (client direction 2026-10-17): RAISED -- a battered round rubble body (face r 3.70 m at the
-              ground, 1.5 deg batter) rising one storey past the longhouse ridge to a 6.0 m eave, two ground-floor
-              and three upper-storey deep-set windows; RoundFrame cone 48 deg (eave radius 4.22 m) on a masonry
-              beam-fill on the wall head, boarded soffit under the overhang; stone ball finial over a 44 deg lead hat
+  round end   RoundFrame cone 48 deg, eave radius 4.22 m, on a battered round rubble body (face r 3.64 m) with a
+              masonry beam-fill on the wall head carrying the rafters (round 5: no timber plate, it was never seen
+              under the deep eave), a boarded soffit under the overhang and two deep-set windows; stone
+              ball finial over a 44 deg lead hat with an apex blocker
   body        rubble walls 13.0 x 5.2 m (outer faces) from the gable to the round end, dressed corner quoins, the
               principal door (-Y) and three windows; a 40 deg thatch gable roof (continuous layered courses, D eave
-              roll, closed verge face) with ridge roll and shake comb, eave lip >= 2.30 m over the door
-  junction    "gable roof abutting a round wall" (roof_junction.wall_abutment): the thatch, its eave rolls, ridge and
-              comb run INTO the drum and are trimmed at its face; a lime-mortar flaunching follows the true
-              roof / cylinder intersection and lead end-aprons close each eave against the stone.  The two eaves no
-              longer meet (the cone's eave lip is >= 0.25 m over the thatch where it meets the wall, checked)
+              roll, closed verge faces) with ridge roll and shake comb, eave lip >= 2.30 m over the door
+  junctions   body walls run into the round wall (clipped inside it), the round wall is dropped inside the body,
+              the thatch runs under the cone (dropped inside the round wall head; under the cone's eave overhang it
+              dies into the round wall), the cone yields to the thatch (cone_roof(abut_roof=ROOF): no cone unit
+              inside / under the thatch solid or its eave roll), a lead flashing closes the slopes + ridge and a lead
+              end-apron is folded over each eave roll under the cone's last eave units
 """
 import os
 import sys
+from functools import partial
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "kit"))
 
@@ -29,25 +31,26 @@ from village_kit.components.frame import RoundFrame  # noqa: E402
 from village_kit.components.rubble_walls import path_stone_wall, round_stone_body  # noqa: E402
 from village_kit.components.wall_openings import door_spec, window_spec  # noqa: E402
 from village_kit.components.linear_roof import GableRoof, linear_roof  # noqa: E402
-from village_kit.components.roof_junction import round_eave_fill, wall_abutment  # noqa: E402
+from village_kit.components.roof_junction import cone_abutment, round_eave_fill  # noqa: E402
 from village_kit.components.ball_finial import ball_finial  # noqa: E402
-from village_kit.components.composite import (composite_decals, composite_hidden_cull, cone_roof,  # noqa: E402
-                                              inside_box, inside_round, recenter, set_entrance)
+from village_kit.components.composite import (composite_decals, composite_hidden_cull, cone_cut_cover,  # noqa: E402
+                                              cone_roof, inside_box, inside_round, recenter, set_entrance)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BID = "v3_longhouse_roundend"
 
-# ---- the round end: a RoundFrame (plate centre line radius, eave, cone); round 8: the eave raised past the ridge --
-KIT = KitParams(radius=3.50, eave_z=6.00, overhang=0.72, pitch_deg=48.0, collar_r=0.62,
+# ---- the round end: a RoundFrame (plate centre line radius, eave, cone) ----------------------------------------
+KIT = KitParams(radius=3.50, eave_z=2.30, overhang=0.72, pitch_deg=48.0, collar_r=0.62,
                 cone_age=age_defaults(**AGE_R10), detail_rule=True)
-R_FACE, BATTER = 3.70, 1.5                     # round rubble face radius at the ground, batter (deg): 3.53 m at the head
+R_FACE, BATTER = 3.64, 2.5                     # round rubble face radius at the ground, batter (deg)
 
 # ---- the body: plan, walls, roof ---------------------------------------------------------------------------------
-# kit 1.9.0 (guard clearance): the deck at the faces is 2.81 m so the rafter feet over the door clear 2.30 m
+# kit 1.9.0 (guard clearance): the deck at the faces was 2.75 m, which hung the rafter feet over the door at
+# 2.257 m (art bible 7: every eave lip over a doorway >= 2.30 m); 2.81 m lifts them to ~2.32 m
 X_GABLE, HALF, WALL_Z = -13.0, 2.6, 2.81       # gable outer face, half width at the outer faces, deck at the faces
 ROOF = GableRoof(x0=X_GABLE, x1=-0.6, half=HALF, wall_z=WALL_Z, pitch_deg=40.0, overhang=0.45, verge=(0.40, 0.0),
                  thick=0.30, step=0.10, exposure=0.30, name="body_roof")
-X_END = -2.0                                   # the body walls run into the round wall (clipped there)
+X_END = -2.0                                   # the body walls run 0.3 m into the round wall (clipped there)
 BODY_PATH = [(X_END, HALF), (X_GABLE, HALF), (X_GABLE, -HALF), (X_END, -HALF)]   # interior on the left
 north = lambda x: X_END - x                                   # noqa: E731  path distance of x on the north wall
 south = lambda x: (X_END - X_GABLE) + 2 * HALF + (x - X_GABLE)  # noqa: E731  ... on the south (entrance) wall
@@ -57,10 +60,8 @@ BODY_OPENINGS = [(north(-6.2), window_spec(sill=1.25)),
                  (south(-10.6), window_spec(sill=1.30, width=0.45)),
                  (south(DOOR_X), door_spec(width=1.0, height=2.10)),
                  (south(-4.3), window_spec(sill=1.25))]
-UPPER = window_spec(sill=3.70, width=0.45, height=0.60)          # round 8: the raised storey's windows
 ROUND_OPENINGS = [(38.0, window_spec(sill=1.20, width=0.45, height=0.50)),
-                  (128.0, window_spec(sill=1.25, width=0.45, height=0.50)),
-                  (8.0, UPPER), (88.0, UPPER), (168.0, UPPER)]
+                  (128.0, window_spec(sill=1.25, width=0.45, height=0.50))]
 
 
 def body_top(x, y):
@@ -68,28 +69,30 @@ def body_top(x, y):
     return float(ROOF.under_z(ROOF.to_local([[x, y, 0.0]])[0][1])) + 0.02
 
 
-def under_deck(P):
-    """deck underside over each point: the round wall is dropped only inside the body, under its roof."""
-    return ROOF.under_z(ROOF.to_local(P)[:, 1])
-
-
 def steps():
-    in_body = inside_box(X_GABLE, -0.3, -HALF + 0.15, HALF - 0.15, z_fn=under_deck)  # body interior, under the deck
+    in_body = inside_box(X_GABLE, -0.3, -HALF + 0.15, HALF - 0.15)          # interior of the body (round wall drop)
     in_round = inside_round((0.0, 0.0), R_FACE, depth=0.12, batter_deg=BATTER)
     at_round = inside_round((0.0, 0.0), R_FACE, depth=-0.10, batter_deg=BATTER)   # within 10 cm of the round face
-    in_drum = inside_round((0.0, 0.0), R_FACE, depth=0.10, batter_deg=BATTER)     # roof parts deep in the drum
     return [
         (set_entrance, dict(xy=(DOOR_X, -HALF))),
         (round_stone_body, dict(name="round_wall", r_base=R_FACE, batter_deg=BATTER, openings=ROUND_OPENINGS,
-                                clip=in_body, open_z="mid", seed=41)),
+                                clip=in_body, seed=41)),
         (path_stone_wall, dict(name="body_wall", path=BODY_PATH, top_fn=body_top, openings=BODY_OPENINGS,
                                clip=in_round, hero_s=(south(DOOR_X - 3.0), south(DOOR_X + 3.0)), seed=31)),
-        (linear_roof, dict(roof=ROOF, covering="thatch", clip=in_drum, seed=71,
-                           rafter_skip=at_round, ridge_caps=True, verge_apex=True)),
-        (wall_abutment, dict(roof=ROOF, center=(0.0, 0.0))),      # round 8: gable roof into the round wall
-        (cone_roof, dict(seed=606)),                              # the cone sits clear above the thatch
+        (linear_roof, dict(roof=ROOF, covering="thatch", abut_cone=(0.0, 0.0), seed=71,
+                           rafter_skip=at_round, ridge_caps=True, verge_apex=True)),   # round 5
+        (cone_roof, dict(seed=606, soffit_skip=in_body, soffit_cut=True, abut_roof=ROOF,  # each roof yields
+                         abut=dict(trim=True, soakers=True,                  # to the other, on a closed, lead-
+                                   top_trim=True, top_rake_deg=60.0, top_min_keep=0.05,  # backed cut on the roll
+                                   top_footprint=0.01,               # round 6: every course cut on one line,
+                                   top_sliver=0.05, top_drop=("roof_underlap",),   # no tabs on the saddle,
+                                   soaker_carry=True, soaker_smooth=4,     # saddle only where carried, traced,
+                                   soaker_lean=True))),              # round 7: no buried cells, strips
         (ball_finial, dict(seed=5, hat_seg=96, fit=True)),
-        (round_eave_fill, dict(z_bot="wall", r_off=-0.03)),       # masonry beam-fill on the wall head
+        (round_eave_fill, dict(skip=in_body, z_bot="wall", r_off=-0.03)),       # beam-fill on the wall head
+        (cone_abutment, dict(roof=ROOF, center=(0.0, 0.0), taper=0.12,           # closed sweep end lapping the
+                             apron=dict(w_in_kept=True, u_top=0.54))),          # apron; apron under kept units
+        (cone_cut_cover, dict(t=0.012, lap=0.06, drop_free=0.005)),  # round 7: lead over the cut course ends
     ] + ([] if os.environ.get("LONG_FAST") else [composite_hidden_cull]) + [recenter]
 
 
@@ -102,13 +105,12 @@ DECAL_VALIDATE = dict(reach=0.06, min_sep=0.3, clear=0.15,
 
 
 def main():
-    from functools import partial
     out = os.environ.get("LONG_OUT", os.path.join(HERE, BID + ".blend"))
     build_building(dict(
         prefix="LONG", collection="LONG", building_id=BID,
         frame=RoundFrame, params=KIT,
         steps=steps(),
-        decals=partial(composite_decals, moss_normal="slope"),        # moss on the slope normal
+        decals=partial(composite_decals, moss_normal="slope"),        # round 6: moss on the slope normal
         decal_validate=DECAL_VALIDATE,
         out=out,
         decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
