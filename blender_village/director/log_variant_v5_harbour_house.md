@@ -684,3 +684,93 @@ After reading the round-2 grade, the client chose, as their own direction: **"Br
 - Make the hall about **6.6-7.0 m wide** (it is 6.0) at about **52-54 deg** (it is 58), with **`ridge_sag` about 0.35-0.45 m** (it is 0.24). Keep the ridge in the 8.5-9.5 m band and keep the swept eaves and flared verges. The aim is ref4's heavy, slumped hall roof that dominates the building.
 - Rework whatever the wider hall moves (the cruck span, the quay and slip, the roof-to-tower abutment, the wing) so that everything stays sealed and carried. The note-15 cap and the hash rule still apply.
 - **Not chosen by the client this round:** the gable "lancet" rework, the deeper slip and ledge, and the curved stair / eyebrow dormer. These stay the director's nice-to-haves: do them only if they come cheaply and safely, and never at the expense of the must-fixes.
+## v5_harbour_house round 3 — builder entry
+
+**Built:** the round-2 ref4 boat hall, with the four waterline must-fixes made **in the kit modules**, so a boathouse
+recipe inherits them. Nothing else in the massing changed. No CLIENT DIRECTION or PRODUCER NOTE was added after the
+round-2 grade.
+
+- **Recipe:** `buildings/variants/v5_harbour_house/build_v5_harbour_house.py` (165 lines, 144 non-blank non-comment).
+  The round-3 changes are 4 recipe values: `ON_QUAY = (0, 1, 5, 6)`, `flush_runs=ON_QUAY` on the hall, and
+  `respond_z=DIM["bed"]` and `king_strut=False` on the cruck. It writes `v5_harbour_house.blend` (18.0 MB, compressed)
+  and `decal_anchors.json` (113 anchors).
+- **Renders:** `renders/variants/v5_harbour_house/round_03/` (all six views, `--samples 24`), with `stats.json` and
+  `hidden.json`. Builder close-ups at water level are in `round_03/builder_extra/` (`r3_slip_mouth`, `r3_corner_W`,
+  `r3_corner_E`, `r3_outer_W`, `r3_gable`).
+- **Datum (unchanged):**
+  - quay and landward ground at Z = 0;
+  - coping and wall footings at -0.04;
+  - harbour bed at -2.5;
+  - recentre shift (-1.308, -5.973);
+  - the water gable faces +Y.
+
+  The review tool's ground plane is still at the bed, so the six main views float the building by 2.5 m. That is
+  the tool, not the model.
+
+### Must-fix list: what was done
+
+| # | Must-fix | Fix (module) | Check |
+|---|---|---|---|
+| 1 | Cruck jamb posts on 5 cm plates over the slip | `cruck.cruck_frame(pad_clip_z=None, respond_z=None, respond_ch=(0.40, 0.56))`. The pads are finalised with `pad_clip_z`; the default keeps the kit's -5 cm clip, so the round-2 behaviour stands. With `respond_z` set, each pad (now its full designed 0.30 m, z -0.30 to 0) is **carried down to the bed as a dressed respond**. That is 9 courses in all, with 1.2 cm joints and alternate courses set back 1.5 cm, closed by an inset core `HARB_water_gable_respond_blocker` (never culled). The responds stand against the quay corner and bond 2 cm into the quay blocks. | Probe `scratch/probe_r3.py` on the final blend: horizontal rays from the slip centre hit the respond face (`_pads`, 1.91-1.93 m) at every station from -2.40 to -0.05, both sides; above 0 they hit the post (1.95-1.96 m). A ray down from the post foot hits masonry at once (respond core 0.29 m below the pad top). See `r3_slip_mouth.png`: each post stands on a stone pier from the bed. |
+| 2 | See-through quay joints after the cull (note 6) | `waterfront.stone_quay(core_blocks=True)`: the joint backing is its own object, **`HARB_quay_backing_blocker`** (266 faces). Its name falls in `composite.BACKING`, so `composite_hidden_cull` never targets it. The cull still trims the block core (`HARB_quay_core`: -566 of 4,428 polygons). | Probe (B), 5 cm x 2.5 cm grids of rays into every quay face from 30 cm out: **0 pass-through** on the outer face west (7,220 rays) and east (6,935), both slip returns (5,320 each) and the slip head (8,645). The same probe on the round-2 blend gives 359 / 391 / 256 / 291 / 508 pass-throughs, so the probe does catch the fault. |
+| 3 | Unbonded slip-mouth corners | `waterfront._core_blocks(courses=, quoin=)` and `_block_courses`. The course beds are drawn once per face group and shared by its runs. At every CONVEX corner the two runs take opposite parities: on each course one run's end block runs through the corner to the other face (its end face is flush on that face, overrunning by the 0.30 m block depth), and the other run butts its back with a 1.1 cm joint. The backing on each run stops at the other run's backing face, so it is closed round the corner with nothing past either face. Plain ends and concave corners are unchanged. | Log: "2 convex corner(s) quoin-bonded". Probe (D): no diagonal ray at either corner arris gets in. On the round-2 blend the east corner ray passes straight through the slot. See `r3_corner_E.png` / `r3_corner_W.png`: long-and-short quoin bond, no vertical slot. |
+| 4 | Footing stones overhanging the water | **`rubble_walls.path_stone_wall(flush_runs=None)`** (existing module; a new optional parameter, default = the old code path). The listed runs' footing course is laid flush: the same course height and lengths, the kit `front` projection, no field-stone bulge. The hall uses `flush_runs=(0, 1, 5, 6)`: both slip walls and both water piers (8 footing stones made flush). The land walls keep the village's stepped projecting footing. | Probe (C): rays straight down 6 cm off the quay faces under those runs hit **nothing above z -0.30** (the only hits are the partition sill on the slip-head coping and the respond pad, both by design). On the round-2 blend, 128 and 120 of 136 rays hit hall footing stones at about z 0.26. |
+
+**Also done (from the nice-to-have list, small):** `cruck_frame(king_strut=True)`. With `king_strut=False` (recipe) the tie-to-collar strut inside the pointed arch is gone, so the water gable reads as a pointed arched brace under the collar, not "a lancet with a cross" (`r3_gable.png`).
+
+### Existing kit modules changed
+
+- `rubble_walls.path_stone_wall`: `flush_runs=None` (above). With `None` the call takes exactly the kit 1.11 / round-2 path.
+- v5-only modules (no other building imports them): `cruck.cruck_frame` (`pad_clip_z`, `respond_z`, `respond_ch`, `king_strut`), and `waterfront.stone_quay` / `_core_blocks` / `_block_courses` (backing object, quoin bond).
+- All recorded in `kit/changes/v5_harbour_house.md` (a new "Round 3" section).
+
+### Hash rule
+
+`kit/baseline/v5r3_hash/` (`build_baseline.ps1 -Step v5r3_hash -MaxParallel 1`, 13:09-13:45). It started after the
+last `rubble_walls` edit (13:05). **All seven MATCH the kit 1.11.0 reference** (`6_r8kit_check`) on geometry, UV and
+Mask:
+
+| Building | Triangles | Geometry hash |
+|---|---|---|
+| hilltop_keep | 1,166,874 | `3e2a219a5901afc5` |
+| wattle_roundhut | 878,355 | `7e5e7c2df5c4d367` |
+| tower_windmill | 1,146,243 | `89bf4a2a2c60e049` |
+| v1_stone_watchtower | 937,933 | `465c7b1b8a7dbb22` |
+| v2_tiered_hall | 980,405 | `9522f17ed8b09646` |
+| v3_longhouse_roundend | 617,342 | `38ff44b686efd26b` |
+| v4_mixed | 938,453 | `2e87caad61b68d34` |
+
+### Stats (round_03 `stats.json`)
+
+| Measure | Value |
+|---|---|
+| Triangles | **695,470** (note-15 cap 1,000,000) |
+| `est_hidden_pct` | **14.2 %**, under the 15 % limit; 1.9 % is below the datum. It was 13.5 %: the protected quay backing and the respond cores are counted as hidden. |
+| Material slots | 9, all in the palette (no new material) |
+| `mask_attribute_missing` | none |
+| Objects | 70: +`HARB_quay_backing_blocker`, +`HARB_water_gable_respond_blocker` |
+| bbox | 16.59 x 17.17 x 15.94 m (unchanged) |
+| Build time (cull included) | 13.5 min |
+| Decal anchors | 113 kept of 176 by the kit gate |
+| Guards | Clearance PASS at both doors (eave lips 5.52 / 2.50 m). Seal probe: 0 leaks on roof / tower and wing roof / tower. Steep-cone and lod-scope: no opt-outs. |
+
+### Known gaps
+
+- **Review-tool datum:** the clay views still put the ground at the bed (a producer `--ground_z` nice-to-have).
+- **Quay free ends** at x -4.31 and 8.29 are still cut ends, with no `ends=` option. In UE the terrain continues the quay.
+- **Not attempted this round (nice-to-haves):**
+  - the broader, lower 52-54 deg hall;
+  - a deeper slip with a landing ledge;
+  - a boathouse smoke recipe for `cruck_frame` + `stone_quay` + `pile_deck`;
+  - `pile_deck` E / W land sides and brace seating;
+  - the `wall_abutment` flashing tabs;
+  - shutters on the stone windows.
+- **The responds narrow the clear width at water level** from 4.6 m to 3.8 m between the pads. The arch above is unchanged.
+- The cruck posts stand 4 cm off the slip-wall face (as designed in round 2). The post-to-wall gap is visible from inside the slip.
+
+## PRODUCER NOTE (2026-10-17, session 2, 13:48): round 3 missed the client's roof must-fix; it cannot be accepted without it
+
+The round-3 fixer started at about 13:05, before the client's 13:21 CLIENT DIRECTION above ("Broader, slumped roof", a MUST-FIX for round 3). It did not see it: its entry says "No CLIENT DIRECTION ... after the round-2 grade" and lists the broader, lower hall as not attempted.
+
+- **Art Director (round-3 grade):** the client's direction is binding. Grade round 3 as built, but list the broader, slumped roof as an open must-fix. **Round 3 cannot pass while it is open**, however well the waterline fixes score: give at most 8.1 if everything else passes.
+- **Round-4 fixer:** do the broader, slumped roof first (hall about 6.6-7.0 m wide, 52-54 deg, `ridge_sag` 0.35-0.45, ridge in the 8.5-9.5 m band), keeping every round-3 waterline fix.
