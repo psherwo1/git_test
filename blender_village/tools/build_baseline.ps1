@@ -13,7 +13,8 @@ $jobs = @(
   @{id="v1_stone_watchtower"; script="buildings\variants\v1_stone_watchtower\build_v1_stone_watchtower.py"; env="WATCH_OUT"},
   @{id="v2_tiered_hall"; script="buildings\variants\v2_tiered_hall\build_v2_tiered_hall.py"; env="HALL_OUT"},
   @{id="v3_longhouse_roundend"; script="buildings\variants\v3_longhouse_roundend\build_v3_longhouse_roundend.py"; env="LONG_OUT"},
-  @{id="v4_mixed"; script="buildings\variants\v4_mixed\build_v4_mixed.py"; env="V4_OUT"}
+  @{id="v4_mixed"; script="buildings\variants\v4_mixed\build_v4_mixed.py"; env="V4_OUT"},
+  @{id="v5_harbour_house"; script="buildings\variants\v5_harbour_house\build_v5_harbour_house.py"; env="HARB_OUT"}
 )
 if ($Only.Count -gt 0) { $jobs = $jobs | Where-Object { $Only -contains $_.id } }
 $queue = New-Object System.Collections.Queue
