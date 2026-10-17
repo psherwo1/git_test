@@ -52,7 +52,12 @@ Target: populate a village of 40-50 buildings from 12-15 unique curated designs 
 - update the README;
 - build the exporter, then the UE lookdev test.
 
-**Client decision on the split verdict: pending** (the client asked to be consulted if the decision is ambiguous).
+**Client decision (2026-10-17): "Yes proceed"** with the recommended kit plan, in this order:
+1. Kit consolidation, guard-rails on by default, README, and the queued UV fix.
+2. Close v1, v2 and v3 through audits (v1 under 1 M triangles).
+3. The timber, rectangular and waterfront family through the harbour house (approved building 3), then a boathouse or barn.
+4. Add-ons: lean-to, porch, chimney, dormer, gable valley.
+5. Unreal exporter, then the UE 5.8 lookdev test.
 
 **Approved new buildings**, chosen to widen the village's vocabulary and taken from the concept art (client-confirmed on 2026-10-16):
 1. the stone longhouse ending in a round building with a mossy conical shingle roof (ref1, lower middle);
