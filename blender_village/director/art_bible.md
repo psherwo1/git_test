@@ -340,3 +340,11 @@ Client's words: "there is no LED volume in use here. This is an amateur hobby pr
 - **Final frames can be rendered offline** (Movie Render Queue, with path tracing or high-quality Lumen), so frame rate is not the constraint; GPU memory, build time and disk size are.
 - **Polish still matters most** — the client wants a high level of finish. Per note 12, that polish now comes mainly from materials, textures, decals, lighting and set dressing, on top of clean, well-constructed modular geometry.
 - Close-up quality rules (note 4: entrances, ground contact, eye-level walls) stay, because shots still come close to the buildings.
+
+### Producer note 14: CLIENT DIRECTION — the kit is an authoring toolbox for 12-15 curated designs (2026-10-16)
+
+- The village of 40-50 placements is built from **12-15 unique curated designs**. Variety comes from instancing (rotation, mirroring), PCG decals on the exported anchors, per-instance `Mask` material variation, small kit add-ons and set dressing.
+- **The kit is the authoring toolbox** for those designs: shared modules, palette, `Mask`, decal anchors and UVs, with fixes made once for every building.
+- **Dropped:** the requirement that any combination of modules be clean, and the 40-50-building variant generator.
+- Each design is a curated recipe, reviewed as a building on its own merits, with the modularity rubric (note 12) still applied. Junction fixes are made as each design needs them and stay reusable in the kit.
+- See the production plan (phase 2 and phase 3) for the reframed decision and scope.

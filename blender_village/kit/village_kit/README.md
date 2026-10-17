@@ -1,5 +1,12 @@
 # village_kit: the shared modular kit for the Fjord Village buildings
 
+> **Client direction (2026-10-16, producer note 14).** The kit is an **authoring toolbox for 12-15 curated, unique
+> building designs**. The 40-50 village placements come from instancing those designs, together with PCG decals,
+> per-instance `Mask` material variation, kit add-ons and set dressing. There is no requirement that any arbitrary
+> combination of modules be clean, and there is no 40-50-building variant generator. Judge the kit on whether it
+> authors curated designs efficiently and consistently at the pass mark. Also note 13: there is no LED volume; this
+> is a hobby production aiming for high polish on an RTX 3060 12 GB / 16 GB RAM desktop.
+
 Phase 2 of the production plan. The three signed-off hero buildings (hilltop keep, tower windmill, wattle
 roundhut) are being moved onto one kit, so that 40 to 50 village buildings can be assembled from parameterised
 components that share one material palette, one Mask writer, one stone generator and one roofing scale.

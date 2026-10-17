@@ -21,7 +21,9 @@ After the three heroes pass, there is an ensemble review for one coherent style.
 
 ## Phase 2: kit feasibility decision (after phase 1)
 
-Target: populate a village of 40-50 buildings.
+> **CLIENT DIRECTION (2026-10-16, producer note 14): the kit is reframed as an AUTHORING TOOLBOX for 12-15 curated, unique building designs.** The village's 40-50 placements come from instancing those designs (rotation, mirroring), PCG decals on the exported anchors, per-instance material variation through `Mask`, small kit add-ons (lean-to, porch, chimney, roof-covering swaps) and set dressing. The goal of "any combination of modules is clean" and the 40-50-building variant generator are **dropped**. Each design is a curated recipe, reviewed as a building on its own merits; junctions are fixed as each design needs them, and the fixes stay reusable in the kit. **The kit decision below is judged on that basis:** can the kit author the remaining curated designs efficiently and consistently at the pass mark? It is not judged on whether any arbitrary combination is clean. Client's words, accepting the producer's recommendation: "Yes reframe it" (to: "keep the kit as an authoring toolbox for 12-15 curated designs, drop the 40-50 generator goal").
+
+Target: populate a village of 40-50 buildings from 12-15 unique curated designs (see the direction above).
 
 **Assessment.** The director and a technical reviewer assess whether the three hero build scripts break apart into a usable modular kit. A usable kit has:
 - parameterised components: walls (stone and wattle, several radii), roofs (conical, bell-cast skirt, tiered, hipped mill cap, thatch), doors and windows, finials and caps, turrets, plinths, timber frames and braces, mill rotor and tail vane;
@@ -31,7 +33,7 @@ Target: populate a village of 40-50 buildings.
 **Proof of concept.** Generate 3-5 variants from the kit. The director grades them against the concept art.
 
 **Decision rule (client-approved):**
-- **The kit works:** proceed with the kit, variant generator and Unreal export.
+- **The kit works:** proceed with the kit, variant generator and Unreal export. *Reframed by note 14:* author the remaining curated designs from the kit (12-15 in total; the 3 heroes and the 4 variants already exist), then export with instance layouts and placement-variation tooling instead of a 40-50 generator.
 - **The kit does NOT break apart into a usable kit (or only partly):** build **3 new custom hero buildings**. Client permission was given on 2026-10-16. They go through the same director-led loop and the same producer notes, and reuse any kit parts that do work.
 
 **Approved new buildings**, chosen to widen the village's vocabulary and taken from the concept art (client-confirmed on 2026-10-16):
@@ -45,6 +47,7 @@ Target: populate a village of 40-50 buildings.
 
 ## Phase 3: delivery
 
+- **Note 14 scope:** the 12-15 curated designs. Existing: 3 heroes and 4 variants (v1 watchtower, v2 tiered hall = approved building 2, v3 longhouse with round end = approved building 1, v4 mill-house). Still to author, for example: the timber harbour house (approved building 3), smaller and larger roundhuts, a store or barn, a boathouse and a gatehouse using `square_cabin`. Placement variation: rotation and mirroring, PCG decals, per-instance `Mask` material parameters, kit add-ons and set dressing.
 - Export kit pieces and/or buildings for Unreal 5.8: FBX or USD, centimetre scale, Nanite-ready.
 - Supply instance layouts for Packed Level Actors.
 - Write import notes covering texturing with jointless Megascans surfaces, world-aligned projection and the `Mask` attribute.
