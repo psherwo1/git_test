@@ -1,0 +1,25 @@
+﻿00:00.532  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\closeups_r5.py:25: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:520
++ ... | Out-Null; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\closeups_r5.py:41: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w.use_nodes = True
+00:00.688  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:07.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\builder_extra\r5_brow_eye.png'
+00:07.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\builder_extra\r5_brow_eye_red.png'
+wrote r5_brow_eye
+00:13.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\builder_extra\r5_brow_ref4.png'
+wrote r5_brow_ref4
+00:19.641  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\builder_extra\r5_brow_graze.png'
+00:20.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\builder_extra\r5_brow_graze_red.png'
+wrote r5_brow_graze
+00:26.813  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\builder_extra\r5_brow_close.png'
+00:27.672  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\builder_extra\r5_brow_close_red.png'
+wrote r5_brow_close

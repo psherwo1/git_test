@@ -32,13 +32,34 @@ from ..geom import Acc, beam, finalize, sweep
 from ..shingles import SH_VARIANTS, SIZE_TABLE, shake_mesh, shingle_mesh
 
 
+EYEBROW = dict(x=0.0, side=1, d=1.5, width=2.0, height=0.75, flat=0.70, plateau=0.18, fade=1.20, lip=0.20,
+               set_back=0.04, window=dict(width=0.56, height=0.36, sill=0.05), min_front=0.14, seed=0)
+"""kit 1.13 (v5 round 5, ref4's eyebrow dormer): one eyebrow bump on a shingle GableRoof, in its local frame --
+    x         centre along the ridge (local x)
+    side      +1 / -1: the slope (local +y / -y)
+    d         plan distance (m) in from the eave lip to the front (snapped so a whole course is the wave's eave)
+    width     the wave's length along the eave (m); flat: the part of it at full height (a cosine fall either side)
+    height    the lift (m) at the front: the vertical gap the timber front closes
+    plateau   plan metres upslope at full height, then fade m: a smooth fall back into the slope (no ridge, no valley)
+    lip       plan overhang (m) of the wave's lowest course past the deck front (the little dark eave)
+    set_back  the timber front's face is this far out from the deck front (m; its backing covers the deck front)
+    window    the kit window (components.openings.window keys, timber family; clear width / height / sill above
+              the front's sill beam); None = a blind board front
+    min_front the front is built where the gap is at least this tall (beyond it the deck front closes the gap)"""
+
+
+def eyebrow(x, side=1, **kw):
+    """kit 1.13: an eyebrow-dormer spec for GableRoof(eyebrows=[...]) (see EYEBROW)."""
+    return dict(x=float(x), side=side, **kw)
+
+
 class GableRoof:
     """the dimension table of one straight gable roof (see module doc).  Pure geometry, no meshes."""
 
     def __init__(self, x0, x1, half, wall_z, pitch_deg=40.0, overhang=0.45, verge=(0.40, 0.40), origin=(0.0, 0.0),
                  yaw_deg=0.0, deck_t=0.035, thick=0.30, step=0.10, exposure=0.30, ridge_roll=(0.36, 0.20),
                  name="roof", ridge_sag=0.0, eave_sag=0.0, eave_sweep=0.0, sweep_len=1.0, verge_flare=0.0,
-                 flare_len=1.6, wave=0.0, wave_seed=33):
+                 flare_len=1.6, wave=0.0, wave_seed=33, eyebrows=()):
         """kit 1.12 (v5 round 2, note 17 "soft, organic lines"; all 0 = the straight roof, bit-identical):
         ridge_sag      m the ridge drops at mid-length (parabolic, 0 at the covering's ends), fading to eave_sag at the lip
         eave_sag       m the eave lines drop at mid-length
@@ -48,14 +69,18 @@ class GableRoof:
                        toward the eave: the verge / bargeboard line curves up to the apex (ref4)
         wave           m low-frequency +-wave out-of-true over the whole roof (art bible 6: ridges / eaves +-2-5 cm)
         The softness is ONE vertical warp field dz(x, y) applied by to_world (and removed by to_local), so every part
-        linear_roof builds and every query (keep_out, top_depth, under_soffit, under_z_world) follows it."""
+        linear_roof builds and every query (keep_out, top_depth, under_soffit, under_z_world) follows it.
+        kit 1.13 (v5 round 5; () = no eyebrow, bit-identical): eyebrows=[eyebrow(...), ...] -- eyebrow dormers, a
+        local bump in the same warp field (see eyebrow() / EYEBROW): the shingle courses swell over a small window in
+        one smooth wave, the deck tears into a vertical front there (framed opening at the window), and linear_roof
+        builds the short timber front with a kit window under the wave's little eave (_eyebrow_fronts)."""
         self.name = name
         self.ridge_sag, self.eave_sag = float(ridge_sag), float(eave_sag)
         self.eave_sweep, self.sweep_len = float(eave_sweep), float(sweep_len)
         self.verge_flare, self.flare_len = float(verge_flare), float(flare_len)
         self.wave, self.wave_seed = float(wave), int(wave_seed)
         self.warped = any(abs(v) > 0 for v in (self.ridge_sag, self.eave_sag, self.eave_sweep, self.verge_flare,
-                                                self.wave))
+                                                self.wave)) or bool(eyebrows)
         self.x0, self.x1 = float(x0), float(x1)
         self.half = float(half)
         self.wall_z = float(wall_z)
@@ -75,19 +100,70 @@ class GableRoof:
         self.z_ridge = self.wall_z + self.half * math.tan(self.p)
         self.xa = self.x0 - self.v0                     # covering extent along the ridge
         self.xb = self.x1 + self.v1
+        self.BROWS = [self._resolve_brow(b) for b in (eyebrows or ())]
+
+    # ---- kit 1.13 (v5 round 5): eyebrow dormers ---------------------------------------------------------------------
+    def _resolve_brow(self, b):
+        """an eyebrow() dict -> the resolved bump (slope coordinates u from the lip; the front snapped to the shingle
+        course grid so one whole course forms the wave's little eave)."""
+        B = dict(EYEBROW)
+        B.update(b)
+        unknown = set(b) - set(EYEBROW)
+        if unknown:
+            raise KeyError(f"eyebrow: unknown option(s) {sorted(unknown)}; known {sorted(EYEBROW)}")
+        cp = math.cos(self.p)
+        e = 0.5 * sum(SIZE_TABLE["shingle"]["exposure"])
+        lip_u = B["lip"] / cp
+        k_lip = max(2, int(round((B["d"] / cp - lip_u) / e)))
+        B.update(sg=1 if B["side"] > 0 else -1, hw=0.5 * B["width"], pw=0.5 * min(B["flat"], 0.95 * B["width"]),
+                 k_lip=k_lip, u_lip=k_lip * e, lip_u=lip_u, u_t=k_lip * e + lip_u,
+                 plat_u=B["plateau"] / cp, fade_u=B["fade"] / cp)
+        B["d_t"] = B["u_t"] * cp
+        if B["u_t"] + B["plat_u"] + B["fade_u"] > self.U - 0.30:
+            raise ValueError(f"eyebrow at x {B['x']:.2f}: its wave runs into the ridge; lower d, plateau or fade")
+        return B
+
+    def brow_bell(self, B, x):
+        """the eyebrow's profile along the ridge: 1 over its flat top (+-flat / 2), a cosine fall to 0 at
+        +-width / 2."""
+        ax = np.abs(np.asarray(x, float) - B["x"])
+        t = np.clip((ax - B["pw"]) / max(B["hw"] - B["pw"], 1e-6), 0.0, 1.0)
+        return 0.5 * (1.0 + np.cos(np.pi * t))
+
+    def _brow_dz(self, x, y, brow=None):
+        """the eyebrow bumps' share of warp_z.  The bump is a STEP at the front u_t (below it the roof runs on
+        untouched, above it it is lifted by height x bell(x)), fading smoothly to 0 upslope over `fade`.  brow:
+        None -> each point is on the lifted side if its own slope distance is >= u_t (queries, walls); a number /
+        array (all bumps) or {bump index: number / array} -> 1 lifted / 0 not (a part laid by piece: a whole shingle
+        course, a deck row, the eave strip)."""
+        dz = np.zeros(x.shape)
+        cp = math.cos(self.p)
+        u = (self.Y - np.abs(y)) / cp
+        for i, B in enumerate(self.BROWS):
+            side = (y * B["sg"]) > 0
+            if isinstance(brow, dict):
+                s = brow.get(i)
+            else:
+                s = brow
+            s = (u >= B["u_t"] - 1e-9).astype(float) if s is None else np.broadcast_to(np.asarray(s, float), x.shape)
+            tt = np.clip((u - B["u_t"] - B["plat_u"]) / max(B["fade_u"], 1e-6), 0.0, 1.0)
+            f = 1.0 - tt * tt * (3.0 - 2.0 * tt)
+            dz = dz + B["height"] * self.brow_bell(B, x) * f * s * side
+        return dz
 
     # ---- frames ------------------------------------------------------------------------------------------------
-    def to_world(self, P):
+    def to_world(self, P, brow=None):
+        """local -> world (warp included).  brow (kit 1.13, eyebrow roofs only): see _brow_dz."""
         P = np.asarray(P, float)
         c, s = math.cos(self.yaw), math.sin(self.yaw)
         out = P.copy()
         out[..., 0] = self.origin[0] + c * P[..., 0] - s * P[..., 1]
         out[..., 1] = self.origin[1] + s * P[..., 0] + c * P[..., 1]
         if getattr(self, "warped", False) and P.shape[-1] >= 3:
-            out[..., 2] = P[..., 2] + self.warp_z(P[..., 0], P[..., 1])
+            out[..., 2] = P[..., 2] + self.warp_z(P[..., 0], P[..., 1], brow=brow)
         return out
 
-    def to_local(self, P):
+    def to_local(self, P, brow=None):
         P = np.asarray(P, float)
         c, s = math.cos(self.yaw), math.sin(self.yaw)
         dx, dy = P[..., 0] - self.origin[0], P[..., 1] - self.origin[1]
@@ -95,16 +171,19 @@ class GableRoof:
         out[..., 0] = c * dx + s * dy
         out[..., 1] = -s * dx + c * dy
         if getattr(self, "warped", False) and P.shape[-1] >= 3:
-            out[..., 2] = P[..., 2] - self.warp_z(out[..., 0], out[..., 1])
+            out[..., 2] = P[..., 2] - self.warp_z(out[..., 0], out[..., 1], brow=brow)
         return out
 
     # ---- kit 1.12 (v5 round 2): the soft-line warp field ----------------------------------------------------------
-    def warp_z(self, x, y):
-        """vertical offset (m) of the warped roof at local (x, y); 0 for a straight roof (see __init__)."""
+    def warp_z(self, x, y, brow=None):
+        """vertical offset (m) of the warped roof at local (x, y); 0 for a straight roof (see __init__).
+        kit 1.13: plus the eyebrow bumps (brow: see _brow_dz; ignored without eyebrows)."""
         x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
         dz = np.zeros(x.shape)
         if not getattr(self, "warped", False):
             return dz
+        if getattr(self, "BROWS", None):
+            dz = dz + self._brow_dz(x, y, brow)
         ay = np.abs(y)
         f_y = np.clip(1.0 - ay / self.Y, 0.0, 1.0)                    # 1 at the ridge, 0 at the lip
         if self.ridge_sag or self.eave_sag:
@@ -661,6 +740,7 @@ def _shingle_courses(roof, acc, rng, seed=0):
     K = int(math.ceil((roof.U - 0.15) / e))
     n_piece = 0
     for sg in (-1, 1):
+        brows = [(bi, B) for bi, B in enumerate(getattr(roof, "BROWS", None) or ()) if B["sg"] == sg]
         for k in range(-1, K):
             ub = max(k, 0) * e + (0.012 if k < 0 else 0.0)
             L = SIZE_TABLE["starter"]["length"] if k < 0 else min(T["length"], roof.U - ub + 0.02)
@@ -671,8 +751,18 @@ def _shingle_courses(roof, acc, rng, seed=0):
                 gap = rng.uniform(*T["gap"])
                 W = xs[i + 1] - xs[i] - gap
                 var = SH_VARIANTS[int(rng.integers(16))]
-                Pl, F, uv = shingle_mesh(W, L, var, curl=var["curl_eave"] if k < 2 else var["curl"],
-                                         bottom=k < 1, head=True)
+                force, L_i, bottom = None, L, k < 1
+                if brows:                      # kit 1.13: a course is wholly on the lifted side of a bump or not
+                    force = {}
+                    for bi, B in brows:
+                        force[bi] = 1.0 if k >= B["k_lip"] else 0.0
+                        if xs[i + 1] > B["x"] - B["hw"] and xs[i] < B["x"] + B["hw"]:
+                            if k < B["k_lip"] and ub + L_i > B["u_t"] - 0.01:
+                                L_i = max(B["u_t"] - 0.01 - ub, 0.10)       # the head stops at the deck front
+                            if k == B["k_lip"]:
+                                bottom = True                                 # the wave's eave course is seen below
+                Pl, F, uv = shingle_mesh(W, L_i, var, curl=var["curl_eave"] if k < 2 else var["curl"],
+                                         bottom=bottom, head=True)
                 v = np.clip(Pl[:, 1] / 0.72, 0, 1)
                 wedge = 0.0 if k < 0 else (0.037 if k == 0 else 0.066)
                 off = wedge * (1 - v) + Pl[:, 2] + rng.uniform(0, 0.01) * (1 - v)
@@ -680,7 +770,8 @@ def _shingle_courses(roof, acc, rng, seed=0):
                 u = ub + Pl[:, 1] + rng.uniform(-0.01, 0.01)
                 P = roof.surf(x, u, sg, off)
                 Fl = [f[:, ::-1] if sg > 0 else f for f in F]      # the slope map has det = -sg
-                acc.add(roof.to_world(P), Fl, "M_roof_shingle", uv, wear=float(rng.uniform(0.2, 0.6)))
+                Pw = roof.to_world(P) if force is None else roof.to_world(P, brow=force)
+                acc.add(Pw, Fl, "M_roof_shingle", uv, wear=float(rng.uniform(0.2, 0.6)))
                 n_piece += 1
     return n_piece
 
@@ -794,7 +885,22 @@ def _deck(roof, acc, clip_local=None):
     if getattr(roof, "warped", False):              # kit 1.12: the warp is curved across the slope; follow it
         us = np.unique(np.concatenate([us, np.linspace(0.0, roof.U, 13)]))
         xs = np.unique(np.concatenate([xs, np.linspace(roof.xa, roof.xb, max(2, int((roof.xb - roof.xa) / 0.25) + 1))]))
+    xs0, us0 = xs, us
     for sg in (-1, 1):
+        brows = [(bi, B) for bi, B in enumerate(getattr(roof, "BROWS", None) or ()) if B["sg"] == sg]
+        xs, us = xs0, us0
+        holes = []
+        if brows:                          # kit 1.13: rows at each eyebrow's tear, a fine grid over its wave
+            ex, eu = [xs], [us]
+            for bi, B in brows:
+                eu.append(np.array([B["u_t"] - 1e-3, B["u_t"]]))
+                eu.append(np.linspace(B["u_t"], B["u_t"] + B["plat_u"] + B["fade_u"], 14))
+                ex.append(np.linspace(B["x"] - B["hw"], B["x"] + B["hw"], 25))
+                h = _brow_hole(roof, B)
+                if h is not None:
+                    ex.append(np.array(h))
+                    holes.append((bi, B, h))
+            xs, us = np.unique(np.concatenate(ex)), np.unique(np.concatenate(eu))
         X, Uu = np.meshgrid(xs, us, indexing="ij")
         top = roof.surf(X, Uu, sg, 0.0)
         bot = roof.surf(X, Uu, sg, -t)
@@ -802,20 +908,77 @@ def _deck(roof, acc, clip_local=None):
         V = np.concatenate([top.reshape(-1, 3), bot.reshape(-1, 3)])
         off = nx_ * nu
         I = lambda i, j: i * nu + j  # noqa: E731
+        skip = set()
+        for bi, B, (h0, h1) in holes:      # the framed opening: the deck front is open behind the window
+            j = int(np.argmin(np.abs(us - (B["u_t"] - 1e-3))))
+            for i in range(nx_ - 1):
+                if xs[i] >= h0 - 1e-9 and xs[i + 1] <= h1 + 1e-9:
+                    skip.add((i, j))
         F = []
         for i in range(nx_ - 1):
             for j in range(nu - 1):
+                if (i, j) in skip:
+                    continue
                 F.append((I(i, j), I(i + 1, j), I(i + 1, j + 1), I(i, j + 1)))
                 F.append((off + I(i, j), off + I(i, j + 1), off + I(i + 1, j + 1), off + I(i + 1, j)))
             F.append((I(i, 0), off + I(i, 0), off + I(i + 1, 0), I(i + 1, 0)))          # eave edge
         for j in range(nu - 1):
             F.append((I(0, j), I(0, j + 1), off + I(0, j + 1), off + I(0, j)))           # verge ends
             F.append((I(nx_ - 1, j), off + I(nx_ - 1, j), off + I(nx_ - 1, j + 1), I(nx_ - 1, j + 1)))
+        for (i, j) in skip:                # the opening's cut edges stay closed (deck thickness)
+            if (i - 1, j) not in skip:
+                F.append((I(i, j), I(i, j + 1), off + I(i, j + 1), off + I(i, j)))
+            if (i + 1, j) not in skip:
+                F.append((I(i + 1, j), off + I(i + 1, j), off + I(i + 1, j + 1), I(i + 1, j + 1)))
         F = np.array(F)
         q = V[F[0]]
         if float(np.cross(q[1] - q[0], q[3] - q[0]) @ roof.normal(sg)) < 0:
             F = F[:, ::-1]
-        acc.add(roof.to_world(V), F, "M_timber_weathered", wear=0.4)
+        if brows:
+            S = {bi: np.tile((Uu >= B["u_t"] - 1e-6).reshape(-1).astype(float), 2) for bi, B in brows}
+            acc.add(roof.to_world(V, brow=S), F, "M_timber_weathered", wear=0.4)
+            for bi, B in brows:
+                _brow_eave_strip(roof, acc, sg, bi, B)
+        else:
+            acc.add(roof.to_world(V), F, "M_timber_weathered", wear=0.4)
+
+
+def _brow_hole(roof, B):
+    """kit 1.13: (x0, x1) local of the deck opening behind an eyebrow's window (None: a blind front)."""
+    if not B.get("window"):
+        return None
+    w = float(B["window"].get("width", 0.56))
+    return (B["x"] - 0.5 * w - 0.03, B["x"] + 0.5 * w + 0.03)
+
+
+def _brow_eave_strip(roof, acc, sg, bi, B):
+    """kit 1.13: the eyebrow's little eave -- a lifted board strip under its lowest course, from the course's butt
+    line back to the deck front (u_lip .. u_t), deck underside up to just under the course butts, so no slot shows
+    between the wave's eave and the deck front."""
+    xs = np.linspace(B["x"] - B["hw"], B["x"] + B["hw"], 25)
+    us = np.array([B["u_lip"] - 0.01, 0.5 * (B["u_lip"] + B["u_t"]), B["u_t"]])
+    X, Uu = np.meshgrid(xs, us, indexing="ij")
+    top = roof.surf(X, Uu, sg, 0.055)
+    bot = roof.surf(X, Uu, sg, -roof.deck_t)
+    nx_, nu = X.shape
+    V = np.concatenate([top.reshape(-1, 3), bot.reshape(-1, 3)])
+    off = nx_ * nu
+    I = lambda i, j: i * nu + j  # noqa: E731
+    F = []
+    for i in range(nx_ - 1):
+        for j in range(nu - 1):
+            F.append((I(i, j), I(i + 1, j), I(i + 1, j + 1), I(i, j + 1)))
+            F.append((off + I(i, j), off + I(i, j + 1), off + I(i + 1, j + 1), off + I(i + 1, j)))
+        F.append((I(i, 0), off + I(i, 0), off + I(i + 1, 0), I(i + 1, 0)))
+        F.append((I(i, nu - 1), I(i + 1, nu - 1), off + I(i + 1, nu - 1), off + I(i, nu - 1)))
+    for j in range(nu - 1):
+        F.append((I(0, j), I(0, j + 1), off + I(0, j + 1), off + I(0, j)))
+        F.append((I(nx_ - 1, j), off + I(nx_ - 1, j), off + I(nx_ - 1, j + 1), I(nx_ - 1, j + 1)))
+    F = np.array(F)
+    q = V[F[0]]
+    if float(np.cross(q[1] - q[0], q[3] - q[0]) @ roof.normal(sg)) < 0:
+        F = F[:, ::-1]
+    acc.add(roof.to_world(V, brow={bi: 1.0}), F, "M_timber", wear=0.5)
 
 
 def _rafters(roof, acc, rng, spacing=0.62, skip=None, verge_apex=False):
@@ -954,6 +1117,103 @@ def _roof_edges(g, roof, pre, rng, clip, verge, apex_finial):
         raise ValueError(f"linear_roof: apex_finial {apex_finial!r}; None or 'turned'")
 
 
+def _eyebrow_fronts(g, roof, pre):
+    """kit 1.13: the short timber front of every eyebrow (GableRoof(eyebrows=...)): a sill beam on the slope, rough
+    vertical boards with battens rising to the wave's eave strip (clamped to it, so the front is the wave's arch),
+    a closed backing over the deck front, end posts, and the kit window (components.openings.window, timber host:
+    wall_openings.build_opening) with its dark room sized to stay under the wave.  The timber family's own
+    pieces (timber_walls._clad / _sheet / wbox), so it reads as the village's timber."""
+    from .openings import window as _window
+    from .timber_walls import STYLES, _clad, _opening_layout, _sheet, resolve_timber, rough_opts, wbox
+    from .wall_openings import build_opening, finish_accs, opening_accs
+    st = STYLES["board_batten"]
+    out = []
+    for i, B in enumerate(roof.BROWS):
+        rng = np.random.default_rng(9100 + 17 * i + int(B["seed"]))
+        sg = B["sg"]
+        d_f = B["d_t"] - B["set_back"]
+        y_f = sg * (roof.Y - d_f)
+        uz, rz = float(roof.under_z(y_f)), float(roof.ref_z(y_f))
+
+        def z_up(x, i=i, y_f=y_f, uz=uz):
+            return uz + float(roof.warp_z(np.array([x]), np.array([y_f]), brow={i: 1.0})[0]) + 0.02
+
+        def z_dn(x, i=i, y_f=y_f, rz=rz):
+            return rz + float(roof.warp_z(np.array([x]), np.array([y_f]), brow={i: 0.0})[0])
+        xg = np.linspace(B["x"] - B["hw"], B["x"] + B["hw"], 201)
+        zd = np.array([z_dn(x) for x in xg])
+        zu = np.array([z_up(x) for x in xg])
+        ok = (zu - zd) >= B["min_front"]
+        ic = int(np.argmin(np.abs(xg - B["x"])))
+        if not ok[ic]:
+            raise ValueError(f"eyebrow {i}: no front (height {B['height']:.2f} m is under min_front)")
+        a = ic
+        while a > 0 and ok[a - 1]:
+            a -= 1
+        b = ic
+        while b < len(xg) - 1 and ok[b + 1]:
+            b += 1
+        x_lo, x_hi = float(xg[a]), float(xg[b])
+        z0 = float(zd[a:b + 1].min()) - 0.02
+        floor = z0 + 0.09
+        tl = -float(sg)                                   # walk so the front's outside (downslope) is on the right
+        x_O = x_hi if tl < 0 else x_lo
+        L = x_hi - x_lo
+        O = roof.to_world(np.array([[x_O, y_f]]))[0]
+        O = np.array([O[0], O[1], 0.0])
+        t_w = roof.dir_world(np.array([tl, 0.0, 0.0]))
+        n_w = roof.dir_world(np.array([0.0, float(sg), 0.0]))
+        F = (O, t_w, n_w)
+
+        def rake(s, x_O=x_O, tl=tl, z_up=z_up):
+            return z_up(x_O + tl * s)
+        tag = f"{roof.name}_eyebrow{i}"
+        accs = dict(frame=Acc(f"{g.prefix}_{tag}_frame"), boards=Acc(f"{g.prefix}_{tag}_boards"),
+                    back=Acc(f"{g.prefix}_{tag}_blocker"))
+        oaccs = opening_accs(g, tag)
+        wbox(accs["frame"], F, 0.0, L, z0, floor, -0.10, 0.0, "M_timber", r=0.012, ns=max(4, int(L / 0.3) + 2))
+        for (pa, pb) in ((0.0, 0.08), (L - 0.08, L)):
+            zt = max(rake(pa), rake(pb))
+            wbox(accs["frame"], F, pa, pb, z0, zt, -0.10, 0.04, "M_timber", r=0.012, nz=6, clamp=rake)
+        blocks, clears = [], []
+        s_c = (B["x"] - x_O) / tl
+        if B.get("window"):
+            wk = dict(shutters=False, jamb=(0.08, 0.14), head=0.08, rail=0.06, frame=0.045, room=0.45,
+                      room_pad=(0.05, 0.10, 0.04))
+            wk.update(B["window"])
+            ww, wh, wsill = wk.pop("width"), wk.pop("height"), wk.pop("sill")
+            sp = resolve_timber(_window(width=ww, height=wh, sill=wsill, **wk))
+            clear, block = _opening_layout(sp, s_c, floor, st)
+            top_min = min(rake(s) for s in np.linspace(block[0], block[1], 9))
+            if block[3] > top_min - 0.02:
+                raise ValueError(f"eyebrow {i}: the window head {block[3]:.2f} is above the wave's eave "
+                                 f"{top_min:.2f}; raise height or lower the window")
+            blocks.append(block)
+            clears.append(clear)
+            build_opening(g, sp, O + s_c * t_w, t_w, n_w, oaccs, rng, label=tag,
+                          host=dict(face=st["board"][1], floor=floor, head_max=None, casing=True, ground=0.0))
+        z_top = max(rake(s) for s in np.linspace(0.0, L, 41))
+        _clad(accs, F, L, floor - 0.04, z_top, st, [(0.0, 0.08), (L - 0.08, L)], blocks, rng, rake,
+              rough=rough_opts(True))
+        ss = sorted(set([0.0, L] + list(np.arange(0.08, L, 0.08)) + [c for cl in clears for c in (cl[0], cl[1])]))
+        zz = sorted(set([floor - 0.03, z_top] + [c for cl in clears for c in (cl[2], cl[3])]))
+
+        def keep(ia, ib, ss=ss, zz=zz, clears=clears):
+            sm, zm = 0.5 * (ss[ia] + ss[ia + 1]), 0.5 * (zz[ib] + zz[ib + 1])
+            return not any(c[0] < sm < c[1] and c[2] < zm < c[3] for c in clears)
+        _sheet(accs["back"], F, np.array(ss), np.array(zz), keep, -0.03, 0.0, "M_timber_weathered",
+               clamp=lambda s, rake=rake: rake(s) - 0.01)
+        for a_ in accs.values():
+            if a_.n:
+                finalize(a_, g.coll, smooth_deg=30.0)
+        finish_accs(g, oaccs)
+        out.append(dict(x=(x_lo, x_hi), z0=z0, top=z_top, d_front=B["d_t"], u_t=B["u_t"]))
+        log(f"  {pre}: eyebrow {i} at x {B['x']:.2f} (side {sg:+d}): front {L:.2f} m wide, sill {z0:.2f}, "
+            f"eave {z_top:.2f} (world z before recentre), lift {B['height']:.2f} m over {B['width']:.2f} m")
+    roof.EYEBROW_FRONTS = out
+    return out
+
+
 def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_cone=None, thatch_style="courses",
                 abut_wall_in=0.10, rafter_skip=None, ridge_caps=False, verge_apex=False, verge=None,
                 apex_finial=None):
@@ -988,6 +1248,8 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
                 V = np.asarray(V, float)
                 return cc(V, margin) & (np.hypot(V[:, 0] - c0[0], V[:, 1] - c0[1]) < r_in - margin)
     rng = np.random.default_rng(seed)
+    if getattr(roof, "BROWS", None) and covering != "shingle":
+        raise ValueError("linear_roof: GableRoof(eyebrows=...) is built for covering='shingle' only (kit 1.13)")
     if covering == "thatch" and thatch_style == "courses":
         out = _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=rafter_skip, ridge_caps=ridge_caps,
                                    verge_apex=verge_apex)
@@ -1038,6 +1300,8 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
         finalize(cb, g.coll, smooth_deg=40.0)
     if verge is not None or apex_finial is not None:
         _roof_edges(g, roof, pre, rng, clip, verge, apex_finial)
+    if getattr(roof, "BROWS", None):
+        _eyebrow_fronts(g, roof, pre)
     return roof
 
 

@@ -1,0 +1,16 @@
+﻿00:01.875  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house_r04_accepted.blend"
+00:02.046  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+r04 meshes 70 r05 meshes 75 bit-identical 64
+not bit-identical: ['HARB_hall_frames', 'HARB_hall_stones', 'HARB_roof_comb', 'HARB_roof_covering', 'HARB_roof_deck', 'HARB_tower_stones']
+  HARB_wing_roof_covering          bit-identical: True
+  HARB_wing_roof_deck              bit-identical: True
+  HARB_wing_roof_comb              bit-identical: True
+  HARB_wing_roof_rafters           bit-identical: True
+  HARB_wing_roof_verge             bit-identical: True
+  HARB_tower_top_frames            bit-identical: True
+  HARB_tower_top_blockers          bit-identical: True
+  HARB_tower_top_boards            bit-identical: True
+new in r05: ['HARB_roof_eyebrow0_blocker', 'HARB_roof_eyebrow0_blockers', 'HARB_roof_eyebrow0_boards', 'HARB_roof_eyebrow0_frame', 'HARB_roof_eyebrow0_frames']
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

@@ -320,7 +320,8 @@ def _build_timber_opening(g, sp, O, t, n, accs, rng, label, host):
                          "M_timber_weathered")
                     _strap(iron, mapfn, n, xh, 0.72 * sw, zz + 0.035, wb + st + 0.022, sgn)
                     _pintle(g, iron, lm(xh, zz + 0.035 + 0.045, wb + 0.012), -sgn * t, k)
-        _room(room, lm, -hw - 0.35, hw + 0.35, cz0 - 0.6, cz1 + 0.35, -jd + 0.03, -jd - sp.get("room", 1.0),
+        px, pb, pt = sp.get("room_pad") or (0.35, 0.6, 0.35)          # kit 1.13 (default = the old margins)
+        _room(room, lm, -hw - px, hw + px, cz0 - pb, cz1 + pt, -jd + 0.03, -jd - sp.get("room", 1.0),
               "M_timber_weathered")
     else:
         cz0 = floor + sp["threshold"]

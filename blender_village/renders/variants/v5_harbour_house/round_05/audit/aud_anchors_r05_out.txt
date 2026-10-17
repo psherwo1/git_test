@@ -1,0 +1,12 @@
+﻿00:01.875  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+NEAR EYEBROW DA_crack_016 crack [-1.64, -1.96, 2.19] [-0.84, -0.54, -0.09]
+NEAR EYEBROW DA_crack_017 crack [-1.62, -0.78, 2.19] [-1.0, 0.01, -0.07]
+NEAR EYEBROW DA_moss_002 moss [-1.98, -2.32, 3.18] [-0.75, 0.0, 0.66]
+NEAR EYEBROW DA_moss_003 moss [-0.0, -2.32, 5.09] [-0.75, 0.0, 0.66]
+NEAR EYEBROW DA_moss_004 moss [-1.98, -0.72, 3.15] [-0.75, 0.0, 0.66]
+NEAR EYEBROW DA_moss_005 moss [0.0, -0.72, 5.28] [-0.11, 0.59, 0.8]
+NEAR EYEBROW DA_moss_007 moss [-0.0, 0.88, 5.07] [-0.75, 0.0, 0.66]
+anchors 112 with a surface within 5 cm in front (buried): 0 []
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

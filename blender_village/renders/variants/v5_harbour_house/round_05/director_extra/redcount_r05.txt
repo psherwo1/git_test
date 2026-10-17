@@ -1,0 +1,12 @@
+﻿RED e02_brow_square_W_eye_red.png                    total  121953 enclosed   212 x 58-1008 y(from top) 68-155
+RED e03_brow_square_W_crane_red.png                  total       0 enclosed     0 
+RED e04_brow_oblique_from_S_red.png                  total   43394 enclosed     1 x 62-62 y(from top) 263-263
+RED e05_brow_oblique_from_N_red.png                  total       0 enclosed     0 
+RED e06_brow_profile_along_slope_N_red.png           total       0 enclosed     0 
+RED e07_brow_from_wing_roof_red.png                  total       0 enclosed     0 
+RED e08_brow_above_fade_red.png                      total       0 enclosed     0 
+RED e09_brow_window_lowgraze_red.png                 total       0 enclosed     0 
+RED x08_main_roof_tower_west_red.png                 total       0 enclosed     0 
+RED x10_wing_roof_tower_N_nook_red.png               total       0 enclosed     0 
+RED x24_W_eave_lookup_red.png                        total   57794 enclosed    70 x 329-981 y(from top) 1-47
+RED z08_roof_wing_tower_from_above_red.png           total   21270 enclosed     0 

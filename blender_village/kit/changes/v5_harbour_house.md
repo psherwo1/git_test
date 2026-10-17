@@ -6,6 +6,76 @@ producer to merge into `../CHANGELOG.md` (proposed version 1.12.0).
 
 ---
 
+## Round 5 (the client's ref4 eyebrow dormer, `reference/ref4b_eyebrow_dormer_markup.jpg`)
+
+A reusable **eyebrow-dormer add-on** on the soft `GableRoof` / `linear_roof` (docstrings tag it "kit 1.13"; it can
+merge with the proposed 1.12.0). Every new option defaults to the old behaviour, so **no hash re-run is needed**.
+
+### `components/linear_roof.py` (existing module: new options only)
+
+- **`GableRoof(..., eyebrows=())`**, plus the spec helper **`eyebrow(x, side=1, **kw)`** and its defaults
+  **`EYEBROW`**. The defaults are `d=1.5`, `width=2.0`, `height=0.75`, `flat=0.70`, `plateau=0.18`, `fade=1.20`,
+  `lip=0.20`, `set_back=0.04`, `window=dict(width=0.56, height=0.36, sill=0.05)`, `min_front=0.14` and `seed=0`.
+  - Each bump is a term in the roof's ONE vertical warp field (`warp_z`).
+  - The term is a **step at the front** (slope distance `u_t`). Below it, the slope runs on untouched. Above it, the
+    roof is lifted by `height x bell(x)`: full height over `flat`, a cosine fall to 0 at `+-width/2`. Upslope it
+    fades smoothly back into the slope (`plateau`, then `fade`), so there are no cheeks, no valleys and no ridge.
+  - The front is snapped to the shingle course grid. One whole course (`k_lip`) is the wave's lowest course and
+    overhangs the front by `lip` (the little dark eave).
+  - Unknown keys raise. A wave that would reach within 0.30 m of the ridge raises.
+- **`to_world(P, brow=None)` / `to_local(P, brow=None)` / `warp_z(x, y, brow=None)`**: a new optional argument.
+  - `None` means each point is on the lifted side if its own slope distance is `>= u_t`. Queries and walls use this.
+  - A number, an array, or `{bump: value}` puts a whole piece on one side, so a piece is never torn across the step.
+    `_shingle_courses` passes one value per course; `_deck` passes one value per row.
+  - Without `eyebrows` the argument is ignored: the result is bit-identical.
+- **Every roof part follows the bump:**
+  - `_shingle_courses`: a course is wholly lifted (`k >= k_lip`) or not. Courses under the wave stop their heads at
+    the deck front. The eave course over the window gets closed undersides (`bottom=True`).
+  - `_deck`: extra rows at the tear (`u_t - 1 mm`, `u_t`) and a fine grid over the wave. The deck becomes a closed
+    vertical **deck front** under the wave, with a **framed opening** behind the window: the cells are removed and
+    the cut edges are closed.
+  - `_brow_eave_strip`: a lifted board strip under the wave's eave course (`u_lip` to `u_t`, from the deck underside
+    to 5.5 cm over the deck), so no slot shows under the eave.
+  - The rafters, comb, verge boards, eave and finials are outside the wave's footprint and are unchanged. The wave
+    must stay 0.30 m under the ridge.
+- **`_eyebrow_fronts(g, roof, pre)`**: `linear_roof` calls it when the roof has eyebrows, with its own seeded rng, so
+  the roof's other random draws are unchanged. It builds:
+  - a sill beam on the slope;
+  - the timber family's rough board-and-batten cladding (`timber_walls._clad`), clamped to the wave's eave strip, so
+    the front IS the wave's arch;
+  - a closed backing (`timber_walls._sheet`) cut only at the clear opening, and end posts;
+  - the **kit window**: `components.openings.window` resolved by `timber_walls.resolve_timber` and built by
+    `wall_openings.build_opening(host=timber)`. It is the cross-mullion two-light frame, with no shutters and a dark
+    room sized to stay under the wave.
+  - The front is built where the gap is at least `min_front` tall. Beyond that, the deck front closes it.
+  - It raises if the window head would cross the wave's eave.
+  - Output objects: `<P>_<roof>_eyebrow<i>_frame`, `_boards`, `_blocker`, and `_frames` / `_blockers` (the window).
+  - It publishes `roof.EYEBROW_FRONTS`.
+- `linear_roof` raises if `eyebrows` is used with a thatch covering. Only shingle is built.
+
+### `components/timber_walls.py`, `components/wall_openings.py` (existing modules: one new option)
+
+- The timber window's `TIMBER_OPENING["window"]` gains `room_pad=(0.35, 0.6, 0.35)`: (side, below, above) margins of
+  the dark room past the clear opening. These are the old hard-coded values, so it is identical by default.
+  `_build_timber_opening` reads it. The eyebrow window uses `(0.05, 0.10, 0.04)` and a 0.45 m room.
+
+### Hash rule
+
+- Not triggered. No existing default changed: the empty `eyebrows`, `brow=None` and the default `room_pad` reproduce
+  the old code path exactly. With no bumps, `_deck` builds the same grid and the same face order, and
+  `_shingle_courses` builds the same pieces with the same rng draws.
+- No `v5r5_hash` run.
+
+### Known limitations (round 5)
+
+- Shingle coverings only. A thatch eyebrow would need the course sheets split at the step.
+- The bump is vertical only. Over the steep part of its flanks, the shingles shear (they follow the field exactly).
+  A `width` of 2.0 m or more with `flat` at or under about 0.6 keeps this soft.
+- One front per bump, on a straight slope. A bump must not overlap a verge, the eave band, another bump or a
+  junction body; this is not checked.
+
+---
+
 ## Round 4 (the client's broader, slumped hall roof)
 
 **No kit module changed.** The wider, lower, more slumped hall is a recipe parameter change on `DIM` / `MAIN`

@@ -1190,3 +1190,310 @@ The client sent `reference/ref4b_eyebrow_dormer_markup.jpg`, the ref4 concept wi
 - **Apply it to the harbour house:** one eyebrow on the slope facing the wing / tower, sized like ref4 (the wave about 1.6-2.2 m wide along the eave and about 0.5-0.8 m high, the window about 0.6-0.8 m wide), clear of the `wall_abutment` and the wing roof.
 - **Seal it:** no see-through at the wave, the window front or the deck opening; the seal probe and red twins as usual. Keep hidden <= 15 % and <= 1 M tris.
 - **Change nothing else.** Every accepted part of round 4 stays as it is. No nice-to-haves.
+## v5_harbour_house round 5 — builder entry
+
+**What I built:** ref4's eyebrow dormer, the area the client circled in `reference/ref4b_eyebrow_dormer_markup.jpg`.
+- It is a reusable kit add-on on the soft `GableRoof` / `linear_roof`, applied once to the harbour house on the west slope, the one facing the wing and the tower.
+- Nothing else in the recipe changed.
+- I read the CLIENT DIRECTION "add ref4's eyebrow dormer (round 5)" before starting. I re-read the log before writing this entry: there is no newer CLIENT DIRECTION or PRODUCER NOTE.
+- The `*_r04_accepted.*` files are untouched (still 14:20 / 14:30).
+- No nice-to-haves.
+
+**Files:**
+- **Recipe:** `buildings/variants/v5_harbour_house/build_v5_harbour_house.py` (183 lines, 156 non-blank non-comment).
+  - It was saved at 15:21. The final build started after that save and wrote the blend at 15:35, so the recipe and the blend are in order (the audit's process point).
+  - The round-5 diff is the `BROW = eyebrow(...)` spec, `eyebrows=[BROW]` on `MAIN`, the import and the docstring.
+  - Outputs: `v5_harbour_house.blend` (19.4 MB) and `decal_anchors.json` (112 anchors).
+- **Renders:** `renders/variants/v5_harbour_house/round_05/` has all six views (`--samples 24`), `stats.json` and `hidden.json`.
+- **Close-ups:** `round_05/builder_extra/` (`scratch/closeups_r5.py`; recentred coordinates, same shift as round 4):
+  - `r5_brow_eye` (+ `_red`): eye level, 1.7 m, from the land west of the hall.
+  - `r5_brow_ref4`: the ref4 three-quarter view from the NW over the water. The water gable is on the left, the tower on the right and the wing in front. This is ref4's own side; the round-4 "ref4 angle" x01 / z10 shots are from the NE and do not see this slope.
+  - `r5_brow_graze` (+ `_red`): grazing along the west slope from the water end.
+  - `r5_brow_close` (+ `_red`): the window, the wave's eave and the front's ends.
+  - `r5_brow_probe_out.txt`: the see-through probe.
+
+### The kit option: `GableRoof(eyebrows=[eyebrow(x, side, ...)])` (`components/linear_roof.py`)
+
+**How the bump works:**
+- It is one more term in the roof's single vertical warp field, so every part that follows the warp follows the bump.
+- The term is a step at the front (slope distance `u_t`):
+  - below the front, the slope runs on untouched;
+  - above it, the roof is lifted by `height x bell(x)`: full height over `flat`, then a cosine fall to 0 at `±width/2`;
+  - upslope it holds for `plateau`, then fades smoothly back into the slope over `fade`.
+- So there are no cheeks, no valleys and no ridge: the courses bend over the window and run on.
+- The front is snapped to the shingle course grid, so one whole course is the wave's lowest course. It overhangs the front by `lip`: the little dark eave.
+
+**Parts that follow it:**
+- **Pieces stay whole.** `to_world` / `warp_z(..., brow=)` can put a whole piece on one side of the step. Each shingle course is either wholly lifted or not, so no shingle is torn across the step.
+  - The courses under the wave stop their heads at the deck front.
+  - The wave's eave course has closed undersides.
+- **The deck** gets two rows at the step. There it becomes a closed vertical deck front under the wave, with a framed opening (cells removed, cut edges closed) behind the window.
+- **The eave strip** is a lifted board strip under the wave's eave course, so no slot shows under the eave.
+- **`_eyebrow_fronts`** is called by `linear_roof` with its own rng, so the roof's other random draws are unchanged. It builds:
+  - a sill beam on the slope;
+  - the timber family's rough board-and-batten cladding (`timber_walls._clad`), clamped to the eave strip, so the front is the wave's arch;
+  - a closed backing (`_sheet`), cut only at the clear opening;
+  - end posts;
+  - the kit window: `openings.window` through `resolve_timber` and `wall_openings.build_opening(host=timber)`. It is the cross-mullion two-light frame with no shutters, and its dark room is sized to stay under the wave.
+- New objects: `HARB_roof_eyebrow0_frame`, `_boards`, `_blocker`, `_frames` and `_blockers`.
+
+**Parameters (`EYEBROW` defaults, then the harbour-house values):**
+
+| parameter | default | harbour house |
+|---|---|---|
+| `x` (along the ridge, local) | — | 4.6 (world y 4.6, over the west-wall window) |
+| `side` | 1 | +1 (west slope) |
+| `d` (in from the eave lip, plan) | 1.5 | 1.5 (snapped to 1.578: course 6 is the eave) |
+| `width` | 2.0 | **2.2** |
+| `height` | 0.75 | **0.72** |
+| `flat` | 0.70 | 0.60 |
+| `plateau` | 0.18 | 0.18 |
+| `fade` | 1.20 | 1.20 |
+| `lip` | 0.20 | 0.20 |
+| `set_back` | 0.04 | 0.04 |
+| `window` | 0.56 x 0.36, sill 0.05 | the same (0.72 m over the jambs) |
+| `min_front` | 0.14 | 0.14 |
+
+`height` is the vertical gap the front closes. `lip` is the wave's eave overhang. `set_back` is the front's face distance out from the deck front. `min_front` sets how far the front runs to each side: it is built where the gap is at least that tall, and the deck front closes the rest.
+
+**As built:**
+- The front is 1.67 m wide.
+- In build coordinates (before the recentre), the sill is at z 4.04 and the wave's eave at 4.76. The wave fades out about 1.2 m under the ridge.
+- Clearances: about 1.3 m from the tower face (the `wall_abutment` meets the tower at y < 2.3), and clear of the wing roof (y < 2.05) and the partition (y 6.2).
+
+**Other kit change:** a new option `room_pad` (the dark room's margins) on the timber window, in `timber_walls.TIMBER_OPENING["window"]` and `wall_openings._build_timber_opening`. Its default `(0.35, 0.6, 0.35)` is the old hard-coded margins. Everything is recorded in `kit/changes/v5_harbour_house.md` (Round 5).
+
+### Checks
+
+| check | result |
+|---|---|
+| eyebrow see-through probe (`scratch/r5_brow_probe.py`) | 18,456 rays on a 3 cm grid over the whole front arch (the lower roof to 15 cm over the wave's eave, the full 2.2 m width), from 15 directions (square-on, ±25 / ±50 deg yaw, -15 / +15 / +35 deg pitch): **0 leaks**. No ray goes more than 0.70 m behind the face. 1,094 rays end on the window's dark room, the deepest at 0.5-0.6 m (the room's back). |
+| red twins | `r5_brow_close_red`, `r5_brow_graze_red`: **0 enclosed red** at the wave, the front or the opening. `r5_brow_eye_red`: the only red inside the outline is the round-4 comb slits on the ridge (audit item 1; not new). |
+| seal probe, both `wall_abutment`s | roof / tower: 51,484 rays, 0 leaks. Wing roof / tower: 57,465 rays, 0 leaks. |
+| clearance gate | PASS: hall door eave lip 5.63 m; wing door 2.50 m (unchanged) |
+| hidden | **14.4 %** (103,248 tris), under the 15 % limit (round 4: 13.6 %) |
+| triangles | **715,139** (round 4: 707,889; the eyebrow adds about 7.3 k), cap 1,000,000 |
+| slots / Mask | 9 palette slots; `mask_attribute_missing` none |
+| objects | 75 (round 4: 70, plus the five eyebrow objects) |
+| bbox | 17.59 x 17.17 x 15.94 m (unchanged); recentre shift (-1.808, -5.973) (unchanged) |
+| six views | identical to round 4 apart from the eyebrow, which is visible on the west slope in `aerial`. `side` is the east elevation. |
+
+### Hash rule
+
+**Not triggered.** Only new options were added, and their defaults keep the old code path exactly:
+- `GableRoof(eyebrows=())`;
+- `to_world` / `to_local` / `warp_z(brow=None)`, ignored without eyebrows;
+- the timber window's `room_pad` default, which equals the old margins.
+
+With no eyebrows, `_deck` builds the same grid and the same face order, and `_shingle_courses` builds the same pieces with the same rng draws. No `v5r5_hash` run.
+
+### Known gaps
+
+- **Steep flanks.** The bump is vertical only. On the steepest part of the wave's flanks the shingles shear as they follow the field. With 2.2 m and `flat` 0.60 this reads as a soft wave (`r5_brow_close`), but it is not as smooth as ref4's painted flank.
+- **Slots at the front ends.** Each end of the front leaves a short dark slot of a few cm between the end post and the wave's flank. It is backed by the deck front (0 leaks), not see-through.
+- **Shingle only.** A thatch roof with `eyebrows` raises.
+- **No overlap check.** A bump must not overlap a verge, the eave band, another bump or a junction body, and this is not checked. The wave is checked only against the ridge.
+- **Decal anchors: 112** (round 4: 115). The same composite decal recipe runs, but the kit gate's random visibility cull now drops 3 more quay / jetty anchors (one lichen, one damp, one moss). The rest are renumbered, and 2 roof-moss anchors now sit on the wave. Not blocking. I did not chase it (no re-run the change does not need).
+- **Carried over from round 4, unchanged:** the comb slits, the eave/verge corners, the quay's cut ends, the 4 cm post slot, the slip-wall foot slots and the review tool's ground plane at the bed.
+
+## v5_harbour_house round 5 — score 8.4/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only, no ground dressing (note
+10), no surface-detail requests (note 12). Binding: producer notes 1-17, every CLIENT DIRECTION entry above (ref4 is the
+primary reference) and **the CLIENT DIRECTION "add ref4's eyebrow dormer (round 5)"** (ref4b, circled; kit add-on,
+wave about 1.6-2.2 m wide and 0.5-0.8 m high, window about 0.6-0.8 m, sealed, change nothing else; "time matters").
+I re-read the log before starting and before writing: no CLIENT DIRECTION or PRODUCER NOTE was added after the round-5
+builder entry.
+
+**Reviewed:** ref4b and ref4; the six `round_05` views, `stats.json`, `hidden.json`; the builder's 4 close-ups, 3 red
+twins and `r5_brow_probe_out.txt`; the recipe diff against `build_v5_harbour_house_r04_accepted.py`; `linear_roof`
+`eyebrow` / `_eyebrow_fronts`, the `room_pad` option and the Round 5 note in `kit/changes/v5_harbour_house.md`.
+
+**Director checks** (`renders/variants/v5_harbour_house/round_05/director_extra/`, read-only bpy, one process at a time):
+- `dir_regress_r05.py` -> `regress_r05_out.txt`: every mesh of the round-5 blend against the accepted round-4 blend
+  (vertex count, max vertex move, KD-tree for re-counted meshes).
+- `dir_regress2_r05.py` -> `regress2_r05_out.txt`: the distance of every round-5 deck / covering / comb vertex from the
+  round-4 surface (BVH), inside and outside the eyebrow zone, plus the triangle diff of the meshes whose count changed.
+- `dir_render_r05.py`: the round-4 camera set (`dir_render_r04.py`) with 10 eyebrow shots added (e01-e10), run for the
+  eyebrow shots and the four west-slope junction shots that could be affected (x08, x10, x24, z08); 12 red twins,
+  counted in `redcount_r05.txt` (`dir_redcount_r05.py`). (e06, a profile along the slope, ended up inside the verge
+  and shows nothing; it is ignored.)
+
+**Accepted round 4 preserved.** The `*_r04_accepted.*` files are at 14:20 / 14:30 (untouched). The recipe diff is only the
+import, the `BROW = eyebrow(...)` spec, `eyebrows=[BROW]` on `MAIN` and the docstring. Mesh by mesh:
+
+| result | meshes |
+|---|---|
+| identical, every vertex within 1 mm | 63 of 70 round-4 meshes, including every wall, the tower, the wing and its roof, the water gable, quay, jetty, verge, shingles, starter, soffit, rafters and both `wall_abutment`s |
+| changed only in the eyebrow zone | `HARB_roof_covering` (moved shingles at y -2.92 to -0.07, x < 0.75; outside the zone every vertex is on the round-4 surface, 0.0 mm); `HARB_roof_deck` (re-gridded, +5.3 k tris, but outside the zone every vertex is within 0.8 mm of the round-4 surface) |
+| changed just outside the zone | `HARB_roof_comb`: 3 vertices of one crest shake over the eyebrow (x 1.74, y -1.42, z 6.66) moved 7.4 cm. The wave's fade reaches one comb piece at the ridge. Not visible in e01 / e10 / `r5_brow_eye`. |
+| scene-dependent hidden-face cull noise | `HARB_hall_stones` -2 tris (0.03 cm2 slivers at the land-gable head), `HARB_tower_stones` -6 tris (up to 9.6 cm2, at z 5.6 inside the main-roof / tower abutment), `HARB_hall_frames` +2 tris (a 0.15 m2 hidden head top on the E window). The x08 / x10 / z08 red twins are at 0 enclosed (as in round 4), and the seal probe is at 0 leaks, so no hole was opened (note 6). |
+| new | the five `HARB_roof_eyebrow0_*` objects, all inside x -0.88..-0.18, y -2.21..-0.54, z 4.05..4.75 |
+
+**Hard numbers:** 715,139 tris (cap 1 M), 14.4 % hidden (limit 15 %; round 4 13.6 %; the +5.3 k deck tris are nearly
+all of the increase), 9 palette slots, `Mask` everywhere, 75 objects, bbox 17.59 x 17.17 x 15.94 m unchanged. Doors
+unchanged (wing eave 2.50 m, hall land door under the gable).
+
+**The client's eyebrow, checked:**
+
+| asked (CLIENT DIRECTION) | built | director check | result |
+|---|---|---|---|
+| on the slope facing the wing / tower, about midway between the water gable and the tower | W slope, y -1.37 (final), over the W-wall window; 1.3 m clear of the abutment | e01, e10, `r5_brow_ref4`: midway along the W slope, clear of the tower, wing roof and abutment | met |
+| one smooth wave of shingle, no cheeks, no valleys, no ridge | a bump in `GableRoof`'s single warp field; whole courses lifted, the fade runs back into the slope | e03, e08: the courses swell in one wave and run on above and to both sides; no cheek, valley or ridge anywhere | met |
+| wave about 1.6-2.2 m wide, 0.5-0.8 m high | 2.2 x 0.72 m, 0.20 m lip | the eyebrow objects span y 1.67 m (front) inside the 2.2 m wave; z 4.05-4.75 | met |
+| small two-light window about 0.6-0.8 m in a short vertical timber front, little dark eave | kit cross-mullion window, 0.56 x 0.36 m clear, 0.72 m over the jambs; board-and-batten front, sill, end posts | e09, e02: the window is framed and dark, set in a boarded front under the wave's eave course | met (four lights, not two; accepted) |
+| kit add-on, defaults unchanged | `GableRoof(eyebrows=())`, `eyebrow()`, `EYEBROW` defaults, `room_pad` default = the old margins | the regression diff: no non-roof mesh changed except cull noise | met; hash rule not triggered |
+| sealed | probe 18,456 rays, 0 leaks; both seal probes 0 leaks | e02-e09 red twins: 0 enclosed at the wave, front and opening (e02's 212 px are the round-4 ridge-comb slits, e04's 1 px is the verge rim) | met |
+| change nothing else | recipe diff = the eyebrow only | see the table above | met |
+
+| axis | score | reason |
+|---|---|---|
+| 1 Silhouette and massing | 8.5 | The circled detail is in, and it reads at every distance: at the 45 m thumbnail (e10) and the ref4 angle from the NW (e01, `r5_brow_ref4`) the W slope now has ref4's eyebrow hood midway between the water gable and the tower, which breaks the long plain slope the way the concept does. It is a little smaller and flatter than ref4's painted hood (ref4's wave is deeper with a heavier dark eave), but inside the client's range. Everything else is round 4's accepted massing, unchanged. |
+| 2 Proportion and actor scale | 8.3 | The wave (2.2 x 0.72 m) and the 0.72 m window frame are in proportion with the 1.6 m courses and the 0.55 m wall windows below (e02). The 0.36 m clear height is a small attic light, right for an eyebrow. Doors and every other dimension unchanged. |
+| 3 Construction logic | 8.4 | Buildable: a sill on the slope, a boarded front with a backing, end posts, a framed deck opening and a lifted eave board under the lowest wave course; the wave's courses are whole pieces that overlap correctly (e03, e09). Round-4 bearings untouched (the regression diff). |
+| 4 Seams and junctions | 8.2 | The new junctions are sealed: 0 probe leaks, 0 enclosed red at the wave, front and opening, and the x08 / x10 / z08 junction twins are as clean as round 4. Held at 8.2: on the steepest part of both flanks the vertical-only warp shears the shingles into stacked thin slivers (e02, `r5_brow_close`), the lifted eave board shows as a pale strip along the arch (e03), a thin dark crescent shows between courses at the top of the plateau (e03, backed), and the front ends leave short dark slots (e04, backed). None is see-through. |
+| 5 Distinctness and reuse | 8.5 | The cleanest add-on so far: one new term in the warp field that the covering, deck, eave board and comb already follow, a kit window through `resolve_timber` / `build_opening`, its own rng so the roof's other draws are unchanged, and the defaults reproduce the old path exactly (63 of 70 meshes are vertex-identical; the rest change only in the zone or by cull noise). It is a value-driven option any shingle `GableRoof` in the village can take. Gaps: shingle only, and no overlap check against verges, the eave band, junction bodies or other bumps. |
+| 6 Technical compliance | 8.4 | 715 k tris, 14.4 % hidden, 9 slots, `Mask` everywhere, deterministic, recipe saved before the build (the round-4 audit's process point is fixed). Taken off: the deck tear rows are inserted along the whole roof length (+5.3 k hidden tris), so the hidden headroom fell from 1.4 % to 0.6 %; the decal cull dropped 3 more quay / jetty anchors (112, still plausible); one comb shake moved 7.4 cm outside the stated zone. |
+
+**Verdict: 8.4/10, PASSED (pass mark 8.2), subject to the independent audit.** The client's circled detail is built
+as asked: one smooth wave of shingle over a small framed window in a short timber front, with no cheeks, valleys or
+ridge, on the slope facing the wing and the tower, sized inside the client's range. It is sealed, and it is a genuine
+reusable kit option whose defaults leave every other building untouched. The regression diff shows that the accepted
+round 4 is preserved: 63 of 70 meshes are vertex-identical, and the rest changed only inside the eyebrow zone or by a
+few hidden-face cull triangles that open no hole.
+
+**Must-fix:** none.
+
+**Nice-to-have (kit, defaults unchanged; carry into the boathouse / barn, not another harbour-house round):**
+1. `linear_roof._deck`: insert the eyebrow tear rows only over the bump's span, not the full roof length (+5.3 k hidden
+   tris now; hidden headroom 0.6 %).
+2. Flank shear: tilt or rotate each lifted shingle to the local slope of the bell (or widen `flat` / soften the flank
+   default), so the steep flanks read as one smooth roll as in ref4 (e02, `r5_brow_close`).
+3. Hide the lifted eave board behind the wave's eave course (inset it a few cm) and close the dark crescent at the top
+   of the plateau (e03); close the front-end slots with the end post or a flank board (e04).
+4. End the fade before the comb (or exclude the comb from the brow term) so the crest shake over the eyebrow stays put.
+5. An overlap check (verge, eave band, `wall_abutment` bodies, other bumps), and thatch support, before the add-on is
+   used elsewhere.
+6. Optional `window=dict(lights=2)` for ref4's two-light (vertical mullion only) eyebrow window.
+
+## v5_harbour_house round 5 — sign-off audit: UPHELD
+
+The independent auditor checked the Art Director's round-5 pass (8.4/10) on the note-12 MODULARITY RUBRIC, pass mark 8.2.
+Geometry only; no ground dressing (note 10), no surface-detail requests (note 12). Binding: producer notes 1-17, every
+CLIENT DIRECTION above and the CLIENT DIRECTION "add ref4's eyebrow dormer (round 5)" (ref4b, circled). I re-read the
+log before starting and before writing: no CLIENT DIRECTION or PRODUCER NOTE was added after the round-5 grade.
+
+**Reviewed:** ref4b and ref4; the builder entry, close-ups, red twins and `r5_brow_probe_out.txt`; the director's
+`regress_r05_out.txt`, `redcount_r05.txt` and e-shots; `stats.json`; the recipe diff against
+`build_v5_harbour_house_r04_accepted.py`; the Round 5 note in `kit/changes/v5_harbour_house.md`; `room_pad` in
+`timber_walls.py` / `wall_openings.py` and its use in `linear_roof._eyebrow_fronts`.
+
+**My scripts** (read-only bpy, one process at a time, `renders/variants/v5_harbour_house/round_05/audit/`):
+- `aud_probe_r05.py` (the round-4 probe + eyebrow checks) -> `aud_probe_r05_out.txt`;
+- `aud_probe2_r05.py` (classifies the eyebrow ray-probe misses) -> `aud_probe2_r05_out.txt`;
+- `aud_ring_r05.py`: the round-4 32-camera ring unchanged, plus 32 eyebrow-targeted red twins (7 azimuths x eye level
+  7 / 12 m, 6 m crane 6 / 10 m, 5.2 m close 3.5 m; 3 cameras that fell inside geometry skipped) and 17 grey workbench
+  views -> `aud_ring_r05_out.txt`, `ring/`;
+- `aud_hash_r05.py` (bit-exact mesh comparison r04 accepted vs r05) -> `aud_hash_r05_out.txt`;
+- `aud_g01px_r05.py` (identifies the only new ring pixels), `aud_anchors_r05.py` (buried anchors);
+- `tools/hidden_tris.py` re-run (`aud_run_hidden.py` wrapper) -> `aud_hidden_out.txt`, `aud_hidden.json`.
+
+**Accepted round 4 untouched:** `*_r04_accepted.*` still 14:20:29 / 14:30:52 / 14:30:53; the accepted blend's SHA-256
+(11A2EEE4...2D58) is the same before and after my read-only runs. Recipe diff = the import, `BROW = eyebrow(...)`,
+`eyebrows=[BROW]` on `MAIN`, the docstring. Recipe saved 15:21:20, blend 15:35:45 (order fixed).
+
+### Hard requirements (measured on the saved blend)
+
+| requirement | measured | result |
+|---|---|---|
+| ≤ 1,000,000 tris | 715,139 evaluated (stats agree) | PASS |
+| ≤ 15 slots, palette only | 9 slots, the same nine as round 4, none outside the palette | PASS |
+| est_hidden_pct ≤ 15 | 14.4 % (stats); my independent re-run (20,000 samples) **14.3 %**, 1.9 % below ground. `HARB_roof_deck` now 83 % hidden of 9,654 (the full-length tear rows) | PASS (0.6-0.7 % headroom) |
+| `Mask` on every mesh | all 75 meshes CORNER BYTE_COLOR, active + render; all transforms identity | PASS |
+| DECAL_ANCHORS + json | 112 empties, all six properties, names equal to the JSON's 112; 0 with no surface within 20 cm behind; **0 buried** (no surface within 5 cm in front); the 7 anchors within 2.5 m of the eyebrow sit on the W wall (cracks z 2.19) and the slope / wave (moss, one with a wave-flank normal) | PASS |
+| door clearance ≥ 2.30 m | identical to round 4: wing S door lowest overhead 2.464 m (rafter tails, 0.20 m out), head 2.22; hall land door under the gable, lowest overhead 5.56 m | PASS |
+| no see-through / floating / clipping > 2 cm (ground and 6 m cameras), esp. at the eyebrow | see below | PASS |
+| hash rule | not triggered, verified bit-exact (below) | PASS |
+| eyebrow = reusable kit option | `GableRoof(eyebrows=[eyebrow(...)])` in `linear_roof`; the window is `openings.window` -> `resolve_timber` -> `build_opening`; the cladding is `timber_walls._clad` / `_sheet`; the recipe only passes values (11 parameters). No bespoke geometry in the recipe | PASS |
+| no regression of round 4 | 64 of 70 meshes **bit-identical**; the 32-camera ring identical shot by shot except 6 single pixels in g01 (below) | PASS |
+
+### The eyebrow: geometric evidence
+
+1. **See-through, eyebrow-targeted red twins:** 32 shots (eye level 7 / 12 m, crane 6 m at 6 / 10 m, close 3.5 m, ±70 deg
+   round the front): **0 enclosed red patches with a rim within 2.0 m of the front centre** in every shot. The enclosed
+   red elsewhere in those frames is the round-4 comb slits, the jetty bays and the quay-foot slots (as round 4).
+2. **Ray probe through the front / wave / opening:** 34,720 rays on a 4 cm grid over y -2.60..-0.14, z 3.95..5.05 on the
+   front plane, 5 yaws x 4 pitches, origins 4 m out. **0 first hits on an interior object** (no peek into the hall
+   through the deck opening). 156 rays hit nothing: all are the two steepest upward rays (yaw ±50, pitch -30) through
+   targets at z 4.83-5.03 that lie **above** the covering (a ray straight up from each target hits nothing; straight
+   down hits the covering 0.12-0.17 m below), i.e. open air passing over the ridge, not a hole. 0 misses through a
+   target under the roof.
+3. **Floating:** 6,314 islands, none whose 2 cm-inflated box touches no other island. Every eyebrow island is within
+   2 cm of the roof or touches another eyebrow part (the window mullions sit in the window frame, the boards on the
+   sill / backing).
+4. **Clipping:** the backing, boards, sill and window jambs run up to 0.05-0.23 m into the closed shingle bodies of the
+   wave's eave course. They are tucked under the eave (the lip overhangs the front by 0.20 m); in the 17 grey views (3.5 m
+   to 12 m, ground to 6 m) nothing pokes through a visible shingle face. Not a visible clip.
+5. **Comb over the eyebrow:** the moved crest shake still sits on the roof: nearest-roof distance max 0.149 m over the
+   eyebrow vs 0.149 / 0.147 m on the reference stretches either side (that is the comb's own 16 cm crest standing
+   proud). No gap opened.
+6. **Clearances:** the eyebrow objects stay inside x -0.88..-0.18, y -2.21..-0.54, z 4.05..4.75, clear of the
+   `wall_abutment`, the wing roof and the partition (director check e01 / e10 confirmed in my bc / bC views).
+
+### Hash rule, verified
+
+`linear_roof.py` (15:17:30), `timber_walls.py` and `wall_openings.py` (15:17:45) are newer than the round-3 hash runs.
+The defaults reproduce the old path **bit-exactly** in this building: the wing roof (a `GableRoof` with no eyebrows:
+covering, deck, comb, rafters, verge) and the tower-top timber openings (default `room_pad`: frames, blockers, boards)
+are bit-identical to the accepted round 4. Not triggered.
+
+### What changed outside the eyebrow (none blocking)
+
+- `HARB_roof_deck`: re-gridded along the **whole** roof length (+5.3 k tris, almost all hidden). Its only visible
+  effect: **6 new single pixels in ring shot g01** (from the NE), which I ray-traced to sub-pixel cracks at the
+  N verge / deck edge (y 3.93, z 4.6-5.9). One pixel there is 0.7 cm, so these are below 1 cm; the 2 cm
+  threshold holds.
+- `HARB_hall_stones` -2, `HARB_tower_stones` -6, `HARB_hall_frames` +2 tris: the hidden-face cull is scene-dependent.
+  The 31 other ring shots match round 4 pixel count for pixel count, and so does g01 apart from the 6 pixels above, so
+  no hole was opened.
+- `HARB_roof_comb`: one crest shake follows the fade (see item 5).
+
+### Director's grade, re-checked
+
+| axis | director | auditor | note |
+|---|---|---|---|
+| 1 Silhouette and massing | 8.5 | 8.4 | The circled wave reads from 12 m eye level and the 6 m crane (bG / bC views). It is shallower than ref4's painted hood. |
+| 2 Proportion and actor scale | 8.3 | 8.3 | 2.2 x 0.72 m wave, 0.72 m window frame; doors unchanged. The window is cross-mullion (four lights) where the direction said two-light; accepted at form level. |
+| 3 Construction logic | 8.4 | 8.4 | Sill, boarded front, backing, end posts, a framed deck opening, every part carried. No floating island. |
+| 4 Seams and junctions | 8.2 | 8.2 | Sealed at the wave, front and opening (0 enclosed, 0 interior peeks). Held at 8.2 for the flank shear (close views), the backed front-end slots and the sub-cm verge pinholes. |
+| 5 Distinctness and reuse | 8.5 | 8.4 | A genuine value-driven kit option, verified bit-exact by default. Shingle only, no overlap check. |
+| 6 Technical compliance | 8.4 | 8.4 | Every hard number verified independently. Hidden headroom is now under 1 %. |
+
+**Verdict: UPHELD at 8.4/10, the Art Director's grade. My lowest axis is seams at 8.2, which is the pass mark.** The client's circled detail
+is built as asked and sealed. It is a reusable kit add-on whose defaults leave every other building untouched (bit-exact
+evidence). Every accepted part of round 4 is preserved: 64 of 70 meshes are bit-identical, and the ring is unchanged
+except 6 sub-cm pixels.
+
+**Blocking issues:** none.
+
+**Carry into the boathouse / barn (kit, defaults unchanged; added to the director's list):**
+1. `_deck`: limit the tear rows to the bump's span (director item 1). This also removes the sub-cm verge pinholes it adds
+   along the W slope, and gets the hidden headroom back (0.6-0.7 % now).
+2. Add a regression gate that compares the ring red twins before and after an add-on, as I did here. It costs about 3 minutes and
+   catches junction changes away from the add-on.
+
+## PRODUCER NOTE (2026-10-17, session 2, 16:30): round 5 (eyebrow dormer) ACCEPTED
+
+Director 8.4 (pass mark 8.2) and the independent audit upheld it. 715,139 tris, 14.4 % hidden, 9 palette slots.
+- The client's circled eyebrow dormer is built as the reusable kit option `linear_roof.GableRoof(eyebrows=[eyebrow(...)])`. Its defaults are off, so the hash rule is not triggered.
+- The director's regression check found 63 of 70 meshes vertex-identical to round 4, and the roof unchanged outside the eyebrow zone (within 0.8 mm).
+- Round 5 is the deliverable. Round 4 is kept as `buildings/variants/v5_harbour_house/*_r04_accepted.*`.
+
+Nice-to-haves to carry into the next design, as kit changes with unchanged defaults:
+- limit the eyebrow's deck tear rows to the bump's span (this gives back hidden-geometry headroom);
+- tilt the lifted shingles to the bump's slope (the flanks shear the shingles into slivers);
+- inset the lifted eave board, and close the plateau crescent and the front-end slots;
+- end the fade before the comb;
+- add an overlap check and thatch support;
+- add a two-light window option;
+- plus the round-4 list above.

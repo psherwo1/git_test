@@ -4,6 +4,9 @@ on dressed responds to the bed (cruck_frame respond_z), the quay walls' footing 
 flush_runs), and the quay's convex corners are quoin-bonded on a never-culled backing (stone_quay).  Round 4: the
 client's broader, slumped hall roof (7.0 m at 49 deg, 0.50 m ridge sag, 0.70 m swept eaves), a parameter change:
 every plan coordinate (the hall, slip, quay, jetty, ladder, moorings, door and run distances) derives from DIM.
+Round 5 (client, ref4b): ref4's eyebrow dormer on the west slope -- the kit's GableRoof(eyebrows=[eyebrow(...)])
+option (a bump in the roof's warp field, a framed deck opening, a short timber front and a kit window); nothing else
+changed.
 
 Run:  python -I build_v5_harbour_house.py  -> v5_harbour_house.blend + decal_anchors.json (next to this file)
       HARB_FAST=1 skips the hidden-geometry cull (quick looks only); HARB_OUT=<path.blend> writes elsewhere.
@@ -37,7 +40,7 @@ from village_kit.components.cone import AGE_R10, age_defaults  # noqa: E402
 from village_kit.components.cruck import cruck_frame  # noqa: E402
 from village_kit.components.finial import finial  # noqa: E402
 from village_kit.components.frame import RoundFrame  # noqa: E402
-from village_kit.components.linear_roof import GableRoof, linear_roof  # noqa: E402
+from village_kit.components.linear_roof import GableRoof, eyebrow, linear_roof  # noqa: E402
 from village_kit.components.openings import window  # noqa: E402
 from village_kit.components.roof_junction import LINEAR_ROOF_PARTS, round_eave_fill, wall_abutment  # noqa: E402
 from village_kit.components.rubble_walls import RUBBLE_LARGE, path_stone_wall, round_stone_body  # noqa: E402
@@ -63,10 +66,15 @@ XW, XE = HX - HALF, HX + HALF                                # hall side faces (
 XJ0, XJ1 = HX - DIM["clear"] / 2, HX + DIM["clear"] / 2      # the arch jambs (1.2 / 6.2)
 YP = Y1 - DIM["bay"]                                         # the bay partition / slip head (6.2)
 K = HALF / 3.0                                               # the soft-roof options scale with the span (round-3 = 1)
+# round 5 (client: ref4's eyebrow dormer): one eyebrow on the west slope (local +y, facing the wing and the tower),
+# over the west-wall window (y 4.6), clear of the tower abutment (y < 2.3), the wing roof (y < 2.05) and the
+# partition (y 6.2): a 2.2 m wave, 0.72 m high at the front, over a 0.56 m two-light kit window
+BROW = eyebrow(x=4.6, side=1, d=1.5, width=2.2, height=0.72, flat=0.60, plateau=0.18, fade=1.20, lip=0.20,
+               window=dict(width=0.56, height=0.36, sill=0.05))
 MAIN = GableRoof(x0=Y0, x1=Y1, half=HALF, wall_z=DIM["wall_z"], pitch_deg=DIM["pitch"], overhang=0.70,
                  verge=(0.35, 0.50), origin=(HX, 0.0), yaw_deg=90.0, name="roof", ridge_sag=DIM["ridge_sag"],
                  eave_sag=0.10, eave_sweep=0.40, sweep_len=1.5, verge_flare=0.36 * K, flare_len=2.0 * K,
-                 wave=0.02, wave_seed=41)
+                 wave=0.02, wave_seed=41, eyebrows=[BROW])
 WING = GableRoof(x0=DIM["wing_x0"], x1=0.0, half=DIM["wing_half"], wall_z=DIM["wing_z"], pitch_deg=50.0,
                  overhang=0.35, verge=(0.40, 0.0), name="wing_roof", ridge_sag=0.14, eave_sweep=0.18, sweep_len=0.8,
                  verge_flare=0.24, flare_len=1.4, wave=0.015, wave_seed=43)

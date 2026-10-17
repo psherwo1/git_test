@@ -1,0 +1,20 @@
+﻿00:00.547  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r5_fast\v5_harbour_house.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\closeups_r5.py:25: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:801
++ ... perty Line; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\closeups_r5.py:41: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w.use_nodes = True
+00:00.719  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.985  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r5_fast\renders2\r5_brow_graze.png'
+00:05.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r5_fast\renders2\r5_brow_graze_red.png'
+wrote r5_brow_graze
+00:09.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r5_fast\renders2\r5_brow_close.png'
+00:09.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r5_fast\renders2\r5_brow_close_red.png'
+wrote r5_brow_close

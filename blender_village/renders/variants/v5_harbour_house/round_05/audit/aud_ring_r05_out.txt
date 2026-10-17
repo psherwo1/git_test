@@ -1,0 +1,640 @@
+﻿00:01.875  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+DOOR hall land door 0.05:3.934(HARB_hall_stones) | 0.10:5.559(HARB_roof_deck) | 0.15:5.573(HARB_roof_deck) | 0.20:5.587(HARB_roof_deck) | 0.25:5.571(HARB_roof_rafters) | 0.30:5.571(HARB_roof_rafters) | 0.35:5.756(HARB_roof_covering) | 0.40:open | 0.45:open | 0.50:open | 0.55:open | 0.60:open | 0.65:open | 0.70:open | 0.75:open | 0.80:open | 0.85:open | 0.90:open | 0.95:open | 1.00:open | 1.05:open | 1.10:open | 1.15:open | 1.20:open
+DOOR wing S door 0.05:2.588(HARB_wing_roof_rafters) | 0.10:2.543(HARB_wing_roof_rafters) | 0.15:2.498(HARB_wing_roof_rafters) | 0.20:2.464(HARB_wing_roof_rafters) | 0.25:2.517(HARB_wing_roof_rafters) | 0.30:2.591(HARB_wing_roof_deck) | 0.35:2.642(HARB_wing_roof_covering) | 0.40:2.640(HARB_wing_roof_covering) | 0.45:open | 0.50:open | 0.55:open | 0.60:open | 0.65:open | 0.70:open | 0.75:open | 0.80:open | 0.85:open | 0.90:open | 0.95:open | 1.00:open | 1.05:open | 1.10:open | 1.15:open | 1.20:open
+blender.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\aud_ring_r05.py:45: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:397
++ ... d_05\audit; & "C:\Program Files\Blender Foundation\Blender 5.2\blende ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  black = bpy.data.materials.new("_AUD_black"); black.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\aud_ring_r05.py:52: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_AUD_world"); world.use_nodes = True
+00:02.469  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+SKIP (camera inside geometry) g 45
+SKIP (camera inside geometry) n 45
+SKIP (camera inside geometry) g 70
+eyebrow shots 32
+00:03.266  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g00_red.png'
+SHOT g00 loc (13.6, -0.4, 1.7) enclosed px 336 patches 50 patches >=2 cm wide 15
+   px     24 extent    9.8 cm  width   1.5 cm  bbox (np.int64(1311), np.int64(165), np.int64(1312), np.int64(177))  depth 12.8 m  at (1.90,-1.16,7.00)  rim ['HARB_roof_comb']
+   px     22 extent    7.0 cm  width   3.1 cm  bbox (np.int64(1833), np.int64(107), np.int64(1836), np.int64(115))  depth 13.2 m  at (1.92,2.50,7.28)  rim ['HARB_roof_comb']
+   px     21 extent    7.1 cm  width   2.4 cm  bbox (np.int64(1913), np.int64(80), np.int64(1915), np.int64(88))  depth 13.4 m  at (1.91,3.05,7.46)  rim ['HARB_roof_comb']
+   px     18 extent   11.3 cm  width   2.3 cm  bbox (np.int64(1366), np.int64(162), np.int64(1368), np.int64(176))  depth 12.8 m  at (1.92,-0.76,6.98)  rim ['HARB_roof_comb']
+   px     17 extent    8.6 cm  width   2.3 cm  bbox (np.int64(1889), np.int64(87), np.int64(1891), np.int64(97))  depth 13.4 m  at (1.91,2.89,7.41)  rim ['HARB_roof_comb']
+   px     16 extent    6.0 cm  width   2.3 cm  bbox (np.int64(1551), np.int64(154), np.int64(1553), np.int64(161))  depth 12.8 m  at (1.91,0.55,7.03)  rim ['HARB_roof_comb']
+   px     16 extent    6.8 cm  width   1.5 cm  bbox (np.int64(1197), np.int64(173), np.int64(1198), np.int64(181))  depth 12.9 m  at (1.93,-1.98,6.97)  rim ['HARB_roof_comb']
+   px     15 extent    9.1 cm  width   4.0 cm  bbox (np.int64(660), np.int64(7), np.int64(668), np.int64(10))  depth 17.2 m  at (-0.17,-7.02,9.67)  rim ['HARB_roof_shingles']
+   px     15 extent    6.1 cm  width   2.3 cm  bbox (np.int64(1771), np.int64(126), np.int64(1773), np.int64(133))  depth 13.1 m  at (1.91,2.07,7.17)  rim ['HARB_roof_comb']
+   px     15 extent    8.2 cm  width   2.2 cm  bbox (np.int64(1421), np.int64(162), np.int64(1423), np.int64(172))  depth 12.8 m  at (1.92,-0.37,6.99)  rim ['HARB_roof_comb']
+   px     12 extent    6.0 cm  width   5.0 cm  bbox (np.int64(652), np.int64(10), np.int64(657), np.int64(14))  depth 17.2 m  at (0.33,-6.86,9.35)  rim ['HARB_roof_apex_finial', 'HARB_roof_shingles']
+   px     12 extent    7.5 cm  width   1.5 cm  bbox (np.int64(1233), np.int64(170), np.int64(1234), np.int64(179))  depth 12.9 m  at (1.92,-1.72,6.98)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:07.313  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c00_red.png'
+SHOT c00 loc (11.6, -0.5, 6.0) enclosed px 496 patches 59 patches >=2 cm wide 6
+   px     45 extent   13.7 cm  width   1.7 cm  bbox (np.int64(1320), np.int64(211), np.int64(1322), np.int64(234))  depth 9.7 m  at (1.92,-1.16,7.00)  rim ['HARB_roof_comb']
+   px     37 extent   11.4 cm  width   2.3 cm  bbox (np.int64(1392), np.int64(215), np.int64(1395), np.int64(234))  depth 9.7 m  at (1.91,-0.76,6.99)  rim ['HARB_roof_comb']
+   px     35 extent    8.4 cm  width   2.4 cm  bbox (np.int64(2015), np.int64(154), np.int64(2018), np.int64(167))  depth 10.2 m  at (1.92,2.50,7.29)  rim ['HARB_roof_comb']
+   px     32 extent    7.5 cm  width   2.3 cm  bbox (np.int64(1171), np.int64(223), np.int64(1174), np.int64(235))  depth 9.8 m  at (1.92,-1.98,6.98)  rim ['HARB_roof_comb']
+   px     30 extent    8.0 cm  width   2.3 cm  bbox (np.int64(1635), np.int64(209), np.int64(1638), np.int64(222))  depth 9.8 m  at (1.91,0.54,7.03)  rim ['HARB_roof_comb']
+   px     28 extent    7.9 cm  width   1.8 cm  bbox (np.int64(2127), np.int64(118), np.int64(2129), np.int64(130))  depth 10.4 m  at (1.91,3.05,7.46)  rim ['HARB_roof_comb']
+   px     26 extent    7.9 cm  width   1.8 cm  bbox (np.int64(2093), np.int64(129), np.int64(2095), np.int64(141))  depth 10.3 m  at (1.90,2.89,7.41)  rim ['HARB_roof_comb']
+   px     25 extent    5.7 cm  width   2.3 cm  bbox (np.int64(1244), np.int64(225), np.int64(1247), np.int64(234))  depth 9.7 m  at (1.91,-1.57,6.97)  rim ['HARB_roof_comb']
+   px     24 extent    7.1 cm  width   2.4 cm  bbox (np.int64(1929), np.int64(179), np.int64(1932), np.int64(190))  depth 10.1 m  at (1.91,2.07,7.17)  rim ['HARB_roof_comb']
+   px     24 extent    9.7 cm  width   1.7 cm  bbox (np.int64(1265), np.int64(213), np.int64(1267), np.int64(229))  depth 9.7 m  at (1.92,-1.46,7.01)  rim ['HARB_roof_comb']
+   px     22 extent    8.5 cm  width   1.7 cm  bbox (np.int64(1465), np.int64(217), np.int64(1467), np.int64(231))  depth 9.7 m  at (1.91,-0.37,6.99)  rim ['HARB_roof_comb']
+   px     19 extent    9.2 cm  width   1.1 cm  bbox (np.int64(1219), np.int64(218), np.int64(1220), np.int64(233))  depth 9.8 m  at (1.92,-1.72,6.99)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:09.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g01_red.png'
+SHOT g01 loc (12.1, 4.5, 1.7) enclosed px 193 patches 74 patches >=2 cm wide 8
+   px     41 extent   10.8 cm  width  10.8 cm  bbox (np.int64(893), np.int64(48), np.int64(902), np.int64(57))  depth 18.3 m  at (-0.21,-6.14,10.11)  rim ['HARB_roof_shingles']
+   px     27 extent    8.3 cm  width   2.1 cm  bbox (np.int64(1755), np.int64(1), np.int64(1757), np.int64(12))  depth 11.8 m  at (1.92,2.51,7.29)  rim ['HARB_roof_comb']
+   px     15 extent    6.3 cm  width   2.1 cm  bbox (np.int64(1604), np.int64(68), np.int64(1606), np.int64(76))  depth 11.9 m  at (1.92,1.55,7.09)  rim ['HARB_roof_comb']
+   px     11 extent    3.1 cm  width   3.1 cm  bbox (np.int64(1938), np.int64(1169), np.int64(1941), np.int64(1172))  depth 13.1 m  at (-0.73,2.97,-0.05)  rim ['HARB_quay_core']
+   px      9 extent    3.7 cm  width   2.2 cm  bbox (np.int64(1287), np.int64(161), np.int64(1289), np.int64(165))  depth 12.6 m  at (1.91,-0.75,6.97)  rim ['HARB_roof_comb']
+   px      7 extent    4.3 cm  width   1.4 cm  bbox (np.int64(1461), np.int64(115), np.int64(1462), np.int64(120))  depth 12.2 m  at (1.92,0.56,7.01)  rim ['HARB_roof_comb']
+   px      5 extent    4.4 cm  width   2.2 cm  bbox (np.int64(949), np.int64(12), np.int64(952), np.int64(13))  depth 18.8 m  at (-0.69,-5.89,10.70)  rim ['HARB_roof_shingles']
+   px      5 extent    2.1 cm  width   1.4 cm  bbox (np.int64(1687), np.int64(43), np.int64(1688), np.int64(45))  depth 11.8 m  at (1.91,2.08,7.15)  rim ['HARB_roof_comb']
+   px      3 extent    2.1 cm  width   2.1 cm  bbox (np.int64(822), np.int64(128), np.int64(823), np.int64(129))  depth 18.1 m  at (0.16,-6.73,9.30)  rim ['HARB_roof_shingles']
+   px      3 extent    2.1 cm  width   2.1 cm  bbox (np.int64(820), np.int64(130), np.int64(821), np.int64(131))  depth 17.7 m  at (0.30,-6.62,9.20)  rim ['HARB_roof_shingles']
+   px      2 extent    2.2 cm  width   1.1 cm  bbox (np.int64(1071), np.int64(22), np.int64(1071), np.int64(23))  depth 18.8 m  at (-1.62,-5.07,10.84)  rim ['HARB_cap_collar', 'HARB_roof_shingles']
+   px      2 extent    1.4 cm  width   0.7 cm  bbox (np.int64(2019), np.int64(82), np.int64(2019), np.int64(83))  depth 12.1 m  at (1.20,3.93,6.79)  rim ['HARB_roof_deck', 'HARB_roof_verge']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:14.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c01_red.png'
+SHOT c01 loc (10.4, 3.6, 6.0) enclosed px 404 patches 25 patches >=2 cm wide 3
+   px     99 extent   14.1 cm  width   3.5 cm  bbox (np.int64(2074), np.int64(46), np.int64(2080), np.int64(73))  depth 8.6 m  at (1.92,3.05,7.48)  rim ['HARB_roof_comb']
+   px     82 extent   12.6 cm  width   2.5 cm  bbox (np.int64(1937), np.int64(100), np.int64(1941), np.int64(124))  depth 8.6 m  at (1.92,2.51,7.31)  rim ['HARB_roof_comb']
+   px     52 extent   12.1 cm  width   1.5 cm  bbox (np.int64(2144), np.int64(18), np.int64(2146), np.int64(41))  depth 8.6 m  at (1.92,3.31,7.58)  rim ['HARB_roof_comb']
+   px     31 extent    7.2 cm  width   2.1 cm  bbox (np.int64(1719), np.int64(167), np.int64(1722), np.int64(180))  depth 8.8 m  at (1.91,1.54,7.10)  rim ['HARB_roof_comb']
+   px     25 extent    5.6 cm  width   1.5 cm  bbox (np.int64(1837), np.int64(148), np.int64(1839), np.int64(158))  depth 8.7 m  at (1.91,2.08,7.16)  rim ['HARB_roof_comb']
+   px     23 extent    6.3 cm  width   1.6 cm  bbox (np.int64(1521), np.int64(197), np.int64(1523), np.int64(208))  depth 9.0 m  at (1.91,0.55,7.02)  rim ['HARB_roof_comb']
+   px     13 extent    4.5 cm  width   1.0 cm  bbox (np.int64(2006), np.int64(93), np.int64(2007), np.int64(101))  depth 8.6 m  at (1.91,2.78,7.35)  rim ['HARB_roof_comb']
+   px     13 extent    5.0 cm  width   1.1 cm  bbox (np.int64(1290), np.int64(221), np.int64(1291), np.int64(229))  depth 9.6 m  at (1.90,-0.76,6.97)  rim ['HARB_roof_comb']
+   px     10 extent    4.0 cm  width   1.0 cm  bbox (np.int64(2187), np.int64(12), np.int64(2188), np.int64(19))  depth 8.6 m  at (1.92,3.46,7.62)  rim ['HARB_roof_comb']
+   px     10 extent    3.0 cm  width   1.0 cm  bbox (np.int64(2114), np.int64(48), np.int64(2115), np.int64(53))  depth 8.6 m  at (1.91,3.19,7.51)  rim ['HARB_roof_comb']
+   px     10 extent    3.1 cm  width   1.0 cm  bbox (np.int64(1638), np.int64(189), np.int64(1639), np.int64(194))  depth 8.8 m  at (1.92,1.15,7.04)  rim ['HARB_roof_comb']
+   px      6 extent    2.5 cm  width   1.0 cm  bbox (np.int64(2115), np.int64(35), np.int64(2116), np.int64(39))  depth 8.6 m  at (1.90,3.19,7.56)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:18.031  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g02_red.png'
+SHOT g02 loc (9.0, 8.5, 1.7) enclosed px 50 patches 14 patches >=2 cm wide 4
+   px     19 extent   14.1 cm  width   0.7 cm  bbox (np.int64(1564), np.int64(1140), np.int64(1564), np.int64(1158))  depth 12.7 m  at (-0.58,0.25,0.06)  rim ['HARB_hall_stones', 'HARB_partition_frame']
+   px      8 extent    4.5 cm  width   3.4 cm  bbox (np.int64(1128), np.int64(53), np.int64(1131), np.int64(55))  depth 19.3 m  at (-0.91,-5.79,10.83)  rim ['HARB_cap_collar', 'HARB_roof_shingles']
+   px      7 extent    4.4 cm  width   3.3 cm  bbox (np.int64(1011), np.int64(159), np.int64(1014), np.int64(161))  depth 18.6 m  at (0.30,-6.12,9.41)  rim ['HARB_roof_shingles']
+   px      3 extent    2.2 cm  width   2.2 cm  bbox (np.int64(1009), np.int64(161), np.int64(1010), np.int64(162))  depth 18.7 m  at (0.27,-6.23,9.44)  rim ['HARB_roof_shingles']
+   px      3 extent    2.2 cm  width   2.2 cm  bbox (np.int64(1006), np.int64(162), np.int64(1007), np.int64(163))  depth 18.8 m  at (0.26,-6.30,9.46)  rim ['HARB_roof_shingles']
+   px      2 extent    1.9 cm  width   0.9 cm  bbox (np.int64(944), np.int64(272), np.int64(945), np.int64(272))  depth 15.8 m  at (1.53,-5.23,7.64)  rim ['HARB_roof_comb']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(1434), np.int64(32), np.int64(1434), np.int64(32))  depth 10.5 m  at (2.36,1.97,6.71)  rim ['HARB_roof_covering']
+   px      1 extent    1.1 cm  width   1.1 cm  bbox (np.int64(1261), np.int64(59), np.int64(1261), np.int64(59))  depth 19.4 m  at (-1.91,-4.82,10.71)  rim ['HARB_roof_shingles']
+   px      1 extent    1.1 cm  width   1.1 cm  bbox (np.int64(1005), np.int64(164), np.int64(1005), np.int64(164))  depth 18.8 m  at (0.27,-6.31,9.44)  rim ['HARB_roof_shingles']
+   px      1 extent    1.1 cm  width   1.1 cm  bbox (np.int64(1004), np.int64(165), np.int64(1004), np.int64(165))  depth 18.8 m  at (0.28,-6.32,9.43)  rim ['HARB_roof_shingles']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(453), np.int64(762), np.int64(453), np.int64(762))  depth 13.5 m  at (5.67,-4.65,2.80)  rim ['HARB_hall_mortar', 'HARB_roof_rafters']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(452), np.int64(763), np.int64(452), np.int64(763))  depth 13.5 m  at (5.68,-4.63,2.79)  rim ['HARB_hall_quoins', 'HARB_roof_rafters']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:22.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c02_red.png'
+SHOT c02 loc (7.7, 6.9, 6.0) enclosed px 9 patches 8 patches >=2 cm wide 0
+   px      2 extent    0.9 cm  width   0.5 cm  bbox (np.int64(1497), np.int64(154), np.int64(1497), np.int64(155))  depth 8.0 m  at (1.90,1.54,7.10)  rim ['HARB_roof_comb']
+   px      1 extent    1.0 cm  width   1.0 cm  bbox (np.int64(1441), np.int64(112), np.int64(1441), np.int64(112))  depth 16.4 m  at (-3.78,-4.46,8.63)  rim ['HARB_battens', 'HARB_roof_starter']
+   px      1 extent    1.0 cm  width   1.0 cm  bbox (np.int64(1440), np.int64(113), np.int64(1440), np.int64(113))  depth 16.3 m  at (-3.71,-4.40,8.61)  rim ['HARB_battens', 'HARB_roof_starter']
+   px      1 extent    1.0 cm  width   1.0 cm  bbox (np.int64(1441), np.int64(114), np.int64(1441), np.int64(114))  depth 16.3 m  at (-3.72,-4.40,8.60)  rim ['HARB_battens', 'HARB_roof_starter']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(453), np.int64(580), np.int64(453), np.int64(580))  depth 13.4 m  at (4.40,-6.03,4.81)  rim ['HARB_roof_rafters']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(451), np.int64(583), np.int64(451), np.int64(583))  depth 13.4 m  at (4.42,-6.03,4.79)  rim ['HARB_roof_rafters']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2203), np.int64(969), np.int64(2203), np.int64(969))  depth 10.3 m  at (-1.76,3.39,3.04)  rim ['HARB_hall_quoins', 'HARB_roof_deck']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(362), np.int64(1184), np.int64(362), np.int64(1184))  depth 13.9 m  at (5.41,-5.71,0.68)  rim ['HARB_hall_quoins']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:26.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g03_red.png'
+SHOT g03 loc (4.5, 10.9, 1.7) enclosed px 21 patches 8 patches >=2 cm wide 0
+   px     13 extent    2.3 cm  width   1.8 cm  bbox (np.int64(673), np.int64(1349), np.int64(676), np.int64(1353))  depth 7.8 m  at (4.69,3.34,-0.05)  rim ['HARB_quay_core']
+   px      2 extent    1.3 cm  width   0.6 cm  bbox (np.int64(919), np.int64(1209), np.int64(920), np.int64(1209))  depth 10.9 m  at (3.41,0.18,-0.05)  rim ['HARB_quay_backing_blocker', 'HARB_quay_core']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2080), np.int64(586), np.int64(2080), np.int64(586))  depth 9.6 m  at (-1.93,3.98,3.36)  rim ['HARB_roof_verge']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2135), np.int64(632), np.int64(2135), np.int64(632))  depth 9.8 m  at (-2.26,3.98,3.14)  rim ['HARB_roof_verge']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2153), np.int64(648), np.int64(2153), np.int64(648))  depth 9.9 m  at (-2.37,3.98,3.07)  rim ['HARB_roof_verge']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(405), np.int64(679), np.int64(405), np.int64(679))  depth 8.5 m  at (5.95,2.58,2.75)  rim ['HARB_roof_rafters']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(500), np.int64(913), np.int64(500), np.int64(913))  depth 7.5 m  at (5.41,3.45,1.71)  rim ['HARB_hall_quoins']
+   px      1 extent    0.7 cm  width   0.7 cm  bbox (np.int64(2450), np.int64(1284), np.int64(2450), np.int64(1284))  depth 12.1 m  at (-4.76,3.42,-0.36)  rim ['HARB_quay_core']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:31.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c03_red.png'
+SHOT c03 loc (3.9, 9.0, 6.0) enclosed px 11 patches 8 patches >=2 cm wide 0
+   px      3 extent    1.9 cm  width   1.9 cm  bbox (np.int64(1154), np.int64(1), np.int64(1155), np.int64(2))  depth 16.0 m  at (0.25,-6.20,9.46)  rim ['HARB_roof_shingles']
+   px      2 extent    1.1 cm  width   0.5 cm  bbox (np.int64(2169), np.int64(1094), np.int64(2170), np.int64(1094))  depth 9.0 m  at (-2.21,3.16,2.91)  rim ['HARB_roof_deck', 'HARB_roof_rafters']
+   px      1 extent    0.9 cm  width   0.9 cm  bbox (np.int64(1153), np.int64(3), np.int64(1153), np.int64(3))  depth 16.0 m  at (0.26,-6.22,9.45)  rim ['HARB_roof_shingles']
+   px      1 extent    0.9 cm  width   0.9 cm  bbox (np.int64(989), np.int64(182), np.int64(989), np.int64(182))  depth 15.2 m  at (1.75,-5.97,7.87)  rim ['HARB_roof_apex_cap_collar']
+   px      1 extent    0.9 cm  width   0.9 cm  bbox (np.int64(562), np.int64(695), np.int64(562), np.int64(695))  depth 15.2 m  at (5.37,-6.00,3.68)  rim ['HARB_roof_rafters']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(2252), np.int64(1038), np.int64(2252), np.int64(1038))  depth 7.9 m  at (-1.74,3.98,3.52)  rim ['HARB_roof_verge']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(2168), np.int64(1093), np.int64(2168), np.int64(1093))  depth 9.0 m  at (-2.21,3.16,2.91)  rim ['HARB_roof_deck', 'HARB_roof_rafters']
+   px      1 extent    0.3 cm  width   0.3 cm  bbox (np.int64(213), np.int64(1399), np.int64(213), np.int64(1399))  depth 5.9 m  at (5.43,3.98,3.30)  rim ['HARB_roof_verge']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:36.313  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g04_red.png'
+SHOT g04 loc (-0.5, 11.5, 1.7) enclosed px 79 patches 16 patches >=2 cm wide 8
+   px     12 extent    6.5 cm  width   5.5 cm  bbox (np.int64(1446), np.int64(62), np.int64(1450), np.int64(67))  depth 18.6 m  at (-0.80,-5.06,10.28)  rim ['HARB_rafters', 'HARB_roof_shingles']
+   px     12 extent    2.4 cm  width   1.9 cm  bbox (np.int64(1514), np.int64(1299), np.int64(1517), np.int64(1303))  depth 8.3 m  at (-0.90,3.34,-0.05)  rim ['HARB_quay_core']
+   px     10 extent    6.3 cm  width   2.1 cm  bbox (np.int64(1761), np.int64(392), np.int64(1762), np.int64(397))  depth 18.0 m  at (-3.88,-5.46,6.88)  rim ['HARB_tower_stones', 'HARB_tower_top_ring']
+   px      9 extent    6.4 cm  width   2.1 cm  bbox (np.int64(1912), np.int64(602), np.int64(1913), np.int64(607))  depth 18.3 m  at (-5.39,-5.95,4.82)  rim ['HARB_wing_roof_comb']
+   px      8 extent    5.5 cm  width   2.2 cm  bbox (np.int64(2071), np.int64(594), np.int64(2072), np.int64(598))  depth 18.8 m  at (-6.94,-5.96,4.88)  rim ['HARB_wing_roof_comb']
+   px      6 extent    4.4 cm  width   2.2 cm  bbox (np.int64(2101), np.int64(595), np.int64(2102), np.int64(598))  depth 18.9 m  at (-7.23,-5.95,4.87)  rim ['HARB_wing_roof_comb']
+   px      6 extent    5.4 cm  width   2.2 cm  bbox (np.int64(1954), np.int64(601), np.int64(1955), np.int64(605))  depth 18.5 m  at (-5.81,-5.95,4.82)  rim ['HARB_wing_roof_comb']
+   px      4 extent    2.3 cm  width   2.3 cm  bbox (np.int64(1444), np.int64(68), np.int64(1445), np.int64(69))  depth 19.3 m  at (-0.77,-5.63,10.54)  rim ['HARB_rafters', 'HARB_roof_shingles']
+   px      3 extent    2.2 cm  width   2.2 cm  bbox (np.int64(1599), np.int64(17), np.int64(1600), np.int64(18))  depth 18.8 m  at (-2.34,-5.20,10.79)  rim ['HARB_roof_shingles', 'HARB_roof_underlap']
+   px      3 extent    3.1 cm  width   1.0 cm  bbox (np.int64(1761), np.int64(386), np.int64(1761), np.int64(388))  depth 17.8 m  at (-3.86,-5.35,6.92)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px      1 extent    1.0 cm  width   1.0 cm  bbox (np.int64(1374), np.int64(140), np.int64(1374), np.int64(140))  depth 17.9 m  at (-0.06,-4.76,9.37)  rim ['HARB_roof_shingles']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(475), np.int64(172), np.int64(475), np.int64(172))  depth 9.4 m  at (3.99,3.98,5.25)  rim ['HARB_roof_verge']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:40.141  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c04_red.png'
+SHOT c04 loc (-0.4, 9.5, 6.0) enclosed px 32 patches 11 patches >=2 cm wide 1
+   px      7 extent    3.8 cm  width   2.9 cm  bbox (np.int64(2007), np.int64(546), np.int64(2009), np.int64(549))  depth 16.3 m  at (-5.39,-5.96,4.82)  rim ['HARB_wing_roof_comb']
+   px      6 extent    3.9 cm  width   2.0 cm  bbox (np.int64(2194), np.int64(539), np.int64(2195), np.int64(542))  depth 16.8 m  at (-6.94,-5.96,4.89)  rim ['HARB_wing_roof_comb']
+   px      6 extent    4.0 cm  width   2.0 cm  bbox (np.int64(2228), np.int64(540), np.int64(2229), np.int64(543))  depth 16.9 m  at (-7.23,-5.96,4.88)  rim ['HARB_wing_roof_comb']
+   px      4 extent    3.8 cm  width   1.0 cm  bbox (np.int64(2058), np.int64(545), np.int64(2058), np.int64(548))  depth 16.4 m  at (-5.81,-5.96,4.83)  rim ['HARB_wing_roof_comb']
+   px      3 extent    1.9 cm  width   1.9 cm  bbox (np.int64(2009), np.int64(544), np.int64(2010), np.int64(545))  depth 16.3 m  at (-5.40,-5.96,4.84)  rim ['HARB_wing_roof_comb']
+   px      1 extent    0.9 cm  width   0.9 cm  bbox (np.int64(1912), np.int64(35), np.int64(1912), np.int64(35))  depth 14.9 m  at (-3.98,-4.72,8.81)  rim ['HARB_roof_shingles']
+   px      1 extent    0.3 cm  width   0.3 cm  bbox (np.int64(1034), np.int64(190), np.int64(1034), np.int64(190))  depth 5.7 m  at (0.90,3.96,6.68)  rim ['HARB_roof_verge']
+   px      1 extent    0.9 cm  width   0.9 cm  bbox (np.int64(1854), np.int64(380), np.int64(1854), np.int64(380))  depth 15.0 m  at (-3.81,-5.17,6.24)  rim ['HARB_tower_stones']
+   px      1 extent    1.0 cm  width   1.0 cm  bbox (np.int64(2059), np.int64(544), np.int64(2059), np.int64(544))  depth 16.4 m  at (-5.82,-5.96,4.85)  rim ['HARB_wing_roof_comb']
+   px      1 extent    1.0 cm  width   1.0 cm  bbox (np.int64(2397), np.int64(992), np.int64(2397), np.int64(992))  depth 16.4 m  at (-8.09,-4.25,1.43)  rim ['HARB_wing_quoins']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1892), np.int64(1300), np.int64(1892), np.int64(1300))  depth 6.4 m  at (-1.96,3.98,3.04)  rim ['HARB_roof_verge']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:43.609  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g05_red.png'
+SHOT g05 loc (-5.4, 10.0, 1.7) enclosed px 215 patches 27 patches >=2 cm wide 7
+   px     51 extent   12.0 cm  width  11.0 cm  bbox (np.int64(1913), np.int64(46), np.int64(1924), np.int64(56))  depth 17.0 m  at (-3.83,-5.05,9.19)  rim ['HARB_roof_shingles']
+   px     22 extent    9.9 cm  width   3.0 cm  bbox (np.int64(1957), np.int64(328), np.int64(1959), np.int64(337))  depth 16.8 m  at (-3.96,-5.96,6.92)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px     21 extent    9.6 cm  width   2.9 cm  bbox (np.int64(2408), np.int64(510), np.int64(2410), np.int64(519))  depth 16.4 m  at (-7.24,-5.96,4.89)  rim ['HARB_wing_roof_comb']
+   px     20 extent   12.4 cm  width   2.9 cm  bbox (np.int64(2207), np.int64(530), np.int64(2209), np.int64(542))  depth 16.3 m  at (-5.82,-5.94,4.85)  rim ['HARB_wing_roof_comb']
+   px     14 extent    5.9 cm  width   3.9 cm  bbox (np.int64(1491), np.int64(370), np.int64(1494), np.int64(375))  depth 16.8 m  at (0.15,-5.07,6.91)  rim ['HARB_tower_stones', 'HARB_tower_top_ring']
+   px     13 extent    7.7 cm  width   2.9 cm  bbox (np.int64(2342), np.int64(520), np.int64(2344), np.int64(527))  depth 16.4 m  at (-6.79,-5.95,4.86)  rim ['HARB_wing_roof_comb']
+   px      9 extent    4.8 cm  width   1.9 cm  bbox (np.int64(2483), np.int64(498), np.int64(2484), np.int64(502))  depth 16.5 m  at (-7.73,-5.95,4.94)  rim ['HARB_wing_roof_comb']
+   px      9 extent    5.7 cm  width   2.9 cm  bbox (np.int64(2272), np.int64(523), np.int64(2274), np.int64(528))  depth 16.3 m  at (-6.30,-5.95,4.90)  rim ['HARB_wing_roof_comb']
+   px      9 extent    4.0 cm  width   1.6 cm  bbox (np.int64(676), np.int64(1150), np.int64(677), np.int64(1154))  depth 13.6 m  at (4.40,0.75,-0.01)  rim ['HARB_hall_stones']
+   px      8 extent    5.7 cm  width   1.9 cm  bbox (np.int64(2273), np.int64(530), np.int64(2274), np.int64(535))  depth 16.3 m  at (-6.30,-5.95,4.84)  rim ['HARB_wing_roof_comb']
+   px      8 extent    3.7 cm  width   1.5 cm  bbox (np.int64(468), np.int64(1183), np.int64(469), np.int64(1187))  depth 12.5 m  at (4.40,2.48,-0.01)  rim ['HARB_hall_stones']
+   px      6 extent    5.8 cm  width   1.0 cm  bbox (np.int64(2539), np.int64(478), np.int64(2539), np.int64(483))  depth 16.6 m  at (-8.10,-5.97,5.06)  rim ['HARB_wing_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:47.266  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c05_red.png'
+SHOT c05 loc (-4.5, 8.3, 6.0) enclosed px 109 patches 29 patches >=2 cm wide 3
+   px     28 extent   10.9 cm  width   4.2 cm  bbox (np.int64(2310), np.int64(568), np.int64(2314), np.int64(580))  depth 14.3 m  at (-5.40,-5.95,4.84)  rim ['HARB_wing_roof_comb']
+   px     24 extent   10.1 cm  width   3.4 cm  bbox (np.int64(2380), np.int64(571), np.int64(2383), np.int64(582))  depth 14.3 m  at (-5.82,-5.95,4.84)  rim ['HARB_wing_roof_comb']
+   px     15 extent    7.6 cm  width   2.5 cm  bbox (np.int64(2463), np.int64(573), np.int64(2465), np.int64(581))  depth 14.4 m  at (-6.30,-5.95,4.86)  rim ['HARB_wing_roof_comb']
+   px      8 extent    5.9 cm  width   1.7 cm  bbox (np.int64(2549), np.int64(578), np.int64(2550), np.int64(584))  depth 14.4 m  at (-6.78,-5.95,4.86)  rim ['HARB_wing_roof_comb']
+   px      3 extent    1.0 cm  width   1.0 cm  bbox (np.int64(450), np.int64(14), np.int64(451), np.int64(15))  depth 8.2 m  at (1.89,3.31,7.58)  rim ['HARB_roof_comb']
+   px      3 extent    1.2 cm  width   1.2 cm  bbox (np.int64(932), np.int64(230), np.int64(933), np.int64(231))  depth 10.2 m  at (1.88,0.29,7.00)  rim ['HARB_roof_comb']
+   px      2 extent    1.0 cm  width   0.5 cm  bbox (np.int64(506), np.int64(51), np.int64(506), np.int64(52))  depth 8.3 m  at (1.88,3.06,7.48)  rim ['HARB_roof_comb']
+   px      2 extent    1.7 cm  width   0.8 cm  bbox (np.int64(2550), np.int64(576), np.int64(2551), np.int64(576))  depth 14.4 m  at (-6.78,-5.96,4.89)  rim ['HARB_wing_roof_comb']
+   px      2 extent    1.7 cm  width   0.8 cm  bbox (np.int64(2285), np.int64(578), np.int64(2285), np.int64(579))  depth 14.3 m  at (-5.23,-5.97,4.80)  rim ['HARB_wing_roof_comb']
+   px      2 extent    1.7 cm  width   0.8 cm  bbox (np.int64(2357), np.int64(580), np.int64(2357), np.int64(581))  depth 14.3 m  at (-5.68,-5.97,4.81)  rim ['HARB_wing_roof_comb']
+   px      2 extent    1.7 cm  width   0.8 cm  bbox (np.int64(2463), np.int64(583), np.int64(2463), np.int64(584))  depth 14.4 m  at (-6.30,-5.95,4.82)  rim ['HARB_wing_roof_comb']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(449), np.int64(16), np.int64(449), np.int64(16))  depth 8.2 m  at (1.89,3.32,7.57)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:50.094  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g06_red.png'
+SHOT g06 loc (-9.4, 6.9, 1.7) enclosed px 13260 patches 38 patches >=2 cm wide 17
+   px   5743 extent  136.8 cm  width  69.9 cm  bbox (np.int64(65), np.int64(1174), np.int64(203), np.int64(1244))  depth 16.8 m  at (7.18,4.86,-0.62)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px   2796 extent   81.6 cm  width  79.6 cm  bbox (np.int64(57), np.int64(1267), np.int64(138), np.int64(1346))  depth 17.0 m  at (7.30,5.20,-1.17)  rim ['HARB_jetty_piles']
+   px   2439 extent   74.2 cm  width  72.2 cm  bbox (np.int64(128), np.int64(1197), np.int64(202), np.int64(1269))  depth 16.9 m  at (7.13,4.51,-0.98)  rim ['HARB_jetty_piles']
+   px    794 extent   42.6 cm  width  34.1 cm  bbox (np.int64(61), np.int64(1243), np.int64(96), np.int64(1287))  depth 16.1 m  at (6.98,5.24,-0.91)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px    554 extent   36.7 cm  width  29.8 cm  bbox (np.int64(171), np.int64(1255), np.int64(200), np.int64(1291))  depth 16.9 m  at (7.19,4.49,-1.16)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px    288 extent   43.0 cm  width  28.0 cm  bbox (np.int64(65), np.int64(1225), np.int64(110), np.int64(1254))  depth 15.9 m  at (6.34,5.41,-0.67)  rim ['HARB_jetty_structure']
+   px    243 extent   40.6 cm  width  27.1 cm  bbox (np.int64(158), np.int64(1282), np.int64(196), np.int64(1307))  depth 17.8 m  at (7.49,4.50,-1.33)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px    210 extent   35.7 cm  width  21.8 cm  bbox (np.int64(116), np.int64(1257), np.int64(151), np.int64(1278))  depth 16.9 m  at (7.22,4.85,-1.07)  rim ['HARB_jetty_structure']
+   px     24 extent   11.8 cm  width   3.4 cm  bbox (np.int64(494), np.int64(1144), np.int64(507), np.int64(1147))  depth 14.4 m  at (4.41,2.93,-0.00)  rim ['HARB_hall_stones']
+   px     20 extent    6.8 cm  width   6.0 cm  bbox (np.int64(557), np.int64(1140), np.int64(564), np.int64(1146))  depth 14.5 m  at (4.39,2.50,-0.02)  rim ['HARB_hall_stones']
+   px     17 extent    5.2 cm  width   4.3 cm  bbox (np.int64(653), np.int64(1132), np.int64(657), np.int64(1137))  depth 14.8 m  at (3.22,2.21,0.13)  rim ['HARB_hall_stones', 'HARB_water_gable_frame']
+   px     15 extent    6.2 cm  width   2.3 cm  bbox (np.int64(646), np.int64(62), np.int64(648), np.int64(69))  depth 13.2 m  at (1.86,3.06,7.46)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:54.063  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c06_red.png'
+SHOT c06 loc (-7.8, 5.6, 6.0) enclosed px 9873 patches 35 patches >=2 cm wide 13
+   px   5887 extent  129.2 cm  width  72.5 cm  bbox (np.int64(18), np.int64(1309), np.int64(156), np.int64(1386))  depth 15.9 m  at (6.94,4.73,-0.97)  rim ['HARB_jetty_structure']
+   px   1856 extent   59.8 cm  width  55.1 cm  bbox (np.int64(117), np.int64(1343), np.int64(175), np.int64(1406))  depth 15.9 m  at (6.90,4.53,-1.35)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px   1672 extent   77.4 cm  width  43.8 cm  bbox (np.int64(89), np.int64(1278), np.int64(164), np.int64(1320))  depth 17.4 m  at (7.61,4.55,-0.94)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px    159 extent   19.2 cm  width  14.4 cm  bbox (np.int64(1668), np.int64(280), np.int64(1685), np.int64(303))  depth 13.6 m  at (0.42,-5.26,6.87)  rim ['HARB_roof_covering', 'HARB_tower_stones']
+   px     53 extent   11.8 cm  width   2.4 cm  bbox (np.int64(271), np.int64(24), np.int64(274), np.int64(43))  depth 10.0 m  at (1.88,3.72,7.77)  rim ['HARB_roof_comb']
+   px     43 extent    8.9 cm  width   3.0 cm  bbox (np.int64(426), np.int64(107), np.int64(430), np.int64(121))  depth 10.1 m  at (1.88,3.06,7.47)  rim ['HARB_roof_comb']
+   px     36 extent    9.5 cm  width   2.4 cm  bbox (np.int64(462), np.int64(122), np.int64(465), np.int64(137))  depth 10.2 m  at (1.88,2.89,7.41)  rim ['HARB_roof_comb']
+   px     35 extent    8.4 cm  width   2.4 cm  bbox (np.int64(541), np.int64(156), np.int64(544), np.int64(169))  depth 10.3 m  at (1.88,2.51,7.28)  rim ['HARB_roof_comb']
+   px     28 extent    7.1 cm  width   2.4 cm  bbox (np.int64(298), np.int64(47), np.int64(301), np.int64(58))  depth 10.0 m  at (1.87,3.61,7.70)  rim ['HARB_roof_comb']
+   px     24 extent    7.7 cm  width   2.4 cm  bbox (np.int64(369), np.int64(83), np.int64(372), np.int64(95))  depth 10.1 m  at (1.87,3.31,7.56)  rim ['HARB_roof_comb']
+   px     15 extent    6.1 cm  width   2.4 cm  bbox (np.int64(625), np.int64(187), np.int64(628), np.int64(196))  depth 10.4 m  at (1.88,2.08,7.17)  rim ['HARB_roof_comb']
+   px      9 extent    3.2 cm  width   1.9 cm  bbox (np.int64(921), np.int64(243), np.int64(923), np.int64(247))  depth 11.1 m  at (1.87,0.29,6.99)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+00:56.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g07_red.png'
+SHOT g07 loc (-11.8, 2.4, 1.7) enclosed px 24665 patches 80 patches >=2 cm wide 38
+   px   3660 extent  114.0 cm  width  64.4 cm  bbox (np.int64(427), np.int64(1123), np.int64(527), np.int64(1179))  depth 19.3 m  at (5.20,4.61,-0.38)  rim ['HARB_hall_quoins', 'HARB_jetty_piles']
+   px   3435 extent  105.4 cm  width  65.3 cm  bbox (np.int64(282), np.int64(1128), np.int64(373), np.int64(1184))  depth 19.6 m  at (7.24,6.16,-0.63)  rim ['HARB_jetty_piles']
+   px   2831 extent   95.3 cm  width  61.6 cm  bbox (np.int64(131), np.int64(1134), np.int64(212), np.int64(1186))  depth 19.8 m  at (7.23,7.48,-0.61)  rim ['HARB_jetty_piles']
+   px   2104 extent   71.3 cm  width  68.0 cm  bbox (np.int64(310), np.int64(1195), np.int64(371), np.int64(1259))  depth 18.7 m  at (6.40,5.84,-1.07)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px   1970 extent   72.6 cm  width  62.6 cm  bbox (np.int64(152), np.int64(1202), np.int64(207), np.int64(1266))  depth 19.1 m  at (6.45,7.17,-1.07)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px   1819 extent   71.6 cm  width  69.2 cm  bbox (np.int64(277), np.int64(1154), np.int64(334), np.int64(1213))  depth 20.4 m  at (7.47,6.36,-1.00)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px   1651 extent   72.9 cm  width  61.9 cm  bbox (np.int64(126), np.int64(1161), np.int64(176), np.int64(1220))  depth 20.7 m  at (8.04,7.84,-1.09)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px   1615 extent   52.8 cm  width  51.0 cm  bbox (np.int64(466), np.int64(1194), np.int64(524), np.int64(1250))  depth 15.3 m  at (3.22,4.08,-0.54)  rim ['HARB_hall_quoins']
+   px   1445 extent   63.7 cm  width  62.6 cm  bbox (np.int64(424), np.int64(1150), np.int64(477), np.int64(1202))  depth 20.1 m  at (7.49,5.07,-0.98)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px    610 extent   43.2 cm  width  32.4 cm  bbox (np.int64(496), np.int64(1167), np.int64(525), np.int64(1206))  depth 18.4 m  at (4.26,4.19,-0.49)  rim ['HARB_hall_quoins', 'HARB_jetty_structure']
+   px    474 extent   55.1 cm  width  17.6 cm  bbox (np.int64(79), np.int64(1199), np.int64(93), np.int64(1245))  depth 20.0 m  at (7.13,8.11,-1.13)  rim ['HARB_jetty_piles']
+   px    456 extent   39.7 cm  width  28.4 cm  bbox (np.int64(421), np.int64(1193), np.int64(445), np.int64(1227))  depth 19.4 m  at (7.18,5.18,-1.18)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:00.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c07_red.png'
+SHOT c07 loc (-9.9, 1.8, 6.0) enclosed px 14135 patches 61 patches >=2 cm wide 25
+   px   2702 extent   86.4 cm  width  74.7 cm  bbox (np.int64(277), np.int64(1164), np.int64(346), np.int64(1244))  depth 18.2 m  at (6.41,5.81,-1.04)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px   2699 extent   87.0 cm  width  75.0 cm  bbox (np.int64(106), np.int64(1184), np.int64(174), np.int64(1263))  depth 18.6 m  at (6.43,7.15,-1.03)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px   1787 extent   68.7 cm  width  60.8 cm  bbox (np.int64(87), np.int64(1146), np.int64(147), np.int64(1199))  depth 19.2 m  at (7.15,7.64,-0.68)  rim ['HARB_jetty_piles']
+   px   1356 extent   40.4 cm  width  39.8 cm  bbox (np.int64(95), np.int64(1160), np.int64(163), np.int64(1227))  depth 10.0 m  at (0.00,0.00,0.00)  rim []
+   px   1258 extent   60.7 cm  width  38.3 cm  bbox (np.int64(249), np.int64(1161), np.int64(321), np.int64(1206))  depth 14.2 m  at (2.84,5.24,0.75)  rim ['HARB_jetty_piles']
+   px   1126 extent   72.8 cm  width  29.3 cm  bbox (np.int64(199), np.int64(1190), np.int64(225), np.int64(1256))  depth 18.5 m  at (6.78,6.71,-1.27)  rim ['HARB_jetty_piles']
+   px    959 extent   55.3 cm  width  34.3 cm  bbox (np.int64(35), np.int64(1221), np.int64(65), np.int64(1270))  depth 18.9 m  at (6.77,7.97,-1.29)  rim ['HARB_jetty_piles']
+   px    867 extent   64.1 cm  width  30.4 cm  bbox (np.int64(33), np.int64(1154), np.int64(59), np.int64(1210))  depth 19.2 m  at (7.01,8.02,-0.79)  rim ['HARB_jetty_piles', 'HARB_jetty_structure']
+   px    571 extent   41.6 cm  width  24.5 cm  bbox (np.int64(194), np.int64(1136), np.int64(216), np.int64(1174))  depth 18.2 m  at (4.24,5.97,0.40)  rim ['HARB_jetty_piles', 'HARB_roof_verge']
+   px    232 extent   67.5 cm  width  11.8 cm  bbox (np.int64(368), np.int64(1171), np.int64(378), np.int64(1233))  depth 18.3 m  at (6.80,5.40,-1.27)  rim ['HARB_jetty_piles']
+   px    121 extent   26.4 cm  width   7.4 cm  bbox (np.int64(400), np.int64(1186), np.int64(406), np.int64(1210))  depth 18.0 m  at (4.77,4.75,-0.38)  rim ['HARB_hall_quoins', 'HARB_jetty_piles']
+   px     53 extent   18.3 cm  width   6.9 cm  bbox (np.int64(4), np.int64(1295), np.int64(9), np.int64(1310))  depth 19.5 m  at (6.76,8.35,-1.76)  rim ['HARB_jetty_structure', 'HARB_ladder']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:03.797  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g08_red.png'
+SHOT g08 loc (-12.4, -2.6, 1.7) enclosed px 290 patches 50 patches >=2 cm wide 8
+   px     47 extent   11.0 cm  width   3.4 cm  bbox (np.int64(1605), np.int64(92), np.int64(1609), np.int64(107))  depth 11.8 m  at (-1.80,-3.82,6.90)  rim ['HARB_tower_stones', 'HARB_tower_top_ring']
+   px     15 extent    8.0 cm  width   1.8 cm  bbox (np.int64(1317), np.int64(298), np.int64(1318), np.int64(306))  depth 15.2 m  at (1.89,-1.72,6.99)  rim ['HARB_roof_comb']
+   px     12 extent    6.2 cm  width   1.8 cm  bbox (np.int64(1493), np.int64(284), np.int64(1494), np.int64(290))  depth 15.2 m  at (1.87,-3.23,7.06)  rim ['HARB_roof_comb']
+   px     12 extent    7.1 cm  width   2.7 cm  bbox (np.int64(1394), np.int64(293), np.int64(1396), np.int64(300))  depth 15.2 m  at (1.87,-2.39,7.01)  rim ['HARB_roof_comb']
+   px     12 extent    8.9 cm  width   1.8 cm  bbox (np.int64(1288), np.int64(296), np.int64(1289), np.int64(305))  depth 15.2 m  at (1.89,-1.46,6.99)  rim ['HARB_roof_comb']
+   px     12 extent    7.1 cm  width   1.8 cm  bbox (np.int64(1253), np.int64(301), np.int64(1254), np.int64(308))  depth 15.2 m  at (1.88,-1.16,6.98)  rim ['HARB_roof_comb']
+   px     11 extent    6.2 cm  width   1.8 cm  bbox (np.int64(1347), np.int64(298), np.int64(1348), np.int64(304))  depth 15.2 m  at (1.87,-1.98,6.98)  rim ['HARB_roof_comb']
+   px     11 extent    6.2 cm  width   2.7 cm  bbox (np.int64(1300), np.int64(301), np.int64(1302), np.int64(307))  depth 15.2 m  at (1.87,-1.58,6.96)  rim ['HARB_roof_comb']
+   px     11 extent    5.5 cm  width   2.7 cm  bbox (np.int64(1059), np.int64(304), np.int64(1061), np.int64(309))  depth 15.5 m  at (1.88,0.54,7.01)  rim ['HARB_roof_comb']
+   px     10 extent    5.7 cm  width   2.8 cm  bbox (np.int64(843), np.int64(282), np.int64(845), np.int64(287))  depth 16.1 m  at (1.89,2.50,7.28)  rim ['HARB_roof_comb']
+   px     10 extent    7.2 cm  width   1.8 cm  bbox (np.int64(1207), np.int64(302), np.int64(1208), np.int64(309))  depth 15.3 m  at (1.87,-0.76,6.98)  rim ['HARB_roof_comb']
+   px      9 extent    4.5 cm  width   1.8 cm  bbox (np.int64(1563), np.int64(276), np.int64(1564), np.int64(280))  depth 15.3 m  at (1.89,-3.83,7.13)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:07.438  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c08_red.png'
+SHOT c08 loc (-10.4, -2.5, 6.0) enclosed px 340 patches 50 patches >=2 cm wide 9
+   px     23 extent   10.1 cm  width   2.2 cm  bbox (np.int64(1546), np.int64(243), np.int64(1548), np.int64(256))  depth 12.3 m  at (1.88,-3.23,7.08)  rim ['HARB_roof_comb']
+   px     22 extent    9.4 cm  width   1.4 cm  bbox (np.int64(1634), np.int64(236), np.int64(1635), np.int64(248))  depth 12.4 m  at (1.87,-3.82,7.12)  rim ['HARB_roof_comb']
+   px     22 extent   10.9 cm  width   2.2 cm  bbox (np.int64(1246), np.int64(258), np.int64(1248), np.int64(272))  depth 12.3 m  at (1.88,-1.16,6.99)  rim ['HARB_roof_comb']
+   px     22 extent    9.4 cm  width   2.2 cm  bbox (np.int64(1189), np.int64(260), np.int64(1191), np.int64(272))  depth 12.4 m  at (1.88,-0.76,6.99)  rim ['HARB_roof_comb']
+   px     20 extent    8.6 cm  width   2.2 cm  bbox (np.int64(1444), np.int64(254), np.int64(1446), np.int64(265))  depth 12.3 m  at (1.87,-2.54,7.02)  rim ['HARB_roof_comb']
+   px     20 extent    7.9 cm  width   2.2 cm  bbox (np.int64(1363), np.int64(260), np.int64(1365), np.int64(270))  depth 12.3 m  at (1.87,-1.98,6.99)  rim ['HARB_roof_comb']
+   px     19 extent    6.7 cm  width   2.2 cm  bbox (np.int64(1007), np.int64(258), np.int64(1009), np.int64(266))  depth 12.6 m  at (1.88,0.54,7.02)  rim ['HARB_roof_comb']
+   px     19 extent    6.5 cm  width   2.2 cm  bbox (np.int64(1422), np.int64(258), np.int64(1424), np.int64(266))  depth 12.3 m  at (1.87,-2.39,7.00)  rim ['HARB_roof_comb']
+   px     17 extent    7.2 cm  width   1.4 cm  bbox (np.int64(1326), np.int64(262), np.int64(1327), np.int64(271))  depth 12.3 m  at (1.89,-1.71,6.98)  rim ['HARB_roof_comb']
+   px     17 extent    7.2 cm  width   2.2 cm  bbox (np.int64(1305), np.int64(263), np.int64(1307), np.int64(272))  depth 12.3 m  at (1.88,-1.57,6.97)  rim ['HARB_roof_comb']
+   px     15 extent    7.0 cm  width   1.6 cm  bbox (np.int64(737), np.int64(223), np.int64(738), np.int64(231))  depth 13.3 m  at (1.89,2.50,7.28)  rim ['HARB_roof_comb']
+   px     12 extent    3.8 cm  width   1.9 cm  bbox (np.int64(1700), np.int64(232), np.int64(1702), np.int64(237))  depth 10.9 m  at (0.38,-4.05,7.03)  rim ['HARB_roof_comb', 'HARB_tower_top_ring']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:10.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g09_red.png'
+SHOT g09 loc (-10.9, -7.5, 1.7) enclosed px 3 patches 3 patches >=2 cm wide 0
+   px      1 extent    0.9 cm  width   0.9 cm  bbox (np.int64(567), np.int64(654), np.int64(567), np.int64(654))  depth 15.0 m  at (-1.48,3.90,3.80)  rim ['HARB_roof_rafters']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(2370), np.int64(1011), np.int64(2370), np.int64(1011))  depth 9.0 m  at (-1.90,-8.25,1.28)  rim ['HARB_tower_dressed', 'HARB_tower_stones']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(2423), np.int64(1264), np.int64(2423), np.int64(1264))  depth 9.2 m  at (-1.88,-8.38,0.20)  rim ['HARB_tower_stones']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:13.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c09_red.png'
+SHOT c09 loc (-9.2, -6.6, 6.0) enclosed px 37 patches 7 patches >=2 cm wide 2
+   px     15 extent    4.9 cm  width   2.1 cm  bbox (np.int64(1430), np.int64(259), np.int64(1432), np.int64(265))  depth 12.0 m  at (1.87,-1.99,6.98)  rim ['HARB_roof_comb']
+   px     10 extent    4.3 cm  width   2.1 cm  bbox (np.int64(1375), np.int64(264), np.int64(1377), np.int64(269))  depth 12.2 m  at (1.88,-1.58,6.97)  rim ['HARB_roof_comb']
+   px      6 extent    3.7 cm  width   1.5 cm  bbox (np.int64(1270), np.int64(267), np.int64(1271), np.int64(271))  depth 12.5 m  at (1.88,-0.76,6.98)  rim ['HARB_roof_comb']
+   px      3 extent    1.6 cm  width   1.6 cm  bbox (np.int64(1007), np.int64(262), np.int64(1008), np.int64(263))  depth 13.7 m  at (1.89,1.53,7.11)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1446), np.int64(136), np.int64(1446), np.int64(136))  depth 6.7 m  at (-3.04,-4.09,6.99)  rim ['HARB_tower_top_ring']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(758), np.int64(156), np.int64(758), np.int64(156))  depth 8.1 m  at (-3.35,-1.01,7.08)  rim ['HARB_roof_apex_finial', 'HARB_wing_roof_apex_finial']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(1029), np.int64(252), np.int64(1029), np.int64(252))  depth 13.6 m  at (1.88,1.32,7.17)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:17.047  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g10_red.png'
+SHOT g10 loc (-7.8, -11.5, 1.7) enclosed px 25 patches 5 patches >=2 cm wide 0
+   px     12 extent    3.2 cm  width   1.2 cm  bbox (np.int64(792), np.int64(25), np.int64(794), np.int64(32))  depth 6.7 m  at (-5.41,-5.99,4.81)  rim ['HARB_wing_roof_comb']
+   px     10 extent    1.5 cm  width   0.5 cm  bbox (np.int64(666), np.int64(1425), np.int64(667), np.int64(1430))  depth 4.3 m  at (-6.28,-7.60,0.59)  rim ['HARB_wing_frames']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(2006), np.int64(206), np.int64(2006), np.int64(206))  depth 12.9 m  at (3.04,-6.17,6.44)  rim ['HARB_roof_verge']
+   px      1 extent    0.3 cm  width   0.3 cm  bbox (np.int64(667), np.int64(1423), np.int64(667), np.int64(1423))  depth 4.3 m  at (-5.25,-4.92,-0.17)  rim ['HARB_wing_frames']
+   px      1 extent    0.3 cm  width   0.3 cm  bbox (np.int64(666), np.int64(1424), np.int64(666), np.int64(1424))  depth 4.3 m  at (-6.28,-7.60,0.59)  rim ['HARB_wing_frames']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:19.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c10_red.png'
+SHOT c10 loc (-6.5, -9.9, 6.0) enclosed px 465 patches 7 patches >=2 cm wide 3
+   px    194 extent   12.8 cm  width   2.4 cm  bbox (np.int64(25), np.int64(977), np.int64(34), np.int64(1029))  depth 4.1 m  at (-6.30,-5.98,4.87)  rim ['HARB_wing_roof_comb']
+   px    137 extent    8.3 cm  width   2.2 cm  bbox (np.int64(308), np.int64(951), np.int64(316), np.int64(984))  depth 4.2 m  at (-5.82,-5.97,4.84)  rim ['HARB_wing_roof_comb']
+   px    108 extent    7.0 cm  width   2.5 cm  bbox (np.int64(516), np.int64(921), np.int64(525), np.int64(948))  depth 4.2 m  at (-5.40,-5.98,4.83)  rim ['HARB_wing_roof_comb']
+   px     13 extent    1.7 cm  width   0.7 cm  bbox (np.int64(118), np.int64(1009), np.int64(120), np.int64(1015))  depth 4.1 m  at (-6.16,-5.97,4.82)  rim ['HARB_wing_roof_comb']
+   px     10 extent    1.3 cm  width   1.0 cm  bbox (np.int64(669), np.int64(868), np.int64(672), np.int64(872))  depth 4.4 m  at (-4.35,-4.03,4.39)  rim ['HARB_wing_roof_comb']
+   px      2 extent    0.5 cm  width   0.2 cm  bbox (np.int64(117), np.int64(1007), np.int64(118), np.int64(1007))  depth 4.1 m  at (-6.16,-5.98,4.83)  rim ['HARB_wing_roof_comb']
+   px      1 extent    0.2 cm  width   0.2 cm  bbox (np.int64(117), np.int64(1005), np.int64(117), np.int64(1005))  depth 4.1 m  at (-6.16,-5.98,4.84)  rim ['HARB_wing_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:23.641  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g11_red.png'
+SHOT g11 loc (-3.3, -13.9, 1.7) enclosed px 46 patches 17 patches >=2 cm wide 1
+   px     20 extent    5.6 cm  width   2.1 cm  bbox (np.int64(246), np.int64(170), np.int64(249), np.int64(180))  depth 8.8 m  at (-5.40,-5.99,4.82)  rim ['HARB_wing_roof_comb']
+   px      5 extent    2.4 cm  width   1.2 cm  bbox (np.int64(1889), np.int64(1180), np.int64(1890), np.int64(1183))  depth 10.3 m  at (2.81,-5.70,0.25)  rim ['HARB_hall_frames']
+   px      3 extent    1.6 cm  width   0.5 cm  bbox (np.int64(134), np.int64(161), np.int64(134), np.int64(163))  depth 8.9 m  at (-5.82,-5.98,4.82)  rim ['HARB_wing_roof_comb']
+   px      2 extent    1.1 cm  width   0.5 cm  bbox (np.int64(39), np.int64(143), np.int64(39), np.int64(144))  depth 9.0 m  at (-6.16,-5.98,4.86)  rim ['HARB_wing_roof_comb']
+   px      2 extent    1.0 cm  width   0.5 cm  bbox (np.int64(133), np.int64(164), np.int64(133), np.int64(165))  depth 8.9 m  at (-5.82,-5.99,4.81)  rim ['HARB_wing_roof_comb']
+   px      2 extent    1.2 cm  width   0.6 cm  bbox (np.int64(1889), np.int64(1139), np.int64(1889), np.int64(1140))  depth 10.3 m  at (2.82,-5.70,0.47)  rim ['HARB_hall_frames']
+   px      2 extent    1.2 cm  width   0.6 cm  bbox (np.int64(1889), np.int64(1152), np.int64(1889), np.int64(1153))  depth 10.3 m  at (2.81,-5.70,0.40)  rim ['HARB_hall_frames']
+   px      1 extent    0.7 cm  width   0.7 cm  bbox (np.int64(2273), np.int64(571), np.int64(2273), np.int64(571))  depth 11.7 m  at (5.30,-6.17,3.73)  rim ['HARB_roof_verge']
+   px      1 extent    0.7 cm  width   0.7 cm  bbox (np.int64(2368), np.int64(716), np.int64(2368), np.int64(716))  depth 12.2 m  at (6.02,-6.13,2.90)  rim ['HARB_roof_rafters', 'HARB_roof_verge']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(1888), np.int64(1136), np.int64(1888), np.int64(1136))  depth 10.3 m  at (2.81,-5.70,0.49)  rim ['HARB_hall_frames']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(1888), np.int64(1154), np.int64(1888), np.int64(1154))  depth 10.3 m  at (2.81,-5.70,0.39)  rim ['HARB_hall_frames']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(1889), np.int64(1161), np.int64(1889), np.int64(1161))  depth 10.3 m  at (2.81,-5.70,0.36)  rim ['HARB_hall_frames']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:26.563  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c11_red.png'
+SHOT c11 loc (-2.7, -12.0, 6.0) enclosed px 18 patches 5 patches >=2 cm wide 0
+   px     14 extent    2.6 cm  width   1.3 cm  bbox (np.int64(259), np.int64(49), np.int64(262), np.int64(56))  depth 5.6 m  at (-3.86,-6.58,6.94)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px      1 extent    0.3 cm  width   0.3 cm  bbox (np.int64(1644), np.int64(102), np.int64(1644), np.int64(102))  depth 5.6 m  at (0.02,-7.08,6.93)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2511), np.int64(898), np.int64(2511), np.int64(898))  depth 10.2 m  at (5.38,-6.17,3.67)  rim ['HARB_roof_verge']
+   px      1 extent    0.7 cm  width   0.7 cm  bbox (np.int64(2457), np.int64(1019), np.int64(2457), np.int64(1019))  depth 11.2 m  at (5.92,-5.58,2.79)  rim ['HARB_roof_rafters']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2537), np.int64(1039), np.int64(2537), np.int64(1039))  depth 10.9 m  at (5.91,-6.02,2.84)  rim ['HARB_roof_rafters']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:29.094  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g12_red.png'
+SHOT g12 loc (1.7, -14.5, 1.7) enclosed px 4 patches 4 patches >=2 cm wide 0
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2382), np.int64(620), np.int64(2382), np.int64(620))  depth 9.5 m  at (6.17,-6.17,3.07)  rim ['HARB_roof_verge']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2350), np.int64(660), np.int64(2350), np.int64(660))  depth 9.5 m  at (6.04,-6.13,2.89)  rim ['HARB_roof_rafters', 'HARB_roof_verge']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2208), np.int64(1209), np.int64(2208), np.int64(1209))  depth 9.5 m  at (5.40,-5.79,0.32)  rim ['HARB_hall_quoins']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(922), np.int64(1379), np.int64(922), np.int64(1379))  depth 7.1 m  at (-0.21,-7.87,-0.04)  rim ['HARB_tower_stones']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:32.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c12_red.png'
+SHOT c12 loc (1.6, -12.5, 6.0) enclosed px 2 patches 2 patches >=2 cm wide 0
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1110), np.int64(160), np.int64(1110), np.int64(160))  depth 6.9 m  at (0.33,-5.79,6.93)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(2359), np.int64(927), np.int64(2359), np.int64(927))  depth 7.5 m  at (4.98,-6.11,4.13)  rim ['HARB_roof_rafters']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:34.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g13_red.png'
+SHOT g13 loc (6.6, -13.0, 1.7) enclosed px 3 patches 3 patches >=2 cm wide 0
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(1468), np.int64(112), np.int64(1468), np.int64(112))  depth 8.2 m  at (3.98,-6.17,5.28)  rim ['HARB_roof_verge']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(1630), np.int64(264), np.int64(1630), np.int64(264))  depth 7.7 m  at (3.76,-2.76,5.82)  rim ['HARB_roof_rafters']
+   px      1 extent    1.0 cm  width   1.0 cm  bbox (np.int64(2028), np.int64(1078), np.int64(2028), np.int64(1078))  depth 16.3 m  at (5.41,3.22,0.32)  rim ['HARB_hall_quoins']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:38.516  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c13_red.png'
+SHOT c13 loc (5.7, -11.3, 6.0) enclosed px 1 patches 1 patches >=2 cm wide 0
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(1369), np.int64(202), np.int64(1369), np.int64(202))  depth 9.1 m  at (1.90,-3.00,7.04)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:41.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g14_red.png'
+SHOT g14 loc (10.6, -9.9, 1.7) enclosed px 55 patches 9 patches >=2 cm wide 1
+   px     38 extent   10.3 cm  width   4.7 cm  bbox (np.int64(258), np.int64(107), np.int64(263), np.int64(119))  depth 13.5 m  at (-1.79,-8.14,6.88)  rim ['HARB_tower_stones', 'HARB_tower_top_ring']
+   px      8 extent    3.6 cm  width   1.4 cm  bbox (np.int64(1234), np.int64(123), np.int64(1235), np.int64(127))  depth 12.3 m  at (1.95,-3.03,7.01)  rim ['HARB_roof_comb']
+   px      2 extent    1.4 cm  width   0.7 cm  bbox (np.int64(1206), np.int64(113), np.int64(1207), np.int64(113))  depth 12.1 m  at (1.93,-3.25,7.03)  rim ['HARB_roof_comb', 'HARB_roof_covering']
+   px      2 extent    1.5 cm  width   0.8 cm  bbox (np.int64(1371), np.int64(187), np.int64(1372), np.int64(187))  depth 12.9 m  at (1.94,-1.76,6.94)  rim ['HARB_roof_comb', 'HARB_roof_covering']
+   px      1 extent    0.7 cm  width   0.7 cm  bbox (np.int64(1208), np.int64(98), np.int64(1208), np.int64(98))  depth 12.2 m  at (1.92,-3.23,7.14)  rim ['HARB_roof_comb']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(1371), np.int64(185), np.int64(1371), np.int64(185))  depth 13.0 m  at (1.91,-1.73,6.97)  rim ['HARB_roof_comb']
+   px      1 extent    0.9 cm  width   0.9 cm  bbox (np.int64(2125), np.int64(563), np.int64(2125), np.int64(563))  depth 15.1 m  at (4.68,3.81,4.47)  rim ['HARB_roof_rafters']
+   px      1 extent    1.1 cm  width   1.1 cm  bbox (np.int64(143), np.int64(985), np.int64(143), np.int64(985))  depth 18.7 m  at (-8.00,-7.69,1.08)  rim ['HARB_wing_quoins']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(2308), np.int64(1171), np.int64(2308), np.int64(1171))  depth 14.1 m  at (5.91,3.27,-0.04)  rim ['HARB_quay_core']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:45.234  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c14_red.png'
+SHOT c14 loc (9.0, -8.6, 6.0) enclosed px 30 patches 11 patches >=2 cm wide 0
+   px     12 extent    3.7 cm  width   1.1 cm  bbox (np.int64(1219), np.int64(201), np.int64(1220), np.int64(207))  depth 9.1 m  at (1.91,-3.00,7.03)  rim ['HARB_roof_comb']
+   px      6 extent    2.8 cm  width   0.5 cm  bbox (np.int64(859), np.int64(89), np.int64(859), np.int64(94))  depth 8.1 m  at (1.91,-4.98,7.36)  rim ['HARB_roof_comb']
+   px      3 extent    1.6 cm  width   0.5 cm  bbox (np.int64(1181), np.int64(194), np.int64(1181), np.int64(196))  depth 9.0 m  at (1.90,-3.24,7.06)  rim ['HARB_roof_comb']
+   px      2 extent    1.3 cm  width   0.7 cm  bbox (np.int64(1627), np.int64(248), np.int64(1627), np.int64(249))  depth 11.4 m  at (1.90,0.28,7.00)  rim ['HARB_roof_comb']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(860), np.int64(88), np.int64(860), np.int64(88))  depth 8.1 m  at (1.90,-4.97,7.37)  rim ['HARB_roof_comb']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(1081), np.int64(166), np.int64(1081), np.int64(166))  depth 8.6 m  at (1.91,-3.84,7.14)  rim ['HARB_roof_comb']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(1179), np.int64(174), np.int64(1179), np.int64(174))  depth 8.9 m  at (1.92,-3.26,7.15)  rim ['HARB_roof_comb']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(1399), np.int64(233), np.int64(1399), np.int64(233))  depth 9.9 m  at (1.90,-1.72,6.97)  rim ['HARB_roof_comb']
+   px      1 extent    0.7 cm  width   0.7 cm  bbox (np.int64(1626), np.int64(250), np.int64(1626), np.int64(250))  depth 11.4 m  at (1.90,0.27,6.99)  rim ['HARB_roof_comb']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(2340), np.int64(709), np.int64(2340), np.int64(709))  depth 13.2 m  at (5.04,3.86,4.06)  rim ['HARB_roof_rafters']
+   px      1 extent    0.6 cm  width   0.6 cm  bbox (np.int64(2369), np.int64(1002), np.int64(2369), np.int64(1002))  depth 10.7 m  at (6.12,1.42,2.91)  rim ['HARB_roof_covering', 'HARB_roof_deck']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:47.953  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\g15_red.png'
+SHOT g15 loc (13.0, -5.4, 1.7) enclosed px 78 patches 23 patches >=2 cm wide 2
+   px     12 extent    5.1 cm  width   1.5 cm  bbox (np.int64(1096), np.int64(131), np.int64(1097), np.int64(137))  depth 12.5 m  at (1.91,-3.24,7.06)  rim ['HARB_roof_comb']
+   px     10 extent    4.6 cm  width   2.3 cm  bbox (np.int64(1376), np.int64(183), np.int64(1378), np.int64(188))  depth 13.0 m  at (1.91,-1.17,6.97)  rim ['HARB_roof_comb']
+   px     10 extent    8.1 cm  width   1.8 cm  bbox (np.int64(408), np.int64(233), np.int64(409), np.int64(241))  depth 15.3 m  at (-1.15,-8.03,6.93)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px      9 extent    2.9 cm  width   2.2 cm  bbox (np.int64(1131), np.int64(142), np.int64(1133), np.int64(145))  depth 12.5 m  at (1.92,-2.99,7.02)  rim ['HARB_roof_comb']
+   px      9 extent    3.8 cm  width   1.5 cm  bbox (np.int64(1305), np.int64(173), np.int64(1306), np.int64(177))  depth 12.8 m  at (1.92,-1.72,6.96)  rim ['HARB_roof_comb']
+   px      5 extent    2.2 cm  width   1.5 cm  bbox (np.int64(1214), np.int64(155), np.int64(1215), np.int64(157))  depth 12.7 m  at (1.91,-2.39,7.02)  rim ['HARB_roof_comb']
+   px      4 extent    2.9 cm  width   0.7 cm  bbox (np.int64(1076), np.int64(130), np.int64(1076), np.int64(133))  depth 12.5 m  at (1.91,-3.38,7.06)  rim ['HARB_roof_comb']
+   px      3 extent    2.6 cm  width   0.9 cm  bbox (np.int64(1811), np.int64(205), np.int64(1811), np.int64(207))  depth 14.7 m  at (1.91,2.50,7.28)  rim ['HARB_roof_comb']
+   px      2 extent    1.8 cm  width   0.9 cm  bbox (np.int64(1895), np.int64(185), np.int64(1895), np.int64(186))  depth 15.3 m  at (1.91,3.30,7.57)  rim ['HARB_roof_comb']
+   px      1 extent    0.7 cm  width   0.7 cm  bbox (np.int64(1193), np.int64(155), np.int64(1193), np.int64(155))  depth 12.6 m  at (1.90,-2.55,7.01)  rim ['HARB_roof_comb']
+   px      1 extent    0.8 cm  width   0.8 cm  bbox (np.int64(1339), np.int64(176), np.int64(1339), np.int64(176))  depth 12.9 m  at (1.90,-1.46,7.00)  rim ['HARB_roof_comb']
+   px      1 extent    0.9 cm  width   0.9 cm  bbox (np.int64(1868), np.int64(193), np.int64(1868), np.int64(193))  depth 15.1 m  at (1.91,3.04,7.47)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:51.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\c15_red.png'
+SHOT c15 loc (11.1, -4.8, 6.0) enclosed px 167 patches 25 patches >=2 cm wide 0
+   px     28 extent    8.2 cm  width   1.6 cm  bbox (np.int64(920), np.int64(178), np.int64(922), np.int64(192))  depth 9.3 m  at (1.92,-3.83,7.12)  rim ['HARB_roof_comb']
+   px     25 extent    7.7 cm  width   1.6 cm  bbox (np.int64(1036), np.int64(195), np.int64(1038), np.int64(208))  depth 9.4 m  at (1.90,-3.24,7.07)  rim ['HARB_roof_comb']
+   px     16 extent    4.4 cm  width   1.7 cm  bbox (np.int64(1084), np.int64(206), np.int64(1086), np.int64(213))  depth 9.4 m  at (1.91,-2.99,7.03)  rim ['HARB_roof_comb']
+   px     15 extent    4.0 cm  width   1.7 cm  bbox (np.int64(1312), np.int64(227), np.int64(1314), np.int64(233))  depth 9.7 m  at (1.92,-1.72,6.97)  rim ['HARB_roof_comb']
+   px     14 extent    5.2 cm  width   1.7 cm  bbox (np.int64(1405), np.int64(229), np.int64(1407), np.int64(237))  depth 9.9 m  at (1.91,-1.17,6.97)  rim ['HARB_roof_comb']
+   px     13 extent    4.4 cm  width   1.6 cm  bbox (np.int64(1009), np.int64(197), np.int64(1011), np.int64(204))  depth 9.4 m  at (1.90,-3.38,7.07)  rim ['HARB_roof_comb']
+   px      9 extent    3.3 cm  width   1.7 cm  bbox (np.int64(1166), np.int64(213), np.int64(1168), np.int64(218))  depth 9.5 m  at (1.89,-2.54,7.02)  rim ['HARB_roof_comb']
+   px      7 extent    3.3 cm  width   1.1 cm  bbox (np.int64(887), np.int64(181), np.int64(888), np.int64(186))  depth 9.3 m  at (1.92,-4.00,7.13)  rim ['HARB_roof_comb']
+   px      7 extent    3.9 cm  width   0.6 cm  bbox (np.int64(1194), np.int64(212), np.int64(1194), np.int64(218))  depth 9.6 m  at (1.91,-2.39,7.02)  rim ['HARB_roof_comb']
+   px      6 extent    2.7 cm  width   1.1 cm  bbox (np.int64(943), np.int64(187), np.int64(944), np.int64(191))  depth 9.3 m  at (1.92,-3.72,7.11)  rim ['HARB_roof_comb']
+   px      6 extent    2.5 cm  width   1.2 cm  bbox (np.int64(1637), np.int64(235), np.int64(1638), np.int64(238))  depth 10.5 m  at (1.90,0.28,6.99)  rim ['HARB_roof_comb']
+   px      4 extent    2.3 cm  width   0.6 cm  bbox (np.int64(1267), np.int64(215), np.int64(1267), np.int64(218))  depth 9.7 m  at (1.91,-1.98,7.03)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:54.813  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bg-70_red.png'
+SHOT bg-70 loc (-3.2, 5.2, 1.7) enclosed px 80 patches 2 patches >=2 cm wide 1
+   px     79 extent    6.1 cm  width   2.7 cm  bbox (np.int64(1385), np.int64(425), np.int64(1392), np.int64(442))  depth 12.0 m  at (-0.47,-3.16,5.94)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px      1 extent    0.1 cm  width   0.1 cm  bbox (np.int64(1227), np.int64(231), np.int64(1227), np.int64(231))  depth 2.6 m  at (-2.37,3.07,2.96)  rim ['HARB_roof_covering']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:56.234  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG-70_red.png'
+SHOT bG-70 loc (-4.9, 9.9, 1.7) enclosed px 118 patches 9 patches >=2 cm wide 2
+   px     76 extent    8.9 cm  width   3.3 cm  bbox (np.int64(2283), np.int64(319), np.int64(2289), np.int64(337))  depth 16.7 m  at (-3.95,-5.96,6.93)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px     34 extent    5.6 cm  width   2.3 cm  bbox (np.int64(1358), np.int64(370), np.int64(1362), np.int64(381))  depth 16.6 m  at (0.14,-5.06,6.89)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px      2 extent    0.9 cm  width   0.5 cm  bbox (np.int64(2495), np.int64(779), np.int64(2495), np.int64(780))  depth 16.2 m  at (-4.69,-5.96,4.81)  rim ['HARB_wing_roof_comb']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(2294), np.int64(101), np.int64(2294), np.int64(101))  depth 18.7 m  at (-3.97,-7.47,8.62)  rim ['HARB_roof_shingles']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(782), np.int64(197), np.int64(782), np.int64(197))  depth 15.2 m  at (1.86,-2.57,7.10)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(824), np.int64(220), np.int64(824), np.int64(220))  depth 15.5 m  at (1.86,-2.97,7.14)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(820), np.int64(244), np.int64(820), np.int64(244))  depth 15.5 m  at (1.88,-2.98,7.04)  rim ['HARB_roof_comb']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(2312), np.int64(302), np.int64(2312), np.int64(302))  depth 16.6 m  at (-4.08,-5.81,6.99)  rim ['HARB_tower_top_ring']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(2495), np.int64(782), np.int64(2495), np.int64(782))  depth 16.2 m  at (-4.69,-5.95,4.79)  rim ['HARB_wing_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:58.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc-70_red.png'
+SHOT bc-70 loc (-2.9, 4.3, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+01:59.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bC-70_red.png'
+SHOT bC-70 loc (-4.2, 8.0, 6.0) enclosed px 1 patches 1 patches >=2 cm wide 0
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(2515), np.int64(265), np.int64(2515), np.int64(265))  depth 14.2 m  at (-3.98,-6.11,5.58)  rim ['HARB_tower_stones']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:01.109  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn-70_red.png'
+SHOT bn-70 loc (-2.0, 1.9, 5.2) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:02.438  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bg-45_red.png'
+SHOT bg-45 loc (-5.7, 3.6, 1.7) enclosed px 129 patches 12 patches >=2 cm wide 1
+   px     86 extent   10.7 cm  width   2.2 cm  bbox (np.int64(1867), np.int64(253), np.int64(1873), np.int64(286))  depth 11.2 m  at (-0.18,-4.55,6.92)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px     17 extent    2.6 cm  width   1.0 cm  bbox (np.int64(1039), np.int64(286), np.int64(1041), np.int64(293))  depth 11.4 m  at (1.87,-2.97,7.03)  rim ['HARB_roof_comb']
+   px      8 extent    1.7 cm  width   1.0 cm  bbox (np.int64(1299), np.int64(347), np.int64(1301), np.int64(351))  depth 12.2 m  at (1.87,-4.13,7.23)  rim ['HARB_roof_comb']
+   px      4 extent    0.9 cm  width   0.6 cm  bbox (np.int64(560), np.int64(71), np.int64(561), np.int64(73))  depth 10.4 m  at (1.88,-1.16,7.04)  rim ['HARB_roof_comb']
+   px      4 extent    1.2 cm  width   0.3 cm  bbox (np.int64(713), np.int64(164), np.int64(713), np.int64(167))  depth 10.7 m  at (1.88,-1.70,6.96)  rim ['HARB_roof_comb']
+   px      3 extent    0.6 cm  width   0.6 cm  bbox (np.int64(1872), np.int64(288), np.int64(1873), np.int64(289))  depth 11.3 m  at (-0.09,-4.70,6.94)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px      2 extent    0.6 cm  width   0.3 cm  bbox (np.int64(1097), np.int64(309), np.int64(1097), np.int64(310))  depth 11.5 m  at (1.88,-3.22,7.05)  rim ['HARB_roof_comb']
+   px      1 extent    0.3 cm  width   0.3 cm  bbox (np.int64(467), np.int64(18), np.int64(467), np.int64(18))  depth 10.3 m  at (1.86,-0.84,7.06)  rim ['HARB_roof_comb']
+   px      1 extent    0.3 cm  width   0.3 cm  bbox (np.int64(712), np.int64(162), np.int64(712), np.int64(162))  depth 10.7 m  at (1.89,-1.71,6.98)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1650), np.int64(313), np.int64(1650), np.int64(313))  depth 13.9 m  at (1.89,-6.08,8.10)  rim ['HARB_roof_apex_finial']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1682), np.int64(337), np.int64(1682), np.int64(337))  depth 13.8 m  at (1.80,-6.15,7.99)  rim ['HARB_roof_apex_cap_collar']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1532), np.int64(366), np.int64(1532), np.int64(366))  depth 13.1 m  at (1.86,-5.33,7.59)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:04.531  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG-45_red.png'
+SHOT bG-45 loc (-9.3, 7.1, 1.7) enclosed px 50 patches 8 patches >=2 cm wide 0
+   px     16 extent    3.6 cm  width   1.2 cm  bbox (np.int64(474), np.int64(95), np.int64(476), np.int64(103))  depth 14.1 m  at (1.87,0.30,6.98)  rim ['HARB_roof_comb']
+   px     15 extent    2.6 cm  width   1.3 cm  bbox (np.int64(1697), np.int64(280), np.int64(1699), np.int64(285))  depth 15.6 m  at (-0.23,-4.51,6.93)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px     10 extent    3.1 cm  width   1.3 cm  bbox (np.int64(1108), np.int64(290), np.int64(1110), np.int64(296))  depth 16.0 m  at (1.87,-2.97,7.03)  rim ['HARB_roof_comb']
+   px      5 extent    1.6 cm  width   0.8 cm  bbox (np.int64(414), np.int64(73), np.int64(415), np.int64(76))  depth 14.0 m  at (1.89,0.55,7.01)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(884), np.int64(234), np.int64(884), np.int64(234))  depth 15.2 m  at (1.89,-1.71,6.98)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(885), np.int64(237), np.int64(885), np.int64(237))  depth 15.2 m  at (1.88,-1.71,6.96)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1699), np.int64(288), np.int64(1699), np.int64(288))  depth 15.8 m  at (-0.14,-4.63,6.96)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px      1 extent    0.5 cm  width   0.5 cm  bbox (np.int64(1410), np.int64(305), np.int64(1410), np.int64(305))  depth 17.4 m  at (1.86,-4.92,7.45)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:06.438  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc-45_red.png'
+SHOT bc-45 loc (-5.0, 2.9, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:07.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bC-45_red.png'
+SHOT bC-45 loc (-7.9, 5.7, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:09.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn-45_red.png'
+SHOT bn-45 loc (-3.3, 1.1, 5.2) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:10.391  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bg-20_red.png'
+SHOT bg-20 loc (-7.4, 1.0, 1.7) enclosed px 355 patches 38 patches >=2 cm wide 1
+   px     82 extent    6.6 cm  width   2.1 cm  bbox (np.int64(327), np.int64(87), np.int64(333), np.int64(108))  depth 10.7 m  at (1.87,0.55,7.02)  rim ['HARB_roof_comb']
+   px     41 extent    5.2 cm  width   1.2 cm  bbox (np.int64(908), np.int64(209), np.int64(911), np.int64(225))  depth 10.9 m  at (1.87,-1.16,6.96)  rim ['HARB_roof_comb']
+   px     32 extent    3.4 cm  width   1.5 cm  bbox (np.int64(1082), np.int64(242), np.int64(1086), np.int64(252))  depth 11.0 m  at (1.87,-1.71,6.96)  rim ['HARB_roof_comb']
+   px     27 extent    2.6 cm  width   1.6 cm  bbox (np.int64(1465), np.int64(292), np.int64(1469), np.int64(299))  depth 11.4 m  at (1.87,-2.98,7.03)  rim ['HARB_roof_comb']
+   px     25 extent    3.9 cm  width   1.2 cm  bbox (np.int64(287), np.int64(86), np.int64(290), np.int64(98))  depth 10.7 m  at (1.88,0.67,7.02)  rim ['HARB_roof_comb']
+   px     20 extent    3.3 cm  width   0.9 cm  bbox (np.int64(647), np.int64(165), np.int64(649), np.int64(175))  depth 10.7 m  at (1.86,-0.37,6.96)  rim ['HARB_roof_comb']
+   px     20 extent    3.6 cm  width   1.0 cm  bbox (np.int64(1537), np.int64(295), np.int64(1539), np.int64(305))  depth 11.5 m  at (1.88,-3.23,7.06)  rim ['HARB_roof_comb']
+   px     15 extent    2.7 cm  width   0.9 cm  bbox (np.int64(116), np.int64(18), np.int64(118), np.int64(26))  depth 10.7 m  at (1.86,1.15,7.14)  rim ['HARB_roof_comb']
+   px     11 extent    2.1 cm  width   0.6 cm  bbox (np.int64(426), np.int64(91), np.int64(427), np.int64(97))  depth 10.7 m  at (1.87,0.28,7.09)  rim ['HARB_roof_comb']
+   px      9 extent    2.1 cm  width   0.9 cm  bbox (np.int64(33), np.int64(30), np.int64(35), np.int64(36))  depth 10.7 m  at (1.87,1.36,7.06)  rim ['HARB_roof_comb']
+   px      9 extent    1.8 cm  width   0.6 cm  bbox (np.int64(421), np.int64(125), np.int64(422), np.int64(130))  depth 10.7 m  at (1.86,0.29,6.97)  rim ['HARB_roof_comb']
+   px      9 extent    1.5 cm  width   0.6 cm  bbox (np.int64(595), np.int64(161), np.int64(596), np.int64(165))  depth 10.7 m  at (1.87,-0.21,6.96)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:12.563  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG-20_red.png'
+SHOT bG-20 loc (-12.1, 2.7, 1.7) enclosed px 399 patches 50 patches >=2 cm wide 2
+   px     81 extent   10.7 cm  width   2.8 cm  bbox (np.int64(1934), np.int64(117), np.int64(1940), np.int64(143))  depth 14.1 m  at (-0.88,-4.03,6.91)  rim ['HARB_tower_top_boards', 'HARB_tower_top_ring']
+   px     55 extent    9.3 cm  width   2.1 cm  bbox (np.int64(239), np.int64(101), np.int64(243), np.int64(122))  depth 15.0 m  at (1.87,2.08,7.19)  rim ['HARB_roof_comb']
+   px     35 extent    5.9 cm  width   1.7 cm  bbox (np.int64(620), np.int64(193), np.int64(623), np.int64(206))  depth 15.1 m  at (1.87,0.55,7.02)  rim ['HARB_roof_comb']
+   px     33 extent    5.9 cm  width   1.7 cm  bbox (np.int64(375), np.int64(144), np.int64(378), np.int64(157))  depth 15.0 m  at (1.87,1.54,7.10)  rim ['HARB_roof_comb']
+   px     23 extent    5.5 cm  width   1.3 cm  bbox (np.int64(160), np.int64(84), np.int64(162), np.int64(96))  depth 15.0 m  at (1.88,2.38,7.24)  rim ['HARB_roof_comb']
+   px     20 extent    5.6 cm  width   1.3 cm  bbox (np.int64(1019), np.int64(255), np.int64(1021), np.int64(267))  depth 15.4 m  at (1.87,-1.16,6.96)  rim ['HARB_roof_comb']
+   px     20 extent    3.9 cm  width   1.3 cm  bbox (np.int64(1141), np.int64(273), np.int64(1143), np.int64(281))  depth 15.6 m  at (1.87,-1.71,6.96)  rim ['HARB_roof_comb']
+   px     19 extent    3.1 cm  width   1.8 cm  bbox (np.int64(1412), np.int64(293), np.int64(1415), np.int64(299))  depth 16.0 m  at (1.87,-2.98,7.03)  rim ['HARB_roof_comb']
+   px     15 extent    4.1 cm  width   1.4 cm  bbox (np.int64(1463), np.int64(292), np.int64(1465), np.int64(300))  depth 16.1 m  at (1.87,-3.22,7.06)  rim ['HARB_roof_comb']
+   px      7 extent    2.1 cm  width   1.3 cm  bbox (np.int64(683), np.int64(214), np.int64(685), np.int64(218))  depth 15.1 m  at (1.87,0.29,6.98)  rim ['HARB_roof_comb']
+   px      6 extent    2.1 cm  width   0.8 cm  bbox (np.int64(57), np.int64(49), np.int64(58), np.int64(53))  depth 15.0 m  at (1.87,2.78,7.34)  rim ['HARB_roof_comb']
+   px      6 extent    2.5 cm  width   0.4 cm  bbox (np.int64(308), np.int64(136), np.int64(308), np.int64(141))  depth 15.0 m  at (1.89,1.81,7.12)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:14.672  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc-20_red.png'
+SHOT bc-20 loc (-6.4, 0.7, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:15.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bC-20_red.png'
+SHOT bC-20 loc (-10.2, 2.1, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:17.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn-20_red.png'
+SHOT bn-20 loc (-4.1, -0.2, 5.2) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:18.625  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bg+00_red.png'
+SHOT bg+00 loc (-7.8, -1.4, 1.7) enclosed px 750 patches 49 patches >=2 cm wide 0
+   px     71 extent    7.8 cm  width   1.2 cm  bbox (np.int64(1390), np.int64(240), np.int64(1393), np.int64(264))  depth 11.0 m  at (1.86,-1.71,6.97)  rim ['HARB_roof_comb']
+   px     70 extent    7.8 cm  width   1.6 cm  bbox (np.int64(1079), np.int64(236), np.int64(1083), np.int64(260))  depth 11.0 m  at (1.88,-0.76,6.99)  rim ['HARB_roof_comb']
+   px     56 extent    5.4 cm  width   1.6 cm  bbox (np.int64(656), np.int64(230), np.int64(660), np.int64(246))  depth 11.2 m  at (1.88,0.54,7.02)  rim ['HARB_roof_comb']
+   px     52 extent    8.4 cm  width   0.9 cm  bbox (np.int64(1476), np.int64(231), np.int64(1478), np.int64(257))  depth 11.1 m  at (1.88,-1.98,7.00)  rim ['HARB_roof_comb']
+   px     51 extent    5.9 cm  width   1.2 cm  bbox (np.int64(1344), np.int64(242), np.int64(1347), np.int64(260))  depth 11.0 m  at (1.88,-1.57,6.98)  rim ['HARB_roof_comb']
+   px     45 extent    6.6 cm  width   0.9 cm  bbox (np.int64(904), np.int64(236), np.int64(906), np.int64(256))  depth 11.1 m  at (1.88,-0.22,6.99)  rim ['HARB_roof_comb']
+   px     44 extent    5.7 cm  width   1.3 cm  bbox (np.int64(1882), np.int64(217), np.int64(1885), np.int64(234))  depth 11.2 m  at (1.87,-3.23,7.06)  rim ['HARB_roof_comb']
+   px     44 extent    5.6 cm  width   1.2 cm  bbox (np.int64(1609), np.int64(234), np.int64(1612), np.int64(251))  depth 11.1 m  at (1.87,-2.39,7.00)  rim ['HARB_roof_comb']
+   px     39 extent    4.5 cm  width   1.3 cm  bbox (np.int64(337), np.int64(210), np.int64(340), np.int64(223))  depth 11.5 m  at (1.88,1.53,7.10)  rim ['HARB_roof_comb']
+   px     38 extent    5.3 cm  width   1.7 cm  bbox (np.int64(32), np.int64(159), np.int64(36), np.int64(174))  depth 11.8 m  at (1.89,2.50,7.28)  rim ['HARB_roof_comb']
+   px     34 extent    5.4 cm  width   1.0 cm  bbox (np.int64(2073), np.int64(202), np.int64(2075), np.int64(218))  depth 11.4 m  at (1.88,-3.82,7.12)  rim ['HARB_roof_comb']
+   px     31 extent    4.7 cm  width   0.9 cm  bbox (np.int64(1658), np.int64(233), np.int64(1660), np.int64(247))  depth 11.1 m  at (1.87,-2.54,7.01)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:20.938  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG+00_red.png'
+SHOT bG+00 loc (-12.8, -1.4, 1.7) enclosed px 650 patches 44 patches >=2 cm wide 1
+   px     48 extent    7.3 cm  width   1.8 cm  bbox (np.int64(393), np.int64(203), np.int64(396), np.int64(218))  depth 16.2 m  at (1.89,2.50,7.29)  rim ['HARB_roof_comb']
+   px     44 extent    7.1 cm  width   1.8 cm  bbox (np.int64(839), np.int64(259), np.int64(842), np.int64(274))  depth 15.7 m  at (1.88,0.54,7.03)  rim ['HARB_roof_comb']
+   px     44 extent    8.3 cm  width   1.3 cm  bbox (np.int64(1358), np.int64(268), np.int64(1360), np.int64(286))  depth 15.6 m  at (1.90,-1.72,6.98)  rim ['HARB_roof_comb']
+   px     43 extent    9.2 cm  width   1.8 cm  bbox (np.int64(1138), np.int64(264), np.int64(1141), np.int64(284))  depth 15.6 m  at (1.87,-0.76,6.99)  rim ['HARB_roof_comb']
+   px     38 extent    8.3 cm  width   1.3 cm  bbox (np.int64(1418), np.int64(264), np.int64(1420), np.int64(282))  depth 15.6 m  at (1.88,-1.98,7.00)  rim ['HARB_roof_comb']
+   px     38 extent    7.0 cm  width   1.8 cm  bbox (np.int64(1324), np.int64(269), np.int64(1327), np.int64(284))  depth 15.6 m  at (1.87,-1.57,6.98)  rim ['HARB_roof_comb']
+   px     35 extent    7.4 cm  width   1.4 cm  bbox (np.int64(271), np.int64(163), np.int64(273), np.int64(178))  depth 16.4 m  at (1.88,3.05,7.47)  rim ['HARB_roof_comb']
+   px     33 extent    8.8 cm  width   1.3 cm  bbox (np.int64(1014), np.int64(262), np.int64(1016), np.int64(281))  depth 15.6 m  at (1.88,-0.22,7.00)  rim ['HARB_roof_comb']
+   px     32 extent    6.3 cm  width   1.3 cm  bbox (np.int64(612), np.int64(243), np.int64(614), np.int64(256))  depth 15.9 m  at (1.88,1.54,7.11)  rim ['HARB_roof_comb']
+   px     31 extent    7.1 cm  width   1.3 cm  bbox (np.int64(1706), np.int64(249), np.int64(1708), np.int64(264))  depth 15.7 m  at (1.88,-3.23,7.07)  rim ['HARB_roof_comb']
+   px     30 extent    7.1 cm  width   1.3 cm  bbox (np.int64(1842), np.int64(238), np.int64(1844), np.int64(253))  depth 15.8 m  at (1.87,-3.83,7.12)  rim ['HARB_roof_comb']
+   px     28 extent    5.7 cm  width   1.3 cm  bbox (np.int64(1512), np.int64(265), np.int64(1514), np.int64(277))  depth 15.6 m  at (1.87,-2.39,7.00)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:23.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc+00_red.png'
+SHOT bc+00 loc (-6.8, -1.4, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:24.484  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bC+00_red.png'
+SHOT bC+00 loc (-10.8, -1.4, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:25.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn+00_red.png'
+SHOT bn+00 loc (-4.3, -1.4, 5.2) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:27.188  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bg+20_red.png'
+SHOT bg+20 loc (-7.4, -3.8, 1.7) enclosed px 403 patches 51 patches >=2 cm wide 0
+   px     56 extent    5.5 cm  width   1.8 cm  bbox (np.int64(1778), np.int64(181), np.int64(1783), np.int64(198))  depth 10.8 m  at (1.86,-1.98,6.97)  rim ['HARB_roof_comb']
+   px     48 extent    6.3 cm  width   1.2 cm  bbox (np.int64(2379), np.int64(36), np.int64(2382), np.int64(56))  depth 10.7 m  at (1.87,-3.72,7.10)  rim ['HARB_roof_comb']
+   px     41 extent    5.6 cm  width   1.2 cm  bbox (np.int64(1390), np.int64(250), np.int64(1393), np.int64(267))  depth 11.1 m  at (1.87,-0.76,6.97)  rim ['HARB_roof_comb']
+   px     36 extent    4.5 cm  width   0.9 cm  bbox (np.int64(1915), np.int64(153), np.int64(1917), np.int64(167))  depth 10.7 m  at (1.87,-2.39,7.00)  rim ['HARB_roof_comb']
+   px     29 extent    3.7 cm  width   1.2 cm  bbox (np.int64(1647), np.int64(212), np.int64(1650), np.int64(223))  depth 10.9 m  at (1.88,-1.58,6.96)  rim ['HARB_roof_comb']
+   px     28 extent    4.5 cm  width   1.2 cm  bbox (np.int64(2060), np.int64(121), np.int64(2063), np.int64(135))  depth 10.7 m  at (1.87,-2.81,7.02)  rim ['HARB_roof_comb']
+   px     23 extent    4.9 cm  width   0.6 cm  bbox (np.int64(1694), np.int64(194), np.int64(1695), np.int64(209))  depth 10.9 m  at (1.89,-1.72,7.00)  rim ['HARB_roof_comb']
+   px     17 extent    3.0 cm  width   1.0 cm  bbox (np.int64(731), np.int64(338), np.int64(733), np.int64(346))  depth 12.0 m  at (1.88,1.53,7.09)  rim ['HARB_roof_comb']
+   px     15 extent    3.0 cm  width   1.2 cm  bbox (np.int64(1775), np.int64(157), np.int64(1778), np.int64(166))  depth 10.8 m  at (1.86,-1.98,7.07)  rim ['HARB_roof_comb']
+   px     12 extent    2.4 cm  width   0.6 cm  bbox (np.int64(2172), np.int64(99), np.int64(2173), np.int64(106))  depth 10.7 m  at (1.87,-3.13,7.04)  rim ['HARB_roof_comb']
+   px      9 extent    2.5 cm  width   0.6 cm  bbox (np.int64(1612), np.int64(213), np.int64(1613), np.int64(220))  depth 10.9 m  at (1.89,-1.46,6.99)  rim ['HARB_roof_comb']
+   px      9 extent    1.9 cm  width   1.0 cm  bbox (np.int64(1005), np.int64(313), np.int64(1007), np.int64(318))  depth 11.5 m  at (1.89,0.54,7.02)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:29.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG+20_red.png'
+SHOT bG+20 loc (-12.1, -5.5, 1.7) enclosed px 53 patches 11 patches >=2 cm wide 0
+   px     17 extent    4.2 cm  width   1.4 cm  bbox (np.int64(884), np.int64(310), np.int64(886), np.int64(318))  depth 16.5 m  at (1.88,1.53,7.10)  rim ['HARB_roof_comb']
+   px     11 extent    3.6 cm  width   1.4 cm  bbox (np.int64(1083), np.int64(303), np.int64(1085), np.int64(310))  depth 16.1 m  at (1.89,0.54,7.02)  rim ['HARB_roof_comb']
+   px      8 extent    2.4 cm  width   1.0 cm  bbox (np.int64(700), np.int64(298), np.int64(701), np.int64(302))  depth 17.0 m  at (1.90,2.51,7.29)  rim ['HARB_roof_comb']
+   px      5 extent    1.4 cm  width   0.9 cm  bbox (np.int64(962), np.int64(314), np.int64(963), np.int64(316))  depth 16.3 m  at (1.87,1.14,7.04)  rim ['HARB_roof_comb']
+   px      4 extent    1.5 cm  width   1.0 cm  bbox (np.int64(599), np.int64(273), np.int64(600), np.int64(275))  depth 17.4 m  at (1.89,3.05,7.48)  rim ['HARB_roof_comb']
+   px      3 extent    0.9 cm  width   0.9 cm  bbox (np.int64(1027), np.int64(291), np.int64(1028), np.int64(292))  depth 16.2 m  at (1.86,0.81,7.11)  rim ['HARB_roof_comb']
+   px      1 extent    0.1 cm  width   0.1 cm  bbox (np.int64(1408), np.int64(153), np.int64(1408), np.int64(153))  depth 4.0 m  at (-8.56,-4.35,3.17)  rim ['HARB_wing_roof_verge']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1172), np.int64(280), np.int64(1172), np.int64(280))  depth 15.9 m  at (1.87,0.11,7.09)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1243), np.int64(292), np.int64(1243), np.int64(292))  depth 15.8 m  at (1.88,-0.22,6.99)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1242), np.int64(293), np.int64(1242), np.int64(293))  depth 15.8 m  at (1.89,-0.22,6.99)  rim ['HARB_roof_comb']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(1243), np.int64(294), np.int64(1243), np.int64(294))  depth 15.8 m  at (1.88,-0.22,6.98)  rim ['HARB_roof_comb']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:31.938  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc+20_red.png'
+SHOT bc+20 loc (-6.4, -3.4, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:33.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bC+20_red.png'
+SHOT bC+20 loc (-10.2, -4.8, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:34.563  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn+20_red.png'
+SHOT bn+20 loc (-4.1, -2.6, 5.2) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:35.859  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG+45_red.png'
+SHOT bG+45 loc (-9.3, -9.9, 1.7) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:37.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc+45_red.png'
+SHOT bc+45 loc (-5.0, -5.6, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:38.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bC+45_red.png'
+SHOT bC+45 loc (-7.9, -8.4, 6.0) enclosed px 2 patches 2 patches >=2 cm wide 0
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(176), np.int64(1104), np.int64(176), np.int64(1104))  depth 12.8 m  at (-2.21,2.54,2.79)  rim ['HARB_roof_rafters']
+   px      1 extent    0.4 cm  width   0.4 cm  bbox (np.int64(216), np.int64(1150), np.int64(216), np.int64(1150))  depth 13.9 m  at (-1.62,3.39,2.34)  rim ['HARB_hall_quoins']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:40.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG+70_red.png'
+SHOT bG+70 loc (-4.9, -12.6, 1.7) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:41.969  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc+70_red.png'
+SHOT bc+70 loc (-2.9, -7.0, 6.0) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:43.281  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bC+70_red.png'
+SHOT bC+70 loc (-4.2, -10.8, 6.0) enclosed px 2 patches 2 patches >=2 cm wide 0
+   px      1 extent    0.1 cm  width   0.1 cm  bbox (np.int64(192), np.int64(329), np.int64(192), np.int64(329))  depth 4.9 m  at (-3.96,-5.88,5.77)  rim ['HARB_tower_stones']
+   px      1 extent    0.1 cm  width   0.1 cm  bbox (np.int64(184), np.int64(1005), np.int64(184), np.int64(1005))  depth 4.9 m  at (-4.01,-5.95,4.88)  rim ['HARB_wing_roof_wing_abutment']
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:45.031  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn+70_red.png'
+SHOT bn+70 loc (-2.0, -4.7, 5.2) enclosed px 0 patches 0 patches >=2 cm wide 0
+   NEAR-EYEBROW (rim centre within 2.0 m of the front centre): patches 0 px 0 max width 0.0 cm
+02:47.234  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG-70_grey.png'
+02:47.609  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn-70_grey.png'
+02:47.969  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG-45_grey.png'
+02:48.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc-45_grey.png'
+02:48.641  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn-45_grey.png'
+02:49.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG-20_grey.png'
+02:49.438  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn-20_grey.png'
+02:49.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bg+00_grey.png'
+02:50.344  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG+00_grey.png'
+02:50.813  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc+00_grey.png'
+02:51.234  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn+00_grey.png'
+02:51.797  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG+20_grey.png'
+02:52.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn+20_grey.png'
+02:52.797  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG+45_grey.png'
+02:53.266  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bc+45_grey.png'
+02:53.688  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bG+70_grey.png'
+02:54.109  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_05\audit\ring\bn+70_grey.png'
+TOTAL enclosed px 68444
+GREY done
+DONE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit
