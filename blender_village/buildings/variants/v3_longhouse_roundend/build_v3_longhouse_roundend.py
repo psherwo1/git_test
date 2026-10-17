@@ -14,8 +14,9 @@ Plan (built with the round end's centre at the origin, then recentred on the pla
               roll, closed verge faces) with ridge roll and shake comb, eave lip >= 2.30 m over the door
   junctions   body walls run into the round wall (clipped inside it), the round wall is dropped inside the body,
               the thatch runs under the cone (dropped inside the round wall head; under the cone's eave overhang it
-              dies into the round wall), a lead flashing closes the slopes + ridge and a lead end-apron is folded
-              over each eave roll under the cone's starter course
+              dies into the round wall), the cone yields to the thatch (cone_roof(abut_roof=ROOF): no cone unit
+              inside / under the thatch solid or its eave roll), a lead flashing closes the slopes + ridge and a lead
+              end-apron is folded over each eave roll under the cone's last eave units
 """
 import os
 import sys
@@ -75,11 +76,13 @@ def steps():
         (wall_plate, dict(seed=303)),
         (path_stone_wall, dict(name="body_wall", path=BODY_PATH, top_fn=body_top, openings=BODY_OPENINGS,
                                clip=in_round, hero_s=(south(DOOR_X - 3.0), south(DOOR_X + 3.0)), seed=31)),
-        (cone_roof, dict(seed=606, soffit_skip=in_body)),
-        (ball_finial, dict(seed=5)),
-        (round_eave_fill, dict(skip=in_body)),
         (linear_roof, dict(roof=ROOF, covering="thatch", abut_cone=(0.0, 0.0), seed=71)),
-        (cone_abutment, dict(roof=ROOF, center=(0.0, 0.0))),
+        (cone_roof, dict(seed=606, soffit_skip=in_body, abut_roof=ROOF,          # each roof yields to the other,
+                         abut_trim=True, abut_soakers=True, soffit_cut=True)),    # on a closed, lead-backed cut
+        (ball_finial, dict(seed=5, hat_seg=96, fit=True)),
+        (round_eave_fill, dict(skip=in_body)),
+        (cone_abutment, dict(roof=ROOF, center=(0.0, 0.0), taper=0.12,           # closed sweep end lapping the
+                             apron=dict(w_in_kept=True, u_top=0.54))),          # apron; apron under kept units
     ] + ([] if os.environ.get("LONG_FAST") else [composite_hidden_cull]) + [recenter]
 
 
@@ -87,7 +90,8 @@ DECAL_VALIDATE = dict(reach=0.06, min_sep=0.3, clear=0.15,
                       exclude_objects=("_deck", "_blockers", "_reveals", "_roof_blocker", "_eave_fill",
                                        "_roof_underlap", "_apex_blocker"),
                       normal_fp_dot=0.85, fp_ntol=0.12, fp_skip_need=6,
-                      fp_skip_surfaces=("M_roof_shingle", "M_thatch"))
+                      fp_skip_surfaces=("M_roof_shingle", "M_thatch"),
+                      walk_zones="da")                       # no lichen / moss on a door's trodden tops
 
 
 def main():

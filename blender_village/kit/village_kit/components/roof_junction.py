@@ -109,7 +109,8 @@ def section_meets_cone(g, roof, sg, u, o, center=(0.0, 0.0), cone_cover=0.05):
     return _first_inside(fz, x_far, cl[0])
 
 
-def abutment_curve(g, roof, center=(0.0, 0.0), cone_cover=0.05, roof_lift=0.0, dy=0.03, ends="nose"):
+def abutment_curve(g, roof, center=(0.0, 0.0), cone_cover=0.05, roof_lift=0.0, dy=0.03, ends="nose",
+                   crest_over=0.015):
     """the junction line, as world points with the two surface normals at each:
     returns P (n, 3), n_roof (n, 3), n_cone (n, 3).  The roof's top is GableRoof.top_z (mid-step envelope incl. the
     ridge roll) + roof_lift; the cone's top is its reference surface + cone_cover (the shingle stack).  The line runs
@@ -152,16 +153,30 @@ def abutment_curve(g, roof, center=(0.0, 0.0), cone_cover=0.05, roof_lift=0.0, d
     # the slopes and the ridge: y from -Y to +Y
     mid = []
     y_m = Y - 0.04
-    if ends != "nose":
+    top_fn = roof.top_z
+    ys = None
+    if ends == "plane":
+        # round 4: over the slopes, the ridge AND the eave roll up to just past its crest (the roof solid's column
+        # top, linear_roof.GableRoof.section_columns), so the sweep meets the end apron with a lap, not a gap
+        ya, ztc, _zb = roof.section_columns()
+        ok = np.isfinite(ztc)
+        ya_ok, zt_ok = ya[ok], ztc[ok]
+        top_fn = lambda y: np.interp(np.abs(np.asarray(y, float)), ya_ok, zt_ok)  # noqa: E731
+        band = ya_ok > ya_ok.max() - 0.45
+        y_m = float(ya_ok[band][np.argmax(zt_ok[band])]) + crest_over
+        ys = np.arange(-y_m, y_m + 1e-9, dy)
+        fine = np.linspace(y_m - 0.20, y_m, 9)
+        ys = np.unique(np.round(np.concatenate([ys[np.abs(ys) < y_m - 0.20], fine, -fine]), 6))
+    elif ends != "nose":
         R = getattr(roof, "ROLL", None)
         y_m = Y - ((R["u_c"] + 0.06) if R is not None else 0.10) * cos_p
-    for y in np.arange(-y_m, y_m + 1e-9, dy):
-        zt = float(roof.top_z(y)) + roof_lift
+    for y in (np.arange(-y_m, y_m + 1e-9, dy) if ys is None else ys):
+        zt = float(top_fn(y)) + roof_lift
         x = _first_inside(lambda xx, y=y, zt=zt: zt - cone_top_local(xx, y), x_far, x_near)
         if x is None:
             continue
         e = 0.01
-        dzdy = (float(roof.top_z(y + e)) - float(roof.top_z(y - e))) / (2 * e)
+        dzdy = (float(top_fn(y + e)) - float(top_fn(y - e))) / (2 * e)
         n_ = np.array([0.0, -dzdy, 1.0])
         mid.append(((x, y, zt), tuple(n_ / np.linalg.norm(n_))))
     seq = pts[0] + mid + pts[1]
@@ -181,8 +196,41 @@ def _smooth(A, k=2):
     return out / np.linalg.norm(out, axis=-1, keepdims=True)
 
 
+KEPT_COVER = ("roof_shingles", "roof_starter", "roof_underlap")
+
+
+def kept_cover_points(g, names=KEPT_COVER):
+    """round 4: world vertices of the cone covering units that are still there (after composite.cone_keep_out)."""
+    import bpy
+    out = []
+    for nm in names:
+        ob = bpy.data.objects.get(f"{g.prefix}_{nm}")
+        if ob is None or ob.type != "MESH" or not len(ob.data.vertices):
+            continue
+        V = np.zeros(len(ob.data.vertices) * 3)
+        ob.data.vertices.foreach_get("co", V)
+        out.append(V.reshape(-1, 3) @ np.array(ob.matrix_world)[:3, :3].T + np.array(ob.matrix_world)[:3, 3])
+    return np.concatenate(out) if out else np.zeros((0, 3))
+
+
+def _first_kept_along(K, p, b, nc, reach=0.6, tube=0.05, up=(-0.04, 0.16)):
+    """distance along direction b (on the cone surface, from junction point p) to the first kept covering vertex in a
+    tube round that line (normal band `up` about the cone normal nc); None if none within reach."""
+    d = K - p
+    s = d @ b
+    m = (s > 0.0) & (s < reach)
+    if not m.any():
+        return None
+    d, s = d[m], s[m]
+    h = d @ nc
+    side = np.linalg.norm(d - s[:, None] * b - h[:, None] * nc, axis=1)
+    k = (side < tube) & (h > up[0]) & (h < up[1])
+    return float(s[k].min()) if k.any() else None
+
+
 def end_apron(acc, g, roof, sg, center=(0.0, 0.0), w_out=0.20, w_in=0.12, t=(0.012, 0.010), z_min=None,
-              cone_cover=0.05, mat="M_lead", n_rows=14):
+              cone_cover=0.05, mat="M_lead", n_rows=14, w_in_kept=False, kept_lap=0.06, w_in_max=0.45,
+              u_top=0.10):
     """KIT COMPONENT (part of cone_abutment(end="apron")): a closed lead end-apron where the eave of a linear roof
     meets a round body's cone.  It lies on the eave nose (the GableRoof.ROLL section, or the plain covering edge),
     from just above the crest down over the nose face, as a band w_out (onto the linear roof) + w_in (tucked under
@@ -196,7 +244,8 @@ def end_apron(acc, g, roof, sg, center=(0.0, 0.0), w_out=0.20, w_in=0.12, t=(0.0
                  o_end=roof.T0)
     z_min = float(getattr(g, "Z_EAVE", -1e9)) + 0.01 if z_min is None else z_min
     # rows: the top of the roll just up-slope of the crest (under the sweep's end), then the nose face downward
-    ut = np.linspace(R["u_c"] + 0.10, R["u_c"] + 0.005, 4)
+    u_top = min(u_top, R["L"] - 0.005)
+    ut = np.linspace(R["u_c"] + u_top, R["u_c"] + 0.005, 4 if u_top <= 0.10 else 7)
     tt = (ut - R["u_c"]) / R["L"]
     ot = R["o_end"] + (R["H"] - R["o_end"]) * (1 - tt) ** 1.5
     dodu = -1.5 * (R["H"] - R["o_end"]) * (1 - tt) ** 0.5 / R["L"]
@@ -226,9 +275,25 @@ def end_apron(acc, g, roof, sg, center=(0.0, 0.0), w_out=0.20, w_in=0.12, t=(0.0
     for _ in range(2):                                    # a calm seam line (no kinks from the cone's facets)
         xs_[1:-1] = 0.25 * xs_[:-2] + 0.5 * xs_[1:-1] + 0.25 * xs_[2:]
     nr, nc = len(rows), len(cols)
+    w_ins = np.full(nr, float(w_in))
+    if w_in_kept:
+        # round 4: the cone-side width per row from the units the keep-out KEPT: the apron runs kept_lap m under
+        # (behind) the first kept cone unit beyond the seam, so no dropped unit leaves a void beside it
+        K = kept_cover_points(g)
+        if len(K):
+            KL = roof.to_local(K)
+            for i, (x_s, u_, o_, n_) in enumerate(rows):
+                p = roof.surf(xs_[i], u_, sg, o_)
+                d = (KL[:, 0] - xs_[i]) * toward
+                m = (d > 0) & (d < w_in_max) & (np.abs(KL[:, 1] - p[1]) < 0.12) & (KL[:, 2] > p[2] - 0.06) & \
+                    (KL[:, 2] < p[2] + 0.30)
+                if m.any():
+                    w_ins[i] = min(w_in_max, max(w_in, float(d[m].min()) + kept_lap))
+            for _ in range(3):
+                w_ins[1:-1] = 0.25 * w_ins[:-2] + 0.5 * w_ins[1:-1] + 0.25 * w_ins[2:]
     out_, in_ = [], []
-    for (x_s, u_, o_, n_), xs0 in zip(rows, xs_):
-        X = xs0 + cols
+    for i, ((x_s, u_, o_, n_), xs0) in enumerate(zip(rows, xs_)):
+        X = xs0 + np.linspace(-w_out, w_ins[i], nc) * toward
         out_.append(roof.surf(X, u_ + n_[0] * t[0], sg, o_ + n_[1] * t[0]))
         in_.append(roof.surf(X, u_ - n_[0] * t[1], sg, o_ - n_[1] * t[1]))
     Vo = np.concatenate(out_)
@@ -258,12 +323,23 @@ def end_apron(acc, g, roof, sg, center=(0.0, 0.0), w_out=0.20, w_in=0.12, t=(0.0
     if float(np.cross(q[1] - q[0], q[3] - q[0]) @ n_w) < 0:
         F = [Fo[:, ::-1], Fi[:, ::-1], np.array(rim)[:, ::-1]]
     acc.add(Pw, F, mat, wear=0.4)
+    if w_in_kept:
+        log(f"  end apron {sg:+d}: w_in from kept units {w_ins.min():.2f}-{w_ins.max():.2f} m")
     return nr
 
 
 def cone_abutment(g, roof, center=(0.0, 0.0), width=(0.26, 0.22), crown=0.09, mat="M_lead", seed=91,
-                  cone_cover=0.05, roof_lift=0.0, dy=0.05, end="apron", apron=None):
+                  cone_cover=0.05, roof_lift=0.0, dy=0.05, end="apron", apron=None, sweep_end="crest", taper=None,
+                  fit_kept=False, kept_lap=0.06, wb_max=0.55):
     """KIT COMPONENT: the flashing along the junction of a linear roof and a round body's cone (see module doc).
+    round 4 (all optional, defaults = round 3):
+      sweep_end="plane": the slope sweep runs on over the eave roll to just past its crest (abutment_curve), so it
+        laps over the end apron's top instead of stopping short of it;
+      taper=m: the sweep's section closes smoothly over the last `m` metres of each end into a small domed cap (a
+        closed lead end, no open or crumpled section);
+      fit_kept=True: the skirt up the cone is sized per station from the cone units the keep-out actually KEPT
+        (composite.cone_keep_out): it reaches `kept_lap` m under the first kept unit, so no dropped unit leaves a
+        dark void beside the flashing (up to wb_max).
     width = (skirt down onto the linear covering, skirt up the cone) in metres; crown = height of the rounded bead
     over the junction line.  Both skirts end buried (8-12 cm under the coverings' tops), so the flashing closes the
     joint whatever the course steps, shingle butts or thatch clumps do under it; the ends are capped.
@@ -272,12 +348,24 @@ def cone_abutment(g, roof, center=(0.0, 0.0), width=(0.26, 0.22), crown=0.09, ma
     tucked under the cone's starter course (nothing below the cone's eave lip).  end="nose": the round-1 sweep round
     the eave soffit and nose."""
     cur = abutment_curve(g, roof, center, cone_cover=cone_cover, roof_lift=roof_lift, dy=dy,
-                         ends="nose" if end == "nose" else "crest")
+                         ends="nose" if end == "nose" else sweep_end)
     if cur is None:
         log("  abutment: no junction found")
         return None
     P, NR, NC = cur
     n = len(P)
+    if taper and n > 12:
+        # round 4: end the sweep where the roof normal still follows the slope -- the stations where the junction
+        # turns over the eave roll's plateau twist the section (the round-3 crumpled tip); the end apron, run up
+        # under the sweep end (end_apron(u_top=...)), covers that stretch
+        c25 = math.cos(math.radians(25.0))
+        k0, k1 = 0, n
+        while k0 < n // 3 and float(NR[k0] @ NR[min(k0 + 6, n - 1)]) < c25:
+            k0 += 1
+        while k1 > 2 * n // 3 and float(NR[k1 - 1] @ NR[max(k1 - 7, 0)]) < c25:
+            k1 -= 1
+        P, NR, NC = P[k0:k1], NR[k0:k1], NC[k0:k1]
+        n = len(P)
     T = np.zeros_like(P)
     T[1:-1] = P[2:] - P[:-2]
     T[0], T[-1] = P[1] - P[0], P[-1] - P[-2]
@@ -293,6 +381,19 @@ def cone_abutment(g, roof, center=(0.0, 0.0), width=(0.26, 0.22), crown=0.09, ma
     BI = perp(NR + NC)
     wr, wb = width
     wob = 1 + 0.08 * n2(np.arange(n) * 0.15, np.zeros(n), seed)
+    up_lift = 0.035
+    if fit_kept:
+        K = kept_cover_points(g)
+        if len(K):
+            wb = np.full(n, float(wb))
+            for i in range(n):
+                gap = _first_kept_along(K, P[i], B[i], NC[i])
+                if gap is not None:
+                    wb[i] = min(wb_max, max(wb[i], (gap + kept_lap) / 0.62))
+            for _ in range(3):                                     # a calm skirt edge
+                wb[1:-1] = 0.25 * wb[:-2] + 0.5 * wb[1:-1] + 0.25 * wb[2:]
+            wb = wb[:, None]
+            up_lift = 0.05                                         # over the kept units' butts, not through them
     loop = [
         P - BI * 0.07,
         P + A * wr * wob[:, None] - NR * 0.12,
@@ -300,10 +401,23 @@ def cone_abutment(g, roof, center=(0.0, 0.0), width=(0.26, 0.22), crown=0.09, ma
         P + A * wr * 0.28 + NR * 0.075 + BI * 0.02,
         P + BI * crown,
         P + B * wb * 0.28 + NC * 0.07 + BI * 0.02,
-        P + B * wb * 0.62 + NC * 0.035,
+        P + B * wb * 0.62 + NC * up_lift,
         P + B * wb * wob[:, None] - NC * 0.09,
     ]
     L = np.stack(loop, 1)                                          # (n, m, 3)
+    if taper:
+        # round 4: a closed, domed lead end -- the section shrinks over the last `taper` m and a final small ring
+        # 3 cm past each end closes it (no open / folded section)
+        sl = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(P, axis=0), axis=1))])
+        de = np.minimum(sl, sl[-1] - sl)
+        f = 0.55 + 0.45 * np.clip(de / taper, 0, 1) ** 0.6
+        L = P[:, None, :] + (L - P[:, None, :]) * f[:, None, None]
+        ends_ = []
+        for i, sgn in ((0, -1.0), (n - 1, 1.0)):
+            Pe = P[i] + T[i] * sgn * 0.03
+            ends_.append(Pe[None, :] + (L[i] - P[i][None, :]) * 0.22)
+        L = np.concatenate([ends_[0][None], L, ends_[1][None]])
+        n = L.shape[0]
     m = L.shape[1]
     V = L.reshape(-1, 3)
     i = np.arange(n - 1)[:, None]

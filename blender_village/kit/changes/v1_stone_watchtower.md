@@ -184,3 +184,122 @@ All three were re-run to scratch after the last edit to an existing module (`dru
 
 Later edits touched only `tower_roof.py` (the cull functions, all new), `tower_decals.py` and `square_cabin.py`,
 which no hero imports.
+
+---
+
+# Round 3 (2026-10-16): windows negotiate with fixed courses, no anchors on blockers, cabin anchors
+
+## New functions / names (nothing existing changed by them)
+
+- **`components/drum_frame.py`**
+  - `fit_window_courses(W, beds_above=(), tops_below=(), min_gap=0.20, lintel_grow=2.2, label)`: a drum window
+    negotiates with the FIXED courses round it. If the gap between its keep-out top (`zt`) and the bed of the next
+    fixed course above is under `min_gap` (one real rubble course), the lintel grows to bed directly under the
+    course (up to `lintel_grow` x nominal); if that is not enough the window rises so its lintel beds under the
+    course; a keep-out running INTO a course lowers the window. The same rule applies under the sill against a
+    fixed course below (the window drops so its sill beds on it). Returns `(spec, note)`.
+  - `drum_window_spec`: an unambiguous alias of `drum_frame.window_spec` (director nice-to-have: three kit
+    functions are called `window_spec`).
+- **`components/tower_decals.py`**
+  - `BLOCKER_PARTS = ("_lookout_rooms", "_ceiling", "_cabin_ceiling")`, `blocker_hit(g, hit, exclude)`,
+    `drop_blocker_anchors(g, probe, exclude)`: note-6 blocker meshes (and `<P>_interior` above the door crown)
+    are never decal surfaces.
+  - `cabin_decals(g, da, probe, rng)`: anchors of a `square_cabin` crown read from `g.CABIN` (water streaks below
+    each lookout's sill board on the plank wall, and below each knee-strut corbel pad on the stone face).
+
+## Optional parameters / behaviour added to existing modules
+
+- `drum_wall.round_stone_drum(..., course_fit=True)`: only read inside the `window_size` / `lookouts` branch (round
+  2, used by no building but this one), so the mill and `v4_mixed` (which pass neither) are unchanged. Every such
+  window goes through `fit_window_courses` against the string-course bed and the cornice bed (`Z_CORN0`) above
+  and the string-course top below; `min_gap` = the plain rubble's `hr[0] + hr[1]`. Each change is logged
+  (`course fit: ...`). `course_fit=False` gives the round-2 placement, a number sets `min_gap`.
+  - This tower: slit 2 (az -60) rises 0.255 m so its lintel beds under the string course.
+  - The round-2 lookout crown (`WATCH_KIT_VARIANT=lookout`): the four lookout lintels grow 0.24 -> 0.385 m and
+    bed under the cornice (the 0.145 m pinner zipper is gone); slit 2 rises as above.
+- `drum_frame.drum_finish(g, checks=True)`: when no rotor was built (`wheel_blades` part empty) the rotor
+  clearance checks skip themselves with a log line. The mill builds its rotor, so it is unchanged; recipes no
+  longer pass `checks=False`.
+- `tower_decals.round_tower_decals(g, seed, exclude=BLOCKER_PARTS)` / `round_tower_decals_gated(..., exclude=)`:
+  the three repair-patch scatters accept only exterior hits (`wall_scatter(accept=)`), blocker anchors are dropped
+  before the gates, `validate_anchors(exclude_objects=)` rejects them, and a final assert checks none remain.
+  `cabin_decals` runs when `g.CABIN` exists. (Only v1 uses this module.)
+- `square_cabin.square_cabin`: publishes `g.CABIN["pads"]` (strut corbel pads); a round lead sleeve (in
+  `<P>_cabin_lead`) dresses the finial's foot into the pointed lead cap, which before left the finial perched on
+  the apex point with a visible gap. (Only v1 uses this module.)
+
+## Round 3 hero re-runs (to scratch: MILL_OUT, HUT_OUT, KEEP_OUT, after the last edit to drum_frame / drum_wall)
+
+| Building | Triangles | Record |
+|---|---|---|
+| tower_windmill | 1,146,243 | 1,146,243 (0.0 %), rotor checks still run (min blade gap 0.060 m PASS) |
+| hilltop_keep | 1,166,874 | 1,166,874 (0.0 %) |
+| wattle_roundhut | 876,619 | 876,619 (0.0 %) |
+
+All three built without errors after the last `drum_frame` / `drum_wall` edit. Later edits touched only
+`square_cabin.py`, `tower_decals.py` and `tower_roof.py`, which no hero imports.
+
+## Fix forced by a concurrent kit change
+
+`core._vis_spawn_pool` returns a `concurrent.futures.ProcessPoolExecutor` since 20:52 (another builder's edit).
+`tower_roof.drum_ray_cull` called `pool.close()` / `join()` on it and its first round-3 deliverable build died at the
+end of the cull. Now `tower_roof._close_pool(pool)` closes either kind, the executor's lazy `map` is consumed inside
+the `try` (`list(...)`), and a broken pool falls back to one process for the remaining targets.
+
+---
+
+# Round 4 (2026-10-16): reusable bell-cast pyramid roof, closed crown bed, true finial tip
+
+## New module (nothing existing changed by it)
+
+- **`components/pyramid_roof.py`**: `pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0,
+  cx=0.0, cy=0.0, pitch_deg=48.0, eave_out=0.50, bell_deg=0.0, bell_len=0.70, kick=0.0, kick_len=0.60, sag=0.0,
+  exposure=0.34, cap_r=0.62, finial_scale=0.80, finial_lean=0.5, rafter_step=0.60, t_deck=0.025, seed=None,
+  rng=None)`. It is extracted from `square_cabin`'s inline straight pyramid (round-3 lines 199-347) and generalised.
+  - Any regular polygon (`sides` >= 3, rotation and centre) on any wall head. The deck underside passes over
+    `z_plate` at the wall-face apothem `p_wall`.
+  - `PyramidSurface`: the pitch profile along the apothem, with a bell-cast eave (`bell_deg` flattening over the last
+    `bell_len` m of slope, cosine-blended, so the hip lines come out concave in elevation), upturned hip corners
+    (`kick`) and a dish between the hips (`sag`). It exposes `under` / `top` / `normal(k, u, p)`, `p_of_m` / `m_of_p`
+    and `apothem`.
+  - Parts, all following the curved surface:
+    - deck (top, soffit and eave edge, with denser rows through the bell);
+    - rafter tails and hip rafters, swept along the surface;
+    - starter board, then coursed kit shingles bent onto the surface (`shingle_mesh`, `SHINGLE_VARIANTS`,
+      `SIZE_TABLE`) and trimmed at the hips;
+    - **one closed saddle per hip**, swept along the hip line. This replaces the two separate boards that left an
+      open V slot along every hip (round-3 j13).
+    - a polygonal lead cap lifted clear of the covering, a lead sleeve, and `finial.turned_finial(scale=finial_scale)`.
+  - It returns a record (`objs`, `surface`, `r_eave`, `z_eave`, `z_eave_corner`, `apex`, `cap_top`, `collar_drip`,
+    `tip`, ...). **`tip` is the max z of the built finial mesh**, not a formula.
+  - Objects: `<P>_<name>_roof_frame / _roof_deck / _shingles / _hips / _lead / _finial`. `name="cabin"` gives the
+    round-3 object names, so cull targets and probes are unchanged.
+  - `bell_deg = kick = sag = 0` reproduces the round-3 straight pyramid. A scratch build with round-3 cabin parameters
+    gave the identical eave (11.11 m, r 3.16), apex 14.66, 448 shingles / 43,610 shingle polygons and the identical
+    deck, lead and finial bboxes. The only change is the hip saddles.
+
+## `components/square_cabin.py` (existing module; only v1 imports it)
+
+- The roof is no longer built inline. `square_cabin` calls `roof_fn or pyramid_roof` with `p_wall` (wall face) and
+  `z_plate` (plate top), `name="cabin"` and its own rng (so the round-3 shingle sequence is kept). The new parameters
+  are:
+  - `roof=dict(...)`: overrides for the roof module, e.g. `bell_deg`, `bell_len`, `kick`, `sag`;
+  - `roof_fn`: any roof module that returns `pyramid_roof`'s record;
+  - `finial_scale=0.80`: was a hard-coded 1.4, which gave 2.0 m above the cap. 0.8 gives 1.14-1.16 m (bible 1.5:
+    0.9-1.3).
+  - `g.CABIN["tip"]` and `g.ROOF["tip"]` now come from the built mesh. `g.CABIN` also carries `bed`, `bed_r`,
+    `bearers` and `roof` (the record).
+- `bed_fill=True` (new, default on): a closed timber rim ring on the wall head (r `bed_r - 0.18` .. `bed_r - 0.06`).
+  It is bedded 1 cm into the cornice cap and runs up to 4 mm under the deck, as blocking between the bearers and
+  between the joists. It goes in `<P>_cabin_floor`. Open framing remains only on the cantilevers outside the drum.
+  Level ray test at z 8.72-9.18, |s| < 2.3 m: 0 sky rays from -Y, +X and az 45. The round-3 build had 6,032 from -Y
+  and 7,420 from +X.
+- `bearers=None` (new default): x = 0 and +-0.65 `bed_r`, so bearers land on any wall head. That is
+  (-1.6, 0, 1.6) here, as before.
+- Head beam: when the plate is less than 5.5 cm above the head beam, the beam grows into the plate. Raising
+  `open_sill` to 1.10 left a 1 cm see-through slot under the plate.
+
+## Hero re-runs
+
+Not run. No existing module that a hero imports was touched: the only existing file edited is `square_cabin.py`, and a
+grep finds it imported only by `build_v1_stone_watchtower.py`. `pyramid_roof.py` is new.

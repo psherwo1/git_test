@@ -109,6 +109,10 @@ def build_plinth(g, coll, seed=9191):
         kind = kinds[i]
         mr = g.detail.min_at(az_pt(ac, r_c, 0.2))           # producer note 11 (1 cm near the door)
         st_kw = dict(split=split_, scar_keep_ent=ske_, dense=(1.6 if (split_ and mr < 0.015) else 1.0))
+        if mr >= 0.015:
+            # kit 1.7 r4 (v4_mixed, producer note 15): optional frame attribute PLINTH_DENSE -- mesh-density factor
+            # of the plinth stones OUTSIDE the entrance zone (note-11 relief >= 1.5 cm there); absent = unchanged
+            st_kw["dense"] *= float(getattr(g, "PLINTH_DENSE", 1.0))
         n_kind[kind] += 1
         near_post = min(abs(np.angle(np.exp(1j * (ac - pa)))) for pa in post_az) * r_c < L / 2 + 0.02
         # visible heights by kind, neighbours >= 4 cm apart

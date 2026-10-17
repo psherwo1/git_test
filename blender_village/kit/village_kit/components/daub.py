@@ -740,6 +740,13 @@ def build_daub(g, coll):
     k_fine = 0.0 if rule else 1.0
     if rule:
         H_S, H_Z, H_CR = 0.03, 0.03, 0.02
+    # kit 1.7 r4 (v4_mixed, producer note 15): optional frame attribute DAUB_GRID = (H_S, H_Z, H_CR[, h_fine]) -- a
+    # coarser coat grid under the note-11 rule (the coat keeps only >= 0.5 m bulge / sag relief); absent = unchanged
+    dgrid = getattr(g, "DAUB_GRID", None)
+    if rule and dgrid:
+        H_S, H_Z, H_CR = (float(v) for v in dgrid[:3])
+        if len(dgrid) > 3:
+            h = float(dgrid[3])
     # kit 1.3.0 (wall_finish daub_relief, director r8 #1): the note-11 entrance exception is applied PER VERTEX
     # (g.detail.min_at_v): inside the entrance zone the r7 hand relief comes back (palm dents and a third of the
     # hand dabs, same places as r7, lifted to >= 1 cm so the rule keeps them); every bay gets sparse 2-2.5 cm

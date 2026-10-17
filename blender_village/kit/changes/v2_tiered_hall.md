@@ -48,3 +48,41 @@ unchanged, so no hero re-run was needed.  All new parameters are optional; the r
 | `tier_frame.roof_support` | plan radius for a round tier (`roof.is_round`). |
 | `tier_finish.tier_views` / `tier_hidden_cull` | build-time budget: two actor rings per ground body (count by circumference, 12-28), one deduplicated crane ring pair, 2 distances x 2 heights x 3 offsets per opening; each target is tested only against the views on its own side of the building (plus every view above 6 m) via `visibility_cull(extra_by_target=...)`. `closure`, `underlap` and `collar` joined the never-cull list (backings). |
 | `tier_finish.tier_decals` | eave drips: a tier whose lip overhangs its body by <= 0.30 m streaks the wall under it; a deeper eave puts its `water_streak` where the drip lands, on a lower tier's shingles (ray down from just outside the lip), or nowhere when it lands on the ground. |
+
+## Round 3 (kit 1.7.2 proposal): roof-to-roof junction rule, public round-roof parts, hygiene
+
+Again only tier-family files plus one NEW file.  No hero imports any of them (grep: only `build_v2_tiered_hall.py`
+imports `tier_roof` / `tier_frame` / `tier_finish` / `round_roof_parts`), so no hero re-run was needed.  All new
+parameters are optional; every round-2 call signature still works.  (Started by the interrupted round-3 fixer at
+20:17-20:25; reviewed, kept and finished in this round.)
+
+| module | change |
+|---|---|
+| `tier_frame.roof_clearance` (new KIT CHECK) + `RoofClearanceError` + `TierFrame.roof_clear = 0.50` / `roof_stack = 0.20` | **The roof-to-roof junction rule.** Every tier, when it registers, is tested against every tier already registered on ANOTHER body. Where both coverings really span the same plan point (inside both lips, outside both p_top openings and outside the bodies rising through them), the clear height between the upper tier's base surface and the lower tier's, less a 0.20 m allowance for the shingle stack and soffit, must be >= 0.50 m; otherwise the build stops with `RoofClearanceError` naming both tiers, both bodies, the worst plan point and the clear height. `g.roof_clear = None` switches it off (diagnostics). Proven both ways this round: it raised on the first witch-hat trial (`tur_e_cap` over `skirt2`, 0.26 m) and passes the delivered recipe (0.70 m). |
+| `tier_roof._register` | every `bell_tier` / `round_tier` registers through it, so the rule runs for both tier kinds. |
+| `round_roof_parts.py` (NEW) | `roof_deck(f, r_in, gap, eave_s, t)` and `eave_closure(f, r_b, mat, n_az)`: the sarking deck + overhang slab and the eave-closure frieze of any round cone frame, promoted from `tower_roof`'s private `_roof_deck` / `_eave_closure` (same geometry as tower_roof at 19:55:57). `round_tier` now imports these instead of another builder's private helpers. `tower_roof` itself is untouched. |
+| `tier_roof.drop_empty_meshes` (new) | removes zero-polygon mesh objects; called at the end of `round_tier`, `_round_finial` and `tier_finish.tier_hidden_cull` (a fully culled object). The round-2 empties `*_cap_purlin_rings` are gone. |
+| `tier_roof.ROUND_PROFILES['witch_hat']` (new entry) | (70 deg, 20 deg bell, 0.45 m bell): ref2's tall witch hat. Eave-to-apex H/D about 1.2-1.4 on spires and turret cones, against 0.65-0.8 with `spire`. Existing entries unchanged. |
+| `tier_roof.bell_tier` | `sides` other than 0-2 (round) or 8 now raises `ValueError` instead of silently building an octagonal tier (only v2 calls it). |
+
+## Round 4 (kit 1.7.3 proposal): see-through junction probe, eave deck lap, turned-down flashing drip, cull budget
+
+Only tier-family files (`tier_roof.py`, `tier_finish.py`) plus one NEW file (`seal_probe.py`).  No hero and no other
+variant imports any of them (grep over `buildings/` and `kit/`: only `build_v2_tiered_hall.py` and the tier family),
+and every pre-existing kit module they call (`oct_roof.sarking_deck`, `core.visibility_cull`, `tier_frame`) is used
+unchanged with its public signature, so no hero re-run was needed.  All new parameters are optional keywords.
+
+**Root cause of round 3's skirt1 / tur_nw slit.** `oct_roof.build_cap` starts the sarking deck about 0.08 m inside
+the wall line, and the wall-head band stands at p_wall - 0.07 .. - 0.02, so a 3-5 mm plan crack runs between the
+deck's eave edge and the band all round every octagonal tier.  Only the ring beam's top faces (in `_structure`)
+backed it.  The hidden-geometry cull removes those faces where no view sees them, and beside the NW turret the
+shingle joints above the crack happened to line up, so rays ran through the joint, the crack and the hollow hall
+to the sky (k05, 119 director rays).  The NE-flank slit is the same family one step further out: there the turret
+cuts the eave structure, so a ray through the overhang lands on the hall's wall face under the eave.
+
+| module | change |
+|---|---|
+| `seal_probe.py` (NEW) `through_seal_probe(g, ring=(0, 0.6), el_deg=(10..80), n_az=24, density, n_dir, depth=0.6, min_incidence=10, backing=False, fail=True)` + `SealError` | **The see-through KIT CHECK** asked for in round 3.  For every tier and every body that rises through it (`through` plus every flashed body), seeded points on the covering's base surface in a 0-0.6 m annulus round the body, each hit by exterior rays from 24 azimuths x elevations 10-80 deg (n_dir per point, rays within 10 deg of grazing the local covering skipped).  A ray that passes its point and reaches nothing (sky), a point > 0.6 m under the tier (through the roof) or a point inside a body > 0.6 m below (hollow interior) is a leak; any leak raises `SealError` naming the tier, the body, the point, the ray direction and what it reached.  Optional `backing=True` pass with the covering removed (report only).  ~1 M rays, 12-20 s.  **Proof:** on round 3's delivered geometry it fails with 8 leaks, `skirt1` round `tur_nw` at (-4.29, 2.50, 3.95) and (-2.66, 4.65, 3.67) (the director's two slits); tur_e, drum and lantern 0. |
+| `tier_roof.eave_deck_lap` (new) + `bell_tier(deck_lap=True)` | A continuous sarking strip (`oct_roof.sarking_deck`, fine 24 x 0.06 m cells so a `through` body cuts it at its face) under every octagonal tier's covering, from 0.22 m inside the wall line, lapping the main deck and the wall-head band, out over the whole overhang to 0.08 m inside the lip.  Name contains `deck`, so the cull never targets it.  `deck_lap=False` gives the kit 1.7.2 tier; a dict passes keywords.  Only octagonal tiers (round tiers already carry `round_roof_parts.roof_deck`, lip to apex). |
+| `tier_roof.roof_flashing(drip=0.03)` | The apron's outer edge is turned down into the shingle courses to 0.03 m under the base surface (a lead drip dressed into the stack) instead of hovering 0.075 m over it, so no grazing ray runs under the apron.  `drip=None` gives the kit 1.7.2 profile. |
+| `tier_finish.tier_hidden_cull(procs=None, seal=True, seal_kw=None)` + `cull_procs()` | **Cull budget (art bible 8):** ray-test workers default to one per physical core less one (logical CPUs / 2 - 1, clamped 3-6; 5 on the 6-core build machine, was a fixed 3).  The result does not depend on it (each polygon's test is independent).  **Seal:** after the cull (and in FAST builds) it runs `through_seal_probe`, so neither a module nor the cull can ship a see-through. |

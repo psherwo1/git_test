@@ -1,0 +1,20 @@
+﻿00:00.563  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\wattle_roundhut\wattle_roundhut.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_cmp_r04.py:79: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:4 char:150
++ ... oding utf8; & "C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe"  ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_cmp_r04.py:108: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w.use_nodes = True
+00:00.781  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:06.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\cmp_hut_eave_west_eye_backface.png'
+DEVICE GPU
+WROTE cmp_hut_eave_west_eye
+00:11.094  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\cmp_hut_door_actor_backface.png'
+WROTE cmp_hut_door_actor

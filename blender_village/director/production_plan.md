@@ -70,6 +70,15 @@ Sign-off rules in force: pass mark 8.2 (client, "for now"), producer notes 1-10,
 
 Rules in force for phase-2 sign-offs: pass mark 8.2, producer notes 1-11, all client corrections.
 
+### Phase 2 kit variants (modularity rubric, note 12; pass mark 8.2 plus an independent audit)
+
+| Variant | Last round | Director | Audit | Triangles | Status |
+|---|---|---|---|---|---|
+| v4_mixed (mill-house) | 4 | 8.4 | **upheld** | 938,453 | **ACCEPTED** 2026-10-17 |
+| v3_longhouse_roundend (approved building 1) | 4 | 8.6 | rejected (close-up junction ends at the cone / thatch crossing) | ~0.47 M | out of rounds; cleanup candidate |
+| v2_tiered_hall (approved building 2) | 4 | 8.4 | rejected (skirt1 hip boards through the drum flashing) | ~0.95 M | out of rounds; cleanup candidate |
+| v1_stone_watchtower (client's square cabin) | 4 | 8.3 | rejected (floor rim gap, hip-saddle mouths, clipped shingle ends) | ~1.06 M (over note 15) | out of rounds; cleanup candidate |
+
 ### Client direction, 2026-10-16: hero gates closed, modularity first (producer note 12)
 
 The client stopped the hero detail rounds: "we don't need more detail at this point, we need reusable modules that can be combined to complete entirely unique structures". Surface detail waits for materials and textures. Kit variants are graded on the modularity rubric in the art bible (note 12), pass mark 8.2.

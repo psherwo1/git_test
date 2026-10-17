@@ -727,3 +727,214 @@ junction gets them. The heroes do not import `junctions.py`, and their re-runs m
 
 Client's words: "Keep the new structures to a one million triangle limit". This building rendered 1,382,693 triangles in round 2 and must come in at 1,000,000 or fewer. It is now a hard requirement for the director and the audit; see the art bible, note 15, for how to cut without losing what the camera sees.
 
+
+## v4_mixed round 4 — builder entry
+
+Both fixes are in kit modules and on through the recipe; the recipe still holds no geometry code (two `Wing`s, two
+junction steps, kit parameter dicts; 104 non-blank, non-comment lines incl. the docstring). Kit changes are recorded
+in `kit/changes/v4_mixed.md` (round 4 section).
+
+**Director must-fix: cull holes at the house wall head (`compound.py`, producer note 6).**
+- `compound_views` keeps each wing's near EYE-LEVEL rings complete: every `ring_n` station at r + 0.4 m and
+  r + 1.5 m, z 1.0 and 1.65 (`Wing.eye_heights`, default on), go into the never-thinned head group with the review
+  cameras and door views. Only the other near heights and the far / crane rings are thinned (log: 617 ring / door /
+  camera viewpoints -> 223 + 77 review, 210 kept whole incl. 132 eye-level stations; the rest are inside the other
+  wing's solid). `cull_max_views` is 300 (r3: 230).
+- New `wall_head_views` + band protection, automatic for any round wing whose eave lip lies below its wall head
+  (`Z_EAVE` 2.40 < `PLATE_TOP` 2.97 here):
+  - per-target viewpoints for `daub`, `wall_plate`, `posts`, `wattle_rods`: eye-height rings under the eave, outside
+    the lip and about 6 m out, plus a band-guard ring in front of the band (254 stations);
+  - `split_band` / `join_band`: the outward polygons of those parts between the lip - 5 cm and the plate top + 2 cm
+    (9,590 daub, 664 plate, 998 post polygons; none inside the drum) are kept out of the cull and merged back
+    afterwards, seam welded. The extra stations alone still lost one grazing daub sliver beside a post in the
+    re-entrant corner (1 ray from 6 m at house az 45 deg); the protection closes it by construction.
+- **Probe 5 re-run** (`round_03/director_extra/dir_probe5_r03.py` on the delivered `.blend`): **0 back-face hits of
+  33,000 rays** at 4 m and 6 m (r3: 43-111 of 825 per west camera). `V4H_daub` boundary edges above z 2.3 in the
+  west sectors (135-225 deg): 194 / 184 (r3: 683 / 836). The door side (az -120..-75, r3 0-6 rays) is also 0.
+- Two door-head gaps the same probe exposed on the door side are fixed with new frame attributes (absent =
+  unchanged):
+  - `doors.build_door` `DOOR_INFILL_DECK`: on the 58 deg cone the infill boards stopped at the rafter line, leaving
+    a ~0.26 m slot between the rafters over the door into the roof void. They now run to just under the batten deck,
+    with a lath behind each board gap.
+  - `conical_roof.build_eave_closure` `EAVE_CLOSURE_DOOR_HALF_DEG`: the closure now runs on behind the door infill,
+    because the cheek opening beside it looked into the eave void (back of the roof blocker).
+- My own wider ring probe (rays over each wing's whole wall from 4 / 6 m, any object): 626 back-face hits against
+  944 on the r3 build. The rest are long-standing open-backed elements (shingle / starter undersides under the
+  eave, the interior skin behind the wattle patches, the drum's dressed work and mortar around the slits). None of
+  them is new or a cull hole, and they are listed under known gaps.
+
+**CLIENT RULE / producer note 15 (at most 1,000,000 triangles): 1,385,232 -> 938,453.** No silhouette, entrance or
+ground-contact geometry was cut. All of it is reusable kit LOD / density parameters:
+- **New `village_kit/lod.py` (`tmpl_lod` step):** height-banded grid LOD for template-instanced pieces. A piece of a
+  listed part whose lowest point is above `z` is re-meshed on every 2nd (above `bands` z, every 3rd) grid line of its
+  `tmpl_box` template. It keeps both outer and both arris lines and all outward lines, and the piece's own shaped
+  vertices, so outline corners, arrises, size and placement are unchanged and only the face grid is thinner. The
+  entrance zone (r 1.3 m round the door, below 2.6 m) and the footing course (below 0.6 m) keep full density.
+  Hooked into `tmplmesh.BatchAcc.add` (`LOD_HOOK`, None by default). Mill: 2,421 pieces, -292k triangles before
+  the cull (base stones 323k -> 170k, arcade dressed 101k -> 33k, plus smock / cap / apron timbers, blades and the
+  pooled cornice corbels).
+- House (frame attributes via `compound.configure`): `DAUB_GRID` (the coat on a 7-7.5 cm grid, its relief is the
+  >= 0.5 m bulge / sag; 178k -> 64k), `PLINTH_DENSE=0.55` outside the entrance zone (77k -> 38k),
+  `SH_RING_STEP=0.21` (shingle rings above the butt; 72k -> 58k).
+- Cull targets added (existing parameters): mill `door_leaf`, `interior`, `door_surround`, `tower_boards`,
+  `cap_frame`; `drum_wall_core(n_th=96)`.
+- Drum rubble a little larger within art bible 3: hr 0.10-0.21, lr 0.20-0.68 m.
+
+**Stats** (`renders/variants/v4_mixed/round_04/stats.json`):
+
+| Measure | Value |
+|---|---|
+| Triangles | **938,453** (cap 1,000,000; r3 1,385,232) |
+| est_hidden_pct | **13.2 %** (r3 12.2 %) |
+| Material slots | 12, all from the palette |
+| `mask_attribute_missing` | none; every mesh has a UV map and `Mask`; 0 non-identity single-user transforms |
+| Objects | 275 |
+| Bounding box | 10.91 x 9.28 x 14.21 m (unchanged) |
+| `.blend` | 22.2 MB, compressed |
+| Decal anchors | 120 (191 placed, 21 dropped by the whole-building audit, thinned to 120) |
+| Build time | 281 s, logged on a CPU shared with other builders and my hero re-runs (r3: 462 s) |
+
+**Renders.** `renders/variants/v4_mixed/round_04/`: all six views at 24 samples, inspected.
+- Silhouette, proportions and the roof / drum junction are unchanged.
+- The door head now shows the infill boards up to the eave (actor_closeup).
+- The LOD'd drum and smock read the same at review distance.
+- No holes or see-through were found, so no further post-render fixes were made.
+
+**Hero re-runs** (to scratch via `KEEP_OUT` / `HUT_OUT` / `MILL_OUT`, after every edit to an existing module that a
+hero imports): hilltop_keep 1,166,874, wattle_roundhut 878,355, tower_windmill 1,146,243. All exact.
+
+**Known gaps.**
+- Long-standing open-backed elements still show back faces to a wide eye-level ray probe: shingle / starter
+  undersides under the eave, the interior skin through the wattle patches, and the drum's dressed work and mortar
+  near the slits. They are not cull holes and are unchanged from earlier rounds. A one-sided-in-Unreal audit of
+  those kit parts is the next note-6 step.
+- `est_hidden_pct` is a sampled estimate that moves about +-0.4 % between near-identical builds. The cull-target
+  additions give 1.8 % of margin.
+- Determinism was not re-hashed this round. Every new step is seeded or deterministic, with no random draws.
+- The r3 nice-to-haves are still open: the fillet crease against the band string course, the house post buried in
+  the drum, the `rafter_bearings` end_clear, a keep-family body module and a round-wall window module.
+
+## v4_mixed round 4 — score 8.4/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only, no ground dressing
+(note 10), no surface-detail requests (note 12). Note 15 (at most 1,000,000 triangles) applied as a hard rule.
+
+**Reviewed:**
+- All six review renders in `renders/variants/v4_mixed/round_04/`, plus `stats.json`, `hidden.json` and the 120
+  anchors in `DECAL_ANCHORS` / `decal_anchors.json`.
+- The recipe (104 lines), `kit/changes/v4_mixed.md` (round 4 section), and the new kit code: `village_kit/lod.py`
+  (`tmpl_lod`, `coarse_template`, `_hook`, `register` / `unregister`, `tmpl_lod_report`), the `tmplmesh.LOD_HOOK`
+  call site, `compound.compound_views` (eye-level head group), `wall_head_views`, `wall_head_band`, `split_band`,
+  `join_band`, `compound_cull(wall_head=True)`, and the new frame attributes `DAUB_GRID`, `PLINTH_DENSE`,
+  `SH_RING_STEP`, `DOOR_INFILL_DECK`, `EAVE_CLOSURE_DOOR_HALF_DEG`.
+- Director close-ups of every module junction in `renders/variants/v4_mixed/round_04/director_extra/`
+  (`dir_render_r04.py`, 44 framings), in four passes:
+  - clay: roof/drum eave ends (r01–r06), flaunching and band (r07–r13), wall/drum, plinth/footing and post head
+    (w01b–w05b), apex, both doors, apron/smock, cap/boom, wheel hub, house eave closure (a01–a07), the house wall
+    head under the low eave all round (h01–h07), the door head and its cheeks (d01–d03), the LOD'd drum and smock
+    at eye level and mid height (L01–L06), thumbnail and overview (t01, t02);
+  - 25 black-on-red see-through checks (`*_seethrough_red.png`);
+  - 14 back-face maps, camera-seen back faces in red (`*_backface.png`, `dir_render_bf_r04.py`);
+  - 20 one-sided simulations, back faces transparent on a red sky, i.e. what Unreal would show
+    (`*_onesided_red.png`, `dir_render_onesided_r04.py`), with the signed-off hut and windmill heroes rendered the
+    same way for comparison (`cmp_*`).
+- Ray probes on the delivered `.blend` (`dir_probe_r04.py`, `dir_probe2…4_r04.py`), the same eave probe on the
+  builder's scratch copy of the r3 deliverable, and a **director rebuild** of the recipe to scratch
+  (`dir_hash_r04.py`).
+
+**Recipe and kit check (director-verified).** The recipe still imports only kit modules and holds no geometry code:
+two `Wing`s, two junction steps and parameter dicts. Both round-4 changes are kit-level:
+- The wall-head fix is automatic in `compound` for any round wing whose eave lip is below its wall head
+  (`Z_EAVE < PLATE_TOP`), and the eye-level rings are kept whole for every compound building (`Wing.eye_heights`,
+  default on).
+- The triangle cut is a new reusable module (`lod.tmpl_lod`, an opt-in hook that is `None` by default, so the heroes
+  are untouched) plus five optional frame attributes (absent = unchanged). The LOD keeps the outer and arris lines
+  and the pieces' own shaped vertices, so every stone stays a discrete, closed piece with its outline.
+
+**Probe results.**
+- **Round-3 must-fix done.** r3 probe 5 on the r4 `.blend`: 0 back-face hits on the wall band objects (daub,
+  wall plate, daub interior, eave closure, blocker) of 33,000 rays from the 4 m and 6 m eye-level rings
+  (r3: 43–111 of 825 per west camera). The h01–h07 close-ups show a closed daub skin and plate all round the house
+  (compare `round_03/director_extra/h01`).
+- Counting back faces on ANY object, the same rays find 345 hits: rafter tails (143), the starter course (119) and
+  eave shingles (79), under the eave lip. These are the culled open shells of the eave pieces, seen through the
+  course gaps. They are NOT new: the r3 deliverable gives 417 on the same probe, and the signed-off hut hero shows
+  the same pattern (`cmp_hut_eave_west_eye_backface`). The one-sided simulations show no sky through them: a solid
+  surface lies behind every one (note 6 backing rule met). Kit audit item, not a must-fix.
+- Wide eye-level probe (4 m / 6 m rings, z 1.0 / 1.65, whole wall): house 148 of 16,367 back-face hits, drum 24 of
+  15,310, all on the long-standing open-backed parts the builder listed.
+- Door head: 0 sky rays and 7 of 4,500 back-face hits through the door head and cheeks (d01–d03 clean). The slot
+  over the door on the 58° cone is closed by the infill boards up to the deck.
+- Doorways: house 14 of 19,380 rays reach z 0 through floor gaps; mill floor and threshold gaps still show terrain
+  (a03 and m01 see-through; the hero windmill shows the same in `cmp_mill_door_actor`). Carried nice-to-have.
+- Hygiene: 938,453 triangles (evaluated), 275 objects, 12 palette slots, `Mask` and UVs on every mesh, 0
+  non-identity single-user transforms, 0 degenerate faces in every part touched this round; `V4H_eave_closure`,
+  `V4J_roof_tower_fillet`, `V4J_abutment_posts` and `V4M_wheel_blades` closed (0 boundary edges). The 4 + 1 edges
+  with more than two faces in `V4M_base_stones` / `_base_dressed` are within single stones (not visible).
+- 120 anchors, all within 4 mm of a surface; damp_rise at 0.46–0.73 m, lichen on stone tops up to 4.2 m,
+  water_streak under drips up to the boom end, soot over openings. Plausible.
+- **Director rebuild:** 279.5 s (log 281 s; art bible 8: about 10 min), 938,453 triangles, and a geometry hash
+  identical to the delivered `.blend` (SHA-1 over names, vertices, polygon counts and matrices, `908e73e0…`).
+  Determinism confirmed.
+
+**What the renders show.**
+- Silhouette unchanged (hero, front, side, back, aerial, t01). The LOD is invisible at review distance, and at 2–3 m
+  the drum rubble still reads as individual flat-bedded stones with arrises and recessed joints (L01–L03, L06);
+  the wheel blades, smock and apron read the same (a04–a06, L05).
+- Wall/drum (w01b, w02), plinth/footing (w03b, w04), roof/drum eave ends (r01–r06) and the flaunching band (r07,
+  r10) are unchanged from round 3 and clean.
+- Still open from round 3: the fillet's top crease meets the band's lower string course in the valley (r12, r13,
+  crane height only).
+- Soft sunlight dashes on the daub under the eave (h01, h02, a07) are sun rays slipping through shingle gaps at
+  grazing angles. No camera sees the sky there (all red checks clean). Not a defect.
+
+| axis | score | reason |
+|---|---|---|
+| 1 Silhouette and massing | 8.6 | Unchanged and right: a narrow miller's cottage under a 58° needle cone against a tall battered stone tower with apron, smock, cap, 16-blade wheel and tail. A new building of this village at thumbnail (t01). The note-15 LOD does not touch the outline. |
+| 2 Proportion and actor scale | 8.5 | Unchanged: house door 0.97 × 2.10 m clear, eave lip over it 2.42–2.45 m, mill door 1.0 m wide with its head at 2.26 m. Points off as before: the framed door head sits only about 0.15 m under the eave lip, and the mill door is tight in the re-entrant corner. |
+| 3 Construction logic | 8.5 | The door head now reads as built: infill boards run up to the batten deck, and the eave closure continues behind them (d01–d03). Roofs on plates, walls on plinth and footing, rafter tails stopped at the drum. Points off for the round-3 leftovers: the fillet crease runs into the band string course (r12, r13), and one house post is buried in the drum (seen only from inside). |
+| 4 Seams and junctions | 8.3 | The round-3 defect is fixed in the kit: the house wall head is closed all round (0 of 33,000 band back-face hits; h01–h07), and no see-through anywhere (25 red checks). Roof/drum, wall/drum and plinth/footing are unchanged and clean. Points off: the fillet/band crease, and the open-shell eave pieces that show back faces (backed, kit-wide, also on the hut hero). |
+| 5 Distinctness and reuse | 8.5 | The new `lod.py` is a genuine reusable module: opt-in, per-prefix, height-banded, with entrance and footing zones kept dense. It brought a 1.39 M recipe under the 1 M cap with parameters only. Heroes re-run exactly. Points off as before: the keep family still adds only the finial, posts and fillet. And the door-head fixes are opt-in attributes, so the next steep-cone building must remember to set them. |
+| 6 Technical compliance | 8.5 | Note 15 met (938,453 ≤ 1,000,000). Hidden 13.2 %, 12 palette slots, `Mask`, UVs, identity transforms, 120 plausible anchors. Build 279.5 s, and a director rebuild is hash-identical. Points off: only 1.8 % of hidden margin on a sampled estimate, and the open-shell eave pieces still to audit for one-sided rendering (kit-wide). |
+
+**Verdict: 8.4/10, PASSED (pass mark 8.2).** The round-3 must-fix is fixed where it belongs: `compound` now keeps
+every wing's eye-level rings whole and protects a wall-head band under a low eave lip automatically, so every
+future compound building with a steep, short-overhang cone inherits it. The new client rule (note 15) is met
+without touching silhouette, entrance or ground contact, through a reusable LOD module and frame attributes. The
+director rebuild confirms the 280 s build, the triangle count and determinism. Nothing on this building breaks a
+producer note. The remaining items are kit polish.
+
+**Strengths**
+- `compound.compound_views` / `wall_head_views` / `split_band` / `join_band`: the fix is generic and automatic. It
+  keys on the frame's own numbers (`Z_EAVE < PLATE_TOP`) rather than on this recipe, and the protected band makes a
+  cull hole there impossible by construction.
+- `village_kit/lod.py` is a clean, reusable LOD layer. It is opt-in through a hook that is `None` by default, keyed by
+  object prefix, and height-banded (note 15: mid-distance first). Entrance and footing zones stay at full density,
+  and it keeps each piece's outline, arrises and placement. Mill pieces 323k → 170k (base stones) and 101k → 33k
+  (arcade) with no visible change at 2–3 m.
+- Triangles 1,385,232 → 938,453 with the silhouette, entrance and ground contact untouched, all by kit parameters.
+- The door-head slot and cheek gap found by the r3 probe were fixed as reusable frame attributes in `doors` and
+  `conical_roof`, not in the recipe.
+- Build time 462 s → 280 s, now with 300 viewpoints, and hash-identical between the builder's and the director's
+  builds.
+
+**Must-fix (round 5)**
+- None. No producer-note violation was found on this building, and no junction is open.
+
+**Nice-to-have (not blocking; kit-level, so every building gains)**
+1. `conical_roof` eave pieces (`roof_starter`, the eave shingle courses, `rafters` tails outside the wall line,
+   about r ≥ R_WALL): the cull leaves them as open shells, and from 4 m at eye level you see their insides through
+   the course gaps (345 back-face hits here, 417 in r3, the same on the hut hero; `h01_…_backface`). Either keep
+   the outward and under faces of the first two courses and the rafter tails out of the cull (as `split_band` does
+   for the wall head), or give them closed caps, so that nothing at the eave renders one-sided in Unreal.
+2. `junctions.ride_fillet`: read the tower's band zones and keep the crease at least 5 cm under the lowest string
+   course (today z 3.83 against the band bottom at 3.80; r12, r13). Carried from round 3.
+3. `doors.build_door` `DOOR_INFILL_DECK` and `conical_roof.build_eave_closure` `EAVE_CLOSURE_DOOR_HALF_DEG`: switch
+   them on automatically when the cone pitch leaves the infill short of the deck (for example pitch above about
+   55°), so the next steep-cone building does not reopen the slot over the door.
+4. `lod.tmpl_lod`: unregister the prefix rule at the end of the wing (in `tmpl_lod_report` or `drum_finish`), so
+   that a later wing or building in the same process with the same prefix cannot inherit it.
+5. Carried: a mill floor backing slab (threshold and floor gaps show terrain through the mill door, a03 and m01); clip
+   or drop the house post inside the drum; `rafter_bearings` `end_clear` about 0.25 m; a keep-family body module
+   (lean-to, thatch wing or octagonal skirt); a round daub-wall window module; and the kit README update for
+   `lod.py` and the round-4 frame attributes.

@@ -84,23 +84,40 @@ def _facing_views(g, ob, P, z_high=6.0):
     return P[side | (P[:, 2] > z_high)]
 
 
-def tier_hidden_cull(g, extra_targets=()):
-    """KIT COMPONENT: see the module doc.  Each object is tested only against the viewpoints that face it."""
+def cull_procs(procs=None):
+    """kit 1.7.3 (build-time budget, art bible 8): worker processes for the hidden-geometry ray test -- `procs` if
+    given, else one per physical core less one for the main process (logical CPUs / 2 - 1), between 3 and 6.  The
+    result does not depend on it (every polygon's test is independent)."""
+    if procs:
+        return int(procs)
+    return int(np.clip((os.cpu_count() or 6) // 2 - 1, 3, 6))
+
+
+def tier_hidden_cull(g, extra_targets=(), procs=None, seal=True, seal_kw=None):
+    """KIT COMPONENT: see the module doc.  Each object is tested only against the viewpoints that face it.
+    procs (kit 1.7.3): ray-test worker processes (cull_procs).  seal (kit 1.7.3): afterwards run the see-through
+    check components.seal_probe.through_seal_probe on every roof / through-body junction (also in FAST builds), so
+    neither a module nor the cull can ship a see-through; seal_kw: its keywords."""
     import time
     import bpy
     if os.environ.get(f"{g.prefix}_FAST"):
         log("  (hidden-geometry cull skipped: FAST build)")
-        return 0
-    t0 = time.time()
-    targets = _targets(g) + list(extra_targets)
-    P = tier_views(g)
-    by = {nm: _facing_views(g, bpy.data.objects[nm], P) for nm in targets}
-    log(f"  hidden-geometry cull: {len(P)} building views (+ the review views), per object "
-        f"{min(len(v) for v in by.values())}-{max(len(v) for v in by.values())}")
-    n = visibility_cull(targets, extra_views=(), extra_by_target=by)
-    log(f"  hidden-geometry cull: -{n} polygons on {len(targets)} objects in {time.time() - t0:.0f} s")
-    from .tier_roof import drop_empty_meshes                  # kit 1.7.2: a fully culled object is removed
-    drop_empty_meshes([bpy.data.objects[nm] for nm in targets if nm in bpy.data.objects])
+        n = 0
+    else:
+        t0 = time.time()
+        targets = _targets(g) + list(extra_targets)
+        P = tier_views(g)
+        by = {nm: _facing_views(g, bpy.data.objects[nm], P) for nm in targets}
+        np_ = cull_procs(procs)
+        log(f"  hidden-geometry cull: {len(P)} building views (+ the review views), per object "
+            f"{min(len(v) for v in by.values())}-{max(len(v) for v in by.values())}, {np_} workers")
+        n = visibility_cull(targets, extra_views=(), extra_by_target=by, procs=np_)
+        log(f"  hidden-geometry cull: -{n} polygons on {len(targets)} objects in {time.time() - t0:.0f} s")
+        from .tier_roof import drop_empty_meshes                  # kit 1.7.2: a fully culled object is removed
+        drop_empty_meshes([bpy.data.objects[nm] for nm in targets if nm in bpy.data.objects])
+    if seal:
+        from .seal_probe import through_seal_probe
+        through_seal_probe(g, **(seal_kw or {}))
     return n
 
 

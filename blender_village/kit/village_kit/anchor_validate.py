@@ -182,7 +182,8 @@ def validate_anchors(da, probe, apply=True, reach=0.05, offset=0.004, clear=0.15
                      footprint=True, fp_tol=0.08, fp_any=8, fp_mat=5, strict_types=(), fp_mat_strict=8,
                      shrink=(0.75,), normal_min_dot=0.2, fp_skip_surfaces=("M_roof_shingle",),
                      families=SLOT_FAMILIES, keep_macro_dot=0.8, normal_fp_dot=None, fp_ntol=0.10,
-                     fp_skip_need=None, no_tops=None, strict=None):
+                     fp_skip_need=None, no_tops=None, strict=None, walk_zones=None, walk_types=("lichen", "moss"),
+                     walk_up_dot=0.7):
     """see the module doc.  da: decals.DecalAnchors; probe: decals.SurfaceProbe of the building's meshes.
     keep_macro_dot: the generator's (macro) normal is kept when the hit face's outward normal agrees with it to
     this dot product (adze ridges, lumps and shingle cups do not tilt the decal); otherwise the anchor takes the
@@ -190,8 +191,14 @@ def validate_anchors(da, probe, apply=True, reach=0.05, offset=0.004, clear=0.15
     fp_skip_surfaces: slots whose anchors skip the footprint test (stepped shingle courses never lie within fp_tol
     of one plane; the centre snap, the open-side test and the de-duplication still apply).
     Returns the report dict (counts per reason, `bad`: [(anchor, reason)]); with apply=True da.items is replaced
-    and da.validation holds the counts."""
+    and da.validation holds the counts.
+    walk_zones (optional, default None = off; v3 round 4): a list of decal_gate.door_walk_zone dicts, or "da" to use
+    the zones a generator published on da.walk_zones -- an anchor of `walk_types` (lichen, moss) whose hit face
+    points up (normal z >= walk_up_dot) inside a zone (thresholds, steps, the trodden ground in front of a door) is
+    rejected as 'trodden'."""
     excl = tuple(exclude_objects)
+    if isinstance(walk_zones, str):
+        walk_zones = getattr(da, walk_zones if walk_zones != "da" else "walk_zones", None)
     strict_cfg = strict            # (the name `strict` is re-bound per anchor by the footprint test below)
     rep = dict(checked=len(da.items), snapped=0, max_move=0.0, renormal=0, shrunk=0, no_surface=0, wrong_surface=0,
                excluded=0, occluded=0, footprint=0, duplicate=0, bad=[])
@@ -237,6 +244,13 @@ def validate_anchors(da, probe, apply=True, reach=0.05, offset=0.004, clear=0.15
             rep["implausible"] += 1
             rep["bad"].append((nm, "%s on %s (trodden / implausible surface)" % (it["type"], hit["object"])))
             continue
+        if walk_zones and it["type"] in walk_types and float(_unit(hit["normal"])[2]) >= walk_up_dot:
+            from .decal_gate import in_walk_zone
+            if in_walk_zone(dict(it, pos=hit["pos"], normal=(0.0, 0.0, 1.0), up=(0.0, 1.0, 0.0)), walk_zones):
+                rep.setdefault("trodden", 0)
+                rep["trodden"] += 1
+                rep["bad"].append((nm, "%s on an upward threshold / step face in a door's walk zone" % it["type"]))
+                continue
         if strict_cfg is not None:
             # kit 1.6.0 (hut r11, sign-off audit r10): the strict gate replaces the normal / footprint tests below
             res = _strict_place(probe, it, hit["pos"], hn, strict_cfg, offset, reach, excl, families, clear)

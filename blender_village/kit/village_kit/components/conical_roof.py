@@ -161,11 +161,19 @@ def build_roof_blocker(g, coll):
     acc.build(coll)
 
 
-def build_eave_closure(g, coll, r_off=0.075, door_half=None, n_az=240):
+def build_eave_closure(g, coll, r_off=0.075, door_half=None, n_az=240, thickness=0.03):
     """daub eave closure (director r4 #3b): a low band on the inner half of the wall plate, from the plate
     top up to the underside of the roof deck, between the rafters.  It closes the eave gap from the
     inside, so no ray through the doorway can leave the hut between the plate and the roof (it reads
-    from outside, deep in the eave shadow, as the daubed wall top between the rafter feet)."""
+    from outside, deep in the eave shadow, as the daubed wall top between the rafter feet).
+    kit 1.7 (v4_mixed r2): a closed band `thickness` m thick (outer + inner faces, top / bottom / end caps);
+    thickness=0 gives the old single-sided band (normals into the hut)."""
+    if door_half is None and getattr(g, "EAVE_CLOSURE_DOOR_HALF_DEG", None) is not None:
+        # kit 1.7 r4 (v4_mixed, director r3 probe): optional frame attribute -- the closure runs on over the door
+        # sector behind the door frame's infill, leaving only +-this many degrees open on the door axis.  On a small
+        # plan the cheek opening between the infill end and the wall post (above the return beam) otherwise looks
+        # straight into the eave void (the back of the roof blocker) from an oblique eye-level view.
+        door_half = math.radians(float(g.EAVE_CLOSURE_DOOR_HALF_DEG))
     if door_half is None:                  # 2 deg inside the door-flanking wall posts
         door_half = g.WALL_POST_AZ_DOOR - math.radians(2.0)
     acc = g.acc("eave_closure", 30, cull=None)
@@ -201,7 +209,46 @@ def build_eave_closure(g, coll, r_off=0.075, door_half=None, n_az=240):
     q = P[F[0]]
     if float(np.dot(np.cross(q[1] - q[0], q[3] - q[0]), [math.sin(az[0]), -math.cos(az[0]), 0])) > 0:
         F = F[:, ::-1]                      # normals face the hut interior (seen through the door)
-    acc.add(P, F, "M_daub")
+    if thickness and thickness > 0:
+        # kit 1.7 (v4_mixed r2, director must-fix 4): a CLOSED band `thickness` m thick -- the face at r_b now faces
+        # OUT (it is seen from outside under the eave, between the rafter feet; art bible 8: no single-sided planes
+        # where seen), an inner face `thickness` further in faces the hut, top / bottom / end caps close it.  The
+        # inner top rises with the roof pitch so it is buried in the shingle stack as deep as the outer top.
+        t_ = float(thickness)
+        zi = zz.copy()
+        zi[:, 2] += t_ * math.tan(g.PITCH)
+        zi[:, 1] = 0.5 * (zi[:, 0] + zi[:, 2]) + (zz[:, 1] - 0.5 * (zz[:, 0] + zz[:, 2]))
+        Pi = np.stack([np.sin(az)[:, None] * (rad - t_), -np.cos(az)[:, None] * (rad - t_), zi], -1).reshape(-1, 3)
+        o = n_az * 3
+        Fo = F[:, ::-1]                                          # outer face: outward
+        Fi = F + o                                               # inner face: inward (old orientation)
+        ii = np.arange(n_az - 1)
+        top_ = np.stack([ii * 3 + 2, (ii + 1) * 3 + 2, o + (ii + 1) * 3 + 2, o + ii * 3 + 2], 1)
+        bot_ = np.stack([ii * 3, o + ii * 3, o + (ii + 1) * 3, (ii + 1) * 3], 1)
+        ends = []
+        for i0, s_ in ((0, 1), (n_az - 1, -1)):
+            for j in range(2):
+                q_ = [i0 * 3 + j, i0 * 3 + j + 1, o + i0 * 3 + j + 1, o + i0 * 3 + j]
+                ends.append(q_ if s_ > 0 else q_[::-1])
+        PP = np.concatenate([P, Pi])
+
+        def _orient(Fq, want):
+            q_ = PP[Fq[0]]
+            nn = np.cross(q_[1] - q_[0], q_[3] - q_[0])
+            return Fq if float(np.dot(nn, want(Fq[0]))) >= 0 else Fq[:, ::-1]
+        cen = lambda f: PP[f].mean(0)                            # noqa: E731
+        Fo = _orient(Fo, lambda f: np.array([cen(f)[0], cen(f)[1], 0.0]))
+        Fi = _orient(Fi, lambda f: -np.array([cen(f)[0], cen(f)[1], 0.0]))
+        top_ = _orient(top_, lambda f: np.array([0.0, 0.0, 1.0]))
+        bot_ = _orient(bot_, lambda f: np.array([0.0, 0.0, -1.0]))
+        e0, e1 = np.array(ends[:2]), np.array(ends[2:])
+        tan0 = np.array([math.cos(az[0]), math.sin(az[0]), 0.0])      # d/daz of (sin, -cos): toward +az
+        e0 = _orient(e0, lambda f: -tan0)
+        tan1 = np.array([math.cos(az[-1]), math.sin(az[-1]), 0.0])
+        e1 = _orient(e1, lambda f: tan1)
+        acc.add(PP, [Fo, Fi, top_, bot_, e0, e1], "M_daub")
+    else:
+        acc.add(P, F, "M_daub")
     acc.build(coll)
 
 
@@ -223,7 +270,15 @@ def build_shingles(g, coll, seed=606):
     max_joint = age.get("max_joint")
     pieces = {}                      # course -> [(theta_c, half-angle, depth at left edge, depth at right edge, s_b)]
 
+    ring_step = getattr(g, "SH_RING_STEP", None)
+
     def place(acc_, th_c, s_b, W, L, var, phi, lift, curl, base_fn, ys=None, closed=True, wear_=None, course=None):
+        if ys is None and ring_step:
+            # kit 1.7 r4 (v4_mixed, producer note 15): optional frame attribute SH_RING_STEP -- the shingle's
+            # cross-section rings above the butt every SH_RING_STEP m instead of 0.07 m (the butt rings, which carry
+            # the rounded butt and the curl, are kept); absent = unchanged
+            ys = np.array([0.0, 0.006, 0.018, 0.04, 0.075, 0.13] + list(np.arange(0.2, L - 0.03, float(ring_step)))
+                          + [L])
         Pl, F, uv = shingle_mesh(W, L, var, curl=curl, ys=ys, bottom=closed, head=closed)
         x, y, z = Pl[:, 0], Pl[:, 1], Pl[:, 2]
         c, s_ = math.cos(phi), math.sin(phi)

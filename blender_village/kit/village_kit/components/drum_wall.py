@@ -1149,7 +1149,7 @@ def wall_core_backing(g, part, z0, z1, d_out=None, depth=0.30, nth=180, nz=9):
 # public kit components
 # =============================================================================================
 def round_stone_drum(g, r_base=None, r_top=None, height=None, zones=None, door=None, arcade=None, windows=None,
-                     seed=None, window_z=None, batter_top=None, window_size=None, lookouts=None):
+                     seed=None, window_z=None, batter_top=None, window_size=None, lookouts=None, course_fit=True):
     """Battered round rubble drum with a balustrade band, a blind arcade and a corbelled cornice (kit component).
     Radius r_base at the ground battering to r_top, cornice top at `height`; zones=dict(band=(z0, z_bal0, z_bal1,
     z1)) places the balustrade band (lower string course, baluster row, upper string course); `door` / `arcade` are
@@ -1168,7 +1168,12 @@ def round_stone_drum(g, r_base=None, r_top=None, height=None, zones=None, door=N
       lookouts    dict(n=4, az0=0.0 | az=[deg...], w=0.55, h=0.85, sill=7.1, room=1.5): lookout windows (kind
                   "lookout": dressed jambs / sill / lintel, straight reveal, closed dark room behind -- lookout_room)
       zones=dict(string=(z0, z1)) instead of band=: a plain dressed string course (drum_band.string_course) in
-                  place of the balustrade band; arcade=dict(n=0) alone (no z_sill / size) is "no arcade"."""
+                  place of the balustrade band; arcade=dict(n=0) alone (no z_sill / size) is "no arcade".
+    Optional (v1_stone_watchtower round 3; only read with window_size / lookouts, so the mill is unchanged):
+      course_fit  True (default): every window_size / lookout window negotiates with the fixed courses round it
+                  (drum_frame.fit_window_courses: string course, cornice; min gap = the plain rubble's hr[0]+hr[1]),
+                  so no strip thinner than one real course is left for the pinners; a number = that min gap;
+                  False = the round-2 placement."""
     kw = {}
     if zones and "string" in zones:
         zs0, zs1 = zones["string"]
@@ -1186,6 +1191,17 @@ def round_stone_drum(g, r_base=None, r_top=None, height=None, zones=None, door=N
                                                                     for i in range(lk["n"])]
             az_w += az_l
             spec += [window_spec(lk["w"], lk["h"], lk["sill"], kind="lookout", room=lk["room"]) for _ in az_l]
+        if course_fit:                  # v1_stone_watchtower r3: windows negotiate with the fixed courses round them
+            from .drum_frame import fit_window_courses
+            zc0 = (height - 0.45) if height is not None else g.Z_CORN0
+            zb_ = zones["band"] if zones and "band" in zones else (g.Z_BAND0, g.Z_BAL0, g.Z_BAL1, g.Z_BAND1)
+            hr_ = g.rubble.get("plain", {}).get("hr", (0.10, 0.22))
+            gap_ = float(course_fit) if not isinstance(course_fit, bool) else float(hr_[0] + hr_[1])
+            for i_ in range(len(spec)):
+                spec[i_], note_ = fit_window_courses(spec[i_], beds_above=(zb_[0], zc0), tops_below=(zb_[3],),
+                                                     min_gap=gap_, label="window %d (az %.0f)" % (i_, az_w[i_]))
+                if note_:
+                    log("course fit: " + note_)
         windows, window_z = az_w, None
         kw["WIN_SPEC"] = spec
         kw["WIN_DZ"] = None

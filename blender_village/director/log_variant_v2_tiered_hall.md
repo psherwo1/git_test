@@ -457,3 +457,388 @@ Blocking issues (independent audit, copied by the producer from the workflow rec
 
 A round-3 fixer started on the issues above and was stopped (usage limit) at about 20:26. It had edited `components/tier_roof.py`, `tier_frame.py`, `tier_finish.py`, `round_roof_parts.py` (20:17-20:25) and `build_v2_tiered_hall.py` (20:25). The files compile, but the edits are unverified and the .blend is still the round-2 build (19:51). The next round-3 fixer: read those files, keep what is sound, finish the fixes, rebuild from the current kit and render round_03.
 
+
+## v2_tiered_hall round 3 — builder entry
+
+**Scope.** The round-2 must-fixes and the four sign-off audit blockers, all in kit modules (`tier_frame`,
+`tier_roof`, `tier_finish`, new `round_roof_parts`) plus the recipe. No surface detail (note 12). The interrupted
+round-3 fixer's edits (20:17-20:25) were read, kept and finished; the .blend was then rebuilt from the current kit.
+Kit changes: `kit/changes/v2_tiered_hall.md`, "Round 3 (kit 1.7.2 proposal)". Only tier-family files (imported by no
+hero) were edited, so the hero re-runs were not needed.
+
+### Blocking issues: status
+
+1. **Roof-to-roof clipping (skirt2 / tur_e_cap): fixed in the kit and the recipe.**
+   - Kit: `tier_frame.roof_clearance` runs for every tier when it registers (`tier_roof._register`, both octagonal
+     and round tiers). Tiers on different bodies that share plan need at least `g.roof_clear` = 0.50 m clear height
+     (base-surface gap less a 0.20 m shingle/soffit allowance), else the build stops with `RoofClearanceError`
+     naming both tiers, both bodies, the plan point and the gap. It was proven live this round: the first steeper-cone
+     trial stopped with "tier 'tur_e_cap' passes over tier 'skirt2' ... 0.26 m".
+   - Recipe: tur_e shaft z1 8.40 (was 6.30 in round 2), coping 8.40, tur_e_belt 8.47-9.45, tur_e_cap overhang 0.45.
+     The cone eave (z 8.87) now sits clear above skirt2's eave (z 7.91). Gate log, delivered build: tur_e_cap over
+     skirt2 0.70 m, tur_e_cap over skirt1 3.80 m, tur_nw_cap over skirt1 1.03 m, skirt2 over tur_nw_cap 1.67 m,
+     cap over skirt2 1.60 m, skirt2 over skirt1 2.69 m. In front.png and hero.png the E turret cone stands free
+     of skirt2 with sky between them.
+2. **Grade arithmetic.** Not a builder item. The clipping that capped axis 4 is gone.
+3. **Zero-face mesh objects: fixed.** New `tier_roof.drop_empty_meshes`, called at the end of `round_tier`,
+   `_round_finial` and `tier_hidden_cull`. Delivered file checked: 0 mesh objects with no polygons (the round-2
+   `*_cap_purlin_rings` empties are gone).
+4. **Private `tower_roof` helpers: fixed.** New public module `components/round_roof_parts.py`: `roof_deck` and
+   `eave_closure`, documented, with the same geometry as `tower_roof` at 19:55:57. `round_tier` imports these. Nothing
+   in v2 now imports a private helper from another builder's module, and `tower_roof.py` itself is untouched.
+   - **Rebuilt from the current kit:** v2_tiered_hall.blend and decal_anchors.json were rebuilt at the end of this
+     round from the kit as it stands. A like-for-like match with the round-2 stats is not possible, because the
+     recipe moved on purpose: the turret was raised to clear the gate, and the cones were made taller. Determinism
+     was checked instead. Two independent FAST builds of this recipe give identical results: 1,069,024 tris, 164
+     objects and 83 anchors each.
+
+### Also done (round-2 nice-to-haves, kit-level)
+
+- **Taller cones (silhouette).** A new `ROUND_PROFILES['witch_hat']` entry (70 deg, 20 deg bell, 0.45 m bell); the
+  existing entries are unchanged. The spire and both turret cones use it, giving eave-to-apex H/D of about 1.2-1.4,
+  against 0.65-0.8 in round 2. That matches ref2's tall witch hats. Finial tips: spire 18.51 m, E turret 14.56 m,
+  NW turret 10.86 m. Lantern z1 went from 11.95 to 12.40, so about 1 m of belt still shows above skirt2.
+- **Polygon sides guard.** `bell_tier` now raises `ValueError` for `sides` other than round (0-2) or 8, instead of
+  silently building an octagon.
+
+### Stats (round 3)
+
+- Triangles: **939,787** (budget 1.5 M).
+- est_hidden_pct: **9.9 %** (92,921 triangles).
+- Material slots: 8, all from the palette. `mask_attribute_missing`: none.
+- Objects: 164 (88 pooled linked duplicates). There are 0 empty mesh objects.
+- bbox: x -6.14..7.34, y -6.14..6.14, z -0.05..18.51 m.
+- `.blend`: 22.9 MB, compressed.
+- Decal anchors: **83** after the kit gate (94 placed). They are in `DECAL_ANCHORS` and in `decal_anchors.json`.
+- Recipe: 78 non-blank, non-comment lines.
+- Build: full **10 min 26 s** (cull 550 s with 109 views). An 80 s FAST build was running alongside it on the shared
+  CPU. A FAST build takes about 1 min.
+- Renders: `renders/variants/v2_tiered_hall/round_03/` (all six views, `--samples 24`, stats.json, hidden.json and
+  render_log.txt).
+- **Review.** All six views were inspected, and I checked a zoomed crop of the skirt2/E-turret area in front.png.
+  - The turret cone is clear of skirt2.
+  - The witch hats read tall, as in ref2.
+  - No see-through, gaps or clipping are visible at the flashings, eaves, masonry joints or openings.
+
+### Known gaps
+
+1. **Build time.** The build is about 10.4 min against section 8's roughly 10 min, under shared-CPU contention. It
+   was 9.6 min in round 2. The extra time comes from the taller cones adding shingle courses for the cull to test. A
+   per-object view cap for the large stone objects is the next lever.
+2. **Soot.** The door's soot anchor is still dropped by the kit gate (0 soot). Moss went from 42 to 20 placed because
+   the steep witch-hat coverings take fewer roof moss anchors.
+3. **Not done** (round-2 nice-to-haves): the turret eave-end soaker, the open-bay lantern, round tiers'
+   `door_arc=None`, the merge with v3's `rubble_walls` / `wall_openings`, and polygon tiers for any `sides`.
+
+## v2_tiered_hall round 3 — score 8.1/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only; ground dressing not
+scored (note 10). Reviewed: all six round_03 views, stats.json, hidden.json, render_log.txt, decal_anchors.json (83
+anchors, positions and normals checked one by one), the recipe, `round_roof_parts.py`, the round-3 changes in
+`tier_frame` / `tier_roof` / `tier_finish` and `kit/changes/v2_tiered_hall.md`. There are 70 director close-ups of
+every module junction (clay plus red-world see-through variants) and 4 zoom crops in
+`renders/variants/v2_tiered_hall/round_03/director_extra/`: j01-j06 masonry joints, q01-q02 quoined corners, k01-k09
+skirt1 junctions, r01-r10 round tiers, x01-x08 roof-to-roof and roof-to-body round the raised E turret, o01-o03
+openings and lantern, c01-c04 crops.
+
+Probes on the delivered file:
+- Independent FAST rebuild from the kit as it stands now (after `conical_roof.py` was edited at 20:59:16 by
+  another builder, 5 s after this .blend was saved): 1,069,024 tris, 164 objects, 83 anchors, and
+  `decal_anchors.json` byte-identical to the delivered file. **Determinism verified.**
+- Mesh clearance (vertical rays, 4 cm grid): tur_e_cap over skirt2 **0.64 m**, skirt2 over tur_nw_cap 1.72 m,
+  cap over skirt2 1.43 m, tur_nw_cap over skirt1 1.17 m. The kit rule's log agrees (0.70 / 1.67 / 1.60 / 1.03 m).
+- 0 empty mesh objects; Mask and UVs on all 164 meshes; 88 pooled duplicates on 8 shared meshes.
+- skirt2's lip passes **0.30 m** from the E turret's stone shaft at (3.84, -0.03, 8.03). Clear, but tight.
+- **See-through:** k05 red shows a red slit in skirt1 beside tur_nw at pixel (843, 365). Rays through those pixels
+  from the k05 camera hit nothing and leave to sky. A follow-up probe over the area round both turrets fired about
+  25 k exterior rays: 119 of them pass the roof at (-4.37..-4.22, 2.36..2.55, z 3.99-4.15) and leave the building to
+  sky (from az 12-246 deg, elevation 20-44 deg). A second, smaller slit is at (-2.32, 4.49, 3.91), seen only from
+  elevation 74-80 deg. Both turret flanks of tur_e and the drum and lantern junctions are clean (0 rays). The same
+  slit is already in round 2's `k05_..._seethrough_red.png` at the same pixel; it was missed in the round-2 grade.
+
+### Axis scores
+
+| # | axis | score | reason |
+|---|---|---|---|
+| 1 | Silhouette and massing | 8.6 | The `witch_hat` profile brings back ref2's tall needle cones (eave-to-apex H/D about 1.2-1.4) on the spire and both turrets, over an octagonal skirt, a drum, a round skirt and a lantern belt. At thumbnail size it reads as ref2's tiered hall and not as a resized keep (18.5 m against the keep's 14 m). Points off: the lantern is still a closed belt. The raised E turret is now an 8.4 m free-standing stone shaft, a little castle-like next to ref2's dormer turrets. |
+| 2 | Proportion and actor scale | 8.6 | Unchanged and correct: door 1.00 x 2.10 m clear on a 10 cm threshold, sills 1.25-1.40 m, wall 3.5 m, skirt1 eave 3.08 m over the door (o01, actor_closeup). About 1 m of lantern belt shows between skirt2 and the spire (o03). |
+| 3 | Construction logic | 8.5 | Every tier bears on a ring beam or a pegged plate with rafters (r01, r04, r08, r09). The round-2 clash is gone: the E turret cone eave sits 0.64 m above skirt2 (x01, x05). Points off: skirt2's eave lip now runs 0.30 m from the E turret shaft, a debris and snow slot that the kit's clearance rule does not check (x03, x04). Where the turrets leave skirt1, the fascia still dies into the stone face (k03, k04). |
+| 4 | Seams and junctions | 8.1 | Masonry joints closed (j01-j06 red), roof-to-roof clear, drum and lantern flashings closed (k07, r03 red), round plates and soffits closed (r01, r04, r09 red), turret coping-to-belt closed (r06 red). **But skirt1 is open to the sky beside tur_nw** (k05 red, pixel ray to sky, 119 probe rays). This is the exact "see-through pixels" failure the axis names. |
+| 5 | Distinctness and reuse | 8.6 | The recipe is pure kit: BODIES + DOOR / WINDOWS + 22 STEPS, 78 lines, with no geometry in it. Each round-3 addition is a kit module behind optional parameters: `roof_clearance` / `RoofClearanceError`, `drop_empty_meshes`, `ROUND_PROFILES['witch_hat']`, public `round_roof_parts`. Points off: `round_roof_parts` is a copy of `tower_roof`'s private helpers, not a single source. The kit now holds three eave-closure versions (`conical_roof.build_eave_closure`, `tower_roof._eave_closure`, `round_roof_parts.eave_closure`). Polygon tiers are still octagon-only. `stone_body` / `framed_openings` still duplicate v3's modules. |
+| 6 | Technical compliance | 8.2 | 939,787 tris; est_hidden_pct 9.9 %; 8 palette slots; Mask complete; 0 empty meshes; pooled pegs and nails; deterministic (verified above); 83 anchors, all plausibly placed (damp and moss at the base and on roof butts, drips on the lower coverings where they land, streaks under sills, cracks at the door and window heads). Points off: a producer-note-6 hole ("never open holes") at the skirt1/tur_nw junction. The full build took 10 min 26 s against section 8's roughly 10 min. |
+
+**Overall 8.1** (lowest axis 8.1; no lift, because the lowest axis fails on an explicit rubric criterion). **Below the
+8.2 pass mark. Not passed.**
+
+### Verdict
+
+Round 3 clears every round-2 blocker, and it clears them in the kit:
+- A real roof-to-roof rule now fails the build, naming both tiers.
+- The E turret cone stands 0.64 m clear of skirt2.
+- No empty meshes are left.
+- No private cross-builder imports are left.
+- A rebuild from today's kit reproduces the file exactly.
+
+The witch-hat profile is the single biggest silhouette gain in this family. One junction is still open, though: skirt1
+beside the NW turret has a slit through to the sky, visible from the west and south-west crane angles. It was already
+there in round 2. It is small, but it is a see-through hole at a module junction, which axis 4 and producer note 6
+both forbid, so the variant cannot pass until `bell_tier` / `roof_flashing` close it for every body that rises
+through a tier. Fix it in the module, add the probe that would have caught it, and bring the build back under 10
+minutes. That should clear 8.2 with no added detail.
+
+### Strengths
+
+- All four sign-off blockers were fixed in kit modules and checked independently:
+  - mesh gap 0.64 m;
+  - 0 empty meshes;
+  - `round_tier` imports only public `round_roof_parts`;
+  - FAST rebuild byte-identical in anchors, with identical tris and object count.
+- `tier_frame.roof_clearance` is the junction rule this family needed: it runs for octagonal and round tiers
+  alike, measures only where both coverings really exist, and names both tiers and the plan point when it fails.
+- `ROUND_PROFILES['witch_hat']` is a one-line profile entry that changes the building's read from umbrella to
+  ref2 needle cones on any round body.
+- The recipe stays a short declarative table: the fix to the clash was 3 numbers in BODIES plus one overhang.
+- All other junctions are clean in the red-world tests:
+  - masonry re-entrant joints;
+  - the drum, lantern and turret flashings;
+  - the round plates and soffits;
+  - the coping-to-belt seats.
+- Technical base: 9.9 % hidden, 8 palette slots, Mask complete, 83 plausible decal anchors.
+
+### Must-fix (round 4)
+
+1. **`tier_roof.bell_tier` / `tier_roof.roof_flashing`: see-through slit in skirt1 beside tur_nw (producer note 6,
+   rubric axis 4).**
+   - Where: skirt1 on the SW flank of tur_nw, at (-4.37..-4.22, 2.36..2.55, z 3.99-4.15). That is plan azimuth about
+     150 deg from the hall centre, 0.25-0.45 m outside the turret face and about 0.9 m up-slope from the eave. A
+     smaller slit is on the NE flank at (-2.32, 4.49, 3.91).
+   - What is wrong: there is no deck, flashing or structure behind the shingle joints there, so exterior rays pass
+     the roof and leave the building to the sky:
+     - k05 red, pixel (843, 365); see crops c03 (red) and c04 (clay);
+     - 119 probe rays, from az 12-246 deg and elevation 20-44 deg.
+     The same slit is in round 2's k05 red.
+   - What it should be: a continuous backing under every covering piece that survives the `through` cut. The deck
+     (and structure) must run right to the body face, under the flashing apron, with no seam left open beside the
+     body. Alternatively, widen the `roof_flashing` apron until it covers the deck's cut edge all round the body.
+   - Add a kit check: in `roof_flashing` (or `tier_finish`), ray-probe an annulus 0-0.6 m round every through-body
+     from exterior directions (all azimuths, elevation 10-80 deg). Fail the build, naming the tier, body and point,
+     on any ray that passes the covering to the sky or the hollow interior.
+   - Re-verify on tur_e, the drum and the lantern; all three are clean now.
+2. **`tier_finish.tier_hidden_cull` build time (art bible section 8).**
+   - What is wrong: the full build took 10 min 26 s (cull 550 s) against the roughly 10 min limit. The margin was
+     already thin in round 2 (9:34, with one 10:40 run), and the taller cones add courses.
+   - What it should be: a full build under 9:30 when run alone, with est_hidden_pct still at or below 15 %. For
+     example:
+     - cap the views per target object;
+     - skip the ray test for large objects whose hidden share was under 6 % last build (`HALL_hall_stones` 5.8 %,
+       `HALL_skirt1_shingles` 4.7 %);
+     - test shingle courses per course band rather than per shingle.
+
+### Nice to have
+
+- Extend `tier_frame.roof_clearance` to tier against foreign body. Today skirt2's lip passes 0.30 m from the E
+  turret's stone shaft at (3.84, -0.03, 8.03). Require at least 0.5 m clear, or `through` plus flashing, for any
+  tier lip that comes within 0.5 m of a body face it does not pass through.
+- One source for round-roof parts:
+  - let `tower_roof` alias `round_roof_parts.roof_deck` / `eave_closure`;
+  - fold `conical_roof.build_eave_closure` into `round_roof_parts.eave_closure` with a `facing=` option, with
+    defaults that reproduce the hut;
+  - re-run the heroes per the kit edit rules.
+- `roof_flashing`: a turned-down soaker or cheek where a turret leaves skirt1 at the eave (k03, k04).
+- `board_belt`: an open-bay lantern option (posts, open bays, a dark blocker drum), as in ref2's hall.
+- `tier_decals`: the door's soot anchor is still gated away (0 soot). Offset it to the lintel face so the gate keeps
+  it.
+- Round tiers: a `door_arc=None` option. The leftover purlin-ring fragments (`*_purlin_rings`, 16-36 faces each)
+  are never seen.
+- Polygon tiers for any `sides`. Merge `stone_body` / `framed_openings` with v3's `rubble_walls` / `wall_openings`.
+  For ref2's hall: a gabled wing (`linear_roof` + `roof_junction` on the tier_frame registry) and a dormer turret
+  corbelled off a skirt slope.
+
+## v2_tiered_hall round 4 — builder entry
+
+**Scope.** The two round-3 must-fixes, both in kit modules: the see-through junction (`tier_roof.bell_tier` /
+`roof_flashing` plus a new see-through kit check) and the cull budget (`tier_finish`). No surface detail (note 12).
+Kit changes: `kit/changes/v2_tiered_hall.md`, "Round 4 (kit 1.7.3 proposal)". Only tier-family files were edited
+(`tier_roof.py`, `tier_finish.py`), plus one NEW file (`components/seal_probe.py`). No hero or other variant imports
+them, so the hero re-runs were not needed. The recipe change is docstring only: BODIES and STEPS are unchanged.
+
+### Must-fix 1: skirt1 slit beside tur_nw. Fixed in the kit and proven by a new kit check.
+
+- **Root cause.** `oct_roof.build_cap` starts the sarking deck about 0.08 m inside the wall line, and the wall-head
+  band stands at p_wall - 0.07 .. -0.02. That leaves a 3-5 mm plan crack between the deck's eave edge and the band,
+  all round every octagonal tier. Only the ring beam's top faces (in `_structure`) backed it, and the hidden cull
+  removes those faces where no view sees them. Beside tur_nw at (-4.30, 2.45), the shingle joints above the crack
+  lined up, so rays ran through the joint and the crack, down the hollow hall to the sky (the k05 pixel). The
+  NE-flank slit is in the same family: the turret cuts the eave structure there, so a ray through the overhang lands on
+  the hall's wall face under the eave.
+  - A vertical-ray map of the delivered round-3 file showed a shingles-only strip just inside the band at
+    y 2.20-2.50 and nothing else.
+- **Kit fix, every octagonal tier.**
+  - New `tier_roof.eave_deck_lap`, on by default through `bell_tier(deck_lap=True)`. It lays a continuous sarking
+    strip (`oct_roof.sarking_deck`, M_timber):
+    - from 0.22 m inside the wall line, lapping both the main deck and the band, out over the whole overhang to
+      0.08 m inside the lip;
+    - in fine cells, so a `through` body cuts it at its own face.
+  - Its name contains `deck`, so the cull never targets it, and the cull can no longer reopen the crack.
+  - `roof_flashing(drip=0.03)`: the apron's outer edge is now turned down into the courses (a dressed lead drip),
+    instead of hovering 0.075 m over the base surface.
+- **New KIT CHECK: `components/seal_probe.through_seal_probe`.** `tier_hidden_cull` runs it after the cull, and in
+  FAST builds too.
+  - Coverage: every tier and every body through it (`through` plus every flashed body).
+  - Targets: seeded points on the covering in a 0-0.6 m annulus round the body.
+  - Rays: from 24 azimuths x elevations 10-80 deg, about 1 M rays in 11-18 s. Rays within 10 deg of grazing the
+    local covering are skipped. At those angles a ray threads the air between chunky shingles and battens, a
+    sub-pixel artefact; three such rays round the lantern were the only extra hits.
+  - Leak rule: a ray that passes its point and then reaches the sky, a point more than 0.6 m under the tier, or a
+    point more than 0.6 m down inside a body is a leak. Any leak raises `SealError`, naming the tier, body, point,
+    ray direction and what the ray reached.
+  - **Proof.** Two runs used the round-3 delivered meshes swapped into a registry build:
+    - Old geometry: the check fails with 8 leaks, `skirt1` round `tur_nw`.
+      - At (-4.29, 2.50, 3.95), az 127-202, el 10-60, to the sky or down through the hall. This is the director's
+        k05 slit.
+      - At (-2.66, 4.65, 3.67), to `hall_stones` under the eave. This is the NE-flank slit.
+      - tur_e, the drum and the lantern have 0 leaks.
+    - With the deck lap and drip: 0 leaks on all four junctions.
+  - An optional `backing=True` pass, report only, removes the covering and checks what is under it. It still reports
+    seams under the hip boards and the round-tier collars; the hips and collars cover those seams.
+- **Delivered build:** `seal probe [see-through]` gives 0 leaks in 950,921 rays.
+  - skirt1/drum 0, skirt1/tur_e 0, skirt1/tur_nw 0, skirt2/lantern 0.
+  - The check runs after the cull, so it covers the shipped geometry.
+
+### Must-fix 2: build time. Fixed in `tier_finish`.
+
+- `tier_hidden_cull(procs=None)` uses the new `cull_procs()`: one worker per physical core less one
+  (logical CPUs / 2 minus 1, clamped 3-6). That is 5 on this 6-core machine; it was a fixed 3.
+- The result does not depend on the worker count, because each polygon's test is independent.
+- The view sets are unchanged, so nothing is culled that a view can see.
+- **Full build, run alone: 7 min 50 s (470 s).** The cull took 377 s, against 550 s in round 3. The seal probe took
+  11 s. The other python processes on the machine were idle during the run.
+- est_hidden_pct is **11.3 %** (limit 15 %). It was 9.9 %; the rise is the deck lap, which is hidden under the covering
+  by design.
+
+### Stats (round 4)
+
+- Triangles: **954,925** (round 3: 939,787; +15 k from `HALL_skirt1_deck_lap`, 10,508 faces after the through cut).
+  Budget 1.5 M.
+- est_hidden_pct: 11.3 % (108,025 triangles).
+- Material slots: 8, all from the palette. `mask_attribute_missing`: none.
+- Objects: 165 (88 pooled duplicates). There are 0 empty meshes.
+- bbox: unchanged, x -6.14..7.34, y -6.14..6.14, z -0.05..18.51 m.
+- `.blend`: 23.0 MB, compressed.
+- Decal anchors: 83 after the kit gate (94 placed). They are in `DECAL_ANCHORS` and in `decal_anchors.json`.
+- Roof-clearance gate: unchanged. tur_e_cap over skirt2 is 0.70 m.
+- Recipe: 81 non-blank, non-comment lines. The +3 are docstring lines; the code is unchanged.
+- Renders: `renders/variants/v2_tiered_hall/round_04/` (all six views, `--samples 24`, stats.json, hidden.json and
+  render_log.txt).
+- **Review.** All six views were inspected, plus zoomed crops of the hero skirt1/drum/turret area and the back
+  skirt1/tur_nw/drum area.
+  - The flashings, eaves and turret junctions are closed.
+  - The silhouette and proportions are unchanged from round 3.
+  - The deck lap does not show at the eave (actor_closeup).
+  - No blocking problem was found.
+
+### Known gaps
+
+- I did not render red-world close-ups (k05). The see-through claim rests on the kit check above, which reproduced
+  the director's slit on the round-3 geometry before the fix.
+- The 7:50 build time was measured once, with the machine otherwise idle. A shared-CPU run will be slower.
+- Determinism was not re-checked with a second full build this round. The procedure is seeded, and the worker count
+  does not change the result.
+- Not done (nice-to-haves):
+  - tier-to-foreign-body lip clearance (skirt2's lip runs 0.30 m from the tur_e shaft);
+  - one source for round-roof parts;
+  - the eave-end soaker where a turret leaves skirt1;
+  - the open-bay lantern;
+  - soot at the door;
+  - `door_arc=None`;
+  - polygon tiers for any `sides`;
+  - closing the `backing` pass's hip and collar seams.
+
+
+## v2_tiered_hall round 4 — score 8.4/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only; ground dressing not
+scored (note 10). Reviewed: all six round_04 views, stats.json, hidden.json, render_log.txt, decal_anchors.json (83
+anchors, read one by one), the recipe, `seal_probe.py`, the round-4 changes in `tier_roof` (`eave_deck_lap`,
+`bell_tier(deck_lap=)`, `roof_flashing(drip=)`) and `tier_finish` (`cull_procs`, `tier_hidden_cull(seal=)`), and
+`kit/changes/v2_tiered_hall.md` "Round 4". Director renders: 82 close-ups of every module junction (the round-3 set
+re-shot, plus six new tight shots k10-k15 of the deck-lap / drip fix; clay plus red-world see-through variants) and 4
+zoom crops in `renders/variants/v2_tiered_hall/round_04/director_extra/`.
+
+Probes on the delivered file:
+- **See-through, rendered:** an automatic scan of all 37 red-world renders for enclosed islands of background red.
+  The detector finds round 3's k05 slit (32 px at 843, 365) in the round-3 renders. In round 4 that island is
+  **gone** (crop c01: the joint now shows dark backing). Every remaining island is 1-9 px of sky at a silhouette edge
+  (ragged shingle outlines, finial gaps), identical to round 3. The new tight shots k10-k15 have no islands at all.
+- **See-through, ray-cast (independent of the builder's probe):** 11,100 seeded points over EVERY covering (skirt1,
+  skirt2, cap, both turret cones, hips, collars), 1.22 M exterior rays (24 az x el 12-80 deg, >= 12 deg from
+  grazing). **0 rays reach the sky or the hollow interior.** The only flagged rays land on the turret cones' own deck
+  (backing, by design). About 1 % of points show deck / deck-lap / underlap from straight above between shingles:
+  backing, not a hole (note 6 asks for exactly this).
+- **Kit check:** `through_seal_probe` runs in FAST and full builds, 950,921 rays, 0 leaks on skirt1/drum, skirt1/tur_e,
+  skirt1/tur_nw and skirt2/lantern. The code was read: it classifies sky, under-tier and inside-body hits and raises
+  `SealError` naming tier, body, point and direction.
+- **Determinism:** an independent FULL rebuild from the current kit gives 954,925 tris and 165 objects, and
+  `decal_anchors.json` is byte-identical to the delivered file. A FAST rebuild also gives byte-identical anchors.
+- **Build time:** my full rebuild took **9 min 31 s** (cull 486 s, 5 workers, seal probe 15 s). Other builders'
+  bpy processes started part-way through it (CPU at 100 % at the end), so it was not run alone. That squares with the
+  builder's 7:50 alone, and it is under section 8's 10 minutes, but the margin under contention is thin.
+- Roof-clearance gate unchanged (tur_e_cap over skirt2 0.70 m). 0 empty meshes; 8 palette slots; Mask complete.
+
+### Axis scores
+
+| # | axis | score | reason |
+|---|---|---|---|
+| 1 | Silhouette and massing | 8.6 | Unchanged from round 3 and still right: octagonal skirt, drum, round skirt, lantern belt and a tall witch-hat spire with two unequal witch-hat turrets, 18.5 m. It reads as ref2's tiered hall, not a resized keep. Points off as before: the lantern is a closed belt, and the 8.4 m free-standing E turret shaft is a little castle-like next to ref2's dormer turrets. |
+| 2 | Proportion and actor scale | 8.6 | Unchanged and correct: door 1.00 x 2.10 m clear on a 10 cm threshold, sills 1.25-1.40 m, wall 3.5 m, skirt1 eave 3.08 m over the door (o01, actor_closeup). The deck lap does not change the eave line or lip. |
+| 3 | Construction logic | 8.5 | `eave_deck_lap` reads as real construction: a boarded sarking over the rafters at the overhang (k08, k12, k03 soffits), carried on the rafters and the wall-head band. The flashing drip is dressed into the courses (k13, c04). Points off, unchanged: where the turrets leave skirt1 the eave fascia still dies square into the stone (k03, k04, k06); skirt2's lip runs 0.30 m from the E turret shaft (x03, x06); the skirt1 hip boards stop square on the drum and turret aprons, with their ends standing proud of the lead rather than under it (k14, c03). |
+| 4 | Seams and junctions | 8.4 | **The round-3 see-through is closed**, and it is closed in the module for every octagonal tier: rendered (k05 island gone, k10-k15 clean), by my whole-roof ray probe (0 of 1.22 M rays) and by the new kit check (0 of 950 k). All the junctions that were clean in round 3 are still clean (masonry joints, drum, lantern and turret flashings, round plates and soffits, coping-to-belt seats, roof-to-roof gaps). Points off: the hip-board ends at the aprons (c03); shingle butts break through the apron's drip line in tight close-up (c04, roof height only); the fascia ends against the turrets have no soaker or cheek (k03, k04). None is a hole or a mid-shot clip. |
+| 5 | Distinctness and reuse | 8.6 | The recipe is unchanged pure kit (BODIES + openings + 22 STEPS; only the docstring grew). The fix was made where it belongs: `eave_deck_lap` is a public kit component, on by default for every octagonal tier through `bell_tier(deck_lap=True)`. `roof_flashing(drip=)` and `tier_hidden_cull(procs=, seal=)` are optional keywords. `seal_probe` is a reusable kit check that any tiered building gets for free. All of it is recorded in `kit/changes/`. Points off, unchanged: three eave-closure versions in the kit, polygon tiers still octagon-only, `stone_body` / `framed_openings` still duplicate v3's modules. |
+| 6 | Technical compliance | 8.4 | Hole closed (note 6); 954,925 tris; hidden 11.3 %; 8 palette slots; Mask complete; 0 empty meshes; pooled pegs and nails; deterministic (full rebuild identical); 83 anchors, all plausibly placed (damp and moss at the base, drips on the lower coverings where they land, streaks under sills, cracks at the opening heads, rust under the door ironwork). Points off: `HALL_skirt1_deck_lap` is about 21 k triangles, 65 % of them hidden (hidden.json), where note 6 asks for a *cheap* backing surface. The build-time fix only adds workers (`cull_procs`): on section 8's 4-core reference it falls back to 3 workers, which was the 10:26 round-3 build, and my contended run took 9:31. |
+
+**Overall 8.4** (lowest axes 8.4; no lift). **Above the 8.2 pass mark. PASSED.**
+
+### Verdict
+
+Round 4 does what round 3 asked, and does it in the kit. The root cause was found: a 3-5 mm plan crack between the
+deck's eave edge and the wall-head band on every octagonal tier, which the cull exposed. It was closed for every
+octagonal tier by a reusable `eave_deck_lap`. A see-through probe now fails any build that reopens a roof/body
+junction. I checked the result three ways (renders, my own whole-roof ray probe, the kit probe), and none of them finds
+a see-through anywhere on the building. A full rebuild from today's kit reproduces the delivered file exactly. The
+silhouette, scale and recipe are unchanged, so the variant passes at 8.4. What is left is junction polish at
+roof height and kit hygiene. None of it is a producer-note violation.
+
+### Strengths
+
+- Root-cause fix in a kit module, not a local patch. `eave_deck_lap` closes the eave crack on every octagonal tier
+  that any future recipe declares, and it survives the cull because it is named as backing.
+- `seal_probe.through_seal_probe` is the junction test this family needed:
+  - seeded and deterministic, about 15 s;
+  - runs in FAST builds too;
+  - proven on the round-3 geometry to catch the director's exact slit;
+  - names tier, body, point and direction on failure.
+- The recipe did not change: one kit default fixed the building.
+- Determinism verified on a full rebuild (tris, objects and anchors identical).
+- All round-3 clean junctions stay clean in 37 red-world renders.
+
+### Must-fix
+
+None. No producer-note violation was found, and every round-3 must-fix is closed and independently verified.
+
+### Nice to have (kit polish, not blocking)
+
+- `tier_roof.eave_deck_lap`: make the backing cheap, as note 6 intends. Use coarse cells (one quad strip per facet)
+  away from `through` bodies, and fine cells only within about 0.5 m of a body face. That would take
+  `HALL_skirt1_deck_lap` from about 21 k triangles to a few thousand, at the same seal.
+- `tier_finish.tier_hidden_cull`: cut the work, not just add workers, so a 4-core shared box stays under 10 minutes.
+  For example, cap the views per object, or skip the ray test for large objects whose hidden share was under 6 %
+  last build (`HALL_hall_stones` 5.6 %, `HALL_skirt1_shingles` 4.0 %).
+- `oct_roof` hips + `roof_flashing`: stop the hip boards about 2 cm inside the apron's outer edge, so the lead laps
+  over their ends, or raise the apron locally over each hip (k14, c03; drum and both turrets).
+- `roof_flashing`: a turned-down soaker or cheek where a turret leaves skirt1 at the eave (k03, k04, k06).
+- `tier_frame.roof_clearance`: add a tier-lip-to-foreign-body rule (skirt2's lip is 0.30 m from the tur_e shaft;
+  ask for at least 0.5 m, or `through` plus flashing).
+- Carried over: one source for round-roof parts (`tower_roof` / `conical_roof` eave closures); open-bay lantern in
+  `board_belt`; door soot anchor offset to the lintel; round tiers `door_arc=None`; polygon tiers for any `sides`;
+  merge `stone_body` / `framed_openings` with v3's `rubble_walls` / `wall_openings`; a gabled wing and a dormer
+  turret on a skirt slope for ref2's hall.

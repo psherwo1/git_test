@@ -18,10 +18,12 @@ cornice cap).  Built and carried:
              beam and a top plate (half-lapped at the corners: no coplanar faces), vertical plank infill below the
              rail, between the openings and over the heads; `n_open` real lookout openings on EVERY side, open
              through the cabin; a boarded ceiling at the plate (the roof void is closed)
-  roof       a square pyramid at `pitch_deg`: rafter tails and hip rafters bearing on the plate under a closed sarking
-             deck (soffit over the overhang, edge at the eave), a starter board and coursed kit shingles
-             (village_kit.shingles.shingle_mesh, SHINGLE_VARIANTS, chunky size table) trimmed at the hips, hip boards
-             over the hips, a square lead apex cap and the kit's turned finial (finial.turned_finial)
+  roof       r4: NOT built here any more -- the kit's components.pyramid_roof.pyramid_roof (sides=4) on the plate,
+             parameters `pitch_deg`, `eave_out`, `exposure`, `cap_r`, `finial_scale` plus any `roof=dict(...)`
+             overrides (bell_deg / bell_len bell-cast eave, kick, sag, ...); `roof_fn` swaps in another roof module.
+             bell_deg=0 (the default) is the round-3 straight pyramid.
+  bed fill   r4: `bed_fill=True` closes the floor sandwich over the wall head with a timber rim ring (blocking
+             between bearers and joists) from the bed to the deck underside
 
 Objects <P>_cabin_floor / _cabin_struts / _cabin_corbels / _cabin_bed / _cabin_frame / _cabin_boards /
 _cabin_ceiling / _cabin_roof_frame / _cabin_roof_deck / _cabin_shingles / _cabin_hips / _cabin_lead / _cabin_finial.
@@ -80,28 +82,38 @@ def _boards(acc, k, u0, u1, d0, d1, z0, z1, rng, mat="M_timber_weathered"):
                   nn=2)
 
 
-def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=(-1.6, 0.0, 1.6), n_joists=7,
+def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=None, n_joists=7,
                  struts=True, strut_drop=1.25, n_open=2, open_w=1.10, open_sill=1.00, open_h=0.90, pitch_deg=48.0,
-                 eave_out=0.50, exposure=0.34, cap_r=0.62, seed=None):
+                 eave_out=0.50, exposure=0.34, cap_r=0.62, seed=None, bed_fill=True, finial_scale=0.80, roof=None,
+                 roof_fn=None):
     """KIT COMPONENT: square timber lookout cabin with a square-pyramid shingle roof on a wall head (module doc).
     side: outer plan size of the floor (m); height: floor top to the top plate's underside; z_bed / bed_r: the wall
-    head (default: the drum's cornice top and cap); bearers: x of the bearers (along Y); n_joists: joists (along X);
+    head (default: the drum's cornice top and cap); bearers: x of the bearers (along Y; r4 default None = 0 and
+    +-0.65 bed_r, so any cabin / drum size bears on the wall head); n_joists: joists (along X);
     struts / strut_drop: a dragon beam to every corner, each carried by a raking knee strut in the diagonal plane,
     its foot on a dressed corbel pad this far below the bed; n_open,
     open_w, open_sill, open_h: lookout openings per side (clear width, sill above the floor, clear height);
     pitch_deg / eave_out: roof pitch and eave beyond the wall face; exposure: shingle course exposure; cap_r: plan
-    radius (to the hip) of the lead apex cap."""
+    radius (to the hip) of the lead apex cap.
+    r4: bed_fill (default True): a closed timber rim ring on the wall head between the bearers and the joists, from
+    the bed up to the deck underside just inside bed_r (the floor sandwich over the wall head is closed; open framing
+    remains only on the cantilevers outside it); finial_scale: turned-finial scale (0.8 = 1.16 m above the cap);
+    roof: overrides for the roof module (e.g. dict(bell_deg=24, bell_len=0.75, kick=0.04)); roof_fn: the roof module,
+    called roof_fn(g, p_wall, z_plate, name="cabin", rng=rng, **kw) and returning pyramid_roof's record (default
+    components.pyramid_roof.pyramid_roof)."""
     from .drum_frame import R_out
-    from .finial import turned_finial
+    from .pyramid_roof import pyramid_roof
     from .tower_roof import drum_top
     s0 = 0 if seed in (None, "") else zlib.crc32(str(seed).encode("utf8")) % 100000
     rng = np.random.default_rng(4141 + s0)
     H = float(drum_top(g)) if z_bed is None else float(z_bed)
     Rb = (float(R_out(g, H)) + 0.28) if bed_r is None else float(bed_r)
+    if bearers is None:
+        xb = round(0.65 * Rb, 2)
+        bearers = (-xb, 0.0, xb)
     hs = side / 2.0
     P = g.prefix + "_cabin_"
-    A = {k: Acc(P + k) for k in ("floor", "struts", "corbels", "bed", "frame", "boards", "ceiling", "roof_frame",
-                                 "roof_deck", "shingles", "hips", "lead", "finial")}
+    A = {k: Acc(P + k) for k in ("floor", "struts", "corbels", "bed", "frame", "boards", "ceiling")}
     # ---------------- floor: bed disc, bearers, joists, deck ----------------
     th = np.linspace(0, 2 * math.pi, 72, endpoint=False)
     rs = np.linspace(0.05, Rb - 0.02, 6)
@@ -125,9 +137,17 @@ def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=(-1.6
     zd0 = H + hb + hj
     obox(A["floor"], np.array([[-hs, 0.0, zd0 + td / 2]]), (1, 0, 0), (0, 1, 0), (0, 0, 1), side, side, td, 0.01,
          "M_timber_weathered", nx=6, ny=6, nz=2)
+    if bed_fill:
+        # r4: rim ring (blocking between the bearers and between the joists) bedded 1 cm into the wall head, up to
+        # the deck underside, its face 6 cm inside the bed ring: no sky between the cornice cap and the deck
+        r1, r0 = Rb - 0.06, Rb - 0.18
+        Vr, Fr = lathe_rz([(r0, H - 0.01), (r1, H - 0.01), (r1, zd0 - 0.004), (r0, zd0 - 0.004), (r0, H - 0.01)],
+                          32, cap_bottom=False, cap_top=False, phase=math.pi / 32)
+        A["floor"].add(Vr, Fr, "M_timber")
     Zf = zd0 + td                                                         # floor top
     # ---------------- knee struts on corbel pads ----------------
     n_str = 0
+    pads = []
     if struts:
         zf = H - strut_drop
         Rf = float(R_out(g, zf))
@@ -147,6 +167,7 @@ def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=(-1.6
             pad_o = np.array([foot[0], foot[1], 0.0]) - rad * 0.10 + EZ * (zf - 0.11)
             obox(A["corbels"], pad_o[None], rad, tang, EZ, 0.30, 0.30, 0.22, 0.02, "M_stone_dressed", nx=3, ny=3,
                  nz=3)
+            pads.append((float(foot[0]), float(foot[1]), float(zf)))
             p0 = foot + EZ * 0.0 + rad * 0.12                              # foot on the pad
             d = top - p0
             p0 = p0 - d / np.linalg.norm(d) * 0.04
@@ -178,7 +199,9 @@ def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=(-1.6
                 posts.append((a, b))
         posts.append((do - 0.20, do))
         posts.sort()
-        _side_box(fr, k, -do + 0.20, do - 0.20, do - 0.17, do - 0.02, zh0, zh0 + 0.14, "M_timber")    # head beam
+        # head beam (r4: when the plate is under 6 cm above it, it grows into the plate -- no slot, no sliver boards)
+        hh = 0.14 if Zp - zh0 - 0.14 >= 0.055 else Zp - zh0 + 0.005
+        _side_box(fr, k, -do + 0.20, do - 0.20, do - 0.17, do - 0.02, zh0, zh0 + hh, "M_timber")      # head beam
         _side_box(fr, k, -do + 0.20, do - 0.20, do - 0.17, do - 0.02, zr0, zr0 + 0.12, "M_timber")    # breast rail
         _side_box(fr, k, -do + 0.20, do - 0.20, do - 0.12, do + 0.05, zr0 + 0.12, zr0 + 0.155,
                   "M_timber_weathered")                                                            # sill board
@@ -187,168 +210,30 @@ def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=(-1.6
             if u1 - u0 < 0.02:
                 continue
             _boards(bo, k, u0, u1, bd0, bd1, zs1, zr0, rng)
-            _boards(bo, k, u0, u1, bd0, bd1, zh0 + 0.14, Zp, rng)
+            _boards(bo, k, u0, u1, bd0, bd1, zh0 + hh, Zp, rng)
             opening = any(abs(0.5 * (u0 + u1) - c) < open_w / 2 for c in centres)
             if not opening:
                 _boards(bo, k, u0, u1, bd0, bd1, zr0 + 0.12, zh0, rng)
     ci = do - 0.17                                                         # boarded ceiling inside the plate
     obox(A["ceiling"], np.array([[-ci, 0.0, Zt - 0.02]]), (1, 0, 0), (0, 1, 0), (0, 0, 1), 2 * ci, 2 * ci, 0.04,
          0.008, "M_timber", nx=4, ny=4, nz=2)
-    # ---------------- square pyramid roof ----------------
-    pt = math.radians(pitch_deg)
-    tp, cp, sp = math.tan(pt), math.cos(pt), math.sin(pt)
-    a = do + eave_out                                                     # eave half-width (plan)
-    t_deck = 0.025
-    dz_top = t_deck / cp
-
-    def z_under(d):
-        return Zt + (do - d) * tp
-
-    z_apex_u = z_under(0.0)
-    apex_top = np.array([0.0, 0.0, z_apex_u + dz_top])
-    Ls = a / cp                                                           # slope length eave -> apex
-    sh = SIZE_TABLE["shingle"]
-    Lsh = exposure + 0.18
-    Lb = 0.048
-    cap_face = cap_r / math.sqrt(2.0)
-    n_sh = 0
-    cover = []
-    for k in range(4):
-        t, n = _tn(k)
-        N = n * sp + EZ * cp
-        S = -n * cp + EZ * sp
-        E0 = -a * t + a * n + EZ * z_under(a)
-        E1 = a * t + a * n + EZ * z_under(a)
-        A_ = EZ * z_apex_u
-        # deck: top, soffit, eave edge (shared hip / apex points with the neighbours: closed)
-        ss, tt = np.linspace(0, 1, 9), np.linspace(0, 1, 10)
-        Q = (1 - tt)[None, :, None] * (E0[None, None] + ss[:, None, None] * (E1 - E0)[None, None]) \
-            + tt[None, :, None] * A_[None, None]
-        nu, nv = Q.shape[:2]
-        i2, j2 = np.meshgrid(np.arange(nu - 1), np.arange(nv - 1), indexing="ij")
-        Fq = np.stack([i2 * nv + j2, (i2 + 1) * nv + j2, (i2 + 1) * nv + j2 + 1, i2 * nv + j2 + 1], -1).reshape(-1, 4)
-        top = Q.reshape(-1, 3) + EZ * dz_top
-        f_up = Fq if np.dot(np.cross(top[Fq[0][1]] - top[Fq[0][0]], top[Fq[0][3]] - top[Fq[0][0]]), N) > 0 \
-            else Fq[:, ::-1]
-        A["roof_deck"].add(top, f_up, "M_timber_weathered")
-        bot = Q.reshape(-1, 3)
-        A["roof_deck"].add(bot, f_up[:, ::-1], "M_timber_weathered")
-        edge = np.concatenate([Q[:, 0], Q[:, 0] + EZ * dz_top])
-        m = len(Q[:, 0])
-        Fe = np.stack([np.arange(m - 1), np.arange(1, m), np.arange(1, m) + m, np.arange(m - 1) + m], -1)
-        if np.dot(np.cross(edge[Fe[0][1]] - edge[Fe[0][0]], edge[Fe[0][3]] - edge[Fe[0][0]]), n) < 0:
-            Fe = Fe[:, ::-1]
-        A["roof_deck"].add(edge, Fe, "M_timber_weathered")
-        # rafter tails (bearing on the plate, carrying the soffit) and the hip rafter at the + end
-        for u in np.arange(-do + 0.35, do - 0.30, 0.60):
-            p0 = u * t + (do - 0.12) * n
-            p1 = u * t + (a - 0.03) * n
-            for p_ in (p0, p1):
-                p_[2] = z_under(float(np.dot(p_, n))) - 0.07 / cp
-            obox(A["roof_frame"], p0[None], (p1 - p0) / np.linalg.norm(p1 - p0), t,
-                 np.cross((p1 - p0) / np.linalg.norm(p1 - p0), t), np.linalg.norm(p1 - p0), 0.10, 0.14, 0.012,
-                 "M_timber", nx=3, ny=2, nz=2)
-        hc0 = (do - 0.10) * (t + n)
-        hc1 = (a - 0.04) * (t + n)
-        hc0[2] = z_under(do - 0.10) - 0.10 / cp
-        hc1[2] = z_under(a - 0.04) - 0.10 / cp
-        beam(A["roof_frame"], hc0, hc1, 0.12, 0.17, 0.012, "M_timber", up=(0, 0, 1))
-        # starter board under the first course
-        def bedpt(u, v, lift=0.0):
-            return u * t + a * n + EZ * (z_under(a) + dz_top) + v * S + N * lift
-
-        def half_w(v):
-            return a * (1 - v / Ls)
-
-        v0, v1 = -0.02, 0.26
-        _slab(A["shingles"], [bedpt(-half_w(v0) + 0.01, v0), bedpt(half_w(v0) - 0.01, v0),
-                              bedpt(half_w(v1) - 0.01, v1), bedpt(-half_w(v1) + 0.01, v1)], N, 0.046,
-              "M_roof_shingle", th1=0.018)
-        # coursed shingles, trimmed at the hips
-        i = 0
-        while True:
-            vb = -0.03 + i * exposure
-            if half_w(vb) < cap_face - 0.05 or vb > Ls:
-                break
-            L_ = min(Lsh, Ls - vb - 0.05)
-            if L_ < 0.12:
-                break
-            w0 = half_w(vb)
-            u = -w0 - rng.uniform(0.0, 0.2)
-            while u < w0 - 0.04:
-                W = float(np.clip(sh["target_w"] * rng.uniform(*sh["w_jitter"]), *sh["width"]))
-                gap = rng.uniform(*sh["gap"])
-                uc = u + W / 2
-                if uc + W / 2 > w0 - 0.05 and w0 - 0.05 - u > 0.12:
-                    W = w0 - 0.05 - u + 0.04
-                    uc = u + W / 2
-                var = SHINGLE_VARIANTS[int(rng.integers(0, len(SHINGLE_VARIANTS)))]
-                Vs, Fs, uv = shingle_mesh(W, L_, var, bottom=False, head=False)
-                y = Vs[:, 1]
-                x = Vs[:, 0] + uc
-                lim = half_w(vb + y) - 0.012                               # trim at the hips
-                x = np.clip(x, -lim, lim)
-                lift = Lb * (1 - np.clip(y, 0, None) / Lsh) + 0.002
-                Wp = (x[:, None] * t[None] + a * n[None] + EZ[None] * (z_under(a) + dz_top)
-                      + (vb + y)[:, None] * S[None] + (Vs[:, 2] + lift)[:, None] * N[None])
-                if np.ptp(x) > 0.05:
-                    A["shingles"].add(Wp, Fs, "M_roof_shingle", uv=uv, wear=rng.uniform(0.2, 0.6))
-                    n_sh += 1
-                    near = np.hypot(Wp[:, 0], Wp[:, 1]) < cap_r + 0.1
-                    if near.any():
-                        cover.append(Wp[near])
-                u += W + gap
-            i += 1
-        # hip boards on this face along its + end hip (and the neighbour lays its own on the other side)
-        for sgn, hip_end in ((1, a), (-1, -a)):
-            C = hip_end * t + a * n + EZ * (z_under(a) + dz_top)
-            Hd = (A_ + EZ * dz_top) - C
-            Lh = np.linalg.norm(Hd)
-            Hd = Hd / Lh
-            ey = -sgn * t - np.dot(-sgn * t, Hd) * Hd
-            ey /= np.linalg.norm(ey)
-            ez = np.cross(Hd, ey)
-            if np.dot(ez, N) < 0:
-                ez = -ez
-            Lb_ = Lh - cap_r * math.sqrt(2.0) * 0.5
-            O = C - Hd * 0.03 + ey * (0.17 / 2 - 0.045) + ez * (0.085 + 0.018)
-            obox(A["hips"], O[None], Hd, ey, ez, Lb_ + 0.03, 0.17, 0.036, 0.008, "M_timber_weathered", nx=6, ny=2,
-                 nz=2)
-    # ---------------- lead apex cap and finial ----------------
-    zc = apex_top[2] + 0.17
-    rc = cap_r * math.sqrt(2.0) * 0.5 * math.sqrt(2.0)                    # corner radius of the square cap
-    drop = (rc / math.sqrt(2.0)) * tp                                     # the pyramid falls this much to the cap edge
-    prof = [(rc + 0.03, -drop - 0.06), (rc + 0.035, -drop - 0.035), (rc, -drop), (0.06, -0.06 * tp / math.sqrt(2)),
-            (0.0, 0.0)]
-    Vl, Fl = lathe_rz(prof, 4, z0=zc, cap_bottom=True, cap_top=False, phase=math.pi / 4)
-    cover += [np.asarray(v_, float) for v_ in A["hips"].V]
-    if cover:
-        cv = np.concatenate(cover)
-        # lift the cap until every covered shingle vertex inside it stays 2 cm under the lead
-        for _ in range(40):
-            zl = np.interp(np.maximum(np.abs(cv[:, 0]), np.abs(cv[:, 1])) * math.sqrt(2.0),
-                           [0.0, rc], [zc, zc - drop])
-            m_ = np.maximum(np.abs(cv[:, 0]), np.abs(cv[:, 1])) < rc / math.sqrt(2.0) + 0.01
-            need = float((cv[m_, 2] + 0.02 - zl[m_]).max(initial=-1.0))
-            if need <= 0:
-                break
-            zc += need
-            Vl[:, 2] += need
-    A["lead"].add(Vl, Fl, "M_lead")
-    turned_finial(A["finial"], (0.0, 0.0, zc - 0.02), scale=1.4, lean_deg=0.5)
-    tip = zc - 0.02 + 1.4 * 1.05
-    built = {}
+    # ---------------- roof: the kit's pyramid roof module on the plate (r4: extracted, bell-cast capable) ----------
+    rkw = dict(pitch_deg=pitch_deg, eave_out=eave_out, exposure=exposure, cap_r=cap_r, finial_scale=finial_scale)
+    rkw.update(roof or {})
+    rf = (roof_fn or pyramid_roof)(g, do, Zt, name="cabin", rng=rng, **rkw)
+    built = dict(rf["objs"])
     for k_, acc in A.items():
-        ob = finalize(acc, g.coll, smooth_deg=35.0, recalc=k_ not in ("bed", "shingles", "roof_deck"))
+        ob = finalize(acc, g.coll, smooth_deg=35.0, recalc=k_ not in ("bed",))
         if ob is not None:
             built[k_] = ob
-    z_eave = z_under(a)
-    g.CABIN = dict(side=side, floor=Zf, plate=Zp, plate_top=Zt, eave=z_eave, apex=float(apex_top[2]), tip=tip,
-                   openings=[(k, c, open_w, Zf + open_sill, open_h) for k in range(4) for c in centres])
-    g.ROOF = dict(frame=None, r_eave=a, z_eave=z_eave, plate_top=Zt, r_wall=do, pitch=pitch_deg, tip=tip,
-                  collar_drip=zc - drop)
-    log("square cabin: side %.2f on the bed z %.2f (r %.2f), floor %.2f, plate %.2f..%.2f, %d x %d lookout openings "
-        "%.2f x %.2f (sill %.2f), %d knee struts, roof %.0f deg eave %.2f (r %.2f) apex %.2f tip %.2f, %d shingles"
-        % (side, H, Rb, Zf, Zp, Zt, 4, n_open, open_w, open_h, Zf + open_sill, n_str, pitch_deg, z_eave, a,
-           apex_top[2], tip, n_sh))
+    z_eave, tip = rf["z_eave"], rf["tip"]
+    g.CABIN = dict(side=side, floor=Zf, plate=Zp, plate_top=Zt, eave=z_eave, apex=float(rf["apex"]), tip=tip,
+                   openings=[(k, c, open_w, Zf + open_sill, open_h) for k in range(4) for c in centres],
+                   pads=pads, bed=H, bed_r=Rb, bearers=tuple(bearers), roof=rf)
+    g.ROOF = dict(frame=None, r_eave=rf["r_eave"], z_eave=z_eave, plate_top=Zt, r_wall=do, pitch=rkw["pitch_deg"],
+                  tip=tip, collar_drip=rf["collar_drip"])
+    log("square cabin: side %.2f on the bed z %.2f (r %.2f, bearers %s, bed fill %s), floor %.2f, plate %.2f..%.2f, "
+        "%d x %d lookout openings %.2f x %.2f (sill %.2f), %d knee struts, roof eave %.2f (r %.2f) apex %.2f tip %.2f"
+        % (side, H, Rb, tuple(bearers), bool(bed_fill), Zf, Zp, Zt, 4, n_open, open_w, open_h, Zf + open_sill, n_str,
+           z_eave, rf["r_eave"], rf["apex"], tip))
     return built

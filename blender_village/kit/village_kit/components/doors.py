@@ -145,17 +145,28 @@ def build_door(g, coll, seed=1212):
     # infill above the lintel up to the rafters: short vertical boards
     xx = -1.05
     k = 0
+    # kit 1.7 r4 (v4_mixed, director r3 probe): optional frame attribute DOOR_INFILL_DECK -- the infill boards run up
+    # to just under the batten / shingle deck instead of the rafter underside, closing the gap between the rafters
+    # over the door head (on a steep cone it is (2 RAFT_R + BATTEN_T) / cos(pitch), ~0.26 m at 58 deg, and shows the
+    # roof void from eye level); absent / False = unchanged
+    deck = ((2 * g.RAFT_R + g.BATTEN_T) / math.cos(g.PITCH) - 0.035) if getattr(g, "DOOR_INFILL_DECK", False) else 0.0
     while xx < 1.05:
         bw = min(rng.uniform(0.16, 0.26), 1.05 - xx)
         if bw < 0.05:
             break
         cx = xx + bw / 2
         r_ = math.hypot(cx, g.FRONT_Y + 0.1)
-        top = float(rafter_underside_z_at_r(g, r_)) + 0.02
+        top = float(rafter_underside_z_at_r(g, r_)) + 0.02 + deck
         h0 = g.HEAD_Z + 0.215
         if top - h0 > 0.04:
             timber_box(fr, (cx, g.FRONT_Y + 0.13, (h0 + top) / 2), (bw / 2 - 0.006, 0.016, (top - h0) / 2),
                        rotz(rng.uniform(-0.01, 0.01)), ch=0.006, segs=(1, 1, 2), seed=40 + k)
+            if deck:
+                # ... with a thin batten-lath behind each board, covering the board gaps (the slits showed the
+                # back of the roof blocker from outside)
+                timber_box(fr, (cx, g.FRONT_Y + 0.13 + 0.026, (h0 + top) / 2 - 0.01),
+                           (bw / 2 + 0.004, 0.008, (top - h0) / 2 - 0.01), np.eye(3), ch=0.003, segs=(1, 1, 1),
+                           seed=60 + k)
         xx += bw
         k += 1
     # threshold (director r3 #3c): three flat slabs under the sill front, front edges wandering, depth

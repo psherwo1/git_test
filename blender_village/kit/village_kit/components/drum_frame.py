@@ -330,6 +330,53 @@ def window_spec(clear_w=0.16, clear_h=0.55, sill=1.30, kind="slit", fw=None, lin
                 zb=z0 - 0.13, zt=z1 + lh + 0.015, hw_sill=sill_w / 2, hw_jamb=cw + fmax + 0.01, hw_lintel=lintel_w / 2)
 
 
+drum_window_spec = window_spec
+"""v1_stone_watchtower r3: the unambiguous name of drum_frame.window_spec (windows.window_spec and
+wall_openings.window_spec are different modules with different signatures)."""
+
+
+def fit_window_courses(W, beds_above=(), tops_below=(), min_gap=0.20, lintel_grow=2.2, label="window"):
+    """KIT (v1_stone_watchtower r3): make a drum window negotiate with the FIXED courses round it (string course,
+    cornice, band), so the rubble filler never has to pack a strip thinner than one real course (`min_gap`, e.g.
+    the rubble table's hr[0] + hr[1]) between a window and a fixed course.
+      above: when 0 <= (next fixed bed above) - W["zt"] < min_gap, the lintel grows to bed directly under that
+             course (up to `lintel_grow` x its nominal height); if that is not enough the whole window rises until
+             its lintel beds under the course; a window whose keep-out runs INTO the course is lowered clear of it.
+      below: when 0 <= W["zb"] - (next fixed top below) < min_gap, the window drops so its sill beds on that course
+             (only if the gap above stays >= min_gap or 0).
+    W: a window_spec dict.  beds_above / tops_below: z of the fixed courses' bed (underside) / top.  Returns
+    (spec, note) -- note is "" when nothing changed."""
+    def rebuilt(dz=0.0, lh=None):
+        z0, h = W["z0"] + dz, W["z1"] - W["z0"]
+        return window_spec(2 * W["cw"], h, z0, W["kind"], fw=W["fw"], lintel_h=W["lintel_h"] if lh is None else lh,
+                           course_h=(h / max(1, len(W["jz"]) - 1)) * 0.999, splay=W["splay"], room=W["room"])
+
+    def gap_up(S):
+        g_ = [b - S["zt"] for b in beds_above if b > S["z1"]]
+        return min(g_) if g_ else None
+
+    note = ""
+    gu = gap_up(W)
+    if gu is not None and gu < 0:                                  # keep-out runs into the course: lower it
+        W, note = rebuilt(dz=gu), "lowered %.3f m clear of the course above" % -gu
+        gu = 0.0
+    if gu is not None and 1e-4 < gu < min_gap:
+        lh = W["lintel_h"] + gu
+        if lh <= W["lintel_h"] * lintel_grow:
+            W, note = rebuilt(lh=lh), "lintel %.3f -> %.3f m, bedded under the course (gap was %.3f m)" % (
+                lh - gu, lh, gu)
+        else:
+            W, note = rebuilt(dz=gu), "raised %.3f m so the lintel beds under the course" % gu
+    gb = [W["zb"] - t for t in tops_below if t < W["z0"]]
+    if gb and 1e-4 < min(gb) < min_gap:
+        d = min(gb)
+        S = rebuilt(dz=-d)
+        gu2 = gap_up(S)
+        if gu2 is None or gu2 >= min_gap or gu2 < 1e-4:
+            W, note = S, (note + "; " if note else "") + "lowered %.3f m so the sill beds on the course below" % d
+    return W, (label + ": " + note if note else "")
+
+
 def cyl_place(g, P, th, zc, yoff, Rfun=None):
     """Map local stone coords onto the drum. x -> arc length, y -> outward, z -> up."""
     Rfun = partial(R_out, g) if Rfun is None else Rfun
@@ -709,6 +756,9 @@ def drum_finish(g, checks=True):
     as linked duplicates in <PREFIX>_kit_instances, and run the rotor clearance checks (spec G / I)."""
     import bpy
     from mathutils import Matrix
+    if checks and getattr(g.parts.get("wheel_blades"), "nv", 0) == 0:   # v1_stone_watchtower r3: no rotor built
+        log("drum_finish: no rotor in this building, rotor clearance checks skipped")
+        checks = False
     if checks:
         from .rotor_checks import rotor_clearance
         rotor_clearance(g)

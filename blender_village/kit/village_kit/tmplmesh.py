@@ -40,6 +40,10 @@ from .core import log, nanite_clean as _nanite_clean, sliver_report as _sliver_r
 PI = math.pi
 D2R = PI / 180.0
 
+# kit 1.7 r4 (v4_mixed, producer note 15): optional grid-LOD hook for BatchAcc.add, set only by village_kit.lod when a
+# recipe registers a rule (lod.tmpl_lod).  None = every BatchAcc behaves exactly as before.
+LOD_HOOK = None
+
 
 def smoothstep(e0, e1, x):
     t = np.clip((x - e0) / (e1 - e0), 0.0, 1.0)
@@ -1016,10 +1020,16 @@ class BatchAcc:
         self.zref = 0.0             # height offset for Mask B of pooled (local-coordinate) meshes
         self.n_degenerate = self.n_ground = self.n_alt = self.n_area = 0
 
-    def add(self, Vw, T, Pl=None, mat=None, smooth="bevel", uv_rand=True, wear=None):
+    def add(self, Vw, T, Pl=None, mat=None, smooth="bevel", uv_rand=True, wear=None, _lod=True):
         """Vw (N,nv,3) world positions; T template; Pl (N,nv,3) local positions for UVs.
         mat: slot name or index. smooth: 'all' | 'none' | 'bevel' (flat main faces, smooth bevels).
         wear: Mask G for these pieces (scalar or (N,)); default = the part's baseline +- 0.2 per piece."""
+        if _lod and LOD_HOOK is not None:                 # kit 1.7 r4: opt-in grid LOD (village_kit.lod)
+            sub = LOD_HOOK(self.name, Vw, T, Pl, wear)
+            if sub is not None:
+                for Vw_, T_, Pl_, wear_ in sub:
+                    self.add(Vw_, T_, Pl=Pl_, mat=mat, smooth=smooth, uv_rand=uv_rand, wear=wear_, _lod=False)
+                return
         Vw = np.asarray(Vw, float)
         if Vw.ndim == 2:
             Vw = Vw[None]

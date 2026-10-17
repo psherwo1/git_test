@@ -33,13 +33,71 @@ def _out(az):
     return np.array([math.sin(az), -math.cos(az), 0.0])
 
 
-def round_tower_decals(g, seed=7410):
-    """place the decal anchors of a rotor-less stone tower on its built meshes (module doc); returns the count."""
+BLOCKER_PARTS = ("_lookout_rooms", "_ceiling", "_cabin_ceiling")
+"""v1_stone_watchtower r3: note-6 blocker / backing meshes no decal may sit on (the closed dark rooms behind the
+lookouts, the ceiling disc over the ground floor, the cabin's ceiling).  `<PREFIX>_interior` is a blocker above the
+door crown only (below it is the plastered passage seen through the door)."""
+
+
+def blocker_hit(g, hit, exclude=BLOCKER_PARTS):
+    """True when a SurfaceProbe hit lies on a note-6 blocker (see BLOCKER_PARTS) rather than on a real exterior or
+    rendered surface."""
+    if hit is None:
+        return False
+    name = hit["object"]
+    if any(name == g.prefix + e for e in exclude):
+        return True
+    return name == g.prefix + "_interior" and float(hit["pos"][2]) > g.ZS_DOOR + g.DOOR_CW + 0.05
+
+
+def drop_blocker_anchors(g, probe, exclude=BLOCKER_PARTS, reach=0.05):
+    """remove every anchor whose surface (ray from `reach` along its normal) is a note-6 blocker; returns the
+    dropped (type, pos, object) list."""
+    keep, dropped = [], []
+    for it in g.decals.items:
+        n = np.asarray(it["normal"], float)
+        hit = probe.cast(np.asarray(it["pos"], float) + n * reach, -n, 2 * reach)
+        if blocker_hit(g, hit, exclude):
+            dropped.append((it["type"], [round(float(v), 2) for v in it["pos"]], hit["object"]))
+        else:
+            keep.append(it)
+    g.decals.items = keep
+    return dropped
+
+
+def cabin_decals(g, da, probe, rng):
+    """v1_stone_watchtower r3: note-11 anchors of a square_cabin crown (g.CABIN): water streaks hanging below each
+    lookout's sill board on the plank wall, and below every knee-strut corbel pad on the stone wall face."""
+    cb = getattr(g, "CABIN", None)
+    if not cb:
+        return 0
+    n0 = len(da)
+    WOOD = {"M_timber", "M_timber_weathered"}
+    do = cb["side"] / 2.0 - 0.04
+    sides = [np.array(v, float) for v in ((0, -1, 0), (1, 0, 0), (0, 1, 0), (-1, 0, 0))]
+    for k, c, ow, z_sill, oh in cb["openings"]:
+        n = sides[k]
+        t = np.array([-n[1], n[0], 0.0])
+        p = t * (c + rng.uniform(-0.3, 0.3) * ow) + n * do + np.array([0.0, 0.0, z_sill - 0.13])
+        D.below_points(da, probe, [p], [n], "water_streak", (0.14, 0.55), surfaces=WOOD, rng=rng, reach=0.3)
+    for (fx, fy, fz) in cb.get("pads", ()):
+        rad = np.array([fx, fy, 0.0]) / max(math.hypot(fx, fy), 1e-6)
+        D.below_points(da, probe, [np.array([fx, fy, fz - 0.24])], [rad], "water_streak", (0.16, 0.6),
+                       surfaces={"M_stone", "M_mortar"}, rng=rng, reach=0.4)
+    return len(da) - n0
+
+
+def round_tower_decals(g, seed=7410, exclude=BLOCKER_PARTS):
+    """place the decal anchors of a rotor-less stone tower on its built meshes (module doc); returns the count.
+    exclude (r3): blocker meshes no anchor may land on (blocker_hit)."""
     rng = np.random.RandomState(seed)
     da = g.decals
     obs = [o for o in g.coll.all_objects if o.type == "MESH"]
     probe = D.SurfaceProbe(obs)
     n0 = len(da)
+
+    def exterior(hit, wh_):
+        return not blocker_hit(g, hit, exclude)
     STONE = {"M_stone", "M_mortar", "M_stone_dressed"}
     WOOD = {"M_timber", "M_timber_weathered"}
     R0 = g.R_BASE0
@@ -129,18 +187,22 @@ def round_tower_decals(g, seed=7410):
             r = rf["r_eave"] * rng.uniform(0.45, 0.85)
             pts.append((*_az_pt(a, r, 0)[:2], rf["z_eave"] + 6.0))
         D.tops(da, probe, pts, "moss", (0.5, 0.4), surfaces={"M_roof_shingle"}, rng=rng, min_up=0.3, h_from=0.5)
+    # ---- a square_cabin crown: streaks under the lookout sill boards and under the strut corbel pads (r3) ----
+    cabin_decals(g, da, probe, rng)
     # ---- mortar repairs on the shaft, render remnants beside the door, the plastered passage ----
+    # (r3: accept=exterior -- a ray through a lookout never lands a patch on the dark room behind it)
     avoid = [it["pos"] for it in da.items]
     D.wall_scatter(da, probe, (0, 0), Rfar, 5, (0.6, g.Z_BAND0 - 0.3), "repair_patch", ((0.3, 0.6), (0.25, 0.5)),
                    surfaces={"M_stone", "M_mortar"}, rng=rng, az_range=(door_half + 0.2, 2 * math.pi - door_half - 0.2),
-                   avoid=avoid, min_sep=0.7)
+                   avoid=avoid, min_sep=0.7, accept=exterior)
     avoid = [it["pos"] for it in da.items]
     D.wall_scatter(da, probe, (0, 0), Rfar, 4, (g.Z_BAND1 + 0.3, g.Z_CORN0 - 0.2), "repair_patch",
-                   ((0.3, 0.6), (0.25, 0.5)), surfaces={"M_stone", "M_mortar"}, rng=rng, avoid=avoid, min_sep=0.8)
+                   ((0.3, 0.6), (0.25, 0.5)), surfaces={"M_stone", "M_mortar"}, rng=rng, avoid=avoid, min_sep=0.8,
+                   accept=exterior)
     avoid = [it["pos"] for it in da.items]
     D.wall_scatter(da, probe, (0, 0), Rfar, 3, (0.5, 1.9), "repair_patch", ((0.3, 0.55), (0.3, 0.6)),
                    surfaces={"M_stone", "M_mortar"}, rng=rng, az_range=(-door_half - 0.9, -door_half - 0.1),
-                   avoid=avoid, min_sep=0.6)
+                   avoid=avoid, min_sep=0.6, accept=exterior)
     for s in (-1, 1):                                   # plastered rubble passage (seen through the door)
         hit = probe.cast((0.0, -g.R_DOOR + 0.6, 1.2), (s, 0.0, 0.0), 1.2)
         da.add_hit("plaster_patch", hit, (0.4, 0.5), probability=0.5, seed=int(rng.randint(1 << 30)),
@@ -150,21 +212,26 @@ def round_tower_decals(g, seed=7410):
     return n
 
 
-def round_tower_decals_gated(g, seed=7410, max_offset=0.015, min_dot=0.85, count=(40, 120)):
+def round_tower_decals_gated(g, seed=7410, max_offset=0.015, min_dot=0.85, count=(40, 120), exclude=BLOCKER_PARTS):
     """round_tower_decals + the drum family's three gates (see drum_decals.drum_tower_decals_gated): snap, validate,
-    audit (the director's test); asserts 0 audit failures and a count in `count`."""
+    audit (the director's test); asserts 0 audit failures and a count in `count`.  exclude (r3): blocker meshes
+    (BLOCKER_PARTS, plus <PREFIX>_interior above the door crown) are not decal surfaces: anchors on them are dropped
+    before the gates, the validate gate rejects them, and a final check asserts none is left."""
     from ..anchor_validate import validate_anchors
     from ..anchor_audit import audit_anchors
     from ..decal_gate import snap_anchors
     from .drum_decals import _macro_normals
-    round_tower_decals(g, seed=seed)
+    round_tower_decals(g, seed=seed, exclude=exclude)
     probe = D.SurfaceProbe([o for o in g.coll.all_objects if o.type == "MESH"])
+    for d_ in drop_blocker_anchors(g, probe, exclude):
+        log(f"    decal anchor on a blocker dropped: {d_}")
     n_in = len(g.decals)
     _macro_normals(g)
     kept, dropped = snap_anchors(g.decals, probe, max_offset=max_offset, min_align=0.9, log=log)
     log(f"decal gate 1 (snap_anchors): {kept} kept, {dropped} dropped of {n_in}")
     rep = validate_anchors(g.decals, probe, apply=True, reach=0.03, offset=0.004, clear=0.10, min_sep=0.25,
-                           fp_tol=0.06, fp_any=7, fp_mat=4, shrink=(0.75, 0.55), normal_min_dot=min_dot)
+                           fp_tol=0.06, fp_any=7, fp_mat=4, shrink=(0.75, 0.55), normal_min_dot=min_dot,
+                           exclude_objects=tuple(g.prefix + e for e in exclude))
     log("decal gate 2 (anchor_validate): " + ", ".join(f"{k} {v}" for k, v in rep.items() if k != "bad"))
     for nm, why in rep["bad"]:
         log(f"    {nm}: {why}")
@@ -172,6 +239,8 @@ def round_tower_decals_gated(g, seed=7410, max_offset=0.015, min_dot=0.85, count
     for b in bad:
         log(f"    audit drop: {b}")
     bad2 = audit_anchors(g.decals, probe, max_offset=max_offset, min_dot=min_dot, drop=False)
+    on_blocker = drop_blocker_anchors(g, probe, exclude)
+    assert not on_blocker, on_blocker
     n = len(g.decals)
     log(f"decal gate 3 (audit, director test): {len(bad)} dropped, {len(bad2)} failing after, {n} anchors "
         f"{g.decals.counts()}")

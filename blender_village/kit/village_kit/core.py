@@ -1000,6 +1000,40 @@ def _vis_noop(i):
     return i
 
 
+def _vis_pre_bpy_path():
+    """sys.path without Blender's internal scripts/modules (see _vis_spawn_pool)."""
+    import os
+    import sys
+    saved = list(sys.path)
+    norm = [os.path.normcase(p) for p in saved]
+    blender = (os.path.normcase(os.sep + "bpy" + os.sep), os.path.normcase("Blender Foundation"))
+    return saved, [p for p, n in zip(saved, norm)
+                   if not (blender[0] in n and os.path.normcase(os.sep + "scripts") in n) and blender[1] not in n]
+
+
+def _vis_map_watched(pool, fn, args, poll=5.0):
+    """kit 1.7 (v4_mixed r2): pool.map that cannot hang.  The executor may start a worker lazily, after the pre-bpy
+    path was restored; such a worker dies importing the build script, and the executor does not always notice
+    (the build hung).  So workers are (re)started with the pre-bpy path in place, and every `poll` s the worker
+    processes are checked: a dead one raises, and visibility_cull falls back to one process."""
+    import sys
+    from concurrent.futures import wait, FIRST_EXCEPTION
+    saved, pre = _vis_pre_bpy_path()
+    sys.path[:] = pre
+    try:
+        futs = [pool.submit(fn, a) for a in args]
+    finally:
+        sys.path[:] = saved
+    while True:
+        done, todo = wait(futs, timeout=poll, return_when=FIRST_EXCEPTION)
+        if not todo or any(f.exception() is not None for f in done):
+            return [f.result() for f in futs]
+        procs_ = list(getattr(pool, "_processes", {}).values())
+        if any(p.exitcode is not None for p in procs_):
+            raise RuntimeError("visibility: a spawn worker died (exit codes %s)"
+                               % [p.exitcode for p in procs_ if p.exitcode is not None])
+
+
 def _vis_spawn_worker(args):
     from mathutils import Vector
     views_np, chunk = args
@@ -1132,7 +1166,7 @@ def visibility_cull(targets, extra_views=(), procs=3, extra_by_target=None, obje
                 if spawn_pool is None:
                     spawn_pool = _vis_spawn_pool(procs, Vw, T, own)
                 VN = _VIS["views_np"]
-                res = list(spawn_pool.map(_vis_spawn_worker, [(VN, c_) for c_ in chunks]))
+                res = _vis_map_watched(spawn_pool, _vis_spawn_worker, [(VN, c_) for c_ in chunks])
             except Exception as ex:                               # incl. BrokenProcessPool when a worker dies
                 log("  (visibility: spawn failed, rest of this cull single process)", repr(ex))
                 res = None
@@ -1160,7 +1194,16 @@ def visibility_cull(targets, extra_views=(), procs=3, extra_by_target=None, obje
         total += len(pids)
         log(f"  visibility cull {name}: -{len(pids)} of {len(groups)} polygons")
     if spawn_pool:
-        spawn_pool.shutdown(wait=True)
+        # kit 1.7 (v4_mixed r2): every result is in, so the workers are stopped instead of joined -- a joined
+        # shutdown kept a 1.6M-triangle build waiting ~3 min after its last target
+        procs_ = list(getattr(spawn_pool, "_processes", {}).values())
+        spawn_pool.shutdown(wait=False, cancel_futures=True)
+        for p in procs_:
+            try:
+                p.terminate()
+                p.join(10)
+            except Exception:
+                pass
     return total
 
 

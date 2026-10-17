@@ -1,0 +1,316 @@
+{
+  "triangles": 476893,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 13.4,
+  "est_hidden_triangles": 64082,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "LONG_body_wall_stones",
+      "est_triangles": 195645,
+      "est_hidden_triangles": 20566,
+      "hidden_pct_of_object": 10.5
+    },
+    {
+      "object": "LONG_cap_collar",
+      "est_triangles": 12339,
+      "est_hidden_triangles": 7093,
+      "hidden_pct_of_object": 57.5
+    },
+    {
+      "object": "LONG_round_wall_stones",
+      "est_triangles": 84171,
+      "est_hidden_triangles": 6914,
+      "hidden_pct_of_object": 8.2
+    },
+    {
+      "object": "LONG_roof_shingles",
+      "est_triangles": 84469,
+      "est_hidden_triangles": 4649,
+      "hidden_pct_of_object": 5.5
+    },
+    {
+      "object": "LONG_body_wall_mortar",
+      "est_triangles": 7332,
+      "est_hidden_triangles": 4351,
+      "hidden_pct_of_object": 59.3
+    },
+    {
+      "object": "LONG_roof_underlap",
+      "est_triangles": 6139,
+      "est_hidden_triangles": 2920,
+      "hidden_pct_of_object": 47.6
+    },
+    {
+      "object": "LONG_round_wall_mortar",
+      "est_triangles": 4947,
+      "est_hidden_triangles": 2563,
+      "hidden_pct_of_object": 51.8
+    },
+    {
+      "object": "LONG_rafters",
+      "est_triangles": 3576,
+      "est_hidden_triangles": 1907,
+      "hidden_pct_of_object": 53.3
+    },
+    {
+      "object": "LONG_roof_soffit_deck",
+      "est_triangles": 2205,
+      "est_hidden_triangles": 1788,
+      "hidden_pct_of_object": 81.1
+    },
+    {
+      "object": "LONG_body_roof_abutment",
+      "est_triangles": 3397,
+      "est_hidden_triangles": 1669,
+      "hidden_pct_of_object": 49.1
+    },
+    {
+      "object": "LONG_roof_blocker",
+      "est_triangles": 1967,
+      "est_hidden_triangles": 1490,
+      "hidden_pct_of_object": 75.8
+    },
+    {
+      "object": "LONG_body_roof_eave_roll",
+      "est_triangles": 10730,
+      "est_hidden_triangles": 655,
+      "hidden_pct_of_object": 6.1
+    },
+    {
+      "object": "LONG_wall_plate",
+      "est_triangles": 655,
+      "est_hidden_triangles": 655,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_body_wall_frames",
+      "est_triangles": 4649,
+      "est_hidden_triangles": 596,
+      "hidden_pct_of_object": 12.8
+    },
+    {
+      "object": "LONG_body_roof_comb",
+      "est_triangles": 8286,
+      "est_hidden_triangles": 596,
+      "hidden_pct_of_object": 7.2
+    },
+    {
+      "object": "LONG_body_roof_rafters",
+      "est_triangles": 2026,
+      "est_hidden_triangles": 596,
+      "hidden_pct_of_object": 29.4
+    },
+    {
+      "object": "LONG_eave_fill",
+      "est_triangles": 536,
+      "est_hidden_triangles": 476,
+      "hidden_pct_of_object": 88.9
+    },
+    {
+      "object": "LONG_body_roof_covering",
+      "est_triangles": 28196,
+      "est_hidden_triangles": 417,
+      "hidden_pct_of_object": 1.5
+    },
+    {
+      "object": "LONG_apex_blocker",
+      "est_triangles": 596,
+      "est_hidden_triangles": 417,
+      "hidden_pct_of_object": 70.0
+    },
+    {
+      "object": "LONG_roof_starter",
+      "est_triangles": 3934,
+      "est_hidden_triangles": 357,
+      "hidden_pct_of_object": 9.1
+    },
+    {
+      "object": "LONG_body_roof_deck",
+      "est_triangles": 476,
+      "est_hidden_triangles": 357,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "LONG_round_wall_frames",
+      "est_triangles": 953,
+      "est_hidden_triangles": 357,
+      "hidden_pct_of_object": 37.5
+    },
+    {
+      "object": "LONG_body_wall_quoins",
+      "est_triangles": 2146,
+      "est_hidden_triangles": 238,
+      "hidden_pct_of_object": 11.1
+    },
+    {
+      "object": "LONG_peg_023",
+      "est_triangles": 178,
+      "est_hidden_triangles": 178,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_021",
+      "est_triangles": 178,
+      "est_hidden_triangles": 178,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_028",
+      "est_triangles": 178,
+      "est_hidden_triangles": 178,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_025",
+      "est_triangles": 178,
+      "est_hidden_triangles": 178,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_009",
+      "est_triangles": 178,
+      "est_hidden_triangles": 178,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_battens",
+      "est_triangles": 298,
+      "est_hidden_triangles": 178,
+      "hidden_pct_of_object": 60.0
+    },
+    {
+      "object": "LONG_peg_005",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_004",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_020",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_027",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_026",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_002",
+      "est_triangles": 119,
+      "est_hidden_triangles": 119,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_013",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_010",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_body_wall_dressed",
+      "est_triangles": 596,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 10.0
+    },
+    {
+      "object": "LONG_peg_018",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_019",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_011",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_body_wall_blockers",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_016",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_015",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_022",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_peg_003",
+      "est_triangles": 59,
+      "est_hidden_triangles": 59,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "LONG_finial",
+      "est_triangles": 1311,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "LONG_body_roof_ridge",
+      "est_triangles": 2503,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "LONG_body_wall_ironwork",
+      "est_triangles": 417,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "LONG_body_wall_reveals",
+      "est_triangles": 59,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "LONG_round_wall_dressed",
+      "est_triangles": 119,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

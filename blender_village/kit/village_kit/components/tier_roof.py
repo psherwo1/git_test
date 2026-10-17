@@ -17,12 +17,18 @@
         overlap in plan need >= g.roof_clear = 0.50 m clear height, else RoofClearanceError names both); round
         tiers take their deck / eave closure from the public components.round_roof_parts (no private import from
         tower_roof) and drop every zero-face mesh object they create (drop_empty_meshes).
+        kit 1.7.3: octagonal tiers lay eave_deck_lap (deck_lap=True): a continuous sarking strip from the main deck
+        across the wall line and over the whole overhang, so no shingle joint opens on the body or the wall face
+        under the eave where a `through` body cuts the eave structure (v2 round 3's skirt1 / tur_nw slit).
+    eave_deck_lap(g, name, roof, p_wall, coll, ...)    KIT COMPONENT (kit 1.7.3)   -> <P>_<name>_deck_lap
     tier_finial(g, name, scale, ...)                  KIT COMPONENT: lead hat fitted over the tier's apex
         shingles + the kit's turned finial (components.finial)          -> <P>_<name>_finial
     roof_flashing(g, roof, body, ...)                  KIT COMPONENT (the junction module)
         lead flashing where a body rises through a roof tier: an upstand tucked into the wall face, turned out over
         the covering as an apron following the true roof surface round the body, ending with closed caps at the
-        eave if the body leaves the roof.                 -> <P>_<roof>_<body>_flashing
+        eave if the body leaves the roof; kit 1.7.3: the apron edge is turned down into the courses (drip=0.03).
+        Every junction is proven by components.seal_probe.through_seal_probe (run by tier_finish.tier_hidden_cull).
+                                                          -> <P>_<roof>_<body>_flashing
 """
 import math
 
@@ -88,14 +94,21 @@ def make_roof(center, p_wall, z_seat, overhang, profile, rot_deg=0.0, p_min=0.02
 
 def bell_tier(g, name, on, overhang=1.0, profile="skirt", rise=0.30, through=(), p_top=None, rot_deg=None,
               n_raft=6, seed=303, saddles=False, cap_exposure=None, saddle_taper=None, band=True, bracket_drop=0.55,
-              sides=None, collar_r=None, pitch_deg=None, round_rafters=None):
+              sides=None, collar_r=None, pitch_deg=None, round_rafters=None, deck_lap=True):
     """KIT COMPONENT: a bell-cast roof tier on body `on` (see the module doc).
     sides (kit 1.7.1): None = 0 (ROUND witch-hat cone, round_tier) when `on` is a round body, 8 (octagonal) when it
     is a polygon body; pass sides=8 to force an octagonal tier on a round body.  collar_r / pitch_deg /
-    round_rafters: round tiers only (lead-hat collar radius, cone pitch, pole rafter count)."""
+    round_rafters: round tiers only (lead-hat collar radius, cone pitch, pole rafter count).
+    deck_lap (kit 1.7.3, octagonal tiers): True (or a dict of eave_deck_lap keywords) lays a continuous sarking strip
+    across the wall line under the covering, lapping the main deck and the wall-head band, so no shingle joint at
+    the eave ever opens on the hollow body or the sky (even where the hidden-geometry cull later removes the ring
+    beam's faces); False = the kit 1.7.2 tier."""
     body = g.body(on)
     if sides is None:
         sides = 0 if body.round else 8
+    if 3 <= int(sides) != 8:
+        raise ValueError(f"bell_tier {name!r}: sides={sides} -- polygon tiers are octagonal only (OctRoof); use "
+                         f"sides=0 (round) or 8")
     if int(sides) < 3:
         return round_tier(g, name, on, overhang=overhang, profile=profile, through=through, p_top=p_top,
                           n_raft=round_rafters, seed=seed, collar_r=collar_r, pitch_deg=pitch_deg)
@@ -124,11 +137,13 @@ def bell_tier(g, name, on, overhang=1.0, profile="skirt", rise=0.30, through=(),
     Vsh = build_cap(coll, roof, prefix, rng, p_wall, z_plate, n_raft, p_top, expo=0.14, W=0.32, t=0.022,
                     lens=(0.12, 0.17), bracket_z0=z_plate - bracket_drop, chunky=g.units == "kit", saddles=saddles,
                     cap_exposure=cap_exposure, saddle_taper=saddle_taper)
+    if deck_lap:
+        eave_deck_lap(g, name, roof, p_wall, coll, **(deck_lap if isinstance(deck_lap, dict) else {}))
     import bpy
     if through:
         fn = lambda V: g.inside_any(V, through, margin=0.015)  # noqa: E731
         n_drop = 0
-        for part in ("shingles", "hips", "structure", "deck"):
+        for part in ("shingles", "hips", "structure", "deck", "deck_lap"):
             ob = bpy.data.objects.get(f"{prefix}_{part}")
             if ob is not None:
                 n0 = len(ob.data.polygons)
@@ -150,7 +165,8 @@ def bell_tier(g, name, on, overhang=1.0, profile="skirt", rise=0.30, through=(),
 # kit 1.7.1: ROUND tiers (witch-hat cones) on round bodies
 # =================================================================================================================
 ROUND_PROFILES = dict(skirt=(42.0, 14.0, 0.9), skirt_steep=(47.0, 15.0, 0.8), cap=(52.0, 16.0, 0.6),
-                      spire=(60.0, 16.0, 0.7))
+                      spire=(60.0, 16.0, 0.7),
+                      witch_hat=(70.0, 20.0, 0.45))     # kit 1.7.2: ref2's tall witch hat, eave-to-apex H/D ~1.2-1.4
 """(cone pitch above the bell, bell-cast flattening (deg), bell length (slope m)) of a round tier per profile name."""
 
 
@@ -276,6 +292,27 @@ def round_tier(g, name, on, overhang=0.6, profile="spire", through=(), p_top=Non
     return roof
 
 
+def eave_deck_lap(g, name, roof, p_wall, coll, out=None, inn=0.22, h_top=-0.009, t=0.018, nx=24, dm=0.06,
+                  lip_gap=0.08):
+    """KIT COMPONENT (kit 1.7.3, producer note 6 at the eave): a continuous sarking strip (oct_roof.sarking_deck,
+    M_timber) on all 8 facets from `out` outside the wall line p_wall (default: the whole overhang, to `lip_gap`
+    inside the eave lip) to `inn` inside it, h_top under the covering (just below the main deck, so where the two
+    overlap the main deck stays on top).  It laps over the main deck's eave edge (build_cap starts that deck ~0.08 m
+    inside p_wall) and over the wall-head band (p_wall - 0.07 .. p_wall - 0.02), closing the crack between them that
+    otherwise only the ring beam's top faces back, and it boards the overhang over the rafters, so no ray through a
+    shingle joint reaches the wall face under the eave where a `through` body has cut the eave structure.  Fine
+    cells (nx across a facet, dm along the slope) so a `through` body cuts it close to its face.  Its name contains
+    'deck', so the hidden-geometry cull never targets it.                              -> <P>_<name>_deck_lap"""
+    from .oct_roof import sarking_deck
+    acc = Acc(g.name(name) + "_deck_lap")
+    if out is None:
+        out = max(0.10, float(roof.p_lip) - p_wall - lip_gap)
+    m0 = float(roof.m_of_p(p_wall + out))
+    m1 = float(roof.m_of_p(max(p_wall - inn, 0.05)))
+    sarking_deck(roof, acc, min(m0, m1), max(m0, m1), h_top=h_top, t=t, nx=nx, dm=dm, p_floor=0.03)
+    return finalize(acc, coll)
+
+
 def wall_head_band(g, name, roof, p_wall, z_plate, coll, t=0.05, drop=0.16, gap=0.035):
     """closed octagonal frieze band (M_timber_weathered) under a tier's soffit: from the wall head (z_plate - drop)
     to `gap` under the roof surface at the band line, so the joint between wall top and eave is closed."""
@@ -339,10 +376,14 @@ def _round_finial(g, name, t, scale):
     log(f"  {name} finial tip ~{t['finial_top']:.2f} m")
 
 
-def roof_flashing(g, roof_name, body_name,up=0.24, apron=0.26, t=0.012, cover_h=0.15, edge_h=0.075, step=0.05):
+def roof_flashing(g, roof_name, body_name,up=0.24, apron=0.26, t=0.012, cover_h=0.15, edge_h=0.075, step=0.05,
+                  drip=0.03):
     """KIT COMPONENT: the lead flashing where body `body_name` rises through tier `roof_name` (see the module doc).
     up: upstand height above the junction; apron: width over the covering; cover_h / edge_h: apron height over the
-    roof's base surface at the upstand / at the drip edge (clears the chunky shingle butts)."""
+    roof's base surface at the upstand / at the drip edge (clears the chunky shingle butts).
+    drip (kit 1.7.3): the apron's outer edge is turned down (dressed) into the shingle stack to `drip` m under the
+    roof's base surface, so no grazing ray can run under the apron between it and the covering and out to the sky
+    (seal_probe); None = the kit 1.7.2 open drip edge."""
     roof = g.roofs[roof_name]["roof"]
     body = g.body(body_name)
     R = float(body.r_nom(0.5 * (body.z0 + body.z1)))
@@ -377,6 +418,9 @@ def roof_flashing(g, roof_name, body_name,up=0.24, apron=0.26, t=0.012, cover_h=
                (0.6 * a, Lr[2] + cover_h - 0.01), (a, Lr[3] + edge_h + 0.02), (a + 0.012, Lr[4] + edge_h)]
         bot = [(a, Lr[3] + edge_h + 0.02 - t), (0.6 * a, Lr[2] + cover_h - 0.01 - t), (0.09 - t, Lr[1] + cover_h - t),
                (0.055 - t, Lr[0] + cover_h + 0.03 - t), (0.055 - t, z_up - t), (-0.035, z_up - t)]
+        if drip is not None:                          # kit 1.7.3: turned-down drip dressed into the courses
+            top = top + [(a + 0.012, Lr[4] - drip)]
+            bot = [(a + 0.012 - t, Lr[4] - drip), (a + 0.012 - t, Lr[4] + edge_h - t)] + bot
         pts = top + bot
         prof_pts.append(pts)
     m = len(prof_pts[0])

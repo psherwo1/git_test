@@ -1,85 +1,79 @@
-﻿[    0.2s] -- round_stone_drum
-[    1.3s] plain rubble: 849 stones, 8 pinch-outs
-[    1.5s] drum rubble stones 1232
-[    1.5s] interior: floor sill at y -1.54, ladder foot 1.30 m inside the door face, 10 rungs
-[    1.7s] door planks 6: short [1, 4], checks [1, 3, 4], split at the head 2, free-edge sag 5.1 mm
-[    1.9s] string course z 5.35..5.60, projection 0.070 m, drip 0.014 m
-[    1.9s] dentil corbels 36 placements from 6 shared variants
-[    5.3s] drum pins 3489, rejected 0 (plain-zone mortar before pins 18.5%)
-[    5.4s] WALL drum               visible mortar 9.0% (1069914 cells), plain zone 8.8%, widest void 0.067 m at u 1.85 z 0.14, stones 4721
-[    5.4s]   pins per iteration [3162, 59, 1]
-[    6.5s] drum mortar skin: 9300 of 13340 cells hidden behind stone cover -> culled
-[    6.6s] wall-core backing z 5.62..8.53 at d -0.034: 1271 of 1440 outer cells kept (openings holed)
-[    6.6s] -- drum_wall_core
-[    6.6s] wall core inner face: 57 quads
-[    6.6s] wall core ring z -0.05..8.30, 0.006 gap behind the skin: 8314 cells (176 x 51 grid), 32 arch-head quads, 8 openings cut
-[    6.6s] -- entrance_step
-[    6.6s] door step: top 0.079 m, 3 front facets
-[    6.6s] -- drum_ceiling
-[    6.6s] drum ceiling at z 3.45, r 1.58
-[    6.6s] -- corbelled_parapet
-[    6.7s] corbelled parapet: face r 2.420 (drum 2.180 + 0.24), z 8.655..9.650, 158 stones, coping top 9.770
-[    6.7s] -- round_tower_roof
-[    6.9s] tower roof: plate outer face -0.00 m inside the wall-head face, rafters clear the arris by 0.076 m
-[    7.0s]   WATCH_rafters: 2242 verts, 1895 faces
-[    7.1s]   WATCH_purlin_rings: 280 verts, 250 faces
-[    7.1s]   WATCH_battens: 328 verts, 246 faces
-[    9.0s] shingles: 367 full-length (covered part visible): 7
-[    9.2s]   WATCH_roof_shingles: 37080 verts, 31414 faces
-[    9.2s]   WATCH_roof_starter: 2700 verts, 2340 faces
-[   12.2s] underlap strips: 364
-[   12.2s]   WATCH_roof_underlap: 4368 verts, 2184 faces
-[   12.3s]   WATCH_roof_deck: 3888 verts, 3744 faces
-[   12.5s]   WATCH_eave_closure: 720 verts, 480 faces
-[   12.5s]   WATCH_wall_plate: 1064 verts, 1034 faces
-[   12.6s]   WATCH_cap_collar: 5154 verts, 5210 faces
-[   12.6s]   WATCH_finial: 2502 verts, 2640 faces
-[   12.6s] collar drip 12.864 fascia top 12.929 lower top 13.369 upper top 13.669 spindle top 14.052 tip 15.002
-[   12.6s] tower roof: eave r 3.140 z 9.337 (lip 0.72 beyond the wall head), plate 9.758..9.958 on r 2.320, 18 rafters, 14 courses, collar drip 12.864, tip 15.002
-[   12.6s] -- drum_finish
-[   27.6s] WATCH_base_stones            tris   781881  (degenerate faces removed 1956, on-ground faces culled 732, slivers alt<0.1mm 0, area<1e-8 0)
-[   28.2s] WATCH_base_mortar            tris    71867  (degenerate faces removed 41, on-ground faces culled 41, slivers alt<0.1mm 0, area<1e-8 0)
-[   28.6s] WATCH_base_dressed           tris    84206  (degenerate faces removed 26, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   28.6s] WATCH_interior               tris     6416  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   28.7s] WATCH_door_leaf              tris     9540  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   28.7s] WATCH_door_iron              tris     2884  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   28.7s] WATCH_door_step              tris     2231  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   29.0s] WATCH_door_surround          tris    44322  (degenerate faces removed 310, on-ground faces culled 310, slivers alt<0.1mm 0, area<1e-8 0)
-[   29.0s] WATCH_lookout_rooms          tris       96  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   29.1s] WATCH_wall_core              tris    16562  (degenerate faces removed 210, on-ground faces culled 202, slivers alt<0.1mm 0, area<1e-8 0)
-[   29.1s] WATCH_ceiling                tris      720  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   29.4s] WATCH_parapet_stones         tris    32392  (degenerate faces removed 107, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   29.5s] WATCH_parapet_coping         tris     3622  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   29.5s] WATCH_parapet_mortar         tris     2800  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
-[   29.5s] OBJECTS 81 (56 linked duplicates of 12 pooled variant meshes: corbel_0 x6, corbel_1 x5, corbel_2 x6, corbel_3 x10, corbel_4 x1, corbel_5 x8)
-[   29.5s] -- tower_hidden_cull
-[   30.4s]   analytic pre-cull WATCH_base_stones: -2706 of 393609 polygons (behind the wall core / inward)
-[   30.5s]   analytic pre-cull WATCH_base_mortar: -1248 of 35934 polygons (behind the wall core / inward)
-[   30.6s]   analytic pre-cull WATCH_base_dressed: -0 of 42906 polygons (behind the wall core / inward)
-[   30.9s]   drum ray cull: 1197398 tris, 323 viewpoints
-[  328.9s]   drum ray cull WATCH_base_stones: -32909 of 390903 polygons (0 with no unblocked view, mean 163 of 323 views per polygon)
-[  380.6s]   drum ray cull WATCH_base_mortar: -2955 of 34686 polygons (0 with no unblocked view, mean 169 of 323 views per polygon)
-[  459.2s]   drum ray cull WATCH_base_dressed: -5261 of 42906 polygons (437 with no unblocked view, mean 263 of 323 views per polygon)
-[  483.2s]   drum ray cull WATCH_parapet_stones: -1397 of 16444 polygons (0 with no unblocked view, mean 217 of 323 views per polygon)
-[  493.1s]   drum ray cull WATCH_parapet_coping: -741 of 2011 polygons (0 with no unblocked view, mean 224 of 323 views per polygon)
-[  501.3s]   drum ray cull WATCH_rafters: -571 of 1895 polygons (0 with no unblocked view, mean 221 of 323 views per polygon)
-[  503.5s]   drum ray cull WATCH_purlin_rings: -228 of 250 polygons (0 with no unblocked view, mean 205 of 323 views per polygon)
-[  504.4s]   drum ray cull WATCH_battens: -43 of 246 polygons (0 with no unblocked view, mean 227 of 323 views per polygon)
-[  535.8s]   drum ray cull WATCH_roof_shingles: -1246 of 31414 polygons (0 with no unblocked view, mean 225 of 323 views per polygon)
-[  539.8s]   drum ray cull WATCH_roof_starter: -75 of 2340 polygons (0 with no unblocked view, mean 240 of 323 views per polygon)
-[  549.5s]   drum ray cull WATCH_wall_plate: -657 of 1034 polygons (0 with no unblocked view, mean 223 of 323 views per polygon)
-[  549.7s] hidden-geometry cull (11 objects): -50037 polygons (analytic 3954, reduced-view rays 46083, full-view rays 0)
-[  552.3s] decal anchors placed: 98  {'damp_rise': 14, 'moss': 10, 'lichen': 11, 'water_streak': 12, 'rust_stain': 3, 'soot': 8, 'crack': 25, 'grime': 2, 'repair_patch': 12, 'plaster_patch': 1}
-[  555.0s]     decal anchor dropped: ('lichen', [-2.31, 0.26, 5.56], 'align -1.00 WATCH_base_stones')
-[  555.0s]     decal anchor dropped: ('lichen', [1.59, -1.7, 5.56], 'align 0.10 WATCH_base_stones')
-[  555.0s]     decal anchor dropped: ('crack', [-1.28, -1.89, 5.0], 'align 0.52 WATCH_base_stones')
-[  555.0s]     decal anchor dropped: ('repair_patch', [-2.27, 0.71, 2.17], 'align 0.27 WATCH_base_stones')
-[  555.0s]     decal anchor dropped: ('crack', [-2.15, -0.76, 5.15], 'duplicate')
-[  555.0s] decal gate 1 (snap_anchors): 93 kept, 5 dropped of 98
-[  555.1s] decal gate 2 (anchor_validate): checked 93, snapped 0, max_move 3.769728732309794e-07, renormal 0, shrunk 2, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 0, duplicate 0, kept 93
-[  555.1s] decal gate 3 (audit, director test): 0 dropped, 0 failing after, 93 anchors {'damp_rise': 14, 'moss': 10, 'lichen': 9, 'water_streak': 12, 'rust_stain': 3, 'soot': 8, 'crack': 23, 'grime': 2, 'repair_patch': 11, 'plaster_patch': 1}
-[  557.4s] decal anchor check (report only): checked 93, snapped 0, max_move 0.000, renormal 0, shrunk 0, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 0, duplicate 0, kept 93
-[  557.5s] decal anchors: 93
-[  557.5s] objects 81 (instances 56, pooled meshes 12) triangles 1106412
+﻿[    0.3s] -- round_stone_drum
+[    0.3s] course fit: window 1 (az -60): raised 0.255 m so the lintel beds under the course
+[    1.4s] plain rubble: 821 stones, 9 pinch-outs
+[    1.6s] drum rubble stones 1294
+[    1.7s] interior: floor sill at y -1.54, ladder foot 1.30 m inside the door face, 10 rungs
+[    1.9s] door planks 6: short [1, 4], checks [1, 3, 4], split at the head 2, free-edge sag 5.1 mm
+[    2.0s] string course z 5.35..5.60, projection 0.070 m, drip 0.014 m
+[    2.1s] dentil corbels 36 placements from 6 shared variants
+[    9.3s] drum pins 3518, rejected 0 (plain-zone mortar before pins 18.1%)
+[    9.5s] WALL drum               visible mortar 8.5% (1143238 cells), plain zone 8.6%, widest void 0.058 m at u 5.09 z 0.20, stones 4812
+[    9.5s]   pins per iteration [3268, 74, 1]
+[   11.8s] drum mortar skin: 10186 of 13672 cells hidden behind stone cover -> culled
+[   11.9s] wall-core backing z 5.62..8.53 at d -0.034: 1428 of 1440 outer cells kept (openings holed)
+[   11.9s] -- drum_wall_core
+[   11.9s] wall core inner face: 54 quads
+[   11.9s] wall core ring z -0.05..8.30, 0.006 gap behind the skin: 7793 cells (168 x 49 grid), 32 arch-head quads, 4 openings cut
+[   11.9s] -- entrance_step
+[   11.9s] door step: top 0.079 m, 3 front facets
+[   11.9s] -- drum_ceiling
+[   12.0s] drum ceiling at z 3.45, r 1.58
+[   12.0s] -- square_cabin
+[   12.4s]   WATCH_cabin_roof_frame: 2304 verts, 2088 faces
+[   12.4s]   WATCH_cabin_roof_deck: 1154 verts, 1184 faces
+[   15.4s]   WATCH_cabin_shingles: 51844 verts, 43513 faces
+[   15.4s]   WATCH_cabin_hips: 624 verts, 608 faces
+[   15.4s]   WATCH_cabin_lead: 58 verts, 58 faces
+[   15.4s]   WATCH_cabin_finial: 841 verts, 841 faces
+[   15.4s] pyramid roof cabin: 4 sides, wall p 2.66 plate 11.67, pitch 49 bell 24/0.75 kick 0.040 sag 0.000, eave p 3.21 z 11.26 (corner 11.30), apex 14.77, cap 14.97, finial x0.80 tip 16.11 (1.14 above the cap), 450 shingles
+[   15.5s]   WATCH_cabin_floor: 1024 verts, 994 faces
+[   15.5s]   WATCH_cabin_struts: 224 verts, 216 faces
+[   15.5s]   WATCH_cabin_corbels: 224 verts, 216 faces
+[   15.5s]   WATCH_cabin_bed: 432 verts, 360 faces
+[   15.6s]   WATCH_cabin_frame: 2216 verts, 2160 faces
+[   15.7s]   WATCH_cabin_boards: 6216 verts, 5994 faces
+[   15.7s]   WATCH_cabin_ceiling: 56 verts, 54 faces
+[   15.7s] square cabin: side 5.40 on the bed z 8.70 (r 2.46, bearers (-1.6, 0.0, 1.6), bed fill True), floor 9.19, plate 11.49..11.67, 4 x 2 lookout openings 1.10 x 1.05 (sill 10.29), 4 knee struts, roof eave 11.26 (r 3.21) apex 14.77 tip 16.11
+[   15.7s] -- drum_finish
+[   15.7s] drum_finish: no rotor in this building, rotor clearance checks skipped
+[   51.3s] WATCH_base_stones            tris   797008  (degenerate faces removed 2021, on-ground faces culled 732, slivers alt<0.1mm 0, area<1e-8 0)
+[   52.5s] WATCH_base_mortar            tris    71042  (degenerate faces removed 41, on-ground faces culled 41, slivers alt<0.1mm 0, area<1e-8 0)
+[   53.1s] WATCH_base_dressed           tris    50690  (degenerate faces removed 26, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   53.2s] WATCH_interior               tris     6416  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   53.3s] WATCH_door_leaf              tris     9540  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   53.4s] WATCH_door_iron              tris     2884  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   53.4s] WATCH_door_step              tris     2231  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   54.2s] WATCH_door_surround          tris    44322  (degenerate faces removed 310, on-ground faces culled 310, slivers alt<0.1mm 0, area<1e-8 0)
+[   54.4s] WATCH_wall_core              tris    15522  (degenerate faces removed 202, on-ground faces culled 194, slivers alt<0.1mm 0, area<1e-8 0)
+[   54.4s] WATCH_ceiling                tris      720  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   54.4s] OBJECTS 59 (36 linked duplicates of 6 pooled variant meshes: corbel_0 x6, corbel_1 x5, corbel_2 x6, corbel_3 x10, corbel_4 x1, corbel_5 x8)
+[   54.4s] -- tower_hidden_cull
+[   56.0s]   analytic pre-cull WATCH_base_stones: -2754 of 401119 polygons (behind the wall core / inward)
+[   56.2s]   analytic pre-cull WATCH_base_mortar: -1576 of 35521 polygons (behind the wall core / inward)
+[   56.2s]   analytic pre-cull WATCH_base_dressed: -0 of 26138 polygons (behind the wall core / inward)
+[   57.1s]   drum ray cull: 1148686 tris, 323 viewpoints
+[  242.9s]   drum ray cull WATCH_base_stones: -31895 of 398365 polygons (0 with no unblocked view, mean 161 of 323 views per polygon)
+[  265.2s]   drum ray cull WATCH_base_mortar: -2399 of 33945 polygons (0 with no unblocked view, mean 164 of 323 views per polygon)
+[  287.7s]   drum ray cull WATCH_base_dressed: -3793 of 26138 polygons (36 with no unblocked view, mean 254 of 323 views per polygon)
+[  387.5s]   drum ray cull WATCH_cabin_shingles: -8235 of 43513 polygons (0 with no unblocked view, mean 246 of 323 views per polygon)
+[  388.1s] hidden-geometry cull (4 objects): -50652 polygons (analytic 4330, reduced-view rays 46322, full-view rays 0)
+[  391.7s] decal anchors placed: 88  {'damp_rise': 13, 'moss': 8, 'lichen': 8, 'water_streak': 20, 'rust_stain': 3, 'soot': 4, 'crack': 17, 'grime': 2, 'repair_patch': 12, 'plaster_patch': 1}
+[  396.0s]     decal anchor dropped: ('lichen', [-0.65, -2.23, 5.55], 'align -1.00 WATCH_base_stones')
+[  396.0s]     decal anchor dropped: ('lichen', [0.99, 2.1, 5.55], 'align 0.06 WATCH_base_stones')
+[  396.0s]     decal anchor dropped: ('lichen', [-0.58, -2.25, 5.55], 'align -0.99 WATCH_base_stones')
+[  396.0s]     decal anchor dropped: ('lichen', [-1.27, -1.94, 5.55], 'align 0.45 WATCH_base_stones')
+[  396.0s]     decal anchor dropped: ('lichen', [1.0, -2.1, 5.56], 'align -0.97 WATCH_base_stones')
+[  396.0s]     decal anchor dropped: ('rust_stain', [-0.44, -2.03, 0.21], 'align -0.22 WATCH_door_surround')
+[  396.0s]     decal anchor dropped: ('soot', [-2.01, -1.16, 5.56], 'align -0.99 WATCH_base_stones')
+[  396.0s]     decal anchor dropped: ('crack', [0.43, 2.15, 7.15], 'align 0.48 WATCH_base_mortar')
+[  396.0s]     decal anchor dropped: ('water_streak', [2.29, -0.15, 4.93], 'duplicate')
+[  396.0s]     decal anchor dropped: ('crack', [-1.7, 1.78, 0.56], 'duplicate')
+[  396.0s]     decal anchor dropped: ('crack', [-1.73, -1.53, 5.15], 'duplicate')
+[  396.0s] decal gate 1 (snap_anchors): 77 kept, 11 dropped of 88
+[  396.0s] decal gate 2 (anchor_validate): checked 77, snapped 0, max_move 4.76837158203125e-07, renormal 0, shrunk 1, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 0, duplicate 0, kept 77
+[  396.0s] decal gate 3 (audit, director test): 0 dropped, 0 failing after, 77 anchors {'damp_rise': 13, 'moss': 8, 'lichen': 3, 'water_streak': 19, 'rust_stain': 2, 'soot': 3, 'crack': 14, 'grime': 2, 'repair_patch': 12, 'plaster_patch': 1}
+[  398.9s] decal anchor check (report only): checked 77, snapped 0, max_move 0.000, renormal 0, shrunk 0, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 0, duplicate 0, kept 77
+[  398.9s] decal anchors: 77
+[  398.9s] objects 59 (instances 36, pooled meshes 6) triangles 1057164
 Info: Saved as "v1_stone_watchtower.blend"
-[  559.9s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v1_stone_watchtower\v1_stone_watchtower.blend 28.6 MB
+[  399.7s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v1_stone_watchtower\v1_stone_watchtower.blend 27.3 MB

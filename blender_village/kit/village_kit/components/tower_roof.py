@@ -561,9 +561,12 @@ def drum_ray_cull(g, targets=DRUM_PRECULL, views=None, procs=3):
             else:
                 if pool is None:
                     pool = core._vis_spawn_pool(procs, Vw, T, own)
-                res = pool.map(_drum_vis_worker, [(VN, c_) for c_ in chunks])
+                if pool is not False:          # (r3) list(): an executor's map is lazy; a dead worker raises here
+                    res = list(pool.map(_drum_vis_worker, [(VN, c_) for c_ in chunks]))
         except Exception as ex:
-            log("  (drum ray cull: pool failed)", ex)
+            log("  (drum ray cull: pool failed, one process from here)", ex)
+            _close_pool(pool)
+            pool, res = False, None
         if res is None:
             if "bvh" not in core._VIS or core._VIS.get("T") is not T:
                 core._VIS.update(bvh=BVHTree.FromPolygons(Vw.tolist(), T.tolist(), all_triangles=True, epsilon=0.0),
@@ -585,10 +588,23 @@ def drum_ray_cull(g, targets=DRUM_PRECULL, views=None, procs=3):
         log(f"  drum ray cull {name}: -{len(pids)} of {len(groups)} polygons ({n_free} with no unblocked view, "
             f"mean {mask.sum(1).mean():.0f} of {len(VN)} views per polygon)")
         total += len(pids)
-    if pool is not None:
-        pool.close()
-        pool.join()
+    _close_pool(pool)
     return total
+
+
+def _close_pool(pool):
+    """close a worker pool from core._vis_spawn_pool: an mp.Pool (close / join) or, since core's 20:52 change, a
+    concurrent.futures.ProcessPoolExecutor (shutdown); None / False: nothing to close."""
+    if not pool:
+        return
+    try:
+        if hasattr(pool, "shutdown"):
+            pool.shutdown(wait=True, cancel_futures=True)
+        else:
+            pool.close()
+            pool.join()
+    except Exception as ex:                          # a broken pool must not fail the build after the cull
+        log("  (drum ray cull: pool shutdown)", ex)
 
 
 def tower_head_views(g):

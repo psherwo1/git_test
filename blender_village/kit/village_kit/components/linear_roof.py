@@ -162,6 +162,95 @@ class GableRoof:
         """for a wall laid along the gable (local y run): s -> deck underside + 2 cm (stones tuck under the deck)."""
         return lambda y: float(self.under_z(y)) + 0.02
 
+    # ---- round 3: the covering as a solid (keep-outs for the bodies it meets) ----------------------------------------
+    def section_loop(self, n_arc=19):
+        """closed (u, o) outline of one slope's whole roof section (deck underside, eave roll or plain eave edge, course
+        envelope up to the ridge roll), lip -> ridge along the top, ridge -> lip along the deck underside."""
+        T = self.T0 + 0.45 * self.step
+        R = getattr(self, "ROLL", None)
+        if R is not None:
+            a = np.linspace(-0.5 * np.pi, 0.5 * np.pi, n_arc)
+            front = np.stack([R["u_c"] - R["Ru"] * np.cos(a), R["o_m"] + R["hh"] * np.sin(a)], 1)
+            ut = np.linspace(R["u_c"], self.U, 40)[1:]
+            ot = np.maximum(np.nan_to_num(self.roll_top_o(ut), nan=-1.0), T)
+            top = np.concatenate([front, np.stack([ut, ot], 1)])
+            bot = np.array([[self.U, -self.deck_t], [R["u_c"] + 0.07, -self.deck_t - 0.008]])
+        else:
+            top = np.array([[0.0, -self.deck_t], [0.0, T], [self.U, T]])
+            bot = np.array([[self.U, -self.deck_t]])
+        return np.concatenate([top, bot])
+
+    def section_columns(self, dy=0.004):
+        """vertical columns of the section (both slopes are mirror images): returns (ya, z_top, z_bot) over |y| = ya,
+        the highest / lowest point of the roof solid (deck + covering + eave roll + ridge roll) in each column;
+        -inf / +inf outside it.  Cached."""
+        key = ("_cols", dy, tuple(sorted((getattr(self, "ROLL", None) or {}).items())), self.T0, self.step)
+        if getattr(self, "_cols_key", None) == key:
+            return self._cols
+        L = self.section_loop()
+        cp, sp = math.cos(self.p), math.sin(self.p)
+        Y = self.Y - L[:, 0] * cp + L[:, 1] * sp
+        Z = self.z_lip + L[:, 0] * sp + L[:, 1] * cp
+        Y = np.maximum(Y, 0.0)
+        ya = np.arange(0.0, float(Y.max()) + dy, dy)
+        zt = np.full(len(ya), -np.inf)
+        zb = np.full(len(ya), np.inf)
+        n = len(Y)
+        for i in range(n):
+            y0, z0, y1, z1 = Y[i], Z[i], Y[(i + 1) % n], Z[(i + 1) % n]
+            lo, hi = min(y0, y1), max(y0, y1)
+            m = (ya >= lo) & (ya <= hi)
+            if not m.any():
+                continue
+            t = (ya[m] - y0) / (y1 - y0) if abs(y1 - y0) > 1e-9 else np.zeros(int(m.sum()))
+            z = z0 + (z1 - z0) * t
+            zt[m] = np.maximum(zt[m], z)
+            zb[m] = np.minimum(zb[m], z)
+        zt = np.maximum(zt, np.where(np.isfinite(zt), self.top_z(ya), -np.inf))   # ridge roll
+        self._cols_key, self._cols = key, (ya, zt, zb)
+        return self._cols
+
+    def keep_out(self, P, lift=0.02, x_pad=0.06, under=True):
+        """round 3: P (n, 3) world -> bool per point: inside the roof solid or within `lift` m over its top, or (under=
+        True) anywhere under it (the soffit, the eaves, the body below), in a vertical column of the roof's plan
+        (x from xa - x_pad to xb + x_pad).  The keep-out a body meeting this roof (a cone, a turret) drops its
+        units with (components.composite.cone_roof(abut_roof=...))."""
+        L = self.to_local(np.asarray(P, float))
+        ya, zt, zb = self.section_columns()
+        ay = np.abs(L[:, 1])
+        top = np.interp(ay, ya, zt, right=-np.inf)
+        m = (L[:, 0] > self.xa - x_pad) & (L[:, 0] < self.xb + x_pad) & np.isfinite(top) & (L[:, 2] < top + lift)
+        if not under:
+            m &= L[:, 2] > np.interp(ay, ya, np.where(np.isfinite(zb), zb, 1e9))
+        return m
+
+    def top_depth(self, P, x_pad=0.06):
+        """round 3: P world -> how far each point lies under the roof solid's top (m; negative above it, -inf outside
+        the roof's plan columns)."""
+        L = self.to_local(np.asarray(P, float))
+        ya, zt, zb = self.section_columns()
+        top = np.interp(np.abs(L[:, 1]), ya, zt, right=-np.inf)
+        d = top - L[:, 2]
+        inx = (L[:, 0] > self.xa - x_pad) & (L[:, 0] < self.xb + x_pad) & np.isfinite(top)
+        return np.where(inx, d, -np.inf)
+
+    def eave_zone(self, P):
+        """round 3: P world -> bool: over the eave band (the eave roll and its buried tail, or the first 0.6 m of a
+        plain covering), where a unit tucked into the covering would show through the eave's thin edge."""
+        R = getattr(self, "ROLL", None)
+        w = (R["u_c"] + R["L"]) if R is not None else 0.6
+        L = self.to_local(np.asarray(P, float))
+        return np.abs(L[:, 1]) > self.Y - w * math.cos(self.p)
+
+    def under_soffit(self, P, x_pad=0.06, below=0.0):
+        """round 3: P world -> bool: under the roof solid's lower outline (deck underside / eave-roll belly) by more
+        than `below` m -- seen from below at the eaves."""
+        L = self.to_local(np.asarray(P, float))
+        ya, zt, zb = self.section_columns()
+        ay = np.abs(L[:, 1])
+        bot = np.interp(ay, ya, np.where(np.isfinite(zb), zb, -1e9), right=-1e9)
+        return (L[:, 0] > self.xa - x_pad) & (L[:, 0] < self.xb + x_pad) & (L[:, 2] < bot - below)
+
 
 # =================================================================================================================
 def _clumps_along(rng, a, b, w_rng):
@@ -370,11 +459,13 @@ def _envelope(sources, u):
     return out
 
 
-def _verge_faces(roof, acc, verge, x_v, end, x_deck):
+def _verge_faces(roof, acc, verge, x_v, end, x_deck, roll_cover=0.012):
     """one continuous, closed verge face per gable (round 2, director: no slots between the courses): a single
     polygon in the gable plane x = x_v from the deck underside up to the upper envelope of the eave roll and every
     course's end section, across both rakes and the ridge, plus a strip closing its foot back under the deck end
-    (x_deck).  Faces outward (-x at end 0, +x at end 1)."""
+    (x_deck).  Faces outward (-x at end 0, +x at end 1).  roll_cover (round 3; None = round 2): the face's eave end
+    also covers the eave roll's whole D section (inset this much inside the roll's outline), so the roll end and
+    the verge face meet with no slot."""
     from mathutils import Vector
     from mathutils.geometry import tessellate_polygon
     R = roof.ROLL
@@ -392,14 +483,22 @@ def _verge_faces(roof, acc, verge, x_v, end, x_deck):
         env = _envelope(src, us)
         ok = np.isfinite(env)
         us, env = us[ok], env[ok]
+        if roll_cover is not None:                         # the roll's D section: belly -> nose -> crest
+            a = np.linspace(-0.5 * np.pi, 0.5 * np.pi, 15)[:-1]
+            us = np.concatenate([R["u_c"] - (R["Ru"] - roll_cover) * np.cos(a), us])
+            env = np.concatenate([R["o_m"] + (R["hh"] - roll_cover) * np.sin(a), env])
         Pt = roof.surf(np.full(len(us), x_v), us, sg, env)
         tops[sg] = Pt[:, 1:]                               # (y, z) eave -> ridge
         yb0 = float(roof.surf(x_v, u_a, sg, o_b)[1])
         yb = np.linspace(yb0, 0.0, 24)
         bots[sg] = np.stack([yb, roof.ref_z(yb) + o_b / math.cos(p)], 1)   # eave -> ridge
+        if roll_cover is not None:
+            bots[sg] = np.concatenate([tops[sg][:1], bots[sg]])
     loop = np.concatenate([tops[-1], tops[1][::-1], bots[1], bots[-1][::-1]])
     keep = np.concatenate([[True], np.linalg.norm(np.diff(loop, axis=0), axis=1) > 1e-4])
     loop = loop[keep]
+    if np.linalg.norm(loop[-1] - loop[0]) < 1e-4:
+        loop = loop[:-1]
     tris = tessellate_polygon([[Vector((float(a_), float(b_), 0.0)) for a_, b_ in loop]])
     V = np.stack([np.full(len(loop), x_v), loop[:, 0], loop[:, 1]], 1)
     F = np.array([list(t) for t in tris])
@@ -422,12 +521,13 @@ def _verge_faces(roof, acc, verge, x_v, end, x_deck):
         acc.add(roof.to_world(Vs), Fs, "M_thatch", wear=0.4)
 
 
-def _eave_rolls(roof, acc, rng, x_lo, x_hi, seed=0, ends=None, bundles=None):
+def _eave_rolls(roof, acc, rng, x_lo, x_hi, seed=0, ends=None, bundles=None, end_caps=True):
     """the eave roll on both eaves: thatch.d_roll (the keep wing's D-roll sweep: +-1 cm swelling over 0.5-1 m, no
     pillows; bundles=thatch.d_roll bundles tuple binds it into long bundles at 4x the cost) along the lip with the
     GableRoof.eave_roll section, the buried back not modelled (drop_hidden).  ends[sg] = (x_from, x_to) local
     overrides (a roll that dies into another body stops where that body takes over); the free ends run 5 cm past
-    the verge with a short round taper."""
+    the verge with a short round taper.  end_caps=True (round 3): the back is kept over the last 0.15 m of each free
+    end, so the roll end is a closed rounded cap (no view into the open section past the verge face)."""
     from .thatch import d_roll
     uo, vis = roof.roll_section()
     p = roof.p
@@ -452,9 +552,17 @@ def _eave_rolls(roof, acc, rng, x_lo, x_hi, seed=0, ends=None, bundles=None):
         if sg > 0:
             xs, ta, tb = xs[::-1], tb, ta
         path = roof.to_world(roof.surf(xs, np.zeros(n), sg, np.zeros(n)))
+        kb = None
+        if end_caps:
+            lo_free = not (ends and sg in ends and ends[sg][0] is not None)
+            hi_free = not (ends and sg in ends and ends[sg][1] is not None)
+
+            def kb(Pw, lo_free=lo_free, hi_free=hi_free):
+                x_ = roof.to_local(np.asarray(Pw, float))[:, 0]
+                return (lo_free & (x_ < x_lo + 0.10)) | (hi_free & (x_ > x_hi - 0.10))
         P = d_roll(acc, path, prof, vis, seed + 11 * sg, rng, up=(0.0, 0.0, 1.0), var=0.010, taper=(ta, tb),
                    tmin=(0.75, 0.75), ribs=False, step=0.06, z_wave=0.008, drop_hidden=True,
-                   bundles=bundles, calm_taper=True, round_end=True)
+                   bundles=bundles, calm_taper=True, round_end=True, keep_back_fn=kb)
         out[sg] = P
     return out
 
