@@ -34,3 +34,116 @@ Client's words: "Remember that the new designs should still give off the feeling
 Read producer note 16 at the end of `director/art_bible.md` in full; it is binding for this building from round 1.
 - **Builder:** the harbour house must share the existing buildings' materials and details: the same palette, the rubble plinth and footing details, the timber sections, the shingle sizes and courses, the door and window frames, thresholds and shutters, iron hardware and lead flashing, eave rolls, verges and ridge, finials, and the same age and moss (`age_defaults`). Reuse the kit's existing detail modules for these rather than writing new ones; the new timber family supplies new FORMS, not a new style. If round 1 is already built, check it against this and record in your builder entry what you reused and what still differs.
 - **Art Director and auditor:** grade "reads as the same village" under distinctness and reuse. Put it next to the keep, the roundhut and the longhouse at the same scale, and make one side-by-side or line-up render. Any material or detail found nowhere else in the village is a must-fix.
+## v5_harbour_house round 1 — builder entry
+
+**Built:** the timber harbour house (approved building 3) and the new **timber / rectangular / waterfront kit family** it needs. Every piece comes from a kit module. The recipe holds only dimensions and the step order.
+
+- **Recipe:** `buildings/variants/v5_harbour_house/build_v5_harbour_house.py` (91 lines, 76 non-blank non-comment). Saves `v5_harbour_house.blend` (6.5 MB, compressed) and `decal_anchors.json` beside it. `HARB_FAST=1` skips the cull; `HARB_OUT=` writes elsewhere.
+- **Renders:** `renders/variants/v5_harbour_house/round_01/` (all six views, `--samples 24`, plus `stats.json` / `hidden.json`).
+  - Supplementary `round_01/quay_datum/` (hero, front, side, actor_closeup) comes from a scratch copy cut at Z = -0.05. The reason: render_review puts its ground plane and its 1.8 m figure at the bounding-box minimum, and here that is the harbour bed (Z = -2.5). In the six main views the figure therefore stands on the bed, 2.5 m below the door. Judge actor scale on the quay_datum set. It is not a deliverable, only an aid for the review.
+
+### The building (dimensions before `recenter`; the build log records the shift, (0, -2.730))
+
+| Part | Kit module | Dimensions |
+|---|---|---|
+| Plan | `PlanFrame` | 5.6 x 9.0 m frame faces, ridge along Y; the land gable faces -Y (principal door), the water gable faces +Y |
+| Plinth | `masonry_wall(path=...)` (rubble, quoins) | 0.32 m |
+| Ground storey | `path_timber_wall` style `post_plank` | sill 0.24 x 0.18 (floor Z = 0.50), posts <= 2.4 m apart, plate top Z = 3.05; door 1.0 x 2.10 with three built-in stone steps; six shuttered windows 0.55 x 0.60 at sill 1.15; the **boat door** 2.6 x 2.5 (two ledged-and-braced leaves) on the water gable |
+| Floor band | `jetty_floor` | joists 0.15 x 0.20 at 0.45 m, Z 3.05-3.25; the upper storey **oversails the land gable by 0.5 m**: joist ends 4 cm proud under the bressummer, soffit planks plus blocking close every joist bay; rim beams on the other sides run out to the jetty line |
+| Upper storey | `path_timber_wall` style `board_batten` | bressummer / sole plate 0.26 x 0.24; cladding runs unbroken from the sill to the roof deck (eave strip closed, gables filled to the rake); six windows; an upper loading door 1.2 x 1.5 (the boat-door spec, smaller) over the boat door |
+| Roof | `GableRoof` (yaw 90) + `linear_roof(covering="shingle")` + `verge_boards` | 52 deg kit shingle gable: wall_z 5.957, overhang 0.45, verges 0.40, ridge comb, rafter tails; bargeboards (mitred) with crossed gable horns; ridge Z ≈ 9.6, overall 9.91 m above the quay |
+| Waterfront | `crib_quay`, `pile_deck`, `ladder` | timber crib quay under the house (7.2 x 10.9 m, bed to Z = 0, cap with crossed corners, fill top round the plinth); plank deck at Z = 0.50 on piles from the water gable (5.6 x 3.9 m) plus a jetty finger 1.8 x 3.2 m in **one** `pile_deck` call (union of rects, land = S); piles to the bed, bearers, joists, fascia, X bracing with waling, two mooring posts, a ladder to the bed |
+
+**Datum (for UE placement).**
+- Building-local, Z up, metres.
+- Quay / landward ground Z = 0. Harbour bed Z = -2.5 (piles, crib and ladder go down to it).
+- Ground floor, boat-door threshold and deck top all at Z = 0.50. Door threshold Z = 0.50, reached by three risers of 0.167 m.
+- After `recenter` the plan bounding box (deck and jetty included) is centred on the origin. The house centre sits at (0, -2.73) and the water end faces +Y.
+
+### New kit modules (`kit/village_kit/components/`; full record in `kit/changes/v5_harbour_house.md`)
+
+- **`timber_walls.py`**
+  - `path_timber_wall(g, name, path, z0, top, top_fn=None, style="post_plank" | "weatherboard" | "board_batten", gable_style, openings=[(s, spec)], sill, plate, post, bay_max, lap_out, backing=True, seed, clip_z, ground_z)` works along any polyline.
+    - Corner posts.
+    - Crossed, halved sill and plate ends at outside corners (heights alternate by 1.5 cm, so there are no coplanar faces).
+    - A closed backing slab behind the cladding, cut at the openings.
+    - Rake-clamped gable boards.
+  - Openings come from the kit's ONE opening spec (`openings.door / window`) with the timber defaults `TIMBER_OPENING`: door with steps, shuttered window, and `boat_door(width, height, leaves, jamb, head, bearing, ledges, room)`.
+  - Helpers: `rect_path`, `rect_openings` (by side), `roof_top_fn(roof)`, `wbox`.
+- **`floor_stack.py`**
+  - `jetty_floor(g, name, lower, z, jetty={"S": d, ...}, joist, spacing, rim, proud, soffit_t, tail)`.
+  - `timber_storeys(g, name, rect, z_base, storeys=[dict(height, style, openings=[(side, coord, spec)], ...)], jetty, roof, floor)`.
+- **`waterfront.py`**
+  - `pile(...)`.
+  - `pile_deck(g, name, rects, deck_z, bed_z, land, pile_rows, pile_cols, ..., moor)`: any rectilinear plan as a union of rects.
+  - `crib_quay(g, name, rect, top_z, bed_z, hole, ...)`.
+  - `ladder(g, name, top, out, z_bot, ...)`.
+- **`timber_roof.py`**: `verge_boards(g, roof, depth, t, horns, horn_len, ends)`.
+- **`timber_finish.py`**:
+  - `timber_hidden_cull` (composite cull limited to the backed parts);
+  - `timber_decals` (composite decals plus timber and waterfront anchors).
+
+**A boathouse or barn is now a short recipe:** `crib_quay` or `pile_deck` for the base, `timber_storeys` with one storey and `boat_door` openings, a `GableRoof` with `linear_roof`, then `verge_boards`.
+
+**Existing kit modules changed: none.** `GableRoof` / `linear_roof`, `masonry_wall`, `PathMap`, `openings`, the composite cull and the composite decals are used unchanged.
+
+**Hash rule: not needed (only new files).** No file in `kit/village_kit/` that existed before this round was modified, so the seven other kit buildings cannot have moved.
+
+### Junctions (how each is closed)
+
+- **Wall to wall:** a corner post at every outside corner, proud of both faces in the clad styles. The sill and plate ends cross and run 7 cm past the other face, with no coplanar faces.
+- **Wall to plinth:** the sill beam sits on the 0.32 m rubble plinth and stands 2 cm proud of its face. The clad storey's boards lap 4 cm down over the sill.
+- **Jetty oversail to the lower wall:**
+  - the joists run through the lower wall head;
+  - blocking boards between the joists sit over the lower plate;
+  - plank soffits close the joist bays;
+  - the rim beams close the ends;
+  - the bressummer carries the upper wall.
+- **Wall head to roof:** the upper cladding runs to the deck underside + 2 cm, both along the eaves (the strip between the rafter tails is closed) and up the gables. Bargeboards cover the deck ends, verge rafters and shingle ends, and mitre at the ridge.
+- **Deck to house:** the deck runs to 1 cm off the sill beam, level with the boat-door threshold. The joists bear on a ledger on the crib cap. The piles start 0.75 m out, clear of the crib face.
+- **Deck to piles:** each pile stands under a bearer, with iron dog plates.
+- **Boat door in the wall:**
+  - the jambs and the head beam (bearing 0.30 m past the jambs) frame it;
+  - the cladding is cut to the jambs and the backing is cut to the clear opening;
+  - the leaves are set into the reveal.
+
+### Stats (round_01 `stats.json`)
+
+| Measure | Value |
+|---|---|
+| Triangles | 254,626 (note 15 cap 1,000,000) |
+| `est_hidden_pct` | 14.0 % |
+| Material slots | 9, all in the palette |
+| `mask_attribute_missing` | none |
+| Objects | 35 (no pooled instances) |
+| bbox | 7.20 x 18.06 x 12.41 m (bed to finial horn; 9.91 m above the quay) |
+| Build time (cull included) | about 6.5 minutes |
+| Decal anchors | 103 kept of 131 by the kit gate (`validate_anchors`, applied); `anchor_audit.audit_anchors` on the saved blend + JSON: 0 failures (scratch `audit_anchors.py`) |
+
+- About 4.7 % of the hidden share is the crib and the piles below Z = 0, which `hidden_tris.py` counts as buried.
+- Guards: the clearance gate PASSES at the principal door (lip 3.048 m on the jetty joists, against a door head of 2.60 m) and at the boat door (7.58 m). There is no roof-through-body junction for the seal probe. Steep-cone and lod-scope do not apply. No opt-outs.
+
+### Known gaps
+
+- **Review-tool datum:** render_review puts its ground plane and figure on the harbour bed (Z = -2.5), so in the six main views the figure stands 2.5 m below the door. Judge actor scale on `round_01/quay_datum/`.
+- **Crib quay:** it is my addition so that the land half does not float over the bed plane in the clay renders. In UE the terrain at Z = 0 will bury its land faces. Drop the `crib_quay` step if the placement has its own quay.
+- **`jetty_floor`:** two jettied sides meeting at a corner (a dragon beam) are not supported, so the jetty is on the land gable only.
+- **`path_timber_wall`:** concave corners have no dedicated inside post.
+- **Not built:** a hoist beam over the upper loading door, and a water-gable jetty.
+- The roof is a plain kit-shingle gable with a comb. Its slopes face +-X, so composite_decals' "north slope" moss (local +y) lands on the -X slope.
+- Surface detail is deliberately not pushed (note 12).
+
+## CLIENT DIRECTION (2026-10-17, session 2, after the first round-1 renders): direction for round 2
+
+The client reviewed the early round-1 clay renders (hero, back, actor close-up, 10:08) and chose these changes, binding from the next round. The round-1 Art Director should list them as must-fix items:
+
+1. **Rougher, older timber.** Irregular board widths, slight sag and out-of-true, a chunkier hand-split look, and the same age and moss treatment (`age_defaults`) as the other buildings. The current boards are too even and too clean.
+2. **The village's roof and finials.** The same chunky, mossy shingle and shake sizes and courses as the keep, the roundhut and the longhouse. Use the village's finial vocabulary (ball or spike finials, the kit's `ball_finial`) instead of the new crossed gable boards, which appear on no other building.
+3. **A stronger jetty and a lower mass.** A clearly visible jettied upper floor (about 0.4-0.6 m oversail on joist ends and a bressummer), and slightly lower storeys, so it reads as a harbour house, not a tall farmhouse (the ridge is about 10 m now).
+4. **Round structures and soft, organic lines (producer note 17; read it in full).** Client's words: "something that makes the initial concept art unique is the use of round structures and soft, organic lines. In my opinion It's what gives it a unique aesthetic rather than a more generic village building".
+   - Give the harbour house at least one integral round element, built from the kit's round families where possible: for example a round stone or timber stair or lookout turret under a cone at one corner, or a round store or hoist at the quay end.
+   - Soften the lines: bell-cast or swept eaves, a gently sagging ridge, rolled verges, curved braces and brackets.
+   - It must still read as a timber harbour house.
+5. **Not requested:** the client did not ask for a stone quay. The plank quay face may stay; the rubble plinth under the walls stays.
+
+Make the new softness reusable kit options (e.g. a swept eave or ridge sag on `timber_roof` / `linear_roof`, a bow on `path_timber_wall`), and record them in `kit/changes/v5_harbour_house.md`.
