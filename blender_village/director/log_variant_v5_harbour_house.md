@@ -1177,3 +1177,16 @@ The nice-to-haves from the grade and the audit carry into the boathouse / barn d
 - a deeper slip;
 - moss on both slopes;
 - `render_review --ground_z`.
+## CLIENT DIRECTION (2026-10-17, session 2, after acceptance): add ref4's eyebrow dormer (round 5)
+
+The client sent `reference/ref4b_eyebrow_dormer_markup.jpg`, the ref4 concept with one area circled in blue: "A detail I would like to see added is this section circled in the reference image." Open it (Read tool).
+
+**What is circled:** an **eyebrow dormer** on the main hall roof. It sits on the slope that faces the lower wing and the tower, about midway between the water gable and the tower.
+- The shingle courses swell up in one smooth, continuous wave over a small window. There are no cheeks, no hard valleys and no ridge: the courses bend over the window and run on.
+- Under the wave, a short vertical timber front holds a small two-light window (about 0.6-0.8 m wide), with a little dark eave over it.
+
+**Round 5 (one round; time matters):**
+- **Kit first.** Build it as a reusable **add-on** (plan step 4 lists the dormer). Preferred: an option on the existing soft `GableRoof` / `linear_roof` warp, i.e. a local bump in the vertical warp field that every roof part already follows (covering, comb, rafters, deck, eave roll), plus a framed opening in the deck. The window comes from `wall_openings.window_spec` / the existing window pieces, set in a short `path_timber_wall` front, or the kit's plank front. Defaults unchanged: no eyebrow unless asked, so the hash rule does not trigger. If you change a shared module's default behaviour, it does.
+- **Apply it to the harbour house:** one eyebrow on the slope facing the wing / tower, sized like ref4 (the wave about 1.6-2.2 m wide along the eave and about 0.5-0.8 m high, the window about 0.6-0.8 m wide), clear of the `wall_abutment` and the wing roof.
+- **Seal it:** no see-through at the wave, the window front or the deck opening; the seal probe and red twins as usual. Keep hidden <= 15 % and <= 1 M tris.
+- **Change nothing else.** Every accepted part of round 4 stays as it is. No nice-to-haves.
