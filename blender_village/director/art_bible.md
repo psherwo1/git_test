@@ -330,3 +330,13 @@ Megascans-style normal and height maps on jointless surfaces supply these. Never
 6. **Technical compliance:** producer notes 1-3 and 6-11 (Nanite hygiene, pooling, hidden ≤ 15 %, palette, `Mask`, no ground dressing, decal anchors plausibly placed), deterministic seeded build, real-world scale.
 
 **Kept unchanged:** the 8.2 pass mark, producer notes 1-11 as technical rules, every client correction, and the signed-off deliverables.
+
+### Producer note 13: CLIENT CORRECTION — no LED volume; a hobby production aiming for high polish (2026-10-16)
+
+Client's words: "there is no LED volume in use here. This is an amateur hobby production but I want to attempt to have high level of polish".
+
+- **Supersedes** every earlier mention of an "LED-volume virtual production" in this bible, the logs, the specs and the workflow prompts. The target is still **Unreal Engine 5.8 with Nanite** (producer notes 1-11 stand as technical rules), but there is no stage, no real-time playback requirement on an LED wall and no stage render nodes.
+- **The reference machine is the client's own desktop:** Ryzen 5 5600X, 16 GB RAM, RTX 3060 12 GB. Memory and streaming budgets are judged against it (see the production plan's memory estimate).
+- **Final frames can be rendered offline** (Movie Render Queue, with path tracing or high-quality Lumen), so frame rate is not the constraint; GPU memory, build time and disk size are.
+- **Polish still matters most** — the client wants a high level of finish. Per note 12, that polish now comes mainly from materials, textures, decals, lighting and set dressing, on top of clean, well-constructed modular geometry.
+- Close-up quality rules (note 4: entrances, ground contact, eye-level walls) stay, because shots still come close to the buildings.

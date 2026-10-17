@@ -81,6 +81,10 @@ Hero outcomes when the gates closed:
 
 The interrupted keep round-10 fixer's kit edits are saved in `director/partial_fix_hilltop_keep_r10.patch` and were reverted from the kit.
 
+**Client correction (2026-10-16, producer note 13):** there is no LED volume. This is an amateur hobby production aiming for a high level of polish, in Unreal 5.8 with Nanite, on the client's RTX 3060 12 GB / 16 GB RAM desktop. Final frames can be rendered offline.
+
+**Memory estimate for a 45-building village (measured 2026-10-16).** Instancing saves only 1-6 % today, so each building is about 1 M **unique** triangles: about 45 M unique triangles if every building is unique, roughly 0.7-1.1 GB of Nanite data on disk. At runtime Nanite streams only what is on screen: a streaming pool of about 0.5-1 GB. The 8 downloaded 2K texture sets come to about 100-150 MB compressed, shared by every building through the palette slots. Expected total GPU memory is about 1.5-2.5 GB, to be measured in UE 5.8 with `stat Nanite` / `memreport` after the first export. Levers, largest first: reuse whole buildings (12-15 unique designs placed 3-4 times each); a "background" density preset; true instancing of stones and shingles.
+
 **Texturing readiness (checked 2026-10-16 on the signed-off kit windmill):** every unique mesh has one `UVMap` (box projection at real-world scale, about 1 UV unit per metre, no zero-area UV faces), `Mask` everywhere and the 15-slot palette. Still to do before a texturing pass: check that wood grain (U axis) follows the long axis of planks, shingles and rafters; choose UV0 tiling versus world-aligned in Unreal; build the export (FBX/USD, cm, custom normals, `Mask` as vertex colour); and run one lookdev test in UE 5.8 on the signed-off windmill before any further modelling detail.
 
 Ensemble review 1: 8.4/10, APPROVED. These non-blocking consistency items carry into phase 2:
