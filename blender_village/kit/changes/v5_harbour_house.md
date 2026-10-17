@@ -6,6 +6,34 @@ producer to merge into `../CHANGELOG.md` (proposed version 1.12.0).
 
 ---
 
+## Round 8 (the client: the eyelid "one flowing continuous curve")
+
+Two new `EYEBROW` keys in `components/linear_roof.py` (docstrings tag them "kit 1.15"). Both default to the round-7
+behaviour (an `eyebrow()` without them takes the old code path; a roof without eyebrows is untouched), so **no hash
+re-run is needed**.
+
+| key | default | what it does when on |
+|---|---|---|
+| `profile` | `"bell"` | `GableRoof.brow_bell`: `"bell"` = the old flat-topped cosine bell (full height over `+-flat/2`). `"arch"` = ONE continuous arch over the whole width, `(1 - t^2)^2` with `t = |x - centre| / (width/2)`: a round crown (curvature never 0 over the window: at 0.95 m lift / 3.5 m width it is 1.24 /m at the crown, at least 0.90 /m over +-0.53 m), tangent feet into the roof, flanks at most 40 deg (the bell's 1.40 m flat gave 53 deg). `flat` is ignored. The warp field, deck patch, eave strip, front rake (boards, posts, closing boards, backing) and window check all read `brow_bell`, so the front's top edge follows the same arch. Any other value raises. |
+| `respace` | `False` | `_shingle_courses` -> `_brow_respace(roof, B, x, u)`: every vertex of a lifted shingle over the bump's span, with slope coordinate `u` in `[u_lip, fade end]`, is moved along the slope so the arc length on the bumped section is a constant share `r0` of the plain roof's own arc length (its sweep / sag included, sampled at the bump centre), the share easing back to 1 (smoothstep) over the last 30 % of the fade. Result: even course spacing over the whole roll, with no bunched "washboard" rows above the lip and no step in exposure where the roll meets the plain slope (crown column, spacing / e: 0.88 0.92 0.94 0.85 0.77 0.73 0.71 0.70 0.72 0.75 0.82 0.92 0.96 -> 0.73 0.76 0.79 0.80 x 6 0.81 0.89 0.95 0.96; `scratch/r8_brow_values.py`). It is the identity at the eave course, at the fade's end and where the bell is 0. It is monotone in `u` (overlaps and course order kept) and adds no rng draws. A (bell, u) table (41 x 401) cached on the roof, interpolated bilinearly. `tilt` uses the re-spaced footprint. |
+
+### Hash rule
+
+Not triggered: only new options whose defaults take the old code path (`brow_bell`'s bell branch is the old
+expression, `_brow_respace` is only called with `respace=True`). The wing roof (no eyebrows) and every non-roof module
+are untouched. No `v5r8_hash` run.
+
+### Known limitations (round 8)
+
+- The arch's shoulders still show the course butts as close, diagonal lines when seen square-on. Course lines that
+  climb a 40 deg flank are spaced `e x cos(40 deg)` across their own direction; the course count is fixed, so
+  re-spacing along the slope cannot open them. This is milder than round 7's 53 deg shoulders.
+- The compression is spread, not removed: the vertical lift makes the roll about 17 % shorter than the plain slope,
+  so every course on it shows about 0.80 of the plain exposure.
+- Carried over: the flank lip is one rolled course; shingle only; no overlap check.
+
+---
+
 ## Round 7 (the client: the MIDDLE eyebrow, "wide + lower")
 
 No kit change. Recipe values only: `eyebrow(height=0.90, lip=0.25, window=dict(width=0.82, height=0.44, sill=0.10,

@@ -2094,3 +2094,290 @@ Compare `reference/ref4b_eyebrow_dormer_markup.jpg` with `lookdev/harbour_house/
    - This is eyebrow-option kit code. Its defaults must keep the old behaviour (the round 5-7 harbour-house values may opt in to the new behaviour).
 3. **Re-verify only what this touches:** the eyebrow see-through probe and red twins, hidden <= 15 %, <= 1 M tris, and the regression against `*_r07_accepted.blend` (outside the eyebrow zone nothing may move). The hash rule applies only if a non-eyebrow default changes.
 4. **Never modify the `*_r04/_r05/_r06/_r07_accepted.*` files.**
+
+## v5_harbour_house round 8 — builder entry
+
+**What I built:** the client's "ONE flowing, continuous curve" eyelid, as the CLIENT DIRECTION of 18:35 asks. The eyebrow's lip is now one round arch along the eave, with no flat run over the window. The courses above it flow as one evenly spaced roll, without the bunched washboard rows. This is new eyebrow-option kit code (kit 1.15) with old-behaviour defaults, and one full rebuild.
+- I read that direction before starting and re-read the log before writing this entry: there is no newer CLIENT DIRECTION or PRODUCER NOTE.
+- The recipe diff against `build_v5_harbour_house_r07_accepted.py` is the `BROW = eyebrow(...)` line and its comment only.
+- The `*_r04/_r05/_r06/_r07_accepted.*` files are untouched (dates 14:20-18:07); the regression scripts only opened them.
+
+**Files:**
+- **Kit:** `kit/village_kit/components/linear_roof.py` (two new `EYEBROW` keys, `GableRoof.brow_bell`, the new `_brow_respace`, one call in `_shingle_courses`). Recorded in `kit/changes/v5_harbour_house.md` (Round 8).
+- **Build:** `build_v5_harbour_house.py`, plus `v5_harbour_house.blend` (19.5 MB) and `decal_anchors.json` (111 anchors), written 18:49 by one full build (`scratch/r8_full_build.log`). Before that I made two 90 s `HARB_FAST` builds in `scratch/r8_fast/` and stopped my own first full build after 2 min, to refine `respace`.
+- **Renders:** six views in `renders/variants/v5_harbour_house/round_08/` (`--samples 24`, `stats.json`, `hidden.json`).
+- **Close-ups:** in `round_08/builder_extra/`, made with `scratch/closeups_r8.py` (the round-7 cameras unchanged, so they are like-for-like with `round_07/builder_extra/r7_*`):
+  - `r8_brow_eye` (+ `_red`): eye level 1.7 m from the land / quay side;
+  - `r8_brow_ref4`: the ref4 three-quarter;
+  - `r8_brow_graze` (+ `_red`): grazing along the slope;
+  - `r8_brow_close` (+ `_red`);
+  - `r8_brow_crane` (+ `_red`);
+  - `r8_brow_thumb45`: 45 m.
+- **Check outputs:** `r8_brow_probe_out.txt`, `r8_redcount_out.txt`, `r8_regress_out.txt`, and `r8_regress2_vs_r07_out.txt` / `_vs_r06_out.txt` / `_vs_r05_out.txt`. `scratch/r8_brow_values.py` -> `scratch/r8_brow_values_out.txt` gives the course spacing and arch numbers.
+
+### The eyebrow, round 8 (kit option `linear_roof.GableRoof(eyebrows=[eyebrow(...)])`)
+
+| parameter | round 7 | round 8 |
+|---|---|---|
+| `profile` (kit 1.15) | (`"bell"`: full height over `flat` 1.40 m, cosine ends) | **`"arch"`**: `(1 - t^2)^2` over the whole 3.5 m; `flat` ignored |
+| `respace` (kit 1.15) | (`False`) | **`True`** |
+| `height` (peak lift) | 0.90 | **0.95** (in the client's 0.90-1.0) |
+| `window` | 0.82 x 0.44 clear, sill 0.10, `lights=2` | **0.80 x 0.42 clear**, sill 0.10, `lights=2` |
+| `x / side / d / width / lip / plateau / fade`, `tilt, span_rows, eave_inset=0.10, close_ends` | 4.4 / +1 / 1.2 / 3.5 / 0.25 / 0.35 / 2.10, on | unchanged |
+
+**As built:**
+- The front is **2.62 m wide** (round 7: 2.87), with the sill at z 3.63 and the crown eave at z 4.58 (build z).
+- Its top edge follows the arch: the boards, end posts, closing boards and backing all clamp to the same `brow_bell` rake.
+- The arch's crown curvature is 1.24 /m (radius 0.81 m), and at least 0.90 /m over the window span (+-0.53 m), so it is never flat. Its feet are tangent to the roof and its flanks are at most 40 deg (round 7's shoulders: 53 deg).
+- The lift is 0.78 m at the window frame's outer edges (0.95 m at the crown), so there is a timber margin of about 8 cm at the head corners and about 0.25 m over the centre.
+- Same centre and slope as round 7, so the abutment and wing clearances are unchanged or larger.
+
+### Kit 1.15: the two new eyebrow keys (defaults = round 7)
+
+1. **`profile="arch"`** (`GableRoof.brow_bell`):
+   - One continuous arch along the eave, rising from the roof, peaking smoothly over the window and falling on the other side.
+   - The default `"bell"` branch is the old expression, unchanged. Any other value raises.
+2. **`respace=True`** (`_brow_respace`, called from `_shingle_courses` for the lifted shingles over the bump's span):
+   - Each vertex's slope coordinate in [eave course, fade end] is moved so that the arc length on the bumped section is a constant share of the plain roof's own arc length. The share eases back to 1 (smoothstep) over the last 30 % of the fade.
+   - It is monotone (course order and overlaps kept), adds no rng draws, and is the identity where the bell is 0.
+   - Course spacing over the crown, as a fraction of the plain exposure e, from the eave course up:
+     - round 7 code: 0.88 0.92 0.94 0.85 0.77 0.73 **0.71 0.70** 0.72 0.75 0.82 0.92 0.96 (the bunched rows);
+     - round 8: 0.73 0.76 0.79 0.80 0.80 0.80 0.80 0.80 0.80 0.81 0.89 0.95 0.96.
+   - So the roll is even, there is no dip mid-fade, and the exposure blends into the plain slope with no step. The plateau-to-fade change in spacing is gone (`r8_brow_crane`, `r8_brow_graze`).
+
+### Checks (only what the change touches)
+
+| check | result |
+|---|---|
+| see-through probe (`r5_brow_probe.py`, 3 cm grid over the whole front arch x 15 directions) | 31,392 rays, **0 leaks**; 2,537 end on the window's dark room |
+| red twins (`dir_redcount_r07.py`) | `r8_brow_close_red`, `r8_brow_crane_red`: **0 red px**. `r8_brow_eye_red`: 195 enclosed px at y 60-196 from the top, the ridge comb slits (round 7: 195). `r8_brow_graze_red`: 14 (round 7: 14). Nothing at the arch, front, feet or opening |
+| triangles | **714,452** (round 7: 714,795), cap 1,000,000 |
+| hidden | **14.1 %** (round 7: 13.8 %), limit 15 % |
+| slots / Mask / objects / bbox / anchors | 9 palette slots, `mask_attribute_missing` none, 75 objects, 17.59 x 17.17 x 15.94 m, 111 anchors: unchanged |
+| regression vs **r07 accepted** (`dir_regress_r05.py`) | **67 of 75 meshes SAME.** Changed: `HARB_roof_covering`, `HARB_roof_deck` (moved only in the wave zone, 6,482 -> 6,490 tris), the five `HARB_roof_eyebrow0_*` objects, and `HARB_wing_roof_covering` (+2 tris, 1 vertex: the cull) |
+| surface regression (`dir_regress2_r06.py`) | **Deck and comb:** every vertex outside the zone is on the r07 surface (0.0000 m). The comb triangle sets are identical. **Covering:** 8 of 75,300 vertices outside the zone are off the r07 surface (y -4.64 / -4.08, 1-7 cm), and 34 are off r06. Against **r05 accepted**, every covering vertex outside the zone is on the surface (0.0000 m, 0 > 2 mm). So these are faces that round 6/7's hidden-face cull dropped and round 8 keeps, i.e. r05 geometry; nothing new outside the zone. **Tower / hall stones:** identical triangle sets. **Wing covering:** 2 kept faces of 2.3 cm2 at the wing eave (cull) |
+| doors | not touched (hall walls, eaves and wing are SAME meshes) |
+
+**Reads like ref4b:**
+- From the quay at eye level (`r8_brow_eye`) and square-on (`r8_brow_crane`), the lip is one continuous arch over the two-light eye, and the shingles above roll over it in even courses. Compare `lookdev/harbour_house/renders/r07/b_eyebrow_closeup_quay_eye.png`, where it is level over the window.
+- Grazing (`r8_brow_graze`), the roll is one smooth swell into the slope.
+- At the ref4 three-quarter (`r8_brow_ref4`) and at 45 m (`r8_brow_thumb45`), it is ref4b's eyelid arch on the west slope.
+
+### Hash rule
+
+**Not triggered.** Only new `EYEBROW` keys were added, and their defaults take the old code path. The wing roof (no eyebrows), the comb and every non-roof module are SAME or unchanged apart from cull recounts. No `v5r8_hash` run.
+
+### Known gaps
+
+- **Shoulders seen square-on:** course lines climbing a 40 deg flank sit `e x cos 40` apart across their own direction (the course count is fixed). This is milder than round 7's 53 deg; the near-side flank in `r8_brow_close` / `r8_brow_eye` still shows a few close diagonal course edges.
+- **The compression is spread, not removed:** the vertical lift makes the roll about 17 % shorter than the plain slope, so its courses show about 0.80 of the plain exposure (even).
+- **Hidden** is up 0.3 % to 14.1 % (0.9 % headroom): the scene-dependent cull keeps a few r05 faces again.
+- **Carried over:** the flank lip is one rolled course; the two internal eyebrow islands; the exterior-reachability cull; shingle only; no overlap check; the pale front boards in lookdev (not re-run).
+
+## v5_harbour_house round 8 — score 8.6/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only, no ground dressing (note 10), no
+surface-detail requests (note 12). Binding: producer notes 1-17, every CLIENT DIRECTION above (ref4 primary) and **the CLIENT
+DIRECTION of 18:35 "the eyelid must be ONE flowing, continuous curve (round 8)"** (one continuous arch along the eave with a
+round crown, no flat top, width about 3.5 m, peak lift 0.90-1.0 m, the front's top edge on the same arch, a 0.80 x 0.42 m
+two-light window with a timber margin; the shingles above as one smooth roll with no washboard rows; eyebrow-option kit code
+with old-behaviour defaults; re-verify only what it touches). I re-read the log before starting and before writing: no CLIENT
+DIRECTION or PRODUCER NOTE was added after the round-8 builder entry.
+
+**Reviewed:** ref4b (circled) and ref4; the round-7 lookdev `b_eyebrow_closeup_quay_eye.png`; the six `round_08` views and
+`stats.json`; the builder's 6 close-ups and 4 red twins against the same-camera `round_07/builder_extra/r7_*`;
+`r8_brow_probe_out.txt`, `r8_redcount_out.txt`, `r8_regress_out.txt`, `r8_regress2_vs_r07/_r05_out.txt`; the recipe diff
+against `build_v5_harbour_house_r07_accepted.py`; the kit 1.15 code (`GableRoof.brow_bell`, `_brow_respace`, the call in
+`_shingle_courses`).
+
+**Director checks** (`renders/variants/v5_harbour_house/round_08/director_extra/`, read-only bpy, one process at a time):
+- `dir_render_r08.py` = `dir_render_r07.py` with **every camera unchanged** (e01-e17, x07, x08, x10, x24, z04, z08), so each
+  shot is like-for-like with `round_07/director_extra`, plus five new arch close-ups: f01 square-on at lip level, f02 along
+  the eave from the S (first camera sat inside the tower and rendered black; re-aimed to (-4.8, -4.2, 4.5)), f03 along the eave
+  from the N, f04 down the roll from the ridge side, f05 low three-quarter from the quay (the ref4b angle).
+- `dir_redcount_r08.py` -> `redcount_r08.txt`; `dir_redclusters_r08.py` -> `redclusters_r08.txt`; `crop_x24_*` (the one new
+  cluster, enlarged).
+
+**Accepted rounds preserved.** SHA-256 of the r04 / r05 / r06 / r07 blends 11A2EEE4... / C22A80B3... / 213D0883... /
+6903404B..., the same as the round-7 audit; the r04-r07 recipes and anchor JSONs keep their 14:20-18:07 dates. The recipe diff
+is only the `BROW = eyebrow(...)` line (height 0.90 -> 0.95, window 0.82 x 0.44 -> 0.80 x 0.42, `profile="arch"`,
+`respace=True`) and its comment. Kit: only `linear_roof.py` (and its pyc) and `kit/changes/v5_harbour_house.md` were written
+after round 7. The new code is reached only through `B.get("profile", "bell") == "arch"` and `B.get("respace")`; the `"bell"`
+branch is the old expression and any other value raises. **Hash rule not triggered** (no non-eyebrow default changed; the wing
+roof's +2 tris are the scene-dependent cull, below).
+
+**The client's direction, checked:**
+
+| asked (CLIENT DIRECTION 18:35) | built | director check | result |
+|---|---|---|---|
+| ONE continuous arch along the eave, no flat top, round crown (not a cusp) | `profile="arch"`: lift x (1 - t^2)^2 over the whole 3.5 m; crown curvature 1.24 /m, >= 0.90 /m over the window; tangent feet | code read: (1 - t^2)^2 has zero slope and a non-zero second derivative at t = 0 (round crown) and zero slope at t = 1 (tangent feet), so there is no level run and no point. **f01** (square-on): one round arch from foot to foot, the crown centred over the window, no straight stretch. **e02 / builder eye** against r07 (same camera): round 7's level lip over the window is gone; it now rises, peaks and falls in one stroke. **x24** (from below the eave): the lip's underside is one clean arch. **f05** (ref4b angle): it is ref4b's eyelid | met |
+| width about 3.5 m, peak lift 0.90-1.0 m | 3.5 / 0.95; front 2.62 m wide, sill z 3.63, crown eave z 4.58 | eyebrow objects z 3.63-4.57 (regress out) | met |
+| the front's top edge follows the same arch | boards, posts, closing boards, backing clamp to `brow_bell` | f01, f02, x24: the boarded front's top edge and the eave board run under the lip along the arch; no gap, no step | met |
+| two-light window about 0.80 x 0.42, rectangular, timber margin | 0.80 x 0.42 clear, sill 0.10, `lights=2`; about 8 cm at the head corners, 0.25 m at the crown | f01 / builder close: framed, one mullion, sill with brackets, a head board and short boards over it, all inside the arch | met (the head corners are tight but clear) |
+| shingles above as ONE smooth roll, no bunched washboard rows; plateau blends into the fade with no kink | `respace=True`: even ~0.80 e over the crown, easing to 1 | **e08** (above the fade, same camera as r07): round 7's stepped shoulders and bunched band are gone; the courses curve over one even dome into the plain slope. **builder crane vs r7 crane**: the lip-top rows no longer bunch; courses fan evenly over the crown. **f04**: one smooth swell, no kink at the plateau / fade join | met |
+| still the wide, low eyelid the client chose | same width, centre and slope; lift +5 cm | **e01** (same camera as r05-r07) and **e14** (25 m): a low, wide lid laid into the W slope with a dark eye under an arched lip, softer than r07's hooded corners and closer to ref4b; **e10** (45 m): still read as a wave with an arched eye | met |
+| sealed: probe and red twins | probe 31,392 rays, 0 leaks | red twins, same cameras as r07: e03, e05, e08, e09, e11, e12, e15, e17 **0 red**; e02 208 / e04 1 / e13 3 enclosed px, **identical to round 7** (the ridge comb slits / frame-top silhouette). New: f01, f02, f03 **0 enclosed**; f04 4 single px on the crest's sky silhouette (y 271-370, 1 px each, 4 spp edge aliasing, sky behind, not an opening) | met |
+| re-verify: hidden <= 15 %, <= 1 M tris, nothing moves outside the zone | 14.1 %, 714,452 | regression below | met |
+
+**Regression against r07 accepted (builder's outputs, checked against my own like-for-like shots):** 67 of 75 meshes SAME.
+Changed: `HARB_roof_covering`, `HARB_roof_deck` (moved only in the wave zone, x -2.31..1.92, y -3.18..0.03), the five eyebrow
+objects, and `HARB_wing_roof_covering` (+1 vertex / 2 tris of 2.3 cm2 at the wing eave, cull). Outside the zone the deck and
+comb are on the r07 surface (0.0000 m); 8 of 75,300 covering vertices are off r07 at the tower abutment (y -4.64 / -4.08),
+and **every covering vertex outside the zone is on the r05 accepted surface** (0 > 2 mm), so these are r05 faces the r06/r07
+cull dropped and round 8 keeps, i.e. nothing new. The W-slope / tower junction red twins with unchanged cameras: x07 12,253 /
+0 enclosed, x08 0, x10 0, z08 21,270 / 0 enclosed, **all identical to round 7**; x24 69 enclosed vs 65: round 7's 61 px and
+4 px clusters at the same pixels plus one new 4 px slit at x 384-385, y 33-35, which the crop shows is daylight between two
+shingle butts on the roll's skyline at the frame top (the lifted courses moved), not an opening into the building. **No
+regression.**
+
+**Hard numbers:** 714,452 tris (cap 1 M), 14.1 % hidden (limit 15 %; headroom down from 1.2 % to 0.9 %), 9 palette slots,
+`Mask` everywhere, 75 objects, bbox 17.59 x 17.17 x 15.94 m unchanged, 111 anchors. Doors untouched (the hall walls, eaves
+and wing walls are SAME meshes).
+
+| axis | score | reason |
+|---|---|---|
+| 1 Silhouette and massing | 9.0 | This is the client's selling point and it is now delivered. Square-on (f01), from the quay (builder eye, f05) and from below (x24), the lip is one round arch over the window with no level stretch and a soft crown, as in ref4b's circle. Side by side with round 7 at the same cameras, the flat-topped lid with hard corners has become one flowing eyelid, and the roof above swells over it as a single dome (e08, f04). Still the wide, low lid the client chose, and it reads at 25 m and 45 m (e14, e10). |
+| 2 Proportion and actor scale | 8.6 | 0.95 m lift, 0.25 m lip, 2.62 m front, 0.80 x 0.42 m two-light window, all in the client's ranges and in scale with the 0.55 m wall windows. The head-corner margin is only about 8 cm, which reads tight close up (f01) but not cramped. |
+| 3 Construction logic | 8.5 | The front's boards, posts, closing boards, backing and eave board all follow the same arch, so the timber front is a believable curved bargeboard face; framed opening, sill with brackets, a head board under the crown. Nothing unsupported. |
+| 4 Seams and junctions | 8.4 | Sealed (0 leaks, 0 red at the arch, front, feet or opening in 11 eyebrow twins). The washboard rows over the crown are gone and the courses run even (~0.80 e), so the r07 crest band is cleared. Held at 8.4: at oblique angles the steep side of the arch still shows a fan of thin stacked course edges along the lip (f05 right flank, f02 left flank), and the flank lip is still one rolled course. Milder than round 7 (40 deg vs 53 deg flanks). |
+| 5 Distinctness and reuse | 8.7 | A clean kit add-on: two general eyebrow keys (`profile`, `respace`) with old-behaviour defaults, monotone and draw-free, so the other eyebrow users and the bell path are unchanged; any village roof can now opt into a ref4b arch. Gaps carried: shingle only, the vertical-lift model (the roll is about 17 % shorter than the plain slope; the respace spreads that evenly instead of removing it), no overlap check. |
+| 6 Technical compliance | 8.4 | 714,452 tris, 14.1 % hidden (0.9 % headroom, the lowest of rounds 6-8), 9 slots, `Mask` everywhere, one full build, 0 leaks, accepted files untouched, hash rule correctly not triggered, regression clean (the only off-surface vertices outside the zone are r05 geometry). Still 111 anchors and a scene-dependent cull at the abutment. |
+
+**Verdict: 8.6/10, PASSED (pass mark 8.2), subject to the independent audit.** The client asked for the eyelid to be one
+flowing, continuous curve, and it is: at every camera where round 7's lip ran level over the window, round 8's rises, crowns
+softly over the eye and falls back into the roof in one stroke, with the boarded front following it. The courses above now
+flow as one even dome into the slope, without round 7's bunched rows or stepped shoulders. It is still the wide, low lid the
+client chose, it is sealed, it is a reusable kit option with old-behaviour defaults, and nothing accepted in round 7 regressed.
+This is the strongest eyebrow of the building and the best match to ref4b so far.
+
+**Must-fix:** none.
+
+**Nice-to-have (kit, defaults unchanged; carry into the boathouse / barn, not another harbour-house round):**
+1. The arch's steep side at oblique angles: split or thin the stacked flank course edges along the lip (lift along the slope
+   normal, or add courses on the flanks), and split the rolled flank lip into shingles (f05, f02).
+2. Hidden headroom is 0.9 %: the exterior-reachability cull (audit r6) would recover it and remove the scene-dependent
+   abutment recounts.
+3. A lookdev re-run of shot b (`b_eyebrow_closeup_quay_eye`) on round 8 for the client, with the pale front boards toned down.
+4. Carried over: the two internal eyebrow islands, an overlap check, thatch support, the round-4 to 7 kit polish list.
+## v5_harbour_house round 8 — sign-off audit: UPHELD
+
+The independent auditor checked the Art Director's round-8 pass (8.6/10) on the note-12 MODULARITY RUBRIC (pass mark 8.2).
+Geometry only; no ground dressing (note 10), no surface-detail requests (note 12). Binding: producer notes 1-17, every CLIENT
+DIRECTION above, and the CLIENT DIRECTION of 18:35, "the eyelid must be ONE flowing, continuous curve (round 8)". I re-read the
+log before starting and before writing: no CLIENT DIRECTION or PRODUCER NOTE was added after the round-8 grade.
+
+**Reviewed:** ref4b (circled) and ref4; the builder entry and the director's grade; `stats.json`; the recipe diff against
+`build_v5_harbour_house_r07_accepted.py`; the kit 1.15 code (`EYEBROW` defaults, `GableRoof.brow_bell`, `_brow_respace`, the
+call in `_shingle_courses`); kit file dates; the builder's `r8_brow_eye` against `r7_brow_eye` (same camera).
+
+**My scripts** (read-only bpy, one process at a time, `renders/variants/v5_harbour_house/round_08/audit/`; the round-7 audit
+scripts reused, only the eyebrow front centre moved to the round-8 front (-1.289, -1.598, 4.096) from my probe):
+- `aud_probe_r08.py` -> `_out.txt`: compliance, doors, islands, corners, eyebrow islands / clipping / comb / ray probe / clearances;
+- `aud_hash_r08.py` -> `aud_hash_r08_vs_r07_out.txt` (r07 accepted vs r08) and `aud_hash_r08_vs_r05_out.txt` (r05 accepted vs r08);
+- **new** `aud_arch_r08.py` -> `_out.txt`: the arch measured on r07 accepted and r08 with rays (lip top along the eave, the
+  front's top edge with horizontal rays against the eyebrow objects only, course butts along the slope);
+- `aud_ring_r08.py` -> `_out.txt`, `ring/`: the round-4 32-camera red ring, the eyebrow-targeted red twins, 17 grey views;
+- `aud_anchors_r08.py`; `tools/hidden_tris.py` (20,000 samples) through `aud_run_hidden.py` -> `aud_hidden_out.txt` / `.json`.
+
+**Accepted rounds untouched:** SHA-256 r04 / r05 / r06 / r07 blends 11A2EEE4... / C22A80B3... / 213D0883... / 6903404B..., the
+same as the round-7 audit, before and after my runs; the r04-r07 recipes and anchor JSONs keep their 14:20-18:07 dates. The r08
+blend (349FD2F8..., 18:49:21) was not saved by any run. Kit: only `linear_roof.py` (+ its pyc) and
+`kit/changes/v5_harbour_house.md` written after round 7. Recipe diff: the `BROW = eyebrow(...)` line (height 0.90 -> 0.95,
+window 0.82 x 0.44 -> 0.80 x 0.42, `profile="arch"`, `respace=True`) and its comment only.
+
+### Hard requirements (measured on the saved blend)
+
+| requirement | measured | result |
+|---|---|---|
+| ≤ 1,000,000 tris | 714,452 evaluated (stats agree) | PASS |
+| ≤ 15 slots, palette only | 9 slots, the same nine as rounds 4-7, none outside the palette | PASS |
+| est_hidden_pct ≤ 15 | 14.1 % (stats); my independent re-run **14.4 %** (1.9 % below ground) | PASS (0.6-0.9 % headroom) |
+| `Mask` on every mesh | all 75 meshes CORNER, active + render; every transform identity | PASS |
+| DECAL_ANCHORS + json | 111 empties with all six properties = the JSON's 111 names; 0 with no surface within 20 cm behind; **0 buried**; the 8 anchors within 2.5 m of the front sit on the W wall and the slope above | PASS |
+| door clearance ≥ 2.30 m | identical to round 7: wing S door lowest overhead 2.591 m at 0.30 m out (wing deck), hall land door 5.51 m; door heads 2.22 m | PASS |
+| no see-through / floating / clipping > 2 cm (ground and 6 m cameras), esp. at the eyebrow | see below | PASS |
+| hash rule | not triggered: only two new `EYEBROW` keys, defaults `profile="bell"` (the old expression, unchanged; any other value raises) and `respace=False` (the new code path is never entered); no other recipe uses eyebrows; the wing roof deck / comb / rafters / verge, the tower top and `HARB_roof_comb` are bit-identical to r07 | PASS |
+| eyebrow = reusable kit option | `GableRoof(eyebrows=[eyebrow(..., profile="arch", respace=True)])`; general code (any roof, any bell value), monotone, no rng draws; no bespoke geometry in the recipe | PASS |
+| no regression of round 7 | 67 of 75 meshes bit-identical to r07; nothing removed outside the zone (below) | PASS |
+
+### The client's arch: geometric evidence (`aud_arch_r08_out.txt`, same rays on r07 accepted and r08)
+
+1. **The flat top is gone.** The front's top edge (horizontal rays, eyebrow objects only):
+   - **r07:** it holds 4.49-4.53 m from y -2.4 to -0.8, i.e. **1.6 m level within 4 cm**, then falls only at its two ends;
+   - **r08:** one arch, symmetric about the crown at y -1.60 (z 4.56): 4.54 / 4.47 / 4.37 / 4.22 / 4.06 / 3.91 at ±0.2 / 0.4 /
+     0.6 / 0.8 / 1.0 / 1.2 m. It drops 6 cm over ±0.27 m and 11 cm over ±0.40 m (the window frame's outer edges); within 1 cm
+     of the peak only over 0.26 m, which is the round crown of a 0.8 m radius, not a level run. Smoothed curvature over the
+     window span: median 0.90 /m, consistent with the builder's 1.24 /m crown / ≥ 0.90 /m.
+   - The lip top (rays down just in front of the boards) gives the same picture: r07 4.56-4.59 over y -2.4..-0.8; r08 rises
+     from 3.73 at the S foot through 4.21 / 4.42 / 4.56 to a 4.61 crown at y -1.6 and falls symmetrically (4.53 / 4.42 / 4.21)
+     to the N foot. Peak lift 0.92-1.0 m, in the client's 0.90-1.0.
+2. **The window fits the arch:** frames top at z 4.317; the front's top edge is 4.45 at the frame's outer corners and 4.56 at the
+   crown, so 13-24 cm of timber over the head. `bn+00` grey: a rectangular two-light window, boarded front, all under one arch.
+3. **The roll above:** course butts along the slope at the crown line (y -1.57, rays, approximate): round 7's three compressed
+   fade rows (arc spacing 0.226 / 0.226 / 0.223 m, about 0.77 of the plain 0.29 m) are now 0.274 / 0.245 / 0.241 m, and no
+   row is bunched against its neighbours. This agrees with the builder's even ~0.80 e. In `bn+00` / `bG-45` grey and
+   `r8_brow_eye` the courses flow over the crown as one dome into the slope. The stacked flank edges and the single rolled flank
+   lip remain on the steep sides (known kit items, milder at 40 deg).
+
+### Seal, floating, clipping
+
+- **Ray probe through the front, arch, lip and opening** (4 cm grid over the front plus 0.45 m above, 7 yaws x 5 pitches,
+  origins 4 m out): 113,050 rays, **0 misses through a target under the roof**, 3,142 misses over open air above the hood,
+  **0 first hits on an interior object**.
+- **Red twins:** the 32 round-4 ring shots are **identical** to round 7 shot by shot. Of the eyebrow-targeted shots, **0 enclosed
+  patches ≥ 2 cm with a rim within 2.5 m of the front**. Near-front flags: bG+20 one 16 px comb slit on the ridge silhouette (round 7:
+  19 px, rim `HARB_roof_comb`, 16 m deep); bg-70 one single pixel 0.2 cm wide on the roll's crest skyline (4 spp aliasing);
+  bC-20 one 0.3 cm pixel on the hall wall (unchanged mesh). Every patch ≥ 2 cm wide is a known ridge-comb slit or the tower-top
+  ring / boards (bit-identical meshes), shifted by a few pixels where the roll's skyline moved.
+- **Floating:** 6,325 islands; none whose 2 cm-inflated box touches no other island. Of the 37 eyebrow islands, 2 are > 2 cm
+  from everything: the same internal back blocker plate (4.4 / 3 cm) and window-frame offcut (6.4 / 3.5 cm) as rounds 6-7, inside
+  the closed front; the probe hit nothing interior, so they are not visible.
+- **Clipping:** front parts run up to 0.17-0.44 m into the closed covering bodies (shallower than round 7's 0.25-0.63 m): the
+  front tucked under the lip and the backing through the lifted courses. Nothing pokes through a visible shingle face in the grey
+  views. Not a visible clip.
+- **Clearances:** 0.67 m from the `wall_abutment` (r07 0.63), 0.75 m from the tower stones (0.71), 1.85 m from the wing roof
+  covering (1.83). The comb over the wave stands at most 0.152 m off the roof, the same as round 7 (0.141 / 0.144 m either side).
+
+### Regression, verified
+
+- **r07 accepted vs r08:** 67 of 75 meshes bit-identical. Changed: `HARB_roof_covering`, `HARB_roof_deck`, the five eyebrow objects
+  and `HARB_wing_roof_covering` (+2 tris). Outside the eyebrow zone **every r07 vertex is on the r08 surface (0.00 mm)**, so
+  nothing accepted was removed; the deck is 0.01 mm. 8 covering vertices and 1 wing-covering vertex of r08 are off r07 (≤ 69 mm /
+  4.4 mm).
+- **r05 accepted vs r08:** outside the zone every r08 covering vertex is on the r05 surface (0.00 mm), and the wing roof
+  covering is **bit-identical to r05**. So those 9 vertices are r05 faces that round 6/7's scene-dependent cull dropped and round 8
+  keeps, not new geometry. This confirms the builder's and director's reading.
+
+### Director's grade, re-checked
+
+| axis | director | auditor | note |
+|---|---|---|---|
+| 1 Silhouette and massing | 9.0 | 8.9 | Measured: round 7's 1.6 m level lip is now one symmetric arch with a round crown; reads as ref4b's eyelid in `bn+00`, `bG-45`, `r8_brow_eye`. |
+| 2 Proportion and actor scale | 8.6 | 8.6 | 0.92-1.0 m lift, 0.80 x 0.42 window with 13-24 cm of timber over its head. |
+| 3 Construction logic | 8.5 | 8.5 | Boards, backing and posts follow the same arch (front top edge measured); nothing unsupported. |
+| 4 Seams and junctions | 8.4 | 8.3 | Sealed (0 under-roof misses, 0 near-front red ≥ 2 cm). The bunched rows are gone; the stacked flank edges and rolled flank lip remain on the steep sides. |
+| 5 Distinctness and reuse | 8.7 | 8.7 | Two general eyebrow keys with old-behaviour defaults; the bell path is the old expression. |
+| 6 Technical compliance | 8.4 | 8.3 | Every hard number verified; hidden is 14.1 % (stats) / 14.4 % (my re-run), so headroom is now 0.6-0.9 %, the thinnest of the building. |
+
+**Verdict: UPHELD at 8.6/10, the Art Director's grade. My lowest axes are seams and technical at 8.3, above the pass mark.** The
+client's "ONE flowing, continuous curve" is delivered and measured: the front's top edge and the lip are one symmetric arch with
+a round crown and no level run, where round 7 held level for 1.6 m. The courses above roll evenly over it. It is sealed (0
+see-through in 113 k targeted rays, the ring identical to round 7), a reusable kit option with old-behaviour defaults (hash rule
+correctly not triggered), and round 7 is preserved (67 of 75 meshes bit-identical, nothing removed outside the zone).
+
+**Blocking issues:** none.
+
+**Carry into the boathouse / barn:** the director's nice-to-haves 1-4; plus the hidden headroom. At 14.1-14.4 % against the
+15 % limit, the next eyebrow change on this house needs the exterior-reachability cull first.
+## PRODUCER NOTE (2026-10-17, session 2, 19:30): round 8 ACCEPTED (one continuous arch)
+
+Director 8.6 (silhouette 9.0) and the independent audit upheld it. 714,452 tris, 14.1 % hidden (0.9 % headroom), 9 slots. Snapshotted as `*_r08_accepted.*`.
+- **Kit 1.15:** `eyebrow(profile="arch", respace=True)`. Defaults are unchanged, so the hash rule is not triggered.
+- **Look test:** `lookdev/harbour_house/renders/r08/`, with `compare_r08/`.
+
+Remaining marks, not blocking:
+- the tower-side (right) shoulder still shows a band of thin, stacked course edges;
+- a few sliver courses taper together at the upper-left foot;
+- the window's left head corner nearly touches the lip;
+- from the high three-quarter the eye shrinks to a sliver;
+- the flank lip is one rolled course.

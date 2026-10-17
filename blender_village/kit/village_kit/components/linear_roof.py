@@ -34,7 +34,7 @@ from ..shingles import SH_VARIANTS, SIZE_TABLE, shake_mesh, shingle_mesh
 
 EYEBROW = dict(x=0.0, side=1, d=1.5, width=2.0, height=0.75, flat=0.70, plateau=0.18, fade=1.20, lip=0.20,
                set_back=0.04, window=dict(width=0.56, height=0.36, sill=0.05), min_front=0.14, seed=0,
-               tilt=False, span_rows=False, eave_inset=0.0, close_ends=False)
+               tilt=False, span_rows=False, eave_inset=0.0, close_ends=False, profile="bell", respace=False)
 """kit 1.13 (v5 round 5, ref4's eyebrow dormer): one eyebrow bump on a shingle GableRoof, in its local frame --
     x         centre along the ridge (local x)
     side      +1 / -1: the slope (local +y / -y)
@@ -56,7 +56,15 @@ kit 1.14 (v5 round 6; every default = the round-5 build, bit-identical):
     eave_inset plan m: the lifted eave board under the wave's lowest course starts this far behind the course's butt
                line, so it hides in the eave's shadow instead of showing as a pale strip
     close_ends True: a closing board runs on past each end post, clamped under the wave's eave, down to where the gap
-               is under 2 cm (no dark slot between the post and the wave's flank)"""
+               is under 2 cm (no dark slot between the post and the wave's flank)
+kit 1.15 (v5 round 8, client: "one flowing continuous curve"; every default = the round-7 build, bit-identical):
+    profile    "bell" (the flat-topped cosine bell: full height over +-flat / 2) or "arch": ONE continuous arch over
+               the whole width, (1 - t^2)^2 with t = |x - centre| / (width / 2) -- a round crown (curvature never 0 over
+               the window), tangent feet into the roof; `flat` is ignored.  The front's top edge follows it.
+    respace    True: the lifted courses (from the wave's eave course to the end of the fade) are re-spaced along the
+               slope to EQUAL arc length on the bumped surface (_brow_respace), so the vertical lift's compression on
+               the fade (the bunched "washboard" rows above the lip) is spread evenly over the whole roll; identity
+               at the eave course, at the fade's end and where the bump is 0 (no rng draws, nothing else moves)"""
 
 
 def eyebrow(x, side=1, **kw):
@@ -138,6 +146,11 @@ class GableRoof:
         """the eyebrow's profile along the ridge: 1 over its flat top (+-flat / 2), a cosine fall to 0 at
         +-width / 2."""
         ax = np.abs(np.asarray(x, float) - B["x"])
+        if B.get("profile", "bell") == "arch":     # kit 1.15: one continuous arch, round crown, tangent feet
+            t = np.clip(ax / max(B["hw"], 1e-6), 0.0, 1.0)
+            return (1.0 - t * t) ** 2
+        if B.get("profile", "bell") != "bell":
+            raise ValueError(f"eyebrow: profile {B.get('profile')!r}; 'bell' or 'arch'")
         t = np.clip((ax - B["pw"]) / max(B["hw"] - B["pw"], 1e-6), 0.0, 1.0)
         return 0.5 * (1.0 + np.cos(np.pi * t))
 
@@ -779,6 +792,11 @@ def _shingle_courses(roof, acc, rng, seed=0):
                 off = wedge * (1 - v) + Pl[:, 2] + rng.uniform(0, 0.01) * (1 - v)
                 x = 0.5 * (xs[i] + xs[i + 1]) + Pl[:, 0]
                 u = ub + Pl[:, 1] + rng.uniform(-0.01, 0.01)
+                if force is not None:          # kit 1.15: eyebrow(respace=True) -- even courses over the roll
+                    for bi, B in brows:
+                        if (B.get("respace") and force[bi] > 0
+                                and xs[i + 1] > B["x"] - B["hw"] and xs[i] < B["x"] + B["hw"]):
+                            u = _brow_respace(roof, B, x, u)
                 P = roof.surf(x, u, sg, off)
                 Fl = [f[:, ::-1] if sg > 0 else f for f in F]      # the slope map has det = -sg
                 Pw = roof.to_world(P) if force is None else roof.to_world(P, brow=force)
@@ -790,6 +808,55 @@ def _shingle_courses(roof, acc, rng, seed=0):
                 acc.add(Pw, Fl, "M_roof_shingle", uv, wear=float(rng.uniform(0.2, 0.6)))
                 n_piece += 1
     return n_piece
+
+
+def _brow_respace(roof, B, x, u, nb=41, nu=401, blend=0.30):
+    """kit 1.15 (eyebrow(respace=True)): slope coordinate u of a lifted covering vertex -> the re-spaced u'.  The
+    bump is a vertical lift h x bell(x) x f(u); on the fade (f' < 0) the lifted surface is shorter than the slope, so
+    courses laid at a fixed u pitch bunch there (the washboard).  For each bell value b, u' is chosen so the ARC
+    LENGTH on the bumped section from the wave's eave course (u_lip) is a constant share r0 of the plain roof's own
+    arc length (its sweep / sag included, sampled at the bump's centre), the share easing smoothly back to 1 over the
+    last `blend` of the fade (no step in exposure where the roll meets the plain slope), ending at the fade's end.
+    Identity outside [u_lip, fade end] and where b = 0; monotone, so overlaps and the course order are kept.  A table
+    over (b, u), interpolated bilinearly."""
+    cache = roof.__dict__.setdefault("_brow_respace_tabs", {})
+    tab = cache.get(id(B))
+    if tab is None:
+        ua, ue = B["u_lip"], B["u_t"] + B["plat_u"] + B["fade_u"]
+        us = np.linspace(ua, ue, nu)
+        tt = np.clip((us - B["u_t"] - B["plat_u"]) / max(B["fade_u"], 1e-6), 0.0, 1.0)
+        f = 1.0 - tt * tt * (3.0 - 2.0 * tt)                          # the fade (as _brow_dz)
+        S = roof.surf(np.full(nu, B["x"]), us, B["sg"], 0.0)
+        y, z0 = S[:, 1], S[:, 2] + roof.warp_z(S[:, 0], S[:, 1], brow=0.0)
+
+        def arc(z):
+            return np.concatenate([[0.0], np.cumsum(np.hypot(np.diff(y), np.diff(z)))])
+        s0 = arc(z0)
+        t1 = ue - blend * B["fade_u"]
+        w = np.clip((us - t1) / max(ue - t1, 1e-6), 0.0, 1.0)
+        w = w * w * (3.0 - 2.0 * w)                                  # 0 .. 1 over the blend
+        mid = 0.5 * (w[1:] + w[:-1]) * np.diff(s0)
+        I = np.concatenate([[0.0], np.cumsum(mid)])                  # int w ds0
+        bs = np.linspace(0.0, 1.0, nb)
+        G = np.empty((nb, nu))
+        for j, b in enumerate(bs):
+            sb = arc(z0 + B["height"] * b * f)
+            r0 = (sb[-1] - I[-1]) / max(s0[-1] - I[-1], 1e-9)       # the even share below the blend
+            G[j] = np.interp(r0 * s0 + (1.0 - r0) * I, sb, us)
+        G[:, 0], G[:, -1] = ua, ue
+        tab = cache[id(B)] = (ua, ue, G)
+    ua, ue, G = tab
+    nb, nu = G.shape
+    x, u = np.broadcast_arrays(np.asarray(x, float), np.asarray(u, float))
+    inside = (u > ua) & (u < ue)
+    fb = np.clip(roof.brow_bell(B, x), 0.0, 1.0) * (nb - 1)
+    fu = np.clip((u - ua) / (ue - ua), 0.0, 1.0) * (nu - 1)
+    j0 = np.clip(np.floor(fb).astype(int), 0, nb - 2)
+    i0 = np.clip(np.floor(fu).astype(int), 0, nu - 2)
+    wb, wu = fb - j0, fu - i0
+    g = ((1 - wb) * ((1 - wu) * G[j0, i0] + wu * G[j0, i0 + 1])
+         + wb * ((1 - wu) * G[j0 + 1, i0] + wu * G[j0 + 1, i0 + 1]))
+    return np.where(inside, g, u)
 
 
 def _brow_tilt(roof, sg, x, u, off, force, tilt_ids, Pw, eps=0.01):

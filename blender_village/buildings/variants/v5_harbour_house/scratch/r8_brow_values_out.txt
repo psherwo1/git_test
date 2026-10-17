@@ -1,0 +1,11 @@
+﻿e 0.350  u_lip 1.400 u_t 1.781 fade end 5.515 U 6.402 k_lip 4
+dx +0.000 bell 1.000 respace False: course spacing / e  min 0.70 max 0.96   0.88 0.92 0.94 0.85 0.77 0.73 0.71 0.70 0.72 0.75 0.82 0.92 0.96
+dx +0.000 bell 1.000 respace True : course spacing / e  min 0.73 max 0.96   0.73 0.76 0.79 0.80 0.80 0.80 0.80 0.80 0.80 0.81 0.89 0.95 0.96
+dx +0.500 bell 0.843 respace False: course spacing / e  min 0.73 max 0.96   0.88 0.92 0.94 0.87 0.80 0.76 0.74 0.73 0.75 0.78 0.84 0.93 0.96
+dx +0.500 bell 0.843 respace True : course spacing / e  min 0.75 max 0.96   0.75 0.78 0.81 0.82 0.82 0.82 0.82 0.82 0.82 0.83 0.90 0.95 0.96
+dx +0.875 bell 0.562 respace False: course spacing / e  min 0.80 max 0.96   0.88 0.92 0.95 0.90 0.85 0.82 0.80 0.80 0.81 0.83 0.88 0.94 0.96
+dx +0.875 bell 0.562 respace True : course spacing / e  min 0.79 max 0.96   0.79 0.82 0.85 0.86 0.86 0.86 0.86 0.86 0.86 0.87 0.91 0.95 0.96
+dx +1.200 bell 0.281 respace False: course spacing / e  min 0.87 max 0.96   0.88 0.92 0.95 0.93 0.90 0.89 0.88 0.87 0.88 0.90 0.92 0.95 0.96
+dx +1.200 bell 0.281 respace True : course spacing / e  min 0.83 max 0.96   0.83 0.87 0.90 0.91 0.91 0.91 0.91 0.91 0.91 0.91 0.94 0.96 0.96
+arch: max flank gradient 0.84 (40 deg); crown curvature 1.24 /m (radius 0.81 m); lift at +-0.53 m 0.784 m
+curvature over the window span: min 0.90 /m (never 0)

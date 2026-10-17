@@ -72,10 +72,13 @@ K = HALF / 3.0                                               # the soft-roof opt
 # the comb; re-centred at y 4.4 so the wave (y 2.65-6.15) stays clear; the kit 1.14 eyebrow fixes on (tilted
 # shingles, deck rows over the bump only, inset eave board, closed front ends).  Round 7 (client: the MIDDLE setting,
 # "wide + lower"): round 6's width, the lift lowered from 1.30 to 0.90 m with a 0.25 m lip (a wide, low eyelid), over
-# a 0.82 x 0.44 m two-light kit window that fits the shallower front
-BROW = eyebrow(x=4.4, side=1, d=1.2, width=3.5, height=0.90, flat=1.40, plateau=0.35, fade=2.10, lip=0.25,
-               window=dict(width=0.82, height=0.44, sill=0.10, lights=2), tilt=True, span_rows=True,
-               eave_inset=0.10, close_ends=True)
+# a 0.82 x 0.44 m two-light kit window that fits the shallower front.  Round 8 (client: "ONE flowing, continuous
+# curve"): the kit 1.15 eyebrow keys -- profile="arch" (one round arch over the whole 3.5 m, no flat run over the
+# window; `flat` is ignored), peak lift 0.95 m, and respace=True (the lifted courses re-spaced to equal arc length,
+# no bunched rows above the lip); a 0.80 x 0.42 m two-light window under the arch's crown
+BROW = eyebrow(x=4.4, side=1, d=1.2, width=3.5, height=0.95, flat=1.40, plateau=0.35, fade=2.10, lip=0.25,
+               window=dict(width=0.80, height=0.42, sill=0.10, lights=2), tilt=True, span_rows=True,
+               eave_inset=0.10, close_ends=True, profile="arch", respace=True)
 MAIN = GableRoof(x0=Y0, x1=Y1, half=HALF, wall_z=DIM["wall_z"], pitch_deg=DIM["pitch"], overhang=0.70,
                  verge=(0.35, 0.50), origin=(HX, 0.0), yaw_deg=90.0, name="roof", ridge_sag=DIM["ridge_sag"],
                  eave_sag=0.10, eave_sweep=0.40, sweep_len=1.5, verge_flare=0.36 * K, flare_len=2.0 * K,

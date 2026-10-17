@@ -1,0 +1,4 @@
+﻿00:00.609  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+EYEBROW PROBE: 31392 rays over the front arch (x 2.65..6.15 local), 0 leak(s)
+leaks by direction: {}
+rays ending on the window's dark room: 2537; first-hit depth histogram (0.1 m bins from -0.5 m): [2493, 5, 2815, 4594, 16835, 2050, 69, 252, 294, 298, 1686, 1, 0, 0, 0, 0]
