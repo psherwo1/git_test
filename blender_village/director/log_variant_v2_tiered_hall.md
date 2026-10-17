@@ -1584,3 +1584,9 @@ The must-fixes below are what closes the junction family for good.
   - an open-bay lantern option in `board_belt`;
   - polygon tiers for any `sides`.
 - Housekeeping: two 0-byte files sit at the repository root, `tier_flashing.py` and `plinth.py`. They are not kit modules and should be removed by whoever created them.
+
+
+## CLIENT DECISION (2026-10-17): ACCEPTED AS IT STANDS
+
+Client's words, after the textured junction test (lookdev/junction_test/REPORT.md): "Honestly I think it's fine and my audience won't notice or care. Not worth wasting effort on." The round-7 build (954,925 tris) is accepted. No further rounds.
+

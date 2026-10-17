@@ -52,7 +52,7 @@ This file lets a new Claude Code session pick up the work with full continuity. 
 | wattle_roundhut | Phase-1 version is the signed-off deliverable. The kit build (878,355 tris) is the reference |
 | v4_mixed (mill-house) | **ACCEPTED** (round 4, 8.4, 938,453 tris) |
 | v1_stone_watchtower (square cabin) | **ACCEPTED** (round 5, 8.5, 937,933 tris) |
-| v2_tiered_hall (approved building 2) | Director 8.2 in round 7. The audit rejected it: turret masonry passes through the lead apron upstands, up to 19 cm, about 4-5.6 m up. **Out of rounds.** The producer's view: it is not visible from ground level. **Client decision pending** on whether to accept it as is; the textured junction test informs it |
+| v2_tiered_hall (approved building 2) | **ACCEPTED by client decision** (round 7, director 8.2, 954,925 tris): the remaining junction defects are judged not worth more effort after the textured test (lookdev/junction_test/REPORT.md). Optional lookdev polish: darker, textured lead on the turret aprons |
 | v3_longhouse_roundend (approved building 1) | **Redesign IN PROGRESS** (see below). The last complete build is round 6 (director 8.1) |
 
 **Kit: 1.10.1.**
@@ -76,7 +76,7 @@ This file lets a new Claude Code session pick up the work with full continuity. 
 
 **Running when this session ended. Check the results; do NOT relaunch blindly.**
 1. **Longhouse redesign workflow** (`workflows/kit_close_variants.js`, only v3, from fix round 8, up to round 10). Journal: `C:\Users\parke\.claude\projects\C--GitHubDesktop-git-test-blender-village\8c996e45-b510-4dd2-9e8e-52ff37fff4ab\subagents\workflows\wf_d6ca71b9-1b3\journal.jsonl`. Progress is visible in `director/log_variant_v3_longhouse_roundend.md`: round 8+ builder entries and score headings. If it was stopped before finishing, write a continuation from the log state, as the earlier continuation scripts did: copy any audit verdicts from the journal into the log first, because fixers read the log.
-2. **Textured junction test** (one agent). Output: `lookdev/junction_test/renders/` and **`lookdev/junction_test/REPORT.md`**, with a verdict per defect on ground-level and pan visibility. If REPORT.md is missing, the agent did not finish; re-run it from `lookdev/junction_test/src/` (copies of hall r7 and longhouse r6).
+2. ~~Textured junction test~~ **DONE**: `lookdev/junction_test/REPORT.md`. The client then accepted the tiered hall as it stands.
 
 ## 5. Practical notes for this machine
 

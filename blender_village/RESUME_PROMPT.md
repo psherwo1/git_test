@@ -9,7 +9,7 @@ READ FIRST: blender_village/HANDOFF.md (the full state, all my decisions, machin
 
 FIRST, check the two jobs that were running when the last session ended (HANDOFF section 4, "Running when this session ended"):
 1. The longhouse redesign (v3, round 8+). Read its log and the workflow journal. If it finished, report the grade or the acceptance. If it stopped part-way, continue it from the saved state.
-2. The textured junction test: lookdev/junction_test/REPORT.md. Send me the key renders and the verdict, then ask me whether to accept the tiered hall (v2) as it stands.
+2. (Done.) The textured junction test is in lookdev/junction_test/REPORT.md, and I accepted the tiered hall (v2) as it stands. No more work on it.
 
 THEN continue my approved plan (HANDOFF section 3): merge the kit/changes notes into the CHANGELOG, then step 3: the timber / rectangular / waterfront kit family through the timber harbour house (approved building 3), then a boathouse or barn; then add-ons; then the Unreal exporter and UE 5.8 lookdev.
 
