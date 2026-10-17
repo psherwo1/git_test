@@ -303,7 +303,8 @@ def _build_timber_opening(g, sp, O, t, n, accs, rng, label, host):
             _box(tim, lm, t, n, xa, xb, za, zb, wf0, wf1, 0.006, "M_timber")
         zm = 0.5 * (cz0 + cz1)
         _box(tim, lm, t, n, -0.02, 0.02, cz0 + f, cz1 - f, wf0 + 0.01, wf1 - 0.01, 0.005, "M_timber")
-        _box(tim, lm, t, n, -hw + f, hw - f, zm - 0.02, zm + 0.02, wf0 + 0.01, wf1 - 0.01, 0.005, "M_timber")
+        if sp.get("lights", 4) != 2:                                  # kit 1.14: lights=2 = no transom
+            _box(tim, lm, t, n, -hw + f, hw - f, zm - 0.02, zm + 0.02, wf0 + 0.01, wf1 - 0.01, 0.005, "M_timber")
         rec.update(z0=cz0, z1=cz1, head=cz1 + hd, sill=cz0 - 0.05, threshold=None, lintel_w=sp["width"] + 2 * jw)
         if sp.get("shutters"):
             # two open plank shutters lying back on the wall face beside the casing: the hinge is the casing's outer

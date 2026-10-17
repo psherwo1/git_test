@@ -68,7 +68,7 @@ TIMBER_OPENING = dict(
     door=dict(width=1.0, height=2.10, threshold=0.0, jamb=(0.16, 0.20), head=0.18, planks=5, leaf_t=0.045,
               leaf_set=0.06, steps_to=None, rise=0.17, tread=0.32, room=1.4, head_rule=None),
     window=dict(width=0.55, height=0.60, sill=1.15, jamb=(0.14, 0.18), head=0.16, rail=0.14, frame=0.06,
-                shutters=True, room=1.0, room_pad=(0.35, 0.6, 0.35)),
+                shutters=True, room=1.0, room_pad=(0.35, 0.6, 0.35), lights=4),
     boat=dict(width=2.6, height=2.6, threshold=0.0, jamb=(0.26, 0.24), head=0.30, bearing=0.30, leaves=2,
               leaf_t=0.05, ledges=3, room=1.6, steps_to=None, rise=0.17, tread=0.32, head_rule=None),
 )
@@ -76,7 +76,9 @@ TIMBER_OPENING = dict(
 the sill beam (doors) or clear sill height above the floor = sill-beam top (windows), jamb (face, depth), head / rail
 heights, leaf thickness and set-back, built-in steps down to `steps_to` (absolute z), dark-room depth (note 6).
 kit 1.13 (v5 round 5; default = the old fixed margins): window room_pad=(side, below, above) -- how far the dark room
-reaches past the clear opening (an eyebrow window's room must stay under the wave)."""
+reaches past the clear opening (an eyebrow window's room must stay under the wave).
+kit 1.14 (v5 round 6; default = the old cross mullion): window lights=4 (cross mullion, 2 x 2) or 2 (one vertical
+mullion: a two-light window)."""
 
 
 def boat_door(width=2.6, height=2.6, leaves=2, jamb=(0.26, 0.24), head=0.30, bearing=0.30, ledges=3, room=1.6,

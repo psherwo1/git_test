@@ -6,6 +6,45 @@ producer to merge into `../CHANGELOG.md` (proposed version 1.12.0).
 
 ---
 
+## Round 6 (the client: the eyebrow "bigger and bolder like the reference")
+
+The round-6 eyebrow is a recipe-value change (3.5 x 1.30 m wave, 0.30 m lip, 0.85 x 0.62 m two-light window) plus
+the three eyebrow kit fixes the round-5 grade carried forward. Docstrings tag them "kit 1.14". Every new option
+defaults to the round-5 behaviour (an `eyebrow()` without them builds exactly as round 5, a roof without eyebrows as
+before), so **no hash re-run is needed**.
+
+### `components/linear_roof.py` (existing module: new `EYEBROW` keys only)
+
+| key | default | what it does when on |
+|---|---|---|
+| `tilt` | `False` | `_brow_tilt`: each lifted shingle that overlaps the bump keeps its footprint but has its thickness re-laid along the bumped surface's normal (`off x (n_bumped - n_unbumped)`, normals by central differences of the warp). The vertical shear no longer thins the flank shingles into slivers. The correction is exactly 0 where the bump is flat or absent. No rng draws added. |
+| `span_rows` | `False` | `_deck` builds the slope as separate closed slabs (`_deck_slab(x_rng=...)`): the plain grid outside the bump and a closed patch over `x +- width/2` only. The patch carries its own grid only (`_brow_cols`: ~every 0.15 m, at least 25 columns; the slope rows plus the tear rows and at least 14 wave rows, ~every 0.30 m) and the framed opening. Before, the tear rows ran along the whole roof length (+5.3 k hidden tris in round 5). The patch's ends meet the plain slabs where the bell is exactly 0. |
+| `eave_inset` | `0.0` | plan m: the lifted eave board under the wave's lowest course starts this far behind the course's butt line (clamped 3 cm before the deck front), so it hides in the eave's shadow instead of reading as a pale strip. |
+| `close_ends` | `False` | `_eyebrow_fronts`: a closing board (`wbox`, clamped 5 mm under the wave's eave rake) runs on past each end post to where the gap under the wave is under 2 cm, so the short dark slot between the post and the flank is closed. |
+
+`_deck` was refactored into `_deck` (per-slope dispatch, eave strips) + `_deck_slab` (one closed slab). With no
+`span_rows` it calls `_deck_slab` once per slope with the old arrays, in the old order (same vertices, faces and
+`acc.add` order).
+
+### `components/timber_walls.py`, `components/wall_openings.py` (existing modules: one new option)
+
+- `TIMBER_OPENING["window"]["lights"] = 4` (new key, the old cross mullion). `lights=2` skips the transom in
+  `_build_timber_opening`: a two-light window with one vertical mullion (ref4's eyebrow window). No rng change.
+
+### Hash rule
+
+Not triggered: only new options whose defaults take the old code path. No `v5r6_hash` run.
+
+### Known limitations (round 6)
+
+- The bump is still a vertical lift. On the fade, the lifted roof is flatter than the slope, so the courses there
+  compress (the exposure along the surface shrinks to about 2/3 at the steepest part of the fade). A bolder bump
+  makes this visible as closely stacked courses at the top of the wave. `tilt` keeps their thickness, but it cannot
+  restore the spacing. A longer `fade` is the lever.
+- Still shingle only, and no overlap check (verge, eave band, junction bodies, other bumps).
+
+---
+
 ## Round 5 (the client's ref4 eyebrow dormer, `reference/ref4b_eyebrow_dormer_markup.jpg`)
 
 A reusable **eyebrow-dormer add-on** on the soft `GableRoof` / `linear_roof` (docstrings tag it "kit 1.13"; it can

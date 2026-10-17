@@ -1,0 +1,34 @@
+{
+  "objects": 75,
+  "triangles": 714910,
+  "bbox_min": [
+    -8.792500495910645,
+    -8.587190628051758,
+    -2.5038681030273438
+  ],
+  "bbox_max": [
+    8.792500495910645,
+    8.587190628051758,
+    13.439508438110352
+  ],
+  "size_m": [
+    17.58500099182129,
+    17.174381256103516,
+    15.943376541137695
+  ],
+  "materials": [
+    "M_iron",
+    "M_lead",
+    "M_mortar",
+    "M_roof_shake",
+    "M_roof_shingle",
+    "M_stone",
+    "M_stone_dressed",
+    "M_timber",
+    "M_timber_weathered"
+  ],
+  "est_hidden_pct": 14.3,
+  "est_hidden_triangles": 102410,
+  "material_slot_count": 9,
+  "mask_attribute_missing": []
+}

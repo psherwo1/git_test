@@ -1,0 +1,16 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\work\hh_r06_lookdev.blend"
+hid LD_ground at z -2.514
+00:00.640  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+00:09.937  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\a_ref4_three_quarter.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\a_ref4_three_quarter.png
+00:19.765  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\b_eyebrow_closeup_quay_eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\b_eyebrow_closeup_quay_eye.png
+00:25.515  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\c_water_gable_jetty_eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\c_water_gable_jetty_eye.png
+00:32.531  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\d_side_elevation_W.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\d_side_elevation_W.png
+00:38.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\e_land_three_quarter_eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\e_land_three_quarter_eye.png
+00:45.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\f_establishing_45m.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\f_establishing_45m.png

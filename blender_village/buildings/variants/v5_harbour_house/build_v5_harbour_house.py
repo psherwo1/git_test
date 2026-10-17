@@ -67,10 +67,14 @@ XJ0, XJ1 = HX - DIM["clear"] / 2, HX + DIM["clear"] / 2      # the arch jambs (1
 YP = Y1 - DIM["bay"]                                         # the bay partition / slip head (6.2)
 K = HALF / 3.0                                               # the soft-roof options scale with the span (round-3 = 1)
 # round 5 (client: ref4's eyebrow dormer): one eyebrow on the west slope (local +y, facing the wing and the tower),
-# over the west-wall window (y 4.6), clear of the tower abutment (y < 2.3), the wing roof (y < 2.05) and the
-# partition (y 6.2): a 2.2 m wave, 0.72 m high at the front, over a 0.56 m two-light kit window
-BROW = eyebrow(x=4.6, side=1, d=1.5, width=2.2, height=0.72, flat=0.60, plateau=0.18, fade=1.20, lip=0.20,
-               window=dict(width=0.56, height=0.36, sill=0.05))
+# clear of the tower abutment (y < 2.3), the wing roof (y < 2.05) and the partition (y 6.2).  Round 6 (client:
+# "bigger and bolder like the reference"): a 3.4 m wave, 1.25 m high at the front with a 0.28 m lip, a longer plateau,
+# the fade ending ~1 m under the comb, over a 0.85 x 0.62 m two-light kit window; re-centred at y 4.45 so the wave
+# (y 2.75-6.15) stays clear; the kit 1.14 eyebrow fixes on (tilted shingles, deck rows over the bump only, inset
+# eave board, closed front ends)
+BROW = eyebrow(x=4.4, side=1, d=1.2, width=3.5, height=1.30, flat=1.40, plateau=0.35, fade=2.10, lip=0.30,
+               window=dict(width=0.85, height=0.62, sill=0.18, lights=2), tilt=True, span_rows=True,
+               eave_inset=0.10, close_ends=True)
 MAIN = GableRoof(x0=Y0, x1=Y1, half=HALF, wall_z=DIM["wall_z"], pitch_deg=DIM["pitch"], overhang=0.70,
                  verge=(0.35, 0.50), origin=(HX, 0.0), yaw_deg=90.0, name="roof", ridge_sag=DIM["ridge_sag"],
                  eave_sag=0.10, eave_sweep=0.40, sweep_len=1.5, verge_flare=0.36 * K, flare_len=2.0 * K,

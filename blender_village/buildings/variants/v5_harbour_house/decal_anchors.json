@@ -16,10 +16,10 @@
   "lichen",
   "grime"
  ],
- "count": 112,
+ "count": 111,
  "counts": {
   "repair_patch": 7,
-  "lichen": 13,
+  "lichen": 12,
   "damp_rise": 15,
   "soot": 7,
   "crack": 21,
@@ -263,56 +263,30 @@
    "seed": 982942229
   },
   {
-   "name": "DA_lichen_004",
-   "type": "lichen",
-   "position": [
-    -1.61549,
-    -2.67278,
-    2.26202
-   ],
-   "normal": [
-    -0.99815,
-    0.00664,
-    0.06048
-   ],
-   "up": [
-    0.06048,
-    -0.0004,
-    0.99817
-   ],
-   "size": [
-    0.5295,
-    0.3373
-   ],
-   "surface": "M_stone",
-   "probability": 0.5,
-   "seed": 867277236
-  },
-  {
    "name": "DA_repair_patch_004",
    "type": "repair_patch",
    "position": [
-    4.59202,
-    -5.81317,
-    1.40191
+    5.4191,
+    -0.37293,
+    2.39596
    ],
    "normal": [
-    -0.12056,
-    -0.99244,
-    0.02315
+    0.9994,
+    -0.02945,
+    0.01825
    ],
    "up": [
-    0.00279,
-    0.02298,
-    0.99973
+    -0.01824,
+    0.00054,
+    0.99983
    ],
    "size": [
-    0.5047,
-    0.4389
+    0.4952,
+    0.4644
    ],
    "surface": "M_stone",
    "probability": 0.35,
-   "seed": 347016346
+   "seed": 350099984
   },
   {
    "name": "DA_repair_patch_005",
@@ -341,7 +315,7 @@
    "seed": 493715215
   },
   {
-   "name": "DA_lichen_005",
+   "name": "DA_lichen_004",
    "type": "lichen",
    "position": [
     4.36846,
@@ -731,7 +705,7 @@
    "seed": 580751586
   },
   {
-   "name": "DA_lichen_006",
+   "name": "DA_lichen_005",
    "type": "lichen",
    "position": [
     1.87236,
@@ -1251,7 +1225,7 @@
    "seed": 1044967662
   },
   {
-   "name": "DA_lichen_007",
+   "name": "DA_lichen_006",
    "type": "lichen",
    "position": [
     -7.02725,
@@ -1277,7 +1251,7 @@
    "seed": 478361154
   },
   {
-   "name": "DA_lichen_008",
+   "name": "DA_lichen_007",
    "type": "lichen",
    "position": [
     -4.78739,
@@ -1381,33 +1355,7 @@
    "seed": 448332251
   },
   {
-   "name": "DA_lichen_009",
-   "type": "lichen",
-   "position": [
-    -1.6675,
-    -2.77325,
-    0.23313
-   ],
-   "normal": [
-    0.0,
-    -0.11037,
-    0.99389
-   ],
-   "up": [
-    -0.51768,
-    -0.85035,
-    -0.09443
-   ],
-   "size": [
-    0.1938,
-    0.1163
-   ],
-   "surface": "M_stone",
-   "probability": 0.5,
-   "seed": 342345649
-  },
-  {
-   "name": "DA_lichen_010",
+   "name": "DA_lichen_008",
    "type": "lichen",
    "position": [
     4.59301,
@@ -1425,15 +1373,15 @@
     -0.07781
    ],
    "size": [
-    0.1707,
-    0.1024
+    0.1938,
+    0.1163
    ],
    "surface": "M_stone",
    "probability": 0.5,
-   "seed": 1065594343
+   "seed": 342345649
   },
   {
-   "name": "DA_lichen_011",
+   "name": "DA_lichen_009",
    "type": "lichen",
    "position": [
     5.4525,
@@ -1451,11 +1399,37 @@
     0.00569
    ],
    "size": [
-    0.2637,
-    0.1582
+    0.2276,
+    0.1366
    ],
    "surface": "M_stone",
    "probability": 0.515,
+   "seed": 1065594343
+  },
+  {
+   "name": "DA_lichen_010",
+   "type": "lichen",
+   "position": [
+    5.4525,
+    2.62691,
+    0.24184
+   ],
+   "normal": [
+    0.0,
+    -0.07005,
+    0.99754
+   ],
+   "up": [
+    0.90129,
+    0.43214,
+    0.03035
+   ],
+   "size": [
+    0.1978,
+    0.1187
+   ],
+   "surface": "M_stone",
+   "probability": 0.609,
    "seed": 835460742
   },
   {
@@ -1477,12 +1451,12 @@
     0.75471
    ],
    "size": [
-    0.598,
-    0.6436
+    0.6624,
+    0.5075
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 865161121
+   "seed": 364664364
   },
   {
    "name": "DA_moss_002",
@@ -1503,38 +1477,38 @@
     0.75471
    ],
    "size": [
-    0.8156,
-    0.6475
+    0.7338,
+    0.4679
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 895422245
+   "seed": 627263384
   },
   {
    "name": "DA_moss_003",
    "type": "moss",
    "position": [
-    -0.00052,
-    -2.32281,
-    5.08872
+    0.00283,
+    -2.32295,
+    6.00936
    ],
    "normal": [
-    -0.75471,
-    0.0,
-    0.65606
+    0.08316,
+    -0.03513,
+    0.99592
    ],
    "up": [
-    0.65606,
-    -0.0,
-    0.75471
+    0.99553,
+    0.04786,
+    -0.08144
    ],
    "size": [
-    0.8186,
-    0.5856
+    0.83,
+    0.6875
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 950313127
+   "seed": 732403755
   },
   {
    "name": "DA_moss_004",
@@ -1555,38 +1529,38 @@
     0.75471
    ],
    "size": [
-    0.7202,
-    0.5125
+    0.6865,
+    0.5219
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 499616687
+   "seed": 934826992
   },
   {
    "name": "DA_moss_005",
    "type": "moss",
    "position": [
-    0.00208,
-    -0.72046,
-    5.27646
+    0.00292,
+    -0.72089,
+    5.96307
    ],
    "normal": [
-    -0.10555,
-    0.58867,
-    0.80146
+    0.10589,
+    0.48023,
+    0.87073
    ],
    "up": [
-    0.84385,
-    -0.37338,
-    0.38538
+    0.84292,
+    -0.50789,
+    0.17761
    ],
    "size": [
-    0.7025,
-    0.5379
+    0.65,
+    0.6599
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 406782731
+   "seed": 1023156666
   },
   {
    "name": "DA_moss_006",
@@ -1607,12 +1581,12 @@
     0.75471
    ],
    "size": [
-    0.7861,
-    0.5573
+    0.5232,
+    0.4023
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 452852620
+   "seed": 158326113
   },
   {
    "name": "DA_moss_007",
@@ -1633,12 +1607,12 @@
     0.75471
    ],
    "size": [
-    0.5104,
-    0.5018
+    0.7097,
+    0.5816
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 163650037
+   "seed": 670631870
   },
   {
    "name": "DA_moss_008",
@@ -1659,12 +1633,12 @@
     0.75471
    ],
    "size": [
-    0.5428,
-    0.4371
+    0.7798,
+    0.6534
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 312050049
+   "seed": 44536726
   },
   {
    "name": "DA_moss_009",
@@ -1685,12 +1659,12 @@
     0.76604
    ],
    "size": [
-    0.5444,
-    0.4981
+    0.6919,
+    0.5022
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 373139076
+   "seed": 334167169
   },
   {
    "name": "DA_moss_010",
@@ -1711,12 +1685,12 @@
     0.76604
    ],
    "size": [
-    0.813,
-    0.4205
+    0.6308,
+    0.5011
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 547312663
+   "seed": 349718579
   },
   {
    "name": "DA_moss_011",
@@ -1737,12 +1711,12 @@
     0.76604
    ],
    "size": [
-    0.5971,
-    0.6632
+    0.6231,
+    0.5128
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 310467249
+   "seed": 427577896
   },
   {
    "name": "DA_moss_012",
@@ -1763,12 +1737,12 @@
     0.76604
    ],
    "size": [
-    0.8514,
-    0.6459
+    0.8509,
+    0.5717
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 495697874
+   "seed": 170655166
   },
   {
    "name": "DA_moss_013",
@@ -1789,12 +1763,12 @@
     0.76604
    ],
    "size": [
-    0.7731,
-    0.4178
+    0.6309,
+    0.6876
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 69164597
+   "seed": 623256210
   },
   {
    "name": "DA_moss_014",
@@ -1815,12 +1789,12 @@
     0.76604
    ],
    "size": [
-    0.6359,
-    0.6792
+    0.5237,
+    0.4798
    ],
    "surface": "M_roof_shingle",
    "probability": 0.75,
-   "seed": 278631987
+   "seed": 407619465
   },
   {
    "name": "DA_moss_015",
@@ -1846,7 +1820,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 937594255
+   "seed": 992817987
   },
   {
    "name": "DA_moss_016",
@@ -1872,7 +1846,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 442134441
+   "seed": 677157322
   },
   {
    "name": "DA_moss_017",
@@ -1898,7 +1872,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 602961250
+   "seed": 642779107
   },
   {
    "name": "DA_moss_018",
@@ -1924,7 +1898,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 625888825
+   "seed": 937594255
   },
   {
    "name": "DA_moss_019",
@@ -1950,7 +1924,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 948109786
+   "seed": 442134441
   },
   {
    "name": "DA_moss_020",
@@ -1976,7 +1950,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 216473464
+   "seed": 602961250
   },
   {
    "name": "DA_moss_021",
@@ -2002,7 +1976,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 724384758
+   "seed": 625888825
   },
   {
    "name": "DA_moss_022",
@@ -2028,7 +2002,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 817410533
+   "seed": 948109786
   },
   {
    "name": "DA_moss_023",
@@ -2054,7 +2028,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 44231205
+   "seed": 216473464
   },
   {
    "name": "DA_moss_024",
@@ -2080,7 +2054,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 547689096
+   "seed": 724384758
   },
   {
    "name": "DA_moss_025",
@@ -2106,7 +2080,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 706481764
+   "seed": 817410533
   },
   {
    "name": "DA_moss_026",
@@ -2132,7 +2106,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 171045750
+   "seed": 44231205
   },
   {
    "name": "DA_moss_027",
@@ -2158,7 +2132,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 522424268
+   "seed": 547689096
   },
   {
    "name": "DA_moss_028",
@@ -2184,7 +2158,7 @@
    ],
    "surface": "M_roof_shingle",
    "probability": 0.7,
-   "seed": 61044981
+   "seed": 706481764
   },
   {
    "name": "DA_damp_rise_005",
@@ -2837,7 +2811,7 @@
    "seed": 942450271
   },
   {
-   "name": "DA_lichen_012",
+   "name": "DA_lichen_011",
    "type": "lichen",
    "position": [
     7.69251,
@@ -2863,7 +2837,7 @@
    "seed": 48134783
   },
   {
-   "name": "DA_lichen_013",
+   "name": "DA_lichen_012",
    "type": "lichen",
    "position": [
     -2.40749,
@@ -2976,17 +2950,17 @@
   "note": "built with the tower axis at the origin, then recentred: see the build log"
  },
  "validation": {
-  "checked": 177,
+  "checked": 176,
   "snapped": 5,
   "max_move": 0.0417,
   "renormal": 0,
   "shrunk": 23,
   "no_surface": 5,
   "wrong_surface": 5,
-  "excluded": 18,
+  "excluded": 19,
   "occluded": 1,
-  "footprint": 36,
+  "footprint": 35,
   "duplicate": 0,
-  "kept": 112
+  "kept": 111
  }
 }

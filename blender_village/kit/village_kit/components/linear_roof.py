@@ -33,7 +33,8 @@ from ..shingles import SH_VARIANTS, SIZE_TABLE, shake_mesh, shingle_mesh
 
 
 EYEBROW = dict(x=0.0, side=1, d=1.5, width=2.0, height=0.75, flat=0.70, plateau=0.18, fade=1.20, lip=0.20,
-               set_back=0.04, window=dict(width=0.56, height=0.36, sill=0.05), min_front=0.14, seed=0)
+               set_back=0.04, window=dict(width=0.56, height=0.36, sill=0.05), min_front=0.14, seed=0,
+               tilt=False, span_rows=False, eave_inset=0.0, close_ends=False)
 """kit 1.13 (v5 round 5, ref4's eyebrow dormer): one eyebrow bump on a shingle GableRoof, in its local frame --
     x         centre along the ridge (local x)
     side      +1 / -1: the slope (local +y / -y)
@@ -45,7 +46,17 @@ EYEBROW = dict(x=0.0, side=1, d=1.5, width=2.0, height=0.75, flat=0.70, plateau=
     set_back  the timber front's face is this far out from the deck front (m; its backing covers the deck front)
     window    the kit window (components.openings.window keys, timber family; clear width / height / sill above
               the front's sill beam); None = a blind board front
-    min_front the front is built where the gap is at least this tall (beyond it the deck front closes the gap)"""
+    min_front the front is built where the gap is at least this tall (beyond it the deck front closes the gap)
+kit 1.14 (v5 round 6; every default = the round-5 build, bit-identical):
+    tilt       True: each lifted shingle's thickness is laid along the BUMP's own surface normal (the bell's slope
+               along the eave and the fade's slope up the roof), not sheared vertically -- no thin slivers on the
+               flanks (_brow_tilt)
+    span_rows  True: the deck's tear rows and fine wave grid are inserted only over the bump's span (a separate
+               closed deck patch), not along the whole roof length (fewer hidden deck triangles)
+    eave_inset plan m: the lifted eave board under the wave's lowest course starts this far behind the course's butt
+               line, so it hides in the eave's shadow instead of showing as a pale strip
+    close_ends True: a closing board runs on past each end post, clamped under the wave's eave, down to where the gap
+               is under 2 cm (no dark slot between the post and the wave's flank)"""
 
 
 def eyebrow(x, side=1, **kw):
@@ -771,9 +782,31 @@ def _shingle_courses(roof, acc, rng, seed=0):
                 P = roof.surf(x, u, sg, off)
                 Fl = [f[:, ::-1] if sg > 0 else f for f in F]      # the slope map has det = -sg
                 Pw = roof.to_world(P) if force is None else roof.to_world(P, brow=force)
+                if force is not None:          # kit 1.14: eyebrow(tilt=True) -- thickness along the bump's normal
+                    tb = [bi for bi, B in brows if B.get("tilt") and force[bi] > 0
+                          and xs[i + 1] > B["x"] - B["hw"] and xs[i] < B["x"] + B["hw"]]
+                    if tb:
+                        Pw = _brow_tilt(roof, sg, x, u, off, force, tb, Pw)
                 acc.add(Pw, Fl, "M_roof_shingle", uv, wear=float(rng.uniform(0.2, 0.6)))
                 n_piece += 1
     return n_piece
+
+
+def _brow_tilt(roof, sg, x, u, off, force, tilt_ids, Pw, eps=0.01):
+    """kit 1.14 (eyebrow(tilt=True)): re-lay a lifted shingle's thickness along the bumped surface's normal.  The
+    vertical warp shears a piece on the bell's steep flanks (its thickness stays vertical, so it thins into a sliver);
+    here each vertex moves by off x (n_bumped - n_unbumped) at its footprint (x, u): the piece keeps its footprint and
+    its full thickness normal to the wave.  0 where the bump is flat (the correction vanishes outside the wave)."""
+    off = np.asarray(off, float)
+    s0 = {bi: (0.0 if bi in tilt_ids else v) for bi, v in force.items()}
+
+    def nrm(s):
+        def S(xx, uu):
+            return roof.to_world(roof.surf(xx, uu, sg, 0.0), brow=s)
+        n = np.cross(S(x + eps, u) - S(x - eps, u), S(x, u + eps) - S(x, u - eps))
+        n /= np.linalg.norm(n, axis=-1, keepdims=True)
+        return n * np.sign(n[..., 2:3])
+    return Pw + off[..., None] * (nrm(force) - nrm(s0))
 
 
 RIDGE_CAP = dict(past=0.045, cap_len=0.09, f_min=0.15)
@@ -888,59 +921,94 @@ def _deck(roof, acc, clip_local=None):
     xs0, us0 = xs, us
     for sg in (-1, 1):
         brows = [(bi, B) for bi, B in enumerate(getattr(roof, "BROWS", None) or ()) if B["sg"] == sg]
-        xs, us = xs0, us0
-        holes = []
-        if brows:                          # kit 1.13: rows at each eyebrow's tear, a fine grid over its wave
-            ex, eu = [xs], [us]
-            for bi, B in brows:
-                eu.append(np.array([B["u_t"] - 1e-3, B["u_t"]]))
-                eu.append(np.linspace(B["u_t"], B["u_t"] + B["plat_u"] + B["fade_u"], 14))
-                ex.append(np.linspace(B["x"] - B["hw"], B["x"] + B["hw"], 25))
-                h = _brow_hole(roof, B)
-                if h is not None:
-                    ex.append(np.array(h))
-                    holes.append((bi, B, h))
-            xs, us = np.unique(np.concatenate(ex)), np.unique(np.concatenate(eu))
-        X, Uu = np.meshgrid(xs, us, indexing="ij")
-        top = roof.surf(X, Uu, sg, 0.0)
-        bot = roof.surf(X, Uu, sg, -t)
-        nx_, nu = X.shape
-        V = np.concatenate([top.reshape(-1, 3), bot.reshape(-1, 3)])
-        off = nx_ * nu
-        I = lambda i, j: i * nu + j  # noqa: E731
-        skip = set()
-        for bi, B, (h0, h1) in holes:      # the framed opening: the deck front is open behind the window
-            j = int(np.argmin(np.abs(us - (B["u_t"] - 1e-3))))
-            for i in range(nx_ - 1):
-                if xs[i] >= h0 - 1e-9 and xs[i + 1] <= h1 + 1e-9:
-                    skip.add((i, j))
-        F = []
+        span = [(bi, B) for bi, B in brows if B.get("span_rows")]
+        if not span:
+            _deck_slab(roof, acc, sg, xs0, us0, brows)
+        else:                              # kit 1.14: eyebrow(span_rows=True) -- a closed patch over each bump only
+            rest = [(bi, B) for bi, B in brows if not B.get("span_rows")]
+            a = roof.xa
+            for c0, c1, bi in sorted((max(B["x"] - B["hw"], roof.xa), min(B["x"] + B["hw"], roof.xb), bi)
+                                     for bi, B in span):
+                if c0 > a + 1e-6:
+                    _deck_slab(roof, acc, sg, xs0, us0, rest, (a, c0))
+                _deck_slab(roof, acc, sg, xs0, us0, rest + [(bi, roof.BROWS[bi])], (c0, c1))
+                a = c1
+            if a < roof.xb - 1e-6:
+                _deck_slab(roof, acc, sg, xs0, us0, rest, (a, roof.xb))
+        for bi, B in brows:
+            _brow_eave_strip(roof, acc, sg, bi, B)
+
+
+def _deck_slab(roof, acc, sg, xs, us, brows, x_rng=None):
+    """one closed deck slab on side sg over the grid xs x us (kit 1.13: plus the tear rows / fine wave grid / framed
+    opening of the eyebrows `brows`); kit 1.14: x_rng=(lo, hi) -- only the part of the roof between lo and hi along
+    the ridge (its own closed ends), so _deck can build an eyebrow's fine patch separately from the plain deck."""
+    t = roof.deck_t
+    holes = []
+    patch = x_rng is not None and any(B.get("span_rows") for _, B in brows)
+    if x_rng is not None:
+        lo, hi = x_rng
+        inner = xs[(xs > lo + 1e-6) & (xs < hi - 1e-6)]
+        xs = np.unique(np.concatenate([[] if patch else inner, [lo, hi]]))   # a patch takes only its own grid
+    if brows:                              # kit 1.13: rows at each eyebrow's tear, a fine grid over its wave
+        ex, eu = [xs], [us]
+        for bi, B in brows:
+            fine = bool(B.get("span_rows"))
+            n_u = max(14, int((B["plat_u"] + B["fade_u"]) / 0.30) + 1) if fine else 14
+            n_x = _brow_cols(B)
+            eu.append(np.array([B["u_t"] - 1e-3, B["u_t"]]))
+            eu.append(np.linspace(B["u_t"], B["u_t"] + B["plat_u"] + B["fade_u"], n_u))
+            ex.append(np.linspace(B["x"] - B["hw"], B["x"] + B["hw"], n_x))
+            h = _brow_hole(roof, B)
+            if h is not None and (x_rng is None or (h[0] > lo and h[1] < hi)):
+                ex.append(np.array(h))
+                holes.append((bi, B, h))
+        xs, us = np.unique(np.concatenate(ex)), np.unique(np.concatenate(eu))
+        if x_rng is not None:
+            xs = xs[(xs >= lo - 1e-9) & (xs <= hi + 1e-9)]
+    X, Uu = np.meshgrid(xs, us, indexing="ij")
+    top = roof.surf(X, Uu, sg, 0.0)
+    bot = roof.surf(X, Uu, sg, -t)
+    nx_, nu = X.shape
+    V = np.concatenate([top.reshape(-1, 3), bot.reshape(-1, 3)])
+    off = nx_ * nu
+    I = lambda i, j: i * nu + j  # noqa: E731
+    skip = set()
+    for bi, B, (h0, h1) in holes:      # the framed opening: the deck front is open behind the window
+        j = int(np.argmin(np.abs(us - (B["u_t"] - 1e-3))))
         for i in range(nx_ - 1):
-            for j in range(nu - 1):
-                if (i, j) in skip:
-                    continue
-                F.append((I(i, j), I(i + 1, j), I(i + 1, j + 1), I(i, j + 1)))
-                F.append((off + I(i, j), off + I(i, j + 1), off + I(i + 1, j + 1), off + I(i + 1, j)))
-            F.append((I(i, 0), off + I(i, 0), off + I(i + 1, 0), I(i + 1, 0)))          # eave edge
+            if xs[i] >= h0 - 1e-9 and xs[i + 1] <= h1 + 1e-9:
+                skip.add((i, j))
+    F = []
+    for i in range(nx_ - 1):
         for j in range(nu - 1):
-            F.append((I(0, j), I(0, j + 1), off + I(0, j + 1), off + I(0, j)))           # verge ends
-            F.append((I(nx_ - 1, j), off + I(nx_ - 1, j), off + I(nx_ - 1, j + 1), I(nx_ - 1, j + 1)))
-        for (i, j) in skip:                # the opening's cut edges stay closed (deck thickness)
-            if (i - 1, j) not in skip:
-                F.append((I(i, j), I(i, j + 1), off + I(i, j + 1), off + I(i, j)))
-            if (i + 1, j) not in skip:
-                F.append((I(i + 1, j), off + I(i + 1, j), off + I(i + 1, j + 1), I(i + 1, j + 1)))
-        F = np.array(F)
-        q = V[F[0]]
-        if float(np.cross(q[1] - q[0], q[3] - q[0]) @ roof.normal(sg)) < 0:
-            F = F[:, ::-1]
-        if brows:
-            S = {bi: np.tile((Uu >= B["u_t"] - 1e-6).reshape(-1).astype(float), 2) for bi, B in brows}
-            acc.add(roof.to_world(V, brow=S), F, "M_timber_weathered", wear=0.4)
-            for bi, B in brows:
-                _brow_eave_strip(roof, acc, sg, bi, B)
-        else:
-            acc.add(roof.to_world(V), F, "M_timber_weathered", wear=0.4)
+            if (i, j) in skip:
+                continue
+            F.append((I(i, j), I(i + 1, j), I(i + 1, j + 1), I(i, j + 1)))
+            F.append((off + I(i, j), off + I(i, j + 1), off + I(i + 1, j + 1), off + I(i + 1, j)))
+        F.append((I(i, 0), off + I(i, 0), off + I(i + 1, 0), I(i + 1, 0)))          # eave edge
+    for j in range(nu - 1):
+        F.append((I(0, j), I(0, j + 1), off + I(0, j + 1), off + I(0, j)))           # verge ends
+        F.append((I(nx_ - 1, j), off + I(nx_ - 1, j), off + I(nx_ - 1, j + 1), I(nx_ - 1, j + 1)))
+    for (i, j) in skip:                # the opening's cut edges stay closed (deck thickness)
+        if (i - 1, j) not in skip:
+            F.append((I(i, j), I(i, j + 1), off + I(i, j + 1), off + I(i, j)))
+        if (i + 1, j) not in skip:
+            F.append((I(i + 1, j), off + I(i + 1, j), off + I(i + 1, j + 1), I(i + 1, j + 1)))
+    F = np.array(F)
+    q = V[F[0]]
+    if float(np.cross(q[1] - q[0], q[3] - q[0]) @ roof.normal(sg)) < 0:
+        F = F[:, ::-1]
+    if brows:
+        S = {bi: np.tile((Uu >= B["u_t"] - 1e-6).reshape(-1).astype(float), 2) for bi, B in brows}
+        acc.add(roof.to_world(V, brow=S), F, "M_timber_weathered", wear=0.4)
+    else:
+        acc.add(roof.to_world(V), F, "M_timber_weathered", wear=0.4)
+
+
+def _brow_cols(B):
+    """the eyebrow's fine column count along the ridge: 25 (kit 1.13); kit 1.14 span_rows: ~every 0.15 m, >= 25."""
+    return max(25, int(B["width"] / 0.15) + 1) if B.get("span_rows") else 25
 
 
 def _brow_hole(roof, B):
@@ -955,8 +1023,11 @@ def _brow_eave_strip(roof, acc, sg, bi, B):
     """kit 1.13: the eyebrow's little eave -- a lifted board strip under its lowest course, from the course's butt
     line back to the deck front (u_lip .. u_t), deck underside up to just under the course butts, so no slot shows
     between the wave's eave and the deck front."""
-    xs = np.linspace(B["x"] - B["hw"], B["x"] + B["hw"], 25)
-    us = np.array([B["u_lip"] - 0.01, 0.5 * (B["u_lip"] + B["u_t"]), B["u_t"]])
+    xs = np.linspace(B["x"] - B["hw"], B["x"] + B["hw"], _brow_cols(B))
+    u0 = B["u_lip"] - 0.01
+    if B.get("eave_inset"):                # kit 1.14: the board's front hides behind the wave's eave course
+        u0 = min(u0 + float(B["eave_inset"]) / math.cos(roof.p), B["u_t"] - 0.03)
+    us = np.array([u0, 0.5 * (u0 + B["u_t"]), B["u_t"]])
     X, Uu = np.meshgrid(xs, us, indexing="ij")
     top = roof.surf(X, Uu, sg, 0.055)
     bot = roof.surf(X, Uu, sg, -roof.deck_t)
@@ -1175,6 +1246,21 @@ def _eyebrow_fronts(g, roof, pre):
         for (pa, pb) in ((0.0, 0.08), (L - 0.08, L)):
             zt = max(rake(pa), rake(pb))
             wbox(accs["frame"], F, pa, pb, z0, zt, -0.10, 0.04, "M_timber", r=0.012, nz=6, clamp=rake)
+        if B.get("close_ends"):            # kit 1.14: a closing board past each end post, under the wave's flank
+            gap = zu - zd
+            a2, b2 = a, b
+            while a2 > 0 and gap[a2 - 1] >= 0.02:
+                a2 -= 1
+            while b2 < len(xg) - 1 and gap[b2 + 1] >= 0.02:
+                b2 += 1
+            for xa_, xb_ in ((float(xg[a2]), x_lo + 0.04), (x_hi - 0.04, float(xg[b2]))):
+                if xb_ - xa_ < 0.06:
+                    continue
+                sa, sb = sorted(((xa_ - x_O) / tl, (xb_ - x_O) / tl))
+                zb = float(min(z_dn(xa_), z_dn(xb_))) - 0.03
+                zt = max(rake(s) for s in np.linspace(sa, sb, 9))
+                wbox(accs["frame"], F, sa, sb, zb, zt, -0.07, 0.02, "M_timber", r=0.008,
+                     ns=max(4, int((sb - sa) / 0.04) + 2), nz=4, clamp=lambda s, rake=rake: rake(s) - 0.005)
         blocks, clears = [], []
         s_c = (B["x"] - x_O) / tl
         if B.get("window"):
