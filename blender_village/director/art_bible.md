@@ -363,3 +363,13 @@ Client's words: "Keep the new structures to a one million triangle limit".
   
   Never cut silhouette, entrance or ground-contact detail (note 4).
 - At the time of this note: v3 longhouse 0.47 M and v2 tiered hall 0.95 M comply; v1 watchtower 1.06 M and v4 mill-house 1.38 M are over.
+
+### Producer note 16: CLIENT DIRECTION — one village, one building culture (2026-10-17)
+
+Client's words: "Remember that the new designs should still give off the feeling that they were built by the same people with the same techniques and materials of the other buildings".
+
+- **Every new design** (the harbour house, the boathouse or barn, the add-ons and all later designs) must read as built by the **same community, with the same techniques and materials** as the existing buildings: the heroes (keep, windmill, roundhut) and the accepted variants (v1-v4).
+- **Same materials:** the shared 15-slot palette only (rubble and dressed stone, lime mortar, timber and weathered timber, shingle and shake, thatch, daub, wattle, iron, lead, moss). A timber building still sits on the same rubble plinths and dry-stone footings, uses the same timber sections, the same shingle sizes and courses, the same iron hardware and the same lead flashing as the rest of the village.
+- **Same techniques:** reuse the kit's existing construction details wherever they apply, rather than inventing new ones: the door frames, thresholds and steps, window frames and shutters, eave rolls, verges and ridge pieces, corner and plinth details, finials, and the age and moss treatment (`age_defaults`). A new family is **new forms from the same hands**, not a new style.
+- **Same proportions and age:** the same storey heights, door and window sizes against the 1.8 m figure, roof pitches within the bible's ranges, and the same weathering level.
+- **Director and auditor:** "reads as the same village" is part of the **distinctness and reuse** axis. A design that looks imported from another place or period, or that uses materials or details found nowhere else in the village, is a must-fix.

@@ -26,3 +26,11 @@ It must read as a timber waterfront building, not as a stone building clad in pl
 - a floor stack with a jettied upper storey;
 - piles or stilts with a plank deck or jetty;
 - a large boat or barn door.
+
+## CLIENT DIRECTION (2026-10-17, session 2): same builders, same techniques, same materials (producer note 16)
+
+Client's words: "Remember that the new designs should still give off the feeling that they were built by the same people with the same techniques and materials of the other buildings".
+
+Read producer note 16 at the end of `director/art_bible.md` in full; it is binding for this building from round 1.
+- **Builder:** the harbour house must share the existing buildings' materials and details: the same palette, the rubble plinth and footing details, the timber sections, the shingle sizes and courses, the door and window frames, thresholds and shutters, iron hardware and lead flashing, eave rolls, verges and ridge, finials, and the same age and moss (`age_defaults`). Reuse the kit's existing detail modules for these rather than writing new ones; the new timber family supplies new FORMS, not a new style. If round 1 is already built, check it against this and record in your builder entry what you reused and what still differs.
+- **Art Director and auditor:** grade "reads as the same village" under distinctness and reuse. Put it next to the keep, the roundhut and the longhouse at the same scale, and make one side-by-side or line-up render. Any material or detail found nowhere else in the village is a must-fix.
