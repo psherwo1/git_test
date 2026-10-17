@@ -147,3 +147,32 @@ The client reviewed the early round-1 clay renders (hero, back, actor close-up, 
 5. **Not requested:** the client did not ask for a stone quay. The plank quay face may stay; the rubble plinth under the walls stays.
 
 Make the new softness reusable kit options (e.g. a swept eave or ridge sag on `timber_roof` / `linear_roof`, a bow on `path_timber_wall`), and record them in `kit/changes/v5_harbour_house.md`.
+## CLIENT DIRECTION (2026-10-17, session 2): the client's concept art for the harbour house — `reference/ref4_harbour_boathouse_concept.jpg`
+
+The client attached concept art "for inspiration": `reference/ref4_harbour_boathouse_concept.jpg`. **Open it (Read tool) before you grade or build.** It is now the primary visual reference for this building. Where it differs from the "Brief" above, follow the concept, within producer notes 1-17 and the 1 M cap. What it shows, and what to take from it:
+
+1. **A stone and timber boathouse-hall, not an all-timber house.**
+   - The ground storey is coursed rubble, in the village's stone.
+   - The water-facing gable is a heavy timber **cruck / arched-brace frame**: big curved members forming pointed and round arches, with plank infill in the upper gable.
+   - A **wide arched boat opening** runs through it at water level; boats moor inside under the arch.
+   - This replaces "rectangular timber house with a big door". The large boat door module becomes a **large arched opening framed by curved timbers**.
+2. **A round stone tower at the landward corner.**
+   - It is integral to the plan, with a timber-clad top storey (vertical boards, small windows, a timber sill band) under a steep, mossy, conical shingle roof with a spike finial.
+   - It has small square windows in the stone, and the shingle roof abuts it.
+   - Build it with the kit's round families: drum / `round_stone_body` + `cone_roof` + finial, with `roof_junction.wall_abutment` where the main roof meets it.
+3. **A soft, sagging, swept roof.**
+   - Thick, chunky, mossy shingles (the keep / roundhut sizes).
+   - The ridge visibly sags and the eaves sweep.
+   - Bargeboards / verges curve and flare up at the gable apex.
+   - An **eyebrow dormer**: the shingles roll up over a small window with no hard edges.
+   - A lower wing roof steps down at the side.
+4. **A curved stone stair** wraps around the tower base, behind a curved parapet wall. It is a strong "round and organic" element; include it if the triangle budget allows.
+5. **Waterfront.**
+   - The building stands on a stone quay edge of large blocks; the boat hall opens onto water.
+   - A plank jetty on posts runs out from the quay.
+   - So the stone quay is now in: it follows the concept, and is consistent with note 16. This supersedes "the plank quay face may stay" in the entry above.
+   - Piles and deck: a short jetty on timber posts, as in the concept.
+6. **Optional, if budget allows:** the small round stone store with a conical shingle roof (concept, right edge). It could also be a separate small design later; record the choice.
+7. **Out of scope (note 10, no ground dressing):** the cobbles, ropes, nets, barrels, crates, boats and cliffs. Leave decal anchors where they would go.
+
+The round-2 direction above still applies (old, rough timber; the village's shingle and finials; soft organic lines; the jetty). The jettied upper floor is no longer required if the concept's cruck hall replaces the two-storey timber house. The **kit family** is still the deliverable: the cruck / arched-brace frame, the arched boat opening, the timber walls and the swept / sagging roof options must all be reusable modules. A boathouse or barn must still be a short recipe.
