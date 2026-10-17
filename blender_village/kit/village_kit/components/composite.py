@@ -1015,13 +1015,17 @@ def set_entrance(g, xy, radius=3.0, height=2.5):
     g.ENTRANCE = tuple(xy)
 
 
-def inside_box(x0, x1, y0, y1, z1=None):
-    """clip(P, margin=0) -> bool: plan point inside the box (e.g. the interior of an attached rectangular body)."""
+def inside_box(x0, x1, y0, y1, z1=None, z_fn=None):
+    """clip(P, margin=0) -> bool: plan point inside the box (e.g. the interior of an attached rectangular body).
+    z_fn (v3 round 8, optional): z_fn(P) -> height per point; only points below it count (e.g. the interior under
+    a GableRoof's deck: a round wall rising past the roof keeps its stones above the deck)."""
     def clip(P, margin=0.0):
         P = np.asarray(P, float)
         m = (P[:, 0] > x0 + margin) & (P[:, 0] < x1 - margin) & (P[:, 1] > y0 + margin) & (P[:, 1] < y1 - margin)
         if z1 is not None:
             m &= P[:, 2] < z1
+        if z_fn is not None:
+            m &= P[:, 2] < np.asarray(z_fn(P), float)
         return m
     return clip
 

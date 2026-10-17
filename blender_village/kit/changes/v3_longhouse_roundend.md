@@ -128,10 +128,28 @@ three objects that differ in the director's blender.exe 5.2 rebuild. The kit-wid
 `B1 = _sign_fix(B1)` before the Gram-Schmidt step. It changes the UV hash of every building, heroes included, so it is
 left to the producer.
 
+## Round 8 (2026-10-17, kit 1.10.1): the client's redesign -- a gable roof abutting a round WALL
+
+Client direction (v3 log, 2026-10-17): raise the round end so the thatch runs into the drum's wall below the cone's
+eave; build the junction as a reusable kit module; bypass the eave-crossing machinery in the recipe. Only v3's own
+modules were edited (`roof_junction.py`, `rubble_walls.py`, `composite.py`; grep: no other kit building imports
+them -- `masonry.py` re-exports `rubble_walls` but no recipe calls `masonry_wall`). Every change is a new function
+or a new keyword whose default keeps the round-6 behaviour. The six other buildings were still rebuilt to
+`kit/baseline/v3_r8_hash/` under the HASH RULE (results in the round-8 builder entry of the v3 director log).
+
+| module | change | old behaviour via |
+|---|---|---|
+| `roof_junction.py` | `wall_abutment(g, roof, center, radius=None, parts=LINEAR_ROOF_PARTS, trace, fillet, lift, bury, end_aprons, apron, step_deg, name, min_clear, drop_near)` (new KIT COMPONENT): the cylinder version of `cone_abutment` that both kit reviews asked for. A `GableRoof` built by `linear_roof` runs INTO a round masonry wall that rises past its ridge: (1) `drop_near` drops the ridge comb's shakes within 15 cm of the face whole; (2) every roof part (deck, rafters, courses, eave rolls, ridge roll, comb) is TRIMMED 2-3 cm behind the battered face, behind the recessed mortar sheet (`junctions.clip_at_tower`); (3) the true roof-top / cylinder line is traced on the built covering (`junctions.trace_roof_on_tower`); (4) a lime-mortar flaunching fitted to the covering follows it eave to eave (`junctions.ride_fillet`); (5) a closed lead apron at each eave end (`junctions.wall_end_apron(closed_lip=True)`); (6) the junction is registered with the seal-probe guard. It raises if the roof's top at the wall is within `min_clear` (0.25 m) of the round frame's cone eave lip (the eaves would cross: that is `cone_abutment`'s case). The compound family's roof-into-tower pieces are reused unchanged on a single frame, so the round wall / roof junction now speaks one language in v3 and v4. `round_body_face(g, center)` and `LINEAR_ROOF_PARTS` (new helpers). | -- (new) |
+| `rubble_walls.py` | `round_stone_body(..., open_z=None)`: `"mid"` frames each opening on the battered face at its own mid height (an upper-storey window of a tall body sits on its face, not on the 1.2 m radius). | `open_z=None` |
+| `composite.py` | `inside_box(..., z_fn=None)`: only points under `z_fn(P)` count (the body interior under a roof deck), so a round wall rising past the roof keeps its stones above the deck. | `z_fn=None` |
+| `composite.py` | **Removed** the interrupted round-7 additions (never built; their junction no longer exists in v3): `cone_cut_cover`, `_cut_chains`, `_join_chains`, `_cover_sweep`, `_filter_max`, `_resample`, `drop_unsupported`, `region_soup`, `_covered_fn`, `_mesh_world`, `cone_soakers(covered, keep_lap)`, `cone_keep_out(soaker_lean)` and `g.CONE_CUT`. `composite.py` is back to its round-6 functions plus `inside_box(z_fn)`; the round 3-6 keep-out / saddle machinery stays in the kit for a design whose eaves do cross a cone. The round-7 file is in the repository's last commit (the working tree was clean when round 8 started) if anyone wants to resume it. | -- |
+
+Recipe: `KitParams(eave_z=6.00)` (was 2.30), `round_stone_body(r_base=3.70, batter_deg=1.5, open_z="mid", clip=inside_box(..., z_fn=deck underside))`, three upper-storey windows, `linear_roof(clip=inside_round(depth=0.10))` (no `abut_cone`), `wall_abutment(roof=ROOF)`, plain `cone_roof(seed=606)` (no `abut_roof` / `abut`), `round_eave_fill` without `skip`; `cone_abutment` and `cone_cut_cover` are no longer called.
+
 ## Known limitations (for the producer's merge)
 - `path_stone_wall` has no batter (the quoins are solid boxes); `round_stone_body` battering is 2.5 deg.
 - `cone_abutment` handles a roof whose ridge is horizontal and meets the cone on its near end; a roof meeting a
-  round WALL (tower taller than the roof) needs a cylinder variant of `abutment_curve` (same skirt builder).
+  round WALL (tower taller than the roof) is `wall_abutment` (round 8).
 - Hero buildings do not import any of these modules; no hero triangle count can move.
 - Round 2: `linear_roof` "courses" style is thatch only (the shingle covering is unchanged); `end_apron` reads the
   `GableRoof.ROLL` section (a covering without a roll gets a nominal nose).

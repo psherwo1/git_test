@@ -74,8 +74,8 @@ This file lets a new Claude Code session pick up the work with full continuity. 
   - the longhouse's moss: too heavy and uniform;
   - the dressed stone: slightly bright.
 
-**Running when this session ended. Check the results; do NOT relaunch blindly.**
-1. **Longhouse redesign workflow** (`workflows/kit_close_variants.js`, only v3, from fix round 8, up to round 10). Journal: `C:\Users\parke\.claude\projects\C--GitHubDesktop-git-test-blender-village\8c996e45-b510-4dd2-9e8e-52ff37fff4ab\subagents\workflows\wf_d6ca71b9-1b3\journal.jsonl`. Progress is visible in `director/log_variant_v3_longhouse_roundend.md`: round 8+ builder entries and score headings. If it was stopped before finishing, write a continuation from the log state, as the earlier continuation scripts did: copy any audit verdicts from the journal into the log first, because fixers read the log.
+**Jobs at handoff:**
+1. **Longhouse redesign: STOPPED on the client's request, to relaunch in the new session.** It was stopped about 25 min into round 8's fix step (09:07). The builder had rewritten `buildings/variants/v3_longhouse_roundend/build_v3_longhouse_roundend.py` (08:57) but not yet built or rendered; the last complete build is round 6 (07:36). **To relaunch:** run `workflows/kit_close_variants.js` with args `{root, py, render_flags, only: ['v3_longhouse_roundend'], start: {v3_longhouse_roundend: {stage: 'fix', round: 8}}}` (MAX_ROUNDS is 10). The fixer reads the CLIENT DIRECTION and the PRODUCER NOTE at the end of `director/log_variant_v3_longhouse_roundend.md`, which tell it to review the partial edits.
 2. ~~Textured junction test~~ **DONE**: `lookdev/junction_test/REPORT.md`. The client then accepted the tiered hall as it stands.
 
 ## 5. Practical notes for this machine

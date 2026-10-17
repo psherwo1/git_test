@@ -217,10 +217,13 @@ def path_stone_wall(g, name, path, top=2.75, top_fn=None, openings=(), clip=None
 
 
 def round_stone_body(g, name, center=(0.0, 0.0), r_base=3.6, batter_deg=2.5, top=None, openings=(), clip=None,
-                     seed=41, cfg=None):
+                     seed=41, cfg=None, open_z=None):
     """KIT COMPONENT (see module doc).  r_base: outer face radius at the ground; top: wall-head height (default the
     round frame's plate underside g.PLATE_BOT); openings: [(azimuth deg from -Y toward +X, spec), ...];
-    clip(P) -> bool drops the stones / mortar inside an attached body."""
+    clip(P) -> bool drops the stones / mortar inside an attached body.
+    open_z (v3 round 8): None (default, the round 1-7 rule) frames every opening on the battered face at z 1.2 m;
+    "mid" frames each at the face radius at its own mid height (an upper-storey window of a tall battered body
+    sits on its own face, not 1.2 m's)."""
     z1 = float(g.PLATE_BOT if top is None else top)
     tb = math.tan(math.radians(batter_deg))
     radius_fn = lambda z: r_base - np.clip(np.asarray(z, float), 0, None) * tb  # noqa: E731
@@ -256,7 +259,11 @@ def round_stone_body(g, name, center=(0.0, 0.0), r_base=3.6, batter_deg=2.5, top
     accs = opening_accs(g, name)
     orng = np.random.default_rng(seed + 11)
     for k, (th, s_c, sp) in enumerate(specs):
-        r_ = float(radius_fn(1.2))
+        if open_z == "mid":
+            _x0, _x1, za_, zb_ = opening_cut(sp)
+            r_ = float(radius_fn(0.5 * (za_ + zb_)))
+        else:
+            r_ = float(radius_fn(1.2))
         O = np.array([center[0] + r_ * math.cos(th), center[1] + r_ * math.sin(th), 0.0])
         t = np.array([-math.sin(th), math.cos(th), 0.0])
         n = np.array([math.cos(th), math.sin(th), 0.0])

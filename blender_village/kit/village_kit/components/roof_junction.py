@@ -21,6 +21,11 @@ any linear roof (thatch or shingle covering, any pitch / width / yaw) can be run
                                         plate and the cone's deck (closes the eave gap of a stone round body)
                                         -> <P>_eave_fill; kit 1.8.0: a wrapper of components.eave.eave_closure
                                         (kind="fill")
+    wall_abutment(g, roof, center, ...) KIT COMPONENT (v3 round 8): a linear roof running into a round WALL that
+                                        rises past its ridge (the cylinder version of cone_abutment): roof trimmed
+                                        at the face, mortar flaunching on the true intersection line, lead end
+                                        aprons, seal-probe registration -> <P>_<roof>_wall_abutment
+    round_body_face(g, center)          (R(z), head z) of the round stone body on g.WALL_FACES
 """
 import math
 
@@ -478,3 +483,109 @@ def round_eave_fill(g, r_off=0.06, z_bot=None, center=(0.0, 0.0), skip=None, mat
         z_bot = float(tops[0]) - 0.03
         log(f"  eave fill from the round wall head z {z_bot:.3f} m (no wall plate)")
     return _fill_band(g, r_off=r_off, z_bot=z_bot, center=center, skip=skip, mat=mat, n_az=n_az)
+
+
+# =================================================================================================================
+# kit round 8 (v3): a linear roof running into a round WALL (the cylinder version of cone_abutment)
+# =================================================================================================================
+LINEAR_ROOF_PARTS = (("deck", 0.03), ("rafters", 0.02), ("covering", 0.02), ("eave_roll", 0.02), ("ridge", 0.02),
+                     ("comb", 0.02))
+"""the objects linear_roof builds (<P>_<roof>_<part>) and the depth (m) behind the wall face each is trimmed at --
+behind the round body's recessed mortar sheet (stone_wall.mortar_sheet, w0 -4 mm +- 3 mm), so no cut end shows."""
+
+
+def round_body_face(g, center=(0.0, 0.0)):
+    """(R(z), wall-head z) of the round stone body published on g.WALL_FACES at `center`
+    (rubble_walls.round_stone_body); R(z) is its battered outer face radius."""
+    for wf in getattr(g, "WALL_FACES", []):
+        if wf.get("kind") == "round" and np.allclose(wf.get("center", (0.0, 0.0)), center):
+            return wf["radius"], float(wf["top"])
+    raise ValueError(f"no round stone body at {center} on g.WALL_FACES (build round_stone_body first)")
+
+
+def wall_abutment(g, roof, center=(0.0, 0.0), radius=None, parts=LINEAR_ROOF_PARTS,
+                  trace=("covering", "eave_roll", "ridge"), fillet=(0.10, 0.11), lift=0.05, bury=0.035,
+                  end_aprons=True, apron=(0.18, 0.28), step_deg=0.5, name="wall_abutment", min_clear=0.25,
+                  drop_near=(("comb", 0.15),)):
+    """KIT COMPONENT (kit round 8, v3): a linear roof (GableRoof, built by linear_roof) runs INTO a round masonry
+    WALL -- a round body whose wall rises past the roof's ridge, its own cone eave above it -- instead of the two
+    eaves crossing (cone_abutment).  Generic over any GableRoof (thatch or shingle, any pitch / width / yaw) and any
+    round body with a face radius R(z) (default: the round stone body on g.WALL_FACES at `center`).  The pieces are
+    the compound family's roof-into-tower language (components.junctions), reused unchanged on a single frame:
+      trim     every part of the roof (`parts`: [(part, depth)], LINEAR_ROOF_PARTS) is TRIMMED at the face, `depth`
+               behind it (junctions.clip_at_tower: crossing edges split on the true battered surface, everything
+               inside deleted) -- the deck, rafters, courses, eave rolls, ridge roll and comb stop inside the stone;
+      trace    the true roof-top / wall-face line, by downward ray casts on the built covering (`trace` parts) just
+               outside the face, every `step_deg` round the body (junctions.trace_roof_on_tower): up one slope, over
+               the ridge, down the other, one run from eave to eave;
+      fillet   a lime-mortar flaunching fitted to the covering along that line (junctions.ride_fillet: back buried
+               `bury` in the masonry, crease fillet[0] over the covering at the face, toe fillet[1] out, `lift` over
+               the courses), so no course step, thatch layer or ridge bundle can open a slot against the stone;
+      aprons   end_aprons: a closed lead apron on the wall face at each eave end of the run (junctions.wall_end_apron,
+               apron = (width past the eave, drop)) over the cut eave against the stone.
+    drop_near [(part, d)]: units of these parts with any vertex less than d m outside the face are dropped WHOLE
+    first (composite.drop_units) -- the ridge comb's shakes stop short of the flaunching instead of standing
+    through it; the ridge roll under them runs on into the wall.
+    The junction is registered for the seal-probe guard.  min_clear: when the round frame g has a cone (g.Z_EAVE),
+    the roof's top within 1 m of the wall must stay min_clear m under the cone's eave lip, or the two eaves cross
+    (that is cone_abutment's junction) and a ValueError says so.  -> <P>_<roof>_<name> (M_mortar / M_lead)."""
+    import bpy
+    from .junctions import _bvh, _smooth_up, clip_at_tower, ride_fillet, trace_roof_on_tower, wall_end_apron
+    if radius is None:
+        radius, _z_head = round_body_face(g, center)
+    C = np.asarray(center, float)[:2]
+    T = dict(center=C, R=lambda z, f=radius: np.asarray(f(np.asarray(z, float)), float), name="round wall")
+    pre = f"{g.prefix}_{roof.name}"
+    trimmed = []
+    if drop_near:
+        from .composite import drop_units
+        from .junctions import tower_field
+        for part, d in drop_near:
+            ob = bpy.data.objects.get(f"{pre}_{part}")
+            if ob is not None and ob.type == "MESH":
+                n_ = drop_units(ob, lambda V, _d=float(d): tower_field(T, V) < _d, rule="any")
+                trimmed.append(f"{part} -{n_} (whole units within {d:.2f} m)")
+    for part, depth in parts:
+        ob = bpy.data.objects.get(f"{pre}_{part}")
+        if ob is None or ob.type != "MESH":
+            continue
+        n0 = len(ob.data.polygons)
+        clip_at_tower(ob, T, inset=float(depth))
+        trimmed.append(f"{part} {n0}->{len(ob.data.polygons)}")
+    log(f"  {name}: trimmed at the wall face: " + ", ".join(trimmed))
+    objs = [o for o in (bpy.data.objects.get(f"{pre}_{p}") for p in trace) if o is not None and len(o.data.polygons)]
+    if not objs:
+        raise ValueError(f"wall_abutment: no covering objects {trace} for roof {roof.name}")
+    bvh = _bvh(objs)
+    runs = trace_roof_on_tower(bvh, T, step_deg=step_deg, z_guess=float(roof.z_lip) + 1.0)
+    if not runs:
+        log(f"  {name}: the roof does not reach the wall")
+        return None
+    z_hi = max(float(P[:, 2].max()) for _, P in runs)
+    if hasattr(g, "Z_EAVE") and z_hi > float(g.Z_EAVE) - min_clear:
+        raise ValueError(f"wall_abutment: the roof top at the wall ({z_hi:.2f} m) is less than {min_clear:.2f} m under "
+                         f"the cone's eave lip ({float(g.Z_EAVE):.2f} m) -- the eaves cross; raise the round body's "
+                         f"eave_z or use cone_abutment")
+    acc = Acc(f"{pre}_{name}", 35)
+    for k, (th, P) in enumerate(runs):
+        zb = _smooth_up(P[:, 2])
+        log(f"  {name}: run {k}: {len(P)} samples, azimuth {np.degrees(th[0]):.1f}..{np.degrees(th[-1]):.1f} deg, "
+            f"z {zb.min():.2f}..{zb.max():.2f} (cone eave lip {float(getattr(g, 'Z_EAVE', float('nan'))):.2f})")
+        ride_fillet(acc, th, zb, T, bvh, h_up=fillet[0], out=fillet[1], lift=lift, bury=bury)
+        if end_aprons:
+            Pe = P.copy()
+            Pe[:, 2] = zb + 0.03
+            for i0, i1 in ((0, 1), (-1, -2)):
+                n_out = np.array([Pe[i0, 0] - C[0], Pe[i0, 1] - C[1], 0.0])
+                wall_end_apron(acc, Pe[i0] + np.array([0, 0, 0.02]), n_out, Pe[i0] - Pe[i1], apron[1], w=apron[0],
+                               closed_lip=True)
+    ob = finalize(acc, g.coll, smooth_deg=35.0)
+    if not hasattr(g, "ABUTMENTS"):
+        g.ABUTMENTS = []
+    g.ABUTMENTS.append(dict(roof=roof.name, kind="wall", runs=runs, center=C))
+    from ..guards import register_junction
+    zs = np.concatenate([P[:, 2] for _, P in runs])
+    register_junction(g, f"{roof.name} / round wall", (f"{pre}_covering", f"{pre}_eave_roll", f"{pre}_ridge"), C,
+                      lambda z, f=radius: float(np.asarray(f(np.asarray(z, float)), float)),
+                      (float(zs.min()) - 0.3, float(zs.max()) + 0.3))
+    return ob

@@ -1364,3 +1364,9 @@ What this means for round 8:
 - **What carries over:** keep everything that already works (walls, gable, verge, ridge roll, soffits, doors, windows, thatch courses, decal gating, clearance). Remove or bypass the eave-crossing machinery (cone_keep_out, trim_units_field, top_trim, the eave-band saddle) in the recipe; the modules can stay in the kit for other designs.
 - **Interrupted work:** a round-7 fixer was stopped at about 08:47. It had edited `build_v3_longhouse_roundend.py` (08:37) and `kit/village_kit/components/composite.py` (08:47) after the last complete build (round 6, 07:36). Review those edits and keep only what is sound.
 - **Hash rule:** composite.py and the v3 modules are v3-only, but if you touch any shared module, every other building's geometry hash must stay identical (kit 1.10.1 table in the CHANGELOG).
+
+
+## PRODUCER NOTE (2026-10-17 09:07): round-8 redesign fixer stopped for the session handoff
+
+The round-8 fixer was stopped about 25 min in, after rewriting build_v3_longhouse_roundend.py (08:57) and before any build or render. The next round-8 fixer: start from the CLIENT DIRECTION above, review that partial recipe (and the earlier partial composite.py edit), keep what is sound, and complete the redesign.
+
