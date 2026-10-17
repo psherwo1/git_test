@@ -176,3 +176,22 @@ The client attached concept art "for inspiration": `reference/ref4_harbour_boath
 7. **Out of scope (note 10, no ground dressing):** the cobbles, ropes, nets, barrels, crates, boats and cliffs. Leave decal anchors where they would go.
 
 The round-2 direction above still applies (old, rough timber; the village's shingle and finials; soft organic lines; the jetty). The jettied upper floor is no longer required if the concept's cruck hall replaces the two-storey timber house. The **kit family** is still the deliverable: the cruck / arched-brace frame, the arched boat opening, the timber walls and the swept / sagging roof options must all be reusable modules. A boathouse or barn must still be a short recipe.
+## CLIENT DIRECTION (2026-10-17, session 2): reuse as many existing modules as possible
+
+Client's words: "Reuse as many existing modules as possible".
+
+- **Builder and fixers:** build every part of the concept (ref4) that an existing kit module can make with that module, extended where needed by **optional parameters whose defaults keep the old behaviour** (the HASH RULE then applies: rebuild the seven others and match the kit 1.11.0 table). Write a new module only for what nothing in the kit can make, and say why in the builder entry. The mapping to start from (check the CHANGELOG 1.11.0 module list for more):
+
+  | Concept part | Existing module(s) to use |
+  |---|---|
+  | rubble ground storey, quay edge | `rubble_walls.path_stone_wall` (and its openings) |
+  | round stone tower | `rubble_walls.round_stone_body`, `composite.cone_roof` (mossy shingle cone), `ball_finial` / the existing spike finials, `RoundFrame` / `KitParams` |
+  | timber top storey of the tower | the drum family's timber gallery / cabin pieces (`square_cabin` round-bed option, or the tier / drum timber bands): reuse before writing new |
+  | main roof and lower wing roof | `linear_roof.GableRoof` / `linear_roof` (shingle covering, verge, ridge roll, eave roll); add sag / sweep / flared-verge OPTIONS to it rather than a parallel roof module |
+  | roof meeting the tower | `roof_junction.wall_abutment` (the longhouse round-8 module) |
+  | doors, windows, shutters, thresholds, steps | `wall_openings.door_spec` / `window_spec` and the existing door / step / threshold pieces |
+  | age, moss, Mask, UVs, decals, cull | `age_defaults`, `mask`, `uvgrain`, `composite_decals`, `composite_hidden_cull` |
+  | genuinely new (no existing module) | the cruck / arched-brace gable frame and the arched boat opening; the eyebrow dormer (planned add-on); the curved stair, if built; piles and jetty |
+
+- **Round 1's new modules:** the round-2 fixer must check `timber_roof.py`, `timber_finish.py`, `timber_walls.py`, `floor_stack.py` and `waterfront.py` against the kit. Where one duplicates an existing module (for example `timber_roof` against `linear_roof`), fold it into the existing module as options and retire the duplicate. Keep only the timber pieces that are truly new.
+- **Art Director and auditor:** score reuse explicitly under **distinctness and reuse**. List each existing module used and each new one with its justification. A new module that duplicates an existing one is a must-fix.
