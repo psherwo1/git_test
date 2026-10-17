@@ -1,0 +1,20 @@
+﻿00:00.484  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\work\hh_r07b_lookdev.blend"
+hid LD_ground at z -2.514
+python.exe : C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\scripts\hh_shots.py:43: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:871
++ ... | Out-Null; & $py -I "$hh\scripts\hh_shots.py" "$hh\work\hh_r07b_look ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  lm.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\scripts\hh_shots.py:100: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+  wm.use_nodes = True
+00:00.641  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+00:09.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r07b\a_ref4_three_quarter.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r07b\a_ref4_three_quarter.png
+00:19.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r07b\b_eyebrow_closeup_quay_eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r07b\b_eyebrow_closeup_quay_eye.png

@@ -1,0 +1,58 @@
+﻿00:01.953  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+BlenderMCP addon registered
+MESH objects 75  all objects 186
+collections {'DECAL_ANCHORS': 111, 'HARB': 75, 'HARB_kit_instances': 0}
+triangles (evaluated) 714795
+materials 9 ['M_iron', 'M_lead', 'M_mortar', 'M_roof_shake', 'M_roof_shingle', 'M_stone', 'M_stone_dressed', 'M_timber', 'M_timber_weathered'] outside palette: []
+non-identity transforms []
+Mask missing/bad []
+BVH built 714795
+DECAL_ANCHORS empties 111 missing props [] json count 111 111
+anchor name sets equal True
+anchors with no surface within 20 cm behind them 0 []
+  repair_patch  n=  7 z   1.24..  5.56
+  lichen        n= 12 z  -0.04..  4.55
+  damp_rise     n= 15 z  -0.72..  7.20
+  soot          n=  7 z   2.36..  8.55
+  crack         n= 21 z   1.07..  5.39
+  water_streak  n= 13 z   0.73..  8.57
+  rust_stain    n=  4 z   0.24..  1.69
+  moss          n= 32 z  -0.70.. 10.78
+DOOR hall land door [(0.15, 0.12, 'HARB_hall_dressed'), (0.3, 5.514, 'HARB_roof_rafters'), (0.5, 99.0, None), (0.75, 99.0, None), (1.0, 99.0, None), (1.3, 99.0, None)]
+   opening head (ray up 15 cm inside the face): 2.22 HARB_hall_frames
+   threshold (ray down at the face): 0.12 HARB_hall_dressed
+DOOR wing S door [(0.15, 0.12, 'HARB_wing_dressed'), (0.3, 2.591, 'HARB_wing_roof_deck'), (0.5, 99.0, None), (0.75, 99.0, None), (1.0, 99.0, None), (1.3, 99.0, None)]
+   opening head (ray up 15 cm inside the face): 2.22 HARB_wing_frames
+   threshold (ray down at the face): 0.12 HARB_wing_dressed
+islands total 6327
+islands whose 2 cm-inflated AABB touches no other island: 0
+CORNER (-1.608,3.427) rafter verts near 70, inside bargeboard 0, max depth 0.000 m, rafter z min 2.732604503631592
+CORNER (5.392,-5.773) rafter verts near 70, inside bargeboard 0, max depth 0.000 m, rafter z min 2.74444580078125
+CORNER (5.392,3.427) rafter verts near 70, inside bargeboard 0, max depth 0.000 m, rafter z min 2.7302591800689697
+EYEBROW objects ['HARB_roof_eyebrow0_blocker', 'HARB_roof_eyebrow0_blockers', 'HARB_roof_eyebrow0_boards', 'HARB_roof_eyebrow0_frame', 'HARB_roof_eyebrow0_frames']
+EYEBROW bbox [-1.2890000343322754, -3.140000104904175, 3.627000093460083] [-0.5889999866485596, -0.057999998331069946, 4.534999847412109]
+   HARB_roof_eyebrow0_blocker     tris   580 bbox [-1.1790000200271606, -3.007999897003174, 3.687000036239624] [-1.1490000486373901, -0.1379999965429306, 4.534999847412109]
+   HARB_roof_eyebrow0_blockers    tris    10 bbox [-1.069000005722046, -2.0329999923706055, 3.7170000076293945] [-0.5889999866485596, -1.1130000352859497, 4.296999931335449]
+   HARB_roof_eyebrow0_boards      tris  1240 bbox [-1.2510000467300415, -2.924999952316284, 3.6710000038146973] [-1.1790000200271606, -0.2199999988079071, 4.5289998054504395]
+   HARB_roof_eyebrow0_frame       tris   100 bbox [-1.218999981880188, -3.140000104904175, 3.627000093460083] [-1.090999960899353, -0.057999998331069946, 3.934999942779541]
+   HARB_roof_eyebrow0_frames      tris   474 bbox [-1.2890000343322754, -2.11299991607666, 3.756999969482422] [-1.0429999828338623, -1.0329999923706055, 4.336999893188477]
+EYEBROW front centre (min x, mid y, mid z) (-1.289, -1.599, 4.081)
+EYEBROW islands 39; > 2 cm from every other surface (roof AND other eyebrow parts): 2 [('HARB_roof_eyebrow0_blockers', 0.044, 0.03, [-0.8299999833106995, -1.5700000524520874, 4.010000228881836]), ('HARB_roof_eyebrow0_frames', 0.064, 0.028, [-1.2200000286102295, -1.5700000524520874, 3.7899999618530273])]
+  HARB_roof_eyebrow0_blocker: verts 290, verts > 2 cm inside a covering piece: 80  deepest [(0.347, [-1.149999976158142, -1.899999976158142, 4.260000228881836]), (0.34, [-1.149999976158142, -1.5800000429153442, 4.260000228881836]), (0.339, [-1.149999976158142, -1.5, 4.260000228881836]), (0.337, [-1.149999976158142, -1.100000023841858, 4.260000228881836])]
+  HARB_roof_eyebrow0_blockers: verts 8, verts > 2 cm inside a covering piece: 5  deepest [(0.63, [-0.5899999737739563, -2.0299999713897705, 4.300000190734863]), (0.61, [-0.5899999737739563, -1.1100000143051147, 4.300000190734863]), (0.345, [-1.0700000524520874, -1.1100000143051147, 4.300000190734863]), (0.092, [-1.0700000524520874, -1.1100000143051147, 3.7200000286102295])]
+  HARB_roof_eyebrow0_boards: verts 864, verts > 2 cm inside a covering piece: 157  deepest [(0.254, [-1.2000000476837158, -2.049999952316284, 4.340000152587891]), (0.248, [-1.2000000476837158, -2.059999942779541, 4.340000152587891]), (0.246, [-1.2100000381469727, -2.049999952316284, 4.340000152587891]), (0.245, [-1.2000000476837158, -1.100000023841858, 4.340000152587891])]
+  HARB_roof_eyebrow0_frame: verts 95, verts > 2 cm inside a covering piece: 28  deepest [(0.131, [-1.090000033378601, -0.2199999988079071, 3.880000114440918]), (0.128, [-1.2200000286102295, -0.20999999344348907, 3.809999942779541]), (0.12, [-1.090000033378601, -2.930000066757202, 3.640000104904175]), (0.093, [-1.2100000381469727, -0.2199999988079071, 3.880000114440918])]
+  HARB_roof_eyebrow0_frames: verts 321, verts > 2 cm inside a covering piece: 91  deepest [(0.426, [-1.090000033378601, -1.9800000190734863, 4.210000038146973]), (0.424, [-1.090000033378601, -1.9800000190734863, 4.210000038146973]), (0.421, [-1.090000033378601, -1.9800000190734863, 4.21999979019165]), (0.414, [-1.090000033378601, -1.559999942779541, 4.210000038146973])]
+COMB over eyebrow y -3.20..0.00: verts 1431, nearest-roof distance max 0.152 m, p95 0.141
+COMB reference S y -5.20..-4.40: verts 368, nearest-roof distance max 0.141 m, p95 0.135
+COMB reference N y 0.60..1.40: verts 354, nearest-roof distance max 0.144 m, p95 0.137
+EYEBROW RAY PROBE: 116550 rays; misses over open air above the hood 2598; misses through a target UNDER the roof (see-through) 0 []; first hits on interior objects {}
+   first-hit objects: {'HARB_roof_covering': 60765, 'HARB_roof_eyebrow0_boards': 17657, 'HARB_roof_eyebrow0_frames': 6661, 'HARB_tower_mortar': 6249, 'HARB_roof_deck': 6158, 'HARB_roof_eyebrow0_blockers': 3379, 'HARB_tower_blockers': 3106, 'HARB_tower_stones': 2740, 'HARB_roof_rafters': 1540, 'HARB_wing_roof_deck': 1171, 'HARB_roof_wall_abutment': 881, 'HARB_roof_comb': 667, 'HARB_tower_frames': 474, 'HARB_wing_mortar': 447}
+CLEAR eyebrow objects -> HARB_roof_wall_abutment: min distance 0.626 m
+CLEAR eyebrow objects -> HARB_wing_roof_covering: min distance 1.833 m
+CLEAR eyebrow objects -> HARB_tower_stones: min distance 0.710 m
+DONE
+BlenderMCP addon unregistered
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

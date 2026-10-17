@@ -392,6 +392,11 @@ def mat_mortar(mat):
     col = g.hsv(a["color"], 0.5, 0.2, 0.9)
     col = g.mix(0.5, col, (0.34, 0.31, 0.26, 1.0))  # towards grey-beige lime
     col = damp(g, c, col, 0.25)
+    if LOOK == "r2":
+        # the same per-object 'lookdev_grime' as the lead: the harbour house's roof-to-tower abutments are mostly
+        # lime-mortar flaunching, which read as a pale band against the stone and moss
+        k = g.out(g.node("ShaderNodeAttribute", attribute_type="OBJECT", attribute_name="lookdev_grime"), "Fac")
+        col = g.hsv(col, 0.5, g.math("MULTIPLY_ADD", k, -0.25, 1.0), g.math("MULTIPLY_ADD", k, -0.45, 1.0))
     finish(g, c, col, _val(g, a["rough"]), a["normal"], nstrength=0.5, rough_min=0.55, rough_max=1.0)
 
 

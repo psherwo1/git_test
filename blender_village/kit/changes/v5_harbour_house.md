@@ -6,6 +6,13 @@ producer to merge into `../CHANGELOG.md` (proposed version 1.12.0).
 
 ---
 
+## Round 7 (the client: the MIDDLE eyebrow, "wide + lower")
+
+No kit change. Recipe values only: `eyebrow(height=0.90, lip=0.25, window=dict(width=0.82, height=0.44, sill=0.10,
+lights=2))`; every other eyebrow value and every kit file as round 6. Hash rule not triggered.
+
+---
+
 ## Round 6 (the client: the eyebrow "bigger and bolder like the reference")
 
 The round-6 eyebrow is a recipe-value change (3.5 x 1.30 m wave, 0.30 m lip, 0.85 x 0.62 m two-light window) plus

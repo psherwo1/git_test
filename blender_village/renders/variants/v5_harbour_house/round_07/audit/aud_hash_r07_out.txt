@@ -1,0 +1,30 @@
+﻿00:01.859  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house_r06_accepted.blend"
+00:02.156  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+BlenderMCP addon registered
+r05 meshes 75 r06 meshes 75 bit-identical 66
+  HARB_wing_roof_covering          bit-identical: True  in r06: True
+  HARB_wing_roof_deck              bit-identical: True  in r06: True
+  HARB_wing_roof_comb              bit-identical: True  in r06: True
+  HARB_wing_roof_rafters           bit-identical: True  in r06: True
+  HARB_wing_roof_verge             bit-identical: True  in r06: True
+  HARB_tower_top_frames            bit-identical: True  in r06: True
+  HARB_tower_top_blockers          bit-identical: True  in r06: True
+  HARB_tower_top_boards            bit-identical: True  in r06: True
+  HARB_roof_comb                   bit-identical: False  in r06: True
+  HARB_roof_wall_abutment          bit-identical: True  in r06: True
+  HARB_wing_roof_wall_abutment     bit-identical: False  in r06: False
+new in r06: []  gone: []
+CHANGED HARB_roof_comb               tris r05   6866 r06   6876 | verts outside zone   4609: r06->r05 max 109.40 mm (>2 mm: 8) | r05->r06 max 0.00 mm (>2 mm: 0)
+CHANGED HARB_roof_covering           tris r05 155150 r06 155244 | verts outside zone  74615: r06->r05 max 74.64 mm (>2 mm: 26) | r05->r06 max 0.00 mm (>2 mm: 0)
+CHANGED HARB_roof_deck               tris r05   6482 r06   6482 | verts outside zone   1624: r06->r05 max 0.00 mm (>2 mm: 0) | r05->r06 max 0.03 mm (>2 mm: 0)
+CHANGED HARB_roof_eyebrow0_blocker   tris r05    596 r06    580 | verts outside zone      0: r06->r05 max 0.00 mm (>2 mm: 0) | r05->r06 max 0.00 mm (>2 mm: 0)
+CHANGED HARB_roof_eyebrow0_blockers  tris r05     10 r06     10 | verts outside zone      0: r06->r05 max 0.00 mm (>2 mm: 0) | r05->r06 max 0.00 mm (>2 mm: 0)
+CHANGED HARB_roof_eyebrow0_boards    tris r05   1452 r06   1240 | verts outside zone      0: r06->r05 max 0.00 mm (>2 mm: 0) | r05->r06 max 0.00 mm (>2 mm: 0)
+CHANGED HARB_roof_eyebrow0_frame     tris r05    101 r06    100 | verts outside zone      0: r06->r05 max 0.00 mm (>2 mm: 0) | r05->r06 max 0.00 mm (>2 mm: 0)
+CHANGED HARB_roof_eyebrow0_frames    tris r05    492 r06    474 | verts outside zone      0: r06->r05 max 0.00 mm (>2 mm: 0) | r05->r06 max 0.00 mm (>2 mm: 0)
+CHANGED HARB_tower_stones            tris r05  80764 r06  80788 | verts outside zone  50883: r06->r05 max 23.95 mm (>2 mm: 8) | r05->r06 max 0.00 mm (>2 mm: 0)
+DONE
+BlenderMCP addon unregistered
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit
