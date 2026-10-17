@@ -353,3 +353,334 @@ The first round-2 fixer was stopped at 11:36 by an unintended tool-use rejection
 Its last full build (`scratch/r2_full2`) was killed part-way through the cull. It wrote no builder entry.
 
 **The relaunched round-2 fixer:** review those edits and keep what is sound. Re-run the hash rule if any existing module changed after 11:28. Finish round 2 against the round-1 must-fix list and every CLIENT DIRECTION above, rebuild, render `round_02` again, and write the builder entry. The barn smoke test is welcome but optional.
+
+## v5_harbour_house round 2 — builder entry
+
+**Built:** the ref4 harbour boat hall (client direction, ref4 now primary). A coursed rubble hall with a heavy timber
+cruck / arched-brace water gable over a 4.6 m arched boat opening, a round rubble tower with a timber top storey under
+a mossy shingle cone at the landward corner, a lower rubble wing, a soft sagging / swept / flared shingle roof, a stone
+quay edge of large blocks and a short jetty on piles. Two fixers did this round. The first (until 11:36) made the kit
+work and the reuse fold-ins. The relaunched fixer (from 12:10) reviewed and kept those edits, then fixed what the
+11:22 renders showed:
+- the quay read as vertical planks;
+- hidden geometry was 20.4 %;
+- the cruck frame was timid;
+- the tower's timber top was a thin band.
+
+It then rebuilt, re-rendered and re-ran the hash rule.
+
+- **Recipe:** `buildings/variants/v5_harbour_house/build_v5_harbour_house.py` (158 lines, 139 non-blank non-comment
+  including the docstrings). It is dimensions plus the step order only. It writes `v5_harbour_house.blend` (19.0 MB,
+  compressed) and `decal_anchors.json` (110 anchors). `HARB_FAST=1` skips the cull and `HARB_OUT=` writes elsewhere.
+- **Renders:** `renders/variants/v5_harbour_house/round_02/` (all six views, `--samples 24`, 12:46, replacing the
+  11:22 set), with `stats.json` and `hidden.json`.
+- **Review-tool datum (unchanged quirk):** render_review puts its ground plane and figure at the bounding-box minimum,
+  which here is the harbour bed (Z = -2.5). The building therefore "floats" 2.5 m over the clay ground, and the
+  figure stands on the bed. This is not a model defect. In UE the terrain or water at Z = 0 meets the quay coping.
+
+### The building (dimensions before `recenter`; the build log's shift is (-1.308, -5.973))
+
+| Part | Kit module(s) | Dimensions |
+|---|---|---|
+| Hall | `rubble_walls.path_stone_wall(cfg=RUBBLE_LARGE, base=-0.04)` | 6.0 x 9.2 m. Eave walls 3.35 m (wall heads follow the warped deck + 2 cm). Land-gable door 1.0 x 2.10 on built-in steps, a gable window and three side windows (`door_spec` / `window_spec`). The open slip runs 3.2 m into the hall to a boarded partition. |
+| Water gable | stone piers (the same `path_stone_wall`) + `cruck.cruck_frame` (new) | Piers to the eave line (3.38). Tie beam 0.32 m at 3.38-3.70 over +-2.75 m. Jamb posts 0.30 m on dressed pad stones. A segmental ARCH, face 0.34 m, from 2.00 to a 3.03 m crown (R 2.38) over the 4.6 m clear opening. Curved blades 0.40 m (elbowed) to the apex at 8.26. A collar at 5.98. A new two-centred POINTED inner arch, face 0.28 m, from the tie at +-1.7 m to the king strut. Rough plank infill is set 15-18 cm behind the member faces, and the members stand 6 cm proud of the stone face. |
+| Partition | `timber_walls.path_timber_wall(style="board_batten", rough=True, bow=0.03)` | Boards up the rake, closing the hall behind the slip. |
+| Main roof | `linear_roof.GableRoof` (yaw 90) + `linear_roof(covering="shingle", verge="board", apex_finial="turned")` | 58 deg, overhang 0.45. Verges 0.35 / 0.50. **ridge_sag 0.24, eave_sag 0.08, eave_sweep 0.28 over 1.0 m, verge_flare 0.36 over 2.0 m, wave 0.02.** Curved, apex-flared bargeboards with no horns. The keep's turned finial on a lead hat at both apexes (tips 9.57). Ridge top about 8.7 m. |
+| Tower | `round_stone_body(cfg=RUBBLE_LARGE)` + `board_belt(body=...)` + `composite.cone_roof` + `finial(style="spike")` + `round_eave_fill` | r 2.30, batter 1.5 deg, stone to 6.90 with three small windows. **Timber top storey now 1.70 m** (6.90-8.60; it was 1.0 m): vertical boards, a hewn sill band ring at the foot and a head ring, and **four** cased lookouts 0.40 x 0.50. Kit-shingle cone (`AGE_R10` age) from the 8.60 eave, tip about 11.9, which is about 3.2 m over the main ridge, plus the spike finial (13.44). |
+| Roof to tower | `roof_junction.wall_abutment` (main and wing) | Main run z 3.02-6.84, wing run 2.70-4.81, lead abutment flashing. The seal probe finds 0 leaks on both. |
+| Wing | `path_stone_wall` + `GableRoof` / `linear_roof` | 6.0 x 3.4 m, eave 2.85, 50 deg, ridge_sag 0.14, eave_sweep 0.18, verge_flare 0.24. Door 1.0 x 2.10 and two windows. Turned finial on its free gable (tip 6.14). |
+| Quay | `waterfront.stone_quay(detail_z=QZ, core_blocks=True)` | Water faces only, 18.8 m of face including the two slip returns and the slip head: x 9.6 to -3.0 along the water gable line. Laid as large blocks from the bed (-2.5) to the coping (-0.04): courses 42-58 cm, blocks 0.85-1.55 m, broken joints, a flush coping course and a recessed joint backing. No land faces are built. |
+| Jetty | `waterfront.pile_deck` + `ladder` | 1.8 x 5.0 m deck at the quay level on 8 piles to the bed, with X-bracing, a waling, two mooring posts, and a ladder to the bed. |
+
+**Datum (for UE placement).**
+- Building-local, Z up, metres.
+- Quay and landward ground Z = 0. The quay coping and the wall footings are at -0.04, the jetty deck at the quay
+  level, and the harbour bed at Z = -2.5 (piles, quay face, ladder).
+- The hall floor is open water (the boat slip). After `recenter` the plan bounding box is centred on the origin
+  (shift (-1.308, -5.973)) and the water gable faces +Y. The datum is also in `decal_anchors.json` (`datum`).
+
+### Round-1 must-fix list: what was done
+
+| # | Must-fix | Done |
+|---|---|---|
+| 1 | Build the ref4 building | Done as in the table above. Ground storey `path_stone_wall`. Water gable `cruck_frame` (one reusable module) with a 4.6 m arched opening at water level, where the plinth stops at the arch feet (the hall wall path turns into the slip at the jambs). Tower `round_stone_body` + `cone_roof` + spike finial, with its timber storey from `board_belt` (the drum / tier band family, given a plain-body option). `wall_abutment` for the main roof and a lower wing GableRoof. Stone quay of large blocks and a `pile_deck` jetty. **Choices:** no eyebrow dormer, no curved stair, no round store (all optional). The store is better as its own small design later. |
+| 2 | Note-17 softness as kit options | `GableRoof(ridge_sag, eave_sag, eave_sweep, sweep_len, verge_flare, flare_len, wave)`, one vertical warp field that every linear_roof part and query follows (see `kit/changes/v5_harbour_house.md`). `path_timber_wall(bow=)`. Curved members live in `cruck_frame`. Defaults are bit-identical (hash rule below). |
+| 3 | Village finials and roof, no horns | `timber_roof.verge_boards` is retired: no crossed horns anywhere. `linear_roof(verge="board")` gives curved bargeboards. `apex_finial="turned"` places `finial.turned_finial` on a `finial.lead_hat` at each free apex, and the cone carries the spike finial. Shingles come from `shingles.SIZE_TABLE` (the keep / roundhut sizes); the cone uses `AGE_R10` `age_defaults`. Moss uses the village decal anchors (`moss_normal="slope"`). |
+| 4 | Rougher timber at form level | `timber_walls.ROUGH` / `rough=True`: board widths 0.16-0.40 m log-uniform with 12 % fillets of 8-12 cm, +-1 deg out of true, long rows and plates sagging, 1.4 cm split arrises, +-1.5 cm uneven ends and 3.2-4.2 cm boards. Shared with the cruck infill through `board_widths` / `rough_opts`. |
+| 5 | Reuse mandate | `timber_walls._build_opening` no longer builds anything: every door, window, shutter, boat door and step comes from `wall_openings.build_opening(host=TIMBER_HOST)`, with `plank_doors.plank_leaf`, `strap_widths` and the pooled `make_pintle`. `timber_roof.verge_boards` is folded into `linear_roof(verge=)`. `timber_finish` is folded into `composite_hidden_cull(parts=BACKED_PARTS)` and `composite_decals(timber=, waterfront=)`. Both retired files are stubs that raise `NotImplementedError` (deleting them was refused by the permission guard, so the producer can delete them at the merge). `crib_quay` is removed in favour of `stone_quay`. `floor_stack` is kept unchanged and is not used here. Tables are below. |
+| 6 | Large door never crosses the storey head | `TIMBER_HOST["head_rule"]`. **"clamp"**: the clear height is clamped so the plate is the lintel (leaves 1 cm under it, no separate head beam). **"trim"**: the plate is cut between the jambs and the head beam replaces it flush at the plate's depth and top. Anything else raises. The opening record's `z1` is the effective head, so the clearance guard reports it. Barn smoke (12:4x): "head rule clamp: effective clear head 2.765 m" for a 3.0 m door in a 2.6 m storey, "head rule trim: effective clear head 2.680 m", and both clearance gates report 2.77 / 2.68 m. |
+| 7 | Shutter hardware | The shutters are `plank_leaf` leaves. The forged straps lie on the leaves and run outward from the hinge edge, and pooled pintles go into the jamb (barn smoke: 20 linked pintle instances, 3 pooled meshes; see `scratch/barn_smoke/renders/actor_closeup.png`). The harbour house's own windows are in stone and use the masonry host's kit shutters. |
+| 8 | No buried quay faces or anchors | `stone_quay(water=)` builds water faces only, so land runs are left to the terrain. All 9 anchors below Z = 0 are on quay water faces at z -0.35 to -0.72 (`M_stone`); none is on a land face. |
+| 9 | Lower mass | Eave walls 3.35 m, ridge top about 8.7 m (it was 9.9), and the cone tip about 3.2 m over the main ridge. |
+| 10 | Note-16 record | See below. |
+
+### Fixes by the relaunched fixer (after the 11:22 renders)
+
+1. **Quay read as vertical planks.** Below the 0.9 m rubble band the quay core was one flat slab per run, and the
+   clay views (ground at the bed) showed it as tall panels. Fix: `stone_quay(core_blocks=True)` (new option in the v5
+   module), which lays the face as low-poly large blocks (~60 tris each) on a recessed joint backing. With
+   `detail_z >= top_z - 0.05` the whole face is block masonry with a flush coping course. Result: the back and side
+   views now show coursed big blocks, as in ref4.
+2. **20.4 % hidden (over the 15 % limit).** About 58k triangles of the old figure were the quay's rubble stones, which
+   `hidden_tris.py` counts as buried (centroid below Z = -0.05) even on the visible water face. Fix: the block quay
+   (19.4k rubble triangles replaced by about 5k block triangles) and a quay shortened from 23.9 m to 18.8 m (the
+   stretch west of the hall carried nothing). Result: **13.5 %** (4.3 % of it below the datum).
+3. **Timid cruck.** Heavier members (post 0.30, arch 0.34, blade 0.40, tie 0.32, collar 0.26), the frame 6 cm proud
+   of the stone, the infill 15-18 cm behind the member faces, and a new `pointed=True` two-centred inner arch in place
+   of the thin quarter-ellipse collar braces (`braces=False`). New `cruck_frame` options are `brace`, `pointed`,
+   `pointed_t` and `pointed_at`.
+4. **Thin tower top.** The cone eave was raised from 7.90 to 8.60 (`KIT eave_z`), so the timber storey is 1.70 m, with
+   four lookouts.
+5. **Softer roof.** ridge_sag 0.15 -> 0.24, eave_sag 0.05 -> 0.08, eave_sweep 0.22 -> 0.28; wing ridge_sag 0.08 ->
+   0.14 and sweep 0.14 -> 0.18. These are recipe values only.
+6. **A 10th material slot (`M_rubble`)** appeared in the 12:30 interim build from the block core. The core now uses
+   `M_stone`, so the palette is back to 9 slots.
+
+### Existing kit modules used (reuse table)
+
+| Module | Used for |
+|---|---|
+| `assembly.build_building`, `KitParams` | the build pipeline and the two dimension tables |
+| `frame.RoundFrame` | the tower / cone frame |
+| `rubble_walls.path_stone_wall` (+ `RUBBLE_LARGE`, `base=`) | hall, water-gable piers, wing |
+| `rubble_walls.round_stone_body` | the tower |
+| `stone_wall` (through rubble_walls) | the one rubble generator, mortar, footing, quoins |
+| `wall_openings.build_opening`, `door_spec`, `window_spec` | every door and window in stone, and (host=) in timber; steps, frames, dressed reveals |
+| `openings.window` | the tower lookouts |
+| `plank_doors.plank_leaf`, `strap_widths`, `make_pintle` | every leaf and shutter, straps and pintles (through wall_openings) |
+| `linear_roof.GableRoof`, `linear_roof` | main and wing roofs: shingle covering, starter, comb ridge, rafters, deck, eave roll, verge boards, apex finials |
+| `shingles.SIZE_TABLE` | the village shingle and comb sizes |
+| `finial.finial`, `turned_finial`, `lead_hat` | spike finial on the cone; turned finials on lead hats at the gable apexes |
+| `composite.cone_roof` | the mossy shingle cone |
+| `cone.age_defaults(**AGE_R10)` | the village's age / moss settings on the cone |
+| `board_belt.board_belt` (+ `body=`) | the tower's timber top storey (drum / tier band family) |
+| `roof_junction.wall_abutment`, `round_eave_fill`, `LINEAR_ROOF_PARTS` | roof to tower junctions, the cone eave fill |
+| `composite.inside_box`, `inside_round`, `set_entrance`, `recenter` | clips and placement |
+| `composite.composite_hidden_cull`, `composite_decals` (+ `timber=`, `waterfront=`) | cull, decal anchors |
+| guards (clearance, seal_probe, decal_validate, steep_cone_door, lod_scope), `uvgrain`, `mask`, `geom` | gates, grain UVs, Mask, mesh hygiene |
+
+**Existing modules changed** (optional parameters or new functions, defaults = kit 1.11.0 behaviour; made by the first
+fixer before 11:08): `linear_roof`, `rubble_walls`, `wall_openings`, `board_belt`, `composite`. The relaunched fixer
+changed no existing module. It touched only the v5 modules `cruck.py` and `waterfront.py`.
+
+**New modules, and why nothing existing could make them**
+
+| New | Why |
+|---|---|
+| `cruck.cruck_frame` | Nothing in the kit builds curved timber members, a timber-framed arch or a gable frame over an opening. The keep's hewn / timber pieces are straight posts, plates and braces. |
+| `waterfront.pile_deck`, `pile`, `ladder` (round 1) | Nothing makes piles, a plank deck or a ladder. |
+| `waterfront.stone_quay` (+ `_core_blocks`) | A thin wrapper on `path_stone_wall` (water-only runs from the bed, `g.QUAYS` for the waterline anchors). The block core is new because a 2.5 m rubble face below the datum would be about 60k "buried" triangles. |
+| `timber_walls.path_timber_wall` (round 1, reworked) | A new wall FORM. Its openings and hardware are the kit's (`wall_openings` host). |
+| `floor_stack` (round 1, unchanged, not used here) | The jettied storey for the barn / harbour-house variants. |
+
+### Note-16 record (same builders, techniques and materials)
+
+- **Reused as-is:**
+  - the 9-slot palette (`M_stone`, `M_stone_dressed`, `M_mortar`, `M_timber`, `M_timber_weathered`, `M_roof_shingle`, `M_roof_shake`, `M_iron`, `M_lead`; no new material);
+  - the village coursed rubble, footing, quoins and dressed reveals (`stone_wall` via `rubble_walls`);
+  - the door and window frames, thresholds and steps, plank leaves, forged straps and pintles (`wall_openings` / `plank_doors`);
+  - the kit shingles and comb ridge (`SIZE_TABLE`), the eave roll and rafters (`linear_roof`);
+  - the mossy shingle cone and its age (`cone_roof`, `AGE_R10`);
+  - the turned and spike finials and lead hats (`finial`);
+  - the lead abutment flashing (`wall_abutment`);
+  - the board belt and hewn rings of the drum family (`board_belt`);
+  - the decal / moss anchor recipe (`composite_decals`).
+- **Still differs (new forms, not new style):**
+  - the cruck frame's curved members, a form found on no other building;
+  - the curved, apex-flared bargeboards, the first timber bargeboard in the village (the other buildings close their verges with thatch rolls, shake aprons or cone eaves);
+  - the soft-roof warp itself;
+  - the quay's squared big blocks (the village has no quay; ref4 shows big squared blocks, not rubble);
+  - the jetty piles and deck.
+
+  None of these introduces a new material or detail vocabulary. Iron dog plates on the jetty use `M_iron`.
+
+### Hash rule
+
+- **Run 1, `kit/baseline/v5r2_hash/`** (first fixer, 10:52-11:28, all seven): every geometry, UV and Mask hash equals
+  the kit 1.11.0 table.
+
+  | Building | Triangles | Geometry hash |
+  |---|---|---|
+  | hilltop_keep | 1,166,874 | `3e2a219a5901afc5` |
+  | wattle_roundhut | 878,355 | `7e5e7c2df5c4d367` |
+  | tower_windmill | 1,146,243 | `89bf4a2a2c60e049` |
+  | v1_stone_watchtower | 937,933 | `465c7b1b8a7dbb22` |
+  | v2_tiered_hall | 980,405 | `9522f17ed8b09646` |
+  | v3_longhouse_roundend | 617,342 | `38ff44b686efd26b` |
+  | v4_mixed | 938,453 | `2e87caad61b68d34` |
+
+- **Why a second run:** `rubble_walls` was edited at 11:06, after the keep, roundhut and windmill builds of that run
+  had started (10:52 / 10:57 / 11:05), and `board_belt` at 10:59, after the keep and roundhut builds had started. v1-v4 started after the
+  last edit to an existing module.
+- **Run 2, `kit/baseline/v5r2b_hash/`** (12:13-12:30): those three were rebuilt with the final kit (`-Only
+  hilltop_keep,wattle_roundhut,tower_windmill -MaxParallel 1`). The result is identical: `3e2a219a5901afc5` /
+  `10326b66883e3031` / `cacc4885b10b1370`, `7e5e7c2df5c4d367` / `c97c88e742be4887` / `46bb1454fa4d264e`, and
+  `89bf4a2a2c60e049` / `b006e70c2dc4750b` / `3c0753f38798dad6`.
+- **Result: all seven buildings MATCH** the 1.11.0 reference (geometry, UV and Mask). The relaunched fixer's own
+  edits are in v5-only modules (`cruck`, `waterfront`), which no other building imports.
+
+### Stats (round_02 `stats.json`, 12:46)
+
+| Measure | Value |
+|---|---|
+| Triangles | **699,138** (note-15 cap 1,000,000) |
+| `est_hidden_pct` | **13.5 %** (4.3 % of all triangles are below Z = -0.05, which the tool counts as buried: the quay face, piles and ladder) |
+| Material slots | 9, all in the palette |
+| `mask_attribute_missing` | none |
+| Objects | 68 (0 pooled: the stone-host windows have no pintles) |
+| bbox | 16.59 x 17.17 x 15.94 m (bed to the spike finial; 13.44 m above the quay) |
+| Build time (cull included) | 13.1 min |
+| Decal anchors | 110 kept of 176 by the kit gate (131 composite + 28 timber + 17 waterfront; applied) |
+| Guards | Clearance PASS at the hall door (eave lip 5.52 m) and the wing door (2.50 m against a 2.22 m head, rule >= 2.30). Seal probe: 0 leaks on roof / tower and wing roof / tower (101,613 rays). Steep-cone and lod-scope: no opt-outs. |
+
+**Barn smoke (family proof, not a deliverable):** `buildings/variants/v5_harbour_house/scratch/barn_smoke/build_barn_smoke.py`
+(30 lines). A post-and-plank barn on a rubble plinth with a clamp boat door, a trim boat door, two shuttered windows
+and a soft shingle roof with finials. It was rebuilt at 12:4x with the final kit
+(`scratch/barn_smoke2/`, 211,691 tris, 20 pooled pintle instances, both clearance gates PASS).
+
+### Known gaps
+
+- **Review-tool datum:** the clay views put the ground at the bed, so the building floats 2.5 m up. The land side of
+  the slip-return blocks and the open land behind the quay are visible from below, where UE terrain would bury them.
+  A `--ground_z` option for render_review is still the producer nice-to-have.
+- **Not built (recipe choice):** the eyebrow dormer, the curved stair round the tower and the small round store.
+- **The roof is still steeper than ref4's** (58 deg, so the brief's 8.5-9.5 m ridge band holds). Its sag (24 cm), its
+  swept eaves and its apex flare are all visible in the side view, but ref4's slump is more exaggerated.
+- **Cruck:** symmetric about the gable centre, one opening per frame. The pointed arch and the blades meet the tie and
+  king strut by interpenetration (no modelled joints; note 12: no finer detail).
+- **`GableRoof` warp:** vertical only, with no plan bow of the eave line. `ref_z` / `under_z` stay the straight
+  profile (use `under_z_world`).
+- **Retired files:** `timber_roof.py` and `timber_finish.py` remain as `NotImplementedError` stubs for the producer to
+  delete at the merge.
+- Kit changes are recorded in `kit/changes/v5_harbour_house.md` (proposed 1.12.0), not in CHANGELOG.md.
+
+## v5_harbour_house round 2 — score 7.8/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only, no ground dressing (note
+10), no surface-detail requests (note 12). Binding: producer notes 1-17, every CLIENT DIRECTION entry above (ref4 is
+the primary reference) and the reuse mandate. No new CLIENT DIRECTION or PRODUCER NOTE after the 12:10 relaunch note.
+
+**Reviewed:**
+- All six `round_02` views (12:44-12:45), `stats.json`, `hidden.json`, `decal_anchors.json` (110 anchors plus the
+  validation block) and the r2c_full build log.
+- The recipe (158 lines), `cruck.py`, `waterfront.py`, the barn smoke recipe and its renders and log (`barn_smoke2`,
+  211,691 tris, 20 pooled pintles, both head-rule gates), the hash-rule folders `kit/baseline/v5r2_hash` and
+  `v5r2b_hash`, and ref4 / ref1-ref3.
+- Director extras in `renders/variants/v5_harbour_house/round_02/director_extra/`:
+  - 34 views, x01-x34, staged with the land at the quay datum (top -0.045), a water plane at -0.9 and 1.8 m figures
+    at both doors, on the jetty and on the quay;
+  - 25 red see-through twins;
+  - the note-16 line-up L01-L03 (keep, roundhut, longhouse, harbour house);
+  - three probes: `probe_r02_out.txt` (objects, transforms, Mask, islands, junction rays, anchor occlusion),
+    `probe2_r02_out.txt` (hole scans of every quay face, the slip and the water gable) and `pick_out.txt`
+    (pixel picks in the nook).
+
+**Director-verified compliance:**
+- 68 meshes, all with identity transforms, a UV map and an active `Mask` (CORNER, BYTE_COLOR). 9 palette slots.
+- Collections `HARB`, `HARB_kit_instances` (empty) and `DECAL_ANCHORS` (110 empties).
+- 699,138 tris and 13.5 % hidden, both inside the limits.
+- Clean red twins: both roof-to-tower abutments (x07, x08, x09, x10, x11), the tower and wing stone junctions (x04,
+  x05), both eaves (x23, x24), the water and land apexes (x21, x25), the wing's free gable (x26), the tie at the pier
+  (x16), the eave corner (x22) and the jetty deck at the quay (x30).
+- The tie beam bears on the pier quoins (1 cm, ray probe). The arch sits under the tie. The partition foot sits on the
+  slip-head coping.
+
+| axis | score | reason |
+|---|---|---|
+| 1 Silhouette and massing | 8.0 | From the water (x01, x15, `back.png`) this is now recognisably the ref4 building: a rubble boat hall with a heavy timber water gable over a segmental boat arch; a round rubble tower with a 1.7 m boarded top storey and four lookouts under a mossy cone with a spike; a lower wing; a soft roof (24 cm ridge sag, swept eaves, apex-flared bargeboards: x21, x34); a block quay and a jetty on piles. Note 17 is met by integral round and soft forms. Held back for three reasons. (a) The 6.0 m, 58 deg gable is narrower and taller than ref4's broad, slumped hall. (b) The inset two-centred pointed arch, with the king strut and collar crossing inside it, reads as a chapel lancet with a cross (x01, x15). (c) From the land (x02, `front.png`, L02) it is the longhouse formula again: a rubble block plus a round rubble tower with a cone. |
+| 2 Proportion and actor scale | 8.3 | Both doors are 1.00 x 2.10 m on built-in thresholds next to the figure (x03, x06). Windows are 0.55 m at 1.30 m sills. The wing eave lip sits 2.50 m over a 2.22 m head (rule 2.30: passes, though tight). The boat arch is 4.6 m clear with its crown at 3.03 m, about 3.9 m over a -0.9 m tide. The figure on the jetty reads right (x15, x30). The slip is only 3.2 m deep to the partition, short for the 4-5 m boats ref4 moors inside, and has no ledge to step ashore. |
+| 3 Construction logic | 7.6 | Mostly carried and built: the tie on the pier quoins, a segmental arch under the tie, blades along the rake, plank infill 15-18 cm behind the members, roofs on the wall heads (deck + 2 cm), and the tower's timber storey on a hewn foot ring over the stone top (x12). The jetty has bearers on piles, a ledger at the quay face, bracing and a ladder. Two faults. **(a) The jamb posts hang over the water.** `cruck_frame` designs 0.30 m dressed pads (z -0.30 to 0), but the pads are finalised with the kit's default -0.05 clip and come out as 5 cm plates (`HARB_water_gable_pads` bbox z -0.05 to 0.00). They cantilever about 0.35 m off the quay corners into the slip, and each 0.30 m post carrying the arch stands on one (x17, x18, x32; the ray below each pad hits nothing). **(b) The slip walls' footing stones overhang the water.** The hall walls along the slip and the water-face piers stand flush on the quay face, and `path_stone_wall`'s projecting rounded footing stones hang over the quay edge (x17, x32). Minor: the jetty X-braces stand about 1 cm off the piles, and the waling about 0.5 cm off the braces (probe islands). |
+| 4 Seams and junctions | 7.5 | The roof-to-tower seals are clean in every red twin and in the kit seal probe (0 leaks in 101,613 rays). The eave strips, verges, apexes, tie bearing and deck-to-coping are closed. Defects: **(a) See-through quay joints.** `composite_hidden_cull` removed 624 polygons from `HARB_quay_core`, including the recessed joint backing behind visible joints. Red pixels show through the joints of the slip head and both slip returns (x19_red, x32_red) and of the outer face (x33_red). The probe2 hole scans pass through on 20 of 336 rays (east slip return), 46 of 336 (west return), 15 of 480 (slip head) and 52 of 848 (outer face), along whole bed joints at z -0.3, -0.6, -0.9 and -1.95. **(b) Unbonded quay corners at the slip mouth.** At x -0.41 and 4.19 (y 3.43), `_core_blocks` lays each run on its own and stops it 2 cm past the corner, so a full-height vertical slot shows the backing (x17, x18, x32). Minor: both free quay ends (x -4.31 and 8.29) are raw cut ends (x27, x28). The lead abutment flashings end in boxy tabs on the tower face in the nook (x10, x11). |
+| 5 Distinctness and reuse | 8.1 | **Existing modules used:** `assembly.build_building` / `KitParams`, `RoundFrame`, `rubble_walls.path_stone_wall` (`RUBBLE_LARGE`, `base=`) and `round_stone_body`, `wall_openings.door_spec / window_spec`, `openings.window`, `plank_doors` (through `wall_openings`), `linear_roof.GableRoof` + `linear_roof` with the new soft options, `shingles.SIZE_TABLE`, `finial` (spike, turned, lead hat), `composite.cone_roof`, `cone.age_defaults(AGE_R10)`, `board_belt(body=)`, `roof_junction.wall_abutment / round_eave_fill`, the composite cull / decals / clips / recenter, guards, `uvgrain`, `mask` and `geom`. **New, each justified:** `cruck.cruck_frame` (nothing in the kit makes curved members or a timber arch); `waterfront.stone_quay` (a wrapper on `path_stone_wall` plus a block core); `pile_deck` / `ladder`. The duplicates of round 1 are retired: `_build_opening` now goes through `wall_openings(host=)`, `verge_boards` through `linear_roof(verge=)` and `timber_finish` through composite options. The hash rule holds on all seven buildings. The soft-roof warp is an option on the existing roof, as note 17 asks. It reads as the same village in the line-up (L01-L03), with the same rubble, shingle, cone, finials and lead. **Family verdict:** the timber half (`path_timber_wall`, the `wall_openings` timber host with the clamp / trim head rules, the soft `GableRoof`) is genuinely reusable, proven by a 30-line barn smoke recipe. The waterfront half (`cruck_frame`, `stone_quay`, `pile_deck`) is parameterised and plane-agnostic, not one-off code, but no second recipe has exercised it yet, and the faults under axes 3 and 4 (pad clip, corner bond, cull, free ends, `pile_deck` land S / N only) would follow it into the boathouse. Points off for the land-side likeness to the v3 longhouse. |
+| 6 Technical compliance | 7.9 | 699,138 tris (cap 1 M). 13.5 % hidden (4.3 % below the datum). 9 palette slots, `Mask` everywhere, identity transforms. Deterministic, the datum recorded in the anchors JSON, and the hash rule documented in two runs. 110 anchors, physically plausible: damp and moss on the quay water faces between -0.35 and -0.72 and on the slip walls, streaks under the cone eave and on the posts, lichen on the coping. One crack (DA_crack_021) sits just under the wing eave, which is harmless. **Producer note 6 is broken** ("Never open holes when culling"): the cull opened the quay joints (axis 4a). Pooling is still 0 in the house itself: dog plates and the door irons are unique (note 3, minor). |
+
+**Verdict: 7.8/10, NOT PASSED (pass mark 8.2).** A large step from 6.3. This is now the client's ref4 building,
+assembled almost entirely from existing kit modules. The note-17 softness lives as options on the existing roof. The
+round-1 duplicates are retired, the hash rule holds, and every roof junction is sealed. What keeps it under the
+mark is concentrated at the waterline. The cruck's jamb posts stand on 5 cm stone plates hanging over the slip,
+because the kit clipped the pads. The cull opened the quay joints into see-through slits, against note 6. The quay
+corners at the slip mouth are unbonded slots. The slip walls' footing stones overhang the water. All four are kit
+bugs in modules the boathouse will reuse, so fix them in the modules, not in the recipe.
+
+**Strengths**
+- Reuse discipline: the round-1 duplicates are folded in. Every opening goes through `wall_openings`, every verge
+  through `linear_roof`, and the cull and decals through composite options. The softness is an option on
+  `GableRoof` with bit-identical defaults, proven on all seven buildings in two hash runs.
+- The roof reads soft and village-like (x21, x34): a sagging comb ridge between turned finials on lead hats,
+  apex-flared curved bargeboards and swept eaves. Its junctions with the tower are sealed (0 leaks, clean red twins
+  in the nook and on both slopes).
+- The water gable is now bold. Heavy posts, a 0.34 m segmental arch, a 0.32 m tie on the pier quoins, 0.40 m blades
+  and an inner pointed arch, all proud of rough, set-back plank infill (x15, x16, x20).
+- The tower is built from the kit's round family: `round_stone_body`, `board_belt(body=)` with four lookouts, a
+  mossy `cone_roof` with `AGE_R10` and the spike finial. It is integral to the plan, and both roofs abut it.
+- The quay now reads as ref4's big blocks at about 1 % of the old rubble triangles, and hidden geometry dropped from
+  20.4 % to 13.5 %.
+- The family proof is real: a 30-line barn recipe with both large-door head rules, gated effective heads and pooled
+  pintles.
+
+**Must-fix (round 3)**
+1. **The cruck jamb posts must bear on stone, not on clipped plates over the water.** The module is
+   `cruck.cruck_frame`, and the faulty pieces are `HARB_water_gable_pads` at x -0.44 to 0.00 and 3.80 to 4.22, y 3.06
+   to 3.54 (after the recentre).
+   - What is wrong: the pads are designed z -0.30 to 0, but `finalize(..., clip_z=CLIP_Z)` cuts them at -0.05, so
+     each 0.30 m post carrying the arch stands on a 5 cm dressed plate that cantilevers about 0.35 m off the quay
+     corner over the slip (x17, x18, x32).
+   - What it should be: two changes.
+     - Give `cruck_frame` a `pad_clip_z` / `clip_z` parameter, and finalise the pads with it. The default keeps
+       today's behaviour.
+     - Seat the posts so that at least 0.25 m of each post's depth bears on the quay coping or the pier (move them
+       onto the jamb line). Alternatively, carry each pad down the quay corner as a dressed respond to the bed.
+     - A post must visibly stand on masonry from every water-level view.
+2. **No see-through quay joints (producer note 6, "never open holes when culling").** The fault is in
+   `waterfront.stone_quay(core_blocks=True)` together with `composite_hidden_cull`, in `HARB_quay_core`.
+   - What is wrong: the cull removed 624 polygons from the quay core, including the recessed joint backing (w -0.20
+     to -0.07) behind joints that ARE visible. Red shows through the bed and head joints of the slip head (y 0.23),
+     both slip returns (x -0.41 / 4.19) and the outer face (y 3.43). See x19_red, x32_red and x33_red, and the
+     133 pass-through rays in `probe2_r02_out.txt`.
+   - What it should be:
+     - Build the joint backing as its own object (e.g. `<P>_<name>_backing`).
+     - Exclude it from the cull, the way the kit protects its other backing sheets.
+     - Re-run the red twins at the slip and the outer face: zero red pixels inside the quay outline.
+3. **Bond the quay's convex corners.** The fault is in `waterfront._core_blocks` / `stone_quay` at the slip mouth,
+   x -0.41 and x 4.19, y 3.43, z -2.5 to -0.04.
+   - What is wrong: each run is laid on its own and extended only 2 cm past a convex corner, so a full-height
+     vertical slot shows the backing at both corners (x17, x18, x32).
+   - What it should be:
+     - On alternate courses, the end block of one run overruns the corner by the block depth (0.30 m), and the
+       other run's face butts it, as a quoin bond.
+     - The backing is closed round the corner, with no vertical joint wider than the 2.2 cm course joint.
+4. **No footing overhang on walls that stand flush on a quay face.** The fault is in
+   `rubble_walls.path_stone_wall` as used by the hall: the slip side walls at x -0.41 / 4.19 for y 0.23 to 3.43, and
+   the water-face piers at y 3.43.
+   - What is wrong: the walls stand flush on the stone_quay water face, but their rounded footing stones project
+     past it and hang over the water (x17, x32).
+   - What it should be: an optional per-run footing control, e.g. `footing_out=0` / `footing=False` for listed runs,
+     defaults unchanged (hash rule). Use it on the runs that stand on a quay face, or set those runs back from the
+     quay face by the footing projection.
+
+**Nice-to-have**
+- `stone_quay`: an `ends=` option ("return": a 1 m return into the land; or "squared": header blocks) so the free
+  ends at x -4.31 and 8.29 are not raw cut ends (x27, x28).
+- Break the "lancet with a cross" read of the water gable (x01, x15). Stop the king strut at the pointed arch's
+  apex, or replace the inset two-centred arch with curved blades that rise from the tie ends along the rake, closer
+  to ref4's crucks. Bible 1.8 allows only round or segmental arches; ref4 overrides that for this frame, but it
+  should read as timber framing, not church tracery.
+- Closer to ref4's slump: the hall is 6.0 m wide under a 58 deg pitch. Try 6.6-7.0 m wide at 52-54 deg with
+  `ridge_sag` 0.35-0.45, keeping the ridge in the 8.5-9.5 m band.
+- Slip: about 4.5-5 m deep to the partition, and a short timber landing ledge along one side (`pile_deck`) so a
+  boat can moor and a person can step ashore.
+- A boathouse smoke recipe that exercises `cruck_frame` + `stone_quay` + `pile_deck`, as the barn smoke does for the
+  timber half.
+- `pile_deck`: accept `land="E" / "W"` (still raises), seat the X-braces and the waling on the piles (they stand
+  about 1 cm and 0.5 cm off), and pool the dog plates (note 3).
+- `wall_abutment`: end the lead flashing at the eave lip instead of the boxy tabs on the tower face in the nook (x10,
+  x11).
+- Shutters on a few of the stone-wall windows: the brief asks for "small shuttered windows", and the kit's stone
+  host has them.
+- `tools/render_review.py --ground_z` (producer tool): the six main views still float the building 2.5 m.
+## CLIENT DIRECTION (2026-10-17, session 2, after the round-2 grade): a broader, slumped roof is must-fix in round 3
+
+After reading the round-2 grade, the client chose, as their own direction: **"Broader, slumped roof"**. It is a MUST-FIX for round 3, alongside the director's four waterline must-fixes.
+- Make the hall about **6.6-7.0 m wide** (it is 6.0) at about **52-54 deg** (it is 58), with **`ridge_sag` about 0.35-0.45 m** (it is 0.24). Keep the ridge in the 8.5-9.5 m band and keep the swept eaves and flared verges. The aim is ref4's heavy, slumped hall roof that dominates the building.
+- Rework whatever the wider hall moves (the cruck span, the quay and slip, the roof-to-tower abutment, the wing) so that everything stays sealed and carried. The note-15 cap and the hash rule still apply.
+- **Not chosen by the client this round:** the gable "lancet" rework, the deeper slip and ledge, and the curved stair / eyebrow dormer. These stay the director's nice-to-haves: do them only if they come cheaply and safely, and never at the expense of the must-fixes.

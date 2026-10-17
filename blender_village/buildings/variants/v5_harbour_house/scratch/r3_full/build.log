@@ -1,0 +1,130 @@
+﻿[    0.2s] -- set_entrance
+[    0.2s] -- stone_quay
+[    0.2s]   HARB_quay_core: 4592 verts, 4428 faces
+[    0.3s]   HARB_quay_backing_blocker: 264 verts, 266 faces
+[    0.3s]   HARB_quay: 2 convex corner(s) quoin-bonded (shared courses, alternate overrun 0.30 m)
+[    0.3s]   HARB_quay: stone quay, 1 water face run(s) from the bed -2.50 to -0.04 m; 0 land run(s) left to the terrain
+[    0.3s] -- round_stone_body
+[    7.7s]   HARB_tower visible mortar 13.1% -> 8.5% after 538 pinning stones
+[    7.7s]   HARB_tower stones 1141
+[    8.5s]   HARB_tower_stones: 56093 verts, 46082 faces
+[    8.5s]   HARB_tower_mortar: 2301 verts, 2124 faces
+[    8.5s]   HARB_tower_frames: 1188 verts, 1170 faces
+[    8.5s]   HARB_tower_dressed: 372 verts, 360 faces
+[    8.5s]   HARB_tower_reveals: 24 verts, 12 faces
+[    8.5s]   HARB_tower_blockers: 24 verts, 15 faces
+[    8.5s] -- path_stone_wall
+[   10.5s]   HARB_hall: flush footing on runs [0, 1, 5, 6] (8 stones)
+[   64.8s]   hall visible mortar 18.2% -> 8.1% after 989 pinning stones
+[   64.8s]   HARB_hall: stones 2006 (hero 173, pins 211)
+[   68.1s]   HARB_hall_stones: 129842 verts, 113649 faces
+[   68.2s]   HARB_hall_quoins: 5822 verts, 5680 faces
+[   71.7s]   HARB_hall_mortar: 4261 verts, 3765 faces
+[   71.7s]   HARB_hall: mortar cells 3765
+[   71.8s]   HARB_hall_frames: 3792 verts, 3729 faces
+[   71.8s]   HARB_hall_dressed: 576 verts, 558 faces
+[   71.8s]   HARB_hall_ironwork: 280 verts, 266 faces
+[   71.8s]   HARB_hall_reveals: 32 verts, 16 faces
+[   71.8s]   HARB_hall_blockers: 32 verts, 20 faces
+[   71.8s] -- path_stone_wall
+[   75.3s]   wing visible mortar 21.3% -> 7.3% after 425 pinning stones
+[   75.3s]   HARB_wing: stones 746 (hero 14, pins 69)
+[   75.9s]   HARB_wing_stones: 45069 verts, 38571 faces
+[   76.0s]   HARB_wing_quoins: 1722 verts, 1680 faces
+[   77.2s]   HARB_wing_mortar: 2100 verts, 1817 faces
+[   77.2s]   HARB_wing: mortar cells 1817
+[   77.2s]   HARB_wing_frames: 3000 verts, 2949 faces
+[   77.2s]   HARB_wing_dressed: 328 verts, 318 faces
+[   77.2s]   HARB_wing_ironwork: 280 verts, 266 faces
+[   77.2s]   HARB_wing_reveals: 16 verts, 8 faces
+[   77.2s]   HARB_wing_blockers: 16 verts, 10 faces
+[   77.2s] -- cruck_frame
+[   78.1s]   HARB_water_gable_frame: 1344 verts, 1309 faces
+[   78.1s]   HARB_water_gable_boards: 2608 verts, 2277 faces
+[   78.1s]   HARB_water_gable_blocker: 1992 verts, 2032 faces
+[   78.1s]   HARB_water_gable_pads: 640 verts, 618 faces
+[   78.1s]   HARB_water_gable_respond_blocker: 112 verts, 108 faces
+[   78.1s]   HARB_water_gable: pads carried down to -2.50 as dressed responds (9 courses)
+[   78.1s]   HARB_water_gable: cruck / arched-brace frame: clear 4.60 m, arch 2.00 -> 3.03 m (R 2.38), tie 3.38-3.70 over +-2.75, collar 5.98, apex 8.26, 39 infill boards
+[   78.1s] -- path_timber_wall
+[   78.9s]   HARB_partition_frame: 180 verts, 174 faces
+[   78.9s]   HARB_partition_boards: 4366 verts, 4089 faces
+[   78.9s]   HARB_partition_blocker: 54 verts, 52 faces
+[   78.9s]   HARB_partition: timber wall (board_batten), 1 runs, 0 openings
+[   78.9s] -- linear_roof
+[   78.9s]   HARB_roof_deck: 2255 verts, 2212 faces
+[   79.0s]   roof rafters: 4 tails skipped (they would run into another body)
+[   79.0s]   HARB_roof_rafters: 1680 verts, 1620 faces
+[   80.7s]   HARB_roof_covering: 120270 verts, 103170 faces
+[   80.7s]   HARB_roof: 891 shingle pieces
+[   80.8s]   HARB_roof_comb: 7000 verts, 6720 faces
+[   80.8s]   HARB_roof_verge: 528 verts, 530 faces
+[   80.8s]   HARB_roof: 4 verge boards
+[   80.9s]   HARB_roof_apex_cap_collar: 338 verts, 338 faces
+[   80.9s]   HARB_roof_apex_finial: 1442 verts, 1442 faces
+[   80.9s]   HARB_roof: apex finials on 2 gable(s), tips 9.57, 9.57
+[   80.9s] -- wall_abutment
+[   81.3s]   wall_abutment: trimmed at the wall face: comb -0 (whole units within 0.15 m), deck 2212->2069, rafters 1620->1599, covering 103170->96256, comb 6720->6720, verge 530->444
+[   81.4s]   wall_abutment: run 0: 206 samples, azimuth 355.5..458.0 deg, z 3.02..6.84 (cone eave lip 8.60)
+[   81.4s]   HARB_roof_wall_abutment: 1602 verts, 1589 faces
+[   81.4s]   seal junction registered: roof / round wall (covering HARB_roof_covering, HARB_roof_eave_roll, HARB_roof_ridge; z 2.65-7.14)
+[   81.4s] -- linear_roof
+[   81.5s]   HARB_wing_roof_deck: 1485 verts, 1456 faces
+[   81.5s]   wing_roof rafters: 6 tails skipped (they would run into another body)
+[   81.5s]   HARB_wing_roof_rafters: 896 verts, 864 faces
+[   82.0s]   HARB_wing_roof_covering: 39650 verts, 34376 faces
+[   82.0s]   HARB_wing_roof: 298 shingle pieces
+[   82.1s]   HARB_wing_roof_comb: 4600 verts, 4416 faces
+[   82.1s]   HARB_wing_roof_verge: 128 verts, 129 faces
+[   82.1s]   HARB_wing_roof: 2 verge boards
+[   82.1s]   HARB_wing_roof_apex_cap_collar: 169 verts, 169 faces
+[   82.1s]   HARB_wing_roof_apex_finial: 721 verts, 721 faces
+[   82.1s]   HARB_wing_roof: apex finials on 1 gable(s), tips 6.14
+[   82.1s] -- wall_abutment
+[   82.3s]   wing_abutment: trimmed at the wall face: comb -1728 (whole units within 0.15 m), deck 1456->1098, rafters 864->864, covering 34376->26442, comb 2688->2688, verge 129->129
+[   82.4s]   wing_abutment: run 0: 282 samples, azimuth 110.5..251.0 deg, z 2.70..4.81 (cone eave lip 8.60)
+[   82.4s]   HARB_wing_roof_wing_abutment: 2134 verts, 2121 faces
+[   82.4s]   seal junction registered: wing_roof / round wall (covering HARB_wing_roof_covering, HARB_wing_roof_eave_roll, HARB_wing_roof_ridge; z 2.38-5.11)
+[   82.4s] -- board_belt
+[   82.5s]   HARB_tower_top_boards: 3796 verts, 3285 faces
+[   82.5s]   HARB_tower_top_backing: 129 verts, 128 faces
+[   82.5s]   HARB_tower_top_ring: 1792 verts, 1728 faces
+[   82.5s]   HARB_tower_top_frames: 2112 verts, 2128 faces
+[   82.5s]   HARB_tower_top_blockers: 32 verts, 20 faces
+[   82.5s] -- cone_roof
+[   82.6s]   HARB_rafters: 1978 verts, 1675 faces
+[   82.6s]   HARB_purlin_rings: 168 verts, 150 faces
+[   82.6s]   HARB_battens: 264 verts, 198 faces
+[   83.8s] shingles: 238 full-length (covered part visible): 68
+[   84.0s]   HARB_roof_shingles: 26610 verts, 23486 faces
+[   84.0s]   HARB_roof_starter: 2220 verts, 1924 faces
+[   86.0s] underlap strips: 235
+[   86.0s]   HARB_roof_underlap: 2820 verts, 1410 faces
+[   86.0s]   HARB_roof_blocker: 1124 verts, 1024 faces
+[   86.1s]   HARB_roof_soffit_deck: 1440 verts, 1296 faces
+[   86.1s] -- finial
+[   86.1s]   HARB_cap_collar: 5154 verts, 5210 faces
+[   86.1s]   HARB_finial: 2502 verts, 2640 faces
+[   86.1s] collar drip 11.251 fascia top 11.316 lower top 11.807 upper top 12.107 spindle top 12.490 tip 13.440
+[   86.1s] -- round_eave_fill
+[   86.2s]   HARB_eave_fill: 721 verts, 480 faces
+[   86.2s] -- pile_deck
+[   86.2s]   HARB_jetty_piles: 340 verts, 276 faces
+[   86.2s]   HARB_jetty_structure: 1440 verts, 1392 faces
+[   86.2s]   HARB_jetty_planks: 1120 verts, 1080 faces
+[   86.2s]   HARB_jetty_fascia: 212 verts, 218 faces
+[   86.2s]   HARB_jetty_ironwork: 448 verts, 432 faces
+[   86.2s]   HARB_jetty: deck 1.80 x 5.00 m, 8 piles, 20 planks
+[   86.2s] -- ladder
+[   86.2s]   HARB_ladder: 272 verts, 226 faces
+[   86.2s] -- composite_hidden_cull
+[   86.9s]   visibility: 875948 tris, 329 viewpoints
+[   92.8s]   visibility cull HARB_quay_core: -566 of 4428 polygons
+[  155.4s]   visibility cull HARB_tower_stones: -6078 of 46082 polygons
+[  159.9s]   visibility cull HARB_tower_frames: -555 of 1170 polygons
+[  160.9s]   visibility cull HARB_tower_dressed: -101 of 360 polygons
+[  358.0s]   visibility cull HARB_hall_stones: -22404 of 113649 polygons
+[  376.9s]   visibility cull HARB_hall_quoins: -3017 of 5680 polygons
+[  388.3s]   visibility cull HARB_hall_frames: -1494 of 3729 polygons
+[  389.9s]   visibility cull HARB_hall_dressed: -202 of 558 polygons
+[  390.3s]   visibility cull HARB_hall_ironwork: -45 of 266 polygons

@@ -271,7 +271,60 @@ QUAY_BLOCKS = dict(ch=(0.28, 0.48), ch_mix=[(0.35, 0.28, 0.34), (0.40, 0.34, 0.4
 and stones 0.70-1.40 m (the bible's through-stone end of the range): fewer, bigger stones (note 15)."""
 
 
-def stone_quay(g, name, path, top_z=0.0, bed_z=-2.5, water=None, cfg=None, seed=651, coping=True, detail_z=-0.9):
+BLOCK_DEPTH, BLOCK_FACE = 0.30, 0.012
+"""the core blocks' bed depth behind the face line and their face set-back (w -0.30 .. -0.012)."""
+
+
+def _block_courses(rng, z0, z1, ch=(0.42, 0.58)):
+    """course boundaries [(za, zb), ...] from z0 to z1 (42-58 cm; the last course takes the remainder >= 20 cm).
+    Round 3: drawn ONCE per quay face group, so the runs meeting at a corner share their beds (quoin bond)."""
+    out, z = [], z0
+    while z < z1 - 0.05:
+        h = float(rng.uniform(*ch))
+        if z1 - (z + h) < 0.2:
+            h = z1 - z
+        out.append((z, z + h))
+        z += h
+    return out
+
+
+def _core_blocks(acc, F, s0, s1, z0, z1, rng, ch=(0.42, 0.58), ln=(0.85, 1.55), gap=0.022, courses=None,
+                 quoin=(None, None)):
+    """the submerged core laid as LOW-POLY large blocks (round 2b): courses of 42-58 cm, blocks 0.85-1.55 m, broken
+    joints, each block a closed rounded box (~60 tris) a little out of line (+-1.2 cm), on the recessed joint
+    backing -- it reads as ref4's big quay blocks from any distance at ~1 % of the rubble's triangles.
+    Round 3 (v5-only): courses = the group's shared course list (None: drawn here, the round-2 behaviour).
+    quoin = (start, end): None, or the parity p of a CONVEX corner at that end (the run's corner point is s = 0 /
+    s = s1 - its e1 extension is ignored there).  On course k the run OWNS the corner when (k + p) is even: its end
+    block runs through the corner to the other run's face plane (s = BLOCK_FACE in from the corner), so its end face
+    is seen flush on the other face; otherwise it BUTTS that block's back (s = BLOCK_DEPTH + gap / 2 in from the
+    corner).  The two runs get opposite parities, so the corner is a long-and-short quoin bond with no straight
+    vertical joint; the only joints are the 2.2 cm beds and 1.1 cm butt joints."""
+    if courses is None:
+        courses = _block_courses(rng, z0, z1, ch)
+    for k, (za, zb) in enumerate(courses):
+        lo_c, hi_c = quoin
+        lo = s0 + gap / 2 if lo_c is None else (BLOCK_FACE if (k + lo_c) % 2 == 0 else BLOCK_DEPTH + gap / 2)
+        hi = s1 - gap / 2 if hi_c is None else (s1 - BLOCK_FACE if (k + hi_c) % 2 == 0
+                                                else s1 - BLOCK_DEPTH - gap / 2)
+        stagger = 0.0 if (k % 2 == 0 or lo_c is not None) else float(rng.uniform(0.3, 0.6))
+        s = lo - stagger
+        while s < hi - 0.05:
+            L = float(rng.uniform(*ln))
+            if hi - (s + L) < 0.35:
+                L = hi - s
+            a = max(s, lo) + (0.0 if s <= lo + 1e-9 else gap / 2)
+            b = min(s + L, hi) - (0.0 if s + L >= hi - 1e-9 else gap / 2)
+            if b - a > 0.1:
+                dw = float(rng.uniform(-0.012, 0.012))
+                top = zb - (gap / 2 if zb < z1 - 1e-6 else 0.0)          # the top course: flush coping
+                wbox(acc, F, a, b, za + gap / 2, top, -BLOCK_DEPTH, -BLOCK_FACE + dw, "M_stone", r=0.035, ns=2,
+                     nz=2, tilt=float(rng.uniform(-0.006, 0.006)))
+            s += L
+
+
+def stone_quay(g, name, path, top_z=0.0, bed_z=-2.5, water=None, cfg=None, seed=651, coping=True, detail_z=-0.9,
+               core_blocks=False):
     """KIT COMPONENT (round 2; replaces the retired timber crib quay): a harbour quay edge of large rubble blocks
     (rubble_walls.path_stone_wall with QUAY_BLOCKS) along a plan polyline (interior = the land on the LEFT, so each
     face looks out over the water on the right).  water: the runs that are WATER faces -- a list of run indices of
@@ -282,9 +335,15 @@ def stone_quay(g, name, path, top_z=0.0, bed_z=-2.5, water=None, cfg=None, seed=
     detail_z: the blocks are laid from here (the tidal band, -0.9 m: where the waterline anchors and the camera are)
     up; below it, down to the bed, the wall's submerged CORE is one closed rubble slab per run, set 2 cm behind the
     face line (note 6: under water nothing is seen at close range; None = blocks all the way to the bed).
+    core_blocks: round 2b -- the core is laid as low-poly large blocks on a recessed joint backing (_core_blocks), so
+    the face below detail_z still reads as ref4's quay blocks (clay / low-water views) at ~60 tris a block; with
+    detail_z >= top_z - 0.05 the WHOLE face is that block masonry (no rubble band; the top course is the coping).
+    Round 3: the joint backing is its own object <P>_<name>_backing_blocker (never culled: composite.BACKING) and
+    every CONVEX corner between two water runs is quoin-bonded (shared courses; alternate courses' end blocks run
+    through the corner by the block depth, see _core_blocks).  -> <P>_<name>_core, <P>_<name>_backing_blocker.
     Publishes g.QUAYS (dict(name, water=[PathMap ...], top_z, bed_z)) -- the waterline anchors
     (composite.waterfront_anchors) go only on these water faces, between -0.9 m and the datum."""
-    from .rubble_walls import path_stone_wall
+    from .rubble_walls import PathMap, path_stone_wall
     A = [tuple(map(float, p)) for p in path]
     runs = list(range(len(A) - 1)) if water is None else sorted(int(i) for i in water)
     groups, cur = [], []
@@ -295,29 +354,66 @@ def stone_quay(g, name, path, top_z=0.0, bed_z=-2.5, water=None, cfg=None, seed=
         cur.append(i)
     if cur:
         groups.append(cur)
-    z_b = bed_z if detail_z is None else max(bed_z, float(detail_z))
+    blocks_only = bool(core_blocks) and detail_z is not None and float(detail_z) >= top_z - 0.05
+    z_b = bed_z if detail_z is None else (top_z if blocks_only else max(bed_z, float(detail_z)))
     cfg_ = dict(QUAY_BLOCKS, footing=z_b + 0.42, **(cfg or {}))     # the footing course sits on the base, not z 0.30
     maps = []
     core = Acc(f"{g.prefix}_{name}_core")
+    # round 3: the joint backing is its OWN object, named into composite.BACKING ("_blocker"), so the hidden-geometry
+    # cull can never remove it from behind a visible joint (producer note 6)
+    back = Acc(f"{g.prefix}_{name}_backing_blocker")
+    rng_c = np.random.default_rng(seed + 7)
+    n_q = 0
     for k, grp in enumerate(groups):
         pts = [A[grp[0]]] + [A[i + 1] for i in grp]
-        pm = path_stone_wall(g, f"{name}_{k}", pts, top=top_z, openings=(), seed=seed + 13 * k, cfg=cfg_,
-                             base=z_b, clip_z=bed_z - 0.01)
+        if blocks_only:                                  # the whole face is the low-poly block masonry
+            pm = PathMap(pts)
+        else:
+            pm = path_stone_wall(g, f"{name}_{k}", pts, top=top_z, openings=(), seed=seed + 13 * k, cfg=cfg_,
+                                 base=z_b, clip_z=bed_z - 0.01)
         maps.append(pm)
         if z_b > bed_z + 0.05:
+            z_top = top_z if blocks_only else z_b + 0.10
+            courses = _block_courses(rng_c, bed_z, z_top) if core_blocks else None   # shared by the group
+
+            def convex(j):
+                if j <= 0 or j >= len(pm.L):
+                    return False
+                a_, b_ = pm.dir[j - 1], pm.dir[j]
+                return a_[0] * b_[1] - a_[1] * b_[0] > 1e-6
+
+            def ext(j):                                          # close the core's corners
+                if j <= 0 or j >= len(pm.L):
+                    return 0.0
+                return 0.02 if convex(j) else 0.12
             for i in range(len(pm.L)):
                 O = np.array([pm.A[i][0], pm.A[i][1], 0.0])
                 F = (O, np.array([*pm.dir[i], 0.0]), np.array([*pm.nrm[i], 0.0]))
-                def ext(j):                                          # close the core's corners
-                    if j <= 0 or j >= len(pm.L):
-                        return 0.0
-                    a_, b_ = pm.dir[j - 1], pm.dir[j]
-                    return 0.02 if a_[0] * b_[1] - a_[1] * b_[0] > 1e-6 else 0.12
                 e0, e1 = ext(i), ext(i + 1)
-                wbox(core, F, -e0, float(pm.L[i]) + e1, bed_z, z_b + 0.12, -0.12, -0.02, "M_rubble", r=0.03,
-                     ns=max(4, int(pm.L[i] / 1.5) + 2), nz=3)
-    if core.n:
-        finalize(core, g.coll, smooth_deg=30.0, clip_z=bed_z - 0.01)
+                Li = float(pm.L[i])
+                if core_blocks:                      # the joint backing, recessed behind the blocks
+                    # corner c (run c-1 -> run c) has parity c: run c-1 ends with p = c, run c starts with p = c + 1,
+                    # so on every course exactly one of the two owns the corner
+                    q0 = (i + 1) if convex(i) else None
+                    q1 = (i + 1) if convex(i + 1) else None
+                    n_q += int(q1 is not None)
+                    # the backing stops at the other run's backing face at a convex corner (closed round it,
+                    # nothing past either face)
+                    b0 = 0.07 if q0 is not None else -e0
+                    b1 = Li - 0.07 if q1 is not None else Li + e1
+                    wbox(back, F, b0, b1, bed_z, z_top - 0.03, -0.20, -0.07, "M_stone", r=0.03,
+                         ns=max(4, int(pm.L[i] / 1.5) + 2), nz=3)
+                    _core_blocks(core, F, 0.0 if q0 is not None else -e0, Li if q1 is not None else Li + e1,
+                                 bed_z, z_top, rng_c, courses=courses, quoin=(q0, q1))
+                else:
+                    wbox(core, F, -e0, float(pm.L[i]) + e1, bed_z, z_b + 0.12, -0.12, -0.02, "M_rubble", r=0.03,
+                         ns=max(4, int(pm.L[i] / 1.5) + 2), nz=3)
+    for a_ in (core, back):
+        if a_.n:
+            finalize(a_, g.coll, smooth_deg=30.0, clip_z=bed_z - 0.01)
+    if n_q:
+        log(f"  {g.prefix}_{name}: {n_q} convex corner(s) quoin-bonded (shared courses, alternate overrun "
+            f"{BLOCK_DEPTH:.2f} m)")
     if not hasattr(g, "QUAYS"):
         g.QUAYS = []
     g.QUAYS.append(dict(name=name, water=maps, top_z=top_z, bed_z=bed_z))

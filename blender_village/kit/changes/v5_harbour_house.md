@@ -6,6 +6,42 @@ producer to merge into `../CHANGELOG.md` (proposed version 1.12.0).
 
 ---
 
+## Round 3 (the four waterline must-fixes of the round-2 grade)
+
+All four are kit fixes, so the boathouse inherits them.
+
+### Existing module: one new option (the default keeps the old behaviour; hash rule `kit/baseline/v5r3_hash/`)
+
+- **`rubble_walls.path_stone_wall(..., flush_runs=None)`**: the run indices (run i = `path[i] -> path[i+1]`) whose
+  footing course is laid FLUSH. These are ordinary face stones of the footing course's height and lengths, with the
+  kit `front` projection and no field-stone bulge (`foot` flag cleared before `polygonize` / `rough_footing`, own
+  stream `seed + 19`). It is for walls standing flush on a quay face, where the projecting footing would hang over
+  the water. `None` takes exactly the old code path (the `_path_stone_wall_based` call is unchanged).
+
+### v5-only modules (no other building imports them)
+
+- **`cruck.cruck_frame`**:
+  - `pad_clip_z=None`: the finalize clip of the pad stones. None gives the kit's -5 cm clip, or just under
+    `respond_z` when responds are built.
+  - `respond_z=None` (with `respond_ch=(0.40, 0.56)`): carry each pad down to `respond_z` as a dressed stone
+    RESPOND of the pad's plan. Courses have 1.2 cm joints and alternate courses are set back 1.5 cm. The joints
+    are closed by an inset core `<P>_<name>_respond_blocker`, which is never culled. The respond has its own
+    stream (`seed + 5`), so the frame's members are unchanged.
+  - `king_strut=True`: False drops the tie-to-collar king strut. With `pointed=True` the pointed arch carries the
+    collar; the strut inside it read as "a lancet with a cross".
+  - Defaults reproduce the round-2 frame.
+- **`waterfront.stone_quay(core_blocks=True)`**:
+  - The recessed joint backing is now its own object, `<P>_<name>_backing_blocker`. The name falls in
+    `composite.BACKING`, so `composite_hidden_cull` never removes it from behind a visible joint (producer note 6).
+  - Course beds are drawn once per face group (`_block_courses`) and shared by its runs.
+  - Every CONVEX corner between two water runs is quoin-bonded (`_core_blocks(quoin=(p0, p1))`). On alternate
+    courses one run's end block runs through the corner to the other face (`BLOCK_FACE` in from the corner), and the
+    other run butts its back (`BLOCK_DEPTH + gap/2`). The backing stops at the other run's backing face, so it is
+    closed round the corner with nothing past either face.
+  - The plain-end, concave-corner and `core_blocks=False` behaviour is unchanged.
+
+---
+
 ## Round 2 (the ref4 boat hall; reuse mandate, note 16, note 17)
 
 ### Summary
@@ -74,6 +110,25 @@ producer to merge into `../CHANGELOG.md` (proposed version 1.12.0).
   of large blocks (`path_stone_wall` with `QUAY_BLOCKS`, `base=bed_z`); only the WATER runs are built (to the bed),
   land runs are left to the terrain (note 6: nothing deeper than 5 cm on land); `g.QUAYS` carries the water faces for
   the waterline anchors.  `crib_quay` removed.
+
+### Round 2, relaunched fixer (12:10 onward): v5-only modules only, no existing module touched
+
+- **`cruck.cruck_frame`**: new options `brace=0.17` (the collar braces' face width, was a literal 0.17) and
+  `pointed=False, pointed_t=0.26, pointed_at=0.74` -- a two-centred POINTED ARCH of two curved timbers springing
+  from the tie beam at `+-pointed_at * s_tie` and meeting under the collar at the king strut (ref4's inner gable
+  arch; raises when there is no room).  Defaults = the 11:00 frame.  The recipe uses heavier members
+  (`member_w=(-0.30, 0.06)`: the frame stands 6 cm proud of the stone face and the infill sits 15-18 cm behind the
+  member faces; `post=0.30, arch_t=0.34, blade=0.40, tie=0.32, collar=0.26`), `pointed=True`, `braces=False`.
+- **`waterfront.stone_quay`**: new option `core_blocks=False` -- the submerged core under `detail_z` is laid as
+  low-poly LARGE BLOCKS (`_core_blocks`: courses 42-58 cm, blocks 0.85-1.55 m, broken joints, ~60 tris a block, a
+  little out of line) on a recessed joint backing, instead of one flat slab per run (the slab read as "vertical
+  planks" in the clay views).  With `detail_z >= top_z - 0.05` the WHOLE face is that block masonry with a flush
+  coping course (no rubble band); the recipe uses `detail_z=QZ, core_blocks=True` -- the rubble quay stones (~58k
+  tris that `hidden_tris.py` counts as buried below z -0.05) are gone, hidden 20.4 % -> 13.5 %.  Block / backing
+  material `M_stone` (the palette; the old slab's `M_rubble` would be a 10th slot).
+- **Hash rule:** no existing module changed in this pass.  Because the earlier fixer edited `rubble_walls` at
+  11:06, after the hilltop_keep / wattle_roundhut / tower_windmill builds of `v5r2_hash` had started (10:52 /
+  10:57 / 11:05), those three were rebuilt into `kit/baseline/v5r2b_hash/` (result in the builder entry).
 
 ### Known limitations (round 2)
 

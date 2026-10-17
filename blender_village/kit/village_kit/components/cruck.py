@@ -58,8 +58,22 @@ def _ribbon(acc, P, top, bot, w0, w1, mat, wear=None):
 
 def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0.28, member_w=(-0.28, 0.02),
                 post=0.24, arch_t=0.24, blade=0.30, collar_at=0.50, collar=0.22, braces=True, pads=True,
-                infill="plank", infill_w=(-0.125, -0.088), backing_w=(-0.16, -0.13), rough=True, seed=901):
-    """KIT COMPONENT (see the module doc)."""
+                infill="plank", infill_w=(-0.125, -0.088), backing_w=(-0.16, -0.13), rough=True, seed=901,
+                brace=0.17, pointed=False, pointed_t=0.26, pointed_at=0.74, pad_clip_z=None, respond_z=None,
+                respond_ch=(0.40, 0.56), king_strut=True):
+    """KIT COMPONENT (see the module doc).
+    pad_clip_z   round 3: the finalize clip of the pad stones (None: the kit's -5 cm land clip, or just under
+                 respond_z when responds are built) -- the pads are designed z -0.30 .. 0
+    respond_z    round 3: None (default: the pads only, the round-2 frame) or the z of the bed / footing the pads are
+                 CARRIED DOWN to: each pad stands on a dressed stone RESPOND of the pad's plan, laid in courses of
+                 respond_ch (1.2 cm joints closed by an inset core <P>_<name>_respond_blocker), so a frame standing
+                 at a quay corner over water bears on masonry down to the bed
+    king_strut   round 3: False drops the king strut between the tie and the collar (with pointed=True the pointed
+                 arch carries the collar, and the strut inside it read as tracery: "a lancet with a cross")
+    brace        the curved collar braces' face width (m)
+    pointed      round 2b: a two-centred POINTED ARCH of two curved timbers (ref4's inner gable arch) springing from
+                 the tie beam at +-pointed_at * the tie's half length and meeting under the collar at the king strut;
+                 pointed_t = its face width.  False: the old frame."""
     O = np.asarray(O, float)
     t = np.asarray(t, float) / np.linalg.norm(t)
     n = np.asarray(n, float) / np.linalg.norm(n)
@@ -83,6 +97,9 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
          sag=0.0 if ro is None else 0.6 * ro["sag"])
     # ---- jamb posts on dressed pad stones, inside the stone jambs
     a_in = clear / 2 - 0.04 - post                        # the posts' inner faces = the arch springing
+    rrng = np.random.default_rng(seed + 5)                # the responds' own stream (the frame's is unchanged)
+    rb_ = Acc(pre + "_respond_blocker")
+    n_resp = 0
     for sg in (-1, 1):
         s0, s1 = sorted((sg * a_in, sg * (clear / 2 - 0.04)))
         wbox(fr, F, s0, s1, 0.0, z_pier + 0.01, w0, w1, "M_timber", r=0.018, ns=4, nz=6,
@@ -90,6 +107,23 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
         if pads:
             p0, p1 = sorted((sg * (a_in - 0.05), sg * (clear / 2 + 0.03)))
             wbox(pd, F, p0, p1, -0.30, 0.0, w0 - 0.07, w1 + 0.05, "M_stone_dressed", r=0.02, ns=5, nz=4)
+            if respond_z is not None and respond_z < -0.35:
+                # the respond: dressed courses from respond_z up to the pad, on an inset closed core
+                z, k = float(respond_z), 0
+                while z < -0.30 - 1e-6:
+                    h = float(rrng.uniform(*respond_ch))
+                    if -0.30 - (z + h) < 0.25:
+                        h = -0.30 - z
+                    j = 0.012 if z + h < -0.30 - 1e-6 else 0.0
+                    dj = 0.015 if k % 2 else 0.0                 # alternate courses a little set back (tooled)
+                    wbox(pd, F, p0 + (dj if sg > 0 else 0.0), p1 - (0.0 if sg > 0 else dj), z, z + h - j,
+                         w0 - 0.07 + dj, w1 + 0.05 - dj + float(rrng.uniform(-0.008, 0.008)), "M_stone_dressed",
+                         r=0.025, ns=3, nz=2)
+                    z += h
+                    k += 1
+                n_resp += k
+                wbox(rb_, F, p0 + 0.04, p1 - 0.04, float(respond_z), -0.29, w0 - 0.03, w1 + 0.01, "M_stone_dressed",
+                     r=0.01, ns=2, nz=2)
     # ---- the segmental arch: intrados through (+-a_in, spring) and (0, crown), crown under the tie
     crown = z_pier - arch_t - 0.004
     rise = crown - spring
@@ -133,7 +167,8 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
     s_col = _scan_root(lambda s: (z_col + collar) - blade_under(1, s) - 0.0, 0.0, s_tie)
     wbox(fr, F, -s_col - 0.05, s_col + 0.05, z_col, z_col + collar, w0 + 0.02, w1 - 0.01, "M_timber", r=0.016,
          ns=6, clamp=lambda s: rake(s) - 0.02)
-    wbox(fr, F, -0.09, 0.09, tie_top - 0.01, z_col + 0.01, w0 + 0.03, w1 - 0.015, "M_timber", r=0.014, nz=6)
+    if king_strut:
+        wbox(fr, F, -0.09, 0.09, tie_top - 0.01, z_col + 0.01, w0 + 0.03, w1 - 0.015, "M_timber", r=0.014, nz=6)
     if apex - (z_col + collar) > 0.25:
         wbox(fr, F, -0.08, 0.08, z_col + collar - 0.01, apex - 0.02, w0 + 0.03, w1 - 0.015, "M_timber", r=0.012,
              nz=5, clamp=lambda s: rake(s) - 0.015)
@@ -148,7 +183,23 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
             ps = sa + (sb - sa) * np.sin(0.5 * np.pi * u)
             pz = za + (zb - za) * (1.0 - np.cos(0.5 * np.pi * u))
             path = np.array([P(s, z, wm) for s, z in zip(ps, pz)])
-            V, Fc = sweep(path, n, prof_rect(0.17, (w1 - w0) - 0.06, 0.015))
+            V, Fc = sweep(path, n, prof_rect(brace, (w1 - w0) - 0.06, 0.015))
+            fr.add(V, Fc, "M_timber", wear=float(rng.uniform(0.3, 0.6)))
+    # ---- the pointed (two-centred) arch: from the tie top at +-sp to the king strut under the collar
+    if pointed:
+        sp = pointed_at * s_tie
+        h = (z_col + 0.01) - tie_top
+        if h < 0.3 or sp < 0.4:
+            raise ValueError(f"cruck_frame {name}: no room for the pointed arch (rise {h:.2f}, half span {sp:.2f})")
+        c = (h * h - sp * sp) / (2.0 * sp)                 # each arc's centre on the tie line, opposite side
+        R2 = c + sp
+        a1 = math.atan2(h, -c)                               # the apex angle (s = 0 on the outer curve)
+        th = np.linspace(math.pi, a1, 22)                    # from the springing (on the tie) to the apex
+        rr = R2 - 0.5 * pointed_t                            # the member's centreline
+        for sg in (-1, 1):                                   # the -s arc is centred at +c; the +s arc mirrors it
+            path = np.array([P(-sg * (c + rr * math.cos(a)), tie_top - 0.01 + rr * math.sin(a), wm + 0.005)
+                             for a in th])
+            V, Fc = sweep(path, n, prof_rect(pointed_t, (w1 - w0) - 0.05, 0.016))
             fr.add(V, Fc, "M_timber", wear=float(rng.uniform(0.3, 0.6)))
     # ---- plank infill + backing: the upper gable (over the tie / pier tops) and the arch spandrels
     n_b = 0
@@ -198,9 +249,15 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
                 return True
             return abs(sm) < a_in and zm > extrados(sm) - 0.06 and zm < z_pier + 0.02
         _sheet(bk, F, ss, zs, keep, backing_w[0], backing_w[1], "M_timber_weathered", clamp=lambda s: rake(s) - 0.008)
-    for a_ in (fr, bd, bk, pd):
+    for a_ in (fr, bd, bk):
         if a_.n:
             finalize(a_, g.coll, smooth_deg=30.0)
+    clip_pd = pad_clip_z if pad_clip_z is not None else (None if respond_z is None else float(respond_z) - 0.01)
+    for a_ in (pd, rb_):
+        if a_.n:
+            finalize(a_, g.coll, smooth_deg=30.0, **({} if clip_pd is None else dict(clip_z=clip_pd)))
+    if n_resp:
+        log(f"  {pre}: pads carried down to {respond_z:.2f} as dressed responds ({n_resp} courses)")
     if not hasattr(g, "CRUCKS"):
         g.CRUCKS = []
     g.CRUCKS.append(dict(name=name, O=O, t=t, n=n, half=half, clear=clear, tie_z=z_pier, spring=spring,

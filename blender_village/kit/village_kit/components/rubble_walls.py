@@ -99,7 +99,7 @@ def _quoin_courses(rng, z_top, h_rng=(0.24, 0.34), long_short=(0.50, 0.28), z0=-
 
 
 def path_stone_wall(g, name, path, top=2.75, top_fn=None, openings=(), clip=None, seed=31, cfg=None, quoins=True,
-                    proj=0.025, hero_s=None, base=None, clip_z=None):
+                    proj=0.025, hero_s=None, base=None, clip_z=None, flush_runs=None):
     """KIT COMPONENT (see module doc).
     path      plan polyline [(x, y), ...], interior on the left (so the outward normal is on the right)
     top       wall-head height (flat); top_fn(x, y) -> height overrides it per point (a gable under a roof deck)
@@ -108,16 +108,20 @@ def path_stone_wall(g, name, path, top=2.75, top_fn=None, openings=(), clip=None
     hero_s    (s0, s1): the run laid with hero polygonal stones (the entrance face); default: the footing only
     base      kit 1.12 (v5 round 2; None = -0.10, the land wall's buried footing): the course base z -- a quay /
               harbour wall standing on the bed (waterfront.stone_quay) starts at the bed
-    clip_z    kit 1.12 (None = the kit's -5 cm land clip): the finalize clip height (a quay wall: just under the bed)"""
-    if base is not None or clip_z is not None:
+    clip_z    kit 1.12 (None = the kit's -5 cm land clip): the finalize clip height (a quay wall: just under the bed)
+    flush_runs kit 1.12 (v5 round 3; None = every run has the projecting stepped footing): run indices of the path
+              (run i = path[i] -> path[i + 1]) whose footing course is laid FLUSH -- ordinary face stones of the
+              footing course's height and lengths, no projection, no field-stone bulge.  For a wall standing flush
+              on a quay / harbour face (waterfront.stone_quay), where a projecting footing would hang over the water."""
+    if base is not None or clip_z is not None or flush_runs is not None:
         return _path_stone_wall_based(g, name, path, top, top_fn, openings, clip, seed, cfg, quoins, proj, hero_s,
-                                      -0.10 if base is None else float(base), clip_z)
+                                      -0.10 if base is None else float(base), clip_z, flush_runs)
     return _path_stone_wall_based(g, name, path, top, top_fn, openings, clip, seed, cfg, quoins, proj, hero_s,
                                   None, None)
 
 
 def _path_stone_wall_based(g, name, path, top, top_fn, openings, clip, seed, cfg, quoins, proj, hero_s, base,
-                           clip_z):
+                           clip_z, flush_runs=None):
     """path_stone_wall's body; base / clip_z None = the kit 1.11 literals (-0.10 / -0.05 mortar foot / CLIP_Z)."""
     z_base = -0.10 if base is None else base
     z_mfoot = -0.05 if base is None else base + 0.05
@@ -159,6 +163,15 @@ def _path_stone_wall_based(g, name, path, top, top_fn, openings, clip, seed, cfg
     runs = [(float(pm.S[i]), float(pm.S[i + 1])) for i in range(len(pm.L))]
     srange = lambda zm: runs  # noqa: E731
     S = layout_wall(rng, srange, z_base, z_top, excl, cfg, ztop_fn=ztop_s)
+    if flush_runs:                       # kit 1.12 (v5 r3): the listed runs' footing course is laid flush
+        sel = np.zeros(len(S["sc"]), bool)
+        for i in flush_runs:
+            sel |= (S["sc"] >= pm.S[int(i)] - 1e-6) & (S["sc"] <= pm.S[int(i) + 1] + 1e-6)
+        sel &= S["foot"] > 0.5
+        S["foot"][sel] = 0.0
+        S["f"][sel] = np.random.default_rng(seed + 19).uniform(*cfg["front"], int(sel.sum()))
+        S["tilty"][sel] = 0.0
+        log(f"  {pre}: flush footing on runs {sorted(int(i) for i in flush_runs)} ({int(sel.sum())} stones)")
     hero = S["foot"] > 0.5
     if hero_s is not None:
         hero |= (S["sc"] > hero_s[0]) & (S["sc"] < hero_s[1]) & (S["zc"] < 2.4)

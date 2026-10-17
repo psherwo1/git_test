@@ -1,5 +1,7 @@
-"""v5_harbour_house (HARB) -- approved building 3, round 2: the ref4 harbour boat hall.  A declarative RECIPE: every
-piece is a village_kit module; the building is dimensions + the order of the steps.
+"""v5_harbour_house (HARB) -- approved building 3, round 3: the ref4 harbour boat hall.  A declarative RECIPE: every
+piece is a village_kit module; the building is dimensions + the order of the steps.  Round 3: the cruck pads stand
+on dressed responds to the bed (cruck_frame respond_z), the quay walls' footing is flush (path_stone_wall
+flush_runs), and the quay's convex corners are quoin-bonded on a never-culled backing (stone_quay).
 
 Run:  python -I build_v5_harbour_house.py  -> v5_harbour_house.blend + decal_anchors.json (next to this file)
       HARB_FAST=1 skips the hidden-geometry cull (quick looks only); HARB_OUT=<path.blend> writes elsewhere.
@@ -9,13 +11,15 @@ with the round tower's axis at the origin, then recentred on the plan bounding b
   hall     coursed rubble boat hall 6.0 x 9.2 m (path_stone_wall), eave walls ~3.3 m, a 58 deg kit-shingle gable roof
            with a sagging ridge, swept eaves and apex-flared bargeboards (GableRoof soft options), turned finials on
            lead hats at both gables; the land gable carries the door
-  water    the water gable: stone piers + a cruck / arched-brace frame with plank infill (cruck_frame) over a 4.6 m
+  water    the water gable: stone piers + a heavy cruck / arched-brace frame with a pointed inner
+           arch and plank infill (cruck_frame) over a 4.6 m
   gable    arched boat opening; the slip runs into the hall (boats moor inside) behind a boarded partition
-  tower    a round rubble tower at the landward corner (round_stone_body) with a timber top storey (board_belt on a
-           plain body: boards, foot and head rings, two lookouts) under a mossy kit-shingle cone (cone_roof) with the
+  tower    a round rubble tower at the landward corner (round_stone_body) with a 1.7 m timber top storey (board_belt on a
+           plain body: boards, foot and head rings, four lookouts) under a mossy kit-shingle cone (cone_roof) with the
            spike finial; the main roof and the lower wing roof run into it (wall_abutment)
   wing     a lower rubble wing beside the tower under its own soft shingle gable
-  quay     a stone quay edge of large blocks (stone_quay: water faces to the bed only) and a short jetty on piles
+  quay     a stone quay edge of large blocks (stone_quay: water faces to the bed only, laid as
+           low-poly large blocks with a flush coping course) and a short jetty on piles
 """
 import os
 import sys
@@ -43,7 +47,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BID = "v5_harbour_house"
 
 # ---- the ONE dimension tables: the tower's RoundFrame (cone) and the rest of the building ----------------------
-KIT = KitParams(radius=2.10, eave_z=7.90, overhang=0.50, pitch_deg=52.0, collar_r=0.62,
+KIT = KitParams(radius=2.10, eave_z=8.60, overhang=0.50, pitch_deg=52.0, collar_r=0.62,
                 cone_age=age_defaults(**AGE_R10), detail_rule=True)
 DIM = KitParams(r_tower=2.30, batter=1.5, stone_top=6.90, hx=3.2, hy=4.8, half=3.0, len=9.2, wall_z=3.35, pitch=58.0,
                 bay=3.2, clear=4.6, pier=0.7, quay_z=-0.04, bed=-2.5, wing_x0=-6.3, wing_half=1.7, wing_z=2.85)
@@ -53,18 +57,19 @@ XW, XE = HX - HALF, HX + HALF                                # hall side faces (
 XJ0, XJ1 = HX - DIM["clear"] / 2, HX + DIM["clear"] / 2      # the arch jambs (0.9 / 5.5)
 YP = Y1 - DIM["bay"]                                         # the bay partition / slip head (6.2)
 MAIN = GableRoof(x0=Y0, x1=Y1, half=HALF, wall_z=DIM["wall_z"], pitch_deg=DIM["pitch"], overhang=0.45,
-                 verge=(0.35, 0.50), origin=(HX, 0.0), yaw_deg=90.0, name="roof", ridge_sag=0.15, eave_sag=0.05,
-                 eave_sweep=0.22, sweep_len=1.0, verge_flare=0.36, flare_len=2.0, wave=0.02, wave_seed=41)
+                 verge=(0.35, 0.50), origin=(HX, 0.0), yaw_deg=90.0, name="roof", ridge_sag=0.24, eave_sag=0.08,
+                 eave_sweep=0.28, sweep_len=1.0, verge_flare=0.36, flare_len=2.0, wave=0.02, wave_seed=41)
 WING = GableRoof(x0=DIM["wing_x0"], x1=0.0, half=DIM["wing_half"], wall_z=DIM["wing_z"], pitch_deg=50.0,
-                 overhang=0.35, verge=(0.40, 0.0), name="wing_roof", ridge_sag=0.08, eave_sweep=0.14, sweep_len=0.8,
+                 overhang=0.35, verge=(0.40, 0.0), name="wing_roof", ridge_sag=0.14, eave_sweep=0.18, sweep_len=0.8,
                  verge_flare=0.24, flare_len=1.4, wave=0.015, wave_seed=43)
 Z_PIER = float(MAIN.under_z_world([[XW, Y1]])[0]) + 0.02     # the water-gable piers stop at the eave line
 
 # ---- plans (interior on the LEFT of the walking direction) -------------------------------------------------------
 HALL = [(XJ0, YP), (XJ0, Y1), (XW, Y1), (XW, Y0), (XE, Y0), (XE, Y1), (XJ1, Y1), (XJ1, YP)]
+ON_QUAY = (0, 1, 5, 6)                       # the slip walls and water piers stand flush on the quay: flush footing
 WING_PATH = [(-0.3, DIM["wing_half"]), (DIM["wing_x0"], DIM["wing_half"]), (DIM["wing_x0"], -DIM["wing_half"]),
              (-0.3, -DIM["wing_half"])]
-QUAY = [(10.0, Y1), (XJ1, Y1), (XJ1, YP), (XJ0, YP), (XJ0, Y1), (-7.5, Y1)]   # every run a water face
+QUAY = [(9.6, Y1), (XJ1, Y1), (XJ1, YP), (XJ0, YP), (XJ0, Y1), (-3.0, Y1)]   # every run a water face
 JETTY = [(7.2, 9.0, Y1, Y1 + 5.0)]
 S_W, S_S, S_E = 3.2 + 0.7, 3.2 + 0.7 + 9.2, 3.2 + 0.7 + 9.2 + 6.0              # path distance at the W / S / E runs
 DOOR_X = 4.3
@@ -78,8 +83,7 @@ WING_OPENINGS = [(W_N + W_W + 2.2, door_spec(width=1.0, height=2.10)),          
 TOWER_OPENINGS = [(15.0, window_spec(width=0.40, height=0.45, sill=1.45)),
                   (55.0, window_spec(width=0.40, height=0.45, sill=3.70)),
                   (215.0, window_spec(width=0.40, height=0.45, sill=5.30))]
-LOOKOUTS = [(25.0, window(width=0.40, height=0.42, sill=0.55, shutters=False)),
-            (205.0, window(width=0.40, height=0.42, sill=0.55, shutters=False))]
+LOOKOUTS = [(a, window(width=0.40, height=0.50, sill=0.75, shutters=False)) for a in (25.0, 115.0, 205.0, 295.0)]
 
 
 def hall_top(x, y):
@@ -105,16 +109,21 @@ def steps():
     parts = LINEAR_ROOF_PARTS + (("verge", 0.02),)
     return [
         (set_entrance, dict(xy=(DOOR_X, Y0))),
-        (stone_quay, dict(name="quay", path=QUAY, top_z=QZ, bed_z=DIM["bed"], seed=651)),
+        (stone_quay, dict(name="quay", path=QUAY, top_z=QZ, bed_z=DIM["bed"], detail_z=QZ, core_blocks=True,
+                            seed=651)),
         (round_stone_body, dict(name="tower", r_base=DIM["r_tower"], batter_deg=DIM["batter"], top=DIM["stone_top"],
                                 openings=TOWER_OPENINGS, clip=lambda P, m=0.0: in_hall(P, m) | in_wing(P, m),
                                 open_z="mid", cfg=RUBBLE_LARGE, seed=41)),
         (path_stone_wall, dict(name="hall", path=HALL, top_fn=hall_top, openings=HALL_OPENINGS, clip=in_tower,
-                               base=QZ, hero_s=(S_S + DOOR_X - XW - 3.0, S_S + DOOR_X - XW + 3.0), cfg=RUBBLE_LARGE, seed=31)),
+                               base=QZ, hero_s=(S_S + DOOR_X - XW - 3.0, S_S + DOOR_X - XW + 3.0), cfg=RUBBLE_LARGE,
+                               flush_runs=ON_QUAY, seed=31)),
         (path_stone_wall, dict(name="wing", path=WING_PATH, top_fn=wing_top, openings=WING_OPENINGS, clip=in_tower,
                                cfg=RUBBLE_LARGE, seed=33)),
         (cruck_frame, dict(name="water_gable", O=(HX, Y1, 0.0), t=(1.0, 0.0, 0.0), n=(0.0, 1.0, 0.0), half=HALF,
-                           top_fn=roof_top_fn(MAIN), z_pier=Z_PIER, clear=DIM["clear"], spring=2.0, seed=901)),
+                           top_fn=roof_top_fn(MAIN), z_pier=Z_PIER, clear=DIM["clear"], spring=2.0, tie=0.32,
+                           member_w=(-0.30, 0.06), post=0.30, arch_t=0.34, blade=0.40, collar=0.26, braces=False,
+                           pointed=True, pointed_t=0.28, pointed_at=0.62, king_strut=False, respond_z=DIM["bed"],
+                           seed=901)),
         (path_timber_wall, dict(name="partition", path=[(XJ1, YP), (XJ0, YP)], z0=QZ, top=2.6,
                                 top_fn=roof_top_fn(MAIN), style="board_batten", gable_style="board_batten",
                                 rough=True, bow=0.03, seed=303)),
