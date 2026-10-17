@@ -2074,3 +2074,23 @@ Carried to the kit polish list:
 - the fade compression of the courses above the eyebrow lip (the "washboard" read), from the vertical-lift model;
 - the single rolled flank lip course;
 - the pale eyebrow front boards in lookdev.
+## CLIENT DIRECTION (2026-10-17, session 2, 18:35): the eyelid must be ONE flowing, continuous curve (round 8)
+
+Client's words: "The portion of the eyelid directly over the window is too flat. It should be a flowing continuous curve like in the reference. That's what's going to be a big part of selling the uniqueness of the organic architecture we are going for."
+
+Compare `reference/ref4b_eyebrow_dormer_markup.jpg` with `lookdev/harbour_house/renders/r07/b_eyebrow_closeup_quay_eye.png`.
+- **Round 7:** the bell profile holds full height over `flat = 1.40` m, so the lip runs straight and level across the window and only curves at its two ends.
+- **Ref4:** the lip is one continuous arch. It rises from the roof on one side, peaks smoothly over the window and falls on the other, with no straight or level stretch. The shingles above flow over it as one smooth roll.
+
+**Round 8 (one round; time matters, but this is the selling point, so get it right):**
+1. **One continuous arch along the eave line.** No flat top.
+   - Give the eyebrow option a continuous profile, for example `profile="arch"`: a smooth, rounded arch with a soft crown (not pointed) whose curvature never reaches zero across the window, or simply `flat` about 0 with a profile shaped so the crown is round, not a cusp.
+   - Width about 3.5 m as now. Peak lift about 0.90-1.0 m over the window centre.
+   - The window front's top edge (the lifted eave board and boards) follows the same arch.
+   - The two-light window (about 0.80 x 0.42 m) stays rectangular and fits under the arch with a little stone-free timber margin. Lower or narrow it slightly if the arch needs it.
+2. **The shingles above flow as one smooth roll.** Remove the bunched, thin "washboard" rows above the lip (the fade compression of the vertical-lift model, flagged in rounds 6-7).
+   - For example, lift along the slope normal instead of vertically, and/or re-space the courses over the fade, so course spacing stays near-even.
+   - The upslope plateau should blend into the fade with no visible kink.
+   - This is eyebrow-option kit code. Its defaults must keep the old behaviour (the round 5-7 harbour-house values may opt in to the new behaviour).
+3. **Re-verify only what this touches:** the eyebrow see-through probe and red twins, hidden <= 15 %, <= 1 M tris, and the regression against `*_r07_accepted.blend` (outside the eyebrow zone nothing may move). The hash rule applies only if a non-eyebrow default changes.
+4. **Never modify the `*_r04/_r05/_r06/_r07_accepted.*` files.**
