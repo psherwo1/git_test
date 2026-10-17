@@ -521,6 +521,9 @@ OBJECT_GRIME = {  # object-name suffix -> 'lookdev_grime' (r2, M_lead only); UE:
     # the hall's other roof-into-body flashings, so the darker turret aprons do not sit next to pale lead bands
     "HALL_skirt1_drum_flashing": 1.0,
     "HALL_skirt2_lantern_flashing": 1.0,
+    # the harbour house's roof-to-tower abutment flashings (client, 2026-10-17: the same darker lead as the hall)
+    "HARB_roof_wall_abutment": 1.0,
+    "HARB_wing_roof_wing_abutment": 1.0,
 }
 
 

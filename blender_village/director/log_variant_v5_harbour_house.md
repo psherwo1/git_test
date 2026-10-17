@@ -1701,3 +1701,145 @@ the zone, and the cull recounts open nothing.
 4. Fix the stale BROW comment in the recipe the next time it is saved, and finish kit edits before the recipe save /
    final build.
 5. Carried over: an overlap check and thatch support, plus the round-4 / round-5 kit polish list.
+
+## v5_harbour_house round 6 — sign-off audit: UPHELD
+
+The independent auditor checked the Art Director's round-6 pass (8.4/10) on the note-12 MODULARITY RUBRIC (pass mark 8.2).
+Geometry only; no ground dressing (note 10), no surface-detail requests (note 12). Binding: producer notes 1-17, every
+CLIENT DIRECTION above, and the CLIENT DIRECTION of 16:35, "the eyebrow dormer bigger and bolder, like ref4 (round 6)".
+I re-read the log before starting and before writing: no CLIENT DIRECTION or PRODUCER NOTE was added after the round-6 grade.
+
+**Reviewed:** ref4b (circled) and ref4; the builder entry; the director's grade, e01 / e10 and his regress / cullvis outputs;
+`stats.json`; the recipe diff against `build_v5_harbour_house_r05_accepted.py`; the `EYEBROW` defaults in `linear_roof.py`
+and `lights` in `wall_openings.py`.
+
+**My scripts** (read-only bpy, one process at a time, `renders/variants/v5_harbour_house/round_06/audit/`; the round-4 /
+round-5 audit scripts reused):
+- `aud_probe_r06.py` -> `_out.txt`: compliance, doors, islands, corners, and the eyebrow checks re-aimed at the round-6 front;
+- `aud_probe2_r06.py` -> `_out.txt`: classifies the ray-probe misses;
+- `aud_hash_r06.py` -> `_out.txt`: every mesh, r05 accepted against r06, exact, plus the surface distance in both directions outside the zone;
+- `aud_removed_r06.py` / `aud_removed2_r06.py` / `aud_removed3_r06.py` -> `_out.txt`: every r05 triangle that r06 no longer
+  has. For each: is it on the r04 surface, is it reachable from outside (400 directions), does the same ray go deeper in r06,
+  and from where;
+- `aud_ring_r06.py` -> `_out.txt`, `ring/`: the round-4 32-camera ring unchanged, plus 31 eyebrow-targeted red twins around
+  the new front centre (-1.239, -1.57, 4.33) (4 cameras inside geometry skipped), plus 16 grey workbench views;
+- `aud_anchors_r06.py`, and `tools/hidden_tris.py` through `aud_run_hidden.py` -> `aud_hidden_out.txt` / `.json`.
+
+**Accepted rounds untouched:** `*_r04_accepted.*` 14:20:29 / 14:30:52 / 14:30:53, `*_r05_accepted.*` 15:21:20 / 15:35:44 /
+15:35:45. SHA-256 r04 blend 11A2EEE4...2D58 and r05 blend C22A80B3...E22C, the same before and after my runs. The r06 blend
+(213D0883...C091) was not saved by any run. The recipe diff is only the `BROW = eyebrow(...)` values and their comment (the
+comment is stale, as the director noted).
+
+### Hard requirements (measured on the saved blend)
+
+| requirement | measured | result |
+|---|---|---|
+| ≤ 1,000,000 tris | 714,910 evaluated (stats agree) | PASS |
+| ≤ 15 slots, palette only | 9 slots, the same nine as rounds 4 / 5, none outside the palette | PASS |
+| est_hidden_pct ≤ 15 | 14.3 % (stats); my independent re-run (20,000 samples) **14.2 %**, 1.9 % below ground. `HARB_roof_deck` is 6,898 tris here (87 % hidden; round 5: 9,654) | PASS (0.7-0.8 % headroom) |
+| `Mask` on every mesh | all 75 meshes CORNER BYTE_COLOR, active + render; every transform identity | PASS |
+| DECAL_ANCHORS + json | 111 empties with all six properties, the same names as the JSON's 111; 0 with no surface within 20 cm behind; **0 buried**; the 7 anchors near the eyebrow sit on the W wall, the slope and the wave top / fade | PASS |
+| door clearance ≥ 2.30 m | identical to rounds 4 / 5: wing S door lowest overhead 2.464 m (rafter tails), hall land door 5.51-5.59 m; door heads 2.22 m | PASS |
+| no see-through / floating / clipping > 2 cm (ground and 6 m cameras), esp. at the eyebrow | see below | PASS |
+| hash rule | not triggered (below) | PASS |
+| eyebrow = reusable kit option | `GableRoof(eyebrows=[eyebrow(...)])`. The four new keys (`tilt`, `span_rows`, `eave_inset`, `close_ends`) are in `linear_roof.EYEBROW`, all defaulting to off / 0. `lights` in `wall_openings` defaults to 4. The recipe only passes values. No bespoke geometry | PASS |
+| no regression of round 5 | 64 of 75 meshes **bit-identical**; the 32-camera ring identical shot by shot to round 5, except g01, which is back to round 4's 187 px (below) | PASS |
+
+### The eyebrow: geometric evidence
+
+1. **The client's sizes** (eyebrow bbox x -1.24..-0.54, y -3.17..0.04, z 3.68..4.98): the 3.5 m wave, 1.30 m lift,
+   0.30 m lip, 0.85 x 0.62 m two-light window and 2.98 m front are all inside the 16:35 ranges. In e01 (the round-5 camera)
+   and e10 (45 m), it now reads as the big, pronounced hood circled in ref4b. My bG-45 / bc+45 grey views confirm it.
+2. **Red twins at the eyebrow:** 31 shots (eye level 7 / 12 m, 6 m crane at 6 / 10 m, close 3.5 m at 5.2 m, ±70 deg around
+   the front). **0 enclosed red with a rim within 2.5 m of the front centre in 30 shots.** In bG+20 there is a single 7 px
+   patch, 0.6 cm wide, at the comb / wing verge, below the threshold. The other enclosed red in those frames is known
+   round-4 geometry: the comb slits, the tower-top ring (the tower-top objects are bit-identical to rounds 4 and 5), and the
+   jetty and quay-foot slots.
+3. **Ray probe through the front, wave, lip and opening:** 152,985 rays on a 4 cm grid over the whole front plus 0.45 m
+   above it, 7 yaws x 5 pitches, origins 4 m out. **0 first hits on an interior object** (no peek into the hall). There
+   were 4,670 misses:
+   - 4,569 targets have nothing overhead, i.e. open air above the hood.
+   - The other 101 are all the yaw -35 / pitch -35 up-rays, through targets at y -3.42..-3.38 and z 5.10-5.42. Those
+     points are 1.25-1.5 m above the covering, south of the wave, in the open air under a high roof edge 3.3-3.7 m above.
+     The rays run up past the water-gable apex (closest approach 1.8 cm) into the sky.
+   - **0 misses through a target under the roof.**
+4. **Floating:** 6,330 islands; none whose 2 cm-inflated box touches no other island. I also checked each of the 42 eyebrow
+   islands against both the roof and every other eyebrow island. 2 are more than 2 cm from both: the back blocker plate
+   (3 / 4.4 cm) and one window-frame piece (4 / 6.4 cm). Both sit inside the closed front, behind the boards and the window
+   frame. They are not visible from outside (the probe hit nothing interior), so this is not a visible floating piece.
+5. **Clipping:** the boards, blocker and frames run up to 0.24-0.74 m into closed covering bodies. This is the front
+   tucked under the 0.30 m lip and the backing passing through the lifted courses, the same construction as round 5. In the
+   16 grey views (3.5-12 m, from the ground to 6 m) nothing pokes through a visible shingle face. Not a visible clip.
+6. **Clearances:** the eyebrow is 0.60 m from the `wall_abutment`, 0.68 m from the tower stones and 1.87 m from the wing
+   roof covering.
+7. **The comb:** it was moved in round 5. Over the wave it now stands at most 0.152 m off the roof, against 0.141 / 0.144 m
+   on either side (its own crest). Every r06 comb vertex is on the r05 surface, and 10 of the 12 r05 tris it lost are on the
+   r04 surface (the shake is back in place). No gap.
+
+### Regression and hash rule, verified
+
+- **Bit-identical to r05:** 64 of 75 meshes, including `HARB_wing_roof_deck`, `_comb`, `_rafters`, `_verge`, the three
+  tower-top timber-opening meshes and `HARB_roof_wall_abutment`. The wing roof is a `GableRoof` without eyebrows, and the
+  tower top uses the default `lights`. These default paths reproduce the old geometry, so **the hash rule is not triggered.**
+  `HARB_wing_roof_covering` differs only by the 2-tri cull recount (all r06 vertices are on r05, 0.00 mm).
+- **Outside the eyebrow zone** (|y + 1.57| ≤ 2.1, x < 1.6): every r06 vertex of every changed mesh is on the r05 surface,
+  max 1.6 mm (hall stones), deck 0.55 mm, covering / comb / tower 0.00 mm.
+- **Triangles dropped by the scene-dependent hidden-face cull:** some r05 triangles no longer exist in r06 (none are on
+  the eyebrow). Outside the zone, 63 of them are reachable from at least one of 400 directions in r05, and for 18 the same
+  ray goes more than 2 cm deeper in r06. I traced every one:
+  - 14 covering tris at the tower abutment (x -0.2..0.94, y -3.7..-4.5, up to 5.5 cm wide), plus 1 at the comb. These are
+    seen **only from viewpoints below ground** (origin z -0.3 to -4.0, looking up under the eave); the one view from above
+    (z 17.5) sees a 0.9 cm sliver. They show the dark deck 14-28 cm behind. They are not visible from ground or 6 m cameras.
+  - 2 tower stones in the abutment: one seen from below ground; one from z 5.7 at 1 of 400 directions, a 2.4 cm stone sliver
+    showing the mortar 3.3 cm behind.
+  - 2 wing-covering slivers in the W nook, 1.5 cm wide, which the director already reported.
+  - None of these is a see-through: the ring twins are pixel-identical.
+  - **Not blocking:** this is the kit cull's noise (note 6), invisible from ground and 6 m cameras or under 2 cm.
+- **Ring:** 31 of 32 ring shots are pixel-identical to round 5. g01 has 187 px against round 5's 193. That is exactly
+  round 4's count: span-rows removed the six sub-cm verge pinholes that round 5's full-length deck re-grid had added.
+
+### Director's grade, re-checked
+
+| axis | director | auditor | note |
+|---|---|---|---|
+| 1 Silhouette and massing | 8.7 | 8.6 | The client's ask is met: in e01 / e10 / bG-45 it is a big hood lifting a large part of the W slope, as circled in ref4b. It is slightly lower because of the compressed crest band at the top of the wave (e01). |
+| 2 Proportion and actor scale | 8.4 | 8.4 | Every size is inside the client's ranges; the window is the asked two-light window. |
+| 3 Construction logic | 8.4 | 8.4 | Sill, boarded front, backing, end posts with closing boards, inset eave board, framed deck opening; nothing visibly unsupported. |
+| 4 Seams and junctions | 8.3 | 8.2 | Sealed at the wave, front and opening; the front-end slots and the eave strip are gone. Held at 8.2: the crescent band, the stacked flank edges and the rolled lip course (my bn+00 right flank shows thin layered edges), and the abutment cull drops (seen only from below ground). |
+| 5 Distinctness and reuse | 8.5 | 8.5 | A value-driven kit option; the defaults are verified bit-exact; span-rows makes the add-on cheaper as it grows. |
+| 6 Technical compliance | 8.3 | 8.3 | Every hard number verified independently. The hidden headroom is still under 1 %, and the deck patch was edited between builds (documented). |
+
+**Verdict: UPHELD at 8.4/10, the Art Director's grade. My lowest axis is seams at 8.2, which is the pass mark.**
+- The eyebrow is now bigger and bolder like ref4, within every range the client set, and sealed: 0 see-through in about
+  153 k targeted rays and 31 targeted red twins, and no interior peeks.
+- It is still a reusable kit option, and its new keys default off, verified bit-exact on the wing roof and the tower top.
+- Round 5 is preserved outside the wave: 64 of 75 meshes are bit-identical, every other vertex is on the r05 surface, and
+  the ring is identical (g01 is back to round 4).
+- The two fixes that fully landed are verified. The plateau crescent is a known kit limit; it is backed and is surface-level.
+
+**Blocking issues:** none.
+
+**Carry into the boathouse / barn (kit, defaults unchanged; added to the director's list):**
+1. The hidden-face cull: drop a triangle only if it is unreachable from every exterior direction, not just from the ring
+   cameras. This keeps the abutment covering faces that can be seen from below the eave. It is invisible from today's camera
+   set, but a low water-level camera would catch it.
+2. Keep the eyebrow's internal blocker and window-frame offcut attached (or drop them). They sit 3-6 cm inside the front
+   and are invisible, but an island check flags them.
+
+## PRODUCER NOTE (2026-10-17, session 2, 17:15): round 6 ACCEPTED; snapshotted
+
+Director 8.4 and the independent audit upheld it (714,910 tris, 14.3 % hidden). Snapshotted as `*_r06_accepted.*`. Never modify the `*_r04/_r05/_r06_accepted.*` files.
+
+## CLIENT DIRECTION (2026-10-17, session 2, 17:15): the final eyebrow is the MIDDLE setting, wide and lower (round 7)
+
+The client reviewed the textured look test (`lookdev/harbour_house/renders/compare/`, r05 | r06). Round 5 is a lovely low eyelid but shrinks to a bump at a distance. Round 6 reads at ref4's scale, but its tall pale boarded front makes it a hooded dormer rather than ref4's shallow eyelid, and its left shoulder shingles stretch into plank-like strips.
+
+The client chose **"Middle: wide + lower"**:
+- **Keep round 6's width** (wave 3.5 m, flat about 1.4 m) and its kit fixes.
+- **Lower the lift to about 0.85-0.95 m** (it is 1.30 m now), with a lip of about 0.25 m. The front becomes correspondingly shallower, so it reads as a wide, low **eyelid** as in ref4b.
+- **Keep a two-light window** that fits the lower front: about 0.80-0.85 m wide and about 0.40-0.48 m clear.
+- If it comes cheaply, ease the shoulder stretch (tilt / flank lip) with a value change. No new kit work.
+
+**Round 7 is values only, one rebuild; time matters.** Re-verify only what the change touches: the seal and see-through probes at the eyebrow, hidden <= 15 %, <= 1 M tris, and the red twins. Change nothing else.
+
+**Lookdev (producer, done):** `apply_lookdev.py` `OBJECT_GRIME` now darkens the harbour house's two roof-to-tower abutment flashings, as on the hall (client: "Yes").
