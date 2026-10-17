@@ -1883,3 +1883,13 @@ def thatch_junctions(g, seed=1515, continuous_fillet=False, band_bury=0.012, poi
     bead round the roll's contact line and a raised pointing strip over the band at each end (no dark slits)."""
     build_wing_structure(g.sub("wing"), seed=seed, continuous_fillet=continuous_fillet, band_bury=band_bury,
                          point_roll_ends=point_roll_ends)  # kit 1.5.0: band_bury > 0.012 runs the turret band's back further into the stone
+    # kit 1.9.0 (guard seal_probe): the thatch wing's roof-through-body junctions -- the turret rising through the
+    # wing's west end and the hall the wing runs into (village_kit.guards; no geometry change)
+    from ..guards import register_junction
+    cover = tuple(f"{g.prefix}_{p}" for p in ("wing_roof_thatch", "wing_roof_thatch_courses", "wing_roof_rolls"))
+    tz, tr, tc = np.asarray(g.TUR_ZF, float), np.asarray(g.TUR_RF, float), np.asarray(g.TUR_C, float)
+    register_junction(g, "wing thatch / turret", cover, tc, lambda z, tz=tz, tr=tr: float(np.interp(z, tz, tr)),
+                      (2.0, float(g.WALL_H) + 3.0))
+    a0, bat = float(g.A0), float(g.BAT)
+    register_junction(g, "wing thatch / hall", cover, (0.0, 0.0), lambda z, a0=a0, bat=bat: a0 - max(float(z), 0.0) * bat,
+                      (2.0, float(g.WALL_H) + 0.6), poly=8)

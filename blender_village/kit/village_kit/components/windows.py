@@ -45,8 +45,11 @@ def build_window_frames(coll, seed=909):
 
 
 def window_spec(xc=-7.4, width=0.45, height=0.55, sill=1.30, frame=0.07, depth=0.16):
-    """small timber window spec (clear width / height, sill height, frame width, set-back in the reveal)."""
-    return dict(xc=xc, hw=width / 2, z0=sill, z1=sill + height, depth=depth, fw=frame)
+    """small timber window spec (clear width / height, sill height, frame width, set-back in the reveal).
+    kit 1.8.0: a thin wrapper of components.openings (family "annex"; the unambiguous name is
+    openings.annex_window, the family-neutral spec openings.window(...).at(xc))."""
+    from .openings import annex_window as _annex_window
+    return _annex_window(xc=xc, width=width, height=height, sill=sill, frame=frame, depth=depth)
 
 
 def hall_windows(g, seed=909):

@@ -1,0 +1,56 @@
+﻿GRAIN M_timber             area    285.7  along  12.8%  across  62.8%  [of judged  13.7%; sheets   17.7]  (per piece: along  12.8%)  | roof    43.6: up  88.1%  down   3.7%  | m/UV 1.00
+GRAIN M_timber_weathered   area     28.4  along   3.8%  across  78.8%  [of judged   4.6%; sheets    4.6]  (per piece: along   3.8%)  | roof     1.8: up  60.7%  down  20.6%  | m/UV 1.00
+GRAIN M_roof_shingle       area    134.5  along   4.8%  across  63.4%  [of judged   6.6%; sheets   37.1]  (per piece: along   4.8%)  | roof   110.9: up  86.8%  down   0.3%  | m/UV 1.01
+GRAIN M_roof_shake         area     82.0  along  56.8%  across   0.0%  [of judged  99.9%; sheets   35.4]  (per piece: along  56.8%)  | roof    79.1: up  94.1%  down   2.0%  | m/UV 1.00
+GRAIN M_thatch             area    188.3  along   6.0%  across  91.6%  [of judged   6.0%; sheets    0.0]  (per piece: along   6.0%)  | roof   123.3: up  96.3%  down   2.0%  | m/UV 1.07
+COLLAPSED objects >= 1% area at ratio<0.2: 42 of 76; worst max 60.44%
+   KEEP_threshold                            60.44%  {'M_stone': 47.037, 'M_stone_dressed': 75.483}
+   KEEP_turret_corbel_collar                 41.85%  {'M_stone': 41.851}
+   KEEP_comb_v01                             31.96%  {'M_roof_shake': 31.959}
+   KEEP_hall_dressed_joint_mortar            31.94%  {'M_mortar': 31.936}
+   KEEP_comb_v03                             31.41%  {'M_roof_shake': 31.412}
+   KEEP_turret_cap_hips                      30.15%  {'M_roof_shingle': 30.147}
+   KEEP_comb_v06                             29.35%  {'M_roof_shake': 29.349}
+   KEEP_comb_v09                             28.90%  {'M_roof_shake': 28.897}
+   KEEP_comb_v00                             27.89%  {'M_roof_shake': 27.893}
+   KEEP_cap_hips                             27.71%  {'M_roof_shingle': 27.715}
+   KEEP_comb_v08                             25.82%  {'M_roof_shake': 25.821}
+   KEEP_comb_v02                             25.70%  {'M_roof_shake': 25.701}
+   KEEP_comb_v04                             22.96%  {'M_roof_shake': 22.964}
+   KEEP_wing_window                          20.39%  {'M_mortar': 0.0, 'M_stone_dressed': 57.082, 'M_timber': 47.253}
+   KEEP_hall_window_frames                   20.21%  {'M_timber': 20.214}
+   KEEP_comb_v07                             18.46%  {'M_roof_shake': 18.465}
+   KEEP_hall_post_bases                      16.81%  {'M_stone_dressed': 16.806}
+   KEEP_roof_collar_shakes                   16.25%  {'M_roof_shake': 16.252}
+   KEEP_roof_skirt_structure                 15.55%  {'M_timber': 15.552}
+   KEEP_wing_door                            15.55%  {'M_stone_dressed': 60.921, 'M_timber': 1.797, 'M_timber_weathered': 11.636}
+   KEEP_roof_skirt_hips                      14.00%  {'M_roof_shingle': 14.002}
+   KEEP_roof_skirt_boards                    13.00%  {'M_roof_shingle': 12.998}
+   KEEP_door_leaf                            12.65%  {'M_timber': 12.649}
+   KEEP_peg_v02                              12.45%  {'M_timber': 12.449}
+   KEEP_peg_v04                              11.58%  {'M_timber': 11.577}
+   KEEP_peg_v05                              11.37%  {'M_timber': 11.366}
+   KEEP_peg_v03                              11.27%  {'M_timber': 11.268}
+   KEEP_peg_v01                              10.62%  {'M_timber': 10.619}
+   KEEP_peg_v00                               9.39%  {'M_timber': 9.394}
+   KEEP_cap_structure                         8.40%  {'M_timber': 8.397}
+   KEEP_turret_cap_structure                  7.87%  {'M_timber': 7.87}
+   KEEP_turret_cap_shingles                   5.58%  {'M_roof_shingle': 5.585}
+   KEEP_hall_eave_plate                       5.50%  {'M_timber': 5.497}
+   KEEP_wing_roof_thatch_courses              5.45%  {'M_thatch': 5.453}
+   KEEP_cone_ledge_slabs                      5.41%  {'M_stone': 5.414}
+   KEEP_turret_cap_deck                       4.86%  {'M_timber': 4.856}
+   KEEP_cap_shingles                          4.85%  {'M_roof_shingle': 4.854}
+   KEEP_cap_deck                              4.11%  {'M_timber': 4.106}
+   KEEP_turret_drum                           2.60%  {'M_timber': 2.915, 'M_timber_weathered': 2.088}
+   KEEP_hall_posts                            2.13%  {'M_timber': 2.129}
+WALKED tops in door zones: area 3.872 m2, B max 1.000, area with B > 0.05: 3.872 m2  (pooled door hardware in the zones, not walked pieces: 26 objects, 0.0073 m2, B max 0.200)
+   door             KEEP_door_ironwork               faces   114 area   0.005 B max 0.502 mean 0.449 >0.05 0.005
+   door             KEEP_hall_dressed_joint_mortar   faces    12 area   0.003 B max 0.514 mean 0.479 >0.05 0.003
+   door             KEEP_hall_dressed_stones         faces   144 area   0.130 B max 0.494 mean 0.453 >0.05 0.130
+   door             KEEP_hall_interior               faces     1 area   0.513 B max 1.000 mean 1.000 >0.05 0.513
+   door             KEEP_hall_wall_stones            faces    34 area   0.021 B max 1.000 mean 0.999 >0.05 0.021
+   door             KEEP_threshold                   faces   281 area   1.321 B max 1.000 mean 0.799 >0.05 1.321
+   annex_door       KEEP_wing_door                   faces    30 area   1.042 B max 1.000 mean 0.803 >0.05 1.042
+   annex_door       KEEP_wing_door_ironwork          faces    93 area   0.004 B max 0.529 mean 0.494 >0.05 0.004
+   annex_door       KEEP_wing_wall_mortar            faces     1 area   0.833 B max 1.000 mean 1.000 >0.05 0.833

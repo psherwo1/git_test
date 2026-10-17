@@ -99,7 +99,7 @@ class Body:
 
 def roof_support(roof, x, y):
     """apothem coordinate p of plan points on an oct_frame.OctRoof (the octagon support distance about its centre,
-    honouring its plan rotation)."""
+    honouring its plan rotation); kit 1.8.0: any roof of the polygonal protocol (pyramid_roof.PyramidSurface)."""
     x = np.asarray(x, float) - roof.c[0]
     y = np.asarray(y, float) - roof.c[1]
     if getattr(roof, "is_round", False):          # tier_roof.ConeRoof (a round tier): the plan radius
@@ -123,6 +123,7 @@ class TierFrame(Building):
 
     roof_clear = 0.50
     roof_stack = 0.20
+    FAMILY = "tier"                      # kit 1.8.0: components.finish dispatch
 
     def __init__(self, prefix="TIER", entrance=(0.0, -5.0), detail_rule=True, units="kit", seed_offset=0):
         super().__init__(prefix)
@@ -146,6 +147,11 @@ class TierFrame(Building):
         oct_frame.activate(self)          # oct_roof / hewn / peg helpers read the active frame through FR
 
     # ---------------------------------------------------------------------------------------------------------
+    def activate(self):
+        """kit 1.8.0: make this frame the one oct_frame.FR reads (called by build_building / build_compound before
+        every step and decal recipe)."""
+        return oct_frame.activate(self)
+
     def sub(self, name):
         from ..core import new_collection
         if name not in self.subs:
@@ -197,7 +203,8 @@ class RoofClearanceError(RuntimeError):
 
 
 def _roof_plan_box(roof):
-    r = float(roof.p_lip) * (1.0 if getattr(roof, "is_round", False) else 1.0 / math.cos(math.pi / 8))
+    r = float(roof.p_lip) * (1.0 if getattr(roof, "is_round", False) else
+                             1.0 / math.cos(math.pi / getattr(roof, "n", 8)))    # kit 1.8.0: any polygon roof
     return roof.c[0] - r, roof.c[0] + r, roof.c[1] - r, roof.c[1] + r
 
 

@@ -1,7 +1,7 @@
 """components.frame -- the round-building frame `g` shared by the round components (plinth, posts, wattle/daub
 wall, plate, conical roof, collar/finial, framed door, interior).
 
-RoundFrame(spec) holds every dimension of one round building (wall radius, post ring, wall plate, eave, roof
+RoundFrame(prefix, radius, eave_z, ...) (keywords: see the class doc) holds every dimension of one round building (wall radius, post ring, wall plate, eave, roof
 pitch, door opening, plinth...) and the state the components publish to each other while the building is built
 (plinth stone-top sampler PL_TOP, post profiles, daub fields, rod store, shingle vertices...).  Components are
 plain functions `component(g, ...)`; they never read module globals, so several buildings can be built in one
@@ -105,6 +105,9 @@ from .cone import build_profile, s_at_r, rafter_underside_z_at_r  # noqa: E402
 
 # the signed-off phase-1 hut (round 7) is the reference size; derived defaults scale from it
 R_REF = 3.50
+# kit 1.9.0 guard steep_cone_door: cones steeper than this (the top of the bible's 50-52 deg hut range) get the
+# door-head flags DOOR_INFILL_DECK / EAVE_CLOSURE_DOOR_HALF_DEG automatically (RoundFrame(steep_door="auto"))
+STEEP_CONE_DEG = 52.0
 # client correction (mostly intact daub): 3 small fallen-out patches + the ref2 band left of the door
 #   (azimuth deg, kind, centre z, half width, half height, seed)
 DEFAULT_PATCHES_AZ = [
@@ -135,16 +138,32 @@ class RoundFrame(Building):
       hygiene       Nanite clean-up (core.nanite_clean) on every mesh
       wall_finish   dict of optional daub finish switches (components.daub.wall_finish_r9()); None / {} = the
                     kit 1.0.0 coat (kit 1.3.0, additive)
+      steep_door    kit 1.9.0 guard: "auto" (default) -> DOOR_INFILL_DECK and EAVE_CLOSURE_DOOR_HALF_DEG = 1.0 when
+                    pitch_deg > STEEP_CONE_DEG (52); True / False force it on / off
     Everything else (front plane of the door frame, plinth face, floor edge, eave shadow heights, the doorway
     window of full-length shingles...) is derived from these, so a different radius / wall height builds a
     consistent hut.  The derived values reproduce the signed-off hut exactly at radius 3.50, eave_z 2.395.
     """
 
+    FAMILY = "round"                     # kit 1.8.0: components.finish dispatch ("composite" with path walls / roofs)
+
     def __init__(self, prefix="HUT", radius=3.50, eave_z=2.395, overhang=0.63, pitch_deg=51.0, n_posts=None,
                  n_raft=None, door_post_az_deg=None, finial_tip=None, collar_r=0.745, collar_pitch_deg=53.0,
                  plinth_top=0.33, n_courses=None, sh_expose=0.318, daub_patches=None, cone_age=None,
-                 detail_rule=True, hygiene=True, wall_finish=None):
+                 detail_rule=True, hygiene=True, wall_finish=None, steep_door="auto"):
         super().__init__(prefix)
+        # kit 1.9.0 guard steep_cone_door: on a cone steeper than STEEP_CONE_DEG the door-head infill runs up to the
+        # batten deck and the eave closure runs on behind it (the v4 r4 fix; on a steep cone the rafter-underside
+        # infill top leaves a slot over the door).  "auto" (default) = on when steep; True / False force it (a
+        # recipe that opts out says why).  Absent attributes = the old behaviour, so cones <= 52 deg are unchanged.
+        steep = (float(pitch_deg) > STEEP_CONE_DEG) if steep_door == "auto" else bool(steep_door)
+        self.STEEP_DOOR = steep
+        if steep:
+            self.DOOR_INFILL_DECK = True
+            self.EAVE_CLOSURE_DOOR_HALF_DEG = 1.0
+            from ..core import log
+            log(f"  {prefix}: steep cone {float(pitch_deg):.0f} deg -> door-head flags DOOR_INFILL_DECK, "
+                f"EAVE_CLOSURE_DOOR_HALF_DEG=1.0 (guard steep_cone_door)")
         self.wall_finish = dict(wall_finish or {})   # kit 1.3.0 (additive): see components.daub.WALL_FINISH_R9
         R = float(radius)
         self.k_r = R / R_REF

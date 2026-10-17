@@ -13,7 +13,9 @@
           * coping=(z, r_in): a dressed coping ledge on the body top, closing it to an inner radius (a belt or a
             smaller body standing on it).
         Objects <P>_<name>_stones, <P>_<name>_mortar, <P>_<name>_coping.
-    opening(kind, th_deg, width, height, sill=0.0, ...)                 an opening spec ('door' / 'window')
+    opening(kind, th_deg, width, height, sill=0.0, ...)                 an opening spec ('door' / 'window');
+        kit 1.8.0: a wrapper of components.openings (family "body"); stone_body also takes openings.door / window
+        specs placed with .at(th_deg).  The kit's one rubble-body entry point is components.masonry.masonry_wall.
     framed_openings(g, seed)                                            KIT COMPONENT
         the timber frame of every published opening: jambs, a lintel let into the course above, a projecting
         stone sill with drip (windows), a dressed threshold (doors), a vertical plank leaf with strap hinges and
@@ -38,15 +40,19 @@ RUBBLE_CFG = dict(footing=0.30, ch=(0.10, 0.19), p_tall=0.08, len=(0.22, 0.58), 
 def opening(kind, th_deg, width=1.0, height=2.10, sill=0.0, jamb=0.18, lintel_min=0.22, depth=0.34, proud=0.06,
             sill_h=0.12, threshold=0.10):
     """an opening spec for stone_body: kind 'door' (clear width x height above a `threshold` m threshold stone) or
-    'window' (clear width x height above the sill height `sill`); th_deg = plan angle of the opening's centre."""
-    return dict(kind=kind, th=math.radians(th_deg), width=width, height=height, sill=sill, jamb=jamb,
-                lintel_min=lintel_min, depth=depth, proud=proud, sill_h=sill_h, threshold=threshold)
+    'window' (clear width x height above the sill height `sill`); th_deg = plan angle of the opening's centre.
+    kit 1.8.0: a thin wrapper of components.openings (family "body"); new recipes write openings.door / window
+    specs placed with .at(th_deg) -- stone_body accepts both."""
+    from .openings import body_opening
+    return body_opening(kind, th_deg, width=width, height=height, sill=sill, jamb=jamb, lintel_min=lintel_min,
+                        depth=depth, proud=proud, sill_h=sill_h, threshold=threshold)
 
 
 def _prep_openings(body, openings):
+    from .openings import resolve
     ops = []
     for o in openings:
-        o = dict(o)
+        o = dict(resolve(o, "body"))
         o["th"] = o["th"] % (2 * math.pi)
         if o["kind"] == "door":
             o["z_clear0"] = o["threshold"]

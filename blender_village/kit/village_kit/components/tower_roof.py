@@ -154,7 +154,8 @@ def roof_frame(g, r_wall, z_plate_bot, overhang, pitch_deg=52.0, bell_deg=12.0, 
     def make(eave_z):
         f = RoundFrame(g.prefix, radius=r_wall, eave_z=eave_z, overhang=overhang, pitch_deg=pitch_deg, n_raft=n_raft,
                        finial_tip=finial_tip, collar_r=collar_r, collar_pitch_deg=collar_pitch_deg,
-                       cone_age=cone_age, detail_rule=bool(getattr(g.rule, "active", True)), hygiene=g.hygiene)
+                       cone_age=cone_age, detail_rule=bool(getattr(g.rule, "active", True)), hygiene=g.hygiene,
+                       steep_door=False)    # kit 1.9.0: a roof sub-frame has no framed door under its cone
         f.PS, f.PR, f.PZ, f.PA = _bell_profile(f, bell_deg, bell_len)
         for k in ("_sag_amp", "_sag_mod", "_sag_s1"):          # the age pass caches the old profile
             f.__dict__.pop(k, None)
@@ -179,79 +180,19 @@ def _roof_deck(f, r_in, gap=0.006, eave_s=0.10, t=0.012):
     shingle back, side joint or slipped piece shows this surface, never sky.  Inside the wall line (r <= r_in) one
     sheet facing OUT; over the eave overhang (from eave_s slope metres above the lip) a closed board slab `t` thick
     (top face up, soffit face down, edge at the eave), so no sunlight leaks through the overhang's shingle joints onto
-    the wall head and the boarded soffit reads from below between the rafter feet."""
-    from .cone import az2th, s_at_r, surf_frame
-    from ..core import grid_quads
-    acc = f.acc("roof_deck", 30, cull=None)
-    az = np.linspace(0, 2 * np.pi, 145)
-    th = az2th(az)
-    s_in = s_at_r(f, r_in)
-
-    def sheet(s0, s1, ns, depth, up=True):
-        ss = np.linspace(s0, s1, ns)
-        TH, SS = np.meshgrid(th, ss, indexing="ij")
-        P, ts, tt, n = surf_frame(f, TH.ravel(), SS.ravel())
-        P = P - n * depth
-        F = grid_quads(len(th), len(ss))
-        q = P[F[0]]
-        if (float(np.dot(np.cross(q[1] - q[0], q[3] - q[0]), n[F[0][0]])) < 0) == up:
-            F = F[:, ::-1]
-        acc.add(P, F, "M_timber_weathered")
-        return P.reshape(len(th), len(ss), 3)
-
-    d0 = f.BATTEN_T + gap
-    sheet(eave_s, f.S_END - 0.04, 22, d0, up=True)                     # the deck (top face), lip to apex
-    sheet(eave_s, s_in + 0.03, 5, d0 + t, up=False)                    # the soffit face over the overhang
-    P0, ts, tt, n = surf_frame(f, th, np.full_like(th, eave_s))        # the slab edge at the eave, facing out
-    E = np.stack([P0 - n * d0, P0 - n * (d0 + t)], 1)                  # (n_th, 2, 3)
-    F = grid_quads(len(th), 2)
-    q = E.reshape(-1, 3)[F[0]]
-    if float(np.dot(np.cross(q[1] - q[0], q[3] - q[0]), -ts[0])) < 0:
-        F = F[:, ::-1]
-    acc.add(E.reshape(-1, 3), F, "M_timber_weathered")
-    acc.build(f.coll)
+    the wall head and the boarded soffit reads from below between the rafter feet.
+    kit 1.8.0: an alias of the public components.round_roof_parts.roof_deck (the bodies were byte-identical)."""
+    from .round_roof_parts import roof_deck
+    return roof_deck(f, r_in, gap=gap, eave_s=eave_s, t=t)
 
 
 def _eave_closure(f, r_b, mat="M_mortar", n_az=240):
     """the wall head between the rafter feet: a band on the plate from its top (3 cm into it) up into the shingle
     stack (top lowered wherever a slipped / missing shingle would expose it), all the way round, FACING OUT (it is
-    seen from outside, in the eave shadow).  The generic form of conical_roof.build_eave_closure."""
-    import bpy
-    from mathutils import Vector
-    from mathutils.bvhtree import BVHTree
-    from ..core import grid_quads, n2
-    from .cone import az2th, surf
-    acc = f.acc("eave_closure", 30, cull=None)
-    az = np.linspace(0.0, 2 * math.pi, n_az, endpoint=False)
-    ss = np.linspace(0.0, 2.5, 500)
-    bv = []
-    for nm in (f"{f.prefix}_roof_shingles", f"{f.prefix}_roof_starter"):
-        if nm in bpy.data.objects:
-            me = bpy.data.objects[nm].data
-            bv.append(BVHTree.FromPolygons([v.co[:] for v in me.vertices], [p_.vertices[:] for p_ in me.polygons]))
-    top = np.zeros(n_az)
-    cs_p, sn_p = math.cos(f.PITCH), math.sin(f.PITCH)
-    for i, a in enumerate(az):
-        P = surf(f, np.full_like(ss, float(az2th(a))), ss)
-        rr = np.hypot(P[:, 0], P[:, 1])
-        z_s = float(np.interp(-r_b, -rr, P[:, 2]))
-        nrm_ = Vector((math.sin(a) * sn_p, -math.cos(a) * sn_p, cs_p))
-        for dz in (0.05, 0.03, 0.012, -0.006):
-            o = Vector((math.sin(a) * r_b, -math.cos(a) * r_b, z_s + dz)) + nrm_ * 0.002
-            if any(b_.ray_cast(o, nrm_, 0.4)[0] is not None for b_ in bv):
-                break
-        top[i] = z_s + dz
-    bot = np.full(n_az, f.PLATE_TOP - 0.03)
-    rng = np.random.RandomState(2611)
-    zz = np.stack([bot, (bot + top) / 2 + 0.008 * rng.uniform(-1, 1, n_az), top], 1)
-    rad = r_b + np.stack([np.zeros(n_az), 0.006 * n2(az * 6.0, np.full(n_az, 0.3), 2612), np.zeros(n_az)], 1)
-    P = np.stack([np.sin(az)[:, None] * rad, -np.cos(az)[:, None] * rad, zz], -1).reshape(-1, 3)
-    F = grid_quads(n_az, 3, closed_u=True)
-    q = P[F[0]]
-    if float(np.dot(np.cross(q[1] - q[0], q[3] - q[0]), [math.sin(az[0]), -math.cos(az[0]), 0])) < 0:
-        F = F[:, ::-1]                       # normals face OUT (seen from below the eave)
-    acc.add(P, F, mat)
-    acc.build(f.coll)
+    seen from outside, in the eave shadow).  The generic form of conical_roof.build_eave_closure.
+    kit 1.8.0: an alias of THE eave closure, components.eave.eave_closure(kind="ring") (same geometry)."""
+    from .eave import eave_closure
+    return eave_closure(f, r_b, mat, n_az, kind="ring")
 
 
 def round_tower_roof(g, pitch_deg=52.0, eave_out=0.62, bell_deg=12.0, bell_len=0.85, collar_r=0.62,

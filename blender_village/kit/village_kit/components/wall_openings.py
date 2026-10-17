@@ -12,9 +12,9 @@ calls work on any wall a later module lays out.  Local coordinates: x along t, z
     window_spec(width=0.50, height=0.55, sill=1.25, ...)   a small deep-set window: projecting dressed stone sill with a
                                                 drip, heavy timber frame with a cross mullion, timber lintel, mortar
                                                 reveal and a dark blocker room behind (note 6)
-    opening_rects(spec)                         the (x0, x1, z0, z1) rectangles the masonry must leave free
-    opening_cut(spec)                           the (x0, x1, z0, z1) rectangle the mortar body must leave open
-    build_opening(g, spec, O, t, n, accs, rng)  build one opening into the accumulators accs = dict(timber, dressed,
+    opening_rects(sp)                           the (x0, x1, z0, z1) rectangles the masonry must leave free
+    opening_cut(sp)                             the (x0, x1, z0, z1) rectangle the mortar body must leave open
+    build_opening(g, sp, O, t, n, accs, rng)    build one opening into the accumulators accs = dict(timber, dressed,
                                                 iron, mortar, blocker); records it on g.OPENINGS (for decal anchors)
     opening_accs(g, name) / finish_accs(g, accs)   the per-wall accumulators -> <P>_<name>_frames, _dressed,
                                                 _ironwork, _reveals, _blockers
@@ -29,20 +29,25 @@ from ..geom import Acc, finalize, obox, prof_rect, sweep
 def door_spec(width=1.0, height=2.10, threshold=0.12, post=(0.20, 0.24), lintel=0.24, bearing=0.25, leaf_set=0.07,
               planks=6):
     """a timber-framed plank door (clear width / height, threshold top above ground, post section (face, depth),
-    lintel height, lintel bearing into the masonry each side, leaf set back behind the frame face)."""
-    return dict(kind="door", width=width, height=height, threshold=threshold, post=post, lintel=lintel,
-                bearing=bearing, leaf_set=leaf_set, planks=planks)
+    lintel height, lintel bearing into the masonry each side, leaf set back behind the frame face).
+    kit 1.8.0: a thin wrapper of components.openings (family "wall", openings.door)."""
+    from .openings import wall_door
+    return wall_door(width=width, height=height, threshold=threshold, post=post, lintel=lintel, bearing=bearing,
+                     leaf_set=leaf_set, planks=planks)
 
 
 def window_spec(width=0.50, height=0.55, sill=1.25, frame=0.08, depth=0.22, lintel=0.16, room=1.3):
     """a small deep-set window (clear width / height, clear sill height, frame member size, reveal depth to the
-    frame, lintel height, blocker-room depth)."""
-    return dict(kind="window", width=width, height=height, sill=sill, frame=frame, depth=depth, lintel=lintel,
-                room=room)
+    frame, lintel height, blocker-room depth).
+    kit 1.8.0: a thin wrapper of components.openings (family "wall", openings.window)."""
+    from .openings import wall_window
+    return wall_window(width=width, height=height, sill=sill, frame=frame, depth=depth, lintel=lintel, room=room)
 
 
 def opening_rects(sp):
     """rectangles (x0, x1, z0, z1) in the wall's local (x along, z up) that the masonry must leave free."""
+    from .openings import resolve
+    sp = resolve(sp, "wall")
     hw = sp["width"] / 2
     if sp["kind"] == "door":
         pw = sp["post"][0]
@@ -59,6 +64,8 @@ def opening_rects(sp):
 
 def opening_cut(sp):
     """the rectangle (x0, x1, z0, z1) the mortar body leaves open (inside the frame / reveal)."""
+    from .openings import resolve
+    sp = resolve(sp, "wall")
     hw = sp["width"] / 2
     if sp["kind"] == "door":
         pw = sp["post"][0]
@@ -110,7 +117,10 @@ def _room(acc, lm, x0, x1, z0, z1, w0, w1, mat):
 
 
 def build_opening(g, sp, O, t, n, accs, rng, label=""):
-    """build one opening (door / window spec) at frame (O, t, n) into accs (see module doc)."""
+    """build one opening (door / window spec) at frame (O, t, n) into accs (see module doc).  kit 1.8.0: sp may be a
+    components.openings spec (resolved to family "wall")."""
+    from .openings import resolve
+    sp = resolve(sp, "wall")
     O = np.asarray(O, float)
     t = np.asarray(t, float) / np.linalg.norm(t)
     n = np.asarray(n, float) / np.linalg.norm(n)

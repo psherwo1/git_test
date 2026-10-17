@@ -3,7 +3,8 @@
 
     pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=0.0, cy=0.0, pitch_deg=48.0,
                  eave_out=0.50, bell_deg=0.0, bell_len=0.70, kick=0.0, kick_len=0.60, sag=0.0, exposure=0.34,
-                 cap_r=0.62, finial_scale=0.80, finial_lean=0.5, rafter_step=0.60, t_deck=0.025, seed=None, rng=None)
+                 cap_r=0.62, finial_scale=0.80, finial_lean=0.5, rafter_step=0.60, t_deck=0.025, seed=None, rng=None,
+                 coll=None)
 
 The village's cap language (art bible 1.4 and the section-2 cap row) on ANY square, hexagonal or octagonal body:
 a pyramid at `pitch_deg` whose last `bell_len` m of slope flatten by `bell_deg` toward the eave (sprocketed, bell-cast
@@ -129,6 +130,26 @@ class PyramidSurface:
         V = np.asarray(V, float) - self.c
         return np.max(np.stack([V @ self.frame(k)[1] for k in range(self.n)], -1), -1)
 
+    # ---- kit 1.8.0: the polygonal bell-cast roof protocol shared with oct_frame.OctRoof, so a PyramidSurface can be
+    # registered as a tier (tier_roof.bell_tier sides != 8) and read by tier_frame.roof_z / roof_support /
+    # roof_clearance, tier_roof.roof_flashing and tier_finish.tier_decals: c (plan centre), rot, n, tanh, phi
+    # (facet normal angles), p_lip, Pp (apothem samples, the last one the apex), zb(p) (covering base = deck top at
+    # the facet centre line), m_of_p / p_of_m (slope distance from the lip), surf(k, x, p) (a point on the deck top)
+    @property
+    def phi(self):
+        return [self.rot + 2.0 * math.pi * k / self.n for k in range(self.n)]
+
+    @property
+    def Pp(self):
+        return self.Pd
+
+    def zb(self, p):
+        p = np.asarray(p, float)
+        return self.zu(p) + self.t_deck / np.cos(self.ang(p))
+
+    def surf(self, k, x, p):
+        return self.top(int(k), x, p)
+
 
 def _slab(acc, B, N, th, mat, th1=None):
     """a closed slab from 4 bottom corners B (in order) offset by th along N (th1 at corners 2, 3: a wedge)."""
@@ -152,8 +173,9 @@ def _sweep_add(acc, path, ups, prof, mat):
 def pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=0.0, cy=0.0, pitch_deg=48.0,
                  eave_out=0.50, bell_deg=0.0, bell_len=0.70, kick=0.0, kick_len=0.60, sag=0.0, exposure=0.34,
                  cap_r=0.62, finial_scale=0.80, finial_lean=0.5, rafter_step=0.60, t_deck=0.025, seed=None,
-                 rng=None):
-    """KIT COMPONENT: bell-cast polygonal pyramid shingle roof (module doc).
+                 rng=None, coll=None):
+    """KIT COMPONENT: bell-cast polygonal pyramid shingle roof (module doc).  kit 1.8.0: coll = the collection the
+    parts go into (default g.coll; tier_roof.bell_tier passes the tier's sub-collection).
     p_wall: apothem of the wall's outer face (the deck underside passes over z_plate there); z_plate: top of the
     wall plate; sides / rot_deg / cx, cy: plan polygon (facet 0's normal at rot_deg); pitch_deg: main pitch;
     eave_out: plan overhang beyond p_wall; bell_deg / bell_len: flattening at the eave and its slope length (0 =
@@ -321,7 +343,7 @@ def pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=
     tip = float(np.concatenate(A["finial"].V)[:, 2].max())                 # the BUILT finial's tip
     built = {}
     for k_, acc in A.items():
-        ob = finalize(acc, g.coll, smooth_deg=35.0, recalc=k_ not in ("shingles", "roof_deck"))
+        ob = finalize(acc, g.coll if coll is None else coll, smooth_deg=35.0, recalc=k_ not in ("shingles", "roof_deck"))
         if ob is not None:
             built[k_] = ob
     z_eave = float(S.zu(a))

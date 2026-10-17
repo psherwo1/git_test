@@ -3,10 +3,10 @@
 make_daub_fields(g)  per bay coat field (s, z) -> distance inside the intact coat; negative in exposed patches.
                      Door bay: the ref2 eroded lower band (stepped fracture line); other bays: a bedded foot with
                      splash bites and the fallen-out patches listed in g.DAUB_PATCHES.
-build_wattle(g)      weave only where it shows (patches + under their margins, foot bites, door rope panels)
-build_daub(g)        the coat sheet per bay (+ clinging flakes)
-build_inner_skin(g)  interior daub face (dark backing behind the weave, the wall seen through the door)
-plinth_under_coat(g) cull predicate for plinth tops hidden behind the bedded coat foot
+build_wattle(g, coll)      weave only where it shows (patches + under their margins, foot bites, door rope panels)
+build_daub(g, coll)        the coat sheet per bay (+ clinging flakes)
+build_inner_skin(g, coll)  interior daub face (dark backing behind the weave, the wall seen through the door)
+plinth_under_coat(g, V)    cull predicate for plinth tops hidden behind the bedded coat foot
 """
 import math
 from functools import partial  # noqa: F401

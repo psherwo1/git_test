@@ -1,0 +1,9 @@
+﻿M_timber area 285.7 grain(V)-along-long-axis 13% across 63% | up-facing area 43.6: V points upslope 88% downslope 4% | metres per UV unit median 1.00
+M_roof_shingle area 134.5 grain(V)-along-long-axis 5% across 63% | up-facing area 110.9: V points upslope 87% downslope 0% | metres per UV unit median 1.01
+M_timber_weathered area 28.4 grain(V)-along-long-axis 4% across 79% | up-facing area 1.8: V points upslope 61% downslope 21% | metres per UV unit median 1.00
+M_roof_shake area 82.0 grain(V)-along-long-axis 52% across 0% | up-facing area 79.3: V points upslope 92% downslope 2% | metres per UV unit median 1.00
+M_thatch area 188.3 grain(V)-along-long-axis 6% across 92% | up-facing area 123.3: V points upslope 96% downslope 2% | metres per UV unit median 1.07
+MASK KEEP_cap_shingles mean [0.337 0.147 0.077 1.   ] min [0.    0.033 0.    1.   ] max [0.991 0.445 0.27  1.   ]
+MASK KEEP_cone_stones mean [0.311 0.1   0.065 1.   ] min [0.    0.019 0.    1.   ] max [1.    0.319 0.27  1.   ]
+MASK KEEP_hall_wall_stones mean [0.294 0.096 0.124 1.   ] min [0.    0.019 0.    1.   ] max [1.    0.319 1.    1.   ]
+MASK KEEP_roof_collar_shakes mean [0.357 0.202 0.077 1.   ] min [0.    0.051 0.    1.   ] max [1.    0.515 0.266 1.   ]

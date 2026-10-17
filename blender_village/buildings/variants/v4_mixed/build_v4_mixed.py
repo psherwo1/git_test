@@ -97,8 +97,10 @@ MILL_LOD = dict(z=0.6, step=2, bands=[(3.0, 3)],          # every 3rd grid line 
 HOUSE_BUDGET = dict(DAUB_GRID=(0.075, 0.07, 0.035, 0.0125), PLINTH_DENSE=0.55, SH_RING_STEP=0.21)
 # round 4 (director r3 probe): the door-head infill boards run up to the batten deck (laths behind the board gaps)
 # -- on the 58 deg cone the rafter-underside top left a ~0.26 m slot between the rafters over the door -- and the
-# eave closure runs on behind the infill (the cheek opening beside it looked into the eave void)
-HOUSE_OPTS = dict(HOUSE_BUDGET, DOOR_INFILL_DECK=True, EAVE_CLOSURE_DOOR_HALF_DEG=1.0)
+# eave closure runs on behind the infill (the cheek opening beside it looked into the eave void).
+# kit 1.9.0: no longer set here -- RoundFrame(steep_door="auto") sets DOOR_INFILL_DECK and
+# EAVE_CLOSURE_DOOR_HALF_DEG = 1.0 itself on any cone steeper than 52 deg (guard steep_cone_door).
+HOUSE_OPTS = dict(HOUSE_BUDGET)
 
 
 def wings():
@@ -128,10 +130,21 @@ JUNCTIONS = [(roof_tower_flashing, dict(roof="house", tower="mill")),
              (wall_tower_abutment, dict(wall="house", tower="mill"))]
 
 
+# kit 1.9.0 guard-rails (village_kit.guards) run by default.  Clearance (house door lip 2.37 m, mill door 5.33 m),
+# the applied decal gate on both wings and the seal probe at the mill's apron / smock tower junction pass.  The seal
+# probe at the house roof / mill tower junction (junctions.roof_tower_flashing) finds 13 of ~23,000 exterior rays
+# (el 30-60 deg) passing the trimmed house roof 0.3 m from the drum face into the space under it (abutment posts,
+# eave closure, wall plate at z 2.1-3.1).  v4 is the accepted variant (director 8.4 + audit); its geometry is not
+# changed in this kit step: the junction is queued for the junction module (kit/CHANGELOG.md 1.9.0).
+OPT_OUT = dict(seal_probe={"house roof / mill tower": (
+    "accepted variant, geometry frozen in kit 1.9.0: 13 of ~23k probe rays pass the trimmed roof next to the drum "
+    "into the eave space; queued for junctions.roof_tower_flashing")})
+
+
 def main():
     out = os.environ.get("V4_OUT", os.path.join(HERE, "v4_mixed.blend"))
     build_compound(dict(
-        collection="V4", building_id="v4_mixed", wings=wings(), junctions=JUNCTIONS,
+        collection="V4", building_id="v4_mixed", wings=wings(), junctions=JUNCTIONS, opt_out=OPT_OUT,
         cull=not os.environ.get("V4_FAST"), cull_procs=4, cull_max_views=300, decal_max=120,
         out=out, decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
         decal_meta=dict(recipe="buildings/variants/v4_mixed/build_v4_mixed.py",

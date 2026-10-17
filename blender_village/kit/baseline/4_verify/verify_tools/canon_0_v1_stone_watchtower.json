@@ -1,0 +1,481 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\0_baseline\\v1_stone_watchtower\\v1_stone_watchtower.blend",
+ "objects": {
+  "WATCH_base_dressed": {
+   "geom": "492fafbec6fb0d06",
+   "uv": "695b6a82ce63d7a5",
+   "mask": "7b8febb19d3155d1",
+   "tris": 43279,
+   "nv": 24639,
+   "np": 22345
+  },
+  "WATCH_base_mortar": {
+   "geom": "d369666dd42ab2d2",
+   "uv": "bc347258f7d8bde6",
+   "mask": "86567cafa82f41aa",
+   "tris": 63092,
+   "nv": 78290,
+   "np": 31546
+  },
+  "WATCH_base_stones": {
+   "geom": "5df0dc70cfc2f3e4",
+   "uv": "6329e941e2b07476",
+   "mask": "060211d2dd4f7d31",
+   "tris": 728778,
+   "nv": 437243,
+   "np": 366470
+  },
+  "WATCH_cabin_bed": {
+   "geom": "715892969f8b1f33",
+   "uv": "7bc259b119d5adb2",
+   "mask": "b9d9a7d2e1152199",
+   "tris": 720,
+   "nv": 432,
+   "np": 360
+  },
+  "WATCH_cabin_boards": {
+   "geom": "0e7a8e1df13a8f74",
+   "uv": "b22f3ec854f78c04",
+   "mask": "7eeda75c5bab3a85",
+   "tris": 11988,
+   "nv": 6216,
+   "np": 5994
+  },
+  "WATCH_cabin_ceiling": {
+   "geom": "df8e79ff1c02d09b",
+   "uv": "82b9dc20700878f0",
+   "mask": "90e0eed338eda8c6",
+   "tris": 108,
+   "nv": 56,
+   "np": 54
+  },
+  "WATCH_cabin_corbels": {
+   "geom": "094ddac4ca25e1b1",
+   "uv": "7f16065b6ea2603b",
+   "mask": "fa9ce58c4ad34a4a",
+   "tris": 432,
+   "nv": 224,
+   "np": 216
+  },
+  "WATCH_cabin_finial": {
+   "geom": "5d070c610160c0f6",
+   "uv": "39cc6013f9da4c4c",
+   "mask": "b46d13f334676ff3",
+   "tris": 1678,
+   "nv": 841,
+   "np": 841
+  },
+  "WATCH_cabin_floor": {
+   "geom": "deaf3577cc5c2077",
+   "uv": "5be5d537f4829875",
+   "mask": "09819e4acc589863",
+   "tris": 1988,
+   "nv": 1024,
+   "np": 994
+  },
+  "WATCH_cabin_frame": {
+   "geom": "58cbcdf0fa8eb360",
+   "uv": "dd04d19f8cccc7a9",
+   "mask": "c3e35cbd28246e2e",
+   "tris": 4320,
+   "nv": 2216,
+   "np": 2160
+  },
+  "WATCH_cabin_hips": {
+   "geom": "8471a46ac13d2d2f",
+   "uv": "66d212373787f835",
+   "mask": "05fdc9ae10ce5de3",
+   "tris": 1232,
+   "nv": 624,
+   "np": 608
+  },
+  "WATCH_cabin_lead": {
+   "geom": "55f2e50a907499c6",
+   "uv": "11808a079b3a7f25",
+   "mask": "cdce7295df90edec",
+   "tris": 108,
+   "nv": 58,
+   "np": 58
+  },
+  "WATCH_cabin_roof_deck": {
+   "geom": "223d0709ca9d3943",
+   "uv": "dac7fa8f387f1708",
+   "mask": "ed8ea97d1dd619d2",
+   "tris": 2304,
+   "nv": 1154,
+   "np": 1184
+  },
+  "WATCH_cabin_roof_frame": {
+   "geom": "6eb2f0bfb4ab3c60",
+   "uv": "6bec05608c0fa87b",
+   "mask": "1ca16005eb98f656",
+   "tris": 4464,
+   "nv": 2304,
+   "np": 2088
+  },
+  "WATCH_cabin_shingles": {
+   "geom": "f329a71e835ba453",
+   "uv": "43bd6b5bc237cc03",
+   "mask": "61726add9995ad63",
+   "tris": 72878,
+   "nv": 45649,
+   "np": 35278
+  },
+  "WATCH_cabin_struts": {
+   "geom": "508f5bb9110f5d8f",
+   "uv": "58fc05d0d451b773",
+   "mask": "3572484ad7df7376",
+   "tris": 432,
+   "nv": 224,
+   "np": 216
+  },
+  "WATCH_ceiling": {
+   "geom": "0bf06722f567bc09",
+   "uv": "87e2b91a4e7ff736",
+   "mask": "00289886feb2d37f",
+   "tris": 720,
+   "nv": 432,
+   "np": 360
+  },
+  "WATCH_corbel_001": {
+   "geom": "41cbd3a0ad30d0fe",
+   "uv": "025778c2ce204ad3",
+   "mask": "bf3bed859ea4c1ec",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_002": {
+   "geom": "69ab09ba00e72298",
+   "uv": "971abe18e4b01367",
+   "mask": "16e16a88ee57916b",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_003": {
+   "geom": "4e0a0f17db6aba95",
+   "uv": "5b3bee1069ebbdfb",
+   "mask": "16e16a88ee57916b",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_004": {
+   "geom": "e1d9b075459d7775",
+   "uv": "79c452c70802b5f0",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_005": {
+   "geom": "325713788111655d",
+   "uv": "3947cd9f2e7a8758",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_006": {
+   "geom": "db515bf29be484a6",
+   "uv": "ae8d2a46470677ad",
+   "mask": "3fa0c05abd2fdc33",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_007": {
+   "geom": "862836fdd789e586",
+   "uv": "b1d15b1b7799f6ba",
+   "mask": "3fa0c05abd2fdc33",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_008": {
+   "geom": "93e9f743353ef9be",
+   "uv": "55a0e6bc5de6ef3e",
+   "mask": "16e16a88ee57916b",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_009": {
+   "geom": "85cf061fa7d73374",
+   "uv": "ff69d8f724a4ece4",
+   "mask": "16e16a88ee57916b",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_010": {
+   "geom": "52c4dc5c3770d4a3",
+   "uv": "a202106a8d671a93",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_011": {
+   "geom": "7c3df17f3fb485bd",
+   "uv": "3e3a6de76cf3442d",
+   "mask": "5287b36c92b96045",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_012": {
+   "geom": "cf37e2e0a1bacc7a",
+   "uv": "40eaf38874fc140d",
+   "mask": "5287b36c92b96045",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_013": {
+   "geom": "3a79c2a03912dadc",
+   "uv": "24c051186b79704e",
+   "mask": "3fa0c05abd2fdc33",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_014": {
+   "geom": "e99a031912149dff",
+   "uv": "565c6556dcee9d33",
+   "mask": "bf3bed859ea4c1ec",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_015": {
+   "geom": "912df4dc1d03cdd1",
+   "uv": "3ebb22643a8c6789",
+   "mask": "16e16a88ee57916b",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_016": {
+   "geom": "e3f242a06260d14f",
+   "uv": "fe950dbabee19045",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_017": {
+   "geom": "6be875f9bdcdc574",
+   "uv": "ba13e2ee1a87e796",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_018": {
+   "geom": "caf69d74ede7dce6",
+   "uv": "0977ae4969d7482a",
+   "mask": "3fa0c05abd2fdc33",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_019": {
+   "geom": "7efb396e7d6b78ac",
+   "uv": "2b0d0cc05dc97cee",
+   "mask": "3fa0c05abd2fdc33",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_020": {
+   "geom": "05df5d5d6daa529f",
+   "uv": "29d93b85a6de76e7",
+   "mask": "bf3bed859ea4c1ec",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_021": {
+   "geom": "36b5d3add2142027",
+   "uv": "6e83b83093c094cf",
+   "mask": "16e16a88ee57916b",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_022": {
+   "geom": "4cb2ccb0611d7d64",
+   "uv": "2a8d3310c827ccd9",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_023": {
+   "geom": "3f07b0d353a24d58",
+   "uv": "cf07be2448d80f14",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_024": {
+   "geom": "a9f145309be43484",
+   "uv": "4bd606292ae0ca4c",
+   "mask": "5287b36c92b96045",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_025": {
+   "geom": "44962730845c886a",
+   "uv": "e635e70ddd4f0b9d",
+   "mask": "bf3bed859ea4c1ec",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_026": {
+   "geom": "3a143a5b422ded29",
+   "uv": "d810f1208be3d7f9",
+   "mask": "bf3bed859ea4c1ec",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_027": {
+   "geom": "ae98cc62ce65b526",
+   "uv": "5e12cc2b099bf8c3",
+   "mask": "16e16a88ee57916b",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_028": {
+   "geom": "c02a9d400b3618cf",
+   "uv": "0ecaed3aae191f92",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_029": {
+   "geom": "6dd3f9d400d9a5be",
+   "uv": "b599919f67c20705",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_030": {
+   "geom": "164a02ea9868b8d7",
+   "uv": "c20b37949c6844d4",
+   "mask": "5287b36c92b96045",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_031": {
+   "geom": "11b886dff97e32a8",
+   "uv": "822b5bb4360f74f3",
+   "mask": "bf3bed859ea4c1ec",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_032": {
+   "geom": "cf56c014a1a36a8a",
+   "uv": "48a0c578f5aee50e",
+   "mask": "16e16a88ee57916b",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_033": {
+   "geom": "caab7d49f9703126",
+   "uv": "c9baf1b139bcc00a",
+   "mask": "f44f34a450a304ab",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_034": {
+   "geom": "167135110ec4292a",
+   "uv": "7dd5c51b892251a4",
+   "mask": "bea3d4b6c89b4e6d",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_035": {
+   "geom": "ce25449a305b4af5",
+   "uv": "2911b23f3ac65e2e",
+   "mask": "5287b36c92b96045",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_corbel_036": {
+   "geom": "32fe5936d864b817",
+   "uv": "6545886cefaeafb1",
+   "mask": "5287b36c92b96045",
+   "tris": 1048,
+   "nv": 555,
+   "np": 524
+  },
+  "WATCH_door_iron": {
+   "geom": "2f1745fa4b9da3d0",
+   "uv": "bce4532d3eba1c5a",
+   "mask": "53b5440725b476f6",
+   "tris": 2884,
+   "nv": 1690,
+   "np": 1684
+  },
+  "WATCH_door_leaf": {
+   "geom": "797a15c511691df1",
+   "uv": "f3cb040975a18509",
+   "mask": "8f76c0ac8cac9aa8",
+   "tris": 9540,
+   "nv": 4842,
+   "np": 4860
+  },
+  "WATCH_door_step": {
+   "geom": "b12ffdb3b06c71a7",
+   "uv": "3e60e03517cbfb14",
+   "mask": "a62600e5fdfcff1b",
+   "tris": 2231,
+   "nv": 1165,
+   "np": 1165
+  },
+  "WATCH_door_surround": {
+   "geom": "855b6d5f9e325094",
+   "uv": "ec5a2bc6b08748a8",
+   "mask": "19d087a2fb7457e1",
+   "tris": 44322,
+   "nv": 23173,
+   "np": 22170
+  },
+  "WATCH_interior": {
+   "geom": "85eaa36d14cd4527",
+   "uv": "5b720c0f84dd0a3d",
+   "mask": "c1ff738c1bb02a03",
+   "tris": 6416,
+   "nv": 3500,
+   "np": 3208
+  },
+  "WATCH_wall_core": {
+   "geom": "a9c584913dd0c163",
+   "uv": "f76de8c1c5a32f3b",
+   "mask": "d789ec14c22ad54c",
+   "tris": 15522,
+   "nv": 8005,
+   "np": 7765
+  }
+ },
+ "triangles": 1057164,
+ "canon_geom": "c08a3ee9062d45f8",
+ "canon_uv": "4cc7fb2a2b8eef31",
+ "canon_mask": "cee53ee16f4241cf"
+}

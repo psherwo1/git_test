@@ -1,10 +1,10 @@
 """components.doors -- door assemblies.
 
-build_door(g)  projecting flat-fronted framed door of a round wattle building: pad stones, cheek sole rails, door
+build_door(g, coll, seed=1212)  projecting flat-fronted framed door of a round wattle building: pad stones, cheek sole rails, door
                posts, jambs, lintel, infill boards, rope side panels (built by components.daub), threshold slabs,
                worn timber sill, ledged and braced plank leaf open inward with strap hinges / pintles / nails, ring
                pull and latch.
-build_step(g)  the door step built into the entrance (producer note 10 keeps it)
+build_step(g, coll)  the door step built into the entrance (producer note 10 keeps it)
 """
 import math
 from functools import partial  # noqa: F401

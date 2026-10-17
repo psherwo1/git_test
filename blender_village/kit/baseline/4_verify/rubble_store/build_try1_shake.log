@@ -1,0 +1,15 @@
+﻿[    0.2s] -- masonry_wall
+[   14.7s]   walls visible mortar 19.2% -> 8.9% after 608 pinning stones
+[   14.7s]   STORE_walls: stones 1557 (hero 24, pins 168)
+[   16.1s]   STORE_walls_stones: 92404 verts, 78863 faces
+[   16.1s]   STORE_walls_quoins: 2624 verts, 2560 faces
+[   16.4s]   STORE_walls_mortar: 2767 verts, 2387 faces
+[   16.4s]   STORE_walls: mortar cells 2387
+[   16.5s]   STORE_walls_frames: 2604 verts, 2559 faces
+[   16.5s]   STORE_walls_dressed: 204 verts, 198 faces
+[   16.6s]   STORE_walls_ironwork: 280 verts, 266 faces
+[   16.6s]   STORE_walls_reveals: 8 verts, 4 faces
+[   16.6s]   STORE_walls_blockers: 8 verts, 5 faces
+[   16.6s] -- linear_roof
+[   16.6s]   STORE_roof_deck: 225 verts, 208 faces
+[   16.6s]   STORE_roof_rafters: 1344 verts, 1296 faces

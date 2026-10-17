@@ -5,7 +5,7 @@ plank_leaf(acc, mapfn, ...)    vertical-plank leaf in any local door frame (x al
                                rotted corner; arched or square head (zt_fn)
 strap_hinge(...)               forged strap (50 -> 38 mm, spear terminal) lying on a facet-mapped leaf, pooled pintle
                                knuckle in the jamb, nails
-make_pintle(acc, k)            pooled forged knuckle eye + pintle + square shank (producer note 3)
+make_pintle(acc, i)            pooled forged knuckle eye + pintle + square shank (producer note 3)
 arched_door(g, seed=808)       KIT COMPONENT: the arch-topped leaf of the principal (arched) opening of an OctFrame
                                with 3 ledges, 3 strap hinges, clinch nails, ring pull with backplate, keyhole plate
                                -> <P>_door_leaf, <P>_door_ironwork
@@ -396,8 +396,11 @@ def build_wall_openings(coll, door=None, window=None, seed=1212):
 
 
 def door_spec(xc=-5.05, width=1.0, height=2.10, frame=0.18, depth=0.20, threshold=0.10):
-    """rectangular plank door spec (clear width / height, frame section, set-back, threshold top)."""
-    return dict(xc=xc, hw=width / 2, z0=threshold, z1=threshold + height, fw=frame, depth=depth)
+    """rectangular plank door spec (clear width / height, frame section, set-back, threshold top).
+    kit 1.8.0: a thin wrapper of components.openings (family "annex"; the unambiguous name is openings.annex_door,
+    the family-neutral spec openings.door(...).at(xc))."""
+    from .openings import annex_door
+    return annex_door(xc=xc, width=width, height=height, frame=frame, depth=depth, threshold=threshold)
 
 
 def arched_door(g, seed=808):

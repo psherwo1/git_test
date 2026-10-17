@@ -17,6 +17,8 @@ openings with components.wall_openings.
                                           openings by azimuth and a clip for the part inside an attached body
                                           -> <P>_<name>_stones, _mortar + the opening objects
 Both publish their faces on g.WALL_FACES (for decal anchors) and their openings on g.OPENINGS.
+kit 1.8.0: openings may be components.openings specs (door(...) / window(...)); the kit's one rubble-body entry point
+is components.masonry.masonry_wall (path= -> path_stone_wall, round= -> round_stone_body, body= -> stone_body).
 """
 import math
 

@@ -325,8 +325,13 @@ def cone_map_factory(z_base_m=0.0):
 
 
 def shake_collar(g, seed=505):
-    """KIT COMPONENT: tier 2 shake collar with its jagged comb."""
+    """KIT COMPONENT: tier 2 shake collar with its jagged comb.  kit 1.9.0: registers the collar / stone-cone
+    junction for the guard seal probe (village_kit.guards; no geometry change)."""
     build_collar(g.sub("tower"), seed=seed)
+    from ..guards import register_junction
+    zf, rf = np.asarray(g.CONE_ZF, float), np.asarray(g.CONE_RF, float)
+    register_junction(g, "shake collar / stone cone", (f"{g.prefix}_roof_collar_shakes",), (0.0, 0.0),
+                      lambda z, zf=zf, rf=rf: float(np.interp(z, zf, rf)), (float(zf[0]), g.COLLAR_TOP_Z + 0.3))
 
 
 def stone_cone(g, seed=404):

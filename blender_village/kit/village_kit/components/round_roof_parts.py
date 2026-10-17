@@ -29,6 +29,8 @@ object into f.coll through f.acc (so Mask, palette and hygiene follow the frame)
           r_b    plan radius of the band (normally f.R_WALL - 0.075)
           mat    palette slot (M_mortar on stone heads, M_timber_weathered on board belts)
           n_az   azimuth stations
+        kit 1.8.0: a thin wrapper of THE eave closure, components.eave.eave_closure(kind="ring"); tower_roof's
+        private _roof_deck / _eave_closure are now aliases of these two (the copies are gone).
 """
 import math
 
@@ -71,40 +73,7 @@ def roof_deck(f, r_in, gap=0.006, eave_s=0.10, t=0.012):
 
 def eave_closure(f, r_b, mat="M_mortar", n_az=240):
     """KIT COMPONENT: outward-facing eave closure band between the rafter feet of round roof frame f (see the
-    module doc).  Build the shingles before calling it."""
-    import bpy
-    from mathutils import Vector
-    from mathutils.bvhtree import BVHTree
-    from ..core import grid_quads, n2
-    from .cone import az2th, surf
-    acc = f.acc("eave_closure", 30, cull=None)
-    az = np.linspace(0.0, 2 * math.pi, n_az, endpoint=False)
-    ss = np.linspace(0.0, 2.5, 500)
-    bv = []
-    for nm in (f"{f.prefix}_roof_shingles", f"{f.prefix}_roof_starter"):
-        if nm in bpy.data.objects:
-            me = bpy.data.objects[nm].data
-            bv.append(BVHTree.FromPolygons([v.co[:] for v in me.vertices], [p_.vertices[:] for p_ in me.polygons]))
-    top = np.zeros(n_az)
-    cs_p, sn_p = math.cos(f.PITCH), math.sin(f.PITCH)
-    for i, a in enumerate(az):
-        P = surf(f, np.full_like(ss, float(az2th(a))), ss)
-        rr = np.hypot(P[:, 0], P[:, 1])
-        z_s = float(np.interp(-r_b, -rr, P[:, 2]))
-        nrm_ = Vector((math.sin(a) * sn_p, -math.cos(a) * sn_p, cs_p))
-        for dz in (0.05, 0.03, 0.012, -0.006):
-            o = Vector((math.sin(a) * r_b, -math.cos(a) * r_b, z_s + dz)) + nrm_ * 0.002
-            if any(b_.ray_cast(o, nrm_, 0.4)[0] is not None for b_ in bv):
-                break
-        top[i] = z_s + dz
-    bot = np.full(n_az, f.PLATE_TOP - 0.03)
-    rng = np.random.RandomState(2611)
-    zz = np.stack([bot, (bot + top) / 2 + 0.008 * rng.uniform(-1, 1, n_az), top], 1)
-    rad = r_b + np.stack([np.zeros(n_az), 0.006 * n2(az * 6.0, np.full(n_az, 0.3), 2612), np.zeros(n_az)], 1)
-    P = np.stack([np.sin(az)[:, None] * rad, -np.cos(az)[:, None] * rad, zz], -1).reshape(-1, 3)
-    F = grid_quads(n_az, 3, closed_u=True)
-    q = P[F[0]]
-    if float(np.dot(np.cross(q[1] - q[0], q[3] - q[0]), [math.sin(az[0]), -math.cos(az[0]), 0])) < 0:
-        F = F[:, ::-1]                       # normals face OUT (seen from below the eave)
-    acc.add(P, F, mat)
-    acc.build(f.coll)
+    module doc).  Build the shingles before calling it.
+    kit 1.8.0: a thin wrapper of THE eave closure, components.eave.eave_closure(kind="ring") (same geometry)."""
+    from .eave import eave_closure as _eave_closure
+    return _eave_closure(f, r_b, mat, n_az, kind="ring")

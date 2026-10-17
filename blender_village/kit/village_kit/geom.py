@@ -8,7 +8,8 @@ Added in kit 1.1.0 with the hilltop-keep migration.  Everything here is generic 
                    arrays (rows of ax4 / ax5 / axn / axr); inst_faces() offsets the shared quad topology
   sweeps           sweep(path, ups, prof): a closed profile (or one profile per station) swept along a path;
                    prof_rect / prof_circle; lathe_rz((r, z) profile)
-  oriented boxes   obox(acc, O, EX, EY, EZ, LX, LY, LZ, r, mat): boards / blocks / timber in any frame; beam(p0, p1)
+  oriented boxes   obox(acc, O, EX, EY, EZ, LX, LY, LZ, r, mat): boards / blocks / timber in any frame;
+                   beam(acc, p0, p1, w, h, c, mat, up=(0, 0, 1), nx=4, deform=None)
   2-D helpers      rot2, rounded_outline, inside_poly, catmull_closed, smooth_wave, softplus, box_sum, runs_of
   frames           frame_matrix, axis_matrix (local +Z -> axis), R_of(M)
   hygiene          strict_clean(me): producer notes 1 / 6 / 9 clean-up used as a core.Acc `hygiene` hook --

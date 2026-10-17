@@ -44,7 +44,9 @@ KIT = KitParams(radius=3.50, eave_z=2.30, overhang=0.72, pitch_deg=48.0, collar_
 R_FACE, BATTER = 3.64, 2.5                     # round rubble face radius at the ground, batter (deg)
 
 # ---- the body: plan, walls, roof ---------------------------------------------------------------------------------
-X_GABLE, HALF, WALL_Z = -13.0, 2.6, 2.75       # gable outer face, half width at the outer faces, deck at the faces
+# kit 1.9.0 (guard clearance): the deck at the faces was 2.75 m, which hung the rafter feet over the door at
+# 2.257 m (art bible 7: every eave lip over a doorway >= 2.30 m); 2.81 m lifts them to ~2.32 m
+X_GABLE, HALF, WALL_Z = -13.0, 2.6, 2.81       # gable outer face, half width at the outer faces, deck at the faces
 ROOF = GableRoof(x0=X_GABLE, x1=-0.6, half=HALF, wall_z=WALL_Z, pitch_deg=40.0, overhang=0.45, verge=(0.40, 0.0),
                  thick=0.30, step=0.10, exposure=0.30, name="body_roof")
 X_END = -2.0                                   # the body walls run 0.3 m into the round wall (clipped there)

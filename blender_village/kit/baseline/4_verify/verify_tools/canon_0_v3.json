@@ -1,0 +1,513 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\0_baseline\\v3_longhouse_roundend\\v3_longhouse_roundend.blend",
+ "objects": {
+  "LONG_apex_blocker": {
+   "geom": "3a36b85e50f7ace6",
+   "uv": "db1437db038b7192",
+   "mask": "53a8e5710b88a6cb",
+   "tris": 720,
+   "nv": 362,
+   "np": 400
+  },
+  "LONG_battens": {
+   "geom": "ea75055252dcfb04",
+   "uv": "b1a9e25af47c0db4",
+   "mask": "e3d235d91d65b41e",
+   "tris": 444,
+   "nv": 380,
+   "np": 221
+  },
+  "LONG_body_roof_abutment": {
+   "geom": "a418f0e4d750a575",
+   "uv": "bc96e03bd7170072",
+   "mask": "e7bf987aa0ff7697",
+   "tris": 2988,
+   "nv": 1500,
+   "np": 1490
+  },
+  "LONG_body_roof_comb": {
+   "geom": "892f1b5a5f6c7201",
+   "uv": "4493bc7f665d0598",
+   "mask": "740d2b552fe62592",
+   "tris": 8420,
+   "nv": 5616,
+   "np": 4210
+  },
+  "LONG_body_roof_covering": {
+   "geom": "df4a6652358eb4ac",
+   "uv": "113ce656c5a90ee6",
+   "mask": "bcf3c808b5af137e",
+   "tris": 28899,
+   "nv": 16980,
+   "np": 14805
+  },
+  "LONG_body_roof_deck": {
+   "geom": "192a381166d885a6",
+   "uv": "c1f6f69c74f3ea28",
+   "mask": "10a19b553543e266",
+   "tris": 668,
+   "nv": 368,
+   "np": 334
+  },
+  "LONG_body_roof_eave_roll": {
+   "geom": "dd35ffb139ff2a53",
+   "uv": "5e5d2840ae7169bc",
+   "mask": "433eb5fff6a6a1fa",
+   "tris": 11040,
+   "nv": 6080,
+   "np": 5505
+  },
+  "LONG_body_roof_rafters": {
+   "geom": "bdc8cf0eb3e38081",
+   "uv": "e38ad857e6c17f33",
+   "mask": "abe3d1e247f30e47",
+   "tris": 2016,
+   "nv": 1374,
+   "np": 1008
+  },
+  "LONG_body_roof_ridge": {
+   "geom": "802090f9b38ffb59",
+   "uv": "f3a712ab284049d4",
+   "mask": "349df908d5f452f4",
+   "tris": 2304,
+   "nv": 1289,
+   "np": 1147
+  },
+  "LONG_body_wall_blockers": {
+   "geom": "93040f7b26610040",
+   "uv": "0141e4aab7269aa4",
+   "mask": "c8ac0bcda8b9570f",
+   "tris": 40,
+   "nv": 32,
+   "np": 20
+  },
+  "LONG_body_wall_dressed": {
+   "geom": "e0544f2288ec66e7",
+   "uv": "e1ccad8bf07fc5b7",
+   "mask": "10f4f5122b671f51",
+   "tris": 728,
+   "nv": 459,
+   "np": 364
+  },
+  "LONG_body_wall_frames": {
+   "geom": "47dd27d686214289",
+   "uv": "8d37a536b4962eba",
+   "mask": "15743601ab3bfd74",
+   "tris": 4542,
+   "nv": 2761,
+   "np": 2247
+  },
+  "LONG_body_wall_ironwork": {
+   "geom": "4a6bd235e5e1a437",
+   "uv": "d1b35acbe27ea21b",
+   "mask": "5a16cf95173a268f",
+   "tris": 462,
+   "nv": 267,
+   "np": 223
+  },
+  "LONG_body_wall_mortar": {
+   "geom": "23e9fe1f885e276e",
+   "uv": "196ede1f07690760",
+   "mask": "93324a0f3855a05b",
+   "tris": 7684,
+   "nv": 4334,
+   "np": 3842
+  },
+  "LONG_body_wall_quoins": {
+   "geom": "d92582bcd557263e",
+   "uv": "f129dd249e9d5df0",
+   "mask": "4e789de472633359",
+   "tris": 2082,
+   "nv": 1235,
+   "np": 1041
+  },
+  "LONG_body_wall_reveals": {
+   "geom": "4e0b3a12304aa86a",
+   "uv": "15b5e6be38078d60",
+   "mask": "9cacc9694194fdbd",
+   "tris": 32,
+   "nv": 32,
+   "np": 16
+  },
+  "LONG_body_wall_stones": {
+   "geom": "4092ef0230efaa38",
+   "uv": "3626051b0fb0476f",
+   "mask": "52665445ed48c950",
+   "tris": 193138,
+   "nv": 115620,
+   "np": 100087
+  },
+  "LONG_cap_collar": {
+   "geom": "8dfb640204435034",
+   "uv": "8c6b00709f908326",
+   "mask": "05f6540766a6b452",
+   "tris": 12862,
+   "nv": 6529,
+   "np": 6433
+  },
+  "LONG_cone_soakers": {
+   "geom": "af3807d729042fd1",
+   "uv": "49fc2f99f79021c4",
+   "mask": "53f427897a5fe5c6",
+   "tris": 784,
+   "nv": 703,
+   "np": 392
+  },
+  "LONG_eave_fill": {
+   "geom": "47cb78aeff249c1e",
+   "uv": "a633df9ab93a7cf1",
+   "mask": "60bab59fad6cf20f",
+   "tris": 720,
+   "nv": 544,
+   "np": 360
+  },
+  "LONG_finial": {
+   "geom": "e61ed02fcdf2b8bb",
+   "uv": "7fb7869d266ee8ba",
+   "mask": "2ea5fa45a8c743d6",
+   "tris": 1280,
+   "nv": 642,
+   "np": 672
+  },
+  "LONG_peg_001": {
+   "geom": "817838545aec14c9",
+   "uv": "6972015b15104c5e",
+   "mask": "9e8de20e50816cd4",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_002": {
+   "geom": "e25c282da9385670",
+   "uv": "714d4d55a5bdafc6",
+   "mask": "a969bff9dc139c3d",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_003": {
+   "geom": "7dcee79aed4dea28",
+   "uv": "111b7af58b32dcc1",
+   "mask": "7656c3d3a33273a1",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_004": {
+   "geom": "6b32ab83a763d2cd",
+   "uv": "e80f55c9d869fd4c",
+   "mask": "a969bff9dc139c3d",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_005": {
+   "geom": "331bcc87b1528f9d",
+   "uv": "12fd9d55afe0b4a8",
+   "mask": "9e8de20e50816cd4",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_006": {
+   "geom": "8f2637a93c6c27a7",
+   "uv": "a05c86a5b2d414d5",
+   "mask": "9e8de20e50816cd4",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_007": {
+   "geom": "838507eb6646dc5c",
+   "uv": "d21f6936a23fa8a8",
+   "mask": "4fa2bbeeb6d88c90",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_008": {
+   "geom": "d04e9799bb29e317",
+   "uv": "8d17c486ad6b3f6a",
+   "mask": "8c320f35a396029f",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_009": {
+   "geom": "9e4c98485cb018eb",
+   "uv": "c342bf72d7b097e0",
+   "mask": "7656c3d3a33273a1",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_010": {
+   "geom": "8b849d940ad236c8",
+   "uv": "00c9b8abef1d4bf8",
+   "mask": "9e8de20e50816cd4",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_011": {
+   "geom": "c4828f42e262a950",
+   "uv": "f6f4d2d8b47be7b8",
+   "mask": "9e8de20e50816cd4",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_012": {
+   "geom": "5a9f5290846362a6",
+   "uv": "108eb1702962226c",
+   "mask": "9e8de20e50816cd4",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_013": {
+   "geom": "919a77ce399d82a5",
+   "uv": "f6f4d2d8b47be7b8",
+   "mask": "9e8de20e50816cd4",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_014": {
+   "geom": "8fca0b4fb4138138",
+   "uv": "6386c2a63f8fafcb",
+   "mask": "8c320f35a396029f",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_015": {
+   "geom": "632c53ad7ccdb5e2",
+   "uv": "a21ceff62ee3a55a",
+   "mask": "7656c3d3a33273a1",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_016": {
+   "geom": "2018b54c086a614a",
+   "uv": "dbf0807064fa5d9f",
+   "mask": "a969bff9dc139c3d",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_017": {
+   "geom": "820fe5c280ad8a3b",
+   "uv": "156a8ece556063e0",
+   "mask": "4fa2bbeeb6d88c90",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_018": {
+   "geom": "6dc1d2a5b555fb57",
+   "uv": "f6afe513f8ad5cc6",
+   "mask": "4fa2bbeeb6d88c90",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_019": {
+   "geom": "6769e597337e9b2a",
+   "uv": "96507a78bcc6dbca",
+   "mask": "8c320f35a396029f",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_020": {
+   "geom": "3cf78e43ca8d129f",
+   "uv": "c213a7c0b20781d9",
+   "mask": "7656c3d3a33273a1",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_021": {
+   "geom": "eea4bdee1fb4c5fa",
+   "uv": "c213a7c0b20781d9",
+   "mask": "7656c3d3a33273a1",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_022": {
+   "geom": "64d9450c35b0719c",
+   "uv": "c213a7c0b20781d9",
+   "mask": "7656c3d3a33273a1",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_023": {
+   "geom": "4986c72b94cb289e",
+   "uv": "fc09e3a8fe5689da",
+   "mask": "8c320f35a396029f",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_024": {
+   "geom": "7e681c9319e95396",
+   "uv": "67977627f8df52b2",
+   "mask": "4fa2bbeeb6d88c90",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_025": {
+   "geom": "20f7c07469a1295f",
+   "uv": "77d64c8466f82cf0",
+   "mask": "4fa2bbeeb6d88c90",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_026": {
+   "geom": "c223e843c142dfd1",
+   "uv": "b9021b8b919ef29b",
+   "mask": "a969bff9dc139c3d",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_027": {
+   "geom": "fe5c422e4496d1bb",
+   "uv": "6972015b15104c5e",
+   "mask": "9e8de20e50816cd4",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_peg_028": {
+   "geom": "d60ce031091d9438",
+   "uv": "231b3f4b8da8638b",
+   "mask": "8c320f35a396029f",
+   "tris": 92,
+   "nv": 48,
+   "np": 42
+  },
+  "LONG_purlin_rings": {
+   "geom": "85e3feb19800f749",
+   "uv": "08fb0cbdb7b8078b",
+   "mask": "06ec770a47d050af",
+   "tris": 20,
+   "nv": 24,
+   "np": 8
+  },
+  "LONG_rafters": {
+   "geom": "492e17ad5f0fd6c9",
+   "uv": "835304dd15c380b0",
+   "mask": "d1b1b546b5d25d99",
+   "tris": 3641,
+   "nv": 2387,
+   "np": 1741
+  },
+  "LONG_roof_blocker": {
+   "geom": "9c2cef653a363994",
+   "uv": "3b1ba3257b2d5f0c",
+   "mask": "f95bb0786a8133a1",
+   "tris": 2176,
+   "nv": 1186,
+   "np": 1088
+  },
+  "LONG_roof_shingles": {
+   "geom": "786bdaa38b828acf",
+   "uv": "07b5c1f3d643b0bd",
+   "mask": "d7ce65bfafe0f1fa",
+   "tris": 85827,
+   "nv": 50823,
+   "np": 40993
+  },
+  "LONG_roof_soffit_deck": {
+   "geom": "b63ed94f8a9b2abf",
+   "uv": "a1c33450d679c8b8",
+   "mask": "da7b588bbb156fef",
+   "tris": 1780,
+   "nv": 990,
+   "np": 890
+  },
+  "LONG_roof_starter": {
+   "geom": "492134b3f89fb856",
+   "uv": "1b91f674d0fe1399",
+   "mask": "8713ae30cb86f0f8",
+   "tris": 4173,
+   "nv": 2499,
+   "np": 1889
+  },
+  "LONG_roof_underlap": {
+   "geom": "9c440e73dd96f5a0",
+   "uv": "ebd702914967aae5",
+   "mask": "6dff2139325735ce",
+   "tris": 5799,
+   "nv": 5805,
+   "np": 2900
+  },
+  "LONG_round_wall_blockers": {
+   "geom": "fe6c4d71a8154e92",
+   "uv": "7c98c95e89133ca0",
+   "mask": "5e8cfc97b162379e",
+   "tris": 20,
+   "nv": 16,
+   "np": 10
+  },
+  "LONG_round_wall_dressed": {
+   "geom": "3021031b95a4a234",
+   "uv": "6004bac9f2591b80",
+   "mask": "3f8cb57eeec127d5",
+   "tris": 320,
+   "nv": 203,
+   "np": 160
+  },
+  "LONG_round_wall_frames": {
+   "geom": "238362c6d39fad37",
+   "uv": "d6d43a6f9ea88cfa",
+   "mask": "bb8d2db88e077349",
+   "tris": 804,
+   "nv": 524,
+   "np": 402
+  },
+  "LONG_round_wall_mortar": {
+   "geom": "5702eb289734fa44",
+   "uv": "66930ea41a1e8f42",
+   "mask": "4fe9751f7a5f9279",
+   "tris": 4502,
+   "nv": 2384,
+   "np": 2251
+  },
+  "LONG_round_wall_reveals": {
+   "geom": "95e8b6122835ad7f",
+   "uv": "5f0e2d1343bfdf05",
+   "mask": "3d6f2325fe9a62d4",
+   "tris": 16,
+   "nv": 16,
+   "np": 8
+  },
+  "LONG_round_wall_stones": {
+   "geom": "2938764111f5810d",
+   "uv": "d09408284f709220",
+   "mask": "2386f3c5efaa7e32",
+   "tris": 84556,
+   "nv": 51248,
+   "np": 42865
+  },
+  "LONG_wall_plate": {
+   "geom": "e5cceed8e88e5ce4",
+   "uv": "dde89d4e02bc2c4e",
+   "mask": "8961cb77c9e6d78f",
+   "tris": 814,
+   "nv": 588,
+   "np": 391
+  }
+ },
+ "triangles": 478877,
+ "canon_geom": "09997f9583bc37fe",
+ "canon_uv": "f8c3a1be86e71573",
+ "canon_mask": "a85fd5515e2dfbad"
+}

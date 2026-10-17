@@ -22,7 +22,7 @@ Local frame for wall stones: x along the wall, y out of the wall (exposed face +
 Every generator is deterministic for a given np.random.RandomState.
 
 Detail-scale rule (producer note 11): the hand-split SKIN (conchoidal flake scars 4-10 mm, lumps 1-1.4 cm, pits)
-is sub-2 cm relief.  stone_skin(min_relief=...) and the plinth / pad styles take `min_relief`: skin components
+is sub-2 cm relief.  stone_skin(P, faces, rng, ..., min_relief=...) and the plinth / pad styles take `min_relief`: skin components
 shallower than it are not modelled (materials / decals carry them).  min_relief=0 keeps the full phase-1 skin.
 Stone SHAPE (facets, fracture planes, arris chips >= 1-2 cm) is always modelled.
 """

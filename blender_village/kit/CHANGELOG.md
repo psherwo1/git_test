@@ -9,12 +9,398 @@
   2. confirm it still builds without errors;
   3. confirm its triangle count is unchanged (within ±0.5 %);
   4. record the edit below, with the buildings you re-ran.
+- Since kit 1.9.0 the guard-rails (`village_kit/guards.py`: clearance, decal_validate, seal_probe, steep_cone_door,
+  lod_scope) run on every build by default.  Never switch one off silently: a recipe opts out per guard (per junction
+  for the seal probe) with a logged reason (`village_kit/README.md` section 3).  Since kit 1.8.0 the target is hash
+  identity (`tools/build_baseline.ps1`, `tools/geom_hash.py`, `tools/geom_diff.py`), not only the +-0.5 % count.
+- Since kit 1.10.0 every building's final UVs and walked-top Mask B come from `village_kit/uvgrain.py` /
+  `mask.clear_walked_tops` (README section 3a).  A UV change must keep the geometry hash; measure it with
+  `tools/uv_audit.py` (grain, collapsed UVs, walked tops).
 
-| Building | Imports village_kit since | Triangles at last check |
+**Reference builds at kit 1.10.1** (fingerprints in `kit/baseline/5_determinism/`; the keep and v3 were rebuilt 3x
+with identical hashes):
+
+| Building | Imports village_kit since | Triangles | Geometry hash (1.10.1) |
+|---|---|---|---|
+| wattle_roundhut | 1.0.0 (round 8) | 878,355 (876,619 before v4's closed 3 cm eave band, accepted by the producer as the reference) | 7e5e7c2df5c4d367 |
+| hilltop_keep | 1.1.0 (round 7) | 1,166,874 | 3e2a219a5901afc5 (canonical 1fb5d4f5fe54ccc6) |
+| tower_windmill | 1.2.0 (round 7) | 1,146,243 | 89bf4a2a2c60e049 |
+| v1_stone_watchtower | variant | 1,057,164 (over note 15; to be reduced) | 47e4208df661a5a9 |
+| v2_tiered_hall | variant | 954,925 | 87ba64b7f9d4a746 |
+| v3_longhouse_roundend | variant | 483,508 (1.9.0 clearance fix) | 8a4e59687b3c7c4d (canonical c827824da304778d) |
+| v4_mixed | variant, accepted | 938,453 | 2e87caad61b68d34 |
+
+---
+
+## 1.10.1 (2026-10-17): deterministic needle repair (producer)
+
+- **`core._needle_faces` / `core.nanite_clean`.** The needle faces and the edges to rotate or collapse were gathered
+  in Python sets of BMesh elements, which iterate in memory-address order. So the repair order could change from
+  build to build. In 2 of 6 kit-1.10 keep builds, 88 polygons of `KEEP_turret_cap_shingles` came out with
+  **reversed winding** (the verifier's blocking issue). They are now de-duplicated in triangle order
+  (`dict.fromkeys`), and the edge "sets" are ordered dicts.
+- **Result.** All seven rebuilt (`kit/baseline/5_determinism/`). The hut, mill, v1, v2 and v4 have geometry hashes
+  identical to 1.10.0. The keep and v3 have a new polygon order but **canonically identical geometry**
+  (`canon_hash.py`): the keep matches the verifier's correct-winding canonical geometry 1fb5d4f5fe54ccc6, and v3
+  matches its 1.10.0 canonical geometry. Three builds each of the keep and v3 gave identical hashes.
+- **The hut's +1,736 triangles since round 11** come from the v4 builder's change to the `build_eave_closure`
+  default (a closed 3 cm band, recorded in `kit/changes/v4_mixed.md`). That broke the edit rule "never change a
+  default", but it is an improvement (closed pieces, note 1). The producer accepts 878,355 as the hut's kit reference.
+  The delivered hut is still the phase-1 version.
+
+---
+
+## 1.10.0 (2026-10-17): the queued UV fix -- grain, collapsed UVs, no moss on walked tops (UV / MASK ENGINEER)
+
+Phase-2 kit decision, client "Yes proceed", step 1 continued: the client-approved queued UV fix
+(`director/queued_uv_fix.md`, found by the look-dev test `lookdev/scripts/analyze_uv_grain.py` /
+`check_uv_stretch.py`).  **UV and `Mask` only: no vertex, polygon or material changed in any building** (geometry
+hashes below).  Like 1.9.0 this deliberately changes defaults (every building's UVs and walked-top Mask B), as the
+client's plan approved.
+
+### New: `village_kit/uvgrain.py` (the kit's final UV writer) and `mask.clear_walked_tops`
+
+`build_building` and `build_compound` call `uvgrain.finish_building(objects, entrances)` once the building is
+finished (after the guards and the decal anchors, before the save).  Per mesh datablock (pooled meshes once):
+
+1. **Grain along the piece.** Slots `M_timber`, `M_timber_weathered`, `M_roof_shingle`, `M_roof_shake`.  A piece is
+   an edge-connected loose part split by its Mask R byte (one R per `Acc.add` / `BatchAcc` instance).  Timber:
+   V = position along the piece's PCA long axis (continuous over the piece); U from a box map in the piece's own PCA
+   frame (width axis on the broad faces, thickness axis on the edges) -- or wrapped round the axis for round / square
+   pieces (cross-section aspect > 0.75); end grain mapped (width, thickness).  Shingles, shakes and sloped timber
+   sheets without a long axis (cone / ring decks, apron soffits): V = z / (piece's mean sine of slope), so V runs
+   up-slope on every face and stays continuous over a curled shake or a cone ring; U along the contour.  ~1 UV unit
+   per metre, a per-piece offset from the piece's position.  **V is the grain axis**: the brief says "U must run
+   along the piece's long axis", but the look-dev wood texture's grain runs vertically in the image (along V) and
+   the acceptance test measures dP/dv, so V is what the brief's target measures; U along the grain would have
+   turned every texture 90 degrees.  `M_thatch` UVs are kept (only its collapsed faces are touched).
+2. **No collapsed UVs.** Every face (any slot) whose UV / 3D area ratio is < 0.25 (first triangle, the
+   check_uv_stretch rule, or the whole face) is re-mapped with the nearest rigid map (SVD of its old map) at 1 UV
+   unit per metre, centred on its old UV centre: thresholds, step tops, post-base tops, thatch course butts,
+   shingle edges, wall plates, pegs, collars, finials, corbels.
+3. **No moss on walked tops.** `mask.clear_walked_tops`: for every entrance (`guards.entrances_of`, or the spec's /
+   wing's `entrances`; compound wings transformed to world), the up-facing faces (n.z > 0.7) inside the walking zone
+   -- clear width + 0.1 m each side, from 1.0 m inside the wall face (threshold, sill) to 1.5 m out, at foot level --
+   get Mask B <= 0.04 (byte 10, so <= 0.05 after quantisation).  CORNER domain: the step fronts, ends and outer edges
+   keep their B.  Pooled hardware (nails, pintles, pegs) is left alone.  The entrances are stored on the scene as
+   `kit_entrances` (JSON).
+
+Changed existing code: `assembly.build_building` and `compound.build_compound` (new key `uv_finish`, default True;
+the call above).  Nothing else.  New tools (the originals in `lookdev/scripts/` are unchanged):
+`tools/uv_audit.py` (the two look-dev scripts' rules over every object, vectorised, plus the walked-top check, JSON
+out), `tools/uv_measure.ps1` (both measurements on a baseline step), `tools/uv_fix_preview.py` (the UV pass on an
+existing .blend, for iterating).
+
+### Verification (all seven rebuilt into `kit/baseline/3_uvfix/`, fingerprinted with `tools/geom_hash.py`)
+
+Six of seven have exactly the step-2 geometry hash (`kit/baseline/2_guardrails/`); only their uv and mask hashes
+changed.  The keep's polygon ORDER varies between builds (see below); its vertices, polygons and materials are
+identical.  decal_anchors.json is byte-identical to step 2 for all seven.
+
+| Building | Triangles | Geometry (step 2 -> step 3) | UV step 2 -> step 3 | Mask step 2 -> step 3 |
+|---|---:|---|---|---|
+| hilltop_keep | 1,166,874 | `b2f847333a2ec943` (step-2 rerun = step 0) -> `12e47dd94bc7786e` (see below) | `0c1f12176f0f1235` -> `8a266ec2dbe568dd` | `c7ddfbfe5d33f6d8` -> `da6309933f84dd2f` |
+| wattle_roundhut | 878,355 | `7e5e7c2df5c4d367` = | `9c0dd5aecb5d869c` -> `c97c88e742be4887` | `794266c3463d1240` -> `46bb1454fa4d264e` |
+| tower_windmill | 1,146,243 | `89bf4a2a2c60e049` = | `9f132597bb379825` -> `b006e70c2dc4750b` | `04f7ade47b360102` -> `3c0753f38798dad6` |
+| v1_stone_watchtower | 1,057,164 | `47e4208df661a5a9` = | `9929b9e5101d3d5f` -> `c0dfea9bb1de1aa6` | `c8e787ab4b8e0bff` -> `0a1fe5428ca8ae19` |
+| v2_tiered_hall | 954,925 | `87ba64b7f9d4a746` = | `15bb7bdc5ae3c360` -> `f1f86c015178281c` | `e976015053c38848` -> `b1391129bc4f32b2` |
+| v3_longhouse_roundend | 483,508 | `6a7a7ecbea54aa07` = | `1a43d013c02f495e` -> `996bf2646564a2ad` | `27422448b80c6b19` -> `b592bfa6f503a77d` |
+| v4_mixed | 938,453 | `2e87caad61b68d34` = | `a73b4ef99fd15564` -> `230f3672711b12d4` | `b6c2768f3068057b` -> `07a9171c30138f67` |
+
+**The keep.**  Five keep builds with the 1.10 kit (`3_uvfix/hilltop_keep`, `hilltop_keep_rerun`,
+`hilltop_keep_rerun2`, and `pass1/hilltop_keep`, `pass1/hilltop_keep_rerun`; pass 1 differed from the final code only
+in the timber U axis, a UV-only change): one (`pass1/hilltop_keep_rerun`) has exactly the step-0 / step-2-rerun
+geometry hash `b2f847333a2ec943`; the other four differ from it in ONE object, `KEEP_turret_cap_shingles`, whose vertex
+array is identical, whose polygon set is identical and whose triangle count is identical -- only the polygon order
+differs (the first build of step 2 had the same artefact in `KEEP_wing_wall_stones`, BASELINE.md).  Likely cause, not
+fixed here (it would be a geometry-order change): `core._needle_faces` returns `list({...BMFace...})`, a set of bmesh
+faces whose iteration order follows memory addresses, so the needle repair in `core.nanite_clean` can process faces
+in a different order from run to run.  Recommended next kit fix: sort those faces by index.
+
+Measurements (`kit/baseline/3_uvfix/audit_before/` = the step-2 builds, `audit_after/` = this step; `*.grain.txt`
+= the original `analyze_uv_grain.py`, `*.audit.txt` / `*.json` = `tools/uv_audit.py`, same door zones for both):
+
+| Building | Timber along the long axis (`analyze_uv_grain.py`, before -> after; in brackets: of the area the rule can judge, and the sheet area it cannot) | Shingles / shakes up-slope | Collapsed (objects >= 1 % of area at ratio < 0.2; worst object) | Walked tops in the door zones (Mask B) |
+|---|---|---|---|---|
+| hilltop_keep | M_timber 13 -> **92 %** (13.7 -> 98.2 %; sheets 18.1 of 300.3 m2); weathered 4 -> 83 % (4.6 -> 99.0 %; 4.6 of 29.2 m2: the drum backing) | shingle 87 -> 100 %; shake 92 -> 97 % | 42 -> **0**; 60.4 % (KEEP_threshold) -> 0.47 % (KEEP_hall_eave_plate) | 3.87 m2: B max 1.000 -> **0.039** |
+| wattle_roundhut | M_timber 92 -> **95 %** (95.7 -> 98.7 %); weathered 4 -> 25 % (15.6 -> 99.9 %; sheets 52.9 of 70.5 m2: HUT_roof_blocker) | shingle 91 -> 100 % | 14 -> **0**; 83.5 % (HUT_wall_plate) -> 0.004 % | 2.22 m2: 1.000 -> **0.039** |
+| tower_windmill | M_timber 4 -> 66 % (5.9 -> 99.2 %; sheets 75.8 of 229.3 m2: apron soffit ring, cap decks); weathered 23 -> **98 %** | cap shingle 7 -> 100 %; apron shake 0 -> 100 % | 1 -> **0**; 2.6 % (MILL_cap_shingles) -> 0.08 % | 2.48 m2: 1.000 -> **0.039** |
+| v1_stone_watchtower | M_timber 9 -> 51 % (18.0 -> 98.9 %; sheets 103.8 of 218.5 m2: cabin floor, ceilings); weathered 27 -> 33 % (83.0 -> 99.8 %; sheets 178.5 of 268.8 m2: roof deck, floor) | shingle 91 -> 100 % | 5 -> **0**; 22.9 % (WATCH_cabin_corbels) -> 0.06 % | 2.45 m2: 1.000 -> **0.039** |
+| v2_tiered_hall | M_timber 11 -> 58 % (18.1 -> 98.9 %; sheets 142.0 of 344.7 m2: skirt deck); weathered 3 -> 19 % (14.4 -> 99.9 %; sheets 317.2 of 391.3 m2: roof decks, bands, backings) | shingle 91 -> 100 % | 40 -> **0**; 90.6 % (HALL_cap_wall_plate) -> 0.02 % | 0.95 m2: 0.851 -> **0.039** |
+| v3_longhouse_roundend | M_timber 54 -> **98 %** (54.6 -> 98.1 %); weathered 9 -> 68 % (12.7 -> 100 %; sheets 113.4 of 356.0 m2: roof / wall / apex blockers) | shingle 83 -> 100 %; shake 100 -> 100 % | 17 -> **0**; 84.9 % (LONG_wall_plate) -> 0.01 % | 0.92 m2: 0.804 -> **0.039** |
+| v4_mixed | M_timber 25 -> 77 % (32.2 -> 98.7 %; sheets 49.3 of 225.5 m2); weathered 6 -> 68 % (9.5 -> 99.1 %; sheets 37.1 of 118.5 m2: V4H_roof_blocker) | shingle 90 -> 100 %; apron shake 0 -> 100 % | 16 -> **0**; 81.3 % (V4H_wall_plate) -> 0.10 % | 4.55 m2: 1.000 -> **0.039** |
+
+`check_uv_stretch.py` (original, ratio < 0.3) on the objects the brief named: KEEP_threshold 1.27 -> 0.0 m2,
+KEEP_hall_post_bases 0.57 -> 0, KEEP_wing_roof_thatch_courses 5.6 -> 0.5, KEEP_cap_shingles 1.57 -> 0.03,
+HUT_roof_shingles 8.11 -> 0.02, HUT_wall_plate 9.5 -> 0, MILL_cap_shingles 0.57 -> 0.02 (`audit_*/check_uv_stretch_*.txt`).
+Thatch (kept as the brief says): keep 96 % up-slope unchanged; v3's body thatch reads 55 % up / 44 % down before and
+after (cause not investigated) -- not in this brief's scope, noted for the thatch module.
+Look-dev: `lookdev/scripts/apply_lookdev.py` re-run on the keep, mill, hut and v4 (`kit/baseline/3_uvfix/lookdev/renders/`,
+same shots as `lookdev/renders/`): shingles and shakes now show grain up the slope, blades / boards / boom / door
+planks / threshold beams along their length, no smeared streaks on the thresholds, post bases and thatch butts, and
+no moss on the thresholds and step tops (the step ends and outer edges keep it).
+
+Targets: **shingles and shakes up-slope >= 90 %: met on all seven (97-100 %).  Collapsed UVs < 1 % of every
+object's area: met (worst object 0.47 %, keep `KEEP_hall_eave_plate`; was 90.6 %).  Walked tops B <= 0.05: met
+(max 0.039 on every door of all seven; was up to 1.0).**  Timber along the long axis >= 90 % in
+`analyze_uv_grain.py`: met on the keep (M_timber), the hut (M_timber), the mill (M_timber_weathered) and v3
+(M_timber); **not met as the script counts it elsewhere**, because the script divides by the slot's whole area but
+can only credit faces on elongated parts (elongation > 1.5): decks, floors, ceilings, ring soffits, backing and
+blocker sheets have no long axis, and their area (the "sheets" column) can never count as "along", whatever the UVs.
+Of the area the script can judge, 98-100 % now runs along the long axis in every building (was 5-96 %), and
+"across" fell to 0-1.4 % (was up to 79 %).  Those sheets' faces now carry up-slope (sloped decks) or one straight
+PCA direction (floors, ceilings).
+
+---
+
+## 1.9.0 (2026-10-17): guard-rails ON by default (KIT ARCHITECT)
+
+Phase-2 kit decision, client "Yes proceed", step 1 continued (guard-rails on by default + README).  The technical
+review (`director/kit_feasibility_technical.md`, condition 4) listed five guard-rails that a new recipe had to know
+about and switch on.  They are now ON by default in `assembly.build_building` and `compound.build_compound`; a
+recipe that cannot pass one opts out explicitly, per guard (per junction for the seal probe), with a logged reason.
+**This release deliberately changes defaults** (an exception to edit rule 1, approved by the client's plan): every
+change it makes to an existing building is either a real fix recorded below or an explicit, reasoned opt-out in that
+building's recipe.
+
+### New module: `village_kit/guards.py`
+
+| Guard | Default behaviour | Opt-out |
 |---|---|---|
-| wattle_roundhut | 1.0.0 (round 8) | 876,619 after 1.6.0 hut part (round 11; round 10: 837,924; round 9: 827,563; round 8: 744,105) |
-| hilltop_keep | 1.1.0 (round 7) | 1,166,874 after 1.5.0 keep part (round 9; round 8: 1,159,180; round 7: 1,123,849; variant 1,025,777) |
-| tower_windmill | 1.2.0 (round 7) | 1,146,243 (round 8, kit 1.4.0; round 7: 1,134,993, variant 865,123) |
+| `clearance` | `entrance_clearance(g)`: for every entrance the door components published (`entrances_of(g)`: the hut family's framed door, the drum door, the keep's arched hall door and annex plank door, `stone_body` doors, `wall_openings` doors; or `spec["entrances"]`), rays straight up from 5 x 5 stations across the clear width, 0.15-0.75 m in front of the face (0.25 / 0.35 m for tier / keep bodies); the door's own assembly (frame, lintel, leaf, step, threshold, ironwork, rooms behind it, matched by name: `DOOR_PARTS`) is passed through; a station whose first hit is a back face starts inside a solid and is ignored.  The lowest hit = the eave lip over the doorway; it must be >= 2.30 m (art bible 7) and >= the door head, else `ClearanceError` names the building, entrance, lip, station and object.  Runs after the last step (after the cull and `recenter`); per wing in a compound | `opt_out=dict(clearance=...)` |
+| `decal_validate` | absent = `True`: `anchor_validate.validate_anchors` is APPLIED (anchors snapped, invalid ones dropped, `validation` counts written to the JSON); a dict passes its keywords as before.  A falsy value without an opt-out raises | `opt_out=dict(decal_validate=...)` (report only, the pre-1.9.0 behaviour) |
+| `seal_probe` | `junction_seal_probe`: the tier family's see-through probe generalised to any roof-through-body junction a module registered with `register_junction(g, name, covering, center, radius(z), z_range)`.  Targets 8 cm inside the covering within 0.6 m of the body face (only where the build-up continues under them and the covering continues 0.2 m outward and sideways: eave lips, verges and comb tips are not junctions); 24 azimuths x 10-80 deg, 8 per target, none within 10 deg of grazing; a ray that passes the target and reaches the sky, a point > 0.6 m under the covering or the hollow body is a leak -> `SealError`.  Run after the last step; in a compound after the whole-building cull on the placed building.  The tier family keeps its own `through_seal_probe` (in `tier_hidden_cull`) | `opt_out=dict(seal_probe=...)` or `dict(seal_probe={junction: reason})` |
+| `steep_cone_door` | `frame.RoundFrame(steep_door="auto")`: pitch > `STEEP_CONE_DEG` (52 deg, the top of the bible's hut range) sets `DOOR_INFILL_DECK = True` and `EAVE_CLOSURE_DOOR_HALF_DEG = 1.0` (the v4 round-4 door-head fix) | `RoundFrame(steep_door=False)` |
+| `lod_scope` | `end_lod_scope(g)`: the frame's `lod.tmpl_lod` rule is unregistered at the end of its building / compound wing (also on an exception) | none |
+
+Junctions registered (no geometry change in any of these modules: the registration only records the body and the
+covering): `shake_apron.shake_apron` ("apron / smock tower"), `stone_cone.shake_collar` ("shake collar / stone
+cone"), `thatch.thatch_junctions` ("wing thatch / turret", "wing thatch / hall"), `roof_junction.cone_abutment`
+("<roof> / round body"), `junctions.roof_tower_flashing` ("<roof> roof / <tower> tower", on the compound).
+
+### Changes to existing kit code
+
+- `assembly.build_building`: `opt_out`, `entrances` keys; runs `guards.after_steps` (LOD scope, clearance, seal)
+  after the steps; `decal_validate` default via the new `assembly.decal_gate_option`.
+- `compound.Wing(..., opt_out=None, entrances=None)`; `build_compound`: `opt_out`; per wing LOD scope + clearance
+  after the wing's steps; the decal guard default for each wing; the seal probe after the whole-building cull.
+- `frame.RoundFrame(..., steep_door="auto")`, `frame.STEEP_CONE_DEG = 52.0`, `g.STEEP_DOOR`.
+- `tower_roof.roof_frame`: its RoundFrame sub-frames pass `steep_door=False` (a tier / tower cap has no framed door
+  under it; the flags were inert there, this only stops them being set and logged).
+- Recipes: `hilltop_keep` (`OPT_OUT`, one junction), `v4_mixed` (`OPT_OUT`, one junction; the explicit steep-cone
+  flags removed from `HOUSE_OPTS`), `v3_longhouse_roundend` (`WALL_Z` 2.75 -> 2.81).  No build script needed an
+  output override added (all seven already had one).
+- `roof_junction` header wording (`tools/check_headers.py`: 0 stale signatures).
+- New tool `tools/guard_probe.py <file.blend> <building_id>`: the clearance gate and the seal probe on an
+  already-built kit building, read-only (used to calibrate the guards on the step-1 builds before rebuilding).
+
+### Per building: what the guards found and what was done
+
+Calibrated first on the step-1 builds with `tools/guard_probe.py` (read-only), then every building was rebuilt.
+
+| Building | clearance (lip over the door) | decal_validate | seal_probe | steep_cone_door / lod_scope | Action |
+|---|---|---|---|---|---|
+| hilltop_keep | hall door 3.711 m (skirt structure), annex door 2.396 m (wing thatch): PASS | now applied: 116 of 116 kept; one anchor re-snapped by 0.01 mm | wing thatch / turret 0 leaks, wing thatch / hall 0 leaks; **shake collar / stone cone: 3 of ~126k rays leak** (thread the jagged comb into the collar / cone void and out; sub-pixel) | n/a | **opt-out** of that one junction in the recipe (`OPT_OUT`): signed-off hero, geometry frozen in this step; the comb seal is queued for the keep family's next round |
+| wattle_roundhut | 2.406 m (battens at the eave): PASS | already applied (its own dict) | no junction registered | 51 deg: no flags (unchanged) | none |
+| tower_windmill | 4.417 m (apron rafters): PASS | now applied: 106 of 106 kept; one anchor re-snapped by 0.01 mm | apron / smock tower: 0 leaks | n/a | none |
+| v1_stone_watchtower | 11.17 m (cabin roof frame: no eave over the drum door): PASS | now applied: 77 of 77 kept, unchanged | no junction registered | n/a | none |
+| v2_tiered_hall | 3.188 m (skirt1 deck lap): PASS | already `True` | tier family's own probe: 4 junctions, 0 leaks (unchanged) | the round tiers' roof sub-frames now pass `steep_door=False` (no door under a tier cap) | none |
+| v3_longhouse_roundend | **FAIL at first: 2.257 m** -- the body roof's rafter feet over the door (station 0.30 m out); the thatch eave roll was at 2.355 m | already applied (its own dict) | body_roof / round body: 0 leaks | 48 deg: no flags | **fixed in the recipe**: `WALL_Z` 2.75 -> 2.81 m (deck at the wall faces), lip now 2.317 m: PASS.  A real actor-scale fix (art bible 7; the recipe's own doc promised >= 2.30 m) |
+| v4_mixed | house door 2.374 m (battens), mill door 5.326 m (apron rafters): PASS | the mill wing's gate is now applied too: 102 of 102 kept; the final JSON is byte-identical | apron / smock tower: 0 leaks; **house roof / mill tower: 13 of ~23k rays leak** (pass the trimmed roof 0.3 m from the drum face into the space under it: abutment posts, eave closure, wall plate, z 2.1-3.1) | 58 deg: flags now set by the frame; the recipe's explicit `DOOR_INFILL_DECK` / `EAVE_CLOSURE_DOOR_HALF_DEG` were removed (geometry identical); the V4M `tmpl_lod` rule is unregistered after the mill wing | **opt-out** of that one junction in the recipe (`OPT_OUT`): accepted variant, geometry frozen here; queued for `junctions.roof_tower_flashing` |
+
+The probe's false positives at free covering edges were removed before the buildings were judged (targets must lie
+inside the roof build-up and at least 0.2 m from an eave lip / verge / comb tip); without that, eave rolls next to
+the keep turret and the v3 round end reported thousands of "leaks" that were rays coming round the eave.
+
+### Verification: all seven rebuilt into `kit/baseline/2_guardrails/`
+
+`tools/build_baseline.ps1 -Step 2_guardrails` (3 builds at once) after the last guard edit; v2 rebuilt again
+(`-Only v2_tiered_hall`) after the final `tower_roof` sub-frame edit.  Fingerprints `2_guardrails/<id>.json`,
+compared with step 1 (`1_consolidate`, identical to step 0):
+
+| Building | Triangles | Geometry | UV | Mask | vs step 1 | decal_anchors.json | Build (s) |
+|---|---:|---|---|---|---|---|---:|
+| hilltop_keep | 1,166,874 | `d9c667967d7c32de` | `b2c490c5171a2199` | `e80fcf38200a4a8b` | same vertices and faces; polygon ORDER differs in one object (see below); a second build of the same code (`hilltop_keep_rerun.json`) gives the step-1 hashes `b2f847333a2ec943` / `0c1f12176f0f1235` / `c7ddfbfe5d33f6d8` | + `validation` block; 1 anchor moved 0.01 mm | 381 |
+| wattle_roundhut | 878,355 | `7e5e7c2df5c4d367` | `9c0dd5aecb5d869c` | `794266c3463d1240` | identical | byte-identical | 596 |
+| tower_windmill | 1,146,243 | `89bf4a2a2c60e049` | `9f132597bb379825` | `04f7ade47b360102` | identical | + `validation` block; 1 anchor moved 0.01 mm | 235 |
+| v1_stone_watchtower | 1,057,164 | `47e4208df661a5a9` | `9929b9e5101d3d5f` | `c8e787ab4b8e0bff` | identical | + `validation` block; anchors identical | 305 |
+| v2_tiered_hall | 954,925 | `87ba64b7f9d4a746` | `15bb7bdc5ae3c360` | `e976015053c38848` | identical (both builds: before and after the `tower_roof` edit) | byte-identical | 446 |
+| v3_longhouse_roundend | **483,508** (+4,631, +0.97 %) | `6a7a7ecbea54aa07` | `1a43d013c02f495e` | `27422448b80c6b19` | **changed (the clearance fix)**: 20 objects, every one of the body / roof / cone parts (the walls are 6 cm taller, the cull sees a different building); largest delta `LONG_body_wall_stones` +5,236 | 82 -> 76 anchors (27 identical, 14 moved, 41 removed, 35 new; `body.wall_z` 2.81) | 406 |
+| v4_mixed | 938,453 | `2e87caad61b68d34` | `a73b4ef99fd15564` | `b6c2768f3068057b` | identical | byte-identical | 370 |
+
+Every build exited 0; the only stderr line is the known numpy `All-NaN slice` warning from `mill_cap.py:194` (mill,
+v4).  No delivered `.blend` / `decal_anchors.json` and no `signoff_*` folder was written.
+
+**Found while verifying (pre-existing, not caused by the guards): the keep is not bit-reproducible run to run.**
+In the first 2_guardrails keep build, `KEEP_wing_wall_stones` has the same 56,166 vertices (same order, max delta 0)
+and the same 49,897 polygons, but 181 polygons near the end of the list are permuted, which changes all three of its
+hashes.  A second build of the identical code reproduced the step-1 hashes exactly.  The order depends on memory
+layout; the likely source is `core.nanite_clean`, which collects the edges to rotate / collapse in Python `set`s of
+`BMEdge` (iteration order by object address) before `bmesh.ops.rotate_edges` / `collapse` append the new faces.  The
+fix (insertion-ordered dicts) may re-order polygons in other buildings, so it belongs to its own step with its own
+baseline; until then compare keep builds per object (`geom_diff.py`) and treat a pure polygon-order change in that
+object as the known artefact.
+
+---
+
+## 1.8.0 (2026-10-17): consolidation -- one public API per concern (KIT ARCHITECT)
+
+Phase-2 kit decision, client "Yes proceed", step 1 (kit consolidation).  Both kit reviews
+(`director/kit_feasibility_director.md`, `director/kit_feasibility_technical.md`) listed parallel module families.
+This release gives each concern ONE public entry point **without changing any building's geometry**: every old
+name still exists as a thin wrapper or alias, and all seven kit buildings were rebuilt and fingerprinted against
+the step-0 baseline (`kit/baseline/BASELINE.md`, the kit as it builds today).  The 1.7.x variant changes are still
+recorded in `kit/changes/*.md` (not merged here); 1.8.0 sits on top of them.
+
+### New modules (the consolidated public API)
+
+| Module | Public API | Replaces (kept as wrappers / aliases) |
+|---|---|---|
+| `components/eave.py` | `eave_closure(g, r_b=None, mat="M_mortar", n_az=240, kind="ring" / "door" / "fill", **kw)`; `KINDS` (the historic constants per kind) | `conical_roof.build_eave_closure` (kind "door"), `round_roof_parts.eave_closure` and `tower_roof._eave_closure` (kind "ring"), `roof_junction.round_eave_fill` (kind "fill") |
+| `components/openings.py` | `door(...)`, `window(...)`, `opening_spec(kind, ...)` -> an `Opening`; `Opening.at(position)`; `resolve(spec, family)`; the family dict builders `body_opening`, `wall_door`, `wall_window`, `annex_door`, `annex_window`, `drum_window`; `FAMILY_DEFAULTS` | `stone_body.opening`, `wall_openings.door_spec` / `window_spec`, `plank_doors.door_spec`, `windows.window_spec`, `drum_frame.window_spec` (= `drum_window_spec`) |
+| `components/masonry.py` | `masonry_wall(g, name, path= / body= / round=, openings=, **kw)` + re-exports (`PathMap`, `SurfMap`, `path_stone_wall`, `round_stone_body`, `stone_body`, `framed_openings`, `coping_ledge`, `WALL_RUBBLE`, `BODY_RUBBLE`, `door`, `window`) | the choice between `stone_body` and `rubble_walls` (both kept, see below) |
+| `components/plan_frame.py` | `PlanFrame(prefix, footprint, entrance, entrance_r, entrance_h, detail_rule, hygiene, ground_skirt, **dims)`, `rect_frame(...)`: a plain rectangular / free-form frame | borrowing `RoundFrame` for a building with no round part (the technical review's probe barn) |
+| `components/finish.py` | `hidden_cull(g, family=None, **kw)`, `building_decals(g, family=None, **kw)`, `family_of(g)` | choosing among `round_` / `drum_` / `oct_` / `tower_` / `tier_` / `composite_hidden_cull` and the seven decal recipes |
+
+New tool: `tools/check_headers.py` (parses every kit module header for documented signatures and reports the ones
+that no longer match the code: unknown / missing arguments, stale defaults, full-signature headers that omit
+parameters).  It reports 0 after this release.
+
+### What each consolidation does
+
+- **One eave closure.** `conical_roof.build_eave_closure` and `round_roof_parts.eave_closure` were one algorithm
+  with different constants (door gap or closed ring, normals in or out, profile range, jitter / wobble seeds, the
+  3 cm closed band).  They are now ONE implementation, `eave._ray_band`, statement for statement; the constants are
+  the `KINDS` table.  `tower_roof._eave_closure` and `tower_roof._roof_deck` (byte-identical private copies of the
+  `round_roof_parts` parts) are now aliases.  `round_eave_fill` solves its top from the cone's reference surface
+  instead of ray-testing the built shingles, so it stays its own implementation (`eave._fill_band`) behind the same
+  entry point (`kind="fill"`).
+- **One polygonal bell-cast roof.** `bell_tier` now builds polygon tiers with ANY number of sides: sides != 8 (or
+  `engine="pyramid"`) builds the tier with `pyramid_roof` / `PyramidSurface` and registers it like any tier, so
+  `roof_flashing`, `roof_clearance`, `stone_body(below=)`, `tier_finial` and `tier_decals` work on it.  To make that
+  possible, `PyramidSurface` and `OctRoof` now share one protocol: `n`, `tanh`, `phi`, `c`, `rot`, `p_lip`, `Pp`,
+  `zb(p)`, `m_of_p`, `p_of_m`, `surf(k, x, p)` (added members only; nothing existing changed).
+- **One stone-body module.** `masonry.masonry_wall` is the single entry point; `path=` / `round=` / `body=` select
+  the builder.  All three take the unified opening specs.
+- **One opening-spec API.** A recipe writes `door(width=1.0, height=2.10)` / `window(width=0.5, sill=1.25)` and
+  hands the same spec to any wall builder: `stone_body` (place it with `.at(th_deg)`), `path_stone_wall` /
+  `round_stone_body` (`(s, spec)` / `(az_deg, spec)` as before), the keep annex (`OctFrame(WDOOR=door().at(xc))`,
+  also through `OctFrame.set`) and drum windows (`WIN_SPEC=[window(kind="lookout", ...)]`).  `None` sizes are the
+  family defaults (`FAMILY_DEFAULTS`: the old spec functions' defaults, which differ per family).  Old family dicts
+  pass through `resolve` unchanged, so every existing recipe builds the same objects.
+- **The clashing `end_apron` names.** `junctions.end_apron` (a lead plate on a WALL face where a cut eave lip meets
+  it) is now `junctions.wall_end_apron`; `roof_junction.end_apron` (the apron folded over a linear roof's eave NOSE
+  against a cone) is now `roof_junction.cone_nose_apron`.  The kit calls the new names; `end_apron` stays in each
+  module as a deprecated alias.
+- **A plain generic frame.** `PlanFrame` publishes only what the generic modules read (`detail` / `ENTRANCE` for
+  note 11, a buried-skirt ground cull, empty `OPENINGS` / `WALL_FACES` / `LINEAR_ROOFS` / `openings`, `sub()`,
+  `name()`, `min_relief()`, `inside_plan()`, `extent()`, and any recipe dimensions as upper-case attributes).
+  `composite_decals` no longer lays cone moss on a building without a cone, because a PlanFrame has no `R_EAVE`.
+- **One cull and one decal entry point.** `finish.hidden_cull(g)` / `finish.building_decals(g)` dispatch on the
+  frame's new `FAMILY` class attribute (`RoundFrame` "round", `DrumFrame` "drum", `OctFrame` "oct", `TierFrame`
+  "tier", `PlanFrame` "plan") and its state (a drum with a tower roof -> "tower"; a round frame with path walls /
+  linear roofs -> "composite").  `family=` overrides.  The family functions are unchanged and still callable.
+- **Keep-family proxy, scoped.** `Building.activate()` (a no-op) is called by `build_building` and
+  `build_compound` before every step and decal recipe; `OctFrame.activate()` and `TierFrame.activate()` point
+  `oct_frame.FR` at themselves.  Two keep-family wings in one compound now each read their own table during their
+  own steps.
+
+### Additive changes to existing modules (defaults keep the old behaviour)
+
+- `pyramid_roof.pyramid_roof(..., coll=None)`: the collection to build into (default `g.coll`).
+- `pyramid_roof.PyramidSurface`: protocol members `phi`, `Pp`, `zb(p)`, `surf(k, x, p)`.
+- `oct_frame.OctRoof`: class attributes `n = 8`, `tanh = TAN22`.
+- `tier_roof.bell_tier(..., engine=None, pyramid=None)`; new private `_pyramid_tier`; `tier_finial` returns early
+  for a pyramid tier (pyramid_roof already built its lead cap and turned finial).
+- **One default changed, on an input no building uses:** `bell_tier(sides=None)` on a POLYGON body whose side count
+  is not 8 used to force an octagonal OctRoof tier onto it; it now builds that body's own side count with the
+  pyramid engine.  8-sided and round bodies are unchanged (v2 has only those).
+- `tier_frame._roof_plan_box`: corner radius from the roof's `n` (default 8: the same expression as before).
+- `tier_frame.roof_support`: doc only (it already read `roof.phi`).
+- `assembly.Building`: `activate()` and `FAMILY = None`; `frame.RoundFrame.FAMILY = "round"`,
+  `drum_frame.DrumFrame.FAMILY = "drum"`, `oct_frame.OctFrame.FAMILY = "oct"`, `tier_frame.TierFrame.FAMILY =
+  "tier"`; `OctFrame.activate()`, `TierFrame.activate()`.
+- `stone_body._prep_openings`, `wall_openings.opening_rects` / `opening_cut` / `build_opening`,
+  `drum_frame.win_list`, `OctFrame.__init__` / `OctFrame.set`: accept `openings.Opening` specs (`resolve`); any
+  other dict passes through unchanged.
+- `drum_frame.WINDOW_FW` is now the same object as `openings.DRUM_WINDOW_FW` (same values).
+
+### Kept as separate implementations (no identical merge possible), and why
+
+- **`OctRoof` (+ `oct_roof.build_cap`) vs `PyramidSurface` (+ `pyramid_roof`).** The two surfaces integrate
+  different profiles: OctRoof a 600-sample pitch table (`d_pts` / `a_pts`) with a low-frequency eave wave
+  (`n1` noise) and sag normalised by the full run; PyramidSurface a 4001-sample cosine bell with sag normalised by
+  the lip distance.  `build_cap` is octagon-specific throughout (`TAN22`, `range(8)`, `(8, 2)` random draws, the
+  wall-head band and the tier decals).  Moving the octagonal tiers onto PyramidSurface would move every roof vertex
+  of the keep and v2.  They now share one protocol, and `bell_tier` routes every non-octagonal tier to
+  PyramidSurface.
+- **`roof_junction.round_eave_fill` vs the ray-tested eave band.** The fill's top follows the cone's reference
+  surface (+2 cm, no ray test against the built shingles, `n_az + 1` stations, `geom.Acc` + `finalize`); the band's
+  top is ray-tested and built through `g.acc`.  Same entry point (`eave_closure(kind="fill")`), separate body.
+- **`stone_body` vs `rubble_walls.path_stone_wall` / `round_stone_body`.** All three use the one stone generator,
+  but with different plan maps (SurfMap / PathMap / round_map_factory), different coursing tables (the two
+  `RUBBLE_CFG`s differ in course heights, stone lengths, `slant`, `ch_mix`, `pinch`), different quoin methods
+  (rubble-layout corner bands vs solid `obox` blocks) and different mortar-body cuts.  Expressing one through
+  another changes every stone.  Same entry point (`masonry_wall`), three bodies.
+- **The seven hidden-geometry culls and seven decal recipes.** Each family's view set, target list and placement
+  rules are tuned to its geometry and recorded in signed-off / accepted builds; they stay, behind `finish`.
+- **`oct_frame.FR` (the keep family's module-global proxy) is NOT removed.** The keep family reads it 401 times in
+  11 modules (`annex`, `oct_cull`, `oct_frame`, `oct_hall`, `oct_roof`, `plank_doors`, `stone_cone`, `thatch`,
+  `turret`, `windows`, plus `tier_frame`'s activation).  About 30 envelope functions (`apo`, `hall_map`, `fmap`,
+  `q_rr`, `wing_under`, `thatch_low`, `tur_r`, `skirt_z_at`, `cush_*`, `get_pool`, `place` ...) take no frame
+  argument and are called from deep inside thatch / turret / stone-cone loops, and `oct_roof.build_cap` (used by
+  v2 through TierFrame) reads `FR.units`, `FR.min_relief`, `FR.pools` and `FR.POOL_SPECS`.  Removing the proxy means
+  changing the signature of every one of those public functions and threading `g` through every call chain of the
+  keep family: a rewrite of the family, not a consolidation, and not verifiable inside this step's time box.  The
+  hash risk itself is low (pure plumbing), so it is the right next step for the keep family when it is next worked
+  on.  This release scopes the proxy instead (`activate()` before every step), which removes its practical failure
+  (two keep-family wings in one compound).
+- **Not touched: the wattle_roundhut +1,736-triangle drift** recorded in `BASELINE.md` (the v4 change to
+  `build_eave_closure(thickness=0.03)`).  The consolidated "door" kind keeps `thickness=0.03` as its default, so
+  the hut builds exactly the baseline; the producer still has to decide which hut is the reference.
+
+### Stale module header signatures fixed (found by `tools/check_headers.py`)
+
+`decal_gate.cast_raw(probe, origin, direction, dist=10.0)`; `geom.beam(acc, p0, p1, w, h, c, mat, ...)`;
+`stones.stone_skin(P, faces, rng, ..., min_relief=...)`; `daub.build_wattle / build_daub / build_inner_skin(g, coll)`,
+`daub.plinth_under_coat(g, V)`; `doors.build_door(g, coll, seed=1212)`, `doors.build_step(g, coll)`;
+`finial.build_collar_finial(g, coll)`; `frame.RoundFrame(prefix, radius, eave_z, ...)` (was "RoundFrame(spec)");
+`plank_doors.make_pintle(acc, i)`; `square_cabin.square_cabin(...)` (bearers default None, and the missing `bed_r`,
+`bed_fill`, `finial_scale`, `roof`, `roof_fn`); `pyramid_roof.pyramid_roof(..., coll=None)`;
+`tier_roof.roof_flashing(g, roof_name, body_name, ...)`; `wall_openings.opening_rects(sp)` / `opening_cut(sp)` /
+`build_opening(g, sp, ...)`.  The headers of every module this release changed (`conical_roof`, `round_roof_parts`,
+`tower_roof`, `roof_junction`, `junctions`, `stone_body`, `rubble_walls`, `tier_roof`) also name the new API.
+
+### Verification
+
+- **In-process A/B before the builds** (old kit snapshot vs 1.8.0, same scene, vertex / face / material / Mask / UV
+  digests): `build_eave_closure` (default 3 cm band, `thickness=0`, frame `EAVE_CLOSURE_DOOR_HALF_DEG`),
+  `round_roof_parts.eave_closure`, `tower_roof._eave_closure`, `tower_roof._roof_deck`, `round_eave_fill` (default
+  and with `r_off` / `skip`) all identical; all 18 opening-spec cases identical (each old spec function, and each
+  unified spec resolved to its family, against the old function's dict, key order included).  Every kit module
+  imports.  A smoke build of the new API (a PlanFrame barn via `masonry_wall` + `door` / `window` + `linear_roof` +
+  `building_decals`; a TierFrame with a hexagonal and a square body under 6- and 4-sided `bell_tier`s, a chimney
+  body through the hexagonal tier with `roof_flashing`, `tier_finial`, `building_decals`) built and saved cleanly
+  (scratch only, not a deliverable).
+- **All seven kit buildings rebuilt** after the last code edit, to `kit/baseline/1_consolidate/<id>/` with
+  `tools/build_baseline.ps1 -Step 1_consolidate` (3 builds at once), fingerprinted with `tools/geom_hash.py`
+  (`1_consolidate/<id>.json`) and compared with the step-0 baseline:
+
+| Building | Triangles | Geometry hash | UV hash | Mask hash | vs baseline | decal_anchors.json | Build (s) |
+|---|---:|---|---|---|---|---|---:|
+| hilltop_keep | 1,166,874 | `b2f847333a2ec943` | `0c1f12176f0f1235` | `c7ddfbfe5d33f6d8` | identical | byte-identical | 386 |
+| wattle_roundhut | 878,355 | `7e5e7c2df5c4d367` | `9c0dd5aecb5d869c` | `794266c3463d1240` | identical | byte-identical | 571 |
+| tower_windmill | 1,146,243 | `89bf4a2a2c60e049` | `9f132597bb379825` | `04f7ade47b360102` | identical | byte-identical | 245 |
+| v1_stone_watchtower | 1,057,164 | `47e4208df661a5a9` | `9929b9e5101d3d5f` | `c8e787ab4b8e0bff` | identical | byte-identical | 310 |
+| v2_tiered_hall | 954,925 | `87ba64b7f9d4a746` | `15bb7bdc5ae3c360` | `e976015053c38848` | identical | byte-identical | 491 |
+| v3_longhouse_roundend | 478,877 | `73e77867096725ec` | `71215dfc7294b03a` | `3d5ef6b3dc13b4fc` | identical | byte-identical | 416 |
+| v4_mixed | 938,453 | `2e87caad61b68d34` | `a73b4ef99fd15564` | `b6c2768f3068057b` | identical | byte-identical | 371 |
+
+  Every build exited 0 and saved its `.blend` and anchors; the only stderr line is the known numpy
+  `All-NaN slice` warning from `mill_cap.py:194` (mill, v4), as in the baseline.  No build script was edited (all
+  seven already had their output override); no delivered `.blend` / `decal_anchors.json` and no `signoff_*` folder
+  was written.  The hut's triangle count is the baseline's 878,355 (the open drift question above), not the table's
+  876,619.
 
 ---
 

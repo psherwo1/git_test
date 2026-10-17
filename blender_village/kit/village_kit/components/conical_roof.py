@@ -6,7 +6,8 @@ build_shingles         doubled starter + N_COURSES of individually modelled shin
                        exposed part + overlap only (full length where covered parts can be seen), slipped / split /
                        missing pieces
 build_roof_blocker     dark blocker cone under the rafters (no light through trimmed joints)
-build_eave_closure     daub band sealing the eave gap above the plate
+build_eave_closure     daub band sealing the eave gap above the plate (kit 1.8.0: a wrapper of
+                       components.eave.eave_closure(kind="door"))
 """
 import math
 from functools import partial  # noqa: F401
@@ -167,89 +168,12 @@ def build_eave_closure(g, coll, r_off=0.075, door_half=None, n_az=240, thickness
     inside, so no ray through the doorway can leave the hut between the plate and the roof (it reads
     from outside, deep in the eave shadow, as the daubed wall top between the rafter feet).
     kit 1.7 (v4_mixed r2): a closed band `thickness` m thick (outer + inner faces, top / bottom / end caps);
-    thickness=0 gives the old single-sided band (normals into the hut)."""
-    if door_half is None and getattr(g, "EAVE_CLOSURE_DOOR_HALF_DEG", None) is not None:
-        # kit 1.7 r4 (v4_mixed, director r3 probe): optional frame attribute -- the closure runs on over the door
-        # sector behind the door frame's infill, leaving only +-this many degrees open on the door axis.  On a small
-        # plan the cheek opening between the infill end and the wall post (above the return beam) otherwise looks
-        # straight into the eave void (the back of the roof blocker) from an oblique eye-level view.
-        door_half = math.radians(float(g.EAVE_CLOSURE_DOOR_HALF_DEG))
-    if door_half is None:                  # 2 deg inside the door-flanking wall posts
-        door_half = g.WALL_POST_AZ_DOOR - math.radians(2.0)
-    acc = g.acc("eave_closure", 30, cull=None)
-    r_b = g.R_WALL - r_off
-    az = np.linspace(door_half, 2 * math.pi - door_half, n_az)
-    ss = np.linspace(0.0, 2.0, 400)
-    top = np.zeros(n_az)
-    from mathutils import Vector
-    from mathutils.bvhtree import BVHTree
-    bv = []
-    for nm in (f"{g.prefix}_roof_shingles", f"{g.prefix}_roof_starter"):   # kit 1.7 (v4_mixed): was "HUT_" only
-        me = bpy.data.objects[nm].data
-        bv.append(BVHTree.FromPolygons([v.co[:] for v in me.vertices], [p_.vertices[:] for p_ in me.polygons]))
-    cs_p, sn_p = math.cos(g.PITCH), math.sin(g.PITCH)
-    for i, a in enumerate(az):
-        P = surf(g, np.full_like(ss, float(az2th(a))), ss)
-        rr = np.hypot(P[:, 0], P[:, 1])
-        z_s = float(np.interp(-r_b, -rr, P[:, 2]))
-        nrm_ = Vector((math.sin(a) * sn_p, -math.cos(a) * sn_p, cs_p))
-        # top edge buried in the shingle stack (seals the eave gap), lowered wherever a slipped or
-        # missing shingle would leave it exposed
-        for dz in (0.05, 0.03, 0.012, -0.006):
-            o = Vector((math.sin(a) * r_b, -math.cos(a) * r_b, z_s + dz)) + nrm_ * 0.002
-            if any(b_.ray_cast(o, nrm_, 0.4)[0] is not None for b_ in bv):
-                break
-        top[i] = z_s + dz
-    bot = np.full(n_az, g.PLATE_TOP - 0.03)
-    rng = np.random.RandomState(2601)
-    zz = np.stack([bot, (bot + top) / 2 + 0.01 * rng.uniform(-1, 1, n_az), top], 1)
-    rad = r_b + np.stack([np.zeros(n_az), 0.008 * n2(az * 6.0, np.full(n_az, 0.3), 2602), np.zeros(n_az)], 1)
-    P = np.stack([np.sin(az)[:, None] * rad, -np.cos(az)[:, None] * rad, zz], -1).reshape(-1, 3)
-    F = grid_quads(n_az, 3)
-    q = P[F[0]]
-    if float(np.dot(np.cross(q[1] - q[0], q[3] - q[0]), [math.sin(az[0]), -math.cos(az[0]), 0])) > 0:
-        F = F[:, ::-1]                      # normals face the hut interior (seen through the door)
-    if thickness and thickness > 0:
-        # kit 1.7 (v4_mixed r2, director must-fix 4): a CLOSED band `thickness` m thick -- the face at r_b now faces
-        # OUT (it is seen from outside under the eave, between the rafter feet; art bible 8: no single-sided planes
-        # where seen), an inner face `thickness` further in faces the hut, top / bottom / end caps close it.  The
-        # inner top rises with the roof pitch so it is buried in the shingle stack as deep as the outer top.
-        t_ = float(thickness)
-        zi = zz.copy()
-        zi[:, 2] += t_ * math.tan(g.PITCH)
-        zi[:, 1] = 0.5 * (zi[:, 0] + zi[:, 2]) + (zz[:, 1] - 0.5 * (zz[:, 0] + zz[:, 2]))
-        Pi = np.stack([np.sin(az)[:, None] * (rad - t_), -np.cos(az)[:, None] * (rad - t_), zi], -1).reshape(-1, 3)
-        o = n_az * 3
-        Fo = F[:, ::-1]                                          # outer face: outward
-        Fi = F + o                                               # inner face: inward (old orientation)
-        ii = np.arange(n_az - 1)
-        top_ = np.stack([ii * 3 + 2, (ii + 1) * 3 + 2, o + (ii + 1) * 3 + 2, o + ii * 3 + 2], 1)
-        bot_ = np.stack([ii * 3, o + ii * 3, o + (ii + 1) * 3, (ii + 1) * 3], 1)
-        ends = []
-        for i0, s_ in ((0, 1), (n_az - 1, -1)):
-            for j in range(2):
-                q_ = [i0 * 3 + j, i0 * 3 + j + 1, o + i0 * 3 + j + 1, o + i0 * 3 + j]
-                ends.append(q_ if s_ > 0 else q_[::-1])
-        PP = np.concatenate([P, Pi])
-
-        def _orient(Fq, want):
-            q_ = PP[Fq[0]]
-            nn = np.cross(q_[1] - q_[0], q_[3] - q_[0])
-            return Fq if float(np.dot(nn, want(Fq[0]))) >= 0 else Fq[:, ::-1]
-        cen = lambda f: PP[f].mean(0)                            # noqa: E731
-        Fo = _orient(Fo, lambda f: np.array([cen(f)[0], cen(f)[1], 0.0]))
-        Fi = _orient(Fi, lambda f: -np.array([cen(f)[0], cen(f)[1], 0.0]))
-        top_ = _orient(top_, lambda f: np.array([0.0, 0.0, 1.0]))
-        bot_ = _orient(bot_, lambda f: np.array([0.0, 0.0, -1.0]))
-        e0, e1 = np.array(ends[:2]), np.array(ends[2:])
-        tan0 = np.array([math.cos(az[0]), math.sin(az[0]), 0.0])      # d/daz of (sin, -cos): toward +az
-        e0 = _orient(e0, lambda f: -tan0)
-        tan1 = np.array([math.cos(az[-1]), math.sin(az[-1]), 0.0])
-        e1 = _orient(e1, lambda f: tan1)
-        acc.add(PP, [Fo, Fi, top_, bot_, e0, e1], "M_daub")
-    else:
-        acc.add(P, F, "M_daub")
-    acc.build(coll)
+    thickness=0 gives the old single-sided band (normals into the hut).  kit 1.7 r4: the optional frame attribute
+    EAVE_CLOSURE_DOOR_HALF_DEG narrows the open door sector.
+    kit 1.8.0: a thin wrapper of THE eave closure, components.eave.eave_closure(kind="door") (same geometry)."""
+    from .eave import eave_closure
+    return eave_closure(g, g.R_WALL - r_off, "M_daub", n_az, kind="door", coll=coll, door_half=door_half,
+                        thickness=thickness)
 
 
 def build_shingles(g, coll, seed=606):

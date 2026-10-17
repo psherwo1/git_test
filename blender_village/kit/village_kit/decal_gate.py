@@ -4,7 +4,7 @@ director keep round-7 rule).  A separate module so decals.py (shared by every bu
     snap_anchors(da, probe, ...)   ray-snap every anchor of a decals.DecalAnchors set to the first exterior surface
                                    along its intended normal; reject |offset| > 1.5 cm, alignment < 0.85, interior /
                                    blocker hits and enclosed spots; de-duplicate same-type anchors closer than 0.3 m.
-    cast_raw(probe, o, d, dist)    a decals.SurfaceProbe ray cast that reports the face's OWN normal (not flipped
+    cast_raw(probe, origin, direction, dist=10.0)  a decals.SurfaceProbe ray cast that reports the face's OWN normal (not flipped
                                    toward the ray), so back faces and reversed shells can be rejected.
 
 A generator may store item['macro'] (the wall / radial / slope normal the decal should project along) on an anchor

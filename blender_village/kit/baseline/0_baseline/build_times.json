@@ -1,0 +1,37 @@
+﻿[
+    {
+        "id":  "v3_longhouse_roundend",
+        "secs":  416,
+        "code":  null
+    },
+    {
+        "id":  "tower_windmill",
+        "secs":  230,
+        "code":  null
+    },
+    {
+        "id":  "wattle_roundhut",
+        "secs":  561,
+        "code":  null
+    },
+    {
+        "id":  "hilltop_keep",
+        "secs":  376,
+        "code":  null
+    },
+    {
+        "id":  "v2_tiered_hall",
+        "secs":  496,
+        "code":  null
+    },
+    {
+        "id":  "v4_mixed",
+        "secs":  366,
+        "code":  null
+    },
+    {
+        "id":  "v1_stone_watchtower",
+        "secs":  301,
+        "code":  null
+    }
+]

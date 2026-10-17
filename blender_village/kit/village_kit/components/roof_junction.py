@@ -14,9 +14,13 @@ any linear roof (thatch or shingle covering, any pitch / width / yaw) can be run
     cone_abutment(g, roof, center, ...) KIT COMPONENT: a continuous flashing (lead apron by default) along that line,
                                         its one skirt dressed down into the linear covering, the other up the cone and
                                         under its shingles, closed at both ends -> <P>_<roof>_abutment
+    cone_nose_apron(acc, g, roof, sg, ...)   the closed lead apron folded over a linear roof's eave nose where it
+                                        meets the cone (part of cone_abutment with end="apron"); kit 1.8.0: renamed from
+                                        end_apron (deprecated alias kept), junctions.wall_end_apron is the wall piece
     round_eave_fill(g, r_off, ...)      KIT COMPONENT: masonry / daub eave fill on a round wall head between the
                                         plate and the cone's deck (closes the eave gap of a stone round body)
-                                        -> <P>_eave_fill
+                                        -> <P>_eave_fill; kit 1.8.0: a wrapper of components.eave.eave_closure
+                                        (kind="fill")
 """
 import math
 
@@ -228,10 +232,12 @@ def _first_kept_along(K, p, b, nc, reach=0.6, tube=0.05, up=(-0.04, 0.16)):
     return float(s[k].min()) if k.any() else None
 
 
-def end_apron(acc, g, roof, sg, center=(0.0, 0.0), w_out=0.20, w_in=0.12, t=(0.012, 0.010), z_min=None,
-              cone_cover=0.05, mat="M_lead", n_rows=14, w_in_kept=False, kept_lap=0.06, w_in_max=0.45,
-              u_top=0.10):
-    """KIT COMPONENT (part of cone_abutment(end="apron")): a closed lead end-apron where the eave of a linear roof
+def cone_nose_apron(acc, g, roof, sg, center=(0.0, 0.0), w_out=0.20, w_in=0.12, t=(0.012, 0.010), z_min=None,
+                    cone_cover=0.05, mat="M_lead", n_rows=14, w_in_kept=False, kept_lap=0.06, w_in_max=0.45,
+                    u_top=0.10):
+    """kit 1.8.0: renamed from roof_junction.end_apron (junctions.end_apron is a different piece, now
+    junctions.wall_end_apron); `end_apron` stays here as a deprecated alias.
+    KIT COMPONENT (part of cone_abutment(end="apron")): a closed lead end-apron where the eave of a linear roof
     meets a round body's cone.  It lies on the eave nose (the GableRoof.ROLL section, or the plain covering edge),
     from just above the crest down over the nose face, as a band w_out (onto the linear roof) + w_in (tucked under
     the cone's starter course) wide along the ridge axis, centred on the seam where the cone's covering crosses the
@@ -328,6 +334,10 @@ def end_apron(acc, g, roof, sg, center=(0.0, 0.0), w_out=0.20, w_in=0.12, t=(0.0
     return nr
 
 
+end_apron = cone_nose_apron
+"""deprecated alias (kit 1.8.0): use cone_nose_apron."""
+
+
 def cone_abutment(g, roof, center=(0.0, 0.0), width=(0.26, 0.22), crown=0.09, mat="M_lead", seed=91,
                   cone_cover=0.05, roof_lift=0.0, dy=0.05, end="apron", apron=None, sweep_end="crest", taper=None,
                   fit_kept=False, kept_lap=0.06, wb_max=0.55):
@@ -357,7 +367,7 @@ def cone_abutment(g, roof, center=(0.0, 0.0), width=(0.26, 0.22), crown=0.09, ma
     if taper and n > 12:
         # round 4: end the sweep where the roof normal still follows the slope -- the stations where the junction
         # turns over the eave roll's plateau twist the section (the round-3 crumpled tip); the end apron, run up
-        # under the sweep end (end_apron(u_top=...)), covers that stretch
+        # under the sweep end (cone_nose_apron(u_top=...)), covers that stretch
         c25 = math.cos(math.radians(25.0))
         k0, k1 = 0, n
         while k0 < n // 3 and float(NR[k0] @ NR[min(k0 + 6, n - 1)]) < c25:
@@ -431,34 +441,30 @@ def cone_abutment(g, roof, center=(0.0, 0.0), width=(0.26, 0.22), crown=0.09, ma
     n_ap = []
     if end == "apron":
         for sg in (-1, 1):
-            n_ap.append(end_apron(acc, g, roof, sg, center, cone_cover=cone_cover, mat=mat, **(apron or {})))
+            n_ap.append(cone_nose_apron(acc, g, roof, sg, center, cone_cover=cone_cover, mat=mat, **(apron or {})))
     ob = finalize(acc, g.coll, smooth_deg=45.0, recalc=True)
     log(f"  abutment: {n} stations, length {float(np.linalg.norm(np.diff(P, axis=0), axis=1).sum()):.2f} m"
         + (f", end aprons {n_ap} rows" if n_ap else ""))
     if not hasattr(g, "ABUTMENTS"):
         g.ABUTMENTS = []
     g.ABUTMENTS.append(dict(roof=roof.name, P=P, NR=NR, NC=NC))
+    # kit 1.9.0 (guard seal_probe): the linear roof runs into the round body / its cone -- registered for the
+    # generic see-through probe after the cull (village_kit.guards; no geometry change).  The body face is the
+    # cone's reference surface above its eave, the wall face (R_WALL + 0.14) below it.
+    from ..guards import register_junction
+    pz, pr = np.asarray(g.PZ, float), np.asarray(g.PR, float)
+    r_face = float(g.R_WALL) + 0.14
+    register_junction(g, f"{roof.name} / round body", (f"{g.prefix}_{roof.name}_covering",
+                                                        f"{g.prefix}_{roof.name}_eave_roll"), center,
+                      lambda z, pz=pz, pr=pr, rf=r_face: float(np.interp(z, pz, pr)) if z >= pz[0] else rf,
+                      (float(P[:, 2].min()) - 0.3, float(P[:, 2].max()) + 0.3))
     return ob
 
 
 def round_eave_fill(g, r_off=0.06, z_bot=None, center=(0.0, 0.0), skip=None, mat="M_mortar", n_az=240):
     """KIT COMPONENT: the eave fill of a round wall head (a stone or daub round body under a cone): a band on the
     inner half of the wall plate, from the plate top up into the cone's covering stack, so no eye can look from the
-    eave gap into the roof space.  skip(P) -> bool drops parts inside an attached body.  -> <P>_eave_fill"""
-    r_b = g.R_WALL - r_off
-    z0 = g.PLATE_TOP - 0.03 if z_bot is None else z_bot
-    az = np.linspace(0, 2 * math.pi, n_az + 1)
-    zt = cone_ref_z(g, center[0] + np.sin(az) * r_b, center[1] - np.cos(az) * r_b, center) + 0.02
-    zz = np.stack([np.full(len(az), z0), 0.5 * (z0 + zt), zt], 1)
-    rad = r_b + np.stack([np.zeros(len(az)), 0.008 * n2(az * 6.0, np.full(len(az), 0.3), 2602), np.zeros(len(az))], 1)
-    P = np.stack([center[0] + np.sin(az)[:, None] * rad, center[1] - np.cos(az)[:, None] * rad, zz], -1).reshape(-1, 3)
-    F = grid_quads(len(az), 3)
-    q = P[F[0]]
-    if float(np.dot(np.cross(q[1] - q[0], q[3] - q[0]), [math.sin(az[0]), -math.cos(az[0]), 0])) < 0:
-        F = F[:, ::-1]                      # outward (seen from under the eave)
-    if skip is not None:
-        C = P[F].mean(1)
-        F = F[~skip(C)]
-    acc = Acc(f"{g.prefix}_eave_fill", 30)
-    acc.add(P, F, mat)
-    return finalize(acc, g.coll, smooth_deg=30.0, recalc=False)
+    eave gap into the roof space.  skip(P) -> bool drops parts inside an attached body.  -> <P>_eave_fill
+    kit 1.8.0: a thin wrapper of THE eave closure, components.eave.eave_closure(kind="fill") (same geometry)."""
+    from .eave import _fill_band
+    return _fill_band(g, r_off=r_off, z_bot=z_bot, center=center, skip=skip, mat=mat, n_az=n_az)

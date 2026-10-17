@@ -20,10 +20,14 @@
         kit 1.7.3: octagonal tiers lay eave_deck_lap (deck_lap=True): a continuous sarking strip from the main deck
         across the wall line and over the whole overhang, so no shingle joint opens on the body or the wall face
         under the eave where a `through` body cuts the eave structure (v2 round 3's skirt1 / tur_nw slit).
+        kit 1.8.0: polygon tiers with ANY number of sides -- sides != 8 (or engine="pyramid") builds the tier with the
+        kit's N-sided bell-cast roof, pyramid_roof / PyramidSurface, registered through the polygonal-roof protocol
+        (OctRoof and PyramidSurface share n, phi, c, rot, p_lip, Pp, zb, m_of_p, p_of_m, surf); 8-sided tiers keep
+        the octagonal OctRoof + build_cap path unchanged.
     eave_deck_lap(g, name, roof, p_wall, coll, ...)    KIT COMPONENT (kit 1.7.3)   -> <P>_<name>_deck_lap
     tier_finial(g, name, scale, ...)                  KIT COMPONENT: lead hat fitted over the tier's apex
         shingles + the kit's turned finial (components.finial)          -> <P>_<name>_finial
-    roof_flashing(g, roof, body, ...)                  KIT COMPONENT (the junction module)
+    roof_flashing(g, roof_name, body_name, ...)        KIT COMPONENT (the junction module)
         lead flashing where a body rises through a roof tier: an upstand tucked into the wall face, turned out over
         the covering as an apron following the true roof surface round the body, ending with closed caps at the
         eave if the body leaves the roof; kit 1.7.3: the apron edge is turned down into the courses (drip=0.03).
@@ -94,21 +98,32 @@ def make_roof(center, p_wall, z_seat, overhang, profile, rot_deg=0.0, p_min=0.02
 
 def bell_tier(g, name, on, overhang=1.0, profile="skirt", rise=0.30, through=(), p_top=None, rot_deg=None,
               n_raft=6, seed=303, saddles=False, cap_exposure=None, saddle_taper=None, band=True, bracket_drop=0.55,
-              sides=None, collar_r=None, pitch_deg=None, round_rafters=None, deck_lap=True):
+              sides=None, collar_r=None, pitch_deg=None, round_rafters=None, deck_lap=True, engine=None,
+              pyramid=None):
     """KIT COMPONENT: a bell-cast roof tier on body `on` (see the module doc).
-    sides (kit 1.7.1): None = 0 (ROUND witch-hat cone, round_tier) when `on` is a round body, 8 (octagonal) when it
-    is a polygon body; pass sides=8 to force an octagonal tier on a round body.  collar_r / pitch_deg /
-    round_rafters: round tiers only (lead-hat collar radius, cone pitch, pole rafter count).
+    sides (kit 1.7.1): None = 0 (ROUND witch-hat cone, round_tier) when `on` is a round body, the body's own side
+    count (8 for the octagonal bodies so far) when it is a polygon body; pass sides=8 to force an octagonal tier on a
+    round body.  collar_r / pitch_deg / round_rafters: round tiers only (lead-hat collar radius, cone pitch, pole
+    rafter count).
     deck_lap (kit 1.7.3, octagonal tiers): True (or a dict of eave_deck_lap keywords) lays a continuous sarking strip
     across the wall line under the covering, lapping the main deck and the wall-head band, so no shingle joint at
     the eave ever opens on the hollow body or the sky (even where the hidden-geometry cull later removes the ring
-    beam's faces); False = the kit 1.7.2 tier."""
+    beam's faces); False = the kit 1.7.2 tier.
+    kit 1.8.0 -- ONE polygonal bell-cast roof: any sides >= 3 other than 8 (or engine="pyramid" for 8) builds the tier
+    with pyramid_roof.PyramidSurface / pyramid_roof (the kit's N-sided bell-cast roof: rafters, closed deck, coursed
+    kit shingles, closed hip saddles, lead apex cap and turned finial), registered like any tier (roof_flashing,
+    roof_clearance, stone_body(below=), tier_decals read it through the shared polygonal-roof protocol).  The profile
+    maps to pitch = its top pitch, bell_deg = top - eave pitch, bell_len = its last fixed distance, kick / sag as
+    given; pyramid = dict of extra pyramid_roof keywords.  engine=None / "oct" with sides 8 keeps the octagonal
+    OctRoof + oct_roof.build_cap tier, unchanged: the two surfaces integrate different profiles (OctRoof: a
+    600-sample pitch table with an eave wave, sag over the full run; PyramidSurface: a 4001-sample cosine bell, sag
+    over the lip distance), so moving the octagonal tiers onto PyramidSurface would move every v2 / keep roof vertex."""
     body = g.body(on)
     if sides is None:
-        sides = 0 if body.round else 8
-    if 3 <= int(sides) != 8:
-        raise ValueError(f"bell_tier {name!r}: sides={sides} -- polygon tiers are octagonal only (OctRoof); use "
-                         f"sides=0 (round) or 8")
+        sides = 0 if body.round else (body.sides if engine == "pyramid" or body.sides != 8 else 8)
+    if int(sides) >= 3 and (int(sides) != 8 or engine == "pyramid"):
+        return _pyramid_tier(g, name, on, int(sides), overhang=overhang, profile=profile, rise=rise, through=through,
+                             rot_deg=rot_deg, seed=seed, pitch_deg=pitch_deg, extra=pyramid)
     if int(sides) < 3:
         return round_tier(g, name, on, overhang=overhang, profile=profile, through=through, p_top=p_top,
                           n_raft=round_rafters, seed=seed, collar_r=collar_r, pitch_deg=pitch_deg)
@@ -159,6 +174,51 @@ def bell_tier(g, name, on, overhang=1.0, profile="skirt", rise=0.30, through=(),
     log(f"  {name}: lip p {roof.p_lip:.2f} z {roof.zb(roof.p_lip):.2f}, wall p {p_wall:.2f} plate {z_plate:.2f}, "
         f"apex {roof.zb(roof.Pp[-1]):.2f}")
     return roof
+
+
+def _pyramid_tier(g, name, on, sides, overhang=1.0, profile="skirt", rise=0.30, through=(), rot_deg=None, seed=303,
+                  pitch_deg=None, extra=None):
+    """kit 1.8.0: an N-sided bell-cast tier on body `on` built by pyramid_roof (see bell_tier)."""
+    import bpy
+    from .pyramid_roof import PARTS, pyramid_roof
+    body = g.body(on)
+    seed = int(seed) + g.seed_offset
+    pr = dict(PROFILES[profile]) if isinstance(profile, str) else dict(profile)
+    z1 = body.z1
+    r_top = float(body.r_nom(z1))
+    if body.round:                         # corners bear on the face, facet middles on the wall head
+        p_wall = r_top * math.cos(math.pi / sides) + 0.04
+        rot = -90.0 if rot_deg is None else rot_deg
+    else:
+        p_wall = r_top - 0.03
+        rot = math.degrees(body.rot) if rot_deg is None else rot_deg
+    z_plate = z1 + 0.12
+    top = float(pitch_deg if pitch_deg is not None else pr["a_pts"][-1])
+    kw = dict(pitch_deg=top, eave_out=overhang, bell_deg=max(0.0, top - float(pr["a_pts"][0])),
+              bell_len=float(pr["d_pts"][-2]) if len(pr["d_pts"]) > 1 else 0.7, kick=pr.get("kick", 0.0),
+              kick_len=pr.get("kick_len", 0.6), sag=pr.get("sag", 0.0))
+    kw.update(extra or {})
+    coll = g.sub(name)
+    rec = pyramid_roof(g, p_wall, z_plate + rise, name=name, sides=sides, rot_deg=rot, cx=float(body.c[0]),
+                       cy=float(body.c[1]), seed=seed, coll=coll, **kw)
+    S = rec["surface"]
+    prefix = g.name(name)
+    if through:
+        fn = lambda V: g.inside_any(V, through, margin=0.015)  # noqa: E731
+        n_drop = 0
+        for part in PARTS:
+            ob = bpy.data.objects.get(f"{prefix}_{part}")
+            if ob is not None:
+                n0 = len(ob.data.polygons)
+                cull_object(ob, fn)
+                n_drop += n0 - len(ob.data.polygons)
+        log(f"  {name}: dropped {n_drop} faces inside {list(through)}")
+    _register(g, name, dict(roof=S, on=on, p_wall=p_wall, z_plate=z_plate, p_top=None, through=tuple(through),
+                            Vsh=np.zeros((0, 3)), z_lip=float(S.zb(S.p_lip)), pyramid=True, tip=rec["tip"],
+                            finial_top=rec["tip"]))
+    log(f"  {name} ({sides}-sided pyramid tier): lip p {S.p_lip:.2f} z {float(S.zb(S.p_lip)):.2f}, wall p "
+        f"{p_wall:.2f} plate {z_plate:.2f}, tip {rec['tip']:.2f}")
+    return S
 
 
 # =================================================================================================================
@@ -347,6 +407,9 @@ def tier_finial(g, name, scale=1.0, hat_r=0.42, hat_h=0.55, lean_deg=1.2, lean_d
     roof = t["roof"]
     if t.get("round"):
         return _round_finial(g, name, t, scale)
+    if t.get("pyramid"):                  # kit 1.8.0: pyramid_roof already built its lead cap and turned finial
+        log(f"  {name} finial: built by pyramid_roof, tip {t['finial_top']:.2f} m")
+        return None
     acc = Acc(g.name(name) + "_finial")
     apex = float(roof.zb(0.02))
     z_top = lead_hat(acc, roof.c[0], roof.c[1], apex, hat_r, hat_h, cover=t["Vsh"])

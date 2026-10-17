@@ -139,3 +139,82 @@ def write_mask(me, r=None, g=None, b=None, b_fn=None, moss=None, seed=0.0):
 
 def has_mask(me):
     return "Mask" in me.color_attributes
+
+
+# ---- kit 1.10.0: no moss on walked steps (the client-approved queued UV fix, item 3) ---------------------------
+WALK_B = 0.04            # stored as byte 10 (0.039): at or under the 0.05 limit after BYTE_COLOR quantisation
+WALK_SIDE = 0.10         # the walking zone: clear width + 0.10 m each side ...
+WALK_OUT = 1.50          # ... from the wall face to 1.5 m out ...
+WALK_IN = 1.00           # ... and back through the opening (threshold / sill inside the reveal) ...
+WALK_Z = (-0.30, 0.90)   # ... at foot level (relative to the entrance origin)
+WALK_UP = 0.70           # up-facing tops only: n.z above this (step fronts, ends and outer edges keep their B)
+
+
+def walk_zone_faces(centres, normals, ent):
+    """bool per face: an up-facing top inside entrance `ent`'s walking zone (guards entrance dict: origin, out
+    (horizontal unit), width = clear width)."""
+    O = np.asarray(ent["origin"], float)
+    if O.shape == (2,):
+        O = np.array([O[0], O[1], 0.0])
+    out = np.asarray(ent["out"], float)[:2]
+    out = out / max(float(np.linalg.norm(out)), 1e-9)
+    t = np.array([-out[1], out[0]])
+    d = centres[:, :2] - O[:2]
+    a, c = d @ out, d @ t
+    dz = centres[:, 2] - O[2]
+    return ((np.abs(c) <= ent["width"] / 2 + WALK_SIDE) & (a >= -WALK_IN) & (a <= WALK_OUT) &
+            (dz >= WALK_Z[0]) & (dz <= WALK_Z[1]) & (normals[:, 2] > WALK_UP))
+
+
+def clear_walked_tops(objects, entrances, b_walk=WALK_B, log=None):
+    """Mask B <= b_walk on every up-facing top (threshold, step, door sill, the floor through the opening) inside
+    each entrance's walking zone, so the moss layer never lands where feet go.  Only those faces' corners change
+    (CORNER domain): the step's front, ends and outer edges keep their moss.  Pooled (shared) meshes are skipped
+    (their tops are not walked: nails, pegs).  objects: the building's objects (world coordinates); entrances:
+    guards entrance dicts in world coordinates.  Returns [(entrance, object, faces)]."""
+    done = []
+    if not entrances:
+        return done
+    for o in sorted((o for o in objects if o.type == "MESH"), key=lambda o: o.name):
+        me = o.data
+        if me.users > 1 or len(me.polygons) == 0 or "Mask" not in me.color_attributes:
+            continue
+        ca = me.color_attributes["Mask"]
+        if ca.domain != "CORNER":
+            continue
+        npg, nl = len(me.polygons), len(me.loops)
+        co = np.empty(len(me.vertices) * 3)
+        me.vertices.foreach_get("co", co)
+        Mw = np.array(o.matrix_world)
+        co = co.reshape(-1, 3) @ Mw[:3, :3].T + Mw[:3, 3]
+        lt = np.empty(npg, np.int64)
+        me.polygons.foreach_get("loop_total", lt)
+        lv = np.empty(nl, np.int64)
+        me.loops.foreach_get("vertex_index", lv)
+        lp = np.repeat(np.arange(npg), lt)
+        cen = np.zeros((npg, 3))
+        np.add.at(cen, lp, co[lv])
+        cen /= lt[:, None]
+        nrm = np.empty(npg * 3)
+        me.polygons.foreach_get("normal", nrm)
+        nrm = nrm.reshape(-1, 3) @ Mw[:3, :3].T
+        nrm /= np.maximum(np.linalg.norm(nrm, axis=1, keepdims=True), 1e-30)
+        hit = np.zeros(npg, bool)
+        for e in entrances:
+            z = walk_zone_faces(cen, nrm, e)
+            if z.any():
+                done.append((e["name"], o.name, int(z.sum())))
+                hit |= z
+        if not hit.any():
+            continue
+        prop = "color_srgb" if ca.data_type == "BYTE_COLOR" else "color"
+        col = np.empty(nl * 4, np.float32)
+        ca.data.foreach_get(prop, col)
+        col = col.reshape(-1, 4)
+        hl = hit[lp]
+        col[hl, 2] = np.minimum(col[hl, 2], b_walk)
+        ca.data.foreach_set(prop, col.ravel())
+    if log:
+        for en, on, nf in done:
+            log(f"  walked tops (Mask B <= {b_walk}): {en} -> {on}: {nf} faces")
+    return done

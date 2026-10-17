@@ -106,7 +106,13 @@ class OctRoof:
     a_pts (deg) at the distances d_pts in from the lip, up to p_min; kick (upturn at the hip corners over kick_len),
     low-frequency eave wave, sag between the hips, rot_deg plan rotation.  Facet k's outward normal is at
     rot + 45 k deg; surf(k, x, p) / world(k, x, p, h) map facet coordinates (x along the facet, p apothem, h along
-    the surface normal) to world."""
+    the surface normal) to world.
+    kit 1.8.0: the octagonal member of the kit's polygonal bell-cast roof protocol (n, tanh, phi, c, rot, p_lip, Pp,
+    zb, m_of_p, p_of_m, surf), shared with pyramid_roof.PyramidSurface (any number of sides); see
+    tier_roof.bell_tier for why the two surfaces are not one implementation."""
+
+    n = 8                                  # kit 1.8.0 protocol: sides
+    tanh = TAN22                           # kit 1.8.0 protocol: facet half-width per unit apothem
 
     def __init__(self, cx, cy, p_lip, z_lip, d_pts, a_pts, p_min, kick=0.0, kick_len=1.0, wave=0.0,
                  sag=0.0, seed=1, rot_deg=0.0):
@@ -162,6 +168,8 @@ class OctRoof:
 class OctFrame(Building):
     """the frame of a tiered octagonal hall building (see the module doc and PARAMS)."""
 
+    FAMILY = "oct"                       # kit 1.8.0: components.finish dispatch
+
     def __init__(self, prefix="KEEP", **params):
         super().__init__(prefix)
         unknown = set(params) - set(PARAMS)
@@ -173,8 +181,10 @@ class OctFrame(Building):
             setattr(self, k, v)
         self.TUR_C = np.asarray(self.TUR_C, float)
         self.OPENINGS = [dict(o) for o in (self.OPENINGS or DEFAULT_OPENINGS)]
-        self.WDOOR = dict(self.WDOOR or dict(xc=-5.05, hw=0.50, z0=0.10, z1=2.20, fw=0.18, depth=0.20))
-        self.WWIN = dict(self.WWIN or dict(xc=-7.4, hw=0.225, z0=1.30, z1=1.85, depth=0.16, fw=0.07))
+        from .openings import resolve       # kit 1.8.0: components.openings specs (.at(xc)) are accepted too
+        self.WDOOR = dict(resolve(self.WDOOR, "annex") or dict(xc=-5.05, hw=0.50, z0=0.10, z1=2.20, fw=0.18,
+                                                               depth=0.20))
+        self.WWIN = dict(resolve(self.WWIN, "annex") or dict(xc=-7.4, hw=0.225, z0=1.30, z1=1.85, depth=0.16, fw=0.07))
         self.CUSH = dict(CUSH0)
         self.hygiene = False
         from ..geom import pool_hygiene
@@ -273,8 +283,17 @@ class OctFrame(Building):
         for k, v in kw.items():
             if k not in PARAMS:
                 raise KeyError(f"unknown OctFrame parameter {k!r}")
+            if k in ("WDOOR", "WWIN"):              # kit 1.8.0: components.openings specs resolve to the annex dict
+                from .openings import resolve
+                v = resolve(v, "annex")
             setattr(self, k, np.asarray(v, float) if k == "TUR_C" else v)
         return self.derive()
+
+    def activate(self):
+        """kit 1.8.0: make this frame the one the family's FR proxy reads (assembly.build_building and
+        compound.build_compound call it before every step and decal recipe, so two OctFrame / TierFrame wings in one
+        compound each read their own table)."""
+        return activate(self)
 
     def sub(self, name):
         """sub-collection <PREFIX>_<name> of the building collection (created on first use)."""

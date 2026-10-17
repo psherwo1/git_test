@@ -10,6 +10,12 @@ Options:
     --samples N          Cycles samples (default 128)
     --pct N              resolution percentage of 1920x1080 (default 100)
     --no-save            do not save the lookdev .blend
+    --look r1|r2         material grade (default r2).  r1 = the first look test (lookdev/renders/, 2026-10-16);
+                         r2 = the producer's review tweaks (dressed stone, thatch, plaster, wattle bark, mill
+                         blades, darker lead), see lookdev/renders_r2/NOTES.md
+    --render-dir DIR     write the shots to DIR (default <output>/renders/<name>)
+    --blend-out FILE     save the lookdev .blend as FILE (default <output>/<name>_lookdev.blend)
+    (lookdev/scripts/run_r2.ps1 renders the r2 set for the five r2 buildings, at most 3 at once.)
 
 The script opens the source .blend (never saves over it), rebuilds the node tree of
 every palette material (M_stone ... M_moss) with the downloaded texture sets, adds a
@@ -41,11 +47,16 @@ ap.add_argument("--samples", type=int, default=128)
 ap.add_argument("--pct", type=int, default=100)
 ap.add_argument("--no-save", action="store_true")
 ap.add_argument("--cpu", action="store_true", help="render on the CPU (if the shared GPU is out of memory)")
+ap.add_argument("--look", choices=("r1", "r2"), default="r2",
+                help="material grade: r1 = the first look test (2026-10-16), r2 = with the producer's review tweaks")
+ap.add_argument("--render-dir", default=None, help="write the shots here (default <out>/renders/<name>)")
+ap.add_argument("--blend-out", default=None, help="save the lookdev .blend here (default <out>/<name>_lookdev.blend)")
 args = ap.parse_args(argv)
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.abspath(args.textures or os.path.join(SCRIPT_DIR, "..", "textures"))
 OUT = os.path.abspath(args.out)
+LOOK = args.look
 NAME = args.name or os.path.splitext(os.path.basename(args.src))[0].replace("_lookdev_src", "")
 
 bpy.ops.wm.open_mainfile(filepath=os.path.abspath(args.src))
@@ -83,6 +94,16 @@ TEXSETS = {
                     rough="patterned_clay_plaster_2k.blend/textures/patterned_clay_plaster_rough_2k.exr",
                     normal="patterned_clay_plaster_2k.blend/textures/patterned_clay_plaster_nor_gl_2k.exr"),
 }
+# r2 wattle bark.  The shortlist's willow bark (Poly Haven bark_willow_02) has not been downloaded yet; once its
+# images are extracted to textures/bark_willow_02_2k.blend/textures/ the script uses them automatically.  Until
+# then the bark is a PROXY: the rough_wood images, compressed round the rod and graded to grey-brown willow.
+_BARK_DIR = "bark_willow_02_2k.blend/textures/"
+if os.path.isfile(os.path.join(TEX, _BARK_DIR, "bark_willow_02_diff_2k.jpg")):
+    TEXSETS["bark"] = dict(size=1.0, color=_BARK_DIR + "bark_willow_02_diff_2k.jpg",
+                           rough=_BARK_DIR + "bark_willow_02_rough_2k.jpg",
+                           normal=_BARK_DIR + "bark_willow_02_nor_gl_2k.exr", proxy=False)
+else:
+    TEXSETS["bark"] = dict(TEXSETS["wood"], proxy=True)
 
 PIECE_OFFSET = (37.1, 91.7, 0.0)
 _img_cache = {}
@@ -282,14 +303,17 @@ def damp(g, ctx, color, amount=0.35):
     return g.mix(f, color, (0.08, 0.075, 0.06, 1.0), blend="MULTIPLY")
 
 
-def moss_layer(g, ctx, color, rough, normal, gain=4.0, lo=0.35, hi=0.65):
-    """Blend nordic moss on top: factor from Mask B x up-facing, broken up by the moss height."""
+def moss_layer(g, ctx, color, rough, normal, gain=4.0, lo=0.35, hi=0.65, extra=None, hue=0.5):
+    """Blend nordic moss on top: factor from Mask B x up-facing, broken up by the moss height.
+    extra (r2): an additional factor socket, e.g. broad world-space moss patches."""
     m = sample(g, ctx, "moss", per_piece=False)
     f = g.math("MULTIPLY", ctx["B"], ctx["up"])
     hgt = g.math("SUBTRACT", g.out(_bw(g, m["height"]), "Val"), 0.5)
     f = g.math("MULTIPLY_ADD", f, gain, g.math("MULTIPLY", hgt, 0.6))
+    if extra is not None:
+        f = g.math("ADD", f, extra)
     fac = g.maprange(f, lo, hi, interp="SMOOTHSTEP")
-    mcol = g.hsv(m["color"], 0.5, 1.05, 0.95)
+    mcol = g.hsv(m["color"], hue, 1.05, 0.95)
     color = g.mix(fac, color, mcol)
     rough = g.mixf(fac, rough, g.math("MULTIPLY_ADD", _val(g, m["rough"]), 0.6, 0.4, clamp=True))
     normal = g.mix(fac, normal, m["normal"])
@@ -389,6 +413,8 @@ def mat_wood(mat, mossy):
     col = g.hsv(col, 0.5, s, v)
     col = jitter(g, c, col, amount=0.09)
     col, rough = wear(g, c, col, _val(g, a["rough"]), light=0.2, rough_add=0.1, desat=0.25)
+    if LOOK == "r2":
+        col = obj_darken(g, col)
     col = damp(g, c, col, 0.3)
     normal = a["normal"]
     if mossy:
@@ -425,10 +451,13 @@ def mat_lead(mat):
     g = G(mat)
     c = setup_common(g)
     a = sample(g, c, "dirtymetal")
-    base = (0.20, 0.215, 0.24, 1.0)  # desaturated blue-grey
+    # desaturated blue-grey; r2 darker: in the r2 renders the r1 value read near-white against the olive thatch and
+    # mossy shingles (keep wing flashing, hut / v4 cap collars)
+    r1 = LOOK == "r1"
+    base = (0.20, 0.215, 0.24, 1.0) if r1 else (0.115, 0.122, 0.135, 1.0)
     col = jitter(g, c, g.mix(0.0, base, base), amount=0.05, hue=0.0)
     grime = g.math("MULTIPLY", a["mask"], 2.5, clamp=True)
-    col = g.mix(grime, col, (0.12, 0.12, 0.12, 1.0))
+    col = g.mix(grime, col, (0.12, 0.12, 0.12, 1.0) if r1 else (0.065, 0.065, 0.065, 1.0))
     col, rough = wear(g, c, col, a["rough"], light=0.1, rough_add=0.1)
     finish(g, c, col, rough, None, metallic=0.2, rough_min=0.7, rough_max=0.95)
 
@@ -470,6 +499,119 @@ def mat_wattle(mat):
     finish(g, c, col, rough, None)
 
 
+# --------------------------------------------------------------------------- r2 grade
+# The producer's review of the first look test (lookdev/renders/, 2026-10-16):
+#   dressed stone 20-30 % less bright (the lichen blew out); thatch more olive and mossy (ref2), less golden;
+#   plaster tile half the size with a lower normal strength (the trowel swirls read as fish scales);
+#   wattle with a willow bark texture instead of a flat colour; windmill fan blades less pale.
+DRESSED_VALUE_R1, DRESSED_VALUE_R2 = 1.15, 0.805  # HSV value on the softened lichen_rock: -30 % albedo
+OBJECT_DARKEN = {  # object-name suffix -> 'lookdev_darken' (r2); UE: a per-mesh material-instance scalar
+    "_wheel_blades": 0.45,
+}
+
+
+def obj_darken(g, col):
+    """Per-object darkening from the object's custom property 'lookdev_darken' (absent = 0 = unchanged):
+    value x (1 - d), saturation x (1 - 0.3 d)."""
+    n = g.node("ShaderNodeAttribute", attribute_type="OBJECT", attribute_name="lookdev_darken")
+    d = g.out(n, "Fac")
+    v = g.math("SUBTRACT", 1.0, d)
+    s = g.math("MULTIPLY_ADD", d, -0.3, 1.0)
+    return g.hsv(col, 0.5, s, v)
+
+
+def world_noise(g, scale, lo, hi, amount):
+    """Low-frequency patch factor (0..amount) from object-space noise (buildings sit at the origin with identity
+    transforms, so object space = world space; UE: a world-aligned noise texture)."""
+    tc = g.node("ShaderNodeTexCoord")
+    n = g.node("ShaderNodeTexNoise")
+    n.inputs["Scale"].default_value = scale
+    n.inputs["Detail"].default_value = 4.0
+    g.link(tc.outputs["Object"], n.inputs["Vector"])
+    return g.maprange(g.out(n, "Fac"), lo, hi, 0.0, amount, interp="SMOOTHSTEP")
+
+
+def mat_stone_dressed_r2(mat):
+    g = G(mat)
+    c = setup_common(g)
+    a = sample(g, c, "lichenrock")
+    color = g.hsv(soften(g, a["color"], -0.3), 0.5, 0.6, DRESSED_VALUE_R2)  # r1: value 1.15
+    # cap the white lichen splotches (partial per-channel min against a mid grey)
+    color = g.mix(0.75, color, (0.21, 0.205, 0.195, 1.0), blend="DARKEN")
+    rough, normal = _val(g, a["rough"]), a["normal"]
+    color = jitter(g, c, color)
+    color, rough = wear(g, c, color, rough, light=0.08, rough_add=0.08)  # r1 light 0.12
+    color = damp(g, c, color)
+    color, rough, normal = moss_layer(g, c, color, rough, normal, gain=2.0, lo=0.4, hi=0.7)
+    finish(g, c, color, rough, normal, nstrength=0.8)
+
+
+def mat_thatch_r2(mat):
+    g = G(mat)
+    c = setup_common(g)
+    a = sample(g, c, "thatch")
+    # r1 multiplied by (1.35, 1.12, 0.78), a golden straw; r2 grades the dark reed towards olive
+    col = g.mix(1.0, a["color"], (0.95, 1.05, 0.55, 1.0), blend="MULTIPLY")
+    col = g.hsv(col, 0.5, 0.85, 0.72)
+    col = jitter(g, c, col, amount=0.07)
+    col, rough = wear(g, c, col, _val(g, a["rough"]), light=0.08, rough_add=0.05, desat=0.3)
+    # olive algae film over the whole roof (ref2), stronger on up-facing slopes
+    film = g.math("MULTIPLY_ADD", c["up"], 0.15, 0.2)
+    col = g.mix(film, col, (0.085, 0.085, 0.025, 1.0))
+    col = damp(g, c, col, 0.3)
+    # moss: Mask B x up as before, plus broad world-space patches; more coverage than r1 (gain 5.5, lo 0.3)
+    patches = world_noise(g, 0.45, 0.45, 0.62, 0.7)
+    col, rough, normal = moss_layer(g, c, col, rough, a["normal"], gain=7.0, lo=0.25, hi=0.75, extra=patches,
+                                         hue=0.525)  # slightly greener moss than r1
+    finish(g, c, col, rough, normal, nstrength=0.9)
+
+
+def mat_daub_r2(mat):
+    g = G(mat)
+    c = setup_common(g)
+    a = sample(g, c, "plaster", size_mult=0.5)  # r1: 2 m tile -> 1 m, trowel swirls half the size
+    # break the regular rows of swirls (they still read as scales in skylit shade, v4 wall_closeup): blend in a
+    # second, offset sample at a non-commensurate 0.74 m tile through low-frequency world-space noise
+    b = sample(g, c, "plaster", size_mult=0.37, extra_offset=(0.31, 0.57, 0.0))
+    f = world_noise(g, 1.3, 0.42, 0.58, 1.0)
+    a = dict(color=g.mix(f, a["color"], b["color"]), rough=g.mix(f, a["rough"], b["rough"]),
+             normal=g.mix(f, a["normal"], b["normal"]))
+    # also halve the contrast of the dark trowel-stroke lines in the albedo (towards the image mean)
+    col = g.mix(0.5, a["color"], (0.379, 0.281, 0.21, 1.0))
+    col = g.mix(1.0, col, (1.12, 1.08, 0.92, 1.0), blend="MULTIPLY")
+    col = g.hsv(col, 0.5, 0.9, 0.92)
+    col = jitter(g, c, col, amount=0.06, hue=0.006)
+    earthy = g.mix(0.45, g.hsv(col, 0.49, 1.25, 0.7), (0.36, 0.27, 0.18, 1.0))
+    edge = g.maprange(c["G"], 0.35, 0.8, interp="SMOOTHSTEP")
+    col = g.mix(edge, col, earthy)
+    col = damp(g, c, col, 0.3)
+    finish(g, c, col, a["rough"], a["normal"], nstrength=0.3, rough_min=0.6, rough_max=1.0)  # r1 normal 0.6
+
+
+# wattle rod UVs (kit rods/stakes): U wraps once round the rod, V runs along it at ~11 UV units per metre
+BARK_UV_SCALE = (0.30, 0.36, 1.0)  # one bark tile ~ 0.3 x the circumference, ~0.25 m along the rod
+WILLOW_TINT = (0.95, 0.75, 0.50)   # rough_wood (linear mean ~0.145, 0.122, 0.096) -> grey-brown willow bark
+
+
+def mat_wattle_r2(mat):
+    g = G(mat)
+    c = setup_common(g)
+    ts = TEXSETS["bark"]
+    vec = g.vmath("MULTIPLY_ADD", c["R"], PIECE_OFFSET, c["uv"])  # per-rod offset
+    vec = g.vmath("MULTIPLY", vec, BARK_UV_SCALE)
+    col = g.tex(ts["color"], vec, False).outputs["Color"]
+    rough = _val(g, g.tex(ts["rough"], vec, True).outputs["Color"])
+    normal = g.tex(ts["normal"], vec, True).outputs["Color"]
+    if ts.get("proxy"):
+        # board grain -> bark, graded to weathered grey-brown willow
+        col = g.mix(1.0, col, WILLOW_TINT + (1.0,), blend="MULTIPLY")
+        col = g.hsv(col, 0.5, 0.9, 1.0)
+    col = jitter(g, c, col, amount=0.15, hue=0.02)  # per-rod variation as in r1
+    col, rough = wear(g, c, col, rough, light=0.1, rough_add=0.1, desat=0.1)
+    col = damp(g, c, col, 0.35)
+    finish(g, c, col, rough, normal, nstrength=0.8, rough_min=0.45, rough_max=1.0)
+
+
 BUILDERS = {
     "M_stone": lambda m: mat_stone(m),
     "M_rubble": lambda m: mat_stone(m),
@@ -487,6 +629,14 @@ BUILDERS = {
     "M_earth": lambda m: mat_moss(m, earth=True),
     "M_moss": lambda m: mat_moss(m),
 }
+if LOOK == "r2":
+    BUILDERS.update({
+        "M_stone_dressed": mat_stone_dressed_r2,
+        "M_daub": mat_daub_r2,
+        "M_wattle": mat_wattle_r2,
+        "M_thatch": mat_thatch_r2,
+    })
+print("look", LOOK, "| bark", "PROXY (rough_wood)" if TEXSETS["bark"].get("proxy") else "bark_willow_02")
 
 # bounds of the building (before adding ground)
 mesh_objs = [o for o in scene.objects if o.type == "MESH"]
@@ -521,6 +671,13 @@ build_objs = [o for o in mesh_objs if not o.hide_render]
 print("hidden objects:", len(hidden), [h for h in hidden if not h.startswith("DA_")])
 BMIN, BMAX = world_bounds(build_objs)
 print("building bounds", tuple(round(v, 2) for v in BMIN), tuple(round(v, 2) for v in BMAX))
+
+if LOOK == "r2":
+    for o in build_objs:
+        for suffix, d in OBJECT_DARKEN.items():
+            if o.name.endswith(suffix):
+                o["lookdev_darken"] = d
+                print("lookdev_darken", o.name, d)
 
 done = []
 for m in bpy.data.materials:
@@ -692,7 +849,18 @@ def find_door():
         return min(c, key=lambda o: world_bounds([o])[0].y) if c else None
     leaf = pick(("door_leaf",)) or pick(("door",), ("iron", "nail", "hinge", "pintle", "bolt", "step", "frame", "surround", "backing")) or pick(("thresh",))
     if leaf is None:
-        return None
+        # kit >= 1.10 buildings store their entrances on the scene (the door may be merged into a frames mesh)
+        import json
+        try:
+            ents = json.loads(scene.get("kit_entrances") or "[]")
+        except ValueError:
+            ents = []
+        ents = [e for e in ents if e.get("out", [0, -1, 0])[1] < -0.7] or ents
+        if not ents:
+            return None
+        e = min(ents, key=lambda e: e["origin"][1])
+        o = Vector(e["origin"])
+        return "kit_entrances:" + e.get("name", "?"), Vector((o.x, o.y, e.get("head", 2.1) / 2)), Vector((0, o.y, 0)), None
     opening = pick(("door_frame", "door_surround")) or leaf
     lmn, lmx = world_bounds([leaf])
     omn, omx = world_bounds([opening])
@@ -765,17 +933,45 @@ elif NAME == "wattle_roundhut":
         return place_look("CAM_wall_closeup", pos, tgt, 35.0)
 
     SHOTS["wall_closeup"] = _hut_wall
+elif NAME == "v3_longhouse_roundend":
+    def _v3_thatch():
+        tb = bounds_of_material("M_thatch") or (BMIN, BMAX)
+        c = (tb[0] + tb[1]) * 0.5
+        tgt = Vector((c.x, tb[0].y + 0.25 * (tb[1].y - tb[0].y), tb[0].z + 0.45 * (tb[1].z - tb[0].z)))
+        pos = Vector((tgt.x - 0.35 * (tb[1].x - tb[0].x), tb[0].y - 5.0, 2.6))
+        return place_look("CAM_thatch_closeup", pos, tgt, 35.0)
+    SHOTS["thatch_closeup"] = _v3_thatch
+elif NAME == "v4_mixed":
+    def _v4_wall():
+        tgt = find_daub_patch()
+        if tgt is None:
+            return None
+        objs = [o for o in build_objs if o.name.startswith("V4H_")] or build_objs
+        hmn, hmx = world_bounds(objs)
+        ctr = (hmn + hmx) * 0.5
+        radial = Vector((tgt.x - ctr.x, tgt.y - ctr.y, 0.0)).normalized()
+        side = Vector((-radial.y, radial.x, 0.0))
+        tgt = tgt + Vector((0, 0, 0.35))
+        pos = tgt + radial * 2.6 + side * 0.6
+        pos.z = 1.5
+        return place_look("CAM_wall_closeup", pos, tgt, 35.0)
+    SHOTS["wall_closeup"] = _v4_wall
 
 want = list(SHOTS) if args.shots == "all" else ([] if args.shots == "none" else args.shots.split(","))
 cams = {}
 for s in SHOTS:
-    cams[s] = SHOTS[s]()
+    cam = SHOTS[s]()
+    if cam is None:
+        print("camera", s, "skipped (no target)")
+        continue
+    cams[s] = cam
     print("camera", s, tuple(round(v, 2) for v in cams[s].location))
 scene.camera = cams.get("hero") or next(iter(cams.values()))
 
 os.makedirs(OUT, exist_ok=True)
 if not args.no_save:
-    blend_out = os.path.join(OUT, NAME + "_lookdev.blend")
+    blend_out = os.path.abspath(args.blend_out) if args.blend_out else os.path.join(OUT, NAME + "_lookdev.blend")
+    os.makedirs(os.path.dirname(blend_out), exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=blend_out, relative_remap=True, copy=False)
     try:
         bpy.ops.file.make_paths_relative()
@@ -784,7 +980,7 @@ if not args.no_save:
         print("relative paths failed:", e)
     print("saved", blend_out)
 
-rdir = os.path.join(OUT, "renders", NAME)
+rdir = os.path.abspath(args.render_dir) if args.render_dir else os.path.join(OUT, "renders", NAME)
 os.makedirs(rdir, exist_ok=True)
 for s in want:
     if s not in cams:

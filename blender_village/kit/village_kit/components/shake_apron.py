@@ -228,3 +228,9 @@ def shake_apron(g, r_eave=None, z_eave=None, r_top=None, z_top=None, courses=Non
     g.set(**kw)
     with g.seeded(seed):
         build_apron(g, g.parts)
+    # kit 1.9.0 (guard seal_probe): the tower rises through the apron -- a roof-through-body junction the generic
+    # see-through probe checks after the cull (village_kit.guards); no geometry change
+    from ..guards import register_junction
+    register_junction(g, "apron / smock tower", (f"{g.prefix}_apron_shingles",), (0.0, 0.0),
+                      lambda z, g=g: float(tw_a(g, min(max(float(z), g.TW_Z0), g.TW_Z1))),
+                      (g.AP_ZT - 0.9, g.AP_ZT + 0.3), poly=8)

@@ -22,6 +22,8 @@ selects an alternative table that builds a different building from the same comp
 """
 import os
 
+import numpy as np
+
 from . import core
 from .decals import DecalAnchors
 from .pools import Pools
@@ -82,6 +84,16 @@ class Building:
     def triangles(self):
         return core.count_triangles(self.coll.all_objects)
 
+    def activate(self):
+        """kit 1.8.0: called before every step / decal recipe of this frame.  A no-op here; the keep-family frames
+        (OctFrame, TierFrame) point the module proxy oct_frame.FR at themselves, so several of them can be built in
+        one compound."""
+        return self
+
+    # kit 1.8.0: the family the generic hidden_cull / building_decals entry points dispatch to
+    # (components.finish).  None = decide from the frame's state (see finish.family_of).
+    FAMILY = None
+
 
 def _validate_decals(g, opt):
     """kit 1.3.0: the decal-anchor gate (village_kit.anchor_validate).  opt True / dict -> applied (snap, drop,
@@ -107,24 +119,51 @@ def _validate_decals(g, opt):
     return rep
 
 
+def decal_gate_option(opt, value, who):
+    """kit 1.9.0: the effective decal_validate option under the guard default.  Not opted out: absent -> True
+    (applied); True / dict -> as given; a falsy value without an opt-out reason raises.  Opted out: the given value
+    (None / False -> report only, as before 1.9.0)."""
+    if "decal_validate" in opt:
+        return value or None
+    if value is None:
+        return True
+    if not value:
+        raise ValueError(f"{who}: decal_validate={value!r} switches the decal guard off; use "
+                         f"opt_out=dict(decal_validate='<reason>') instead")
+    return value
+
+
 def build_building(spec):
     """run a declarative building spec:
         prefix, frame (Building subclass, called with **params), params (KitParams),
         steps: [(component(g, **kw), kw), ...]   in order (components publish what later ones need on g),
         decals: optional fn(g) adding decal anchors, out: .blend path, decal_json: optional path,
-        decal_validate: optional (kit 1.3.0) True / dict of anchor_validate.validate_anchors keywords -> the anchors
-            are snapped and validated; absent -> the check only reports in the log.
+        decal_validate: (kit 1.3.0) True / dict of anchor_validate.validate_anchors keywords -> the anchors
+            are snapped and validated.  kit 1.9.0: absent = True (guard default); report-only needs an opt-out.
+        opt_out: kit 1.9.0 {guard: reason} (village_kit.guards.GUARDS) -- the guard-rails run by default after the
+            last step (entrance clearance, junction seal probe) and on the anchors (decal_validate);
+        entrances: optional explicit entrance list for the clearance gate (default: what the door components
+            published, guards.entrances_of).
     Returns the frame g.  Starts from an empty factory scene, saves compressed."""
+    from . import guards
+    opt = guards.opt_outs(spec, spec["prefix"])
     core.reset_scene()
     g = spec["frame"](spec["prefix"], **dict(spec.get("params", {})))
     g.make_collections(spec.get("collection"))
-    for step in spec["steps"]:
-        fn, kw = step if isinstance(step, tuple) else (step, {})
-        core.log(f"-- {getattr(fn, '__name__', fn)}")
-        fn(g, **kw)
+    try:
+        for step in spec["steps"]:
+            fn, kw = step if isinstance(step, tuple) else (step, {})
+            core.log(f"-- {getattr(fn, '__name__', fn)}")
+            g.activate()                               # kit 1.8.0: scoped frame proxy (no-op for most frames)
+            fn(g, **kw)
+    finally:
+        guards.end_lod_scope(g)                        # kit 1.9.0: a tmpl_lod rule never outlives its building
+    core.log("-- guards")
+    guards.after_steps(g, opt, entrances=spec.get("entrances"))
     if spec.get("decals"):
+        g.activate()
         spec["decals"](g)
-    _validate_decals(g, spec.get("decal_validate"))
+    _validate_decals(g, decal_gate_option(opt, spec.get("decal_validate"), spec["prefix"]))
     n = g.decals.build_collection()
     core.log(f"decal anchors: {n}")
     if spec.get("decal_json"):
@@ -134,6 +173,11 @@ def build_building(spec):
             extra["validation"] = g.decals.validation
         g.decals.export_json(spec["decal_json"], building=spec.get("building_id", spec["prefix"]),
                              extra=extra or spec.get("decal_meta"))
+    if spec.get("uv_finish", True):                    # kit 1.10.0: grain / collapsed UVs + walked-top Mask B
+        from . import uvgrain
+        ents = guards.entrances_of(g) if spec.get("entrances") is None else [
+            e if isinstance(e.get("origin"), np.ndarray) else guards._ent(**e) for e in spec["entrances"]]
+        uvgrain.finish_building(g.coll.all_objects, ents, log=core.log)
     tris = g.triangles()
     core.log(f"objects {len(g.coll.all_objects)} (instances {g.pools.n_inst}, pooled meshes {len(g.pools)}) "
              f"triangles {tris}")

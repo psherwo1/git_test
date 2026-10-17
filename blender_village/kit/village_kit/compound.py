@@ -51,7 +51,10 @@ class Wing:
 
     frame, prefix, params   the family frame class, the object-name prefix (unique per wing) and its parameters
     steps                   [fn or (fn, kw)] exactly as in a build_building spec (build order)
-    decals / decal_validate the wing's decal recipe fn(g) and optional assembly-style anchor gate (dict / True)
+    decals / decal_validate the wing's decal recipe fn(g) and its assembly-style anchor gate (dict / True; kit 1.9.0:
+                            None = the guard default True, report-only needs opt_out)
+    opt_out                 kit 1.9.0 {guard: reason} for this wing (village_kit.guards.GUARDS)
+    entrances               kit 1.9.0 explicit entrances for the wing's clearance gate (default: guards.entrances_of)
     cull_targets            object parts (without prefix) the compound cull may thin (backed pieces only)
     reach                   plan radius of the wing's body for its actor rings (default: from its bounds)
     door                    (x, y) of its door in wing-local coords (door views); None = none
@@ -66,8 +69,11 @@ class Wing:
 
     def __init__(self, name, frame, prefix, params=None, steps=(), at=(0.0, 0.0), yaw_deg=0.0, decals=None,
                  decal_validate=None, cull_targets=(), reach=None, door=None, view_heights=(0.3, 1.0, 1.65, 2.3),
-                 crane_heights=(5.0, 9.0), solid=None, ring_n=24, eye_heights=(1.0, 1.65)):
+                 crane_heights=(5.0, 9.0), solid=None, ring_n=24, eye_heights=(1.0, 1.65), opt_out=None,
+                 entrances=None):
         self.name = name
+        self.opt_out = dict(opt_out or {})        # kit 1.9.0: {guard: reason} (village_kit.guards)
+        self.entrances = entrances                # kit 1.9.0: explicit clearance-gate entrances (wing-local)
         self.frame = frame
         self.prefix = prefix
         self.params = dict(params or {})
@@ -561,26 +567,38 @@ def build_compound(spec):
         <collection>J), cull (True), cull_procs (4), decal_audit (True or audit_anchors kwargs), decal_max (120),
         out, decal_json, decal_meta.
     Returns the Compound context."""
-    from .assembly import _validate_decals
+    from .assembly import _validate_decals, decal_gate_option
+    from . import guards
     import bpy
+    opt = guards.opt_outs(spec, spec["collection"])
     core.reset_scene()
     top = core.new_collection(spec["collection"])
     wings = spec["wings"]
     for i, w in enumerate(wings):
         core.log(f"== wing {w.name} ({w.frame.__name__}, prefix {w.prefix})")
+        wopt = dict(opt)
+        wopt.update(guards.opt_outs(w, f"{spec['collection']}/{w.name}"))
         g = w.frame(w.prefix, **w.params)
         g.make_collections(f"{spec['collection']}_{w.name}")
         bpy.context.scene.collection.children.unlink(g.coll)
         top.children.link(g.coll)
         w.g = g
-        for step in w.steps:
-            fn, kw = step if isinstance(step, tuple) else (step, {})
-            core.log(f"-- {w.name}: {getattr(fn, '__name__', fn)}")
-            fn(g, **kw)
+        try:
+            for step in w.steps:
+                fn, kw = step if isinstance(step, tuple) else (step, {})
+                core.log(f"-- {w.name}: {getattr(fn, '__name__', fn)}")
+                g.activate()                           # kit 1.8.0: scoped frame proxy (no-op for most frames)
+                fn(g, **kw)
+        finally:
+            guards.end_lod_scope(g)                    # kit 1.9.0: the wing's tmpl_lod rule ends with the wing
+        if "clearance" not in wopt:                    # kit 1.9.0 guard (wing-local, the wing's own meshes)
+            guards.entrance_clearance(g, entrances=w.entrances)
         if w.decals:
+            g.activate()
             w.decals(g)
-        if w.decal_validate is not None or w.decals:
-            _validate_decals(g, w.decal_validate)
+        dv = decal_gate_option(wopt, w.decal_validate, f"{spec['collection']}/{w.name}")
+        if dv is not None or w.decals:
+            _validate_decals(g, dv)
         core.log(f"   wing {w.name}: {len(g.coll.all_objects)} objects, {g.triangles()} triangles, "
                  f"{len(g.decals.items)} anchors")
         _move_objects(w.objects(), _translate(PARK * (i + 1)))
@@ -602,6 +620,19 @@ def build_compound(spec):
     if spec.get("cull", True):
         compound_cull(c, wings, procs=spec.get("cull_procs", 4), max_views=spec.get("cull_max_views", 260),
                       wall_head=spec.get("cull_wall_head", True))
+    # kit 1.9.0 guard seal_probe: every registered roof-through-body junction (the compound's junction steps and
+    # each wing's own modules), on the whole placed building after its one cull
+    all_meshes = [o for o in top.all_objects if o.type == "MESH"]
+    js = guards.probed_junctions(getattr(c, "SEAL_JUNCTIONS", None), opt)
+    if js:
+        guards.junction_seal_probe(all_meshes, js, prefix=c.prefix)
+    for w in wings:
+        wopt = {k: v for k, v in opt.items() if not isinstance(v, dict)}   # per-junction opt-outs name their level
+        wopt.update(w.opt_out)
+        js = guards.probed_junctions(getattr(w.g, "SEAL_JUNCTIONS", None), wopt)
+        if js:
+            guards.seal_junctions(w.g, junctions=js, objects=all_meshes,
+                                  transform=lambda xy, w=w: w.to_world(np.array([xy[0], xy[1], 0.0]))[:2])
     # decal anchors: every wing's (already in world coordinates) + the junctions', audited on the whole building
     da = DecalAnchors(spec["collection"])
     for w in wings:
@@ -617,6 +648,17 @@ def build_compound(spec):
         extra["wings"] = {w.name: dict(frame=w.frame.__name__, prefix=w.prefix, at=list(w.at),
                                        yaw_deg=round(math.degrees(w.yaw), 3)) for w in wings}
         da.export_json(spec["decal_json"], building=spec.get("building_id", spec["collection"]), extra=extra)
+    if spec.get("uv_finish", True):                    # kit 1.10.0: grain / collapsed UVs + walked-top Mask B
+        from . import uvgrain
+        ents = []
+        for w in wings:                                # each wing's entrances, wing-local -> world
+            for e in (guards.entrances_of(w.g) if w.entrances is None else
+                      [e if isinstance(e.get("origin"), np.ndarray) else guards._ent(**e) for e in w.entrances]):
+                o3 = np.asarray(e["origin"], float)
+                o3 = np.array([o3[0], o3[1], 0.0 if o3.shape == (2,) else o3[2]])
+                ents.append(dict(e, name=f"{w.prefix} {e['name']}", origin=w.to_world(o3),
+                                 out=w.dir_world(np.asarray(e["out"], float))))
+        uvgrain.finish_building(top.all_objects, ents, log=core.log)
     tris = core.count_triangles(top.all_objects)
     core.log(f"objects {len(top.all_objects)} triangles {tris}")
     c.triangles = tris

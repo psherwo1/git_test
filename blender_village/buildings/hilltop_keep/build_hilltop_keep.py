@@ -101,6 +101,16 @@ def steps(off=0):
             oct_hidden_cull]                 # producer note 6
 
 
+# kit 1.9.0 guard-rails (village_kit.guards) run by default; the keep opts out of ONE junction of the seal probe.
+# The generic probe passes the wing thatch / turret and wing thatch / hall junctions (0 leaks) but finds 3 of
+# ~126,000 exterior rays (sub-pixel, el 10-45 deg) threading the shake collar's jagged comb into the void between
+# the collar and the stone cone and out to the sky.  The keep is a signed-off hero whose geometry this kit step
+# must not change; the comb seal is queued for the keep family's next round (kit/CHANGELOG.md 1.9.0).
+OPT_OUT = dict(seal_probe={"shake collar / stone cone": (
+    "signed-off hero, geometry frozen in kit 1.9.0: 3 of ~126k probe rays thread the shake collar's jagged comb "
+    "(sub-pixel); queued for the keep family's next round")})
+
+
 def main():
     variant = bool(os.environ.get("KEEP_KIT_VARIANT"))
     if variant:
@@ -114,6 +124,7 @@ def main():
         frame=OctFrame, params=KIT,
         steps=steps(KIT["seed_offset"]),
         decals=decals,                      # producer note 11 (+ the round-9 door walking-zone gate)
+        opt_out=OPT_OUT,                    # kit 1.9.0 guard-rails (see OPT_OUT)
         out=out,
         decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
         decal_meta=dict(kit_params={k: (v if not hasattr(v, "tolist") else v.tolist()) for k, v in KIT.items()}),

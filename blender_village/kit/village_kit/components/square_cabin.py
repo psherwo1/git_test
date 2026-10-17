@@ -1,9 +1,9 @@
 """components.square_cabin -- a SQUARE TIMBER LOOKOUT CABIN perched on a round (or any) wall head, with its own
 square-pyramid shingle roof (kit changes v1_stone_watchtower round 2; new module, nothing existing changed).
 
-    square_cabin(g, side=5.4, height=2.30, z_bed=None, bearers=(-1.6, 0.0, 1.6), n_joists=7, struts=True,
+    square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=None, n_joists=7, struts=True,
                  strut_drop=1.25, n_open=2, open_w=1.10, open_sill=1.00, open_h=0.90, pitch_deg=48.0, eave_out=0.50,
-                 exposure=0.34, cap_r=0.62, seed=None)
+                 exposure=0.34, cap_r=0.62, seed=None, bed_fill=True, finial_scale=0.80, roof=None, roof_fn=None)
 
 A gatehouse loft, a harbour look-out or a watchtower cabin from one call.  The cabin's square plan is centred on
 the z axis, its sides face -Y / +X / +Y / -X (the entrance side of the building is -Y).  It sits on a wall head at

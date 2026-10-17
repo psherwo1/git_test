@@ -11,8 +11,10 @@ them from the family frames (tower_of / round_wall_of).
         tower-face intersection is traced by ray casts on the built roofing and closed with the keep family's
         flaunching language (components.thatch.flaunch_loop: a lime-mortar fillet where the line is flatter than
         `steep_deg`, stepped lead flashing tucked into the bed joints where it is steeper); the run's ends are
-        dressed down over the cut eave lip with a lead end-apron so no shingle edge shows against the stone
-        -> <P>_<name>_fillet (M_mortar / M_lead)
+        dressed down over the cut eave lip with a lead end-apron (wall_end_apron) so no shingle edge shows against
+        the stone -> <P>_<name>_fillet (M_mortar / M_lead)
+    wall_end_apron(acc, P_end, out_n, along, drop, ...)   the lead plate on a wall face where a cut eave lip meets
+        it; kit 1.8.0: renamed from end_apron (deprecated alias kept), roof_junction.cone_nose_apron is the cone piece
     wall_tower_abutment(c, wall, tower, ...)   where a round post-and-infill wall runs into a round masonry tower: a
         hewn abutment post (components.hewn.hewn_square, the keep family's square timber) on each side, its drum
         half let into the masonry, covering the daub / stone seam from the plinth to the wall plate, with a mortar
@@ -160,8 +162,10 @@ def _smooth_up(z, n_max=3, n_avg=4):
     return np.maximum(m, z)
 
 
-def end_apron(acc, P_end, out_n, along, drop, w=0.16, t=0.004, proud=0.025, turn=0.05, closed_lip=False):
-    """lead end-apron where a roof's cut eave lip meets a wall: a plate on the wall face from just above the roof
+def wall_end_apron(acc, P_end, out_n, along, drop, w=0.16, t=0.004, proud=0.025, turn=0.05, closed_lip=False):
+    """kit 1.8.0: renamed from junctions.end_apron (roof_junction.end_apron is a different piece, now
+    roof_junction.cone_nose_apron); `end_apron` stays here as a deprecated alias.
+    lead end-apron where a roof's cut eave lip meets a wall: a plate on the wall face from just above the roof
     line down over the lip (`drop`), `w` wide toward the roof, its lower edge turned out `turn` under the lip.
     closed_lip=True (kit v4 r3, director v4 r2 must-fix 1): the drip lip is a CLOSED bent strip with its own
     vertices (top, bottom and both end caps), tucked 3 mm up into the plate's bottom edge instead of welded onto
@@ -225,6 +229,10 @@ def end_apron(acc, P_end, out_n, along, drop, w=0.16, t=0.004, proud=0.025, turn
         for i in range(m_ - 1):
             quads.append([k * m_ + i, k * m_ + i + 1, (k + 1) * m_ + i + 1, (k + 1) * m_ + i])
     acc.add(lip, [np.array(quads)[:, ::-1]], "M_lead")
+
+
+end_apron = wall_end_apron
+"""deprecated alias (kit 1.8.0): use wall_end_apron."""
 
 
 # parts of a RoundFrame roof wing that are trimmed at the tower face (structure first, then the roofing)
@@ -661,8 +669,8 @@ def roof_tower_flashing(c, roof, tower, roof_parts=("roof_shingles", "roof_start
             Pe[:, 2] = zb + 0.03
             for i0, i1 in ((0, 1), (-1, -2)):
                 n_out = np.array([Pe[i0, 0] - C[0], Pe[i0, 1] - C[1], 0.0])
-                end_apron(acc, Pe[i0] + np.array([0, 0, 0.02]), n_out, Pe[i0] - Pe[i1], apron[1], w=apron[0],
-                          closed_lip=apron_closed)
+                wall_end_apron(acc, Pe[i0] + np.array([0, 0, 0.02]), n_out, Pe[i0] - Pe[i1], apron[1], w=apron[0],
+                               closed_lip=apron_closed)
                 ends.append(Pe[i0].copy())
         if decals:
             _roof_junction_decals(c, P, C, seed + k)
@@ -672,6 +680,13 @@ def roof_tower_flashing(c, roof, tower, roof_parts=("roof_shingles", "roof_start
         rafter_bearings(c, roof, tower, name, seed=seed + 10, **kw)
     c.finalize(acc, smooth_deg=35.0)
     c.__dict__.setdefault("junction_runs", {})[name] = runs
+    if runs:
+        # kit 1.9.0 (guard seal_probe): the roof runs into the tower -- registered on the compound for the generic
+        # see-through probe after the whole-building cull (village_kit.guards; no geometry change)
+        from ..guards import register_junction
+        zs = np.concatenate([P[:, 2] for _, P in runs])
+        register_junction(c, f"{roof} roof / {tower} tower", tuple(o.name for o in objs), C,
+                          lambda z, R=T["R"]: float(R(z)), (float(zs.min()) - 0.3, float(zs.max()) + 0.3))
     return runs
 
 

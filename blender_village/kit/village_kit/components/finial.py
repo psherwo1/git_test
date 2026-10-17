@@ -1,6 +1,6 @@
 """components.finial -- apex "lead hat" collar and finials.
 
-build_collar_finial(g)  lead-hat collar (smooth cone with drip fascia, rolled bead, standing seams), bell-cast
+build_collar_finial(g, coll)  lead-hat collar (smooth cone with drip fascia, rolled bead, standing seams), bell-cast
                         upper collar, turned spindle and iron spike (style "spike")
 """
 import math

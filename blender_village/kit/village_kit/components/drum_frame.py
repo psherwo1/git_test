@@ -31,6 +31,7 @@ class DrumFrame(Building):
     tower windmill; components change them through their parameters (g.set)."""
 
     LEANED = ("tower_", "cap_", "windshaft", "poll_end", "rotor_iron", "wheel_", "tail_")
+    FAMILY = "drum"                      # kit 1.8.0: components.finish dispatch ("tower" once a tower roof is built)
 
     def __init__(self, prefix="MILL", collection=None, detail_rule=True, hygiene=True, entrance_relief=0.01,
                  min_relief=0.02, rubble=None, **unused):
@@ -301,11 +302,13 @@ def win_list(g):
     spec = getattr(g, "WIN_SPEC", None)
     if spec is None:
         return [(a, g.WIN, dz) for a, dz in zip(g.WIN_AZ, win_dz(g))]
-    return [(a, s, 0.0) for a, s in zip(g.WIN_AZ, spec)]
+    from .openings import resolve                  # kit 1.8.0: components.openings specs are accepted too
+    return [(a, resolve(s, "drum"), 0.0) for a, s in zip(g.WIN_AZ, spec)]
 
 
-WINDOW_FW = dict(slit=[(0.17, 0.21), (0.21, 0.17)], lookout=[(0.20, 0.26), (0.26, 0.20)])
-"""jamb-block face widths (left, right) per jamb course, alternating course by course."""
+from .openings import DRUM_WINDOW_FW as WINDOW_FW  # noqa: E402
+"""jamb-block face widths (left, right) per jamb course, alternating course by course (kit 1.8.0: the same object
+as components.openings.DRUM_WINDOW_FW)."""
 
 
 def window_spec(clear_w=0.16, clear_h=0.55, sill=1.30, kind="slit", fw=None, lintel_h=None, course_h=0.30,
@@ -316,18 +319,10 @@ def window_spec(clear_w=0.16, clear_h=0.55, sill=1.30, kind="slit", fw=None, lin
     kind "lookout": a straight reveal through the wall and a closed dark room `room` m deep behind the face
     (producer note 6).  The jamb courses (about `course_h` each), the sill / lintel sizes and the rubble keep-out
     bands are derived from the clear size, so a slit, a stair light and a lookout come from one module."""
-    cw = clear_w / 2.0
-    z0, z1 = float(sill), float(sill) + clear_h
-    n = max(2, int(round(clear_h / course_h)))
-    jz = [float(z) for z in np.linspace(z0, z1, n + 1)]
-    fw = fw or WINDOW_FW["lookout" if kind == "lookout" else "slit"]
-    fmax = max(max(p) for p in fw)
-    lh = lintel_h if lintel_h is not None else (0.18 if kind == "slit" else 0.24)
-    sill_w = 2 * (cw + fmax) + 0.04
-    lintel_w = 2 * (cw + fmax) + 0.16
-    return dict(kind=kind, cw=cw, z0=z0, z1=z1, jz=jz, fw=fw, splay=splay, room=room, sill_w=sill_w,
-                lintel_w=lintel_w, lintel_h=lh, z_sill=z0 - 0.065, z_lintel=z1 + 0.005 + lh / 2,
-                zb=z0 - 0.13, zt=z1 + lh + 0.015, hw_sill=sill_w / 2, hw_jamb=cw + fmax + 0.01, hw_lintel=lintel_w / 2)
+    # kit 1.8.0: a thin wrapper of components.openings (family "drum", openings.drum_window / openings.window)
+    from .openings import drum_window
+    return drum_window(clear_w, clear_h, sill, kind=kind, fw=fw, lintel_h=lintel_h, course_h=course_h, splay=splay,
+                       room=room)
 
 
 drum_window_spec = window_spec

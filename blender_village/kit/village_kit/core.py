@@ -861,7 +861,10 @@ def _needle_faces(bm, h_min):
     L = np.max(np.stack([np.linalg.norm(B - A, axis=1), np.linalg.norm(C - B, axis=1),
                          np.linalg.norm(A - C, axis=1)]), axis=0)
     bad = ar2 / np.maximum(L, 1e-12) < h_min
-    return list({tris[i][0].face for i in np.flatnonzero(bad)})
+    # kit 1.10.1: de-duplicate in triangle order.  A set of BMFace iterates in memory-address order, which made
+    # the needle repairs below run in a different order from build to build (the keep's turret cap came out with
+    # flipped winding in some builds).
+    return list(dict.fromkeys(tris[i][0].face for i in np.flatnonzero(bad)))
 
 
 def nanite_clean(me, merge_dist=1e-4, h_min=1e-4, iters=5):
@@ -886,15 +889,15 @@ def nanite_clean(me, merge_dist=1e-4, h_min=1e-4, iters=5):
         if it == iters - 1:
             bmesh.ops.delete(bm, geom=[f for f in bad_f if f.is_valid], context="FACES")
             break
-        short, longe = set(), set()
+        short, longe = {}, {}                  # ordered "sets" (dict keys), for a deterministic repair order
         for f in bad_f:
             if len(f.verts) != 3:
                 continue
             es = sorted(f.edges, key=lambda e: e.calc_length())
             if es[0].calc_length() < 1e-3:
-                short.add(es[0])
+                short[es[0]] = None
             elif es[-1].is_manifold:
-                longe.add(es[-1])
+                longe[es[-1]] = None
         if longe:
             bmesh.ops.rotate_edges(bm, edges=[e for e in longe if e.is_valid and e not in short], use_ccw=False)
         if short:
