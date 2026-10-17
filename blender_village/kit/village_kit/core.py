@@ -981,11 +981,23 @@ def _vis_spawn_pool(procs, Vw, T, own):
     blender = (os.path.normcase(os.sep + "bpy" + os.sep), os.path.normcase("Blender Foundation"))
     sys.path[:] = [p for p, n in zip(saved, norm)
                    if not (blender[0] in n and os.path.normcase(os.sep + "scripts") in n) and blender[1] not in n]
+    # ProcessPoolExecutor, not mp.Pool: when a worker dies (e.g. MemoryError) the executor raises BrokenProcessPool
+    # and the cull falls back to one process; mp.Pool would hang.  The executor starts workers on demand, so all of
+    # them are started (one warm-up task each) while the pre-bpy path is in place.
+    from concurrent.futures import ProcessPoolExecutor
     try:
-        pool = mp.get_context("spawn").Pool(procs, initializer=_vis_spawn_init, initargs=(Vw, T, own))
+        pool = ProcessPoolExecutor(max_workers=procs, mp_context=mp.get_context("spawn"),
+                                   initializer=_vis_spawn_init, initargs=(Vw, T, own))
+        list(pool.map(_vis_noop, range(procs)))
     finally:
         sys.path[:] = saved
     return pool
+
+
+def _vis_noop(i):
+    import time
+    time.sleep(0.2)                           # keeps each warm-up task busy so every worker gets started
+    return i
 
 
 def _vis_spawn_worker(args):
@@ -1115,14 +1127,18 @@ def visibility_cull(targets, extra_views=(), procs=3, extra_by_target=None, obje
                     res = pool.map(_vis_worker, chunks)
             except Exception as ex:
                 log("  (visibility: fork failed)", ex)
-        else:
+        elif spawn_pool is not False:                             # False: an earlier spawn failure, stay single
             try:
                 if spawn_pool is None:
                     spawn_pool = _vis_spawn_pool(procs, Vw, T, own)
                 VN = _VIS["views_np"]
-                res = spawn_pool.map(_vis_spawn_worker, [(VN, c_) for c_ in chunks])
-            except Exception as ex:
-                log("  (visibility: spawn failed)", ex)
+                res = list(spawn_pool.map(_vis_spawn_worker, [(VN, c_) for c_ in chunks]))
+            except Exception as ex:                               # incl. BrokenProcessPool when a worker dies
+                log("  (visibility: spawn failed, rest of this cull single process)", repr(ex))
+                res = None
+                if spawn_pool:
+                    spawn_pool.shutdown(wait=False, cancel_futures=True)
+                spawn_pool = False
         if res is None:                                           # single process (same chunks, same result)
             log("  (visibility: single process)")
             res = [_vis_worker(c_) for c_ in chunks]
@@ -1143,9 +1159,8 @@ def visibility_cull(targets, extra_views=(), procs=3, extra_by_target=None, obje
         ob.data.update()
         total += len(pids)
         log(f"  visibility cull {name}: -{len(pids)} of {len(groups)} polygons")
-    if spawn_pool is not None:
-        spawn_pool.close()
-        spawn_pool.join()
+    if spawn_pool:
+        spawn_pool.shutdown(wait=True)
     return total
 
 

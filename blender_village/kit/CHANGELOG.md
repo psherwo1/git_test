@@ -29,6 +29,10 @@
 - **Spawn workers are capped at 2 per build** (environment variable `VILLAGE_CULL_PROCS` overrides it). Each spawn
   worker holds its own BVH copy, and with four variant builders on one 16 GB desktop builds ran out of memory. The
   cull result does not depend on the worker count.
+- **A dying spawn worker no longer hangs the build.** The pool is a `concurrent.futures.ProcessPoolExecutor`
+  (not `mp.Pool`): a worker killed by MemoryError raises `BrokenProcessPool`, and the rest of that cull runs in one
+  process with the same chunks and the same result. Tested by killing a worker on purpose: the error was raised in
+  0.1 s, and spawn and single-process results still matched.
 - **Build scripts must keep their build under `if __name__ == "__main__":`** (spawn re-imports the script in every
   worker).  All three hero scripts already do.
 - **Verified** (all three rebuilt to scratch, in parallel): hilltop_keep **1,166,874**, wattle_roundhut **876,619**,
