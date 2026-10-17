@@ -12,6 +12,8 @@ body, a tower + an annex ...) (kit, variant v3_longhouse_roundend).
                                           box is centred on the origin (art bible 8), recording g.SHIFT
     composite_decals(g, seed)             producer note 11 anchors for rubble walls (straight and round), openings,
                                           thatch / shingle roofs and the round end's cone
+    roof_cut_field(roofs, lift, off, rake_deg)        round 5: a yielding body's cut surface against GableRoof(s)
+    trim_units_field(ob, mark, field, removed, min_keep)  round 5: cut units on a curved surface, capped
 """
 import math
 
@@ -27,7 +29,7 @@ reveals) and small closed hero pieces."""
 
 def cone_roof(g, seed=606, structure_seeds=(404, 505), soffit=True, soffit_skip=None, abut_roof=None,
               abut_lift=0.02, abut_rule="tuck", abut_tuck=0.15, abut_trim=False, soffit_cut=False,
-              abut_soakers=False):
+              abut_soakers=False, abut_top_trim=False, abut_rake_deg=None, abut_min_keep=0.2):
     """soffit=True (round 2 default): cone_soffit under the whole eave overhang (soffit_skip(P) -> bool drops the
     part inside an attached body).  abut_roof (round 3): a GableRoof (or a list of them) this cone meets -- the
     cone yields to it (cone_keep_out): every covering unit inside / under that roof's solid or less than abut_lift
@@ -38,7 +40,13 @@ def cone_roof(g, seed=606, structure_seeds=(404, 505), soffit=True, soffit_skip=
     soffit_cut=True -- the soffit slab is built already cut by the roof keep-out (whole azimuth columns, closed end
     faces on the keep-out boundary; cone_soffit(cut=...)), so no soffit sheet reaches into the roof's zone;
     abut_soakers=True -- one lead soaker sheet under every unit dropped near the roof (cone_soakers), so no dropped
-    unit leaves a dark void beside the flashing."""
+    unit leaves a dark void beside the flashing.
+    round 5: abut_top_trim=True -- the eave-band covering units are cut on the roof's top surface and eave plane
+    (cone_keep_out(top_trim=True)): every oversailing course ends on one line along the eave roll, and the removed
+    parts get soakers too; abut_rake_deg (with abut_top_trim): past the roll's crest the cut runs down-and-out at
+    this angle (cone_keep_out(top_rake_deg=...)); the soaker lies over the whole cut region (lead saddle) and the
+    battens / soffit / rafters under it stay; abut_min_keep: the smallest share of a unit's vertices above the cut
+    for it to be cut rather than dropped whole (cone_keep_out(top_min_keep=...))."""
     from .conical_roof import build_purlins_battens, build_rafters, build_roof_blocker, build_shingles
     build_rafters(g, g.coll, seed=structure_seeds[0])
     build_purlins_battens(g, g.coll, seed=structure_seeds[1])
@@ -56,7 +64,8 @@ def cone_roof(g, seed=606, structure_seeds=(404, 505), soffit=True, soffit_skip=
         cone_soffit(g, skip=soffit_skip, cut=cut)
     if roofs:
         cone_keep_out(g, roofs, lift=abut_lift, rule=abut_rule, tuck=abut_tuck, trim=abut_trim,
-                      soffit_cut=bool(soffit and soffit_cut), soakers=abut_soakers)
+                      soffit_cut=bool(soffit and soffit_cut), soakers=abut_soakers, top_trim=abut_top_trim,
+                      top_rake_deg=abut_rake_deg, top_min_keep=abut_min_keep)
 
 
 # =================================================================================================================
@@ -150,13 +159,36 @@ def roof_eave_planes(roof, off=0.004):
     return out
 
 
-def trim_units(ob, mark, planes, whole=True, mark_face=None):
+def _face_groups(faces):
+    """edge-connected groups of a list of BMFaces (round 5: the removed part of each cut unit)."""
+    fs = set(faces)
+    seen, out = set(), []
+    for f0 in faces:
+        if f0 in seen:
+            continue
+        grp, stack = [], [f0]
+        seen.add(f0)
+        while stack:
+            f = stack.pop()
+            grp.append(f)
+            for e in f.edges:
+                for lf in e.link_faces:
+                    if lf in fs and lf not in seen:
+                        seen.add(lf)
+                        stack.append(lf)
+        out.append(grp)
+    return out
+
+
+def trim_units(ob, mark, planes, whole=True, mark_face=None, removed=None):
     """KIT HELPER (round 4): an EVEN cut line instead of a ragged one.  Every unit (connected island) of mesh object
     `ob` that has a vertex marked by mark(V) -> bool AND a vertex on the outer side of one of `planes` [(point,
     outward normal)] is cut on that plane (bmesh.bisect_plane); the part on the inner side is deleted (whole=True:
     all of it -- small units such as shingles; whole=False: only the faces whose centre mark_face(C) marks -- long
     members such as rafters) and every opening the cut leaves is closed with a flat cap (holes_fill, custom data
-    copied from the unit), so the kept units of every course end on one regular line.  Returns (units cut, caps)."""
+    copied from the unit), so the kept units of every course end on one regular line.  Returns (units cut, caps).
+    round 5: removed (a list, optional) collects the world vertex array of every deleted part (cone_soakers lays lead
+    under them too)."""
     import bmesh
     me = ob.data
     nv = len(me.vertices)
@@ -209,6 +241,9 @@ def trim_units(ob, mark, planes, whole=True, mark_face=None):
                 kill.append(f)
         if not kill:
             continue
+        if removed is not None:
+            for grp in _face_groups(kill):
+                removed.append(np.array([v.co[:] for f in grp for v in f.verts]))
         kill_set = set(kill)
         rim = {e for f in kill for e in f.edges if any(lf not in kill_set for lf in e.link_faces)}
         bmesh.ops.delete(bm, geom=kill, context="FACES_ONLY")
@@ -242,18 +277,168 @@ def trim_units(ob, mark, planes, whole=True, mark_face=None):
     return n_units, n_caps
 
 
+def roof_cut_field(roofs, lift=0.02, off=0.004, rake_deg=None):
+    """round 5: the cut surface of a body that yields to GableRoof(s), as a continuous scalar field P world -> f
+    (f > 0: keep side).  Per roof f = max(z - (top + lift), |local y| - y_eave): the keep side is everything over the
+    roof solid's top (linear_roof.GableRoof.section_columns, the eave roll and ridge roll included) by more than
+    `lift`, OR outside its eave plane (roof_eave_planes, + `off`), OR beyond its ends along the ridge; with several
+    roofs the minimum.  Units cut on it (trim_units_field) end ON the roof's top along the eave roll and on the eave
+    plane past the lip -- one line, not a stack of whole-unit ends.
+    rake_deg (optional): past the eave roll's crest the cut surface runs on outward and DOWN at this angle (the
+    roll's top continued as a raking verge line) instead of dropping vertically at the eave plane, so the yielding
+    body's eave courses that hang in front of the roll end on one raking line resting on the roll, not as a
+    vertical stack of cut plates beside its nose."""
+    roofs = roofs if isinstance(roofs, (list, tuple)) else [roofs]
+    tr = math.tan(math.radians(rake_deg)) if rake_deg is not None else None
+
+    def field(P):
+        P = np.asarray(P, float)
+        f = np.full(len(P), np.inf)
+        for r in roofs:
+            ya, zt, _zb = r.section_columns()
+            ok = np.isfinite(zt)
+            ym = float(ya[ok].max())
+            L = r.to_local(P)
+            ay = np.abs(L[:, 1])
+            top = np.interp(np.minimum(ay, ym), ya[ok], zt[ok])
+            if tr is None:
+                fr = np.maximum(L[:, 2] - top - lift, ay - (ym + off))
+            else:
+                yo, zo = ya[ok], zt[ok]
+                band = yo > yo.max() - 0.45
+                y_c = float(yo[band][np.argmax(zo[band])])
+                z_c = float(zo[band].max())
+                zcut = np.where(ay <= ym, top, -np.inf)
+                zcut = np.maximum(zcut, np.where(ay > y_c, z_c - (ay - y_c) * tr, -np.inf))
+                fr = L[:, 2] - zcut - lift
+            fr = np.maximum(fr, np.maximum(r.xa - 0.06 - L[:, 0], L[:, 0] - (r.xb + 0.06)))
+            f = np.minimum(f, fr)
+        return f
+    return field
+
+
+def _copy_corner_data(bm, faces):
+    """round 5: corner data (Mask colour, UVs) of new cap faces copied from another loop on the same vertex."""
+    fs = set(faces)
+    cols = list(bm.loops.layers.color.values()) + list(bm.loops.layers.float_color.values())
+    uvs = list(bm.loops.layers.uv.values())
+    if not cols and not uvs:
+        return
+    for f in faces:
+        for lp in f.loops:
+            src = next((ol for ol in lp.vert.link_loops if ol.face not in fs), None)
+            if src is None:
+                continue
+            for ly in cols:
+                lp[ly] = src[ly]
+            for ly in uvs:
+                lp[ly].uv = src[ly].uv
+
+
+def trim_units_field(ob, mark, field, removed=None, min_keep=0.2, grad_h=0.01):
+    """KIT HELPER (round 5): trim_units on a CURVED cut surface.  Every unit (connected island) of mesh object `ob`
+    with a vertex marked by mark(V) -> bool that the scalar field(V) (> 0: keep) crosses is clipped to field >= 0:
+    crossing edges are split where the field (linearly interpolated) is zero, faces are split along those points,
+    the part on the negative side is deleted and the opening is closed with a cap (holes_fill; material, smoothing,
+    Mask colour and UVs copied from the unit; the cap faces down the field's gradient).  A unit with fewer than
+    `min_keep` of its vertices on the keep side is left alone (the caller drops it whole: no slivers).
+    removed (a list, optional) collects the world vertex array of every deleted part.  Returns (units cut, caps)."""
+    import bmesh
+    me = ob.data
+    nv = len(me.vertices)
+    if not nv:
+        return 0, 0
+    V = np.zeros(nv * 3)
+    me.vertices.foreach_get("co", V)
+    V = V.reshape(-1, 3)
+    mk = np.asarray(mark(V), bool)
+    if not mk.any():
+        return 0, 0
+    f = np.asarray(field(V), float)
+    f = np.where(np.abs(f) < 1e-6, -1e-6, f)
+    lab = mesh_islands(me)
+    has_mark = np.bincount(lab, weights=mk.astype(float), minlength=nv) > 0
+    n_pos = np.bincount(lab, weights=(f > 0).astype(float), minlength=nv)
+    n_all = np.bincount(lab, minlength=nv).astype(float)
+    sel = has_mark & (n_pos > 0) & (n_pos < n_all) & (n_pos >= min_keep * np.maximum(n_all, 1))
+    vsel = sel[lab]
+    if not vsel.any():
+        return 0, 0
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bm.verts.ensure_lookup_table()
+    val = {bm.verts[i]: float(f[i]) for i in np.flatnonzero(vsel)}
+    # 1) split every crossing edge at the field's zero
+    cross = [e for e in bm.edges if e.verts[0] in val and e.verts[1] in val
+             and (val[e.verts[0]] > 0) != (val[e.verts[1]] > 0)]
+    on = []
+    for e in cross:
+        a, b = e.verts
+        fa, fb = val[a], val[b]
+        t = min(max(fa / (fa - fb), 1e-4), 1 - 1e-4)
+        co = a.co.lerp(b.co, t)
+        _ne, nvt = bmesh.utils.edge_split(e, a, t)
+        nvt.co = co
+        val[nvt] = 0.0
+        on.append(nvt)
+    if not on:
+        bm.free()
+        return 0, 0
+    # 2) split the faces through those points
+    bmesh.ops.connect_verts(bm, verts=on, check_degenerate=False)
+    # 3) delete the negative side of the selected units
+    kill = [fc for fc in bm.faces if all(v in val for v in fc.verts) and max(val[v] for v in fc.verts) <= 0.0
+            and min(val[v] for v in fc.verts) < 0.0]
+    if removed is not None:
+        for grp in _face_groups(kill):
+            removed.append(np.array([v.co[:] for fc in grp for v in fc.verts]))
+    kill_set = set(kill)
+    rim = {e for fc in kill for e in fc.edges if any(lf not in kill_set for lf in e.link_faces)}
+    bmesh.ops.delete(bm, geom=kill, context="FACES_ONLY")
+    loose_e = [e for e in bm.edges if e.is_valid and not e.link_faces]
+    if loose_e:
+        bmesh.ops.delete(bm, geom=loose_e, context="EDGES")
+    loose_v = [v for v in bm.verts if v.is_valid and not v.link_faces]
+    if loose_v:
+        bmesh.ops.delete(bm, geom=loose_v, context="VERTS")
+    rim = [e for e in rim if e.is_valid and e.is_boundary]
+    n_caps = 0
+    if rim:
+        r = bmesh.ops.holes_fill(bm, edges=rim, sides=0)
+        caps = r["faces"]
+        for fc in caps:
+            nb = [lf for e in fc.edges for lf in e.link_faces if lf is not fc]
+            if nb:
+                fc.material_index = nb[0].material_index
+                fc.smooth = nb[0].smooth
+            fc.normal_update()
+            c = np.array(fc.calc_center_median()[:])
+            gr = np.array([(field((c + d)[None])[0] - field((c - d)[None])[0]) for d in np.eye(3) * grad_h])
+            if float(np.dot(np.array(fc.normal[:]), gr)) > 0:      # the cap faces the cut side (down the field)
+                fc.normal_flip()
+        _copy_corner_data(bm, caps)
+        n_caps = len(caps)
+    bmesh.ops.dissolve_degenerate(bm, dist=1e-5, edges=bm.edges[:])
+    bm.to_mesh(me)
+    bm.free()
+    me.update()
+    return int(sel.sum()), n_caps
+
+
 def cone_soakers(g, units_V, roofs, reach=0.30, lap=0.035, cell=0.02, z0=0.002, t=0.006, mat="M_lead",
-                 name="cone_soakers"):
+                 name="cone_soakers", always=()):
     """KIT COMPONENT (round 4, part of cone_keep_out(soakers=True)): ONE continuous lead soaker sheet on a RoundFrame
     cone's reference surface under every covering unit the keep-out dropped within `reach` m of the roof it meets
     (|GableRoof.top_depth| <= reach), each footprint grown by `lap` so the sheet runs under the neighbouring kept
     units and under the thatch.  Where both roofs yield (the thatch clipped under the cone, the cone units dropped
     inside the thatch solid) the pit shows lead, never a dark void.  The footprints are rasterised on a (azimuth,
     slope) grid of `cell` m and the sheet is a closed slab (top, underside, side faces on its outline).
-    units_V: list of (n, 3) world vertex arrays of the dropped units.  -> <P>_cone_soakers (or None)"""
+    units_V: list of (n, 3) world vertex arrays of the dropped units.  -> <P>_cone_soakers (or None)
+    round 5: always -- vertex arrays laid under whatever their distance to the roof (the removed parts of units cut
+    by cone_keep_out(top_trim=True), including those in front of the roof's eave roll, outside its columns)."""
     from ..geom import Acc, finalize
     from .cone import az2th, s_at_r, surf_frame
-    near = []
+    near = [np.asarray(V, float) for V in always if len(V)]
     for V in units_V:
         c = V.mean(0)[None]
         d = np.full(1, np.inf)
@@ -346,7 +531,7 @@ def _island_vertex_sets(ob, mask_fn):
 
 
 def cone_keep_out(g, roofs, lift=0.02, rule="tuck", tuck=0.15, trim=False, soffit_cut=False, soakers=False,
-                  soaker_reach=0.30):
+                  soaker_reach=0.30, top_trim=False, top_min_keep=0.2, top_rake_deg=None):
     """KIT COMPONENT (round 3, after cone_roof): the cone yields to the linear roof(s) it meets -- the mirror of
     linear_roof(abut_cone=...).  The keep-out is each GableRoof's solid (deck, courses, eave roll, ridge roll; its
     vertical columns, linear_roof.GableRoof.keep_out) up to `lift` over its top and everything under it.  Covering
@@ -357,7 +542,17 @@ def cone_keep_out(g, roofs, lift=0.02, rule="tuck", tuck=0.15, trim=False, soffi
         while on the slopes a unit may tuck its corner a little under the thatch beside the flashing;
       rule "any": every unit with any vertex in the keep-out; "frac": half its vertices; "all": wholly inside.
     Rafter, purlin and soffit faces wholly inside it are dropped (their ends stay buried in the roof).  Records
-    g.CONE_KEEP_OUT (the keep-out fn) for later steps.  Returns {object: polygons removed}."""
+    g.CONE_KEEP_OUT (the keep-out fn) for later steps.  Returns {object: polygons removed}.
+    round 5: top_trim=True -- in the roof's eave band the covering units are CUT on the roof's top surface (+ lift)
+    and its eave plane (roof_cut_field, trim_units_field) instead of dropped whole or cut on the eave plane only, so
+    every oversailing course ends on one line along the eave roll's top with a capped end (units with less than
+    top_min_keep of their vertices above it are still dropped whole); with soakers=True the removed part of every
+    cut unit is a soaker footprint too (lead under every cut AND every dropped unit).  top_rake_deg (with
+    top_trim): past the roll's crest the cut runs on down-and-out at this angle (roof_cut_field(rake_deg=...)) --
+    covering units, battens and rafters in front of the roll nose are cut on that raking line (units mostly under
+    it are dropped) and the soaker is laid over the whole cut region (a lead saddle in front of the roll nose;
+    the battens, soffit and rafters under it stay), so the eave courses end on one raking line resting on the
+    roll, not in a vertical stack of cut plates."""
     import bpy
     roofs = roofs if isinstance(roofs, (list, tuple)) else [roofs]
 
@@ -372,17 +567,43 @@ def cone_keep_out(g, roofs, lift=0.02, rule="tuck", tuck=0.15, trim=False, soffi
             d = r.top_depth(V)
             m |= (d > tuck) | r.under_soffit(V) | ((d > -lift) & r.eave_zone(V))
         return m
+    def eave_mark(V):
+        m = np.zeros(len(V), bool)
+        for r in roofs:
+            d = r.top_depth(V)
+            m |= r.eave_zone(V) & np.isfinite(d) & ((d > -lift) | r.under_soffit(V))
+        return m
     out = {}
     planes = [pl for r in roofs for pl in roof_eave_planes(r)] if trim else []
     cut_info = {}
     drop_sets = []
+    removed = []
+    field = roof_cut_field(roofs, lift=lift + 0.003, rake_deg=top_rake_deg) if top_trim else None
+    rake = field is not None and top_rake_deg is not None
+
+    def rake_mark(V):
+        m = np.zeros(len(V), bool)
+        for r in roofs:
+            m |= r.eave_zone(V)
+        return m & (field(V) < 0)
     for nm in COVER_UNITS + STRUCT_FACES:
         ob = bpy.data.objects.get(f"{g.prefix}_{nm}")
         if ob is None or ob.type != "MESH":
             continue
         if nm == "roof_soffit_deck" and soffit_cut:
             continue                                   # built already cut (cone_soffit(cut=...)), end faces closed
-        if planes and nm in COVER_UNITS:
+        if field is not None and nm in COVER_UNITS:
+            # round 5: cut on the roof's top / eave plane in the eave band (one line along the roll), then the rest
+            rm = [] if (soakers and nm in ("roof_shingles", "roof_starter")) else None
+            if rake and rm is not None:                # the whole footprint of every unit the rake touches
+                rm += _island_vertex_sets(ob, rake_mark)
+            cut_info[nm] = trim_units_field(ob, rake_mark if rake else eave_mark, field, removed=rm,
+                                            min_keep=top_min_keep)
+            if rm:
+                removed += rm
+            if rake:                                   # units (mostly) under the raking line: dropped whole
+                out[nm + " (rake)"] = drop_units(ob, rake_mark, rule="frac", frac=1.0 - top_min_keep)
+        elif planes and nm in COVER_UNITS:
             # round 4 (trim): a unit the tuck rule would drop that crosses the eave plane is cut on it and capped
             cut_info[nm] = trim_units(ob, (lambda V: deep(V)) if rule == "tuck" else inside, planes, whole=True)
         elif planes and nm == "rafters":
@@ -399,8 +620,10 @@ def cone_keep_out(g, roofs, lift=0.02, rule="tuck", tuck=0.15, trim=False, soffi
         else:
             out[nm] = drop_units(ob, inside, rule=rule)
     g.CONE_KEEP_OUT = inside
-    if soakers and drop_sets:
-        cone_soakers(g, drop_sets, roofs, reach=soaker_reach)
+    if soakers and removed:
+        log(f"  cut units: {len(removed)} removed parts are soaker footprints too")
+    if soakers and (drop_sets or removed):
+        cone_soakers(g, drop_sets, roofs, reach=soaker_reach, always=removed)
     log("cone keep-out (" + ", ".join(r.name for r in roofs) + "): -" +
         ", ".join(f"{k} {v}" for k, v in out.items() if v) + " polygons")
     if cut_info:

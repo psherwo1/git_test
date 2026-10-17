@@ -1,0 +1,275 @@
+[    0.2s] GUARD OPT-OUT V4: seal_probe at junction 'house roof / mill tower' -- accepted variant, geometry frozen in kit 1.9.0: 13 of ~23k probe rays pass the trimmed roof next to the drum into the eave space; queued for junctions.roof_tower_flashing
+[    0.3s] == wing house (RoundFrame, prefix V4H)
+[    0.3s]   V4H: steep cone 58 deg -> door-head flags DOOR_INFILL_DECK, EAVE_CLOSURE_DOOR_HALF_DEG=1.0 (guard steep_cone_door)
+[    0.3s] -- house: configure
+[    0.3s] -- house: patches_by_azimuth
+[    0.3s] -- house: drystone_plinth
+[    5.0s] plinth kinds: {'slab': 10, 'block': 7, 'boulder': 8}
+[    5.0s] plinth stones: 25 two-high: 1 (4 %) fractured: 13
+[    5.2s]   V4H_plinth_stones: 31585 verts, 31147 faces
+[    5.3s] chinking: 18 of 72 candidate joints
+[    5.3s] -- house: round_daub_wall
+[    7.7s] rods: 379
+[    8.0s]   V4H_wattle_rods: 44352 verts, 35090 faces
+[    8.0s]   V4H_wattle_stakes: 445 verts, 292 faces
+[    8.0s]   V4H_door_panel_backing: 240 verts, 176 faces
+[    8.1s]   V4H_posts: 13524 verts, 12622 faces
+[    8.2s] plinth tops under the daub foot culled: 963
+[    8.2s]   daub bay 0: grid 20 x 64, cracks 3
+[    8.2s]   daub bay 1: grid 20 x 63, cracks 4
+[    8.3s]   daub bay 2: grid 29 x 64, cracks 3
+[    8.3s]   daub bay 3: grid 20 x 61, cracks 4
+[    8.3s]   daub bay 4: grid 83 x 80, cracks 4
+[    8.4s]   daub bay 5: grid 27 x 65, cracks 2
+[    8.5s]   daub bay 6: grid 94 x 120, cracks 3
+[    8.7s]   daub bay 7: grid 84 x 117, cracks 2
+[    8.8s]   daub bay 8: grid 111 x 74, cracks 3
+[    9.0s] daub cracks: 0 flakes: 7 intact coat T mean 0.0624 p5 0.0509 p95 0.0732
+[    9.5s]   V4H_daub: 36221 verts, 34772 faces
+[    9.5s]   V4H_daub_interior: 5177 verts, 4980 faces
+[    9.5s] -- house: wall_plate
+[    9.5s]   V4H_wall_plate: 1160 verts, 1135 faces
+[    9.5s] -- house: conical_roof
+[    9.6s]   V4H_rafters: 2434 verts, 2052 faces
+[    9.7s]   V4H_purlin_rings: 280 verts, 250 faces
+[    9.7s]   V4H_battens: 336 verts, 252 faces
+[   11.8s] shingles: 416 full-length (covered part visible): 85
+[   12.0s]   V4H_roof_shingles: 35080 verts, 29592 faces
+[   12.0s]   V4H_roof_starter: 2700 verts, 2340 faces
+[   12.0s]   V4H_roof_blocker: 1217 verts, 1120 faces
+[   12.3s]   V4H_eave_closure: 1440 verts, 1438 faces
+[   12.3s] -- house: turned_apex
+[   12.3s]   V4H_cap_collar: 193 verts, 193 faces
+[   12.3s]   V4H_finial: 961 verts, 961 faces
+[   12.3s] turned apex: hat r 0.74 apex 7.425 top 7.475 finial tip ~8.70
+[   12.3s] -- house: door_step
+[   12.3s]   V4H_step_stone: 2689 verts, 2688 faces
+[   12.3s] -- house: framed_door
+[   14.4s]   V4H_door_frame: 60036 verts, 57589 faces
+[   14.5s]   V4H_door_leaf: 1756 verts, 1734 faces
+[   14.5s]   V4H_door_ironwork: 234 verts, 218 faces
+[   14.6s]   V4H_threshold: 14765 verts, 14696 faces
+[   14.6s] -- house: interior
+[   14.6s]   V4H_floor: 1728 verts, 1696 faces
+[   14.7s]   V4H_hearth: 965 verts, 849 faces
+[   15.0s]   clearance gate V4H framed_door: door head 2.28 m, eave lip over it 2.374 m at (-0.5, -2.92) on V4H_battens (rule >= 2.30 m, 25 stations): PASS
+[   15.4s] decal anchors placed: 98  {'damp_rise': 7, 'moss': 14, 'lichen': 9, 'water_streak': 7, 'soot': 5, 'grime': 4, 'rust_stain': 5, 'crack': 34, 'plaster_patch': 8, 'repair_patch': 5}
+[   15.9s] decal anchor check (applied): checked 98, snapped 8, max_move 0.008, renormal 1, shrunk 10, no_surface 0, wrong_surface 1, excluded 0, occluded 1, footprint 5, duplicate 4, implausible 1, kept 86
+[   15.9s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'V4H_daub', 'V4H_daub', 'V4H_daub', 'V4H_daub', 'V4H_daub', 'V4H_daub']
+[   15.9s]     DA_moss_008: footprint off the surface (n.n0 1.00) ['-', 'V4H_plinth', 'V4H_plinth', 'V4H_plinth', 'V4H_plinth', 'V4H_plinth', '-', '-', 'V4H_plinth']
+[   15.9s]     DA_lichen_001: footprint off the surface (n.n0 1.00) ['V4H_plinth', 'V4H_plinth', '-', 'V4H_plinth', 'V4H_plinth', '-', 'V4H_plinth', 'V4H_plinth', '-']
+[   15.9s]     DA_lichen_008: lichen on V4H_step_stone (trodden / implausible surface)
+[   15.9s]     DA_moss_012: buried: occluded within 15 cm
+[   15.9s]     DA_soot_001: footprint off the surface (shingles)
+[   15.9s]     DA_crack_016: hit M_timber (V4H_wall_plate), declared M_daub
+[   15.9s]     DA_crack_017: within 0.25 m of another crack
+[   15.9s]     DA_crack_018: within 0.25 m of another crack
+[   15.9s]     DA_crack_019: within 0.25 m of another crack
+[   15.9s]     DA_crack_020: within 0.25 m of another crack
+[   15.9s]     DA_crack_032: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'V4H_daub', 'V4H_daub', 'V4H_daub', 'V4H_daub', 'V4H_daub', 'V4H_daub']
+[   15.9s]    wing house: 100 objects, 483794 triangles, 86 anchors
+[   15.9s] == wing mill (DrumFrame, prefix V4M)
+[   15.9s] -- mill: configure
+[   15.9s] -- mill: tmpl_lod
+[   15.9s]   tmpl_lod V4M: parts base_stones, base_dressed, arcade_dressed, arcade_backs, tower_boards, tower_frame, apron_rafters, cap_frame, wheel_blades, pool_corbel* above z 0.60 m on every 2th grid line, above 3.0 m every 3th (full density in the entrance zone: r 1.3 m, z < 2.6 m)
+[   15.9s] -- mill: round_stone_drum
+[   16.5s] plain rubble: 476 stones, 11 pinch-outs
+[   16.5s] drum rubble stones 563
+[   16.5s] threshold: 2 straight dressed stones 0.66 + 0.65 m, joint 0.012 m
+[   16.6s] interior: floor sill at y -1.08, ladder foot 1.30 m inside the door face, 10 rungs
+[   16.7s] door planks 6: short [1, 4], checks [1, 3, 4], split at the head 2, free-edge sag 5.1 mm
+[   17.1s] arcade piers: 36 coursed long-and-short dressed blocks in 6 piers
+[   17.2s] balusters 50 positions from 12 shared variants (5 profile families): eroded 8, chipped 4, stumps 2, plain 3, missing 2; lean +-1.0 deg
+[   17.2s] dentil corbels 28 placements from 6 shared variants
+[   18.8s] drum pins 1410, rejected 0 (plain-zone mortar before pins 18.8%)
+[   18.8s] WALL drum               visible mortar 8.8% (484413 cells), plain zone 8.8%, widest void 0.070 m at u 5.04 z 0.24, stones 2009
+[   18.8s]   pins per iteration [1264, 39, 2]
+[   19.0s] WALL arcade backs: mean visible mortar 14.5%, widest void 0.018 m
+[   20.2s] drum mortar skin: 7499 of 12665 cells hidden behind stone cover -> culled
+[   20.3s] wall-core backing z 4.09..5.33 at d -0.034: 1152 of 1440 outer cells kept (openings holed)
+[   20.3s] -- mill: drum_wall_core
+[   20.3s] wall core inner face: 33 quads
+[   20.3s] wall core ring z -0.05..5.10, 0.006 gap behind the skin: 3513 cells (114 x 36 grid), 224 arch-head quads, 9 openings cut
+[   20.3s] -- mill: entrance_step
+[   20.3s] door step: top 0.079 m, 3 front facets
+[   20.3s] -- mill: smock_tower
+[   20.4s] tower boards 138 pieces, 3 strongly cupped boards, 8 split ends
+[   20.5s] -- mill: shake_apron
+[   20.7s] apron shakes 168
+[   20.7s]   seal junction registered: apron / smock tower (covering V4M_apron_shingles; z 5.70-6.90)
+[   20.7s] -- mill: mill_cap
+[   20.7s] cap: side max pitch 45.1 deg (bell-cast to 25), end faces 55.0 deg; ridge 0.90 m long at z 11.55; valley x 0.44..0.72
+[   20.7s] valance boards 46 (4 sheer notches)
+[   20.8s] cap shingles 78 slivers culled 1
+[   20.8s] cap + hood shingles: slivers culled (< 5 cm wide after clamping) 5
+[   20.9s] cap shingles wholly under the cappings (never visible): 0 culled
+[   20.9s] CAP cappings: 12 hip pieces (0.51-0.63 m), max deviation from hip line 0.92 deg; bearing gap per station (board underside to highest shingle under it): median 0.003, 90% 0.024 m, 1% -0.056
+[   21.0s] -- mill: fan_wheel
+[   21.6s] -- mill: rear_tail_vane
+[   21.6s] king post at x' -0.70: roof 11.584 -> top 11.884 m (0.12 x 0.12 hewn, lead collar)
+[   21.6s] tail boom: rails x' -1.02..-4.90 at z 10.35 (droop 0.022), hanger at x' -1.55, braces to x' -3.24 / -3.26
+[   21.7s] tail vane: 10 boards over 1.80 m (x' -2.90..-4.70), height 1.40 -> 2.20 m, cracked 3, replaced 7
+[   21.7s] -- mill: tmpl_lod_report
+[   21.7s]   tmpl_lod V4M: 2421 pieces thinned, -292466 triangles
+[   21.7s]     V4M_apron_rafters: 56 pieces, 14496 -> 7968 triangles
+[   21.7s]     V4M_arcade_backs: 133 pieces, 19216 -> 10128 triangles
+[   21.7s]     V4M_arcade_dressed: 96 pieces, 100608 -> 33024 triangles
+[   21.7s]     V4M_base_dressed: 59 pieces, 32128 -> 12764 triangles
+[   21.7s]     V4M_base_stones: 1710 pieces, 322948 -> 169702 triangles
+[   21.7s]     V4M_cap_frame: 70 pieces, 15608 -> 8472 triangles
+[   21.7s]     V4M_pool_corbel_0: 1 pieces, 1048 -> 484 triangles
+[   21.7s]     V4M_pool_corbel_1: 1 pieces, 1048 -> 484 triangles
+[   21.7s]     V4M_pool_corbel_2: 1 pieces, 1048 -> 484 triangles
+[   21.7s]     V4M_pool_corbel_3: 1 pieces, 1048 -> 484 triangles
+[   21.7s]     V4M_pool_corbel_4: 1 pieces, 1048 -> 484 triangles
+[   21.7s]     V4M_pool_corbel_5: 1 pieces, 1048 -> 484 triangles
+[   21.7s]     V4M_tower_boards: 159 pieces, 25620 -> 13404 triangles
+[   21.7s]     V4M_tower_frame: 58 pieces, 10152 -> 6120 triangles
+[   21.7s]     V4M_wheel_blades: 74 pieces, 21048 -> 11160 triangles
+[   21.7s] -- mill: drum_finish
+[   21.9s] CLEARANCE rotor -> V4M_cap_frame            0.140 m
+[   21.9s] CLEARANCE rotor -> V4M_cap_shingles         0.140 m
+[   21.9s] CLEARANCE rotor -> V4M_cap_iron             0.200 m
+[   21.9s] CLEARANCE rotor -> V4M_tower_frame          0.200 m
+[   21.9s] CLEARANCE rotor -> V4M_tower_iron           0.280 m
+[   21.9s] CLEARANCE rotor -> V4M_tower_boards         0.500 m
+[   21.9s] CLEARANCE rotor -> V4M_apron_shingles       1.565 m
+[   21.9s] CLEARANCE rotor -> V4M_tail_boom            1.920 m
+[   21.9s] CLEARANCE rotor -> V4M_tail_iron            1.957 m
+[   21.9s] CLEARANCE rotor -> V4M_tail_vane            9.900 m
+[   21.9s] lowest rotating point z = 8.061 m (apron top 6.60 m, ground 0)
+[   22.3s] ROTOR wind-wheel blades vs arms: min gap 0.060 m (PASS)
+[   22.3s] WHEEL r=2.50: blade width 0.999, pitch 0.982, gap -0.017 m
+[   22.3s] WHEEL r=3.05: blade width 1.175, pitch 1.198, gap 0.023 m
+[   22.3s] CLEARANCE CHECK wheel vs apron/props/tail >= 0.30 m: PASS
+[   24.2s] TAIL swept clearance at any cap yaw: tower_boards 0.166 m, tower_frame 0.026 m, tower_iron 9.900 m
+[   27.8s] V4M_base_stones              tris   235374  (degenerate faces removed 955, on-ground faces culled 446, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.1s] V4M_base_mortar              tris    45044  (degenerate faces removed 26, on-ground faces culled 26, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.2s] V4M_base_dressed             tris    22720  (degenerate faces removed 29, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.2s] V4M_interior                 tris     5272  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.3s] V4M_door_leaf                tris     9540  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.3s] V4M_door_iron                tris     2884  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.3s] V4M_door_step                tris     2231  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.4s] V4M_apron_rafters            tris    11136  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.4s] V4M_apron_shingles           tris    17472  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.5s] V4M_tower_boards             tris    13404  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.5s] V4M_tower_frame              tris     8454  (degenerate faces removed 8, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.5s] V4M_tower_iron               tris     1520  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.6s] V4M_cap_frame                tris    17394  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.8s] V4M_cap_shingles             tris    18502  (degenerate faces removed 173, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.8s] V4M_cap_iron                 tris     3306  (degenerate faces removed 4, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.8s] V4M_windshaft                tris      320  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.8s] V4M_poll_end                 tris      692  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.8s] V4M_rotor_iron               tris     4784  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.9s] V4M_wheel_rim                tris     5120  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.9s] V4M_wheel_blades             tris    11160  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.9s] V4M_wheel_spokes             tris     4000  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.9s] V4M_wheel_arm_A              tris     1200  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.9s] V4M_wheel_arm_B              tris     1200  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   28.9s] V4M_wheel_arm_C              tris     1200  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   29.0s] V4M_wheel_arm_D              tris     1200  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   29.0s] V4M_tail_boom                tris     7104  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   29.0s] V4M_tail_vane                tris     4212  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   29.0s] V4M_tail_iron                tris     3416  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   29.3s] V4M_door_surround            tris    45916  (degenerate faces removed 642, on-ground faces culled 642, slivers alt<0.1mm 0, area<1e-8 0)
+[   29.4s] V4M_arcade_dressed           tris    33014  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   29.5s] V4M_arcade_backs             tris    10040  (degenerate faces removed 20, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   29.6s] V4M_wall_core                tris     7336  (degenerate faces removed 185, on-ground faces culled 129, slivers alt<0.1mm 0, area<1e-8 0)
+[   29.6s] OBJECTS 172 (140 linked duplicates of 24 pooled variant meshes: baluster_0 x6, baluster_1 x6, baluster_10 x3, baluster_11 x2, baluster_2 x2, baluster_3 x4, baluster_4 x6, baluster_5 x3, baluster_6 x4, baluster_7 x4, baluster_8 x4, baluster_9 x4, bolt_hex_0 x7, bolt_hex_1 x18, bolt_hex_2 x9, bolt_hex_3 x14, bolt_hex_4 x7, bolt_hex_5 x9, corbel_0 x7, corbel_1 x3, corbel_2 x4, corbel_3 x5, corbel_4 x4, corbel_5 x5)
+[   29.6s]   tmpl_lod V4M: rule unregistered (end of the wing / building)
+[   30.0s]   clearance gate V4M drum_door: door head 2.26 m, eave lip over it 5.326 m at (0.5, -2.35) on V4M_apron_rafters (rule >= 2.30 m, 25 stations): PASS
+[   30.6s] decal anchors placed: 107  {'damp_rise': 13, 'moss': 13, 'lichen': 10, 'water_streak': 21, 'rust_stain': 9, 'soot': 4, 'crack': 22, 'grime': 3, 'repair_patch': 8, 'plaster_patch': 4}
+[   30.7s] wheel-end water streaks: 4 on the outer blade ends (tip radius 3.11 m from the shaft)
+[   31.3s]     decal anchor dropped: ('water_streak', [-1.7, 0.35, 4.79], 'footprint off the surface')
+[   31.3s]     decal anchor dropped: ('rust_stain', [-0.42, -1.57, 1.56], 'align 0.47 V4M_door_leaf')
+[   31.3s]     decal anchor dropped: ('lichen', [-1.71, -0.57, 4.18], 'duplicate')
+[   31.3s]     decal anchor dropped: ('lichen', [-1.58, 0.42, 4.18], 'duplicate')
+[   31.3s]     decal anchor dropped: ('water_streak', [0.21, 1.73, 4.82], 'duplicate')
+[   31.3s]     decal anchor dropped: ('water_streak', [-1.97, 4.21, 9.81], 'duplicate')
+[   31.3s]     decal anchor dropped: ('crack', [1.61, 1.15, 0.55], 'duplicate')
+[   31.3s]     decal anchor dropped: ('moss', [0.72, 1.9, 5.99], 'duplicate')
+[   31.3s] decal gate 1 (snap_anchors): 103 kept, 8 dropped of 111
+[   31.4s] decal gate 2 (anchor_validate): checked 103, snapped 0, max_move 2.384185791015625e-07, renormal 0, shrunk 3, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 1, duplicate 0, kept 102
+[   31.4s]     DA_water_streak_010: footprint off the surface (n.n0 1.00) ['V4M_arcade', 'V4M_arcade', '-', 'V4M_arcade', 'V4M_arcade', '-', 'V4M_arcade', 'V4M_arcade', '-']
+[   31.4s] decal gate 3 (audit, director test): 0 dropped, 0 failing after, 102 anchors {'damp_rise': 13, 'moss': 12, 'lichen': 8, 'water_streak': 21, 'rust_stain': 8, 'soot': 4, 'crack': 21, 'grime': 3, 'repair_patch': 8, 'plaster_patch': 4}
+[   31.9s] decal anchor check (applied): checked 102, snapped 0, max_move 0.000, renormal 0, shrunk 0, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 0, duplicate 0, kept 102
+[   31.9s]    wing mill: 172 objects, 596055 triangles, 102 anchors
+[   32.0s] -- junction: roof_tower_flashing
+[   32.2s]   trim at tower face: rafters 2052->1994, battens 252->247, wall_plate 1135->1130, roof_starter 2340->2113, roof_shingles 29592->28794
+[   32.2s]   roof_tower: run 0: 155 samples, azimuth 157.5..234.5 deg, z 2.58..3.46
+[   33.2s]   (empty) V4J_roof_tower_pads
+[   33.2s]   roof_tower: 2 rafter feet at the tower face, 0 level pads on corbels (z ), 2 carried by the wall plate / under an apron
+[   33.2s]   V4J_roof_tower_fillet: 1245 verts, 1232 faces
+[   33.2s]   seal junction registered: house roof / mill tower (covering V4H_roof_shingles, V4H_roof_starter; z 2.23-3.76)
+[   33.2s] -- junction: wall_tower_abutment
+[   33.2s]   abutment: post 0 at (0.75, 1.56), seam [0.868, 1.58]
+[   33.2s]   abutment: post 1 at (1.13, 0.15), seam [1.238, 0.194]
+[   33.2s]   V4J_abutment_posts: 1056 verts, 1080 faces
+[   33.3s]   V4J_abutment_pointing: 384 verts, 372 faces
+[   33.5s]   wall-head band protected (house): V4H_daub 9590 of 34772 polygons at z 2.35-2.99 kept out of the cull
+[   33.5s]   wall-head band protected (house): V4H_wall_plate 664 of 1130 polygons at z 2.35-2.99 kept out of the cull
+[   33.6s]   wall-head band protected (house): V4H_posts 998 of 12622 polygons at z 2.35-2.99 kept out of the cull
+[   34.0s]   compound views: 617 ring / door / camera viewpoints -> 223 (+77 review; 210 kept whole incl. 132 eye-level ring stations) at 5.00 m separation
+[   34.0s]   wall-head band views (house): eave lip 2.40 m < plate top 2.97 m -> 254 stations (85 band-guard at z 2.69) for daub, wall_plate, posts, wattle_rods
+[   34.8s]   visibility: 1082825 tris, 300 viewpoints
+[   62.3s]   visibility cull V4H_plinth_stones: -10620 of 30184 polygons
+[   98.5s]   visibility cull V4H_wattle_rods: -6949 of 35090 polygons
+[  112.8s]   visibility cull V4H_posts: -2956 of 11624 polygons
+[  126.6s]   visibility cull V4H_door_frame: -5187 of 57589 polygons
+[  135.5s]   visibility cull V4H_threshold: -4746 of 14696 polygons
+[  144.0s]   visibility cull V4H_roof_shingles: -1547 of 28794 polygons
+[  144.6s]   visibility cull V4H_roof_starter: -103 of 2113 polygons
+[  145.7s]   visibility cull V4H_wall_plate: -168 of 466 polygons
+[  147.4s]   visibility cull V4H_rafters: -242 of 1994 polygons
+[  147.9s]   visibility cull V4H_purlin_rings: -140 of 250 polygons
+[  161.2s]   visibility cull V4H_daub: -2696 of 25182 polygons
+[  171.1s]   visibility cull V4M_arcade_dressed: -2554 of 16512 polygons
+[  175.4s]   visibility cull V4M_arcade_backs: -908 of 5079 polygons
+[  182.7s]   visibility cull V4M_base_dressed: -1830 of 12040 polygons
+[  191.1s]   visibility cull V4M_cap_shingles: -1653 of 9806 polygons
+[  255.8s]   visibility cull V4M_base_stones: -21821 of 118534 polygons
+[  259.5s]   visibility cull V4M_door_leaf: -1639 of 4860 polygons
+[  263.3s]   visibility cull V4M_interior: -1606 of 2636 polygons
+[  268.3s]   visibility cull V4M_door_surround: -2132 of 22964 polygons
+[  276.0s]   visibility cull V4M_tower_boards: -1828 of 6702 polygons
+[  285.6s]   visibility cull V4M_cap_frame: -1986 of 9017 polygons
+[  285.7s] compound hidden-geometry cull: -73311 polygons
+[  288.2s]   seal probe [see-through] apron / smock tower: 15394 points, 90208 rays, 92 grazing pass(es), 0 leak(s)
+[  288.2s]   seal probe: 90208 rays on 1 junction(s) in 2.4 s
+[  288.9s] compound decal anchors: 191 placed, 21 dropped by the whole-building audit (covered by a neighbouring wing / junction), 50 thinned -> 120
+[  288.9s]     damp_rise #2 at [1.068, 0.923, 0.697]: off -0.166 m, dot -1.00, hit V4M_wall_core / M_mortar, declared M_daub
+[  288.9s]     moss #2 at [1.343, 0.321, 0.16]: off -0.288 m, dot -0.87, hit V4M_wall_core / M_mortar, declared M_stone
+[  288.9s]     moss #3 at [0.858, 1.772, 0.16]: off -0.072 m, dot -0.71, hit V4M_wall_core / M_mortar, declared M_stone
+[  288.9s]     lichen #1 at [0.682, -1.496, 0.17]: off -0.004 m, dot 0.84, hit V4H_plinth_stones / M_stone, declared M_stone
+[  288.9s]     lichen #7 at [-2.502, -2.446, 0.23]: no surface
+[  288.9s]     soot #4 at [-1.462, -2.564, 2.405]: off +0.234 m, dot 0.81, hit V4H_battens / M_timber_weathered, declared M_timber
+[  288.9s]     rust_stain #1 at [-0.907, -2.34, 0.306]: off +0.210 m, dot 0.95, hit V4H_door_frame / M_timber, declared M_timber
+[  288.9s]     rust_stain #2 at [-0.907, -2.339, 1.773]: off +0.209 m, dot 1.00, hit V4H_door_frame / M_timber, declared M_timber
+[  288.9s]     crack #1 at [1.022, 1.053, 0.873]: off -0.138 m, dot -0.98, hit V4M_wall_core / M_mortar, declared M_daub
+[  288.9s]     crack #10 at [1.136, 0.343, 0.709]: off -0.004 m, dot -0.87, hit V4M_wall_core / M_mortar, declared M_daub
+[  288.9s]     crack #11 at [0.846, 1.464, 1.756]: off +0.094 m, dot -0.83, hit V4M_wall_core / M_mortar, declared M_daub
+[  288.9s]     crack #12 at [1.15, -0.036, 0.582]: off +0.229 m, dot -0.67, hit V4M_base_stones / M_stone, declared M_daub
+[  288.9s]     plaster_patch #1 at [1.139, 0.072, 2.38]: off +0.098 m, dot 1.00, hit V4J_abutment_posts / M_timber, declared M_daub
+[  288.9s]     plaster_patch #2 at [1.152, 0.198, 1.362]: off +0.135 m, dot -0.78, hit V4M_wall_core / M_mortar, declared M_daub
+[  288.9s]     damp_rise #16 at [0.795, 1.491, 0.46]: off +0.138 m, dot 0.82, hit V4J_abutment_posts / M_timber, declared M_stone
+[  288.9s]     damp_rise #17 at [0.867, 0.789, 0.46]: off +0.015 m, dot 1.00, hit V4H_daub_interior / M_daub, declared M_stone
+[  288.9s]     damp_rise #18 at [1.185, 0.158, 0.46]: off +0.188 m, dot 0.99, hit V4J_abutment_posts / M_timber, declared M_stone
+[  289.0s]     crack #48 at [1.141, 0.726, 3.6]: off +0.212 m, dot 0.98, hit V4H_eave_closure / M_daub, declared M_stone
+[  289.0s]     repair_patch #6 at [1.152, 0.373, 1.669]: off -0.035 m, dot 1.00, hit V4M_wall_core / M_mortar, declared M_stone
+[  289.0s]     plaster_patch #10 at [0.885, 0.909, 1.233]: off +0.065 m, dot 1.00, hit V4H_daub_interior / M_daub, declared M_stone
+[  289.0s]     plaster_patch #11 at [1.278, 0.157, 1.073]: off +0.182 m, dot 0.63, hit V4J_abutment_posts / M_timber, declared M_stone
+[  289.0s] decal anchors: 120
+[  290.1s] uv grain (kit 1.10.0): 105 meshes, 1682 timber / shingle pieces (61 round, 420 sloped sheets), 158256 grain faces re-projected, 1213 collapsed faces repaired
+[  290.5s]   walked tops (Mask B <= 0.04): V4H framed_door -> V4H_door_frame: 2 faces
+[  290.5s]   walked tops (Mask B <= 0.04): V4H framed_door -> V4H_door_leaf: 11 faces
+[  290.5s]   walked tops (Mask B <= 0.04): V4H framed_door -> V4H_floor: 48 faces
+[  290.5s]   walked tops (Mask B <= 0.04): V4H framed_door -> V4H_step_stone: 2019 faces
+[  290.5s]   walked tops (Mask B <= 0.04): V4H framed_door -> V4H_threshold: 2921 faces
+[  290.5s]   walked tops (Mask B <= 0.04): V4M drum_door -> V4M_door_iron: 50 faces
+[  290.5s]   walked tops (Mask B <= 0.04): V4M drum_door -> V4M_door_leaf: 5 faces
+[  290.5s]   walked tops (Mask B <= 0.04): V4M drum_door -> V4M_door_step: 839 faces
+[  290.5s]   walked tops (Mask B <= 0.04): V4M drum_door -> V4M_door_surround: 404 faces
+[  290.5s]   walked tops (Mask B <= 0.04): V4M drum_door -> V4M_interior: 106 faces
+[  290.5s] objects 275 triangles 938453
+Info: Saved as "v4_mixed.blend"
+[  290.6s] saved C:\GitHubDesktop\git_test\blender_village\kit\baseline\v3_r5_hash\v4_mixed\v4_mixed.blend 23.0 MB

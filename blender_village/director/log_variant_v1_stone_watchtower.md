@@ -849,3 +849,163 @@ Blocking issues (independent audit, copied by the producer from the workflow rec
 
 The kit has since been consolidated (1.8.0), the guard-rails turned on (1.9.0), the UV fix applied (1.10.0) and needle repair made deterministic (1.10.1); see kit/CHANGELOG.md and the rewritten README. Round 5 fixes every blocking issue above that still applies, on the current kit, and stays at or under 1,000,000 triangles (note 15). Kit edits to existing modules must keep every other building's geometry hash (HASH RULE).
 
+
+## v1_stone_watchtower round 5 — builder entry
+
+**Deliverable.** One run of the recipe (`build_v1_stone_watchtower.py`, 348 s, started 05:13:46) produced
+`v1_stone_watchtower.blend` (05:19:35, 24.8 MB, compressed), `build.log` and `decal_anchors.json` (05:19:33). The review
+set `renders/variants/v1_stone_watchtower/round_05/` (all six views, 24 samples, OPTIX) was rendered from that .blend.
+Kit 1.10.1 with the guard-rails on (no opt-out). All changes are kit modules plus numbers / step order in the recipe; no
+surface detail. Source of truth: `pyramid_roof.py` (05:10:59), `square_cabin.py` (05:09:36) and `level_probe.py`
+(05:10:12) predate the build. The recipe was saved again at 05:41 for its **docstring only** (the build-order comment);
+its code is the code that ran.
+
+**Blocking issues of the round-4 audit**
+
+1. **Sky slot at the outermost joist bay (axis 4): closed in `square_cabin`.**
+   - The bed fill is now a curb of 16 straight timbers (`bed_n=16`, one piece each, corners 1 cm inside the bed ring)
+     bedded 1 cm into the cornice cap and **1 cm into the deck** (round 4 stopped 4 mm under the deck, a hairline).
+   - New rule in the module: **end blocking** on every bearer from inside the curb out 3 cm into the outermost joist,
+     wherever the curb stops short of it (6 blocks here, bearer top to deck). It closes |y| 2.40-2.51 m from +-X.
+   - **Verified in the build** by the new kit check `components/level_probe.cabin_bed_probe`, run after the cull:
+     horizontal rays every 5 mm over |s| <= bed_r + 0.05 = 2.51 m and every 5 mm from bed + 4 mm to deck top - 4 mm,
+     16 azimuths: **0 of 1,559,760** reach the sky (log line `level probe`). It raises on any sky line, so the build
+     cannot ship a slot. The same probe on the round-4 deliverable finds 2,732 (first at az 0, s -2.51, z 8.944: the
+     audit's slot), so it does see the defect.
+   - The director's own `dir_render_r04.py sky` on the deliverable: 0 sky rays in every band (|s| < 2.28, 2.28-2.40,
+     2.40-2.46, 2.46-2.50) at all 8 azimuths. `builder_extra/j33` (the audit's 80 m telephoto) shows timber, no sky;
+     `j01`, `j02`, `j03`, `j05`, `j08` show the curb and blocks.
+2. **Open mouth under each hip-saddle end (axis 4): closed in `pyramid_roof`.** New `hip_bed=0.30`: over the last
+   0.30 m of slope the saddle's underside runs (smoothstep) from its 8.5 cm lift down to 1.2 cm inside the deck, so the
+   eave end is a closed hip-roll end flush with the lip. `builder_extra/j23` (40 m hip-on): no dark pip at any corner;
+   `j37` (level, az -45) and `j17` (close): the end is solid.
+3. **Clipped shingle ends beside the saddle (axis 4): `pyramid_roof` `hip_tuck`.** Default 0.8 x the board width
+   (0.104 m): the trim line is `p*tanh - hip_tuck` and the last shingle of each course is sized to end there, so the
+   clamped ends lie under the 0.13 m saddle board (`j17`, `j36`, `j18`).
+4. **Note 15 (hard): 937,933 triangles** (`stats.json`; was 1,057,164). `lod.tmpl_lod(z=4.0, step=2, parts=(base_stones,
+   base_dressed))` as the first step: 2,556 drum pieces above 4 m and outside the entrance zone on every 2nd grid line
+   (-140,920 triangles before the cull). Same outlines, arrises and placement; nothing at the entrance, at ground
+   contact or on the silhouette changes (`actor_closeup`, `hero`).
+
+`hip_tuck=0.012, hip_bed=0` and `bed_n=0` reproduce round 4, so both modules keep the old behaviour on request.
+
+**Further kit items (director nice-to-haves)**
+- Rim as built timber: the 16-piece curb (above). The `cabin_bed` mortar disc is laid only without a curb (it was
+  100 % hidden). `square_cabin` header signature updated, dead imports and `_slab` removed, `open_sill` default 1.10.
+- `g.CABIN` publishes `deck_under` / `deck_top`.
+
+**Stats** (`round_05/stats.json`): 937,933 triangles, est_hidden_pct 12.2 %, 8 palette slots, `mask_attribute_missing`
+none, 58 objects (36 linked duplicates of 6 pooled corbels; `cabin_bed` no longer exists), bbox 6.74 x 6.74 x 16.12 m,
+finial tip 16.112 = published tip 16.11. Cull -39,050 polygons. Anchors 77, three gates 0 failing, applied
+`decal_validate` kept 77. Clearance gate PASS (eave over the door 11.17 m). Geometry hash `465c7b1b8a7dbb22`.
+
+**Junction probe** (`dir_render_r04.py probe` on the deliverable): all 18 remaining module pairs overlap or touch (the
+19th, `cabin_bed`, is gone by design).
+
+**Renders.** `round_05/`: all six views inspected: no leaks, floating parts or see-through; reads as a lookout tower.
+`round_05/builder_extra/`: the director's cameras j01, j02, j03, j05, j08, j17, j18, j23, j30, j33, j34, j36, j37 on
+the deliverable. No blocking problem found in the render, so no further change.
+
+**Hash rule** (existing modules `pyramid_roof.py`, `square_cabin.py` edited): the six other buildings were rebuilt into
+`kit/baseline/v1r5_hash/` after the last edit. Keep, hut, mill and the accepted v4 are **hash-identical** to 1.10.1.
+v2 and v3 differ because their builders changed their recipes and modules during the run (v2 recipe 05:28,
+`tier_flashing.py`, `tier_cull.py`; v3 recipe 05:38, `composite.py`, `roof_junction.py`, `linear_roof.py`). Neither
+reaches the edited code: their logs have no `pyramid roof` / `square cabin` line. Details:
+`kit/changes/v1_stone_watchtower.md`, "Round 5".
+
+**Known gaps**
+- The hip-saddle end is now a solid block about 16 cm deep at the corner. It reads as a hip-roll end, a little heavy
+  in the close-up (`j17`).
+- Thin dark crevices remain between the shingle butts and the underside of the saddle board edge (the board rides
+  8.5 cm proud). This is shading, not see-through; the deck is closed underneath.
+- With `struts=False` (no dragon beams) the bearer band on the +-X sides beyond the curb would rely on the curb only;
+  the level probe would flag it. v1 has struts.
+- Carried: the lookouts are unshuttered openings; no full (non-fast) build of the `lookout` crown variant;
+  `pyramid_roof` and `OctRoof` are still two surfaces (CHANGELOG 1.8.0 explains why).
+
+
+## v1_stone_watchtower round 5 — score 8.5/10
+
+**Graded by:** Art Director, on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only. Ground dressing was not scored (note 10). No surface detail is requested.
+
+**What was graded.** `buildings/variants/v1_stone_watchtower/v1_stone_watchtower.blend` (05:19:35), `build.log` and `decal_anchors.json` (one 348 s run started 05:13:46), and `renders/variants/v1_stone_watchtower/round_05/`. I rendered from a SHA-256-identical copy in my scratch.
+
+**Source of truth (proved by rebuild).** I rebuilt the recipe on disk to scratch (`WATCH_OUT`, 360 s, exit 0, with two other builds running). The rebuild is **hash-identical** to the deliverable on all three channels: geometry `465c7b1b8a7dbb22`, uv `eadfb3aacdd78b6d`, mask `37235edc68b2377f`, 937,933 triangles. Its `decal_anchors.json` is byte-identical. So the 05:41 docstring-only save did not change the code, and the kit files saved after the build started (`tier_flashing` 05:18, `roof_junction` / `composite` 05:34, `linear_roof` 05:40) do not reach this building. `roof_junction` is imported only lazily inside `eave._fill_band`, which the cabin crown never calls.
+
+**Hash rule.** In `kit/baseline/v1r5_hash/`, keep `3e2a219a5901afc5`, hut `7e5e7c2df5c4d367`, mill `89bf4a2a2c60e049` and v4 `2e87caad61b68d34` match the kit 1.10.1 references in `5_determinism/`. v2 and v3 differ. Their own builders changed recipes and modules during the run, and neither imports `square_cabin`. `pyramid_roof` is reached only through `tier_roof._pyramid_tier` for tiers that do not have 8 sides, and no building has one. I accept the builder's evidence. `pyramid_roof` changed its defaults (`hip_bed=0.30`, `hip_tuck` = 0.8 board) on purpose, and only v1 builds with it. Under CHANGELOG line 434 the producer merges `kit/changes/v1_stone_watchtower.md` "Round 5" into the CHANGELOG.
+
+**Reviewed:**
+- the art bible (notes 1-15);
+- this log;
+- the recipe (62 lines: one `KIT` table, the `CROWNS` switch, step order only, no geometry);
+- `build.log` end to end:
+  - `tmpl_lod`: 2,556 pieces, -140,920 triangles;
+  - the pyramid roof: hip tuck 0.104, closed saddle end 0.30;
+  - the cabin: a curb of 16 timbers and 6 end blocks;
+  - the cull: -39,050;
+  - the level probe: 1,559,760 rays, 0 see-through;
+  - the clearance gate: PASS;
+  - the anchors: 77, with 0 failing;
+- `square_cabin.py` (the bed fill and the end blocking), `pyramid_roof.py` (`hip_tuck`, `hip_bed`) and `level_probe.py` in full, plus `kit/changes/v1_stone_watchtower.md` Round 5;
+- `tools/check_headers.py`: the only stale header is v2's `tier_flashing`, and every v1 header is true;
+- all six review views, `stats.json`, `hidden.json`, all 77 anchors and the 13 builder close-ups.
+
+**Director checks** (`round_05/director_extra/`; scripts `dir_render_r05.py` with the modes `probe`, `sky`, `hyg` and the renders, plus `dir_pyramid_reuse_smoke_r05.py`; sky log `sky_r05.txt`):
+- **Sky test (my own, finer than round 4).** Level rays through z 8.700-9.190 every 5 mm, from 16 azimuths, |s| ≤ 2.75 m every 5 mm.
+  - **0 sky rays in every band inside |s| < 2.51 m** (|s| < 2.28, 2.28-2.46 and 2.46-2.51), at all 16 azimuths, about 1.59 M rays.
+  - Sky shows only at |s| 2.51-2.75 from the four axis azimuths. That is the open framing under the cantilever, outside the wall head, which is correct.
+  - The 80 m telephotos from +X, -X and -Y (j33, j51, j52) show timber where round 4 showed sky.
+- **Probe.** 23 module pairs. The 19 round-4 pairs (minus `cabin_bed`, which is gone by design) plus door step / surround, ceiling / wall core and dressed / rubble. Every pair overlaps or touches. Exceptions:
+  - `roof_deck`→`frame` (1.7 cm): the deck is carried through the rafter tails, as in round 4.
+  - `hips`→`roof_frame` (4.9 cm): the saddle beds on the shingles and the deck, as built.
+  - The curb runs r 2.254-2.449 and z 8.690-9.150, so it is bedded 1 cm into the cornice cap and 1 cm into the deck (deck underside 9.14).
+  - The saddle ends reach down to z 11.259, which is the deck's lowest edge, at all four corners.
+- **Hygiene.** No zero-area faces anywhere. Every cabin object has no boundary edges, except 8 non-manifold edges in `cabin_frame` where boxes share edges. `Mask` is CORNER / BYTE_COLOR, active and default, on every mesh, and every mesh has a UV map. Only the pooled corbel duplicates carry transforms.
+- **Reuse smoke.** `pyramid_roof` with the NEW defaults, standalone and off-centre, on 3, 6 and 8 sides at 50 deg, and on 4 sides at 60 deg and at 35 deg. All six parts are built every time. The saddle ends are closed and the shingles are tucked on every variant (j53, j54_*). The fixes generalise and are not tuned to the square.
+- **Renders** (24 samples, same clay, sun and world as render_review):
+  - Crown on the drum: j01-j03 (floor sandwich level from -Y, +X and az 45), j04 and j05 (curb under a bearer and under the joists), j06 (dragon beam to strut head), j07 (strut foot on its pad), j08 (underfloor from the ground), j09 and j10 (bed from above), j38-j40 (end blocks from +X, -X and +Y), j41 (curb facets from below).
+  - Cabin body: j11-j15.
+  - Roof: j16-j23, plus the saddle ends level at all four corners (j35, j36, j37, j42), raking (j43, j17), from below (j44) and from above (j46), and the hip tuck at mid-slope (j45).
+  - Drum: j24-j29.
+  - Note-15 LOD seam: j47 and j48 (z 4 m, grazing and face-on), j49 (edge of the entrance zone), j50 (mid-shot).
+  - Reads: j30 (45 m thumbnail) and j31 (neighbour's eye level).
+
+| # | axis | score | one-line reason |
+|---|---|---|---|
+| 1 | Silhouette and massing | 8.5 | Unchanged from round 4, and still right. It reads instantly as a lookout tower at 45 m (j30): a battered rubble drum, a wider square timber cabin on raking struts, and a bell-cast cap with upturned corners and a spike finial. The closed saddle ends add a small, legible hip-roll knuckle at each corner in the hip-on elevation (j23). Held back as before: the cap is a plain square pyramid (the client's chosen crown) and its bell is gentle at thumbnail size. |
+| 2 | Proportion and actor scale | 8.6 | The door is 1.05 m with a crown of about 2.3 m and has its step. Slits are 0.18 x 0.95 m. The eave is at 11.26 m (brief 9-12; 11.17 m over the door, clearance PASS). Lookout sills are 1.10 m, and the kit default is now 1.10 too. The finial is 1.14 m above the cap, and the published tip 16.11 m equals the bbox. Remaining: the lead cap has the roof's pitch, where bible 1.5 asks for a shallower collar. |
+| 3 | Construction logic | 8.6 | The round-4 objection is answered. The bed fill is now 16 straight timbers with butt joints (j05, j31, j41), not a bent lathed band, and it is bedded into the cornice cap and the deck. End blocks sit on the bearers out to the outermost joist (j38-j40). Struts are on pads, dragon beams run to the corners, the head beam grows into the plate, and the finial sits in a lead sleeve. The saddle eave end now beds on the covering at the lip instead of cantilevering over a void (j43, j44). It is a little heavy, a 16 cm block (builder's own note), but it reads as a hip-roll end. |
+| 4 | Seams and junctions | 8.5 | All three round-4 blockers are closed and measured. (a) The floor sandwich: 0 sky rays inside |s| < 2.51 m from 16 azimuths at 5 mm (my test), the kit's own `cabin_bed_probe` gives 0 of 1.56 M, and the telephotos show timber (j33, j51, j52). (b) The saddle mouth: closed at all four corners (j35-j37, j42-j44) and on 3, 6 and 8 sides and at 35 and 60 deg (j54). (c) The hip line: the shingles tuck under the board, with no crumbs past the saddle edge from the crane (j18) or level (j35, j36). The LOD seam at z 4 m is invisible (j47-j50). All 23 probed pairs touch. Minor and not see-through: thin dark crevices under the saddle-board edges seen from above (j09, j46). |
+| 5 | Distinctness and reuse | 8.5 | Still clearly a new building, and the recipe is a pure kit assembly that rebuilds hash-identical. Every fix is a module rule, not a recipe patch: `bed_n` curb and end blocking for any bearer layout, `hip_bed` / `hip_tuck` for any polygon (smoke-tested), and a new generic `level_probe.level_sky_probe` for any level junction band. Old behaviour stays on request (`bed_n=0`, `hip_tuck=0.012, hip_bed=0`). Points lost (carried over): `square_cabin` can still only perch on a drum. `bed_r`, the strut pads and the curb all come from `drum_frame.R_out` and a round bed. The kit keeps two polygonal bell-cast surfaces. The cabin bed probe is a recipe step, not a guard the cabin registers itself. |
+| 6 | Technical compliance | 8.7 | 937,933 triangles, under the note-15 cap of 1,000,000, through `lod.tmpl_lod` with nothing changed at the entrance, at ground contact or on the silhouette (j47-j50, actor_closeup). 12.2 % hidden, 8 palette slots, no missing `Mask`, 58 objects (36 linked duplicates of 6 pooled corbels). Build time 348 s. Guards on, with no opt-out. Deterministic: my rebuild matches on all three hashes, and the anchors JSON is byte-identical. All 77 anchors are plausible: damp and moss at the base, roof moss on the north face, streaks under the sill boards, strut pads and slits, soot over openings, rust under the hinges, and none on a blocker. |
+
+**Overall: 8.5/10** (lowest axes 8.5, not rounded up). **PASS** (pass mark 8.2). No producer note is violated, and note 15 is now met.
+
+**Verdict.** Round 5 closes every blocking issue from the round-4 sign-off audit, in the modules where they belong, and I measured each one rather than reading it off the renders.
+- The crown-to-drum floor sandwich has no see-through anywhere over the wall head, and a new reusable kit check now enforces that in the build.
+- The hip saddles end in closed hip-roll ends with the shingles tucked under them, and that holds on every polygon the roof module can make.
+- The building is under the client's 1 M triangle cap without any visible cost.
+
+The recipe stays a short declarative assembly and rebuilds bit-identical. What keeps the grade at 8.5 is reach, not defects. The cabin is still a drum-only crown. The cap's lead collar has the roof's pitch. The level probe has to be added by hand.
+
+**Strengths**
+- The fixes are rules, not patches:
+  - End blocking appears wherever the curb stops short of the outermost joist, for any `side`, `bed_r` or bearer layout.
+  - `hip_bed` and `hip_tuck` are expressed in slope length and board width, so they work on 3-8 sides and at 35-60 deg (j54).
+  - The old behaviour stays reachable by parameters.
+- `level_probe` is a genuinely reusable kit check for any level junction (floor sandwich, sole plate, jetty). It runs after the cull, so the cull cannot ship a slot, and it raises with the azimuth, offset and height. The builder showed that it catches round 4 (2,732 lines), not only that it passes round 5.
+- The construction now reads as built timber under the cabin: curb segments with butt joints, and blocks on the bearers.
+- Note 15 was met with the kit's `tmpl_lod`, and the thinning is invisible at the z 4 m seam and at the edge of the entrance zone.
+- Source of truth and determinism are proved by an independent rebuild: three identical hashes and a byte-identical anchors file. The hash rule was run for the six other buildings.
+- The builder reported honestly: the heavy saddle end, the crevices under the board, the `struts=False` limit and the edit made to the docstring after the build were all flagged.
+
+**Must-fix**
+- None blocking. No producer-note violation and no see-through, gap or clipping at any module junction I probed or rendered.
+
+**Nice-to-have (next kit round, not blocking this pass)**
+1. **Cabin on any body (axis 5): `square_cabin.square_cabin`, lines 102, 143-157 and 174-192.** `bed_r`, the curb and the strut pads all come from `drum_frame.R_out` and a round bed. Add `bed_shape=` (round, square or polygon) or an `on=` wall-face callback. The curb then follows that outline, and the pads take the face point and normal from it. The cabin can then crown a square or octagonal stone body (a gatehouse loft, a harbour lookout on a square tower).
+2. **Self-registering level check (axis 5): `square_cabin` and `guards`.** Have `square_cabin` register its bed band with the guard set, like `register_junction` for `seal_probe`, so `cabin_bed_probe` runs automatically after the cull for every cabin, including `struts=False`, instead of being a recipe step a later recipe could omit.
+3. **Lead cap pitch (axis 2): `pyramid_roof`.** Add `cap_pitch_deg` so the lead hat can be shallower than the roof (bible 1.5: about 44 deg against 49 deg).
+4. **Saddle end mass (axis 3): `pyramid_roof` hips block.** Optionally taper the saddle's depth over the `hip_bed` length, so the closed end is about 10 cm deep rather than 16 cm (j17, j43). It is a proportion tweak, not a gap.
+5. **Producer merge.** Merge `kit/changes/v1_stone_watchtower.md` "Round 5" into `kit/CHANGELOG.md` (deliberate default changes in `pyramid_roof`, plus `bed_n`) and list `level_probe` in README section 7 (drum row). The recipe comment "rim ring on the bed" (line 69) is stale: it is a curb now.
+6. **Carried debt.** Run a full (non-fast) build of the lookout crown variant once. Use one polygonal bell-cast surface for `OctRoof` and `pyramid_roof`.

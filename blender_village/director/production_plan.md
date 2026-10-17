@@ -100,7 +100,7 @@ Rules in force for phase-2 sign-offs: pass mark 8.2, producer notes 1-11, all cl
 | v4_mixed (mill-house) | 4 | 8.4 | **upheld** | 938,453 | **ACCEPTED** 2026-10-17 |
 | v3_longhouse_roundend (approved building 1) | 4 | 8.6 | rejected (close-up junction ends at the cone / thatch crossing) | ~0.47 M | out of rounds; cleanup candidate |
 | v2_tiered_hall (approved building 2) | 4 | 8.4 | rejected (skirt1 hip boards through the drum flashing) | ~0.95 M | out of rounds; cleanup candidate |
-| v1_stone_watchtower (client's square cabin) | 4 | 8.3 | rejected (floor rim gap, hip-saddle mouths, clipped shingle ends) | ~1.06 M (over note 15) | out of rounds; cleanup candidate |
+| v1_stone_watchtower (client's square cabin) | 5 | 8.5 | **upheld** | 937,933 | **ACCEPTED** 2026-10-17 (kit 1.10.1; round-4 audit had rejected 8.3) |
 
 ### Client direction, 2026-10-16: hero gates closed, modularity first (producer note 12)
 

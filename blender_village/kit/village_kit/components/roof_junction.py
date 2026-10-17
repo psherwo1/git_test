@@ -465,6 +465,16 @@ def round_eave_fill(g, r_off=0.06, z_bot=None, center=(0.0, 0.0), skip=None, mat
     """KIT COMPONENT: the eave fill of a round wall head (a stone or daub round body under a cone): a band on the
     inner half of the wall plate, from the plate top up into the cone's covering stack, so no eye can look from the
     eave gap into the roof space.  skip(P) -> bool drops parts inside an attached body.  -> <P>_eave_fill
-    kit 1.8.0: a thin wrapper of THE eave closure, components.eave.eave_closure(kind="fill") (same geometry)."""
+    kit 1.8.0: a thin wrapper of THE eave closure, components.eave.eave_closure(kind="fill") (same geometry).
+    round 5: z_bot="wall" -- the fill starts 3 cm inside the top of the round stone body published on g.WALL_FACES
+    (rubble_walls.round_stone_body) at `center`: the masonry beam-fill of a round wall head that carries the rafters
+    with NO timber wall plate (round_wall.wall_plate left out: under a deep stone eave it is never seen, note 1)."""
     from .eave import _fill_band
+    if isinstance(z_bot, str) and z_bot == "wall":
+        tops = [wf["top"] for wf in getattr(g, "WALL_FACES", []) if wf.get("kind") == "round"
+                and np.allclose(wf.get("center", (0.0, 0.0)), center)]
+        if not tops:
+            raise ValueError("round_eave_fill(z_bot='wall'): no round stone body at this centre on g.WALL_FACES")
+        z_bot = float(tops[0]) - 0.03
+        log(f"  eave fill from the round wall head z {z_bot:.3f} m (no wall plate)")
     return _fill_band(g, r_off=r_off, z_bot=z_bot, center=center, skip=skip, mat=mat, n_az=n_az)

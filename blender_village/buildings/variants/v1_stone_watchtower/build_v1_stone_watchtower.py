@@ -5,7 +5,9 @@ Run:  python build_v1_stone_watchtower.py  -> v1_stone_watchtower.blend + decal_
       WATCH_KIT_VARIANT=lookout  builds the round-2 crown instead (same drum family, other kit modules; see CROWNS)
 
 Recipe (top to bottom = build order; every line is a kit module, numbers live in KIT):
-  drum family   round_stone_drum     5.0 m battered coursed-rubble drum, 8.7 m to the cornice top, NO arcade, a plain
+  note 15       tmpl_lod             drum rubble / dressed work above 4 m (outside the entrance zone) on every 2nd
+                                     grid line: same outlines, thinner face grid (<= 1,000,000 triangles)   (lod)
+  drum family   round_stone_drum    5.0 m battered coursed-rubble drum, 8.7 m to the cornice top, NO arcade, a plain
                                      dressed string course at the first floor (zones string=), arched door, three
                                      0.18 x 0.95 m stair lights rising round the shaft (window_size, window_z; each
                                      window negotiates with the string course / cornice: course_fit), dentil-corbelled
@@ -14,17 +16,20 @@ Recipe (top to bottom = build order; every line is a kit module, numbers live in
                 entrance_step        built-in door step (note 10)
                 drum_ceiling         ceiling over the ground floor seen through the door           (tower_roof)
   crown         square_cabin         5.4 m square timber watch cabin perched on the drum: bearers and joists
-  ("cabin",                          on the wall head closed by a rim ring (bed_fill), knee struts on corbel pads,
+  ("cabin",                          on the wall head closed by a curb of 16 straight timbers plus end blocking out
+                                     to the outermost joists (bed_fill, bed_n), knee struts on corbel pads,
    default)                          framed plank walls with two lookout openings per side         (square_cabin)
                   pyramid_roof       its roof (called by square_cabin, roof=): 49 deg square pyramid bell-cast to
-                                     25 deg at the eave, upturned hip corners, hip saddles, lead cap, 1.16 m
-                                     turned finial                                                  (pyramid_roof)
+                                     25 deg at the eave, upturned hip corners, hip saddles with closed eave ends and
+                                     the shingles tucked under them, lead cap, 1.16 m turned finial (pyramid_roof)
   crown         round_stone_drum(lookouts=) + corbelled_parapet + round_tower_roof: the round-2 watch storey of four
   ("lookout")                        lookout windows with closed rooms, a rubble parapet on the corbel table and a
                                      54 deg bell-cast conical shingle roof                           (tower_roof)
   finishing     drum_finish          parts -> objects, pooled corbels / pegs as linked duplicates (no rotor: the
                                      rotor checks skip themselves)
                 tower_hidden_cull    note 6: analytic pre-cull, drum rays on unblocked views only     (tower_roof)
+                cabin_bed_probe      level see-through check of the floor sandwich over the wall head, 5 mm grid,
+                                     16 azimuths, |s| <= bed_r + 5 cm; raises on any sky line       (level_probe)
   anchors       round_tower_decals_gated   note 11, snapped / validated / audited, never on a note-6 blocker,
                                      cabin anchors from g.CABIN                                     (tower_decals)
 """
@@ -41,12 +46,15 @@ from village_kit.components.square_cabin import square_cabin  # noqa: E402
 from village_kit.components.tower_roof import (TOWER_CULL_TARGETS, corbelled_parapet, drum_ceiling,  # noqa: E402
                                                round_tower_roof, tower_hidden_cull)
 from village_kit.components.tower_decals import round_tower_decals_gated  # noqa: E402
+from village_kit.components.level_probe import cabin_bed_probe  # noqa: E402
+from village_kit.lod import tmpl_lod, tmpl_lod_report  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BIG_RUBBLE = dict(hr=(0.10, 0.22), lr=(0.20, 0.70))          # larger, rougher coursing than the mill's drum
 
 FRAME = dict(detail_rule=True, rubble=dict(plain=BIG_RUBBLE, spandrel=dict(BIG_RUBBLE, hbig=0.27, p_big=0.2)))
 KIT = KitParams(
+    lod=dict(z=4.0, step=2, parts=("base_stones", "base_dressed")),   # note 15: thinner face grid above 4 m
     drum=dict(r_base=2.48, r_top=2.18, height=8.70, batter_top="full",       # 2.1 deg batter, 4.96 m at the foot
               zones=dict(string=(5.35, 5.60)),                     # plain dressed string course at the first floor
               door=dict(width=1.05, spring=1.65, reveal=0.30),
@@ -64,6 +72,7 @@ KIT = KitParams(
     roof=dict(pitch_deg=54.0, eave_out=0.72, bell_deg=15.0, bell_len=1.0, collar_r=0.62, seed="watch"),
     finish=dict(),
     cull=dict(procs=2, targets=TOWER_CULL_TARGETS + ("cabin_shingles",)),  # shared machine: 2 cull workers
+    probe=dict(),                                                  # level see-through check of the floor sandwich
 )
 LOOKOUT = KIT.variant(   # the round-2 watch storey (decal_anchors.json kit_params of the round-2 deliverable)
     drum=dict(KIT["drum"], windows=(45, -45, -135), lookouts=dict(n=4, az0=0.0, w=0.65, h=1.00, sill=6.85)),
@@ -75,19 +84,20 @@ CROWNS = {"cabin": (KIT, [(square_cabin, "cabin")]),
 def main():
     out = os.environ.get("WATCH_OUT", os.path.join(HERE, "v1_stone_watchtower.blend"))
     kit, crown = CROWNS[os.environ.get("WATCH_KIT_VARIANT", "cabin") or "cabin"]
-    steps = ([(round_stone_drum, kit["drum"]), (drum_wall_core, kit["core"]), (entrance_step, kit["step"]),
-              (drum_ceiling, kit["ceiling"])]
+    steps = ([(tmpl_lod, kit["lod"]), (round_stone_drum, kit["drum"]), (drum_wall_core, kit["core"]),
+              (entrance_step, kit["step"]), (drum_ceiling, kit["ceiling"])]
              + [(fn, kit[key]) for fn, key in crown]
-             + [(drum_finish, kit["finish"]), (tower_hidden_cull, kit["cull"])])
+             + [tmpl_lod_report, (drum_finish, kit["finish"]), (tower_hidden_cull, kit["cull"]),
+                (cabin_bed_probe, kit["probe"])])
     if os.environ.get("WATCH_FAST"):
-        steps = steps[:-1]
+        steps = [s for s in steps if not (isinstance(s, tuple) and s[0] is tower_hidden_cull)]
     build_building(dict(
         prefix="WATCH", collection="WATCH", building_id="v1_stone_watchtower",
         frame=DrumFrame, params=FRAME, steps=steps,
         decals=round_tower_decals_gated,
         out=out, decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
-        decal_meta=dict(kit_params={k: kit[k] for k in ["drum", "core", "step", "ceiling"] + [c for _, c in crown]
-                                    + ["finish", "cull"]}),
+        decal_meta=dict(kit_params={k: kit[k] for k in ["lod", "drum", "core", "step", "ceiling"]
+                                    + [c for _, c in crown] + ["finish", "cull", "probe"]}),
     ))
 
 

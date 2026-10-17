@@ -2,8 +2,9 @@
 square-pyramid shingle roof (kit changes v1_stone_watchtower round 2; new module, nothing existing changed).
 
     square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=None, n_joists=7, struts=True,
-                 strut_drop=1.25, n_open=2, open_w=1.10, open_sill=1.00, open_h=0.90, pitch_deg=48.0, eave_out=0.50,
-                 exposure=0.34, cap_r=0.62, seed=None, bed_fill=True, finial_scale=0.80, roof=None, roof_fn=None)
+                 strut_drop=1.25, n_open=2, open_w=1.10, open_sill=1.10, open_h=0.90, pitch_deg=48.0, eave_out=0.50,
+                 exposure=0.34, cap_r=0.62, seed=None, bed_fill=True, finial_scale=0.80, roof=None, roof_fn=None,
+                 bed_n=16)
 
 A gatehouse loft, a harbour look-out or a watchtower cabin from one call.  The cabin's square plan is centred on
 the z axis, its sides face -Y / +X / +Y / -X (the entrance side of the building is -Y).  It sits on a wall head at
@@ -24,6 +25,12 @@ cornice cap).  Built and carried:
              bell_deg=0 (the default) is the round-3 straight pyramid.
   bed fill   r4: `bed_fill=True` closes the floor sandwich over the wall head with a timber rim ring (blocking
              between bearers and joists) from the bed to the deck underside
+             r5: the rim is a curb of `bed_n` straight timbers (one piece each, corners 1 cm inside the bed ring),
+             bedded 1 cm into the wall head and 1 cm into the deck (no hairline under the deck), plus end blocking
+             on every bearer out to the outermost joists wherever the curb stops short of them: level rays through
+             the floor sandwich meet timber everywhere over the wall head (checked by components.level_probe).
+             The mortar bed disc is only laid without a bed fill (with one it is 100 % hidden).
+             bed_n=0 is the round-4 lathed 32-gon ring (no end blocking).
 
 Objects <P>_cabin_floor / _cabin_struts / _cabin_corbels / _cabin_bed / _cabin_frame / _cabin_boards /
 _cabin_ceiling / _cabin_roof_frame / _cabin_roof_deck / _cabin_shingles / _cabin_hips / _cabin_lead / _cabin_finial.
@@ -36,7 +43,6 @@ import numpy as np
 
 from ..core import log
 from ..geom import Acc, beam, finalize, lathe_rz, obox
-from ..shingles import SHINGLE_VARIANTS, SIZE_TABLE, shingle_mesh
 
 EZ = np.array([0.0, 0.0, 1.0])
 SIDES = [np.array(v, float) for v in ((0, -1, 0), (1, 0, 0), (0, 1, 0), (-1, 0, 0))]
@@ -54,22 +60,6 @@ def _side_box(acc, k, u0, u1, d0, d1, z0, z1, mat, r=0.012, nn=3):
     obox(acc, O[None], t, n, EZ, u1 - u0, d1 - d0, z1 - z0, r, mat, nx=nn, ny=nn, nz=nn)
 
 
-def _slab(acc, B, N, th, mat, th1=None):
-    """a closed slab from 4 bottom corners B (4, 3, in order) offset by th along N (th1: thickness at corners 2, 3:
-    a wedge)."""
-    B = np.asarray(B, float)
-    th1 = th if th1 is None else th1
-    V = np.concatenate([B, B + N * np.array([th, th, th1, th1])[:, None]])
-    F = np.array([[0, 3, 2, 1], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]])
-    c = V.mean(0)
-    for i, f in enumerate(F):                               # orient every face outward
-        p = V[f]
-        nrm = np.cross(p[1] - p[0], p[3] - p[0])
-        if np.dot(nrm, p.mean(0) - c) < 0:
-            F[i] = f[::-1]
-    acc.add(V, F, mat)
-
-
 def _boards(acc, k, u0, u1, d0, d1, z0, z1, rng, mat="M_timber_weathered"):
     """vertical plank infill between u0 and u1 (widths 0.18-0.28, tight joints with rounded arrises)."""
     if u1 - u0 < 0.03 or z1 - z0 < 0.03:
@@ -83,9 +73,9 @@ def _boards(acc, k, u0, u1, d0, d1, z0, z1, rng, mat="M_timber_weathered"):
 
 
 def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=None, n_joists=7,
-                 struts=True, strut_drop=1.25, n_open=2, open_w=1.10, open_sill=1.00, open_h=0.90, pitch_deg=48.0,
+                 struts=True, strut_drop=1.25, n_open=2, open_w=1.10, open_sill=1.10, open_h=0.90, pitch_deg=48.0,
                  eave_out=0.50, exposure=0.34, cap_r=0.62, seed=None, bed_fill=True, finial_scale=0.80, roof=None,
-                 roof_fn=None):
+                 roof_fn=None, bed_n=16):
     """KIT COMPONENT: square timber lookout cabin with a square-pyramid shingle roof on a wall head (module doc).
     side: outer plan size of the floor (m); height: floor top to the top plate's underside; z_bed / bed_r: the wall
     head (default: the drum's cornice top and cap); bearers: x of the bearers (along Y; r4 default None = 0 and
@@ -97,7 +87,9 @@ def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=None,
     radius (to the hip) of the lead apex cap.
     r4: bed_fill (default True): a closed timber rim ring on the wall head between the bearers and the joists, from
     the bed up to the deck underside just inside bed_r (the floor sandwich over the wall head is closed; open framing
-    remains only on the cantilevers outside it); finial_scale: turned-finial scale (0.8 = 1.16 m above the cap);
+    remains only on the cantilevers outside it); r5: bed_n = straight curb timbers of the bed fill (0 = the round-4
+    lathed ring) plus end blocking on the bearers out to the outermost joists; open_sill default 1.10 (bible 7);
+    finial_scale: turned-finial scale (0.8 = 1.16 m above the cap);
     roof: overrides for the roof module (e.g. dict(bell_deg=24, bell_len=0.75, kick=0.04)); roof_fn: the roof module,
     called roof_fn(g, p_wall, z_plate, name="cabin", rng=rng, **kw) and returning pyramid_roof's record (default
     components.pyramid_roof.pyramid_roof)."""
@@ -115,17 +107,19 @@ def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=None,
     P = g.prefix + "_cabin_"
     A = {k: Acc(P + k) for k in ("floor", "struts", "corbels", "bed", "frame", "boards", "ceiling")}
     # ---------------- floor: bed disc, bearers, joists, deck ----------------
-    th = np.linspace(0, 2 * math.pi, 72, endpoint=False)
-    rs = np.linspace(0.05, Rb - 0.02, 6)
-    V = np.stack([np.outer(rs, np.sin(th)), np.outer(rs, -np.cos(th)), np.full((len(rs), len(th)), H + 0.003)], -1)
-    i_, j_ = np.meshgrid(np.arange(len(rs) - 1), np.arange(len(th)), indexing="ij")
-    j1 = (j_ + 1) % len(th)
-    F = np.stack([i_ * len(th) + j_, (i_ + 1) * len(th) + j_, (i_ + 1) * len(th) + j1, i_ * len(th) + j1], -1)
-    F = F.reshape(-1, 4)
-    p = V.reshape(-1, 3)[F[0]]
-    if np.cross(p[1] - p[0], p[3] - p[0])[2] < 0:
-        F = F[:, ::-1]
-    A["bed"].add(V.reshape(-1, 3), F, "M_mortar")
+    if not (bed_fill and bed_n):            # r5: with a curb bed fill the disc is 100 % hidden under the floor
+        th = np.linspace(0, 2 * math.pi, 72, endpoint=False)
+        rs = np.linspace(0.05, Rb - 0.02, 6)
+        V = np.stack([np.outer(rs, np.sin(th)), np.outer(rs, -np.cos(th)), np.full((len(rs), len(th)), H + 0.003)],
+                     -1)
+        i_, j_ = np.meshgrid(np.arange(len(rs) - 1), np.arange(len(th)), indexing="ij")
+        j1 = (j_ + 1) % len(th)
+        F = np.stack([i_ * len(th) + j_, (i_ + 1) * len(th) + j_, (i_ + 1) * len(th) + j1, i_ * len(th) + j1], -1)
+        F = F.reshape(-1, 4)
+        p = V.reshape(-1, 3)[F[0]]
+        if np.cross(p[1] - p[0], p[3] - p[0])[2] < 0:
+            F = F[:, ::-1]
+        A["bed"].add(V.reshape(-1, 3), F, "M_mortar")
     hb, hj, td = 0.24, 0.20, 0.05
     for x in bearers:                                                     # bearers along Y on the wall head
         obox(A["floor"], np.array([[x, -hs, H + hb / 2]]), (0, 1, 0), (-1, 0, 0), (0, 0, 1), side, 0.22, hb, 0.015,
@@ -137,13 +131,41 @@ def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=None,
     zd0 = H + hb + hj
     obox(A["floor"], np.array([[-hs, 0.0, zd0 + td / 2]]), (1, 0, 0), (0, 1, 0), (0, 0, 1), side, side, td, 0.01,
          "M_timber_weathered", nx=6, ny=6, nz=2)
-    if bed_fill:
+    n_blk = 0
+    if bed_fill and not bed_n:
         # r4: rim ring (blocking between the bearers and between the joists) bedded 1 cm into the wall head, up to
         # the deck underside, its face 6 cm inside the bed ring: no sky between the cornice cap and the deck
         r1, r0 = Rb - 0.06, Rb - 0.18
         Vr, Fr = lathe_rz([(r0, H - 0.01), (r1, H - 0.01), (r1, zd0 - 0.004), (r0, zd0 - 0.004), (r0, H - 0.01)],
                           32, cap_bottom=False, cap_top=False, phase=math.pi / 32)
         A["floor"].add(Vr, Fr, "M_timber")
+    elif bed_fill:
+        # r5: a curb of bed_n straight timbers (flats facing +-X / +-Y when bed_n % 4 == 0), corners 1 cm inside the
+        # bed ring, bedded 1 cm into the wall head and 1 cm into the deck; each timber one piece (its own Mask R)
+        nb = int(bed_n)
+        ca, ta = math.cos(math.pi / nb), math.tan(math.pi / nb)
+        rf1 = (Rb - 0.01) * ca                                            # outer flat (apothem)
+        rf0 = rf1 - 0.12
+        zb0, zb1 = H - 0.01, zd0 + 0.01
+        half = rf1 * ta
+        for i in range(nb):
+            ph = 2.0 * math.pi * i / nb
+            nn_ = np.array([math.cos(ph), math.sin(ph), 0.0])
+            tt_ = np.array([-math.sin(ph), math.cos(ph), 0.0])
+            O = nn_ * 0.5 * (rf0 + rf1) - tt_ * half + EZ * 0.5 * (zb0 + zb1)
+            obox(A["floor"], O[None], tt_, nn_, EZ, 2.0 * half, rf1 - rf0, zb1 - zb0, 0.012, "M_timber", nx=3,
+                 ny=2, nz=3)
+        # end blocking on every bearer, from inside the curb out into the outermost joist on each side, wherever
+        # the curb stops short of that joist (a level ray along the joists otherwise sees sky over the wall head)
+        yj = hs - 0.10 - 0.09                                             # inner face of the outermost joist
+        for x in bearers:
+            if rf1 * rf1 - x * x >= yj * yj:
+                continue
+            y0 = math.sqrt(max(rf0 * rf0 - x * x, 0.0)) + 0.02
+            for sy in (-1.0, 1.0):
+                obox(A["floor"], np.array([[x, sy * y0, 0.5 * (H + hb - 0.01 + zb1)]]), (0, sy, 0), (-sy, 0, 0),
+                     (0, 0, 1), yj + 0.03 - y0, 0.14, zb1 - (H + hb - 0.01), 0.012, "M_timber", nx=3, ny=2, nz=3)
+                n_blk += 1
     Zf = zd0 + td                                                         # floor top
     # ---------------- knee struts on corbel pads ----------------
     n_str = 0
@@ -229,11 +251,13 @@ def square_cabin(g, side=5.4, height=2.30, z_bed=None, bed_r=None, bearers=None,
     z_eave, tip = rf["z_eave"], rf["tip"]
     g.CABIN = dict(side=side, floor=Zf, plate=Zp, plate_top=Zt, eave=z_eave, apex=float(rf["apex"]), tip=tip,
                    openings=[(k, c, open_w, Zf + open_sill, open_h) for k in range(4) for c in centres],
-                   pads=pads, bed=H, bed_r=Rb, bearers=tuple(bearers), roof=rf)
+                   pads=pads, bed=H, bed_r=Rb, bearers=tuple(bearers), roof=rf, deck_under=zd0, deck_top=Zf)
     g.ROOF = dict(frame=None, r_eave=rf["r_eave"], z_eave=z_eave, plate_top=Zt, r_wall=do, pitch=rkw["pitch_deg"],
                   tip=tip, collar_drip=rf["collar_drip"])
-    log("square cabin: side %.2f on the bed z %.2f (r %.2f, bearers %s, bed fill %s), floor %.2f, plate %.2f..%.2f, "
-        "%d x %d lookout openings %.2f x %.2f (sill %.2f), %d knee struts, roof eave %.2f (r %.2f) apex %.2f tip %.2f"
-        % (side, H, Rb, tuple(bearers), bool(bed_fill), Zf, Zp, Zt, 4, n_open, open_w, open_h, Zf + open_sill, n_str,
-           z_eave, rf["r_eave"], rf["apex"], tip))
+    log("square cabin: side %.2f on the bed z %.2f (r %.2f, bearers %s, bed fill %s: %s, %d end blocks), floor %.2f, "
+        "plate %.2f..%.2f, %d x %d lookout openings %.2f x %.2f (sill %.2f), %d knee struts, roof eave %.2f (r %.2f) "
+        "apex %.2f tip %.2f"
+        % (side, H, Rb, tuple(bearers), bool(bed_fill), ("curb of %d timbers" % bed_n) if bed_n else "lathed ring",
+           n_blk, Zf, Zp, Zt, 4, n_open, open_w, open_h, Zf + open_sill, n_str, z_eave, rf["r_eave"], rf["apex"],
+           tip))
     return built

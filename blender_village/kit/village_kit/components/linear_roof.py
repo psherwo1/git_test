@@ -459,13 +459,40 @@ def _envelope(sources, u):
     return out
 
 
-def _verge_faces(roof, acc, verge, x_v, end, x_deck, roll_cover=0.012):
+def _ridge_cover_top(roof, T, x_v, inset=0.012, side=0.0):
+    """round 5: the verge face's top polyline T [(y, z) eave -> ridge -> eave] raised to the ridge roll's section at
+    the face plane x_v (the roll's FULL section, which the capped roll reaches just behind the face; its top `inset`
+    inside the roll's outline, its sides `side` past the roll's flanks), so the face covers the roll's underside and
+    no slot is left between the courses and the roll's side lip."""
+    yc, zc = (float(v[0]) for v in _ridge_centre(roof, np.array([x_v])))
+    fr, fh = roof.roll_w, roof.roll_h - inset
+    fw = fr + side
+    mid = np.flatnonzero((np.abs(T[:, 0] - yc) < fw + 0.03) & (np.abs(T[:, 0]) < 0.5 * roof.Y))
+    if not len(mid) or fw <= 0:
+        return T
+    i0, i1 = int(mid[0]), int(mid[-1])
+    seg = T[i0:i1 + 1]
+    ys_seg, iu = np.unique(seg[:, 0], return_index=True)
+    zs_seg = seg[iu, 1]
+    ang = np.linspace(np.pi, 0.0, 19)
+    ya = np.concatenate([[yc - fw], yc + fr * np.cos(ang), [yc + fw]])
+    ys = np.unique(np.concatenate([ys_seg, ya]))
+    ys = ys[(ys >= ys_seg[0]) & (ys <= ys_seg[-1])]
+    z = np.interp(ys, ys_seg, zs_seg)
+    inn = np.abs(ys - yc) <= fw                          # the roll's section, then a flat shoulder at its flanks
+    za = zc + fh * np.sqrt(np.clip(1 - ((ys - yc) / fr) ** 2, 0, 1))
+    z = np.where(inn, np.maximum(z, za), z)
+    return np.concatenate([T[:i0], np.stack([ys, z], 1), T[i1 + 1:]])
+
+
+def _verge_faces(roof, acc, verge, x_v, end, x_deck, roll_cover=0.012, ridge_cover=False):
     """one continuous, closed verge face per gable (round 2, director: no slots between the courses): a single
     polygon in the gable plane x = x_v from the deck underside up to the upper envelope of the eave roll and every
     course's end section, across both rakes and the ridge, plus a strip closing its foot back under the deck end
     (x_deck).  Faces outward (-x at end 0, +x at end 1).  roll_cover (round 3; None = round 2): the face's eave end
     also covers the eave roll's whole D section (inset this much inside the roll's outline), so the roll end and
-    the verge face meet with no slot."""
+    the verge face meet with no slot.  ridge_cover (round 5; with _ridge_roll(end_caps=...)): the face's ridge
+    part also covers the capped ridge roll's section at the face plane (_ridge_cover_top)."""
     from mathutils import Vector
     from mathutils.geometry import tessellate_polygon
     R = roof.ROLL
@@ -494,7 +521,10 @@ def _verge_faces(roof, acc, verge, x_v, end, x_deck, roll_cover=0.012):
         bots[sg] = np.stack([yb, roof.ref_z(yb) + o_b / math.cos(p)], 1)   # eave -> ridge
         if roll_cover is not None:
             bots[sg] = np.concatenate([tops[sg][:1], bots[sg]])
-    loop = np.concatenate([tops[-1], tops[1][::-1], bots[1], bots[-1][::-1]])
+    T = np.concatenate([tops[-1], tops[1][::-1]])
+    if ridge_cover:
+        T = _ridge_cover_top(roof, T, x_v)
+    loop = np.concatenate([T, bots[1], bots[-1][::-1]])
     keep = np.concatenate([[True], np.linalg.norm(np.diff(loop, axis=0), axis=1) > 1e-4])
     loop = loop[keep]
     if np.linalg.norm(loop[-1] - loop[0]) < 1e-4:
@@ -598,21 +628,67 @@ def _shingle_courses(roof, acc, rng, seed=0):
     return n_piece
 
 
-def _ridge_roll(roof, acc, rng, x_from=None):
-    """thatch ridge roll: a rounded bundle along the ridge (closed sweep, ends capped at the verges)."""
+RIDGE_CAP = dict(past=0.045, cap_len=0.09, f_min=0.15)
+"""round 5: the ridge roll's rounded free end -- it runs `past` m beyond the verge face and its section closes over
+the last `cap_len` m as a quarter ellipse (a bound bundle end), never below f_min of the full section."""
+
+
+def _ridge_centre(roof, xs):
+    """the ridge roll's centre line (local y, z) at ridge coordinates xs (the gentle +-1.2 / 1.5 cm wander)."""
+    xs = np.asarray(xs, float)
+    return (0.012 * n2(xs * 0.8, np.zeros_like(xs), 77),
+            roof.roll_centre_z() + 0.015 * n2(xs * 0.6, np.ones_like(xs), 78))
+
+
+def _ridge_cap_scale(d, past=0.04, cap_len=0.16, f_min=0.15):
+    """section scale of a capped ridge roll at distance d from its free end (quarter ellipse)."""
+    t = np.clip(np.asarray(d, float) / cap_len, 0.0, 1.0)
+    return np.maximum(f_min, np.sqrt(np.clip(1.0 - (1.0 - t) ** 2, 0.0, 1.0)))
+
+
+def _ridge_roll(roof, acc, rng, x_from=None, end_caps=None):
+    """thatch ridge roll: a rounded bundle along the ridge (closed sweep, ends capped at the verges).
+    round 5: end_caps=dict(lo=x_face | None, hi=x_face | None) -- at each FREE end (its verge face plane given) the
+    roll runs RIDGE_CAP["past"] m past the face and closes in a rounded end (_ridge_cap_scale) instead of a flat
+    faceted disc; None = the old flat-capped sweep."""
     wr, hr = roof.roll_w, roof.roll_h
-    zc = roof.roll_centre_z()
     a = np.linspace(0, np.pi, 11)
     top = np.stack([wr * np.cos(a), hr * np.sin(a)], 1)                 # right, up (CCW from +y side)
     bury = np.array([[-wr * 0.85, -0.10], [0.0, -0.16], [wr * 0.85, -0.10]])
     prof = np.concatenate([top, bury])
     x0_ = roof.xa - 0.02 if x_from is None else x_from
-    xs = np.linspace(x0_, roof.xb, max(4, int((roof.xb - x0_) / 0.25) + 1))
-    path = np.stack([xs, 0.012 * n2(xs * 0.8, np.zeros_like(xs), 77), zc + 0.015 * n2(xs * 0.6, np.ones_like(xs), 78)], 1)
+    x1_ = roof.xb
+    if end_caps:
+        lo, hi = end_caps.get("lo"), end_caps.get("hi")
+        cp = RIDGE_CAP
+        if lo is not None:
+            x0_ = lo - cp["past"]
+        if hi is not None:
+            x1_ = hi + cp["past"]
+    xs = np.linspace(x0_, x1_, max(4, int((x1_ - x0_) / 0.25) + 1))
+    fs = np.ones(len(xs))
+    if end_caps:
+        extra = []
+        if lo is not None:
+            extra.append(x0_ + cp["cap_len"] * (1 - np.cos(np.linspace(0, 0.5 * np.pi, 8)[:-1])))
+        if hi is not None:
+            extra.append(x1_ - cp["cap_len"] * (1 - np.cos(np.linspace(0, 0.5 * np.pi, 8)[:-1])))
+        xs = np.unique(np.concatenate([xs] + extra))
+        fs = np.ones(len(xs))
+        if lo is not None:
+            fs = np.minimum(fs, _ridge_cap_scale(xs - x0_, **cp))
+        if hi is not None:
+            fs = np.minimum(fs, _ridge_cap_scale(x1_ - xs, **cp))
+    yc, zc = _ridge_centre(roof, xs)
+    path = np.stack([xs, yc, zc], 1)
     # sweep's profile axes: right = U x T, up = U; T = +x, U = +z -> right = -y; mirror the profile for +y
     prof_s = prof * np.array([-1.0, 1.0])
-    V, F = sweep(path, (0, 0, 1), prof_s[::-1].copy())
+    if end_caps:
+        V, F = sweep(path, (0, 0, 1), prof_s[::-1][None, :, :] * fs[:, None, None])
+    else:
+        V, F = sweep(path, (0, 0, 1), prof_s[::-1].copy())
     acc.add(roof.to_world(V), F, "M_thatch", wear=0.3)
+    zc = roof.roll_centre_z()
     # binding spars across the roll every ~0.7 m (split hazel, read at mid-shot as the ridge pattern)
     for x in np.arange(roof.xa + 0.35, roof.xb - 0.2, 0.7):
         ang = np.linspace(0.15, np.pi - 0.15, 9)
@@ -682,12 +758,17 @@ def _deck(roof, acc, clip_local=None):
         acc.add(roof.to_world(V), F, "M_timber_weathered", wear=0.4)
 
 
-def _rafters(roof, acc, rng, spacing=0.62):
+def _rafters(roof, acc, rng, spacing=0.62, skip=None, verge_apex=False):
     """rafter tails under the eave overhang (from 0.25 m inside the wall face to just behind the lip) and a verge
-    rafter under each verge (seen from below and from the gable)."""
+    rafter under each verge (seen from below and from the gable).
+    round 5 (defaults = old behaviour): skip(P world) -> bool -- a rafter tail with any corner of its box marked is
+    not built (e.g. the face of a round body the roof runs into: composite.inside_round with a negative depth), so no
+    tail butts into or through another body's wall; verge_apex=True -- the two verge rafters run on past the ridge
+    into a crossed (halved) apex, closing the pocket their short ends left under the deck at the gable apex."""
     t = roof.deck_t
     w, h = 0.11, 0.15
     xs = np.arange(roof.x0 + 0.25, roof.x1 - 0.1, spacing)
+    n_skip = 0
     for sg in (-1, 1):
         nrm = roof.normal(sg)
         for x in xs:
@@ -696,18 +777,26 @@ def _rafters(roof, acc, rng, spacing=0.62):
             u1 = (roof.ovh + 0.25) / math.cos(roof.p)
             p0 = roof.surf(x_, u0, sg, -t - h / 2)
             p1 = roof.surf(x_, u1, sg, -t - h / 2)
+            if skip is not None:
+                cn = np.array([roof.surf(x_ + dx, uu, sg, -t + dz) for dx in (-w / 2, w / 2) for uu in (u0, u1)
+                               for dz in (0.0, -h)])
+                if np.asarray(skip(roof.to_world(cn)), bool).any():
+                    n_skip += 1
+                    continue
             beam(acc, roof.to_world(p0), roof.to_world(p1), w, h, 0.012, "M_timber", up=roof.dir_world(nrm))
         for xe, ve in ((roof.x0, roof.v0), (roof.x1, roof.v1)):
             if ve <= 0:
                 continue
             xv = xe - ve + 0.07 if xe == roof.x0 else xe + ve - 0.07
             p0 = roof.surf(xv, 0.0, sg, -t - h / 2)
-            p1 = roof.surf(xv, roof.U - 0.05, sg, -t - h / 2)
+            p1 = roof.surf(xv, roof.U + (0.03 if verge_apex else -0.05), sg, -t - h / 2)
             beam(acc, roof.to_world(p0), roof.to_world(p1), w, h, 0.012, "M_timber_weathered", up=roof.dir_world(nrm))
+    if n_skip:
+        log(f"  {roof.name} rafters: {n_skip} tails skipped (they would run into another body)")
 
 
 def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_cone=None, thatch_style="courses",
-                abut_wall_in=0.10):
+                abut_wall_in=0.10, rafter_skip=None, ridge_caps=False, verge_apex=False):
     """KIT COMPONENT: a straight gable roof from its GableRoof spec (see module doc).  clip(P_world, margin=0) -> bool
     marks vertices inside another body; faces wholly inside are dropped from the covering, ridge, comb and rafters,
     and deck faces more than 10 cm inside it.  abut_cone=(cx, cy): the roof runs into the cone of the round frame g
@@ -715,7 +804,12 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
     abut_wall_in; None = under the cone only, the round-1 rule), so under the cone's eave overhang the roof runs on
     (deck, eave roll, courses) and dies into the round wall instead of leaving a pocket under the oversailing eave.
     thatch_style: "courses" (round 2 default: continuous layered courses + thatch.d_roll eave roll + one closed
-    verge face per gable) or "clumps" (round 1).  Publishes the spec on g.LINEAR_ROOFS[roof.name]."""
+    verge face per gable) or "clumps" (round 1).  Publishes the spec on g.LINEAR_ROOFS[roof.name].
+    round 5 (defaults = round 4): rafter_skip(P world) -> bool -- rafter tails reaching into another body (e.g. the
+    round wall a roof runs into: composite.inside_round(..., depth=-0.04)) are not built (_rafters(skip=...));
+    ridge_caps=True ("courses" thatch) -- the ridge roll gets a rounded end <= 5 cm past each free verge face and the
+    verge face covers the roll's section there (_ridge_roll(end_caps=...), _verge_faces(ridge_cover=True));
+    verge_apex=True -- the verge rafters meet in a crossed apex (no pocket under the deck at the gable apex)."""
     if abut_cone is not None and clip is None:
         from .roof_junction import inside_cone
         cc = inside_cone(g, center=abut_cone)
@@ -730,7 +824,8 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
                 return cc(V, margin) & (np.hypot(V[:, 0] - c0[0], V[:, 1] - c0[1]) < r_in - margin)
     rng = np.random.default_rng(seed)
     if covering == "thatch" and thatch_style == "courses":
-        return _linear_roof_courses(g, roof, clip, rng, seed, comb)
+        return _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=rafter_skip, ridge_caps=ridge_caps,
+                                    verge_apex=verge_apex)
     pre = f"{g.prefix}_{roof.name}"
     if not hasattr(g, "LINEAR_ROOFS"):
         g.LINEAR_ROOFS = {}
@@ -773,7 +868,7 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
     return roof
 
 
-def _linear_roof_courses(g, roof, clip, rng, seed, comb):
+def _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=None, ridge_caps=False, verge_apex=False):
     """linear_roof, thatch_style "courses" (round 2): deck + rafters as before; the eave roll (thatch.d_roll),
     continuous layered courses, a closed verge face per free gable, the ridge roll and the comb."""
     pre = f"{g.prefix}_{roof.name}"
@@ -788,7 +883,7 @@ def _linear_roof_courses(g, roof, clip, rng, seed, comb):
         deck.cull = lambda V: clip(V, margin=0.10)
     finalize(deck, g.coll, smooth_deg=30.0)
     raf = Acc(pre + "_rafters")
-    _rafters(roof, raf, rng)
+    _rafters(roof, raf, rng, skip=rafter_skip, verge_apex=verge_apex)
     if clip is not None:
         raf.cull = clip
     finalize(raf, g.coll, smooth_deg=30.0)
@@ -798,9 +893,9 @@ def _linear_roof_courses(g, roof, clip, rng, seed, comb):
     cov = Acc(pre + "_covering", 60)
     n_c, verge = _layered_courses(roof, cov, rng, x_lo, x_hi, seed=seed)
     if roof.v0 > 0:
-        _verge_faces(roof, cov, verge, x_lo, 0, roof.xa + 0.02)
+        _verge_faces(roof, cov, verge, x_lo, 0, roof.xa + 0.02, ridge_cover=ridge_caps)
     if roof.v1 > 0:
-        _verge_faces(roof, cov, verge, x_hi, 1, roof.xb - 0.02)
+        _verge_faces(roof, cov, verge, x_hi, 1, roof.xb - 0.02, ridge_cover=ridge_caps)
     if clip is not None:
         cov.cull = clip
     finalize(cov, g.coll, smooth_deg=60.0, recalc=False)
@@ -812,7 +907,11 @@ def _linear_roof_courses(g, roof, clip, rng, seed, comb):
     finalize(roll, g.coll, smooth_deg=70.0)
     log(f"  {pre}: {n_c} continuous thatch courses + eave rolls + verge faces")
     rid = Acc(pre + "_ridge", 50)
-    _ridge_roll(roof, rid, rng, x_from=(x_lo - 0.03) if roof.v0 > 0 else None)
+    if ridge_caps:
+        _ridge_roll(roof, rid, rng, end_caps=dict(lo=x_lo if roof.v0 > 0 else None,
+                                                  hi=x_hi if roof.v1 > 0 else None))
+    else:
+        _ridge_roll(roof, rid, rng, x_from=(x_lo - 0.03) if roof.v0 > 0 else None)
     if clip is not None:
         rid.cull = clip
     finalize(rid, g.coll, smooth_deg=50.0)

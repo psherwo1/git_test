@@ -70,6 +70,33 @@ new function or a new keyword whose default keeps the round-3 behaviour.
 Recipe: `cone_roof(..., abut_trim=True, abut_soakers=True, soffit_cut=True)`,
 `cone_abutment(..., taper=0.12, apron=dict(w_in_kept=True, u_top=0.54))` and `DECAL_VALIDATE["walk_zones"] = "da"`.
 
+## Round 5 (2026-10-17, kit 1.10.1): module-level fixes from the round-4 sign-off audit
+
+Only v3's own modules were edited: `composite.py`, `linear_roof.py`, `roof_junction.py`. No other kit building
+imports them (grep: the only lazy imports are `ball_finial` -> `composite.drop_units`, `linear_roof` ->
+`roof_junction.inside_cone`, `eave._fill_band` (kind "fill", v3's `round_eave_fill` only) ->
+`roof_junction.cone_ref_z`, and `finish` dispatch for families "composite" / "plan", which only v3 uses). Every change
+is a new function or a new keyword whose default keeps the round-4 behaviour. The other six buildings were rebuilt to
+`kit/baseline/v3_r5_hash/` under the HASH RULE (results in the round-5 builder entry of the v3 director log).
+
+| module | change | old behaviour via |
+|---|---|---|
+| `composite.py` | `roof_cut_field(roofs, lift, off, rake_deg=None)` (new): the cut surface of a body yielding to a `GableRoof`, as a continuous scalar field (> 0 keep): over the roof solid's top (+ lift) or outside its eave plane; `rake_deg`: past the eave roll's crest the surface runs on down-and-out at that angle (the roll's top continued as a raking line). `trim_units_field(ob, mark, field, removed, min_keep)` (new kit helper): `trim_units` on a CURVED cut -- crossing edges split at the field's zero, faces split, the negative side deleted, the opening capped (material, smoothing, Mask colour and UVs copied; caps face down the gradient); units with less than `min_keep` of their vertices kept are left for the caller to drop whole. `_face_groups`, `_copy_corner_data` (helpers). | -- |
+| `composite.py` | `cone_keep_out(..., top_trim=False, top_min_keep=0.2, top_rake_deg=None)`, `cone_roof(..., abut_top_trim=False, abut_rake_deg=None, abut_min_keep=0.2)`: with `top_trim` the eave-band covering units (shingles, starters, under-laps, battens) are cut on `roof_cut_field` instead of dropped whole / cut on the vertical eave plane; with `rake_deg` the units in front of the eave roll's nose are cut on the raking line (units mostly under it dropped whole) and the soaker is laid over the whole cut region (a lead saddle in front of the roll). | `top_trim=False` |
+| `composite.py` | `trim_units(..., removed=None)` and `cone_soakers(..., always=())`: the removed part of every CUT unit is a soaker footprint too (round-4 soakers covered dropped units only, which left the d29 / d34 pocket beside a trimmed shingle). | `removed=None`, `always=()` |
+| `linear_roof.py` | `_ridge_roll(..., end_caps=None)` + `RIDGE_CAP`, `_ridge_centre`, `_ridge_cap_scale` (new): the ridge roll's free end runs 4.5 cm past the verge face and closes over the last 9 cm as a quarter ellipse (a rounded bundle end), instead of a flat faceted disc 3 cm past the face. `_verge_faces(..., ridge_cover=False)` + `_ridge_cover_top` (new): the verge face's ridge part covers the roll's full section (top 1.2 cm inside its outline), so there is no slot under the roll. `linear_roof(..., ridge_caps=False)` turns both on. | `ridge_caps=False` |
+| `linear_roof.py` | `_rafters(..., skip=None, verge_apex=False)`, `linear_roof(..., rafter_skip=None, verge_apex=False)`: `skip(P)` -> a rafter tail with any box corner marked is not built (the tails that butted into the round wall's face stones; v3 passes `composite.inside_round(..., depth=-0.10)`), the rng draw is still consumed; `verge_apex` runs the two verge rafters 3 cm past the ridge into a crossed (halved) apex, closing the pocket their short ends left under the deck. | `rafter_skip=None`, `verge_apex=False` |
+| `roof_junction.py` | `round_eave_fill(..., z_bot="wall")`: the masonry beam-fill starts 3 cm inside the top of the round stone body published on `g.WALL_FACES` -- the wall head carries the rafters with no timber plate. | `z_bot=None` |
+
+Recipe: `round_wall.wall_plate` is no longer called (the plate and its 28 pegs measured 100 % hidden: the hidden-tris
+rings at 1.4 x and 2.5 x the plan radius cannot see under a 0.72 m stone eave; with the soffit deleted outright the
+plate is still 96.8 % hidden, so `cone_soffit(r_in=...)` could not have fixed it), `round_eave_fill(z_bot="wall",
+r_off=-0.03)`, `linear_roof(..., rafter_skip=at_round, ridge_caps=True, verge_apex=True)`,
+`cone_roof(..., abut_top_trim=True, abut_rake_deg=60.0, abut_min_keep=0.05)`.
+
+Tried and removed again (not left in the kit): a timber cheek board standing on the cut eave plane (it sat behind the
+cut courses from every eye-level view, so it closed nothing that was seen).
+
 ## Known limitations (for the producer's merge)
 - `path_stone_wall` has no batter (the quoins are solid boxes); `round_stone_body` battering is 2.5 deg.
 - `cone_abutment` handles a roof whose ridge is horizontal and meets the cone on its near end; a roof meeting a

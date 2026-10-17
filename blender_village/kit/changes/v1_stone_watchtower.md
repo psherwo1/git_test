@@ -303,3 +303,75 @@ the `try` (`list(...)`), and a broken pool falls back to one process for the rem
 
 Not run. No existing module that a hero imports was touched: the only existing file edited is `square_cabin.py`, and a
 grep finds it imported only by `build_v1_stone_watchtower.py`. `pyramid_roof.py` is new.
+
+# Round 5 (2026-10-17, kit 1.10.1): closed floor sandwich to the bed edge, closed hip-saddle ends, tucked hip shingles
+
+Fixes for the round-4 sign-off audit (three axis-4 junction blockers) and note 15 (v1 was 1,057,164 triangles).
+
+## New module (nothing existing changed by it)
+
+- `components/level_probe.py`: `level_sky_probe(g, z0, z1, s_max, centre, n_az=16, az0, ds=0.005, dz=0.005, objects,
+  far, name, fail=True, report)` and the step `cabin_bed_probe(g, n_az, ds, dz, margin=0.05, fail=True)`.
+  - A level see-through check for any horizontal junction band (floor sandwich, sole plate, jetty on a wall head):
+    horizontal orthographic rays every 5 mm across `|s| <= s_max` and every 5 mm in z, from `n_az` azimuths over 180
+    deg. A line that meets no mesh is a see-through; with `fail=True` it raises `LevelSeeThroughError`.
+  - `cabin_bed_probe` runs it over a `square_cabin` crown (bed + 4 mm to deck top - 4 mm, `|s| <= bed_r + 0.05`).
+    Run it AFTER the cull. About 1.56 M rays in 2-3 s.
+  - Proof: on the round-4 deliverable it finds 2,732 see-through lines (first at az 0, s -2.51, z 8.944: the audit's
+    outermost-joist-bay slot); on round 5, 0.
+  - It complements `seal_probe.through_seal_probe` (roofs a body rises through), which cannot test a level band.
+
+## `components/pyramid_roof.py` (existing module; only v1 builds with it -- `tier_roof._pyramid_tier` imports it
+## lazily for non-8-sided tiers, which no building uses)
+
+- New keywords `hip_tuck=None`, `hip_bed=0.30` (signature and header updated). **`hip_tuck=0.012, hip_bed=0`
+  reproduce round 4 exactly** (same rng draws; the saddle stations and profile are unchanged when `hip_bed=0`).
+  - `hip_tuck` (default None = 0.8 x the saddle board width = 0.104 m): the coursed shingles end this far short of
+    the hip (trim line `p*tanh - hip_tuck`, and each course's last shingle is sized to end there), so the trimmed /
+    clamped shingle ends sit under the saddle board and none shows past its edges (audit item 3, line 251).
+  - `hip_bed` (default 0.30 m): over the last 0.30 m of slope at the eave the saddle's underside runs (smoothstep)
+    from `lift` down to 1.2 cm inside the deck, on 8 extra stations. The saddle end is a closed hip-roll end flush
+    with the lip: no open mouth under it (audit item 2; the black pip at every eave corner).
+- Defaults changed on purpose: the fix is on for every future pyramid roof. No other building calls `pyramid_roof`
+  (grep), and the hash re-run below shows every other building unchanged.
+
+## `components/square_cabin.py` (existing module; only v1 imports it)
+
+- `bed_n=16` (new): the bed fill is now a curb of `bed_n` straight timbers, one piece each (own Mask R), flats facing
+  +-X / +-Y, corners 1 cm inside the bed ring, bedded 1 cm into the wall head and **1 cm into the deck** (round 4
+  stopped 4 mm under the deck: a hairline). Director nice-to-have "rim ring as built timber".
+- End blocking (part of the bed fill): on every bearer, from inside the curb out 3 cm into the outermost joist on each
+  side, wherever the curb stops short of that joist (here 6 blocks, 0.14 m wide, bearer top to deck). This closes the
+  audit's slot at |y| 2.40-2.51 m from +-X (audit item 1). Rule-based, so any side / bed_r / bearer layout gets it.
+- The `cabin_bed` mortar disc is laid only without a curb (it was 100 % hidden).
+- `bed_n=0` = the round-4 lathed 32-gon ring without end blocks.
+- `open_sill` default 1.00 -> 1.10 (bible 7; v1 passes 1.10 anyway). Dead imports (`SHINGLE_VARIANTS`, `SIZE_TABLE`,
+  `shingle_mesh`) and the unused `_slab` removed; header signature updated.
+- `g.CABIN` also publishes `deck_under` and `deck_top` (read by `cabin_bed_probe`).
+- Known limit: with `struts=False` there are no dragon beams, so the bearer band on the +-X sides beyond the curb is
+  closed only by the curb (inside bed_r - 0.01). The probe would catch it.
+
+## Recipe (note 15)
+
+- `lod.tmpl_lod(z=4.0, step=2, parts=("base_stones", "base_dressed"))` first: drum rubble and dressed work above 4 m,
+  outside the entrance zone, on every 2nd grid line (2,556 pieces, -140,920 triangles before the cull). Nothing below
+  4 m, at the entrance or on the silhouette is touched. Result 937,933 triangles (was 1,057,164).
+- `cabin_bed_probe` after the cull.
+
+## Hash re-run (HASH RULE): `tools/build_baseline.ps1 -Step v1r5_hash -MaxParallel 2`, the six other buildings
+
+Built 05:13-05:40 after the last edit to `pyramid_roof.py` (05:10:59) and `square_cabin.py` (05:09:36), into
+`kit/baseline/v1r5_hash/`, compared with the kit 1.10.1 references (`kit/baseline/5_determinism/`, `tools/geom_diff.py`):
+
+| Building | Triangles | Geometry hash | vs 1.10.1 |
+|---|---|---|---|
+| hilltop_keep | 1,166,874 | 3e2a219a5901afc5 | identical |
+| wattle_roundhut | 878,355 | 7e5e7c2df5c4d367 | identical |
+| tower_windmill | 1,146,243 | 89bf4a2a2c60e049 | identical |
+| v4_mixed (accepted) | 938,453 | 2e87caad61b68d34 | identical |
+| v2_tiered_hall | 969,527 | 44ae9b286b85aaae | differs: the v2 builder's concurrent round (recipe saved 05:28, new kit files `tier_flashing.py` 05:18 / `tier_cull.py` 05:09; changed objects are the skirt / lantern / turret flashings, cheeks, plates, openings) |
+| v3_longhouse_roundend | 479,791 | 26b91b3f1df9d1be | differs: the v3 builder's concurrent round (recipe saved 05:38, `composite.py` 05:34, `roof_junction.py` 05:34, `linear_roof.py` 05:40; new pegs and wall plate, cheek removed) |
+
+Neither v2 nor v3 reaches the edited code: their build logs contain no `pyramid roof` / `square cabin` line (they have
+no pyramid tier and do not import `square_cabin`), and `level_probe.py` is new. The four buildings whose recipes and
+modules nobody else changed are hash-identical. v1 itself: 937,933 triangles, geometry `465c7b1b8a7dbb22`.

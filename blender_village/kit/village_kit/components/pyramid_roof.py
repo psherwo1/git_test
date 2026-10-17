@@ -4,7 +4,7 @@
     pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=0.0, cy=0.0, pitch_deg=48.0,
                  eave_out=0.50, bell_deg=0.0, bell_len=0.70, kick=0.0, kick_len=0.60, sag=0.0, exposure=0.34,
                  cap_r=0.62, finial_scale=0.80, finial_lean=0.5, rafter_step=0.60, t_deck=0.025, seed=None, rng=None,
-                 coll=None)
+                 coll=None, hip_tuck=None, hip_bed=0.30)
 
 The village's cap language (art bible 1.4 and the section-2 cap row) on ANY square, hexagonal or octagonal body:
 a pyramid at `pitch_deg` whose last `bell_len` m of slope flatten by `bell_deg` toward the eave (sprocketed, bell-cast
@@ -22,6 +22,10 @@ rounds 2-3, point for point (same deck, same shingles from the same rng).
              bent onto the surface and trimmed at the hips                                 -> <P>_<name>_shingles
   hips       ONE closed saddle (two boards meeting over the hip) per hip, swept along the curved hip line (no open
              V slot between two separate boards)                                            -> <P>_<name>_hips
+             v1 r5: the coursed shingles stop `hip_tuck` short of the hip line (default 0.8 x the saddle board
+             width), so their trimmed ends tuck under the saddle and none shows past its edges; over the last
+             `hip_bed` m of slope the saddle's underside runs down into the deck, so its eave end is a closed
+             hip-roll end flush with the lip (no open mouth under it).  hip_tuck=0.012, hip_bed=0 = round 4.
   apex       a polygonal lead cap lifted clear of every shingle / hip vertex under it, a round lead sleeve seating the
              finial, and the kit's turned finial at `finial_scale` (finial.turned_finial; 0.8 = 1.16 m above the
              cap, art bible 1.5: 0.9-1.3 m)                                       -> <P>_<name>_lead / _finial
@@ -173,9 +177,13 @@ def _sweep_add(acc, path, ups, prof, mat):
 def pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=0.0, cy=0.0, pitch_deg=48.0,
                  eave_out=0.50, bell_deg=0.0, bell_len=0.70, kick=0.0, kick_len=0.60, sag=0.0, exposure=0.34,
                  cap_r=0.62, finial_scale=0.80, finial_lean=0.5, rafter_step=0.60, t_deck=0.025, seed=None,
-                 rng=None, coll=None):
+                 rng=None, coll=None, hip_tuck=None, hip_bed=0.30):
     """KIT COMPONENT: bell-cast polygonal pyramid shingle roof (module doc).  kit 1.8.0: coll = the collection the
     parts go into (default g.coll; tier_roof.bell_tier passes the tier's sub-collection).
+    v1 r5 (hip junction): hip_tuck = how far (m, across the facet) short of the hip line the coursed shingles end
+    (None = 0.8 x the saddle board width: the trimmed ends sit under the saddle); hip_bed = slope length (m) at the
+    eave end over which the saddle's underside runs down into the deck (a closed end flush with the lip).
+    hip_tuck=0.012, hip_bed=0 reproduce round 4.
     p_wall: apothem of the wall's outer face (the deck underside passes over z_plate there); z_plate: top of the
     wall plate; sides / rot_deg / cx, cy: plan polygon (facet 0's normal at rot_deg); pitch_deg: main pitch;
     eave_out: plan overhang beyond p_wall; bell_deg / bell_len: flattening at the eave and its slope length (0 =
@@ -206,6 +214,9 @@ def pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=
         reach = min(0.7, 1.6 * max(bell_len, kick_len if kick else 0.0) / a)
         rows = np.unique(np.round(np.concatenate([rows, np.linspace(0, reach, 10)]), 5))
     n_path = 8 if S.curved else 2
+    th_b, w_b = 0.036, 0.13                                 # hip saddle board thickness and width (lift: below)
+    tuck = 0.8 * w_b if hip_tuck is None else float(hip_tuck)
+    e_sh = tuck - 0.012                                     # course end pulled in from the hip (0 = round 4)
     for k in range(nS):
         t, n = S.frame(k)
         # ---- deck: top, soffit, eave edge ----
@@ -258,19 +269,20 @@ def pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=
             if L_ < 0.12:
                 break
             w0 = pb * tanh
+            we = w0 - e_sh                                             # the course's end (r5: under the saddle)
             u = -w0 - rng.uniform(0.0, 0.2)
-            while u < w0 - 0.04:
+            while u < we - 0.04:
                 W = float(np.clip(sh["target_w"] * rng.uniform(*sh["w_jitter"]), *sh["width"]))
                 gap = rng.uniform(*sh["gap"])
                 uc = u + W / 2
-                if uc + W / 2 > w0 - 0.05 and w0 - 0.05 - u > 0.12:
-                    W = w0 - 0.05 - u + 0.04
+                if uc + W / 2 > we - 0.05 and we - 0.05 - u > 0.12:
+                    W = we - 0.05 - u + 0.04
                     uc = u + W / 2
                 var = SHINGLE_VARIANTS[int(rng.integers(0, len(SHINGLE_VARIANTS)))]
                 Vs, Fs, uv = shingle_mesh(W, L_, var, bottom=False, head=False)
                 y = Vs[:, 1]
                 pv = S.p_of_m(vb + y)
-                lim = pv * tanh - 0.012                                    # trim at the hips
+                lim = pv * tanh - tuck                                     # trim at the hips (r5: under the saddle)
                 x = np.clip(Vs[:, 0] + uc, -lim, lim)
                 lift = Lb * (1 - np.clip(y, 0, None) / Lsh) + 0.002
                 Wp = S.top(k, x, pv) + (Vs[:, 2] + lift)[:, None] * S.normal(k, x, pv)
@@ -283,12 +295,20 @@ def pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=
                 u += W + gap
             i += 1
     # ---------------- hips: one closed saddle per hip, swept along the (concave) hip line ----------------
-    lift, th_b, w_b = 0.085, 0.036, 0.13
+    lift = 0.085                               # (the shingle loop above reuses the name per vertex)
     hp = np.linspace(a + 0.03, 0.6 * cap_r * cosh, 26 if S.curved else 8)
+    if hip_bed > 0:                            # r5: stations to resolve the closed eave end of every saddle
+        hp = np.unique(np.concatenate([hp, a + 0.03 - np.linspace(0.0, 1.2 * hip_bed * cosh, 9)]))[::-1]
     for k in range(nS):
         k2 = (k + 1) % nS
         uh = hp * tanh
         H = S.top(k, uh, hp)
+        sl = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(H, axis=0), axis=1))])
+        if hip_bed > 0:                        # the underside runs from 1.2 cm inside the deck up to `lift`
+            wb_ = np.clip(sl / hip_bed, 0.0, 1.0)
+            lb = -0.012 + (lift + 0.012) * wb_ * wb_ * (3.0 - 2.0 * wb_)
+        else:
+            lb = np.full(len(hp), lift)
         NA = S.normal(k, uh * 0.997, hp)
         NB = S.normal(k2, -uh * 0.997, hp)
         T = np.zeros_like(H)
@@ -305,10 +325,10 @@ def pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=
                 dX = sgn * tv
                 dX = dX - np.dot(dX, T[j]) * T[j]
                 dX = _unit(dX - np.dot(dX, Nx) * Nx)
-                fb, ft = dX * w_b + Nx * lift, dX * w_b + Nx * (lift + th_b)
+                fb, ft = dX * w_b + Nx * lb[j], dX * w_b + Nx * (lift + th_b)
                 sides_.append(((fb @ R[j], fb @ U[j]), (ft @ R[j], ft @ U[j])))
             cA = max(float(np.dot(NA[j], U[j])), 0.3)
-            rb, rt = (0.0, lift / cA), (0.0, (lift + th_b) / cA)
+            rb, rt = (0.0, lb[j] / cA), (0.0, (lift + th_b) / cA)
             right, left = (sides_[0], sides_[1]) if sides_[0][0][0] > sides_[1][0][0] else (sides_[1], sides_[0])
             prof.append([right[0], right[1], rt, left[1], left[0], rb])
         _sweep_add(A["hips"], H, U, np.array(prof), "M_timber_weathered")
@@ -349,9 +369,10 @@ def pyramid_roof(g, p_wall, z_plate, name="pyramid", sides=4, rot_deg=-90.0, cx=
     z_eave = float(S.zu(a))
     z_corner = float(S.under(0, a * tanh, a)[2])
     log("pyramid roof %s: %d sides, wall p %.2f plate %.2f, pitch %.0f bell %.0f/%.2f kick %.3f sag %.3f, eave p %.2f "
-        "z %.2f (corner %.2f), apex %.2f, cap %.2f, finial x%.2f tip %.2f (%.2f above the cap), %d shingles"
+        "z %.2f (corner %.2f), apex %.2f, cap %.2f, finial x%.2f tip %.2f (%.2f above the cap), %d shingles, "
+        "hip tuck %.3f, closed saddle end %.2f m"
         % (name, nS, do, z_plate, pitch_deg, bell_deg, bell_len, kick, sag, a, z_eave, z_corner, apex_top, zc,
-           finial_scale, tip, tip - zc, n_sh))
+           finial_scale, tip, tip - zc, n_sh, tuck, hip_bed))
     return dict(objs=built, surface=S, sides=nS, p_wall=do, z_plate=float(z_plate), r_eave=a, z_eave=z_eave,
                 z_eave_corner=z_corner, apex=apex_top, cap_top=zc, collar_drip=zc - drop, tip=tip, pitch=pitch_deg,
                 bell_deg=bell_deg, n_shingles=n_sh)
