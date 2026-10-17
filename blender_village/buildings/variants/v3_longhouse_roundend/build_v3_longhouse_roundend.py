@@ -7,7 +7,8 @@ Run:  python build_v3_longhouse_roundend.py   -> v3_longhouse_roundend.blend + d
 
 Plan (built with the round end's centre at the origin, then recentred on the plan bounding box):
   round end   RoundFrame cone 48 deg, eave radius 4.22 m, on a battered round rubble body (face r 3.64 m) with a
-              pegged wall plate, an eave fill, a boarded soffit under the overhang and two deep-set windows; stone
+              masonry beam-fill on the wall head carrying the rafters (round 5: no timber plate, it was never seen
+              under the deep eave), a boarded soffit under the overhang and two deep-set windows; stone
               ball finial over a 44 deg lead hat with an apex blocker
   body        rubble walls 13.0 x 5.2 m (outer faces) from the gable to the round end, dressed corner quoins, the
               principal door (-Y) and three windows; a 40 deg thatch gable roof (continuous layered courses, D eave
@@ -20,20 +21,20 @@ Plan (built with the round end's centre at the origin, then recentred on the pla
 """
 import os
 import sys
+from functools import partial
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "kit"))
 
 from village_kit.assembly import KitParams, build_building  # noqa: E402
 from village_kit.components.cone import AGE_R10, age_defaults  # noqa: E402
 from village_kit.components.frame import RoundFrame  # noqa: E402
-from village_kit.components.round_wall import wall_plate  # noqa: E402
 from village_kit.components.rubble_walls import path_stone_wall, round_stone_body  # noqa: E402
 from village_kit.components.wall_openings import door_spec, window_spec  # noqa: E402
 from village_kit.components.linear_roof import GableRoof, linear_roof  # noqa: E402
 from village_kit.components.roof_junction import cone_abutment, round_eave_fill  # noqa: E402
 from village_kit.components.ball_finial import ball_finial  # noqa: E402
-from village_kit.components.composite import (composite_decals, composite_hidden_cull, cone_roof, inside_box,  # noqa: E402
-                                              inside_round, recenter, set_entrance)
+from village_kit.components.composite import (composite_decals, composite_hidden_cull, cone_cut_cover,  # noqa: E402
+                                              cone_roof, inside_box, inside_round, recenter, set_entrance)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BID = "v3_longhouse_roundend"
@@ -71,20 +72,27 @@ def body_top(x, y):
 def steps():
     in_body = inside_box(X_GABLE, -0.3, -HALF + 0.15, HALF - 0.15)          # interior of the body (round wall drop)
     in_round = inside_round((0.0, 0.0), R_FACE, depth=0.12, batter_deg=BATTER)
+    at_round = inside_round((0.0, 0.0), R_FACE, depth=-0.10, batter_deg=BATTER)   # within 10 cm of the round face
     return [
         (set_entrance, dict(xy=(DOOR_X, -HALF))),
         (round_stone_body, dict(name="round_wall", r_base=R_FACE, batter_deg=BATTER, openings=ROUND_OPENINGS,
                                 clip=in_body, seed=41)),
-        (wall_plate, dict(seed=303)),
         (path_stone_wall, dict(name="body_wall", path=BODY_PATH, top_fn=body_top, openings=BODY_OPENINGS,
                                clip=in_round, hero_s=(south(DOOR_X - 3.0), south(DOOR_X + 3.0)), seed=31)),
-        (linear_roof, dict(roof=ROOF, covering="thatch", abut_cone=(0.0, 0.0), seed=71)),
-        (cone_roof, dict(seed=606, soffit_skip=in_body, abut_roof=ROOF,          # each roof yields to the other,
-                         abut_trim=True, abut_soakers=True, soffit_cut=True)),    # on a closed, lead-backed cut
+        (linear_roof, dict(roof=ROOF, covering="thatch", abut_cone=(0.0, 0.0), seed=71,
+                           rafter_skip=at_round, ridge_caps=True, verge_apex=True)),   # round 5
+        (cone_roof, dict(seed=606, soffit_skip=in_body, soffit_cut=True, abut_roof=ROOF,  # each roof yields
+                         abut=dict(trim=True, soakers=True,                  # to the other, on a closed, lead-
+                                   top_trim=True, top_rake_deg=60.0, top_min_keep=0.05,  # backed cut on the roll
+                                   top_footprint=0.01,               # round 6: every course cut on one line,
+                                   top_sliver=0.05, top_drop=("roof_underlap",),   # no tabs on the saddle,
+                                   soaker_carry=True, soaker_smooth=4,     # saddle only where carried, traced,
+                                   soaker_lean=True))),              # round 7: no buried cells, strips
         (ball_finial, dict(seed=5, hat_seg=96, fit=True)),
-        (round_eave_fill, dict(skip=in_body)),
+        (round_eave_fill, dict(skip=in_body, z_bot="wall", r_off=-0.03)),       # beam-fill on the wall head
         (cone_abutment, dict(roof=ROOF, center=(0.0, 0.0), taper=0.12,           # closed sweep end lapping the
                              apron=dict(w_in_kept=True, u_top=0.54))),          # apron; apron under kept units
+        (cone_cut_cover, dict(t=0.012, lap=0.06, drop_free=0.005)),  # round 7: lead over the cut course ends
     ] + ([] if os.environ.get("LONG_FAST") else [composite_hidden_cull]) + [recenter]
 
 
@@ -102,7 +110,7 @@ def main():
         prefix="LONG", collection="LONG", building_id=BID,
         frame=RoundFrame, params=KIT,
         steps=steps(),
-        decals=composite_decals,
+        decals=partial(composite_decals, moss_normal="slope"),        # round 6: moss on the slope normal
         decal_validate=DECAL_VALIDATE,
         out=out,
         decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),

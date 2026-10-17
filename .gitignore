@@ -8,3 +8,4 @@ blender_village/lookdev/*.blend
 blender_village/lookdev/_tests/
 blender_village/kit/baseline/**/*.blend
 blender_village/lookdev/r2_src/
+blender_village/lookdev/junction_test/src/

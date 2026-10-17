@@ -12,7 +12,7 @@ const PY = (args && args.py) || 'C:\\GitHubDesktop\\git_test\\.bpyenv\\Scripts\\
 const RFLAGS = (args && args.render_flags) || ''
 const HERO_STATE = (args && args.hero_state) || ''
 const PASS = 8.2
-const MAX_ROUNDS = 7
+const MAX_ROUNDS = 10
 const pad = n => String(n).padStart(2, '0')
 
 const VARIANTS = [
@@ -124,7 +124,7 @@ Tasks:
 2. Where the building needs geometry the kit lacks (for example a straight stone wall run, a gable or hipped roof, or a junction piece where a linear roof meets a round body), ADD it to the kit as a reusable, parameterised module in ${KIT}/village_kit/components/, written so other buildings can use it, not as one-off code in your recipe.
 3. Junctions are the point of this test: every place two modules meet must be closed, flashed or covered, with no gaps, see-through pixels or visible clipping.
 4. Render into ${rdir(v, 1)} (all six views, --samples 24) and inspect every view. Fix seams and obvious problems, then stop: about 2 hours in total. Do not polish surface detail (note 12).
-5. Write "## ${v.id} round 1 — builder entry" (what you built, the recipe, new modules, known gaps) to ${vlog(v)}.
+5. Write "## ${v.id} round 1 â€” builder entry" (what you built, the recipe, new modules, known gaps) to ${vlog(v)}.
 
 ${TECH}
 Return the structured report.`, { label: `build:${v.id}`, phase: 'Variants', schema: WORK_SCHEMA, effort: 'high' })
@@ -138,7 +138,7 @@ The brief was: ${v.brief}
 The builder reports: ${w ? JSON.stringify({ summary: w.summary, components_used: w.components_used, new_kit_modules: w.new_kit_modules, recipe_lines: w.recipe_lines, known_gaps: w.known_gaps }) : 'no report available; read the log'}.
 Read ${ROOT}/director/art_bible.md (producer notes 1-12; grade on the note-12 MODULARITY RUBRIC), the log ${vlog(v)} and the recipe ${vdir(v)}/build_${v.id}.py. Inspect EVERY render in ${rdir(v, r)} (all PNGs, stats.json, hidden.json) and the decal anchors. Make extra close-up renders of every junction between modules into ${rdir(v, r)}/director_extra. Check that the recipe really assembles kit modules and that any new geometry was added to the kit as a reusable module.
 Grade 1-10 to ONE DECIMAL on the modularity rubric (overall roughly the lowest axis, rounded up by at most one). Producer-note violations are must-fix. Must-fix items must be concrete: module, location, what is wrong, what it should be. Do not ask for more surface detail.
-APPEND "## ${v.id} round ${r} — score X.X/10" with the axis table, verdict, strengths and must-fix list to ${vlog(v)}. Return the structured grade.`, { label: `director:${v.id}:r${r}`, phase: 'Variants', schema: GRADE_SCHEMA, effort: 'high' })
+APPEND "## ${v.id} round ${r} â€” score X.X/10" with the axis table, verdict, strengths and must-fix list to ${vlog(v)}. Return the structured grade.`, { label: `director:${v.id}:r${r}`, phase: 'Variants', schema: GRADE_SCHEMA, effort: 'high' })
 }
 
 function audit(v, r) {
@@ -160,7 +160,7 @@ Read ${ROOT}/director/art_bible.md (producer notes 1-12) and ${vlog(v)} (latest 
 ISSUES TO FIX:
 ${feedback}
 
-Rebuild, check quickly, then render into ${rdir(v, r)} (all six views, --samples 24) and inspect it. Fix only blocking problems you find in that render, then stop: about 90 minutes. Append "## ${v.id} round ${r} — builder entry" to ${vlog(v)}.
+Rebuild, check quickly, then render into ${rdir(v, r)} (all six views, --samples 24) and inspect it. Fix only blocking problems you find in that render, then stop: about 90 minutes. Append "## ${v.id} round ${r} â€” builder entry" to ${vlog(v)}.
 
 ${TECH}
 Return the structured report.`, { label: `fix:${v.id}:r${r}`, phase: 'Variants', schema: WORK_SCHEMA, effort: 'high' })

@@ -1,0 +1,32 @@
+﻿[
+    {
+        "id":  "tower_windmill",
+        "secs":  296,
+        "code":  0
+    },
+    {
+        "id":  "wattle_roundhut",
+        "secs":  1126,
+        "code":  0
+    },
+    {
+        "id":  "hilltop_keep",
+        "secs":  896,
+        "code":  0
+    },
+    {
+        "id":  "v2_tiered_hall",
+        "secs":  376,
+        "code":  0
+    },
+    {
+        "id":  "v4_mixed",
+        "secs":  391,
+        "code":  0
+    },
+    {
+        "id":  "v1_stone_watchtower",
+        "secs":  301,
+        "code":  0
+    }
+]

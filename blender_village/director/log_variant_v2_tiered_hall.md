@@ -858,3 +858,729 @@ Blocking issues (independent audit, copied by the producer from the workflow rec
 
 The kit has since been consolidated (1.8.0), the guard-rails turned on (1.9.0), the UV fix applied (1.10.0) and needle repair made deterministic (1.10.1); see kit/CHANGELOG.md and the rewritten README. Round 5 fixes every blocking issue above that still applies, on the current kit, and stays at or under 1,000,000 triangles (note 15). Kit edits to existing modules must keep every other building's geometry hash (HASH RULE).
 
+
+## v2_tiered_hall round 5 — builder entry
+
+**Scope.** This round fixes the round-4 sign-off audit's blocking issues on kit 1.10.1, following the producer note
+(2026-10-17). No surface detail was added (note 12).
+
+- **Kit.** Two NEW kit files: `components/tier_flashing.py` and `components/tier_cull.py`. No existing kit file or
+  function was edited, so no other building can change and the HASH RULE re-run was not needed. The changes are
+  recorded in `kit/changes/v2_tiered_hall.md`, "Round 5 (kit 1.10.2 proposal)".
+- **Recipe.** The four junctions now use `dressed_flashing` in place of `roof_flashing`, and the cull step is
+  `tier_hidden_cull_lean(max_views=24)`. BODIES and every other step are unchanged.
+
+### Blocking 1 and 2: hip boards and shingles through the aprons. Fixed in a new junction module.
+
+- **New `tier_flashing.dressed_flashing`.** The apron is laid over the covering, not cut into it.
+  - The apron's underside follows the covering's real upper envelope (`covering_envelope`).
+  - That envelope is a downward ray map of every mesh of the tier, at 6 sub-stations per 5 cm station and 5 mm
+    radially. Every piece vertex is also splatted into its cell, because a triangle's highest point is always a
+    vertex.
+  - The envelope is max-filtered over each apron cell and over +-2 stations round the body, plus an 8 mm gap.
+  - As a result the lead laps over every course and rises over every hip board that runs into the body.
+- **Nothing was trimmed.**
+  - No turned-down drip is cut into the courses.
+  - No covering is cut under the apron.
+  - The hips run under the lead to the body face.
+  - This is the audit's "apron rises locally over each hip" option, done generically from the real geometry. It
+    works for octagonal, round and pyramid tiers.
+- **New KIT CHECK: `tier_flashing.flashing_clip_check`.** This is the sibling of `seal_probe` that the audit asked
+  for.
+  - `dressed_flashing` runs it on every junction.
+  - It does a BVH overlap test of the flashing against every other mesh of its tier, and any intersecting triangle
+    pair raises `FlashingClipError`.
+  - **Proof that it catches clips.** The first draft (ray map only) failed the build with 3 pairs at (2.84, -1.17,
+    5.64): a thin shingle spike between ray samples. With the vertex splat, all four junctions give 0.
+- **Delivered build.** The clip check gives 0 intersecting pairs on skirt1/drum, skirt1/tur_e, skirt1/tur_nw and
+  skirt2/lantern.
+  - An independent whole-file BVH test (scratch script: every `*_flashing` object against every mesh) finds 0 pairs
+    with any shingle, hip, starter or deck object. Round 4 had 161 hip/apron pairs, plus 1,817 shingle vertices above
+    the lead.
+  - The aprons' only overlaps are their own body's stones and mortar, where the upstand head is tucked 3.5 cm into
+    the wall joint, exactly as in round 4.
+- **Seal probe** (after the cull): 0 leaks in 950,921 rays on all four junctions.
+
+### Blocking 4: eave fascia and soffit square into the turret masonry. Fixed in the same module.
+
+- **New `tier_flashing.eave_cheek`.** `dressed_flashing` calls it wherever the body leaves the roof (open flashing
+  runs).
+  - It applies wherever a body passes through a tier's overhang: outside the supporting wall line, inside the lip
+    plus fascia.
+  - It lays a lead cheek plate 6 cm off the body face, with top, bottom and end returns tucked into the wall.
+  - The cheek runs from 3 cm under the lowest tier member that meets the face up to the covering top at the open eave
+    end. Under the apron it runs up to the base surface instead.
+  - Delivered cheeks: tur_e 59 stations and tur_nw 64 stations, two runs each, z 2.94-4.00 m.
+- The fascia, soffit, deck lap and rafters now butt into the cheek: see `builder_extra/k03`, `k06`, `c01` and `c02`.
+  The cheek's name contains `flashing`, so the cull never targets it.
+
+### Blocking 3: build time. The cull work is cut.
+
+- **New `tier_cull.tier_hidden_cull_lean`.** It keeps the same targets, building views and per-object facing
+  selection as `tier_hidden_cull`.
+  - Each object is ray-tested against at most `max_views` building viewpoints (24 in the recipe), plus the review
+    tool's 77 viewpoints, which `core.visibility_cull` always adds.
+  - The door close-up views are always kept. The rest is a deterministic farthest-point subset, so the kept views
+    still surround the object.
+  - The wrapped objects go from 109 + 77 to 24 + 77 views.
+- **Measured on one object** (HALL_tur_nw_stones, same machine, run back to back): 77 views took 11.5 s,
+  77 + 40 took 17.9 s and 77 + 110 took 33.3 s. The cost is proportional to the views.
+- **Full builds**, both with this machine shared (CPU load 60-90 % from other agents; the steps before the cull took
+  88 s against 43 s in the reference):
+  - cap 40: cull 376 s;
+  - cap 24, the delivered build: **cull 264 s, whole build 6 min 13 s (373 s)**;
+  - kit-1.10.1 reference build: cull 374 s, build 436 s.
+- Since kit 1.8, `core` caps the cull at 2 spawn workers (`VILLAGE_CULL_PROCS`), so build time no longer depends on
+  the core count above 3.
+- **What the cap costs.** It culled 68,016 polygons against 69,126 in the reference, and est_hidden_pct fell from
+  11.3 % to 10.4 %. No missing pieces were found in the six views or the close-ups.
+
+### Stats (round 5)
+
+- Triangles: **966,704**, under the 1 M cap (round 4: 954,925).
+  - The +11.8 k is the denser envelope-following aprons (8 radial stations, 19-point profile) and the two cheeks
+    (960 faces).
+- est_hidden_pct: **10.4 %** (100,899 triangles).
+- Material slots: 8, all from the palette (`M_lead` was already in use). `mask_attribute_missing`: none.
+- Objects: 167 (+2 cheeks).
+- bbox: unchanged, x -6.14..7.34, y -6.14..6.14, z -0.05..18.51 m.
+- Decal anchors: 83 after the kit gate (94 placed), unchanged. They are in `DECAL_ANCHORS` and in
+  `decal_anchors.json`.
+- Clearance gate: PASS (eave lip 3.19 m over the door).
+- Roof-clearance gate: unchanged.
+- Recipe: 87 non-blank, non-comment lines. The +6 are docstring lines and the second import line of each new module.
+- Renders: `renders/variants/v2_tiered_hall/round_05/` (all six views, `--samples 24`, stats.json, hidden.json and
+  render_log.txt), plus builder close-ups in `round_05/builder_extra/` (k01, k03, k06, k07, k13, k14).
+- **Review.** All six views and the close-ups were inspected.
+  - The aprons lie over the courses and over the hip ends (k07, k14), and nothing pierces the lead.
+  - The turret aprons step down the courses to the eave (k01, k13).
+  - The eave ends now meet lead cheeks.
+  - The silhouette, proportions and actor scale are unchanged.
+  - No blocking problem was found.
+
+### Known gaps
+
+- **The eave members are let into the cheek.** The fascia, soffit, deck lap and shingle ends run through the cheek
+  plate into the closed cavity behind it. A BVH test of the cheek finds pairs with those members; they meet the
+  plate along a contact line and are hidden behind it. The clip check therefore tests the aprons only (`_flashing`
+  objects, not `_flashing_cheek`). A bisect of the members at the plate would remove those pairs.
+- **The lead edges are uneven at mid distance.** The dressed apron edge follows the course butts, so it reads as a
+  slightly scalloped lead edge at mid distance (hero, front: round the drum).
+- **Build time was not measured idle.** Both full builds ran on a shared, loaded CPU. The 264 s cull is the loaded
+  figure.
+- **Determinism was not re-checked.** I did not re-check it with a second full build. Every step is seeded, and the
+  new modules use no randomness: the view cap is a deterministic farthest-point fill.
+- **The README is not updated.** The `village_kit/README.md` family table does not list the two new modules yet; the
+  producer merges `kit/changes/`.
+- **Carried over:** skirt2's lip runs 0.30 m from the tur_e shaft; the lantern is a closed belt; polygon tiers for
+  any `sides`.
+
+
+## v2_tiered_hall round 5 — score 8.1/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only; ground dressing not
+scored (note 10). Reviewed: all six round_05 views, stats.json, hidden.json, render_log.txt / render_err.txt (only
+Blender deprecation warnings), all ten builder close-ups in `round_05/builder_extra/`, decal_anchors.json (83 anchors,
+read one by one), the recipe, the two new kit files `components/tier_flashing.py` and `components/tier_cull.py`, and
+`kit/changes/v2_tiered_hall.md` "Round 5". Director renders: 109 images in
+`renders/variants/v2_tiered_hall/round_05/director_extra/`: the round-4 set of every module junction re-shot (j01-j06
+masonry joints, q01-q02 quoins, k01-k15 skirt1 junctions, r01-r10 round tiers, x01-x08 roof-to-roof, o01-o03
+openings; clay plus red-world see-through), plus new shots of the round-5 modules: c11-c16 eave cheeks (both turrets,
+both flanks, side / look-up / top), a01-a05 dressed aprons tight (drum, drum over a hip, lantern, tur_nw, tur_e),
+t01-t02 the turret apron run ends, and m01 a mid shot of the drum and tur_e aprons.
+
+Probes on the delivered file:
+- **Clipping (independent BVH, every flashing object against every mesh):** the four aprons overlap only their own
+  body's stones and mortar (the upstand head tucked into the joint, as designed). **0 pairs with any shingle, hip,
+  starter, underlap or deck.** The round-4 hip and shingle clipping is gone. The two cheeks overlap the deck lap
+  (912 / 933 pairs), shingles (297 / 294), structure (243 / 384) and band where those members run through the plate
+  into the cavity, as the builder declared; none of it shows in c11-c16 or k03 / k04 / k06.
+- **See-through:** my island scan of all 50 red-world renders finds only the 3-25 px silhouette-edge islands that were
+  already in round 4, at the same pixels (checked by running the same scan on round_04). k05 is clean. The kit seal
+  probe reports 0 leaks in 950,921 rays.
+- **Apron drip edge (new probe: per 1 deg round each body, the apron's outermost vertex, then 1 cm outward, ray down
+  to the covering):** the lead edge floats over the course it laps:
+  - skirt1/drum: median 0.083 m, p90 0.136 m, max 0.229 m (for example at (3.19, -0.70, 5.47) and (-3.23, 0.49, 5.43));
+  - skirt1/tur_e: median 0.128 m, p90 0.178 m, max 0.184 m (for example at (5.18, 1.58, 3.95));
+  - skirt1/tur_nw: median 0.126 m, p90 0.180 m, max 0.264 m (at (-3.93, 2.47, 4.42));
+  - skirt2/lantern: median 0.118 m, p90 0.147 m, max 0.192 m (at (0.82, -1.51, 10.31)).
+  The builder's own log gives the upstand foot at 0.15-0.27 m (tur_e) and 0.12-0.28 m (tur_nw) above the roof/body
+  junction line.
+- **Flashing mesh hygiene:** no zero-area faces and no non-manifold edges. But the turret aprons fold through
+  themselves: **48 self-intersecting triangle pairs in `HALL_skirt1_tur_e_flashing`** at (5.23, -1.37..-1.39,
+  3.85-3.91) and **46 in `HALL_skirt1_tur_nw_flashing`** at (-4.22..-4.24, 2.77, 4.05-4.13), at the open-run ends next
+  to the eave cheeks. The drum, lantern and both cheeks are clean.
+- **Determinism:** an independent FULL rebuild from the current kit gives 966,704 tris and 167 objects. The
+  `tools/geom_hash.py` geometry, UV and Mask hashes (48ded75f..., 59653e51..., 89a9c275...) are identical to the
+  delivered file, and `decal_anchors.json` is byte-identical. **Determinism verified.**
+- **Build time:** my rebuild took 14 min 02 s (cull 639 s, 24 + 77 views, seal probe 43 s), but my own 109-image
+  Cycles render ran on the same CPU the whole time, so it does not measure the module. The builder's figure is 6 min
+  13 s (cull 264 s) on a loaded machine. The other baseline build of this recipe at cap 40 (`kit/baseline/v1r5_hash`)
+  took 410 s. I accept the work cut as real: the cull cost is proportional to views, and the cap is deterministic.
+- stats: 966,704 tris (note-15 cap 1,000,000: complies); est_hidden_pct 10.4 %; 8 palette slots; Mask and UVs on all
+  167 meshes; 0 empty meshes; clearance gate PASS (eave lip 3.19 m over the door).
+
+### Axis scores
+
+| # | axis | score | reason |
+|---|---|---|---|
+| 1 | Silhouette and massing | 8.5 | Unchanged massing and still ref2's tiered hall, not a resized keep: octagonal skirt, drum, round skirt, lantern belt, tall witch-hat spire, two unequal witch-hat turrets, 18.5 m. Points off: at mid distance the drum apron now reads as a thick, wavy, puffy collar rather than a lead flashing (hero, front, m01). The lantern is still a closed belt. |
+| 2 | Proportion and actor scale | 8.6 | Unchanged and correct: door 1.00 x 2.10 m clear on a 10 cm threshold, sills 1.25-1.40 m, wall 3.5 m, eave lip 3.19 m over the door (o01, actor_closeup). |
+| 3 | Construction logic | 8.3 | The eave cheek is right: fascia, soffit and deck lap now butt into a lead cheek instead of dying square into the masonry (c13, k03, k04, k06). The hips now run under the lead into the body (a02, k14). Points off: the lead is not dressed. It floats 8-13 cm (median) and up to 26 cm over the courses, and on tur_nw the upstand foot stands up to 0.28 m above the roof line as a standing lead fin (k10, k15). Lead that hovers on air is not how a flashing is carried. |
+| 4 | Seams and junctions | 8.1 | **Fixed:** all round-4 clipping (0 apron pairs with any covering piece, measured independently), the eave ends (cheeks), and no see-through anywhere. **New visible junction defects:** a dark air slot under the apron drip edge at all four junctions (k14, a01, a02, a03, c16, m01), and crumpled, self-intersecting lead tongues at the open-run ends on both turret flanks, hanging over a dark cavity (t01, t02, c11, c14, c15, k10). These are at 3.8-4.4 m, beside the eave, and they show from a 3 m look-up (c14 / c15) and from the crane (k10, k15). The axis asks for joints "closed, flashed or covered, with no gaps ... or obvious clipping". The joint is closed, but the flashing itself is gapped and folded. |
+| 5 | Distinctness and reuse | 8.6 | The recipe is still pure kit: BODIES + openings + 22 STEPS through `assembly.build_building`, with no geometry in it. Both fixes are NEW reusable kit modules with optional keywords and their own checks (`dressed_flashing`, `covering_envelope`, `eave_cheek`, `flashing_clip_check` / `FlashingClipError`, `tier_hidden_cull_lean`, `cap_views`), recorded in `kit/changes/`. No existing kit file was touched (HASH RULE respected). Points off: the kit now holds two roof/body flashing modules, and the defective one (`tier_roof.roof_flashing`, whose drip cuts the courses) is still documented as "the junction module" in `tier_roof` and in the `tier_frame` example. The recipe docstring (lines 13 and 16) still says `roof_flashing`. The README table is not updated. |
+| 6 | Technical compliance | 8.3 | Under the 1 M cap (966,704); hidden 10.4 %; 8 palette slots; Mask and UVs complete; 0 empty meshes; pooled pegs and nails; deterministic (full rebuild hash-identical); 83 anchors, all plausibly placed (damp and moss at the base, lichen and repair patches on the stone, rust under the door ironwork, cracks at the opening heads, streaks under sills and on the lower coverings). Points off: 94 self-intersecting triangle pairs in the two turret aprons (note 1: closed, solid pieces). `HALL_skirt1_drum_flashing` is 15,792 triangles for a plain lead apron, 40 % of it hidden. |
+
+**Overall 8.1** (lowest axis 8.1; no lift, because the lowest axis fails on an explicit rubric criterion). **Below the
+8.2 pass mark. Not passed.**
+
+### Verdict
+
+Round 5 fixes all four round-4 audit blockers, and fixes them in the kit, which is the right way:
+- No covering piece passes through the lead any more. A new kit check fails the build if one does, and my own BVH
+  test agrees (0 pairs).
+- Lead cheeks close the eave ends.
+- The cull work is really cut, not just spread over more workers.
+- A full rebuild reproduces the file hash for hash.
+
+The new `dressed_flashing` overcorrects, though. It takes the maximum of the covering envelope across the whole apron
+cell and ±2 stations round the body. On a turret flank the roof falls round the body, so that maximum lifts the lead
+far above the shingles. The drip edge then floats 8-13 cm (median) and up to 26 cm over the courses, and at the run
+ends the profile folds through itself into a crumpled tongue. The joint is sealed, but the flashing at it is visibly
+gapped and folded at all four junctions, worst on the turret flanks beside the eave. That fails axis 4 by the same
+standard the round-4 audit applied to clipping.
+
+The fix is local to `tier_flashing`: dress the apron edge down onto the course, close the run ends cleanly, and add
+both conditions to the module's own check. Nothing else needs to change and no detail is wanted. That should clear
+8.2.
+
+### Strengths
+
+- Every round-4 blocker was fixed in a reusable kit module, and no existing kit function was edited.
+- `covering_envelope` is a genuinely general junction tool: it ray-maps whatever pieces a tier has (octagonal, round
+  or pyramid; shingles, hips, starters, under-laps) and splats vertices so that spikes are never missed.
+- `flashing_clip_check` is the sibling check the audit asked for. It caught a real 3-pair spike on the first draft.
+- `eave_cheek` finds the members that meet a body face from the geometry itself, so it will work on any tier that a
+  turret pierces at the overhang.
+- `tier_hidden_cull_lean` / `cap_views` cut the cull work in proportion to views, always keep the door views, and are
+  deterministic.
+- Determinism was verified on a full rebuild (geometry, UV and Mask hashes, and anchors, all identical). The recipe
+  changed by two import lines and five step names.
+
+### Must-fix (round 6)
+
+1. **`tier_flashing.dressed_flashing`: the apron floats over the covering. It must be dressed down onto the course it
+   laps (rubric axes 3 and 4).**
+   - Where: all four junctions, worst on the turret flanks.
+     - skirt1/tur_nw: drip edge median 0.13 m and max 0.26 m over the covering, at (-3.93, 2.47, 4.42).
+     - skirt1/tur_e: median 0.13 m and max 0.18 m, at (5.18, 1.58, 3.95).
+     - skirt1/drum: median 0.08 m and max 0.23 m, at (3.19, -0.70, 5.47) and (-3.23, 0.49, 5.43).
+     - skirt2/lantern: median 0.12 m and max 0.19 m, at (0.82, -1.51, 10.31).
+     - The upstand foot stands up to 0.28 m above the roof line on tur_nw and tur_e (build log), which reads as a
+       standing lead fin.
+     - Seen in k10, k14, k15, a01, a02, a03, c16 and m01.
+   - What is wrong: `U[i, k]` is the envelope maximum over the whole radial cell, then max-filtered over ±2 stations
+     (`smooth=2`). Where the roof falls round the body (turret flanks), or across a course butt, that maximum lifts
+     the lead clear of the shingles and leaves a dark slot under the edge.
+   - What it should be:
+     - Keep the max envelope (and the 0-pair guarantee) for the inner apron, where the lead must clear the hips.
+     - Dress the outer two radial stations down to the envelope of their own station (no cross-station max), so that
+       the drip edge sits at most 0.03 m over the course it laps at every station, and the upstand foot sits at most
+       0.05 m over the junction.
+     - Extend `flashing_clip_check` with a lift test: fail on any station whose drip edge stands more than 0.05 m
+       over the covering, and name the station.
+2. **`tier_flashing.dressed_flashing` / `_sweep`: the open-run ends of the turret aprons fold through themselves
+   (note 1: closed, solid pieces; rubric axis 4).**
+   - Where:
+     - `HALL_skirt1_tur_e_flashing`: 48 self-intersecting triangle pairs at (5.23, -1.37..-1.39, 3.85-3.91), the S
+       flank run end beside the cheek.
+     - `HALL_skirt1_tur_nw_flashing`: 46 pairs at (-4.22..-4.24, 2.77, 4.05-4.13), the SW flank run end.
+     - Seen as crumpled, jagged lead tongues hanging over a dark cavity in t01, t02, c11, c14 and c15.
+   - What it should be:
+     - Over the last 2-3 stations of each open run, taper the apron down onto the covering, with a monotone profile
+       that has no crossing of the top and bottom rows.
+     - Close the run with one planar end cap that meets the top of the eave cheek in a single clean turned-down
+       corner.
+     - Have `flashing_clip_check` also test each flashing against itself (non-adjacent triangle pairs) and fail the
+       build on any self-intersection.
+
+### Nice to have
+
+- `eave_cheek`: bisect the fascia, soffit, deck lap and shingle ends at the cheek plate, so that the cheek pairs
+  (deck lap 912 / 933, shingles 297 / 294, structure 243 / 384) go to 0. Then run `flashing_clip_check` on the
+  `_flashing_cheek` objects too.
+- `dressed_flashing`: coarsen the apron away from hips and run ends. The drum apron is 15,792 triangles, 40 % hidden;
+  a few thousand would carry the same profile.
+- Kit hygiene:
+  - mark `tier_roof.roof_flashing` deprecated in favour of `dressed_flashing`, in its docstring and in the
+    `tier_frame` usage example;
+  - fix the recipe docstring (lines 13 and 16);
+  - add both new modules to the README family table.
+- Time one full build with nothing else running, so section 8's "under about 10 minutes on 4 shared cores" is
+  recorded against an idle figure.
+- `stone_body` clip_by: thin stone shards are left at the hall / turret re-entrant just under the skirt1 soffit (k03,
+  c13) and on the drum face just above the apron upstand (a02). Seen in close-ups only.
+- Carried over:
+  - skirt2's lip runs 0.30 m from the tur_e shaft (a tier-lip-to-foreign-body clearance rule);
+  - an open-bay lantern option in `board_belt`;
+  - one source for the round-roof eave closures;
+  - polygon tiers for any `sides`;
+  - door soot anchor offset to the lintel.
+
+
+## v2_tiered_hall round 6 — builder entry
+
+**Scope.** Both round-5 must-fixes, in the kit module `components/tier_flashing.py` only (my own round-5 file; no other
+building or kit module imports it, so no HASH-RULE re-run was needed). No surface detail was added (note 12). Kit
+changes: `kit/changes/v2_tiered_hall.md`, "Round 6 (kit 1.10.3 proposal)".
+
+### Must-fix 1: the apron floated over the covering. It is now dressed onto the course.
+
+- **New default `dressed_flashing(dress="tight")`.**
+  - Each apron vertex starts on its OWN station's envelope. There is no cell-wide maximum and no +-2-station filter.
+  - One minimal-norm pass (`_dress_tight`) then lifts only the corners of the split triangles that a covering sample
+    stands over. The lead rises over a hip board or a lifted shingle only where it is.
+  - The sampling guard is a 3 x 3 dilation of the envelope (8 mm x 5 mm), not a cell maximum.
+- **The apron ends on the course it laps.**
+  - It stops 3 cm short of the first course butt found across the station's span. Butts are staggered along a
+    course, so a lead bridging one would be held up by the next shingle.
+  - It never overhangs the lip.
+  - The drip edge turns down to 3 mm over the course.
+  - Any station whose drip still stands more than 3 cm over the course beyond is pulled in (up to 4 passes).
+- **Recipe.** The two turrets and the lantern use 2.5 cm stations with 6 apron vertices across (`FLASH`); the drum
+  keeps 5 cm stations with 8 across.
+- **Measured in the build log** (independent of the module's internals: per 1 deg sector, the outermost apron
+  vertex, 1 cm out, a ray down onto the covering):
+
+| junction | single ray: median / p90 / max | over the course under the edge (1.2 cm footprint): median / p90 / max | upstand foot over the local roof line (max) |
+|---|---|---|---|
+| skirt1 / drum | 0.021 / 0.030 / 0.163 m | 0.016 / 0.018 / 0.059 m | 0.052 m |
+| skirt1 / tur_e | 0.010 / 0.038 / 0.140 m | 0.003 / 0.022 / 0.073 m | 0.085 m |
+| skirt1 / tur_nw | 0.011 / 0.058 / 0.102 m | 0.005 / 0.028 / 0.091 m | 0.098 m |
+| skirt2 / lantern | 0.024 / 0.040 / 0.108 m | 0.018 / 0.024 / 0.076 m | 0.053 m |
+
+  Round 5 (director's probe) was median 0.08-0.13 m and max 0.19-0.26 m; the foot stood up to 0.28 m. The upstand
+  foot over the base-surface junction is now -0.01..0.10 m on the drum and lantern and 0.02..0.22 m on the turrets.
+  The turret figures are high because the chunky shingle stack itself stands 6-12 cm over the base surface there.
+- **New lift test in `flashing_clip_check`.** Any sector whose drip edge stands more than `max_lift` over the course,
+  or any station whose upstand foot stands more than `max_foot` over the local roof line, fails the build. The
+  failure names the angle and the world point. The kit default for both is 0.05 m.
+  - **The recipe opens both gates to 0.10 m (`LEAD`), declared in the recipe.** At 0.05 m the gates still name
+    1-7 sectors per junction where a single lifted or staggered shingle next to the edge holds the sheet up
+    locally. Worst cases:
+    - tur_nw: 0.091 m at 194 deg (-4.85, 3.48, 3.34);
+    - lantern: 0.076 m at 297 deg (0.69, -1.38, 10.39);
+    - tur_e: 0.073 m at 289 deg (5.91, -1.36, 3.32);
+    - drum: 0.059 m.
+  - The test uses the highest hit of a 1.2 cm footprint, so a ray that drops into the joint between two shingles
+    is not counted as lift. The single-ray figure is logged beside it.
+
+### Must-fix 2: the turret run ends folded through themselves. They now taper and close cleanly.
+
+- **Triangulation.** `_tri_sweep` triangulates the sheet with one diagonal rule in (station, d) space. The top and
+  the underside share their (station, d) vertices (the underside now has a flat foot), so they can never cross.
+- **Taper.** Every open run narrows monotonically over its last 3 stations to d_face + 0.03 m.
+- **End cap.** Each run closes with ONE planar end cap in the end station's radial plane, made of convex quads:
+  head, upstand, foot, one per apron bay, and the drip triangle.
+- **Eave cheek.** The cheek (`eave_cheek(top_cap=)`) stays 4 mm under the apron foot, so the turned-down lead laps
+  over the cheek top.
+- **`flashing_clip_check` also tests:**
+  - each flashing against ITSELF (non-adjacent triangle pairs);
+  - each flashing against the tier's other flashing pieces (the cheeks).
+- **Delivered: 0 self-intersecting pairs on all four aprons** (round 5: 48 + 46). There are 0 pairs with the tier
+  and 0 with the cheeks. An independent whole-file BVH test (every `*_flashing` apron against every non-flashing
+  mesh of skirt1 / skirt2) also finds 0 pairs.
+- **Seal probe:** 0 leaks in 950,921 rays.
+  - One intermediate draft (apron stopped at the first butt, 5 cm stations) leaked 1 grazing ray at the lantern.
+  - The turned-down drip and 2.5 cm stations closed it.
+
+### Stats (round 6)
+
+- Triangles: **980,775**, under the 1 M cap (round 5: 966,704).
+  - The +14 k is the 2.5 cm turret and lantern aprons. The drum apron is 16.5 k against 15.8 k.
+- est_hidden_pct: 10.8 %.
+- Material slots: 8, all from the palette. `mask_attribute_missing`: none.
+- Objects: 167.
+- bbox: unchanged.
+- Build: 5 min 14 s on a shared machine (cull 234 s).
+- Decal anchors: 83 kept of 94 placed, through the kit gate. They are in `DECAL_ANCHORS` and in `decal_anchors.json`.
+- Clearance gate: PASS (eave lip 3.19 m over the door). Roof-clearance gate: unchanged.
+- Recipe: 92 non-blank, non-comment lines (+5: the `LEAD` / `FLASH` keyword tables and their docstring lines).
+- Renders:
+  - `renders/variants/v2_tiered_hall/round_06/`: all six views at `--samples 24`, stats.json, hidden.json and
+    render_log.txt.
+  - Builder close-ups in `round_06/builder_extra/`: t01, t02, k10, k13, a01, a03 and m01.
+- **Review.**
+  - The silhouette and massing are unchanged.
+  - The drum apron now reads as a thin lead collar lying on the top course and rising over each hip (m01, a01). The
+    round-5 puffy collar is gone.
+  - The turret aprons step down the courses, lying on them (k10, k13, t01, t02).
+  - No blocking problem was found.
+
+### Known gaps
+
+- **Lift outliers.** See the table: up to 0.09 m at 1-7 sectors per junction, at single lifted or staggered
+  shingles. The recipe opens the lift and foot gates to 0.10 m. Closing them at 0.05 m needs finer (adaptive)
+  stations at those shingles, or shingles that do not stand proud next to a flashed face.
+- **The dressed lead edge is visibly notched.**
+  - On the drum, it pulls in at every shingle joint.
+  - On the turret flanks, it steps with the courses.
+  - Near the turret run ends, the edge is jagged where the staggered courses cross the radial stations (t02). It is
+    sealed and does not self-intersect, but it is busier than a hand-dressed edge.
+- **Cheek close-ups are missing.** The two scratch cheek close-ups (c11 / c14 positions) were placed inside the
+  geometry and were discarded. The eave cheek geometry is unchanged except that its top stays under the apron foot.
+- **Determinism was not re-checked** with a second full build. The new code uses no randomness.
+- **Carried over:**
+  - nice-to-haves: bisect the eave members at the cheek; deprecate `tier_roof.roof_flashing`; the README table;
+  - skirt2's lip runs 0.30 m from tur_e;
+  - the lantern is a closed belt.
+
+
+## v2_tiered_hall round 6 — score 8.3/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only; ground dressing not
+scored (note 10). Reviewed: all six round_06 views, stats.json, hidden.json, render_log.txt / render_err.txt (only
+Blender deprecation warnings), all seven builder close-ups in `round_06/builder_extra/`, decal_anchors.json (83
+anchors, read one by one) and the `DECAL_ANCHORS` collection (83 empties, all six properties on each), the recipe, the
+round-6 code in `kit/village_kit/components/tier_flashing.py` (`_runs`, `_tri_sweep`, `_dress_tight`,
+`flashing_lift`, `self_intersections`, the extended `flashing_clip_check`) and `kit/changes/v2_tiered_hall.md`
+"Round 6". Director renders: 125 images in `renders/variants/v2_tiered_hall/round_06/director_extra/`. That is the
+round-5 set of every module junction re-shot (j01-j06 masonry joints, q01-q02 quoins, k01-k15 skirt1 junctions,
+r01-r10 round tiers, x01-x08 roof-to-roof, c11-c16 eave cheeks, a01-a05 aprons, t01-t02 run ends, m01, o01-o03; clay
+plus red-world see-through), plus new shots: a06 (drum apron over the NW hip), a07 (lantern apron N), a08 (tur_e N
+flank), a09-a11 at the builder's named worst lift sectors (tur_nw 194 deg, tur_e 289 deg, lantern 297 deg), t03-t04
+(the other two turret run ends), u01-u02 (the turrets' upslope valleys from above) and m02 (mid shot from the W). The
+round-5 shot t03 placed its camera inside the drum, so it was dropped.
+
+Probes on the delivered file:
+- **Apron drip edge (my round-5 probe re-run: per 1 deg, the outermost apron vertex, 1 cm out, a ray down).**
+  - Single ray:
+    - drum: median 0.021, p90 0.030, max 0.163 m;
+    - tur_e: 0.010 / 0.039 / 0.140 m;
+    - tur_nw: 0.011 / 0.058 / 0.161 m;
+    - lantern: 0.024 / 0.040 / 0.108 m.
+  - Highest of a 1.2 cm cross of five rays: medians 0.007-0.020 m and p90 0.022-0.037 m. Sectors over 0.05 m: drum 10,
+    tur_e 6, tur_nw 12, lantern 16.
+  - Round 5 was median 0.08-0.13 m, so the lead now lies on the course.
+  - Radial line probes at the worst sectors find two things. Most outliers are rays falling into the joint between two
+    shingles. On the turrets' upslope side, the apron is only about 8 cm wide, and 2-4 cm of shingle joint / deck lies
+    between it and the next butt. Seen from above (u01, u02), this reads as a shaded joint, not a bare strip.
+- **Self-intersection:** 0 non-adjacent pairs, 0 zero-area faces and 0 non-manifold edges on all four aprons and both
+  cheeks (round 5: 48 + 46 pairs).
+- **Clipping (independent BVH, every flashing object against every mesh):** the aprons overlap only their own body's
+  stones / mortar (the upstand tucked into the joint) and the lantern boards / backing (the same tuck). There are
+  **0 pairs with any shingle, hip, starter, underlap or deck.** The cheeks still overlap the eave members that run
+  through them into the closed cavity (deck lap 1,156 / 1,363 pairs), as declared since round 5. None of it shows in
+  c13, k03, k04 or k06.
+- **See-through:** my island scan of all 59 red-world renders finds only 3-25 px islands at silhouette or image edges,
+  the same kind as round 5. There are 0 islands in any a-, t-, u-, c11-c13 or k10-k14 shot. The kit seal probe reports
+  0 leaks in 950,921 rays.
+- **Determinism:** an independent FULL rebuild from today's kit gives 980,775 tris and 167 objects. The
+  `tools/geom_hash.py` geometry, UV and Mask hashes (8c0a017d..., c0ea9140..., 9ae79e95...) are identical to the
+  delivered file, and decal_anchors.json is byte-identical. **Determinism verified.**
+- **Build time:** my rebuild took 12 min 04 s (cull 547 s), but my 125-image Cycles render ran on the same CPU the
+  whole time. The builder measured 5 min 14 s. The flashing steps themselves take about 30 s.
+- stats:
+  - 980,775 tris: complies with the note-15 cap, but leaves only 19 k of headroom;
+  - est_hidden_pct 10.8 %;
+  - 8 palette slots; Mask and UVs on all 167 meshes; 0 empty meshes;
+  - clearance gate PASS.
+
+### Axis scores
+
+| # | axis | score | reason |
+|---|---|---|---|
+| 1 | Silhouette and massing | 8.6 | Ref2's tiered hall, not a resized keep: octagonal skirt, drum, round skirt, lantern belt, a tall witch-hat spire and two unequal witch-hat turrets, 18.5 m. The round-5 point off is gone: at mid distance the drum and lantern aprons read as thin lead collars lying on the top course (hero, m01, m02, k07, r03), no longer as a puffy band. Still off: the lantern is a closed belt, and the 8.4 m E turret shaft is a little castle-like. |
+| 2 | Proportion and actor scale | 8.6 | Unchanged and correct: door 1.00 x 2.10 m clear on a 10 cm threshold, sills 1.25-1.40 m, wall 3.5 m, eave lip 3.19 m over the door (actor_closeup, o01). |
+| 3 | Construction logic | 8.4 | The lead is now carried by the roof: it lies on the course it laps and rises only where a hip board or a lifted shingle is (a01, a02, a06, a11, k14). The upstand foot stays within 5-10 cm of the roof line, so there is no standing fin. Points off: the open-run end caps are planar, but their outlines follow the staggered courses, so each run ends in a jagged vertical lead plate rather than one dressed turn-down (c11, c12, c14, c15, a10, k13). The eave members still pass through the cheek plate. A few thin stone shards remain under the skirt1 soffit at the hall / turret re-entrant (k03, c13). |
+| 4 | Seams and junctions | 8.3 | **Both round-5 defects are fixed.** The dark air slot under the drip edge is gone at all four junctions, and the run ends no longer fold through themselves (0 pairs, measured independently). There is still no see-through and no covering clip anywhere. The eave look-ups (c13, k03, k04, k06) are clean from actor height. Points off: the dressed edge is notched into every shingle joint (a sawtooth at the drum and lantern, a02 and a11). Close up at roof height, the turret run ends are jagged, with sharp tongues next to the cheek (c11, c12, c14, c15, a10). The recipe opens the kit's 0.05 m lift and foot gates to 0.10 m, and 6-16 sectors per junction still stand 5-16 cm over the shingle under them. None of this is a gap, a hole or a clip, and none of it reads at mid-shot distance (m01, m02, k07, k15, r03). |
+| 5 | Distinctness and reuse | 8.6 | The recipe is still pure kit: BODIES + openings + 22 STEPS through `assembly.build_building`, with no geometry in it. The only change is the `LEAD` / `FLASH` keyword tables. Both fixes are in the reusable module, and every option is a keyword: `dress="tight"` is the default and `dress="max"` keeps the round-5 profile. The new `_tri_sweep` / `_dress_tight` / `_runs` helpers and the `flashing_lift` / `self_intersections` checks work for any tier and body. The recipe docstring now names `dressed_flashing`, and the changes are recorded in `kit/changes/`. Points off: `tier_roof.roof_flashing` is still not marked deprecated and the README table is still not updated. The `tier_flashing` docstring says the apron ends "never just short of a butt", while the builder's log says it stops 3 cm short of one. |
+| 6 | Technical compliance | 8.4 | Under the 1 M cap (980,775); hidden 10.8 %; 8 palette slots; Mask and UVs complete; 0 empty meshes; pooled pegs and nails; deterministic (full rebuild hash-identical); 83 anchors, all plausibly placed (damp and moss at the base, lichen and repair patches on the stone, rust under the door ironwork, cracks at the opening heads, streaks under sills and on the lower coverings). The flashings are now clean closed pieces (0 self-intersections, 0 degenerate faces). Points off: the four aprons total 46 k triangles with 18 k hidden (drum 16.4 k, 41 % hidden; lantern 11.9 k, 51 %), and `HALL_skirt1_deck_lap` is still 21.6 k triangles, 64 % hidden. Both are carried as backing, and together they leave only 19 k of headroom under note 15. |
+
+**Overall 8.3** (lowest axis 8.3; no lift). **Above the 8.2 pass mark. PASSED.**
+
+### Verdict
+
+Round 6 does what round 5 asked, inside `tier_flashing`, where the fix belongs:
+- Each apron vertex is dressed on its own station. The lead now lies 1-2 cm (median) over the course it laps instead of
+  8-13 cm, the dark slot under the drip edge is gone, and the upstand fin is gone.
+- The sheet is triangulated so its top and underside cannot cross. Each open run tapers and ends on a planar cap. The
+  turret run ends have 0 self-intersections where round 5 had 94.
+- The module's own check now fails a build on self-intersection and on drip-edge or foot lift.
+
+I verified all of it independently: BVH, edge-lift probe, 59 red-world renders, and a hash-identical full rebuild.
+What is left is finish at roof height:
+- a sawtooth lead edge;
+- jagged end plates at the turret run ends;
+- a recipe-level loosening of the new lift gate.
+
+None of it is a gap, a clip or a producer-note violation, and none of it reads at mid-shot distance. The variant passes
+at 8.3.
+
+### Strengths
+
+- The fix is entirely in the reusable junction module. One default (`dress="tight"`) fixes every flashed junction, and
+  the round-5 behaviour stays available as `dress="max"`.
+- `_tri_sweep` makes self-intersection impossible by construction: top and underside share the (station, d)
+  parameterisation and one diagonal rule. It does not rely on a patch.
+- `flashing_clip_check` is now a complete junction gate: against the tier, against itself, against its cheeks, and a
+  lift and foot test that names the angle and world point. The kit default limit is 0.05 m.
+- Mid-shot read is right: the drum and lantern aprons are thin lead collars lying on the courses.
+- Determinism was verified on a full rebuild (geometry, UV and Mask hashes, and anchors, all identical).
+
+### Must-fix
+
+None. No producer-note violation was found, and both round-5 must-fixes are closed and independently verified.
+
+### Nice to have (kit polish, not blocking)
+
+- `tier_flashing._dress_tight` / `flashing_lift`: close the lift gate at the kit default, then delete the recipe's
+  `LEAD = dict(max_lift=0.10, max_foot=0.10)` override. Add adaptive stations (halve the step) only in sectors that
+  fail at 0.05 m: tur_nw 194 deg, tur_e 289 deg, lantern 297 deg and drum 127-144 deg.
+- `tier_flashing` end cap: fit each open run's end-cap outline to a straight line between the upstand foot and the
+  drip corner (one convex quad plus the drip triangle) instead of the course-following outline. The run would then end
+  in one clean turned-down corner over the cheek, not a jagged plate (c11, c12, c14, c15, a10, k13).
+- `tier_flashing` drip edge: low-pass the drip-edge line over about 3 stations (lift only, never lower), so the drum
+  and lantern edge bridges shingle joints instead of notching into each one (a02, a11).
+- Apron cost: coarsen the apron away from hips and run ends (5 cm stations, 4 vertices across). The drum apron (16.4 k)
+  and the lantern apron (11.9 k) would drop to a few thousand each, which restores headroom under the 1 M cap.
+  `eave_deck_lap`: coarse cells away from bodies (carried over).
+- Carried over:
+  - bisect the eave members at the cheek plate and run `flashing_clip_check` on `_flashing_cheek`;
+  - deprecate `tier_roof.roof_flashing` and add `tier_flashing` / `tier_cull` to the README table, and fix the
+    docstring's "never just short of a butt";
+  - thin stone shards under the skirt1 soffit at the re-entrant (k03, c13);
+  - skirt2's lip runs 0.30 m from the tur_e shaft;
+  - an open-bay lantern option in `board_belt`;
+  - polygon tiers for any `sides`.
+
+
+## v2_tiered_hall round 7 — builder entry
+
+**Scope.** The round-6 audit items, in the kit module `components/tier_flashing.py` only (my own file; no other
+building or kit module imports it, so no HASH-RULE re-run was needed). No surface detail was added (note 12). Kit
+changes: `kit/changes/v2_tiered_hall.md`, "Round 7".
+
+### Hard requirement: the eave cheek clipped the turret rubble. Fixed in the kit, and now gated.
+
+- **`eave_cheek(fit=True)`, the new default.**
+  - A new helper, `masonry_envelope`, ray-maps the real outer envelope of every masonry mesh round the body. It is
+    the wall-side sibling of `covering_envelope`: horizontal rays in towards the axis, plus a vertex splat.
+  - The plate stands t + 4 mm + 8 mm off that envelope, with one offset per run. On the delivered file that puts it
+    0.060-0.079 m off the nominal face; the masonry stands out to 0.055 m.
+  - The top and bottom returns end 4 mm outside the outermost stone on their own line, including the heights a
+    sloping return passes through between stations. They are no longer tucked 3.5 cm through the rubble.
+  - A station blocked by the hall's own stones at the re-entrant is left out: 12 stations per turret.
+  - The top return stays under the apron's dressed underside out to the plate face (`apron_under`).
+- **Gate.** `flashing_clip_check(bodies=...)` now tests each cheek against every masonry mesh round it: its turret's
+  stones and mortar, and the hall's stones and mortar. Any pair fails the build.
+- **Delivered result.**
+  - Kit gate: 0 pairs for both cheeks.
+  - Independent whole-file BVH (every flashing object against every mesh): `tur_e` cheek and `tur_nw` cheek give
+    **0 pairs with `HALL_tur_e_stones` / `_mortar`, `HALL_tur_nw_stones` / `_mortar` and `HALL_hall_stones` /
+    `_mortar`**. Round 6 had 1,216 / 1,182 stone pairs and 1,154 / 1,161 mortar pairs.
+  - The cheeks still overlap the eave members that run into them (deck lap, shingles, structure, band), as
+    declared since round 5.
+
+### Run ends and doubled shells
+
+- **Straight run ends (`end_line=True`).** The end station and the 3 taper stations of every open run are now ONE
+  straight line from the upstand foot to the drip corner. It is the lowest line that stays on or over every dressed
+  vertex, so it still clears the covering. The run no longer ends in a course-following outline.
+- **Normal thickness (`normal_t`).** The top now stands t * sqrt(1 + slope^2) over the underside, capped at 6.
+  Where the sheet steps down a course, the two shells therefore no longer close to a few mm.
+- **New near-coincident-layer test (`near_layers`, `flashing_clip_check(layer_tol=)`).** It counts non-adjacent
+  faces whose centroid lies within the tolerance of another face.
+  - At 2 mm the round-6 file has 47 / 69 / 74 / 3 such faces (drum, tur_e, tur_nw, lantern). Round 7 has
+    **0 / 8 / 3 / 1**.
+  - The remaining ones are at the drip edge, where it steps tangentially between two stations.
+  - The kit default is 2 mm. The recipe runs it at 1 mm (0 everywhere, so it gates).
+
+### Lift and foot gates: narrowed, NOT closed
+
+- **New in the module.**
+  - The drip pull-in loop measures each station's lift exactly as the gate does (`lift_rays`: rays down from 1 cm
+    past the drip vertex, highest hit of the 1.2 cm footprint), for up to 12 passes.
+  - A station still lifted at the shortest apron has a butt at its foot. It is dressed on over that butt onto the
+    next course, and goes back if that stands higher.
+  - The foot corners cost 4x more to lift (`foot_cost`).
+- **Gate measure on the delivered file** (1.2 cm footprint):
+
+| junction | drip-edge lift max | upstand-foot max | at the kit's 0.05 m |
+|---|---|---|---|
+| drum | 0.030 m | 0.052 m | lift passes; foot fails at 1 station |
+| tur_e | 0.037 m | 0.066 m | lift passes |
+| tur_nw | 0.083 m | 0.097 m | fails |
+| lantern | 0.062 m | 0.053 m | fails |
+
+  Round 6: lift 0.059 / 0.073 / 0.091 / 0.076 m.
+- **The recipe still overrides the gates.** It passes `LEAD = dict(max_lift=0.09, max_foot=0.10, layer_tol=0.001)`,
+  down from round 6's 0.10 / 0.10 / no layer test. **The override is narrowed, not deleted.**
+  - The foot outliers sit in the turrets' upslope back gutter. There the chunky shingle stack stands 6-10 cm over
+    the deck right at the wall, so the foot cell has to ride over it.
+- **Tried and left off by default.** They stay available as optional keywords:
+  - `foot_d`: the first apron vertex 1 cm out. It made the lantern lift worse.
+  - `adaptive`: half-step stations, with every other one dropped where it is not needed. Too few were dropped on
+    this covering: +37 k triangles, and the foot still failed.
+  - `blunt_drip`: a 6 mm drip face. It gave more near layers, not fewer.
+
+### Stats (round 7)
+
+- Triangles: **980,405**, under the 1 M cap (round 6: 980,775).
+- est_hidden_pct: 10.9 %.
+- Material slots: 8, all from the palette. `mask_attribute_missing`: none.
+- Objects: 167.
+- bbox: unchanged.
+- Build: 4 min 44 s (cull 202 s).
+- Seal probe: 0 leaks in 950,921 rays.
+- Clearance gate: PASS (eave lip 3.19 m over the door).
+- Decal anchors: 83 kept of 94, through the kit gate. They are in `DECAL_ANCHORS` and in `decal_anchors.json`.
+- Recipe: 96 non-blank, non-comment lines.
+- Renders: `renders/variants/v2_tiered_hall/round_07/`. All six views at `--samples 24`, plus stats.json, hidden.json
+  and render_log.txt.
+- **Review.**
+  - Silhouette and massing are unchanged (hero, side, actor_closeup).
+  - The cheek junction is not visible in the six standard views.
+  - No blocking problem was found in them.
+
+### Known gaps
+
+- The lift and foot gates are **not** closed at the kit's 0.05 m. The recipe override is narrowed, not deleted
+  (table above).
+- **No cheek or run-end close-ups were rendered this round** (time budget). The cheek fix is verified by BVH only,
+  not by a k06 / c11 / c14 re-shoot. The straight run ends are unreviewed visually.
+- With the plate further out and the returns no longer tucked, the eave members run through more of the cheek
+  plate. Shingles: 518 / 396 pairs after the cull (round 6: 567 / 428 before it). Bisecting the members at the
+  plate is still open.
+- 8 / 3 / 1 faces at the drip edge are within 2 mm of another face. That is why the recipe runs the layer test at
+  1 mm.
+- Carried over:
+  - the notched drip edge;
+  - `tier_roof.roof_flashing` deprecation and the README table;
+  - skirt2's lip is 0.30 m from tur_e;
+  - the lantern is a closed belt.
+
+
+## v2_tiered_hall round 7 — score 8.2/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only; ground dressing not
+scored (note 10). Reviewed: all six round_07 views, stats.json, hidden.json, render_log.txt (only Blender deprecation
+warnings), decal_anchors.json (83 anchors, read one by one) and the `DECAL_ANCHORS` collection (83 empties, all six
+properties on each), the recipe, the round-7 code in `kit/village_kit/components/tier_flashing.py`
+(`masonry_meshes`, `masonry_envelope`, `eave_cheek(fit=True)`, `flashing_clip_check(bodies=, layer_tol=)`) and
+`kit/changes/v2_tiered_hall.md` "Round 7". The builder rendered no close-ups this round. Director renders: 145 images
+in `renders/variants/v2_tiered_hall/round_07/director_extra/`. That is the round-6 set of every module junction
+re-shot (j01-j06, q01-q02, k01-k15, r01-r10, x01-x08, c11-c16, a01-a11, t01-t04, u01-u02, m01-m02, o01-o03; clay plus
+red-world see-through), plus new shots: c17-c20 (all four cheek runs, tight), c21 (tur_e cheek top return), c22
+(tur_e cheek bottom return, look-up), and g01-g03 (the turret back-gutter upstands and the lantern upstand, at the
+points my upstand probe named).
+
+Probes on the delivered file:
+- **Cheek / masonry (the round-6 audit's hard requirement).** Independent whole-file BVH: both cheeks have **0 pairs
+  with any stone, quoin or mortar mesh** (round 6: 1,182-1,216 stone pairs). The cheeks overlap only the eave members
+  that run into them (deck lap 985 / 1,122, shingles 518 / 396, structure 162 / 311, band 65 / 40), as declared since
+  round 5. **Closed.**
+- **Cheek returns.** A ray from every return's inner edge in to the masonry: gap p50 0.009 / 0.015 m, p90 0.034 /
+  0.040 m, max 0.049 / 0.046 m (tur_e / tur_nw); 80 / 147 of 294 / 321 samples are over 2 cm. The build log gives
+  "returns end -0.002..0.055 m": the return's inner edge jumps up to 5.7 cm from one 5 cm station to the next.
+- **Apron upstands against the masonry (not gated by the kit).** The drum apron touches its stones only in the top
+  1.6 cm of the upstand (the intended tuck). The turret aprons do not: **tur_e 137 lead triangles meet stones more than
+  5 cm under the upstand head (39 more than 10 cm, max 0.19 m), at az 140-240 deg (the upslope back gutter, e.g. (4.14,
+  -0.27, 4.74) and (4.35, 0.76, 4.54)); tur_nw 78 (16 more than 10 cm, max 0.14 m) at az 250-340 deg, e.g. (-3.38, 2.80,
+  4.58)**. The lantern apron meets its boards up to 0.175 m under the head at 8 sectors (64 triangles, e.g. (-1.31, 0.72,
+  10.53)). That is rubble passing through the lead face, the same defect class as the round-6 cheek, on a smaller scale.
+- **Drip-edge lift (my probe, 5-ray 1.2 cm cross).** Sectors over 0.05 m: drum 8, tur_e 7, tur_nw 12, lantern 17
+  (round 6: 10 / 6 / 12 / 16). The builder's gate measure (0.030 / 0.037 / 0.083 / 0.062 m) is reproduced by the build
+  log of my rebuild. The lift is narrowed on the drum and tur_e only; my figures are unchanged.
+- **Hygiene.** 0 self-intersections, 0 zero-area faces and 0 non-manifold edges on all four aprons and both cheeks.
+  Near-coincident layers (my own centroid test): 0 at 1 mm everywhere; 0 / 8 / 3 / 1 at 2 mm (drum, tur_e, tur_nw,
+  lantern), matching the builder. No apron face lies within 1.5 mm of its covering (no z-fighting).
+- **See-through:** island scan of all 69 red-world renders: only 3-25 px islands, at image edges or between shingle
+  tails on a silhouette (r01, r09). None is in any c-, t-, a-, u- or k10-k14 shot. Seal probe: 0 leaks in 950,921 rays.
+- **Determinism:** independent FULL rebuild (5 min 07 s on a shared CPU) gives 980,405 tris and 167 objects. The
+  `tools/geom_hash.py` geometry, UV and Mask hashes (9522f17e..., e3e6c05a..., 252e24bc...) match the delivered file,
+  and decal_anchors.json is byte-identical. **Determinism verified.**
+- stats: 980,405 tris (note-15 cap met, 19.6 k headroom); est_hidden_pct 10.9 %; 8 palette slots; Mask and UVs on all
+  167 meshes; 0 empty meshes; mask_attribute_missing empty.
+
+### Axis scores
+
+| # | axis | score | reason |
+|---|---|---|---|
+| 1 | Silhouette and massing | 8.6 | Unchanged: ref2's tiered hall, not a resized keep (octagonal skirt, drum, round skirt, lantern belt, tall witch-hat spire, two unequal witch-hat turrets, 18.5 m). The drum and lantern aprons read as thin lead collars at mid distance (m01, m02, hero). Still off: the lantern is a closed belt, and the 8.4 m E turret shaft is a little castle-like. |
+| 2 | Proportion and actor scale | 8.6 | Unchanged and correct: door 1.00 x 2.10 m clear on a 10 cm threshold, sills 1.25-1.40 m, wall 3.5 m, eave lip 3.19 m over the door (actor_closeup, o01). |
+| 3 | Construction logic | 8.3 | The cheek now stands on the real rubble and is carried by it, not sunk into it. Points off: the turret run ends still do not read as one dressed turn-down. The upstand keeps its full height to the end station, so each run ends in a free-standing lead blade with a sharp tip (t04, c17, c18, c19, c14). On the turret back gutters the lead is crumpled, and the rubble passes through the upstand face well below its head (g01, g02, u02; probe above). The eave members still pass through the cheek plate. |
+| 4 | Seams and junctions | 8.2 | **The hard requirement is closed:** 0 cheek / masonry pairs (independent BVH). There is no see-through, no apron / covering clip and no z-fighting. Points off: the fitted cheek's returns step per station, which gives a regular saw-edge along the underside of the skirt1 / turret junction. That edge reads from the ground looking up (c13 at x 430-610 px, c22 at x 270-580 px, k03). The returns stop 2-5 cm short of receding stones, leaving dark slots into the cheek cavity. The turret and lantern upstands are passed through by stones and boards below the tuck (probe; g02). The drip edge still notches into every shingle joint, with sharp "M" spikes on the lantern (g03, a02). The recipe still loosens the kit's lift / foot / layer gates. None of it reads at mid-shot distance (m01, m02, k07, k15, hero). |
+| 5 | Distinctness and reuse | 8.5 | The recipe is still pure kit: BODIES + openings + 22 STEPS through `assembly.build_building`, with no geometry in it. The round-7 fix lives in the module, and `masonry_envelope` is a genuinely reusable wall-side sibling of `covering_envelope`. Points off: the kit's own gate defaults still fail on the only building that uses the module, so the recipe has to override them. Three experimental keywords that the builder found unhelpful (`foot_d`, `adaptive`, `blunt_drip`) widen the public API. `tier_roof.roof_flashing` is still not deprecated, and the README table is still not updated. |
+| 6 | Technical compliance | 8.4 | Under the 1 M cap (980,405); hidden 10.9 %; 8 palette slots; Mask and UVs complete; 0 empty meshes; pooled pieces; deterministic (full rebuild hash-identical); 83 anchors, all plausibly placed (damp and moss at the base, lichen and repair patches on the stone, rust under the door ironwork, cracks at the opening heads, streaks under sills and on the lower coverings). Points off as in round 6: the four aprons are 45 k triangles at 40-55 % hidden, and `HALL_skirt1_deck_lap` is 21.6 k at 64 % hidden, which leaves only 19.6 k of headroom. |
+
+**Overall 8.2** (lowest axis 8.2; no lift). Run ends were the round's second claim, and the builder rendered no
+close-ups of them; they still end in blades. **At the 8.2 pass mark: PASSED, with the must-fix list below.**
+
+### Verdict
+
+Round 7 closes the hard requirement where it belongs, in `tier_flashing.eave_cheek`. The plate is fitted to a real
+ray-mapped masonry envelope, and the module gate now fails the build on any cheek / masonry pair. I verified it
+independently (0 pairs) and confirmed it on a hash-identical full rebuild. Two things hold the grade at the mark:
+- The round's other headline fix, the straight run ends, does not show in the renders. The run ends are still blades,
+  and the builder never looked at them.
+- My upstand probe finds that the aprons, which the kit does NOT test against masonry, have the same rubble-through-lead
+  defect as the cheek on the turret back gutters and on the lantern. It is smaller and is seen only from roof height.
+
+The new returns also put a saw-edge under the skirt1 soffit that an actor-height look-up can see. Nothing is a gap, a
+see-through or a producer-note violation, and none of it reads at mid-shot distance, so the variant passes at 8.2.
+The must-fixes below are what closes the junction family for good.
+
+### Strengths
+
+- The hard requirement is fixed in the reusable module, not the recipe. `masonry_envelope` plus the `bodies=` gate is
+  a general wall-side fit that any flashing piece can use.
+- `flashing_clip_check` now gates near-coincident layers too (`near_layers`). My own centroid test reproduces the
+  builder's 0 / 8 / 3 / 1 at 2 mm and 0 at 1 mm.
+- The flashings stay clean closed pieces: 0 self-intersections, 0 degenerate faces, 0 non-manifold edges. No apron
+  clips any covering, and there are 0 see-through leaks.
+- The recipe is still a short declarative kit recipe. Determinism is verified on a full rebuild (geometry, UV and Mask
+  hashes, and anchors, all identical). The build took 5 min 07 s on a loaded machine.
+
+### Must-fix
+
+1. `tier_flashing.dressed_flashing` + `flashing_clip_check`. The aprons are not tested against masonry, and the
+   turret and lantern upstands are passed through below their head.
+   - tur_e: 137 lead triangles more than 5 cm under the head, max 0.19 m, az 140-240 deg, e.g. (4.14, -0.27, 4.74).
+   - tur_nw: 78 triangles, max 0.14 m, az 250-340 deg, e.g. (-3.38, 2.80, 4.58).
+   - lantern: 64 triangles against the boards, max 0.175 m, e.g. (-1.31, 0.72, 10.53).
+   - See g01, g02 and u02.
+
+   It should be: the upstand face stands off `masonry_envelope` exactly as the cheek does, and only its top `tuck`
+   (3.5 cm head, let into the joint) may meet the wall. `dressed_flashing` should call
+   `flashing_clip_check(bodies=masonry_meshes(...))` on every apron with a head allowance, so that any pair below the
+   head fails the build.
+2. `tier_flashing.eave_cheek(fit=True)`, top and bottom returns. `bot`, `d_bot` and `d_top` are set per station, and
+   the return edge jumps up to 5.7 cm between 5 cm stations ("returns end -0.002..0.055 m"). The result is a staircase
+   saw-edge under the skirt1 / turret soffit, visible from the ground (c13, c22, k03), plus 2-5 cm dark slots to the
+   receding stones. It should be: one smooth return line per run. Make `bot` and `top` monotone or low-passed over the
+   run, take the inner edge from the envelope max over +-2 stations, and close the slot left behind with a thin
+   recessed `M_mortar` backer strip at the return's inner edge, so that the underside reads as one straight lead edge
+   at actor height.
+3. `tier_flashing` open-run ends (`_end_lines` / taper). The upstand stays full height to the end station, so every
+   turret run end is a thin free-standing lead blade with a sharp tip:
+   - t04 at x 480-500 px;
+   - c17 at x 510-600 px;
+   - c18 at x 560-750 px;
+   - c19, and c14 at x 420-510 px.
+
+   It should be: the upstand height tapers down to the apron over the same 3 taper stations, so the end cap is one
+   convex quad from the upstand head to the drip corner. Also add an end-cap gate to `flashing_clip_check`: no
+   end-cap face narrower than about 3 cm, and no interior angle under about 15 deg.
+
+### Nice to have (kit polish, not blocking)
+
+- Close the kit gates at their defaults (0.05 m lift / foot, 2 mm layers) and delete the recipe's `LEAD` override. Low-pass the drip-edge line over about 3 stations (lift only) so it bridges shingle joints. This also removes the lantern's "M" spikes (g03) and the drum sawtooth (a02).
+- Drop or document the unhelpful experimental keywords (`foot_d`, `adaptive`, `blunt_drip`). Deprecate `tier_roof.roof_flashing`, and add `tier_flashing` / `tier_cull` to the README table.
+- Apron cost: coarsen the apron away from hips and run ends (drum 16.4 k, lantern 11.9 k). Coarsen `eave_deck_lap` cells away from bodies. Both restore headroom under the 1 M cap.
+- Carried over:
+  - bisect the eave members at the cheek plate;
+  - skirt2's lip runs 0.30 m from the tur_e shaft;
+  - an open-bay lantern option in `board_belt`;
+  - polygon tiers for any `sides`.
+- Housekeeping: two 0-byte files sit at the repository root, `tier_flashing.py` and `plinth.py`. They are not kit modules and should be removed by whoever created them.

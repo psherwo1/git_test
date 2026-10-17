@@ -97,6 +97,37 @@ r_off=-0.03)`, `linear_roof(..., rafter_skip=at_round, ridge_caps=True, verge_ap
 Tried and removed again (not left in the kit): a timber cheek board standing on the cut eave plane (it sat behind the
 cut courses from every eye-level view, so it closed nothing that was seen).
 
+## Round 6 (2026-10-17, kit 1.10.1): module-level fixes from the round-5 audit
+
+Only `composite.py` (v3's own module) was edited. Every change is a new function or a new keyword whose default keeps
+the round-5 behaviour. No other kit building imports `composite` (round-5 grep, unchanged); the six other buildings
+were still rebuilt to `kit/baseline/v3_r6_hash/` under the HASH RULE (results in the round-6 builder entry).
+
+| module | change | old behaviour via |
+|---|---|---|
+| `composite.py` | `soaker_support(g, roofs, eave_s, margin, gap, clear)` (new): `(carry, seat)` for a cone that yields to `GableRoof`(s). carry: lead is kept only on / in a roof's solid (never under its lower outline, the eave-roll belly or deck underside) or, outside every roof's plan columns, over the cone's kept soffit (slope distance >= soffit `eave_s` + 4 cm, and the soffit point under it also outside the roof's columns) or the wall head. seat: the soffit top's depth there. | -- |
+| `composite.py` | `cone_soakers(..., carry=None, seat=None, smooth=0)` + `_soaker_cells`, `_outline_smooth` (new): cells carried by nothing are clipped; the slab is built one quad per cell (no long run quads, no T-junctions) with its outline traced and smoothed (Laplacian, in azimuth-m / slope-m node space); where seated, the sheet turns down (ramped over about 4 cells) and lies on the soffit boarding, so its free lower edge is a closed edge resting on the soffit. | all off |
+| `composite.py` | `drop_slivers(ob, field, mark, h, on, removed)` (new kit helper): after a field cut, drops the units left as thin slivers lying on the cut (a cap vertex and nothing more than `h` over the cut). | -- |
+| `composite.py` | `footprint_field(g, field, margin)`, `_cone_foot(g, P)` (new): a cone covering's footprint cut, `field(foot(P)) - margin`, where foot(P) is P's foot on the cone's reference surface. Units cut on it end on one surface square to the cone, along the line where the reference surface crosses the cut, whatever their height in the course stack. | -- |
+| `composite.py` | `cone_keep_out(..., top_sliver=0.0, soaker_carry=False, soaker_smooth=0, top_drop=(), top_footprint=0.0)`: wires the above in. `top_drop` names hidden-layer units, such as the under-laps, that are dropped whole where the cut touches them; cut, they were left as bare triangular tabs on the saddle. | defaults |
+| `composite.py` | `cone_roof(..., abut=None)`: a dict of further `cone_keep_out` keywords, merged over the flat `abut_*` ones. New keep-out options go through this sub-spec, so `cone_roof` stops growing flat keywords (round-4/5 hygiene note). | `abut=None` |
+| `composite.py` | `composite_decals(..., moss_normal="hit")`: `"slope"` projects linear-roof moss along the roof's slope normal. A ray hit on a course's flat top gave a straight-up normal on the 40 deg thatch (`DA_moss_005/007/009/012/014`). | `"hit"` |
+
+Recipe: `cone_roof(..., abut=dict(top_footprint=0.01, top_sliver=0.05, top_drop=("roof_underlap",),
+soaker_carry=True, soaker_smooth=4))`, `decals=partial(composite_decals, moss_normal="slope")`.
+
+Tried and removed again (not left in the kit): `cut_cheek_lead`, a closed lead cheek traced along the cut line over
+the cut course ends. It found kept units beside the traced line on only a few rows, so it built 4 short segments and
+covered nothing that was seen.
+
+UV determinism (round-5 note, not changed here): `uvgrain.regrain_mesh` sign-fixes the PCA major axis `L` (`_sign_fix`)
+but not the second axis `B1 = V[:, :, 1]`. Its sign is whatever the LAPACK build returns, and it sets U on timber
+pieces. Re-running `finish_uvs` on the round-5 file in the 5.1.2 module reproduces the delivered UV hashes exactly
+(twice), and flipping `B1` changes exactly `LONG_battens` / `LONG_rafters` / `LONG_round_wall_frames`. Those are the
+three objects that differ in the director's blender.exe 5.2 rebuild. The kit-wide fix is
+`B1 = _sign_fix(B1)` before the Gram-Schmidt step. It changes the UV hash of every building, heroes included, so it is
+left to the producer.
+
 ## Known limitations (for the producer's merge)
 - `path_stone_wall` has no batter (the quoins are solid boxes); `round_stone_body` battering is 2.5 deg.
 - `cone_abutment` handles a roof whose ridge is horizontal and meets the cone on its near end; a roof meeting a
