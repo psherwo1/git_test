@@ -44,3 +44,13 @@
    - A new module (e.g. components/porch.py).
 
 **File ownership while both tracks run:** this track must NOT edit linear_roof.py or oof_junction.py, because the other track owns them. Subclass, wrap or call them from the new modules. If something truly needs a change there, record it in the builder entry as a request for later and work around it.
+## PRODUCER NOTE (2026-10-17, session 2, 23:10): early-preview feedback, apply in round 1 (the village theme)
+
+From `round_01/preview/` (the first FAST build):
+1. **Keep the eave lift over the front door.** The thatch waving up over the porch is exactly on theme.
+2. **The porch hood is not yet on theme.** It is a flat, ruler-straight shingle canopy on square brackets under soft thatch.
+   - Make it **soft**: a swept / bell-cast or gently arched hood (the `GableRoof` soft options, or a curved hood profile), in the host's covering or the village shingle with a rolled or flared edge.
+   - Carry it on **curved timber brackets** (the `cruck` curves) or a small cruck-arched frame.
+   - Seat it sealed into the wall.
+   - Door clearance >= 2.30 m.
+3. **The lean-to must read as a lean-to:** a real mono-pitch shed (a store or byre) against the back long wall. About 4-6 m along the wall and 2-3 m deep, low walls (rubble or rough boarding) or posts, its soft roof dying into the host wall under the host eave, with a door or opening of its own. It must not be a small canopy.

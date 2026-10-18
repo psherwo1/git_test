@@ -43,3 +43,13 @@ A low village cottage on an **L plan**, built from rubble (lower walls or full w
    - It is reusable alongside GableRoof(eyebrows=).
 
 **File ownership while both tracks run:** this track may edit linear_roof.py, oof_junction.py and its own new modules. The other track will not edit those two files.
+## PRODUCER NOTE (2026-10-17, session 2, 23:12): early-preview feedback, apply in round 1 (the village theme)
+
+From `round_01/preview/` (the first FAST build):
+1. **Keep:** the L-plan, the soft thatch valley and the gabled dormer with its rolled thatch hood. All on theme.
+2. **The chimney reads as a miniature lighthouse:** a tall, thin round shaft standing far above the ridge, with a cupola. The village must not gain more towers.
+   - Make it a **short, chunky village chimney**: a battered rubble stack, broad at the base (it can be an external stack against the gable, as now), rising only about **0.8-1.2 m above the ridge**.
+   - Give it softened shoulders (weathered offsets where it narrows).
+   - Top it with a **round element of modest size**: a round clay / stone pot or a low smoke louvre under a little cone, at most about 0.6 m tall, with no lantern / cupola read.
+   - Flash it into the roof properly.
+3. **The thatch gable verges are saw-toothed** (stepped course ends against the sky, most visible on the cross wing). Use the kit's **`linear_roof(verge_roll=True)`** with the apex bend (from the barn, kit 1.12.0) on every thatch gable, so each rake is one soft rolled edge.
