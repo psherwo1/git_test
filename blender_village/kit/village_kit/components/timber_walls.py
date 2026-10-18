@@ -68,9 +68,10 @@ TIMBER_OPENING = dict(
     door=dict(width=1.0, height=2.10, threshold=0.0, jamb=(0.16, 0.20), head=0.18, planks=5, leaf_t=0.045,
               leaf_set=0.06, steps_to=None, rise=0.17, tread=0.32, room=1.4, head_rule=None),
     window=dict(width=0.55, height=0.60, sill=1.15, jamb=(0.14, 0.18), head=0.16, rail=0.14, frame=0.06,
-                shutters=True, room=1.0, room_pad=(0.35, 0.6, 0.35), lights=4),
+                shutters=True, room=1.0, room_pad=(0.35, 0.6, 0.35), lights=4, gable=False),
     boat=dict(width=2.6, height=2.6, threshold=0.0, jamb=(0.26, 0.24), head=0.30, bearing=0.30, leaves=2,
-              leaf_t=0.05, ledges=3, room=1.6, steps_to=None, rise=0.17, tread=0.32, head_rule=None),
+              leaf_t=0.05, ledges=3, room=1.6, steps_to=None, rise=0.17, tread=0.32, head_rule=None,
+              to_ground=False, pad=None),
 )
 """the timber family's opening defaults (a None in the shared spec takes these): clear width / height, threshold above
 the sill beam (doors) or clear sill height above the floor = sill-beam top (windows), jamb (face, depth), head / rail
@@ -78,16 +79,33 @@ heights, leaf thickness and set-back, built-in steps down to `steps_to` (absolut
 kit 1.13 (v5 round 5; default = the old fixed margins): window room_pad=(side, below, above) -- how far the dark room
 reaches past the clear opening (an eyebrow window's room must stay under the wave).
 kit 1.14 (v5 round 6; default = the old cross mullion): window lights=4 (cross mullion, 2 x 2) or 2 (one vertical
-mullion: a two-light window)."""
+mullion: a two-light window).
+kit 1.16 (v6 barn; every default = the old build): window lights=0 -- an OPEN opening (no glazing frame, no
+mullion: a loft door or a vent slit; with shutters=True the two plank leaves stand open on the face); window
+gable=True -- the opening is laid in the GABLE above the wall plate (its jambs stand on the plate, its head is
+checked against the roof rake, not the plate; see path_timber_wall); boat to_ground=True -- a CART door: the clear
+opening starts at the ground, the sill beam is cut between two dressed stone pads that carry the jambs (pad = (past
+the jamb, depth behind the face, proud of it), None = (0.10, 0.42, 0.10)) -- the plinth runs into the pads' backs."""
 
 
 def boat_door(width=2.6, height=2.6, leaves=2, jamb=(0.26, 0.24), head=0.30, bearing=0.30, ledges=3, room=1.6,
-              steps_to=None, at=None, head_rule=None):
+              steps_to=None, at=None, head_rule=None, to_ground=False, pad=None):
     """a large boat / barn / loading door: the shared opening spec (components.openings.door) with boat=True.
     round 2: head_rule None (the wall's: "clamp") / "clamp" / "trim" -- what happens when it is taller than its
-    storey (wall_openings.TIMBER_HOST): it never crosses the storey head."""
+    storey (wall_openings.TIMBER_HOST): it never crosses the storey head.
+    kit 1.16 (v6; False = old): to_ground=True -- a cart door opening at the ground on stone pads (TIMBER_OPENING)."""
+    extra = dict(to_ground=True, pad=pad) if to_ground else {}
     return _door(width=width, height=height, threshold=0.0, at=at, boat=True, leaves=leaves, jamb=jamb, head=head,
-                 bearing=bearing, ledges=ledges, room=room, steps_to=steps_to, head_rule=head_rule)
+                 bearing=bearing, ledges=ledges, room=room, steps_to=steps_to, head_rule=head_rule, **extra)
+
+
+def loft_door(width=1.20, height=1.70, sill=2.60, jamb=(0.16, 0.20), room=1.0, room_pad=(0.20, 0.30, 0.20), **kw):
+    """kit 1.16 (v6): a hayloft door high in a gable -- the timber window spec opened up (lights=0: no frame, no
+    mullion) with its two plank leaves standing open on the face (shutters), laid in the gable (gable=True).
+    sill: above the storey floor (the sill-beam top); put it so the jambs stand on the plate."""
+    from .openings import window as _window
+    return _window(width=width, height=height, sill=sill, shutters=True, lights=0, gable=True, jamb=jamb, room=room,
+                   room_pad=room_pad, **kw)
 
 
 def rect_path(x0, x1, y0, y1):
@@ -321,7 +339,7 @@ def _sheet(acc, F, ss, zs, keep, w0, w1, mat, clamp=None):
 # ---------------------------------------------------------------------------------------------------------------
 # openings: the kit's ONE opening builder, wall_openings.build_opening(host=...) (round 2: the private builder retired)
 # ---------------------------------------------------------------------------------------------------------------
-def _opening_layout(sp, s_c, floor, st, head_max=None, plate_top=None, head_rule="clamp"):
+def _opening_layout(sp, s_c, floor, st, head_max=None, plate_top=None, head_rule="clamp", ground=None):
     """an opening's clear rect and the cladding block rect (the opening's own jambs, rails and head, cased).
     round 2: a door taller than its storey head (head_max) is laid out as wall_openings' timber host builds it --
     "clamp": the clear top and the block stop at the plate underside; "trim": the block stops at the plate top."""
@@ -334,6 +352,8 @@ def _opening_layout(sp, s_c, floor, st, head_max=None, plate_top=None, head_rule
         top = cz1 + sp["head"]
     else:
         cz0 = floor + sp["threshold"]
+        if sp.get("to_ground"):                  # kit 1.16: a cart door's clear opening starts at the ground
+            cz0 = floor - 0.30 if ground is None else float(ground)
         cz1 = cz0 + sp["height"]
         bot = floor - 0.30                       # a door's block reaches through the sill line
         top = cz1 + sp["head"]
@@ -361,14 +381,36 @@ def _plate_cut(sp, s_c, floor, plate_bot, head_rule):
     return None
 
 
+def _sill_cut(sp, s_c):
+    """kit 1.16: (s0, s1) of the sill beam a cart door (boat to_ground=True) cuts -- between its pads' outer ends."""
+    if not sp.get("to_ground"):
+        return None
+    ps = (sp.get("pad") or (0.10, 0.42, 0.10))[0]
+    hw, jw = sp["width"] / 2, sp["jamb"][0]
+    return (s_c - hw - jw - ps, s_c + hw + jw + ps)
+
+
+def _face_w(st, ro):
+    """kit 1.16: w of the outermost cladding face of a style (the battens of board-and-batten, rough or not): where
+    a gable opening's casing and open leaves lie."""
+    if ro is None:
+        w = st["board"][1]
+        return w + (0.022 if not st["rows"] else 0.0)
+    w = st["board"][0] + ro["thick"][1] + ro["w_jit"]
+    return w + (0.025 if not st["rows"] else 0.0)
+
+
 def _build_opening(g, oaccs, F, sp, s_c, floor, head_max, st, rng, label, ground, plate_top=None, plate_w=None,
-                   head_rule="clamp"):
-    """one opening of a timber wall: wall_openings.build_opening with the timber host (see TIMBER_HOST there)."""
+                   head_rule="clamp", face=None):
+    """one opening of a timber wall: wall_openings.build_opening with the timber host (see TIMBER_HOST there).
+    kit 1.16: face (None = the style's) -- the host face w (a gable opening lies on the gable cladding's face)."""
     from .wall_openings import build_opening
     O, t, n = F[0], F[1], F[2]
     bow = F[3] if len(F) > 3 else None
     w_off = 0.0 if bow is None else float(bow(s_c))
-    host = dict(face=st["board"][1] if st["casing"] else 0.0, floor=floor, head_max=head_max, plate_top=plate_top,
+    if face is None:
+        face = st["board"][1] if st["casing"] else 0.0
+    host = dict(face=face, floor=floor, head_max=head_max, plate_top=plate_top,
                 plate_w=plate_w, head_rule=head_rule, ground=ground, casing=st["casing"])
     return build_opening(g, sp, O + s_c * t + w_off * n, t, n, oaccs, rng, label=label, host=host)
 
@@ -443,9 +485,18 @@ def path_timber_wall(g, name, path, z0, top=2.6, top_fn=None, style="post_plank"
         # ---- sill and plate (crossed, halved ends at outside corners; heights alternate by 1.5 cm per run)
         e0, e1 = ext(k0, 0), ext(k1, 1)
         sag_l = 0.0 if ro is None else ro["sag"] * min(1.0, L / 4.0)
-        wbox(accs["frame"], F, -e0, L + e1, z0, floor - dz, -sd, st["sill_out"], "M_timber", r=0.014,
-             ns=max(4, int(L / 1.2) + 2))
         seg_ops = sorted(ops_by_seg[i], key=lambda o: o[0])
+        s_cuts = sorted(c for c in (_sill_cut(sp, sc) for (sc, sp) in seg_ops) if c)
+        if not s_cuts:
+            wbox(accs["frame"], F, -e0, L + e1, z0, floor - dz, -sd, st["sill_out"], "M_timber", r=0.014,
+                 ns=max(4, int(L / 1.2) + 2))
+        else:                                        # kit 1.16: a cart door cuts the sill beam between its pads
+            a_ = -e0
+            for (c0, c1) in s_cuts + [(L + e1, None)]:
+                if c0 - a_ > 0.02:
+                    wbox(accs["frame"], F, a_, c0, z0, floor - dz, -sd, st["sill_out"], "M_timber", r=0.014,
+                         ns=max(4, int((c0 - a_) / 1.2) + 2))
+                a_ = c1 if c1 is not None else a_
         plate_bot = top - ph + dz
         if st["plate"]:
             # round 2: a door taller than its storey with head_rule "trim" cuts the plate between its jambs (its head
@@ -481,11 +532,13 @@ def path_timber_wall(g, name, path, z0, top=2.6, top_fn=None, style="post_plank"
         blocks, clears = [], []
         for (sc, sp) in seg_ops:
             clear, block = _opening_layout(sp, sc, floor, st, head_max=plate_bot if st["plate"] else top,
-                                           plate_top=top if st["plate"] else None, head_rule=head_rule)
+                                           plate_top=top if st["plate"] else None, head_rule=head_rule,
+                                           ground=ground_z)
             clears.append(clear)
             blocks.append(block)                              # the cladding stops at the opening's own jambs
         if st["mid_posts"]:
-            gaps = _free(0.0, L, occ + [(b_[0], b_[1]) for b_ in blocks])
+            gaps = _free(0.0, L, occ + [(b_[0], b_[1]) for b_, (sc_, sp_) in zip(blocks, seg_ops)
+                                        if not sp_.get("gable")])
             for (u, v) in gaps:
                 nb = int(math.ceil((v - u) / bay_max))
                 for k in range(1, nb):
@@ -495,9 +548,18 @@ def path_timber_wall(g, name, path, z0, top=2.6, top_fn=None, style="post_plank"
                     occ.append((sm - pw / 2, sm + pw / 2))
         # ---- openings: wall_openings.build_opening with the timber host (it records them on g.OPENINGS)
         for (sc, sp) in seg_ops:
-            _build_opening(g, oaccs, F, sp, sc, floor, plate_bot if st["plate"] else top, st, rng,
-                           f"{name}_{n_open}", ground_z, plate_top=top if st["plate"] else None,
-                           plate_w=(-pd_, st["sill_out"]), head_rule=head_rule)
+            if sp.get("gable"):                      # kit 1.16: an opening in the gable, above the plate
+                if rake is None or floor + sp["sill"] - sp["rail"] < top - 0.005:
+                    raise ValueError(f"timber wall {name}: a gable opening at s {sc:.2f} needs a gable (top_fn) and "
+                                     f"its jambs on the plate (clear sill >= {top - floor + sp['rail']:.2f} m)")
+                hw_ = sp["width"] / 2 + sp["jamb"][0] + 0.05
+                hm_ = min(rake(s_) for s_ in np.linspace(sc - hw_, sc + hw_, 9)) - 0.03
+                _build_opening(g, oaccs, F, sp, sc, floor, hm_, gst, rng, f"{name}_{n_open}", ground_z,
+                               face=_face_w(gst, ro))
+            else:
+                _build_opening(g, oaccs, F, sp, sc, floor, plate_bot if st["plate"] else top, st, rng,
+                               f"{name}_{n_open}", ground_z, plate_top=top if st["plate"] else None,
+                               plate_w=(-pd_, st["sill_out"]), head_rule=head_rule)
             n_open += 1
         # ---- cladding below the plate (the storey) and above it (gable / eave strip)
         corner_occ = [(a, b) for (a, b) in occ if a <= 1e-6 or b >= L - 1e-6]
@@ -518,7 +580,8 @@ def path_timber_wall(g, name, path, z0, top=2.6, top_fn=None, style="post_plank"
             w0, w1 = st["backing"]
             ss = sorted(set([0.0, L] + [c for cl in clears for c in (cl[0], cl[1])]
                             + (list(np.arange(0.6, L, 0.6)) if rake is not None else [])))
-            zz = sorted(set([floor - dz - 0.02, top] + [c for cl in clears for c in (cl[2], cl[3])]
+            zb_ = floor - dz - 0.02
+            zz = sorted(set([zb_, top] + [max(c, zb_) for cl in clears for c in (cl[2], cl[3])]
                             + ([zt_max] if zt_max > top + 0.03 else [])))
             ss, zz = np.array(ss), np.array(zz)
 
@@ -683,11 +746,63 @@ def _clad_rough(accs, F, L, z_lo, z_hi, st, occ, blocks, rng, rake, ro):
                      nz=max(4, int((d - c) / 0.8) + 3), clamp=clamp, tilt=0.4 * tilt * rng.uniform(-1, 1))
 
 
+def hoist_beam(g, name, at, out, z, length=1.10, tail=0.45, section=(0.20, 0.22), brace=(0.55, 0.50),
+               brace_t=(0.12, 0.13), block=True, lean=0.02):
+    """KIT COMPONENT (kit 1.16, v6 barn): a hay-hoist beam over a loft door -- a hewn beam run out of a gable (or any
+    wall) face, carried by ONE curved knee brace from the face below it (an arched brace, the village's curved timber
+    language: tangent to the face at its foot and to the beam at its head), with a pulley block on a forged eye and a
+    hook at its outer end.
+        at       (x, y) on the wall's outer face (the beam's centre line)      out   the face's outward plan normal
+        z        the beam's top (keep it under the roof's verge: the rake minus the verge rafter)
+        length   how far it runs out past the face; tail: how far it runs in behind the face (into the gable frame)
+        section  (width, height) of the beam; brace = (reach out along the beam, drop down the face) of the knee
+                 brace's intrados, brace_t its (width, depth); lean: the outer end droops this much (an old beam)
+    -> <P>_<name>_frame (M_timber) and <P>_<name>_ironwork (M_iron)."""
+    from ..geom import beam, prof_circle, prof_rect, sweep
+    A = np.array([float(at[0]), float(at[1]), 0.0])
+    o = np.array([float(out[0]), float(out[1]), 0.0])
+    o /= np.linalg.norm(o)
+    w, h = section
+    tim, iron = Acc(f"{g.prefix}_{name}_frame"), Acc(f"{g.prefix}_{name}_ironwork")
+    zc = z - h / 2
+    p0, p1 = A - o * tail + EZ * zc, A + o * length + EZ * (zc - lean)
+    beam(tim, p0, p1, w, h, 0.02, "M_timber", nx=8)
+    zb = lambda s: zc - h / 2 - lean * max(s, 0.0) / length  # noqa: E731  the beam's underside at s out
+    bo, bd = brace
+    th = np.linspace(0.0, 0.5 * np.pi, 13)
+    s_ = bo * (1.0 - np.cos(th))
+    z_ = (zb(bo) - bd) + bd * np.sin(th)
+    s_ = np.concatenate([[-0.05], s_, [bo + 0.06]])
+    z_ = np.concatenate([[z_[0]], z_, [zb(bo) + 0.05]])
+    path = A[None] + s_[:, None] * o[None] + (z_[:, None] - brace_t[1] / 2) * EZ[None]
+    side = np.cross(EZ, o)
+    V, F = sweep(path, side, prof_rect(brace_t[1], brace_t[0], 0.015))
+    tim.add(V, F, "M_timber")
+    if block:
+        tip = A + o * (length - 0.14) + EZ * zb(length - 0.14)
+        V, F = sweep(np.array([tip + EZ * 0.02, tip - EZ * 0.10]), side, prof_circle(0.012, 8))   # the forged eye
+        iron.add(V, F, "M_iron")
+        obox(tim, (tip - EZ * 0.10 - o * 0.08)[None], o, side, EZ, 0.16, 0.10, 0.24, 0.02, "M_timber")   # the block
+        obox(tim, (tip - EZ * 0.18 - o * 0.10)[None], o, side, EZ, 0.20, 0.035, 0.20, 0.012, "M_timber_weathered",
+             nx=5, nz=5)                                                                            # the sheave
+        a = np.linspace(0.0, 1.25 * np.pi, 12)
+        hk = tip[None] - EZ[None] * 0.22 + EZ[None] * (-0.07 - 0.05 * np.sin(a))[:, None] + \
+            o[None] * (0.05 * np.cos(a))[:, None]
+        hk = np.concatenate([tip[None] - EZ[None] * 0.22, hk])
+        V, F = sweep(hk, side, prof_circle(0.011, 8))                                                  # the hook
+        iron.add(V, F, "M_iron")
+    for acc in (tim, iron):
+        if acc.n:
+            finalize(acc, g.coll, smooth_deg=30.0)
+    log(f"  {g.prefix}_{name}: hoist beam {length:.2f} m out at z {z:.2f}")
+    return dict(at=A, out=o, z=z, length=length)
+
+
 def resolve_timber(spec):
     """a shared opening spec (components.openings) -> the timber family's dict (TIMBER_OPENING defaults); the input
     of wall_openings.build_opening(host=...)."""
     return _resolve(spec)
 
 
-__all__ = ["path_timber_wall", "boat_door", "rect_path", "rect_openings", "side_s", "roof_top_fn", "wbox",
+__all__ = ["path_timber_wall", "boat_door", "loft_door", "hoist_beam", "rect_path", "rect_openings", "side_s", "roof_top_fn", "wbox",
            "STYLES", "TIMBER_OPENING", "ROUGH", "rough_opts", "board_widths", "resolve_timber"]

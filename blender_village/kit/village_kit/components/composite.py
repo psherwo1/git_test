@@ -1161,14 +1161,19 @@ def recenter(g):
 # producer note 11: decal anchors
 # =================================================================================================================
 def composite_decals(g, seed=1201, door_lichen="jamb", south_moss=False, walk_gate=True, moss_normal="hit",
-                     timber=False, waterfront=False):
+                     timber=False, waterfront=False, timber_soot=True):
     """kit 1.12 (v5 round 2; False = old): timber=True adds timber_anchors (timber walls, cruck frames, board belts;
     folded from the retired timber_finish), waterfront=True adds waterfront_anchors (quay water faces and piles in
-    the waterline band only).  See _composite_decals for the rest."""
+    the waterline band only).  See _composite_decals for the rest.
+    kit 1.17 (v6 round 2; True = old): timber_soot=False -- no soot over the TIMBER openings (a barn's cart, man and
+    loft doors have no hearth behind them); the masonry openings keep theirs (e.g. a kiln's door)."""
     da = _composite_decals(g, seed=seed, door_lichen=door_lichen, south_moss=south_moss, walk_gate=walk_gate,
                            moss_normal=moss_normal)
     if timber:
-        timber_anchors(g, seed=seed + 300)
+        if timber_soot:
+            timber_anchors(g, seed=seed + 300)
+        else:
+            timber_anchors(g, seed=seed + 300, soot=False)
     if waterfront:
         waterfront_anchors(g, seed=seed + 600)
     return da
@@ -1182,7 +1187,7 @@ def _timber_probe(g):
 TIMBER_SURF = ("M_timber", "M_timber_weathered")
 
 
-def timber_anchors(g, seed=1501):
+def timber_anchors(g, seed=1501, soot=True):
     """kit 1.12: note-11 anchors on the timber family: damp_rise / moss at a timber wall's sill line (north faces
     likelier), repair / grime on its faces, soot over timber openings, water_streak under their sills, rust under
     the shutter / leaf straps, grime beside timber doors; on a cruck frame: water_streak under the tie beam and the
@@ -1217,8 +1222,9 @@ def timber_anchors(g, seed=1501):
     for op in ops:
         O, t, n = op["O"] + sh, op["t"], op["n"]
         hw = op["width"] / 2
-        above_opening(da, probe, O, n, op["width"] + 0.2, op["head"] + 0.02, "soot",
-                      size=(op["width"] + 0.3, 0.45), surfaces=TIMBER_SURF, rng=rng)
+        if soot:                                 # kit 1.17: soot=False -- no hearth behind (a barn)
+            above_opening(da, probe, O, n, op["width"] + 0.2, op["head"] + 0.02, "soot",
+                          size=(op["width"] + 0.3, 0.45), surfaces=TIMBER_SURF, rng=rng)
         if op["kind"] == "window":
             below_points(da, probe, [O + ez * (op["z0"] - 0.32) + n * 0.03], [n], "water_streak",
                          size=(op["width"] * 0.8, 0.6), surfaces=TIMBER_SURF, rng=rng)

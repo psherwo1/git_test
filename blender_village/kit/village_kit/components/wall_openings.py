@@ -298,13 +298,14 @@ def _build_timber_opening(g, sp, O, t, n, accs, rng, label, host):
         _box(tim, lm, t, n, -hw - jw - 0.05, hw + jw + 0.05, cz0 - 0.05, cz0, -jd, jo + 0.06, 0.01, "M_timber", nx=5)
         f = sp["frame"]
         wf0, wf1 = -jd + 0.04, -jd + 0.04 + f
-        for (xa, xb, za, zb) in ((-hw, -hw + f, cz0, cz1), (hw - f, hw, cz0, cz1), (-hw, hw, cz0, cz0 + f),
-                                 (-hw, hw, cz1 - f, cz1)):
-            _box(tim, lm, t, n, xa, xb, za, zb, wf0, wf1, 0.006, "M_timber")
-        zm = 0.5 * (cz0 + cz1)
-        _box(tim, lm, t, n, -0.02, 0.02, cz0 + f, cz1 - f, wf0 + 0.01, wf1 - 0.01, 0.005, "M_timber")
-        if sp.get("lights", 4) != 2:                                  # kit 1.14: lights=2 = no transom
-            _box(tim, lm, t, n, -hw + f, hw - f, zm - 0.02, zm + 0.02, wf0 + 0.01, wf1 - 0.01, 0.005, "M_timber")
+        if sp.get("lights", 4) != 0:                                  # kit 1.16: lights=0 = open (loft door / vent)
+            for (xa, xb, za, zb) in ((-hw, -hw + f, cz0, cz1), (hw - f, hw, cz0, cz1), (-hw, hw, cz0, cz0 + f),
+                                     (-hw, hw, cz1 - f, cz1)):
+                _box(tim, lm, t, n, xa, xb, za, zb, wf0, wf1, 0.006, "M_timber")
+            zm = 0.5 * (cz0 + cz1)
+            _box(tim, lm, t, n, -0.02, 0.02, cz0 + f, cz1 - f, wf0 + 0.01, wf1 - 0.01, 0.005, "M_timber")
+            if sp.get("lights", 4) != 2:                              # kit 1.14: lights=2 = no transom
+                _box(tim, lm, t, n, -hw + f, hw - f, zm - 0.02, zm + 0.02, wf0 + 0.01, wf1 - 0.01, 0.005, "M_timber")
         rec.update(z0=cz0, z1=cz1, head=cz1 + hd, sill=cz0 - 0.05, threshold=None, lintel_w=sp["width"] + 2 * jw)
         if sp.get("shutters"):
             # two open plank shutters lying back on the wall face beside the casing: the hinge is the casing's outer
@@ -326,6 +327,8 @@ def _build_timber_opening(g, sp, O, t, n, accs, rng, label, host):
               "M_timber_weathered")
     else:
         cz0 = floor + sp["threshold"]
+        if kind == "boat" and sp.get("to_ground"):         # kit 1.16 (v6): a cart door opens at the ground
+            cz0 = float(h["ground"])
         cz1 = cz0 + sp["height"]
         hd = sp["head"]
         hm = h["head_max"]
@@ -397,6 +400,14 @@ def _build_timber_opening(g, sp, O, t, n, accs, rng, label, host):
             _box(iron, lm, t, n, -0.03, 0.03, cz0 + 1.05, cz0 + 1.25, lw1 + 0.035, lw1 + 0.05, 0.004, "M_iron")
         _room(room, lm, -hw - 0.3, hw + 0.3, cz0 - 0.002, cz1 + 0.3, -jd + 0.03, -jd - sp.get("room", 1.4),
               "M_timber_weathered")
+        if kind == "boat" and sp.get("to_ground"):
+            # kit 1.16 (v6): the sill beam is cut between the pads (path_timber_wall), and each jamb stands on a
+            # dressed stone PAD from the ground to the sill-beam top -- the plinth runs into the pad's back
+            ps, pin, pout = sp.get("pad") or (0.10, 0.42, 0.10)
+            for a, b in ((-hw - jw - ps, -hw), (hw, hw + jw + ps)):
+                _box(accs["dressed"], lm, t, n, a, b, cz0 - 0.06, floor - 0.01, -jd - pin, jo + pout, 0.02,
+                     "M_stone_dressed", nx=5)
+            rec["sill_cut"] = (-hw - jw - ps, hw + jw + ps)
         rec.update(z0=cz0, z1=cz1, head=(cz1 + hd) if head_beam else cz1, sill=None, threshold=cz0,
                    lintel_w=sp["width"] + 2 * jw, head_rule=None if head_beam and "plate_cut" not in rec else
                    ("trim" if "plate_cut" in rec else "clamp"))

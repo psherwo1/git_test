@@ -1,0 +1,47 @@
+00:01.687  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+00:01.843  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:06.031  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d02_kiln_back_thatch_W_from_ridge.png'
+00:06.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d02_kiln_back_thatch_W_from_ridge_red.png'
+BlenderMCP addon registered
+DEVICE GPU
+SHOT d02_kiln_back_thatch_W_from_ridge
+00:10.281  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d03_kiln_back_thatch_E_from_ridge.png'
+00:10.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d03_kiln_back_thatch_E_from_ridge_red.png'
+SHOT d03_kiln_back_thatch_E_from_ridge
+00:14.593  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d04_cone_eave_E_fin.png'
+00:14.968  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d04_cone_eave_E_fin_red.png'
+SHOT d04_cone_eave_E_fin
+00:18.968  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d05_eave_lip_into_kiln_W_low.png'
+00:19.359  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d05_eave_lip_into_kiln_W_low_red.png'
+SHOT d05_eave_lip_into_kiln_W_low
+00:23.328  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d06_eave_lip_into_kiln_E_low.png'
+00:23.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d06_eave_lip_into_kiln_E_low_red.png'
+SHOT d06_eave_lip_into_kiln_E_low
+00:27.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d07_hoist_side_on_from_S.png'
+SHOT d07_hoist_side_on_from_S
+00:31.140  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d08_hoist_from_below_W.png'
+SHOT d08_hoist_from_below_W
+00:35.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d09_SW_corner_eave_verge_lift.png'
+00:35.546  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d09_SW_corner_eave_verge_lift_red.png'
+SHOT d09_SW_corner_eave_verge_lift
+00:39.281  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d10_ridge_skyline_E_half.png'
+00:39.640  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d10_ridge_skyline_E_half_red.png'
+SHOT d10_ridge_skyline_E_half
+00:43.593  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d11_kiln_door_eye.png'
+SHOT d11_kiln_door_eye
+00:47.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d12_loft_door_eye_W.png'
+SHOT d12_loft_door_eye_W
+00:48.031  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d13_thumb_SW_45m.png'
+SHOT d13_thumb_SW_45m
+00:48.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d14_thumb_SE_45m.png'
+SHOT d14_thumb_SE_45m
+00:49.125  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d15_thumb_NE_back_45m.png'
+SHOT d15_thumb_NE_back_45m
+00:52.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d16_E_three_quarter_eye.png'
+SHOT d16_E_three_quarter_eye
+00:56.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\d17_W_three_quarter_eye.png'
+SHOT d17_W_three_quarter_eye
+BlenderMCP addon unregistered
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit
