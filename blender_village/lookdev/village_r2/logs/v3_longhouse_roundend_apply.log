@@ -1,0 +1,26 @@
+﻿00:01.281  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\v3_longhouse_roundend_src.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\lookdev\scripts\apply_lookdev.py:788: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\scripts\run_village.ps1:11 char:9
++         & $py -I "$root\scripts\apply_lookdev.py" "$w\work\${id}_src. ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  gmat.use_nodes = True
+00:01.828  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+look r2 | bark PROXY (rough_wood)
+hidden objects: 89 []
+building bounds (-8.89, -4.28, -0.05) (8.89, 4.28, 11.34)
+rebuilt palette materials: ['M_iron', 'M_lead', 'M_mortar', 'M_roof_shake', 'M_roof_shingle', 'M_stone', 'M_stone_dressed', 'M_thatch', 'M_timber', 'M_timber_weathered']
+sky type MULTIPLE_SCATTERING
+devices [('NVIDIA GeForce RTX 3060', 'CUDA', False), ('AMD Ryzen 5 5600X 6-Core Processor', 'CPU', False), ('NVIDIA GeForce RTX 3060', 'OPTIX', True)]
+door: kit_entrances:body_wall_3 (-2.39, -2.61, 1.11)
+camera hero (-16.92, -25.84, 11.09)
+camera front (0.0, -28.55, 8.14)
+camera entrance_closeup (-1.49, -7.11, 1.7)
+camera thatch_closeup (-7.08, -8.32, 2.6)
+Info: Saved as "v3_longhouse_roundend_lookdev.blend"
+Info: Total files 23 | Changed 23 | Failed 0
+Info: Saved "v3_longhouse_roundend_lookdev.blend"
+saved C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\v3_longhouse_roundend_lookdev.blend

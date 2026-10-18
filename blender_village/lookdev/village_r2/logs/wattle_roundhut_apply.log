@@ -1,0 +1,27 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\wattle_roundhut_src.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\lookdev\scripts\apply_lookdev.py:788: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\scripts\run_village.ps1:11 char:9
++         & $py -I "$root\scripts\apply_lookdev.py" "$w\work\${id}_src. ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  gmat.use_nodes = True
+00:00.766  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+look r2 | bark PROXY (rough_wood)
+hidden objects: 98 []
+building bounds (-4.19, -4.59, -0.04) (4.19, 4.2, 8.73)
+rebuilt palette materials: ['M_daub', 'M_earth', 'M_iron', 'M_lead', 'M_mortar', 'M_roof_shingle', 'M_stone', 'M_timber', 'M_timber_weathered', 'M_wattle']
+sky type MULTIPLE_SCATTERING
+devices [('NVIDIA GeForce RTX 3060', 'CUDA', False), ('AMD Ryzen 5 5600X 6-Core Processor', 'CPU', False), ('NVIDIA GeForce RTX 3060', 'OPTIX', True)]
+door: HUT_door_leaf (-0.02, -2.9, 1.26)
+camera hero (-12.54, -19.35, 8.38)
+camera front (0.0, -24.06, 6.43)
+camera entrance_closeup (0.88, -8.24, 1.7)
+daub patch centre (-1.66, -3.09, 0.77)
+camera wall_closeup (-2.43, -5.65, 1.5)
+Info: Saved as "wattle_roundhut_lookdev.blend"
+Info: Total files 23 | Changed 23 | Failed 0
+Info: Saved "wattle_roundhut_lookdev.blend"
+saved C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\wattle_roundhut_lookdev.blend

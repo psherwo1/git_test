@@ -1,0 +1,12 @@
+﻿00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\v4_mixed_lookdev.blend"
+BOUNDS v4_mixed (-4.67, -3.42, -0.04) (6.24, 5.85, 14.17)
+ENTRANCE v4_mixed -Y: V4H_door_frame (0.0, -1.0, 0.0)
+SUN v4_mixed azimuth rotated 0 deg from r2 default (0.72, -0.69, 0.0)
+00:00.921  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+CAMERA v4_mixed hero (-17.49, -26.93, 14.2) -> (0.78, 1.22, 7.06) 35.0
+00:08.593  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v4_mixed\hero.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v4_mixed\hero.png
+CAMERA v4_mixed eye (15.57, -24.39, 1.7) -> (0.78, 1.22, 5.95) 28.0
+00:11.937  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v4_mixed\eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v4_mixed\eye.png

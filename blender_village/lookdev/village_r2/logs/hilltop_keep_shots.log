@@ -1,0 +1,12 @@
+﻿00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\hilltop_keep_lookdev.blend"
+BOUNDS hilltop_keep (-11.1, -5.3, -0.05) (5.3, 5.3, 14.0)
+ENTRANCE hilltop_keep kit_entrances:door (-0.0, -1.0, 0.0)
+SUN hilltop_keep azimuth rotated 0 deg from r2 default (0.72, -0.69, 0.0)
+00:00.766  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+CAMERA hilltop_keep hero (-19.82, -26.05, 13.58) -> (-2.9, 0.0, 6.97) 35.0
+00:06.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\hilltop_keep\hero.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\hilltop_keep\hero.png
+CAMERA hilltop_keep eye (9.55, -21.56, 1.7) -> (-2.9, 0.0, 5.88) 28.0
+00:09.937  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\hilltop_keep\eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\hilltop_keep\eye.png
