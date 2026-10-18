@@ -14,7 +14,7 @@ import bpy
 from mathutils import Vector
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
-blend, out = argv[0], argv[1]
+blend, out = os.path.abspath(argv[0]), os.path.abspath(argv[1])  # r05: absolute BEFORE open_mainfile
 only = argv[2:]
 SX, SY = -0.418, 2.587
 os.makedirs(out, exist_ok=True)

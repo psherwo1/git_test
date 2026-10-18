@@ -1,0 +1,18 @@
+﻿00:00.563  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\v7_cottage_fast.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:111: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:302
++ ... tch {} } }; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:127: DeprecationWarning: 'World.use_nodes' is 
+expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.719  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.813  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\preview\hero.png'
+00:08.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\preview\side.png'
+00:12.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\preview\back.png'
+REVIEW_STATS {"objects": 64, "triangles": 524090, "bbox_min": [-7.663808822631836, -6.677858829498291, -0.05000000074505806], "bbox_max": [7.663808822631836, 6.677858352661133, 7.850304126739502], "size_m": [15.327617645263672, 13.355716705322266, 7.900304317474365], "materials": ["M_iron", "M_lead", "M_mortar", "M_roof_shake", "M_stone", "M_stone_dressed", "M_thatch", "M_timber", "M_timber_weathered"], "est_hidden_pct": 31.2, "est_hidden_triangles": 163712, "material_slot_count": 9, "mask_attribute_missing": []}

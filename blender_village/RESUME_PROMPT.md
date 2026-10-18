@@ -12,17 +12,16 @@ READ FIRST:
 - blender_village/director/production_plan.md (the variant table).
 Treat them as the source of truth and do not re-litigate recorded decisions.
 
-FIRST, check what HANDOFF section 4 lists as open (the v7 cottage's final round result and any job marked unfinished) and report it to me.
+FIRST, confirm the state in HANDOFF section 4 (everything was accepted and nothing was running at the handoff) and give me a short status summary.
 
 THEN continue my approved plan, in this order:
-1. The housekeeping HANDOFF lists, if not yet done: merge kit/changes for v7_cottage and a1_longhouse_addons into the CHANGELOG, and delete the two retired stubs.
-2. More LOW, ROOFED designs toward the 12-15 curated designs. No more towers. Every new design follows producer notes 16-19:
+1. More LOW, ROOFED designs toward the 12-15 curated designs. No more towers. Every new design follows producer notes 16-19:
    - the same builders, techniques and materials;
    - round structures and soft, organic lines;
    - a rectangular or square cottage carries at least one eyebrow dormer;
    - square walls get rounded roofs: round hips plus a soft crown, "an oval on the rectangle".
    Use the kit's add-ons (valley, chimney, gabled dormer, eyebrow, lean-to, porch) for variety.
-3. Step 5: the Unreal exporter (FBX/USD, cm, Nanite, Mask as vertex colour, decal_anchors.json, Packed Level Actor / ISM layouts), then a UE 5.8 lookdev test that measures Lumen, volumetric fog and the path tracer on the village (see director/performance_assessment.md).
+2. Step 5: the Unreal exporter (FBX/USD, cm, Nanite, Mask as vertex colour, decal_anchors.json, Packed Level Actor / ISM layouts), then a UE 5.8 lookdev test that measures Lumen, volumetric fog and the path tracer on the village (see director/performance_assessment.md).
 
 WORKING CONVENTIONS:
 - Time matters: do not spend time that can be avoided; the earlier a correct result is obtained, the better.

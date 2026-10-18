@@ -10,7 +10,7 @@ import bpy
 from mathutils import Vector
 
 argv = sys.argv[1:]
-blend, out, sx, sy = argv[0], argv[1], float(argv[2]), float(argv[3])
+blend, out, sx, sy = os.path.abspath(argv[0]), os.path.abspath(argv[1]), float(argv[2]), float(argv[3])  # r05: absolute
 only = argv[4:]
 os.makedirs(out, exist_ok=True)
 bpy.ops.wm.open_mainfile(filepath=blend)

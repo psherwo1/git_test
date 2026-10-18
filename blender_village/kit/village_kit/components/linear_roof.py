@@ -34,7 +34,8 @@ from ..shingles import SH_VARIANTS, SIZE_TABLE, shake_mesh, shingle_mesh
 
 EYEBROW = dict(x=0.0, side=1, d=1.5, width=2.0, height=0.75, flat=0.70, plateau=0.18, fade=1.20, lip=0.20,
                set_back=0.04, window=dict(width=0.56, height=0.36, sill=0.05), min_front=0.14, seed=0,
-               tilt=False, span_rows=False, eave_inset=0.0, close_ends=False, profile="bell", respace=False)
+               tilt=False, span_rows=False, eave_inset=0.0, close_ends=False, profile="bell", respace=False,
+               grid="shingle")
 """kit 1.13 (v5 round 5, ref4's eyebrow dormer): one eyebrow bump on a shingle GableRoof, in its local frame --
     x         centre along the ridge (local x)
     side      +1 / -1: the slope (local +y / -y)
@@ -64,7 +65,13 @@ kit 1.15 (v5 round 8, client: "one flowing continuous curve"; every default = th
     respace    True: the lifted courses (from the wave's eave course to the end of the fade) are re-spaced along the
                slope to EQUAL arc length on the bumped surface (_brow_respace), so the vertical lift's compression on
                the fade (the bunched "washboard" rows above the lip) is spread evenly over the whole roll; identity
-               at the eave course, at the fade's end and where the bump is 0 (no rng draws, nothing else moves)"""
+               at the eave course, at the fade's end and where the bump is 0 (no rng draws, nothing else moves)
+kit 1.20 (v7 round 4, producer note 18: the THATCH eyebrow; "shingle" = old):
+    grid       "thatch": the eyebrow is laid on a linear_roof(covering="thatch") "courses" roof -- the front is snapped
+               to the THATCH course grid (GableRoof.exposure), each continuous course is wholly lifted (from the
+               wave's eave course up) or not, the course under the front stops at the deck front over the bump, the
+               lifted courses are re-spaced (respace) and the village eave roll (its own D section) is swept along
+               the wave's lip as ONE rolled arch over the window (_brow_rolls), its ends sinking into the thatch"""
 
 
 def eyebrow(x, side=1, **kw):
@@ -89,7 +96,8 @@ class GableRoof:
     def __init__(self, x0, x1, half, wall_z, pitch_deg=40.0, overhang=0.45, verge=(0.40, 0.40), origin=(0.0, 0.0),
                  yaw_deg=0.0, deck_t=0.035, thick=0.30, step=0.10, exposure=0.30, ridge_roll=(0.36, 0.20),
                  name="roof", ridge_sag=0.0, eave_sag=0.0, eave_sweep=0.0, sweep_len=1.0, verge_flare=0.0,
-                 flare_len=1.6, wave=0.0, wave_seed=33, eyebrows=(), eave_lifts=(), ridge_seat=False):
+                 flare_len=1.6, wave=0.0, wave_seed=33, eyebrows=(), eave_lifts=(), ridge_seat=False, hips=None,
+                 hip_inset=None, hip_k=1.0, hip_seam=None, crown=0.0):
         """kit 1.12 (v5 round 2, note 17 "soft, organic lines"; all 0 = the straight roof, bit-identical):
         ridge_sag      m the ridge drops at mid-length (parabolic, 0 at the covering's ends), fading to eave_sag at the lip
         eave_sag       m the eave lines drop at mid-length
@@ -110,7 +118,23 @@ class GableRoof:
         in from the lip (d = plan distance from the lip), so there is no step, tear or front: every covering (thatch
         or shingle), deck, rafter, eave roll and wall top (roof_top_fn) follows it.
         kit 1.16 (False = old): ridge_seat=True -- the thatch ridge roll's flanks are seated in the top courses (no
-        slot under the roll on a steep roof; _ridge_roll)."""
+        slot under the roll on a steep roof; _ridge_roll).
+        kit 1.20 (v7 round 4, producer note 19 "an oval on the rectangle"; None / 0 = old, bit-identical):
+        hips       None, "both" / True, or a tuple of ends ("lo", "hi"): each such end is a ROUND HIP (half-cone) in
+                   place of a gable -- the roof's eave runs round it as a half oval in plan, oversailing the corners
+                   (no verge, no gable face).  Built as a BEND of the roof's own local frame: the slope coordinates
+                   run on past the hip centre by a quarter arc on each slope (virtual x up to xa / xb), and to_world /
+                   to_local fold that run round the hip centre (the two slopes meet on the hip's nose line).  So every
+                   part linear_roof lays (deck, courses, eave roll, ridge roll, rafters) and every query (keep_out,
+                   top_depth, under_z_world, top_world, the valley / dormer / chimney add-ons) follows the hip.
+        hip_inset  plan m from the end wall face in to the hip centre (the cone's axis on the ridge); None = the
+                   largest inset that keeps the wall corners 0.15 m inside the lip
+        hip_k      plan stretch of the hip along the ridge (1 = a half circle; < 1 a tighter, steeper nose)
+        hip_seam   (side, x): where the eave roll of a roof with TWO hips (a closed oval) starts and ends -- put it
+                   where another body covers it (e.g. under a cross wing); None = side -1 at mid-length
+        crown      m: a SOFTLY CONVEX cross-section -- every slope is lifted by crown x sin(pi / 2 x s), s = 0 at the
+                   lip to 1 at the ridge roll's flank (flat over the roll, so the ridge roll keeps its section): the
+                   slope is steeper at the eave and eases into a rounded, rolled ridge (works with or without hips)"""
         self.name = name
         self.ridge_seat = bool(ridge_seat)
         self.LIFTS = [dict(EAVE_LIFT, **lf) for lf in (eave_lifts or ())]
@@ -140,9 +164,79 @@ class GableRoof:
         self.U = self.Y / math.cos(self.p)              # slope length lip -> ridge
         self.z_lip = self.wall_z - self.ovh * math.tan(self.p)
         self.z_ridge = self.wall_z + self.half * math.tan(self.p)
+        self.crown = float(crown)
+        self.HIPS = None
+        if hips:                                        # kit 1.20: round hips (see __init__ doc)
+            ends = ("lo", "hi") if hips in (True, "both", "round") else tuple(hips)
+            if set(ends) - {"lo", "hi"}:
+                raise ValueError(f"GableRoof: hips {hips!r}; 'both' or a tuple of 'lo' / 'hi'")
+            k = float(hip_k)
+            if hip_inset is None:
+                hip_inset = k * math.sqrt(max((self.Y - 0.15) ** 2 - self.half ** 2, 0.04))
+            d_in = float(hip_inset)
+            if "lo" in ends:
+                self.v0 = 0.0
+            if "hi" in ends:
+                self.v1 = 0.0
+            c_lo = self.x0 + d_in if "lo" in ends else self.x0 - self.v0
+            c_hi = self.x1 - d_in if "hi" in ends else self.x1 + self.v1
+            if c_hi - c_lo < 0.5:
+                raise ValueError(f"GableRoof {name}: the round hips leave no ridge (inset {d_in:.2f} m)")
+            Q = 0.5 * math.pi * self.Y
+            self.HIPS = dict(lo="lo" in ends, hi="hi" in ends, c_lo=c_lo, c_hi=c_hi, k=k, Rq=self.Y, Q=Q,
+                             inset=d_in, seam=hip_seam)
+        self.warped = self.warped or bool(self.crown) or self.HIPS is not None
         self.xa = self.x0 - self.v0                     # covering extent along the ridge
         self.xb = self.x1 + self.v1
+        if self.HIPS is not None:                       # kit 1.20: the virtual run past each hip centre
+            if self.HIPS["lo"]:
+                self.xa = self.HIPS["c_lo"] - self.HIPS["Q"]
+            if self.HIPS["hi"]:
+                self.xb = self.HIPS["c_hi"] + self.HIPS["Q"]
         self.BROWS = [self._resolve_brow(b) for b in (eyebrows or ())]
+
+    # ---- kit 1.20 (v7 round 4): the round-hip bend ---------------------------------------------------------------
+    def ridge_span(self):
+        """(lo, hi) local x of the straight ridge: the hip centres at round-hip ends, else the covering's ends."""
+        H = self.HIPS
+        if H is None:
+            return self.xa, self.xb
+        return H["c_lo"], H["c_hi"]
+
+    def _bend(self, x, y):
+        """virtual slope coordinates (x, y) -> local plan (px, py): past a hip centre the run folds round it."""
+        H = self.HIPS
+        px, py = np.array(x, float, copy=True), np.array(y, float, copy=True)
+        for end, sx in (("lo", -1.0), ("hi", 1.0)):
+            if not H[end]:
+                continue
+            c = H["c_" + end]
+            m = (x - c) * sx > 0
+            if not np.any(m):
+                continue
+            th = np.clip((x[m] - c) * sx / H["Rq"], 0.0, 0.5 * math.pi)
+            r = np.abs(y[m])
+            px[m] = c + sx * H["k"] * r * np.sin(th)
+            py[m] = np.sign(y[m]) * r * np.cos(th)
+        return px, py
+
+    def _unbend(self, px, py):
+        """local plan (px, py) -> virtual slope coordinates (x, y) (the inverse of _bend)."""
+        H = self.HIPS
+        x, y = np.array(px, float, copy=True), np.array(py, float, copy=True)
+        for end, sx in (("lo", -1.0), ("hi", 1.0)):
+            if not H[end]:
+                continue
+            c = H["c_" + end]
+            m = (px - c) * sx > 0
+            if not np.any(m):
+                continue
+            dx = (px[m] - c) * sx / H["k"]
+            r = np.hypot(dx, py[m])
+            th = np.arctan2(dx, np.abs(py[m]))
+            x[m] = c + sx * th * H["Rq"]
+            y[m] = np.where(py[m] < 0, -r, r)
+        return x, y
 
     # ---- kit 1.13 (v5 round 5): eyebrow dormers ---------------------------------------------------------------------
     def _resolve_brow(self, b):
@@ -155,6 +249,10 @@ class GableRoof:
             raise KeyError(f"eyebrow: unknown option(s) {sorted(unknown)}; known {sorted(EYEBROW)}")
         cp = math.cos(self.p)
         e = 0.5 * sum(SIZE_TABLE["shingle"]["exposure"])
+        if B.get("grid", "shingle") == "thatch":        # kit 1.20: the thatch course grid
+            e = float(self.exposure)
+        elif B.get("grid", "shingle") != "shingle":
+            raise ValueError(f"eyebrow: grid {B.get('grid')!r}; 'shingle' or 'thatch'")
         lip_u = B["lip"] / cp
         k_lip = max(2, int(round((B["d"] / cp - lip_u) / e)))
         B.update(sg=1 if B["side"] > 0 else -1, hw=0.5 * B["width"], pw=0.5 * min(B["flat"], 0.95 * B["width"]),
@@ -204,6 +302,13 @@ class GableRoof:
         P = np.asarray(P, float)
         c, s = math.cos(self.yaw), math.sin(self.yaw)
         out = P.copy()
+        if getattr(self, "HIPS", None) is not None:     # kit 1.20: fold the virtual run round the hips
+            px, py = self._bend(P[..., 0], P[..., 1])
+            out[..., 0] = self.origin[0] + c * px - s * py
+            out[..., 1] = self.origin[1] + s * px + c * py
+            if P.shape[-1] >= 3:
+                out[..., 2] = P[..., 2] + self.warp_z(P[..., 0], P[..., 1], brow=brow)
+            return out
         out[..., 0] = self.origin[0] + c * P[..., 0] - s * P[..., 1]
         out[..., 1] = self.origin[1] + s * P[..., 0] + c * P[..., 1]
         if getattr(self, "warped", False) and P.shape[-1] >= 3:
@@ -217,6 +322,8 @@ class GableRoof:
         out = P.copy()
         out[..., 0] = c * dx + s * dy
         out[..., 1] = -s * dx + c * dy
+        if getattr(self, "HIPS", None) is not None:     # kit 1.20: unfold the hips
+            out[..., 0], out[..., 1] = self._unbend(out[..., 0], out[..., 1])
         if getattr(self, "warped", False) and P.shape[-1] >= 3:
             out[..., 2] = P[..., 2] - self.warp_z(out[..., 0], out[..., 1], brow=brow)
         return out
@@ -233,6 +340,8 @@ class GableRoof:
             dz = dz + self._brow_dz(x, y, brow)
         ay = np.abs(y)
         f_y = np.clip(1.0 - ay / self.Y, 0.0, 1.0)                    # 1 at the ridge, 0 at the lip
+        if getattr(self, "HIPS", None) is not None:
+            return dz + self._hip_warp(x, y, ay, f_y)
         if self.ridge_sag or self.eave_sag:
             hl = max(0.5 * (self.xb - self.xa), 1e-6)
             t = np.clip((x - 0.5 * (self.xa + self.xb)) / hl, -1.0, 1.0)
@@ -251,6 +360,41 @@ class GableRoof:
             t = np.clip(np.abs(x - lf["x"]) / max(0.5 * lf["width"], 1e-6), 0.0, 1.0)
             k = np.clip(1.0 - np.clip(self.Y - ay, 0.0, None) / max(lf["fade"], 1e-6), 0.0, 1.0)
             dz += lf["height"] * (1.0 - t * t) ** 2 * k * k * ((y * lf["side"]) > 0)
+        if getattr(self, "crown", 0.0):                # kit 1.20: the convex section (flat over the ridge roll)
+            dz += self._crown_dz(ay)
+        return dz
+
+    def _crown_dz(self, ay):
+        s = np.clip((self.Y - ay) / max(self.Y - self.roll_w, 1e-6), 0.0, 1.0)
+        return self.crown * np.sin(0.5 * np.pi * s)
+
+    def _hip_warp(self, x, y, ay, f_y):
+        """kit 1.20: the soft-line warp of a round-hipped roof: the sag runs over the straight ridge only (0 at the
+        hip centres, constant round each hip, so the cone's apex is one point), the wave is sampled at the folded
+        plan point (the two slopes agree on the hip's nose line), sweep / crown / lifts as on a gable."""
+        H = self.HIPS
+        dz = np.zeros(x.shape)
+        if self.ridge_sag or self.eave_sag:
+            hl = max(0.5 * (H["c_hi"] - H["c_lo"]), 1e-6)
+            t = np.clip((x - 0.5 * (H["c_lo"] + H["c_hi"])) / hl, -1.0, 1.0)
+            dz -= (1.0 - t * t) * (self.ridge_sag * f_y + self.eave_sag * (1.0 - f_y))
+        if self.eave_sweep:
+            k = np.clip(1.0 - np.clip(self.Y - ay, 0.0, None) / max(self.sweep_len, 1e-6), 0.0, 1.0)
+            dz += self.eave_sweep * k * k
+        if self.verge_flare:                            # a free gable at the non-hip end (if any)
+            for xe, free in ((self.xa, self.v0 > 0 and not H["lo"]), (self.xb, self.v1 > 0 and not H["hi"])):
+                if free:
+                    k = np.clip(1.0 - np.abs(x - xe) / max(self.flare_len, 1e-6), 0.0, 1.0)
+                    dz += self.verge_flare * k * k * f_y ** 1.5
+        if self.wave:
+            px, py = self._bend(x, y)
+            dz += self.wave * n2(px * 0.35, py * 0.30, self.wave_seed)
+        for lf in getattr(self, "LIFTS", ()):
+            t = np.clip(np.abs(x - lf["x"]) / max(0.5 * lf["width"], 1e-6), 0.0, 1.0)
+            k = np.clip(1.0 - np.clip(self.Y - ay, 0.0, None) / max(lf["fade"], 1e-6), 0.0, 1.0)
+            dz += lf["height"] * (1.0 - t * t) ** 2 * k * k * ((y * lf["side"]) > 0)
+        if self.crown:
+            dz += self._crown_dz(ay)
         return dz
 
     def lift_z(self, x, y):
@@ -274,6 +418,8 @@ class GableRoof:
         c, s = math.cos(self.yaw), math.sin(self.yaw)
         dx, dy = Q[:, 0] - self.origin[0], Q[:, 1] - self.origin[1]
         xl, yl = c * dx + s * dy, -s * dx + c * dy
+        if getattr(self, "HIPS", None) is not None:     # kit 1.20
+            xl, yl = self._unbend(xl, yl)
         return self.under_z(yl) + self.warp_z(xl, yl)
 
     def dir_world(self, d):
@@ -597,7 +743,17 @@ def _layered_courses(roof, acc, rng, x_lo, x_hi, seed=0, run=(1.0, 2.2), crown=(
     xs = np.linspace(x_lo, x_hi, n_col)
     verge = {}
     n_c = 0
+    H = getattr(roof, "HIPS", None)
+    calm = None
+    if H is not None:     # kit 1.20: the course irregularity fades out at each hip's nose line (the slopes meet there)
+        calm = np.ones(n_col)
+        for end, xe in (("lo", roof.xa), ("hi", roof.xb)):
+            if H[end]:
+                t_ = np.clip(np.abs(xs - xe) / 0.9, 0.0, 1.0)
+                calm = np.minimum(calm, t_ * t_ * (3.0 - 2.0 * t_))
+    TB = [(bi, B) for bi, B in enumerate(getattr(roof, "BROWS", None) or ()) if B.get("grid") == "thatch"]
     for sg in (-1, 1):
+        brows = [(bi, B) for bi, B in TB if B["sg"] == sg]
         k = 0
         while True:
             ub0 = R["u_c"] + 0.20 + k * e
@@ -630,10 +786,24 @@ def _layered_courses(roof, acc, rng, x_lo, x_hi, seed=0, run=(1.0, 2.2), crown=(
             w[len(bu):] = 1.0
             if u_end >= roof.U:
                 w[-1] = 0.0
+            if calm is not None:
+                dr, lift, crn = dr * calm, lift * calm, crn * calm
             U_ = ub0 + us[:, None] + dr[None, :]
             X = np.broadcast_to(xs[None, :], U_.shape)
-            O = off[:, None] + (lift[None, :] + crn[None, :]) * w[:, None] + \
-                0.004 * w[:, None] * n2(X * 1.5, U_ * 2.0 + k, seed + sg)
+            nz = 0.004 * w[:, None] * n2(X * 1.5, U_ * 2.0 + k, seed + sg)
+            if calm is not None:
+                nz = nz * calm[None, :]
+            O = off[:, None] + (lift[None, :] + crn[None, :]) * w[:, None] + nz
+            force = None
+            if brows:              # kit 1.20: the thatch eyebrow -- a course is wholly lifted (k >= k_lip) or not
+                force = {}
+                for bi, B in brows:
+                    force[bi] = 1.0 if k >= B["k_lip"] else 0.0
+                    inb = (roof.brow_bell(B, xs) > 1e-4)[None, :]
+                    if force[bi] == 0.0:            # the course under the front stops at the deck front
+                        U_ = np.where(inb, np.minimum(U_, B["u_t"] - 0.02), U_)
+                    elif B.get("respace"):
+                        U_ = np.where(inb, _brow_respace(roof, B, X, U_), U_)
             P = roof.surf(X, U_, sg, O)
             nr = len(us)
             ii = np.arange(nr - 1)[:, None] * n_col + np.arange(n_col - 1)[None, :]
@@ -641,7 +811,10 @@ def _layered_courses(roof, acc, rng, x_lo, x_hi, seed=0, run=(1.0, 2.2), crown=(
             q = P.reshape(-1, 3)[F[len(F) // 2]]
             if float(np.cross(q[1] - q[0], q[3] - q[0]) @ roof.normal(sg)) < 0:
                 F = F[:, ::-1]
-            acc.add(roof.to_world(P.reshape(-1, 3)), F, "M_thatch", wear=float(rng.uniform(0.2, 0.6)))
+            if force is None:
+                acc.add(roof.to_world(P.reshape(-1, 3)), F, "M_thatch", wear=float(rng.uniform(0.2, 0.6)))
+            else:
+                acc.add(roof.to_world(P.reshape(-1, 3), brow=force), F, "M_thatch", wear=float(rng.uniform(0.2, 0.6)))
             verge.setdefault((sg, 0), []).append((U_[:, 0].copy(), O[:, 0].copy()))
             verge.setdefault((sg, 1), []).append((U_[:, -1].copy(), O[:, -1].copy()))
             k += 1
@@ -799,6 +972,86 @@ def _eave_rolls(roof, acc, rng, x_lo, x_hi, seed=0, ends=None, bundles=None, end
                    bundles=bundles, calm_taper=True, round_end=True, keep_back_fn=kb)
         out[sg] = P
     return out
+
+
+def _roll_prof(roof):
+    """the eave roll's D section as (inward horizontal, up) for thatch.d_roll (as _eave_rolls)."""
+    uo, vis = roof.roll_section()
+    p = roof.p
+    q = uo[:, 0] * math.cos(p) - uo[:, 1] * math.sin(p)
+    v = uo[:, 0] * math.sin(p) + uo[:, 1] * math.cos(p)
+    prof = np.stack([q, v], 1)
+    area = 0.5 * float(np.sum(prof[:, 0] * np.roll(prof[:, 1], -1) - np.roll(prof[:, 0], -1) * prof[:, 1]))
+    if area < 0:
+        prof, vis = prof[::-1].copy(), vis[::-1].copy()
+    return prof, vis
+
+
+def _hip_eave_roll(roof, acc, rng, seed=0, ds=0.05):
+    """kit 1.20: the eave roll of a round-hipped roof as ONE thatch.d_roll sweep round the whole oval eave (down
+    one slope, round the hip's half oval, back along the other): no joint at a hip's nose.  A roof with two hips is
+    a closed oval; it starts and ends at GableRoof(hip_seam=(side, x)) (default side -1 at mid-length), where
+    another body should cover the joint.  A free gable at a non-hip end gets the old round taper."""
+    from .thatch import d_roll
+    H = roof.HIPS
+    prof, vis = _roll_prof(roof)
+
+    def run(sg, a, b):
+        n = max(2, int(abs(b - a) / ds) + 1)
+        return np.stack([np.linspace(a, b, n), np.full(n, float(sg))], 1)
+    xa, xb = roof.xa, roof.xb
+    if H["lo"] and H["hi"]:
+        sg0, xs0 = H["seam"] if H["seam"] is not None else (-1, 0.5 * (H["c_lo"] + H["c_hi"]))
+        sg0 = -1 if sg0 < 0 else 1
+        if sg0 < 0:
+            parts = [run(-1, xs0, xb), run(1, xb, xa)[1:], run(-1, xa, xs0)[1:]]
+        else:
+            parts = [run(1, xs0, xa), run(-1, xa, xb)[1:], run(1, xb, xs0)[1:]]
+        ta = tb = 0.0
+    elif H["lo"]:
+        parts = [run(1, xb, xa), run(-1, xa, xb)[1:]]
+        ta = tb = 0.12 if roof.v1 > 0 else 0.0
+    else:
+        parts = [run(-1, xa, xb), run(1, xb, xa)[1:]]
+        ta = tb = 0.12 if roof.v0 > 0 else 0.0
+    XS = np.concatenate(parts)
+    loc = np.stack([roof.surf(x, 0.0, int(s), 0.0) for x, s in XS])
+    path = roof.to_world(loc)
+    P = d_roll(acc, path, prof, vis, seed + 11, rng, up=(0.0, 0.0, 1.0), var=0.010, taper=(ta, tb),
+               tmin=(0.75, 0.75), ribs=False, step=0.06, z_wave=0.008, drop_hidden=True, calm_taper=True,
+               round_end=True)
+    return {-1: P, 1: P}
+
+
+def _brow_rolls(roof, acc, rng, seed=0, ds=0.04, sink=0.16, b_min=0.02, taper=0.55, scale=0.75):
+    """kit 1.20 (eyebrow(grid="thatch")): the village eave roll (its own D section, x `scale`: a slimmer lip over a
+    small window) swept along each thatch eyebrow's lifted lip -- one rolled arch over the window, following the
+    wave (the lip line u_lip on the lifted surface); where the wave falls to the plain slope its ends taper and sink
+    `sink` m into the courses."""
+    from .thatch import d_roll
+    prof, vis = _roll_prof(roof)
+    prof = prof * float(scale)
+    n = 0
+    for bi, B in enumerate(getattr(roof, "BROWS", None) or ()):
+        if B.get("grid") != "thatch":
+            continue
+        sg = B["sg"]
+        t_max = math.sqrt(max(1.0 - math.sqrt(b_min), 0.0)) if B.get("profile") == "arch" else 1.0
+        x0, x1 = B["x"] - t_max * B["hw"], B["x"] + t_max * B["hw"]
+        m = max(8, int((x1 - x0) / ds) + 1)
+        xs = np.linspace(x0, x1, m)
+        if sg > 0:
+            xs = xs[::-1]
+        b = np.clip(roof.brow_bell(B, xs), 0.0, 1.0)
+        o = -sink * (1.0 - np.clip(b / 0.35, 0.0, 1.0)) ** 2
+        loc = roof.surf(xs, np.full(m, B["u_lip"]), sg, o)
+        path = roof.to_world(loc, brow={bi: 1.0})
+        rng_ = np.random.default_rng(seed + 401 + bi)
+        d_roll(acc, path, prof, vis, seed + 13 * bi + 5, rng_, up=(0.0, 0.0, 1.0), var=0.008, taper=(taper, taper),
+               tmin=(0.20, 0.20), ribs=False, step=0.04, z_wave=0.004, drop_hidden=False, calm_taper=True,
+               round_end=True)
+        n += 1
+    return n
 
 
 VERGE_ROLL = dict(out=0.07, rc=0.28, top=0.01, face_from=0.35, apex=0.02, taper=0.12, apex_bend=None,
@@ -1045,6 +1298,12 @@ RIDGE_CAP = dict(past=0.045, cap_len=0.09, f_min=0.15)
 """round 5: the ridge roll's rounded free end -- it runs `past` m beyond the verge face and its section closes over
 the last `cap_len` m as a quarter ellipse (a bound bundle end), never below f_min of the full section."""
 
+HIP_DOME_SEAT = dict(lead=0.2, fade=0.8, flare=0.25, sink=0.05)
+"""kit 1.21 (v7 round 5; read only for a round-hipped roof with ridge_seat=True, so no other roof changes): over the
+hip's dome the seated ridge-roll flank eases (smoothstep from `lead` m before the hip centre over `fade` m of the
+slope run) into a bell -- the flank foot `flare` x further out and `sink` m deeper, the arc's lower flanks swelling
+half that -- so the revolved flank is no cylinder collar under the dome.  {} / None = the round-4 dome."""
+
 
 def _ridge_centre(roof, xs):
     """the ridge roll's centre line (local y, z) at ridge coordinates xs (the gentle +-1.2 / 1.5 cm wander)."""
@@ -1101,10 +1360,42 @@ def _ridge_roll(roof, acc, rng, x_from=None, end_caps=None):
         if hi is not None:
             fs = np.minimum(fs, _ridge_cap_scale(x1_ - xs, **cp))
     yc, zc = _ridge_centre(roof, xs)
+    H = getattr(roof, "HIPS", None)
+    if H is not None:      # kit 1.20: no wander round a hip (the roll's run folds into the hip's dome there)
+        wgt = np.ones(len(xs))
+        for end, sx in (("lo", -1.0), ("hi", 1.0)):
+            if H[end]:
+                d_ = (H["c_" + end] - xs) * sx                  # > 0 inside the straight ridge
+                t_ = np.clip(d_ / 0.6, 0.0, 1.0)
+                wgt = np.minimum(wgt, t_ * t_ * (3.0 - 2.0 * t_))
+        z0_ = roof.roll_centre_z()
+        yc, zc = yc * wgt, z0_ + (zc - z0_) * wgt
     path = np.stack([xs, yc, zc], 1)
     # sweep's profile axes: right = U x T, up = U; T = +x, U = +z -> right = -y; mirror the profile for +y
     prof_s = prof * np.array([-1.0, 1.0])
-    if end_caps:
+    if H is not None and getattr(roof, "ridge_seat", False) and HIP_DOME_SEAT:
+        # kit 1.21 (v7 r5; hipped + seated rolls only): past each hip centre the seated flank (a vertical drop, which
+        # revolves round the hip into a cylinder COLLAR under the dome) eases into a BELL: the arc's end runs on down
+        # and out to the flank foot, so the dome reads as one rounded cap settling into the hip's top course
+        hd = HIP_DOME_SEAT
+        wd = np.zeros(len(xs))
+        for end, sx in (("lo", -1.0), ("hi", 1.0)):
+            if H[end]:
+                t_ = np.clip(((xs - H["c_" + end]) * sx + hd["lead"]) / hd["fade"], 0.0, 1.0)
+                wd = np.maximum(wd, t_ * t_ * (3.0 - 2.0 * t_))
+        bell = bury.copy()
+        bell[:, 0] = bury[:, 0] * (1.0 + hd["flare"] * (np.abs(bury[:, 0]) > 0.75 * wr))
+        bell[:, 1] = bury[:, 1] - hd["sink"]
+        top_b = top.copy()
+        lift = np.sin(np.linspace(0, np.pi, len(top)))       # the arc's lower flanks swell out toward the bell
+        top_b[:, 0] = top[:, 0] * (1.0 + 0.5 * hd["flare"] * (1.0 - lift))
+        P0 = np.concatenate([top, bury]) * np.array([-1.0, 1.0])
+        P1 = np.concatenate([top_b, bell]) * np.array([-1.0, 1.0])
+        per = (1.0 - wd)[:, None, None] * P0[None] + wd[:, None, None] * P1[None]
+        if end_caps:
+            per = per * fs[:, None, None]
+        V, F = sweep(path, (0, 0, 1), per[:, ::-1].copy())
+    elif end_caps:
         V, F = sweep(path, (0, 0, 1), prof_s[::-1][None, :, :] * fs[:, None, None])
     else:
         V, F = sweep(path, (0, 0, 1), prof_s[::-1].copy())
@@ -1112,7 +1403,8 @@ def _ridge_roll(roof, acc, rng, x_from=None, end_caps=None):
     zc = roof.roll_centre_z()
     seat = getattr(roof, "ridge_seat", False)
     # binding spars across the roll every ~0.7 m (split hazel, read at mid-shot as the ridge pattern)
-    for x in np.arange(roof.xa + 0.35, roof.xb - 0.2, 0.7):
+    sp_a, sp_b = roof.ridge_span() if H is not None else (roof.xa, roof.xb)
+    for x in np.arange(sp_a + 0.35, sp_b - 0.2, 0.7):
         ang = np.linspace(0.15, np.pi - 0.15, 9)
         if seat:
             # kit 1.17 (v6 round 2; with ridge_seat): each spar is laid on the roll's own centre line at its x
@@ -1174,7 +1466,10 @@ def _deck(roof, acc, clip_local=None):
     t = roof.deck_t
     xs = np.linspace(roof.xa, roof.xb, max(2, int((roof.xb - roof.xa) / 0.5) + 1))
     us = np.array([0.0, roof.ovh / math.cos(roof.p), roof.U * 0.5, roof.U])
-    if getattr(roof, "warped", False):              # kit 1.12: the warp is curved across the slope; follow it
+    if getattr(roof, "HIPS", None) is not None:     # kit 1.20: a hipped deck (backing, ~95 % hidden): 0.6 m x 9 rows
+        us = np.unique(np.concatenate([us, np.linspace(0.0, roof.U, 9)]))
+        xs = np.linspace(roof.xa, roof.xb, max(2, int((roof.xb - roof.xa) / 0.6) + 1))
+    elif getattr(roof, "warped", False):            # kit 1.12: the warp is curved across the slope; follow it
         us = np.unique(np.concatenate([us, np.linspace(0.0, roof.U, 13)]))
         xs = np.unique(np.concatenate([xs, np.linspace(roof.xa, roof.xb, max(2, int((roof.xb - roof.xa) / 0.25) + 1))]))
     xs0, us0 = xs, us
@@ -1318,6 +1613,42 @@ def _brow_eave_strip(roof, acc, sg, bi, B):
     if float(np.cross(q[1] - q[0], q[3] - q[0]) @ roof.normal(sg)) < 0:
         F = F[:, ::-1]
     acc.add(roof.to_world(V, brow={bi: 1.0}), F, "M_timber", wear=0.5)
+
+
+def _hip_rafters(roof, acc, rng, spacing=0.62, skip=None):
+    """kit 1.20: the rafter tails of a round-hipped roof -- along the straight slopes as _rafters, and RADIAL round
+    each hip (spaced at the lip), each running from the lip in to 0.25 m inside the wall line it crosses (the hip
+    oversails the end wall, so its tails are longer there); laid square to the folded surface."""
+    t = roof.deck_t
+    w, h = 0.11, 0.15
+    cp = math.cos(roof.p)
+    xs = np.arange(roof.xa + 0.5 * spacing, roof.xb - 0.1, spacing)
+    n_skip = 0
+    us = np.linspace(0.0, roof.U, 200)
+    for sg in (-1, 1):
+        for x in xs:
+            x_ = x + rng.uniform(-0.03, 0.03)
+            Ls = roof.surf(np.full(len(us), x_), us, sg, -t - h / 2)
+            px, py = roof._bend(Ls[:, 0], Ls[:, 1])
+            inside = (px > roof.x0) & (px < roof.x1) & (np.abs(py) < roof.half)
+            if not inside.any():
+                continue
+            u_in = float(us[int(np.argmax(inside))])
+            u0, u1 = 0.03, u_in + 0.25 / cp
+            p0 = roof.surf(x_, u0, sg, -t - h / 2)
+            p1 = roof.surf(x_, u1, sg, -t - h / 2)
+            if skip is not None:
+                cn = np.array([roof.surf(x_ + dx, uu, sg, -t + dz) for dx in (-w / 2, w / 2) for uu in (u0, u1)
+                               for dz in (0.0, -h)])
+                if np.asarray(skip(roof.to_world(cn)), bool).any():
+                    n_skip += 1
+                    continue
+            a, b = roof.to_world(p0), roof.to_world(p1)
+            up = roof.to_world(roof.surf(x_, 0.5 * (u0 + u1), sg, 0.0)) - \
+                roof.to_world(roof.surf(x_, 0.5 * (u0 + u1), sg, -0.05))
+            beam(acc, a, b, w, h, 0.012, "M_timber", up=up / max(float(np.linalg.norm(up)), 1e-9))
+    if n_skip:
+        log(f"  {roof.name} rafters: {n_skip} tails skipped (they would run into another body)")
 
 
 def _rafters(roof, acc, rng, spacing=0.62, skip=None, verge_apex=False, lift_max=None, verge_u0=0.0):
@@ -1629,7 +1960,10 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
                 return cc(V, margin) & (np.hypot(V[:, 0] - c0[0], V[:, 1] - c0[1]) < r_in - margin)
     rng = np.random.default_rng(seed)
     if getattr(roof, "BROWS", None) and covering != "shingle":
-        raise ValueError("linear_roof: GableRoof(eyebrows=...) is built for covering='shingle' only (kit 1.13)")
+        if not (covering == "thatch" and thatch_style == "courses"
+                and all(B.get("grid") == "thatch" for B in roof.BROWS)):
+            raise ValueError("linear_roof: GableRoof(eyebrows=...) on thatch needs eyebrow(grid='thatch') and the "
+                             "'courses' style (kit 1.20); shingle eyebrows need covering='shingle' (kit 1.13)")
     if covering == "thatch" and thatch_style == "courses":
         kw17 = {}
         if verge_roll:
@@ -1730,7 +2064,9 @@ def _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=None, ridge
         deck.cull = lambda V: clip(V, margin=0.10)
     finalize(deck, g.coll, smooth_deg=30.0)
     raf = Acc(pre + "_rafters")
-    if rafter_lift_max is not None or VR is not None:
+    if getattr(roof, "HIPS", None) is not None:          # kit 1.20: radial tails round the hips
+        _hip_rafters(roof, raf, rng, skip=rafter_skip)
+    elif rafter_lift_max is not None or VR is not None:
         _rafters(roof, raf, rng, skip=rafter_skip, verge_apex=verge_apex, lift_max=rafter_lift_max,
                  verge_u0=VR["rc"] + 0.10 if VR is not None else 0.0)
     else:
@@ -1752,16 +2088,27 @@ def _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=None, ridge
     finalize(cov, g.coll, smooth_deg=60.0, recalc=False)
     roll = Acc(pre + "_eave_roll", 70)
     ends = {sg: (None if roof.v0 > 0 else x_lo, None if roof.v1 > 0 else x_hi) for sg in (-1, 1)}
-    if VR is not None:
+    if getattr(roof, "HIPS", None) is not None:          # kit 1.20: one roll round the oval eave
+        roof.EAVE_ROLLS = _hip_eave_roll(roof, roll, rng, seed=seed)
+    elif VR is not None:
         roof.EAVE_ROLLS = _verge_rolls(roof, roll, x_lo, x_hi, seed=seed, **VR)
     else:
         roof.EAVE_ROLLS = _eave_rolls(roof, roll, rng, x_lo, x_hi, seed=seed, ends=ends)
+    n_br = 0
+    if any(B.get("grid") == "thatch" for B in (getattr(roof, "BROWS", None) or ())):
+        n_br = _brow_rolls(roof, roll, rng, seed=seed)                   # kit 1.20: the thatch eyebrow's lip roll
     if clip is not None:
         roll.cull = clip
     finalize(roll, g.coll, smooth_deg=70.0)
-    log(f"  {pre}: {n_c} continuous thatch courses + eave rolls + verge faces")
+    log(f"  {pre}: {n_c} continuous thatch courses + eave rolls + verge faces"
+        + (f" + {n_br} eyebrow lip roll(s)" if n_br else "")
+        + (f"; round hips {'lo ' if roof.HIPS['lo'] else ''}{'hi' if roof.HIPS['hi'] else ''} (centres "
+           f"{roof.HIPS['c_lo']:+.2f} / {roof.HIPS['c_hi']:+.2f}, inset {roof.HIPS['inset']:.2f} m)"
+           if getattr(roof, "HIPS", None) is not None else ""))
     rid = Acc(pre + "_ridge", 50)
-    if ridge_caps:
+    if getattr(roof, "HIPS", None) is not None:          # kit 1.20: the roll runs on round each hip (its dome)
+        _ridge_roll(roof, rid, rng, x_from=roof.xa)
+    elif ridge_caps:
         _ridge_roll(roof, rid, rng, end_caps=dict(lo=x_lo if roof.v0 > 0 else None,
                                                   hi=x_hi if roof.v1 > 0 else None))
     else:
@@ -1775,4 +2122,6 @@ def _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=None, ridge
         if clip is not None:
             cb.cull = clip
         finalize(cb, g.coll, smooth_deg=40.0)
+    if any(B.get("grid") == "thatch" for B in (getattr(roof, "BROWS", None) or ())):
+        _eyebrow_fronts(g, roof, pre)                    # kit 1.20: the thatch eyebrow's timber front + window
     return roof

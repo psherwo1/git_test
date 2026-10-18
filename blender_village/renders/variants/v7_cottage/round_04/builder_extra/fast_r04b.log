@@ -1,0 +1,43 @@
+﻿00:00.563  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\v7_cottage_fast.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\b_render_r04.py:31: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:333
++ ... 001,3.194'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\b_render_r04.py:42: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\b_render_r04.py:72: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.703  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.016  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\i06_attic_to_E_hip_chimney.png'
+00:05.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\i06_attic_to_E_hip_chimney_red.png'
+DEVICE GPU
+COUNT i06_attic_to_E_hip_chimney red red 10 yellow 0
+SHOT i06_attic_to_E_hip_chimney
+00:12.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\i09_attic_to_W_hip.png'
+00:12.609  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\i09_attic_to_W_hip_red.png'
+COUNT i09_attic_to_W_hip red red 11206 yellow 0
+SHOT i09_attic_to_W_hip
+00:18.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\i11_wing_attic_to_S_hip.png'
+00:19.813  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\i11_wing_attic_to_S_hip_red.png'
+COUNT i11_wing_attic_to_S_hip red red 199 yellow 0
+SHOT i11_wing_attic_to_S_hip
+00:25.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\h03_W_hip_soffit_eye.png'
+00:27.797  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\h03_W_hip_soffit_eye_void.png'
+COUNT h03_W_hip_soffit_eye void red 172564 yellow 7
+SHOT h03_W_hip_soffit_eye
+00:34.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\h06_wing_S_hip_soffit_eye.png'
+00:35.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\h06_wing_S_hip_soffit_eye_void.png'
+COUNT h06_wing_S_hip_soffit_eye void red 343248 yellow 374
+SHOT h06_wing_S_hip_soffit_eye
+00:41.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\e02_eyebrow_oblique_NW.png'
+00:42.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\builder_extra\fast2\e02_eyebrow_oblique_NW_void.png'
+COUNT e02_eyebrow_oblique_NW void red 0 yellow 0
+SHOT e02_eyebrow_oblique_NW

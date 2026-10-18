@@ -35,6 +35,89 @@ with identical hashes):
 
 ---
 
+## 1.20.0 (2026-10-18): the WALL add-ons -- lean-to and porch (a1 longhouse demo; producer merge)
+
+The plan-step-4 wall add-ons were proved on a demo copy of the accepted v3 longhouse (`buildings/addon_demos/a1_longhouse_addons/`, director 8.2, re-audit upheld). The full per-round record is `kit/changes/a1_longhouse_addons.md`.
+
+### New modules
+- **`components/lean_to.py`:**
+  - `plane_wall` / `wall_field` / `behind`: the junction code's round-wall pieces made to work on a straight wall.
+  - `mono_roof`: the shared core of every wall add-on. It is a mono-pitch `GableRoof` built by `linear_roof` (the village shingle or thatch, the soft warp), with a ledger, rafters and a plate, trimmed at the face, with lime flaunching and lead aprons, guarded against the host eave (`below`, plus the round-3 nearest-distance roll guard), and registered for the seal probe.
+  - `lean_to(roof_ends="square"|"round")`: rubble end walls or posts, hewn posts on dressed pads, and curved knee braces.
+    - `"round"` is `RoundLean` / `round_lean_roof` (producer note 19, "an oval on the rectangle"): a softly convex thatch slope whose free ends curve round as rounded hips, with the **village eave roll** (`eave_roll={}`, built by `linear_roof`'s own section code) and roof-moss decals (`decals=True`, the `RoundLeanDecals` adapter).
+  - `orient=True` turns inside-out end-wall stones back out.
+  - `knee_brace`.
+- **`components/porch.py`: `porch`.** A door hood: a `mono_roof` on two curved brackets (`timber_walls.hoist_beam(block=False)`), front-beam clearance >= 2.30 m, with the soft hood options (`eave_lifts`, `eave_sweep`) and `verge_board(above=)`. Proved on two hosts (v3 demo, v5).
+
+### Options added to existing modules (defaults keep the old behaviour)
+
+| module | option | added by |
+|---|---|---|
+| `guards.register_junction` | `arc=None`: the seal probe samples an azimuth range only (straight walls) | a1 r1 |
+| `rubble_walls` | NEW `orient_stones(g, name, ...)` and `_inward_stones`; nothing calls them by default | a1 r3 |
+
+### Behaviour changes to existing defaults
+- **None.** The hash rule was not triggered: no baseline building uses `lean_to.py` or `porch.py`.
+- **Producer fix (round 4):** `lean_to` post pads now have their top at `pad_h`, so the post foot beds 1 cm into the pad. The audit had found it floating 3 cm above. Only a1 uses it.
+
+### To delete (done in this merge)
+- The retired stubs `components/timber_roof.py` and `components/timber_finish.py`, which have no references.
+
+### Known limitations
+- `RoundLean` (lean-to) and the rounded-hip `GableRoof` of 1.19.0 (cottage) are two rounded-roof implementations. Converge them.
+- The rounded lean-to is thatch only; its roll section is laid for one pitch; its thatch pitch is 16 deg under a host eave (below the bible's thatch range).
+- `seal_wall_head` / `seal_gable_corner` are recipe-local (kit candidate: `path_stone_wall(head_seal=...)`).
+- Not yet supported: a porch on a round wall; `flashing="lead"` on timber hosts; a closed lean-to front.
+- **Kit-wide (open):** inside-out `RUBBLE_LARGE` open stone shells in `path_stone_wall` / `round_stone_body`. They are in the accepted v3 (about 6 stones), in v5, and in the v7 stack. The fix is `orient_stones` by default, which changes geometry, so it needs a hash-checked baseline run.
+
+### Status
+- **a1_longhouse_addons: ACCEPTED** (round 4, 8.2, 717,226 tris).
+- **v7_cottage: ACCEPTED BY CLIENT DECISION** (round 5, 8.1, 418,987 tris), with known limits (see 1.19.0 and the v7 log).
+
+---
+## 1.19.0 (2026-10-18): the ROOF add-ons, the round-hipped "loaf" roof and the thatch eyebrow (v7 cottage; merged)
+
+Plan step 4 (the client's "Move forward with the quick fix, the housekeeping, and the add ons") and producer notes 18
+/ 19.  One release for the v7 cottage builder's work in rounds 1-5.  It supersedes the proposed numbers 1.19 (rounds
+1-3), 1.20 (round 4) and 1.21 (round 5); the docstrings keep those tags and were not retagged (as in 1.12.0).  The
+lean-to / porch add-ons of the other track are not in this release.  Full per-round tables (signatures, proofs):
+`kit/changes/v7_cottage.md`.
+
+### New modules
+- `components/roof_addons.py`: `roof_valley` (two GableRoofs meeting in a rolled thatch valley, any yaw, L / T /
+  dormer-into-host; swept internal-corner roll with a boarded soffit fill; the wing's ridge roll ended under or past
+  the arch), `chimney` (a round battered rubble stack at a gable via `wall_abutment`, or through a slope / ridge /
+  round hip via a closed ring of lime flaunching; round pot by default, a low louvre opt-in) + `chimney_decals`,
+  `GabledDormer` / `gabled_dormer`, the clips `solid_clip` / `deck_clip` / `any_clip`, `roofs_top_fn`, `top_world` /
+  `top_normal`, `straight_span`, and (1.21) `reentrant_views` + `hidden_cull` (the lean cull plus eye-level views
+  into an L's re-entrant corners).
+- `components/orient_fix.py` (1.21): `orient_open_islands` / `orient_closed_slabs`, opt-in post steps that flip
+  stone shells and deck faces whose normals `strict_clean`'s recalc left pointing inward.
+
+### Optional parameters added to existing modules (`linear_roof.py`; every default is the old code path)
+- `linear_roof(deck_clip=, apex_ends=, eave_roll=)`, and `verge_roll` on a roof with ONE free verge (it used to raise).
+- `GableRoof(hips=, hip_inset=, hip_k=, hip_seam=)`: round hips (half-cones; the eave an oval in plan), built as a bend
+  of the roof's own frame (`_bend` / `_unbend` in `to_world` / `to_local` / `under_z_world`), so every part and add-on
+  follows them; `GableRoof(crown=)`: a softly convex section; `eyebrow(grid="thatch")`: the harbour-house eyebrow on a
+  thatch "courses" roof with a rolled lip (`_brow_rolls`).
+- `HIP_DOME_SEAT` (1.21; read only on a hipped roof with `ridge_seat=True`): the seated ridge-roll flank eases into a
+  bell over the hip dome (no cylinder collar).
+
+### Behaviour changes to existing defaults
+None.  No building other than v7 uses the new options.
+
+### Known limitations
+- Round hips, the valley and the gabled dormer are proven on thatch only.
+- `hidden_cull` duplicates `composite_hidden_cull`'s lean branch (composite.py was not this track's file): fold it in
+  as `composite_hidden_cull(extra_views=)` when convenient.
+- The inverted-normal root cause (bmesh recalc on open shells in `geom.strict_clean`) is not changed; `orient_fix`
+  is the opt-in repair, because changing `strict_clean` would change every building's hash.
+
+### Verification
+Buildings re-run: v7_cottage only.  The hash rule is not triggered (no existing default path changed), so
+`build_baseline.ps1` was not run.
+
+---
 ## 1.12.0 (2026-10-17): timber / waterfront family, soft roofs, eyebrow and barn options (producer)
 
 Housekeeping step of the client's "Move forward with the quick fix, the housekeeping, and the add ons".  Two variant

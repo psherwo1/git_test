@@ -109,6 +109,28 @@ def top_normal(roof, P, e=0.03):
     return n / np.linalg.norm(n, axis=1, keepdims=True)
 
 
+class straight_span:
+    """kit 1.20 (v7 round 4): `with straight_span(MAIN, WING): composite_decals(g, ...)` -- while inside, each
+    round-hipped GableRoof (GableRoof(hips=...)) reports its STRAIGHT ridge span as xa / xb, so the composite moss
+    anchors (laid on the plain slope frame along xa..xb) stay off the folded hips, whose slope frame turns.
+    Roofs without hips are untouched."""
+
+    def __init__(self, *roofs):
+        self.roofs = [r for r in roofs if getattr(r, "HIPS", None) is not None]
+        self.saved = []
+
+    def __enter__(self):
+        self.saved = [(r, r.xa, r.xb) for r in self.roofs]
+        for r in self.roofs:
+            r.xa, r.xb = r.ridge_span()
+        return self
+
+    def __exit__(self, *exc):
+        for r, a, b in self.saved:
+            r.xa, r.xb = a, b
+        return False
+
+
 def roofs_top_fn(roofs, tuck=0.02):
     """top_fn(x, y) for walls under several GableRoofs (an L / T plan): the highest deck underside (warp included)
     of the roofs whose plan columns hold (x, y), + tuck; the first roof's if none does."""
@@ -125,6 +147,51 @@ def roofs_top_fn(roofs, tuck=0.02):
             best = float(roofs[0].under_z_world([[x, y]])[0])
         return best + tuck
     return fn
+
+
+# =================================================================================================================
+# kit 1.21 (v7 round 5): the hidden-geometry cull with eye-level views into the RE-ENTRANT corners of an L / T plan
+# =================================================================================================================
+def reentrant_views(footprint, reach=(0.35, 0.9, 1.7, 2.8, 4.0), heights=(0.9, 1.7, 2.5)):
+    """viewpoints (n, 3) in the exterior wedge of every RE-ENTRANT (concave) corner of a plan polygon: the grid
+    corner + a u1 + b u2 (u1, u2 the two wall directions away from the corner; a, b in `reach`) at each height.
+    footprint_views loops round the plan BOUNDING BOX, so the pocket under the deep eave of an L's inside corner
+    (and its valley foot) is seen by none of them, and the cull deleted wall faces a visitor at the door sees."""
+    F = np.asarray(footprint, float)[:, :2]
+    if np.allclose(F[0], F[-1]):
+        F = F[:-1]
+    n = len(F)
+    area = 0.5 * float(np.sum(F[:, 0] * np.roll(F[:, 1], -1) - np.roll(F[:, 0], -1) * F[:, 1]))
+    orient = 1.0 if area > 0 else -1.0
+    out = []
+    for i in range(n):
+        a, v, b = F[i - 1], F[i], F[(i + 1) % n]
+        e1, e2 = v - a, b - v
+        if orient * (e1[0] * e2[1] - e1[1] * e2[0]) >= -1e-9:       # convex or straight
+            continue
+        u1, u2 = (a - v) / np.linalg.norm(a - v), (b - v) / np.linalg.norm(b - v)
+        for s in reach:
+            for t in reach:
+                p = v + s * u1 + t * u2
+                for z in heights:
+                    out.append((p[0], p[1], z))
+    return np.array(out).reshape(-1, 3)
+
+
+def hidden_cull(g, extra_views=(), min_polys=0, procs=4):
+    """KIT COMPONENT (post step, kit 1.21): composite.composite_hidden_cull(views="lean") plus `extra_views` (n, 3)
+    tested for every target (e.g. reentrant_views(footprint)).  extra_views=() is the lean cull unchanged."""
+    from ..core import visibility_cull
+    from .composite import BACKING, LEAN_VIEWS, ROOF_PARTS, ROOF_VIEWS, _meshes, footprint_views
+    targets = [o.name for o in _meshes(g)
+               if o.data.users == 1 and not any(b in o.name for b in BACKING) and len(o.data.polygons) >= min_polys]
+    ex = np.asarray(extra_views, float).reshape(-1, 3)
+    common = np.concatenate([footprint_views(g, **ROOF_VIEWS), ex])
+    low = footprint_views(g, **dict(LEAN_VIEWS, heights=(0.6,), crane=(6.0, ())))
+    by = {t: low for t in targets if not any(r in t for r in ROOF_PARTS)}
+    n = visibility_cull(targets, extra_views=common, extra_by_target=by, procs=procs)
+    log(f"hidden-geometry cull: -{n} polygons on {len(targets)} objects (+{len(ex)} re-entrant corner views)")
+    return n
 
 
 # =================================================================================================================
@@ -293,12 +360,15 @@ def _lip_z(roof, sg, Q):
     return roof.to_world(roof.surf(L[:, 0], np.zeros(len(Q)), int(sg), 0.0))[:, 2]
 
 
-def _corner_roll(acc, main, wing, sgm, sgw, r=0.25, ext=0.30, grow=1.05, end_f=0.94, seed=0):
+def _corner_roll(acc, main, wing, sgm, sgw, r=0.25, ext=0.30, grow=1.05, end_f=0.94, seed=0, blend=None):
     """kit 1.19 r3: ONE swept INTERNAL-CORNER ROLL -- the eave roll's own D section (main.roll_section()) carried
     round the re-entrant lip corner on a fillet of radius r in plan (tangent to both lips, in the exterior quadrant),
     with `ext` m straight runs on along both lips; the lip height and the section's up blend smoothly from main's
     slope to the wing's.  The section is `grow` x the straight rolls' (it envelops their cut ends, _corner_close) and
-    tapers to end_f x over the last 0.1 m of each run, where it dives inside the straight rolls."""
+    tapers to end_f x over the last 0.1 m of each run, where it dives inside the straight rolls.
+    kit 1.21 (v7 r5; None = old): blend (m) -- the taper runs over the last `blend` m of each run as a smoothstep
+    (tangent at both ends): a long, shallow overlap in which the corner roll sinks into the straight roll, in place
+    of the short 0.1 m step that read as a flat-faced sleeve band."""
     Cl, em, ew = _lip_frame(main, wing, sgm, sgw)
     C = Cl + r * em + r * ew
     ds = 0.03
@@ -327,7 +397,11 @@ def _corner_roll(acc, main, wing, sgm, sgw, r=0.25, ext=0.30, grow=1.05, end_f=0
     I = np.where(((I * I3).sum(1) < 0)[:, None], -I, I)
     uo, _vis = main.roll_section()
     uo = np.asarray(uo, float)
-    f = grow - (grow - end_f) * np.clip((sd - (ext - 0.10)) / 0.10, 0, 1)
+    if blend is None:
+        f = grow - (grow - end_f) * np.clip((sd - (ext - 0.10)) / 0.10, 0, 1)
+    else:
+        tb = np.clip((sd - (ext - float(blend))) / max(float(blend), 1e-6), 0, 1)
+        f = grow - (grow - end_f) * tb * tb * (3.0 - 2.0 * tb)
     L = P[:, None, :] + f[:, None, None] * (I[:, None, :] * uo[None, :, 0:1] + N[:, None, :] * uo[None, :, 1:2])
     n, m = L.shape[:2]
     V = np.vstack([L.reshape(-1, 3), L[0].mean(0)[None], L[-1].mean(0)[None]])
@@ -350,7 +424,7 @@ def _corner_roll(acc, main, wing, sgm, sgw, r=0.25, ext=0.30, grow=1.05, end_f=0
 
 
 def _corner_close(g, main, wing, sgm, sgw, name, clear=0.35, into=0.12, past=-0.05, t=0.035, n=8, corner_r=0.25,
-                  cut=0.13):
+                  cut=0.13, roll=None):
     """kit 1.19 r2 / r3: the RE-ENTRANT EAVE CORNER of a valley (two eaves at one height meeting inside an L / T):
     (1) every rafter tail of either roof within `clear` m of the other roof's plan columns is dropped WHOLE (no
     clipped, open-ended box under the corner); (2) a BOARDED SOFFIT FILL closes the corner from below: one closed
@@ -398,7 +472,7 @@ def _corner_close(g, main, wing, sgm, sgw, name, clear=0.35, into=0.12, past=-0.
     if getattr(main, "ROLL", None) is None:
         main.eave_roll()
     ak = Acc(f"{g.prefix}_{name}_roll", 70)
-    Cl, em, ew, rr = _corner_roll(ak, main, wing, sgm, sgw, r=corner_r)
+    Cl, em, ew, rr = _corner_roll(ak, main, wing, sgm, sgw, r=corner_r, **(roll or {}))  # kit 1.21: roll= options
     finalize(ak, g.coll, smooth_deg=70.0)
     n_cut = 0
     for r, e_along, e_out in ((main, em, ew), (wing, ew, em)):
@@ -517,7 +591,7 @@ def valley_line(main, wing, dy=0.03, edge=0.004, foot="crest", foot_back=0.0):
 
 def roof_valley(g, main, wing, name=None, width=(0.34, 0.34), crown=0.16, bury=(0.10, 0.10), dy=0.03,
                 comb_clear=0.22, var=0.06, seed=0, taper=0.30, end_out=0.16, smooth=2, foot="crest", corner="auto",
-                ridge_cut=0.12, sink=0.06, ridge_bury=0.12, ridge_bury_w=0.35, foot_back=None):
+                ridge_cut=0.12, sink=0.06, ridge_bury=0.12, ridge_bury_w=0.35, foot_back=None, corner_opts=None):
     """KIT COMPONENT (kit 1.19, v7): the rolled thatch valley where `wing` runs into `main` (both GableRoofs built by
     linear_roof; see the module doc).  Build the two roofs first with linear_roof(clip=solid_clip(other),
     deck_clip=deck_clip(other)) so the coverings and decks yield to each other at the valley; this then sweeps the
@@ -533,7 +607,11 @@ def roof_valley(g, main, wing, name=None, width=(0.34, 0.34), crown=0.16, bury=(
     the crossing deck ends in the soffit fill; at such a corner each foot tuck runs on >= 0.26 m and sinks by the
     crown + 8 cm into that roll; ridge_bury (m, 0 = off) / ridge_bury_w: both skirts bury that much deeper where the
     line crosses the wing's ridge roll (|wing y| < ridge_bury_w, fading), and the ridge cut's fill faces are oriented
-    outward (no dark wedge either side of the comb)."""
+    outward (no dark wedge either side of the comb).
+    kit 1.21 (v7 r5; None = old): corner_opts -- keywords for each _corner_close (corner_r, cut, and roll=dict(ext=,
+    blend=, grow=, end_f=) for the swept internal-corner roll's long smoothstep overlap into the straight rolls).
+    A NEGATIVE ridge_cut ends the wing's ridge roll that far PAST the arch's crest, inside the main covering (a
+    roof without a comb: the roll end is buried in the main thatch, no cut end or pocket under the arch)."""
     from .composite import drop_units
     import bpy
     name = name or f"{wing.name}_valley"
@@ -608,7 +686,7 @@ def roof_valley(g, main, wing, name=None, width=(0.34, 0.34), crown=0.16, bury=(
         sgm = -1.0 if float(main.to_local(wc)[0, 1]) < 0 else 1.0
         nd = 0
         for k, sgw in enumerate((-1.0, 1.0)):
-            nd += _corner_close(g, main, wing, sgm, sgw, f"{name}_soffit_{k}")
+            nd += _corner_close(g, main, wing, sgm, sgw, f"{name}_soffit_{k}", **(corner_opts or {}))
         msg += f"; re-entrant corners closed (soffit fills, {nd} rafter polygons dropped)"
     if not hasattr(g, "VALLEYS"):
         g.VALLEYS = []
@@ -905,7 +983,7 @@ def _ring_trace(bvh, T, step_deg=1.0, z_guess=3.0, offsets=(0.006, 0.02)):
     return [(th2, P)]
 
 
-def _ring_abutment(g, roof, center, radius, name, parts):
+def _ring_abutment(g, roof, center, radius, name, parts, fillet=None):
     """the roof surrounds the stack (a chimney through the slope or the ridge): trim the roof at the stack face and
     run the lime-mortar flaunching (junctions.ride_fillet) round the whole ring (closed by an overlap)."""
     import bpy
@@ -920,12 +998,15 @@ def _ring_abutment(g, roof, center, radius, name, parts):
     objs = [o for o in (bpy.data.objects.get(f"{pre}_{p}") for p in ("covering", "eave_roll", "ridge", "comb"))
             if o is not None and len(o.data.polygons)]
     bvh = _bvh(objs)
-    runs = _ring_trace(bvh, T, z_guess=float(roof.z_lip))       # low: the battered face is widest (r2 fix)
+    fk = dict(h_up=0.12, out=0.12, lift=0.05, bury=0.035, taper=0.15)      # kit 1.20: fillet= overrides
+    fk.update(fillet or {})
+    step = float(fk.pop("step_deg", 1.0))                                  # kit 1.20: ring sampling (deg)
+    runs = _ring_trace(bvh, T, step_deg=step, z_guess=float(roof.z_lip))   # low: the battered face is widest (r2 fix)
     if not runs:
         raise ValueError(f"chimney {name}: the roof does not surround the stack (use the gable placement)")
     acc = Acc(f"{pre}_{name}", 35)
     for th, P in runs:
-        ride_fillet(acc, th, _smooth_up(P[:, 2]), T, bvh, h_up=0.12, out=0.12, lift=0.05, bury=0.035, taper=0.15)
+        ride_fillet(acc, th, _smooth_up(P[:, 2]), T, bvh, **fk)
     log(f"  {name}: ring flaunching round the stack, {len(runs[0][0])} samples, z {runs[0][1][:, 2].min():.2f}.."
         f"{runs[0][1][:, 2].max():.2f}")
     ob = finalize(acc, g.coll, smooth_deg=35.0)
@@ -1013,13 +1094,14 @@ def chimney(g, name="chimney", center=(0.0, 0.0), r_base=0.62, batter_deg=2.0, t
     if roof is not None:
         prt = parts or (LINEAR_ROOF_PARTS + (("verge", 0.02),))
         kw = dict(abut or {})
+        ring_fillet = kw.pop("ring_fillet", None)          # kit 1.20: the ring flaunching's ride_fillet keywords
         kw.setdefault("radius", stack_R)
         try:
             wall_abutment(g, roof, center=cxy, parts=prt, name=f"{name}_abutment", **kw)
         except ValueError as ex:
             if "covers the whole tower" not in str(ex):
                 raise
-            _ring_abutment(g, roof, C, kw["radius"], f"{name}_abutment", prt)
+            _ring_abutment(g, roof, C, kw["radius"], f"{name}_abutment", prt, fillet=ring_fillet)
     # ---- the cap: a dressed drip course, softly out of round ----------------------------------------------------
     ck = dict(CHIMNEY_CAP, **(cap or {}))
     R = r_base - top * tb

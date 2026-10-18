@@ -41,50 +41,59 @@ This file lets a new Claude Code session pick up the work with full continuity. 
 - **The client asked for a textured check** of whether the remaining junction defects are visible at ground level or in a quick pan.
 - Never modify `buildings/*/signoff_phase1/` or `buildings/tower_windmill/signoff_kit_r08/`.
 
-## 4. State at handoff (2026-10-18 01:50, end of desktop session 2)
+## 4. State at handoff (2026-10-18 ~11:45, end of desktop session 2; nothing running)
 
-**Designs (10 built; 9 accepted or final):**
+**Designs: 11 built, all accepted, final or signed off:**
 
 | Design | State |
 |---|---|
-| tower_windmill | Signed off on the kit (round 8, 9.0) |
+| tower_windmill | Signed off on the kit (r8, 9.0) |
 | hilltop_keep, wattle_roundhut | Phase-1 versions are the deliverables; the kit builds are the references |
 | v1_stone_watchtower | ACCEPTED (r5, 8.5, 937,933) |
 | v2_tiered_hall | ACCEPTED by client decision (r7, 980,405), with the darker grimy turret lead in lookdev |
-| v3_longhouse_roundend | ACCEPTED (r8 redesign, 8.3, 617,342); round 6 archived |
+| v3_longhouse_roundend | ACCEPTED (r8 redesign, 8.3, 617,342) |
 | v4_mixed | ACCEPTED (r4, 8.4, 938,453) |
-| v5_harbour_house (approved building 3, the client's ref4 concept) | **FINAL** (r8, 8.6, 714,452): cruck boat hall, round tower, slumped roof, the eyebrow as one continuous arch. r04-r08 snapshots `*_rNN_accepted.*` |
-| v6_barn | **ACCEPTED** (r3 8.4 + the r4 quick fix, audit upheld, 213,529): thatch barn with a cruck arched cart entry under a thatch eyelid |
-| v7_cottage (roof add-ons: valley, chimney, gabled dormer) | Round 3: 7.9, not accepted. **The client extended it by up to 2 rounds:** round 4 does producer note 19 (rounded hips + soft crown, "an oval on the rectangle") and note 18 (a thatch eyebrow) FIRST |
-| a1_longhouse_addons (wall add-ons: lean-to, porch, on a demo copy of v3) | Round 3 BUILT (the lean-to rounded per note 19), **grade NOT run** (usage limit). Round 2 was 8.1 |
+| v5_harbour_house (approved building 3, ref4) | FINAL (r8, 8.6, 714,452). Snapshots `*_r04..r08_accepted.*` |
+| v6_barn | ACCEPTED (r4 quick fix, director 8.4, audit upheld, 213,529) |
+| v7_cottage (step-4 ROOF add-ons) | ACCEPTED BY CLIENT DECISION (r5, 8.1, 418,987): rounded-hip "oval" thatch roofs (note 19), a thatch eyebrow (note 18), a gabled dormer, a soft valley, a round chimney. Known limits in its log |
+| a1_longhouse_addons (step-4 WALL add-ons: lean-to, porch, on a demo copy of v3) | ACCEPTED (r4, 8.2, re-audit upheld after the producer's one-line pad fix; 717,226) |
 
-**Kit 1.12.0** (CHANGELOG merged; the reference table covers 8 buildings incl. v5; `tools/build_baseline.ps1` rebuilds 8). Since 1.12.0:
-- the add-on modules `roof_addons.py` (valley, chimney, dormer), `lean_to.py` and `porch.py`;
-- `cruck_frame(infill_soffit=)`, `linear_roof(eave_roll=)`.
+**Kit 1.20.0** (CHANGELOG fully merged through 1.20.0; the 8-building reference table is in 1.12.0). The retired stubs are deleted.
+- The add-ons are reusable kit pieces:
+  - the valley, chimney and gabled dormer (`roof_addons.py`);
+  - the rounded-hip / soft-crown `GableRoof` and the thatch eyebrow (1.19.0);
+  - the lean-to (incl. the rounded `RoundLean`) and the porch (1.20.0).
+- `tools/build_baseline.ps1` rebuilds 8 buildings (incl. v5; reference `kit/baseline/7_v5_ref/`).
 
-All are defaults-off, recorded in `kit/changes/v7_cottage.md`, `kit/changes/a1_longhouse_addons.md` and `kit/changes/v6_barn.md`, and still to be merged. The retired stubs `components/timber_roof.py` and `timber_finish.py` are to be deleted.
+**Open kit items** (none blocks a design):
+- **Inside-out RUBBLE_LARGE stone shells,** kit-wide (v3, v5, v7 stack). The fix is `orient_stones` by default, which needs a hash-checked baseline run.
+- **Two rounded-roof implementations** (`RoundLean` and the 1.19.0 hipped `GableRoof`) should converge.
+- **Eyebrow polish:** the shoulder and the window margin.
+- **The v5 polish list:** eave corners, quay ends, ridge-comb slits, lead tabs.
+- **Lookdev:** the flat daub on the roundhut / v4, the bark proxy texture, the v2 pale shingles, the heavy moss.
 
-**New producer notes this session (binding):**
+**Binding producer notes added this session:**
 - 16: same builders, techniques and materials;
 - 17: round structures and soft, organic lines;
 - 18: a rectangular / square cottage has at least one eyebrow dormer;
-- 19: square walls get rounded roofs (round hips + soft crown).
+- 19: square walls get rounded roofs (round hips + soft crown, "an oval on the rectangle").
 
-**Client preference (memory):** time matters. Fold direction into the current round, show early previews, and skip avoidable work.
+**Client preferences:**
+- Time matters: fold direction into the round in progress through the variant log, show early previews, skip avoidable work.
+- Reuse existing modules.
+- Rounds are capped; ask before going beyond the cap.
 
-**Lookdev and studies:**
-- `lookdev/village_r2/`: all nine buildings textured, with contact sheets;
-- `lookdev/harbour_house/`: the textured r05-r08 look tests;
-- `lookdev/vignette/`: the nine buildings in a fjord village, day and golden-hour fog, with measurements;
-- `director/performance_assessment.md`: Lumen vs the path tracer, fog costs, memory; the client should upgrade to 32 GB RAM.
+**Studies:**
+- `lookdev/village_r2/`: all buildings textured, with contact sheets;
+- `lookdev/harbour_house/`: the v5 look tests;
+- `lookdev/vignette/`: a fjord-village vignette with measurements;
+- `director/performance_assessment.md`: Lumen vs the path tracer, fog, memory. The measured Cycles path tracing is about 30 s / frame at 1080p with fog. The client should upgrade to 32 GB RAM.
+- **Vignette takeaway:** too many conical towers; the next designs should be low and roofed.
 
-**Lookdev to tune:** the flat daub on the roundhut / v4, the bark proxy texture, the v2 pale shingles, and the heavy moss.
-
-**NEXT (when resuming):**
-1. **Wall track:** run the round-3 Director grade, and the audit if it passes. `log_addons_lean_porch.md` has the context.
-2. **Cottage rounds 4-5:** the rounded roof and the thatch eyebrow first (log `log_variant_v7_cottage.md`), then grade and audit.
-3. Merge the add-on kit notes into the CHANGELOG, delete the two stubs, and refresh this file.
-4. Then: more low, roofed designs (notes 18 / 19); then step 5, the Unreal exporter and the UE 5.8 lookdev test.
+**NEXT:**
+1. More LOW, ROOFED designs toward 12-15, following notes 16-19 and using the add-ons. Cap the rounds, and show early previews.
+2. The optional kit-wide `orient_stones` default, with a baseline run.
+3. Step 5: the Unreal exporter, then the UE 5.8 lookdev test (it measures what the performance assessment estimates).
 ## 5. Practical notes for this machine
 
 - **Git:** there is no system git. Use GitHub Desktop's bundled git: `C:\GitHubDesktop\app-3.6.7\resources\app\git\cmd\git.exe`. Push auth works.
