@@ -303,7 +303,10 @@ def damp(g, ctx, color, amount=0.35):
     return g.mix(f, color, (0.08, 0.075, 0.06, 1.0), blend="MULTIPLY")
 
 
-def moss_layer(g, ctx, color, rough, normal, gain=4.0, lo=0.35, hi=0.65, extra=None, hue=0.5):
+ROOF_MOSS_SCALE = 0.25  # client 2026-10-18: roofs 75 % less moss (30 / 50 % too green; 90 % slightly too brown)
+
+
+def moss_layer(g, ctx, color, rough, normal, gain=4.0, lo=0.35, hi=0.65, extra=None, hue=0.5, scale=1.0):
     """Blend nordic moss on top: factor from Mask B x up-facing, broken up by the moss height.
     extra (r2): an additional factor socket, e.g. broad world-space moss patches."""
     m = sample(g, ctx, "moss", per_piece=False)
@@ -313,6 +316,8 @@ def moss_layer(g, ctx, color, rough, normal, gain=4.0, lo=0.35, hi=0.65, extra=N
     if extra is not None:
         f = g.math("ADD", f, extra)
     fac = g.maprange(f, lo, hi, interp="SMOOTHSTEP")
+    if scale != 1.0:
+        fac = g.math("MULTIPLY", fac, scale)
     mcol = g.hsv(m["color"], hue, 1.05, 0.95)
     color = g.mix(fac, color, mcol)
     rough = g.mixf(fac, rough, g.math("MULTIPLY_ADD", _val(g, m["rough"]), 0.6, 0.4, clamp=True))
@@ -423,7 +428,8 @@ def mat_wood(mat, mossy):
     col = damp(g, c, col, 0.3)
     normal = a["normal"]
     if mossy:
-        col, rough, normal = moss_layer(g, c, col, rough, normal, gain=6.5, lo=0.32, hi=0.62)
+        col, rough, normal = moss_layer(g, c, col, rough, normal, gain=6.5, lo=0.32, hi=0.62,
+                                         scale=ROOF_MOSS_SCALE if mat.name in ("M_roof_shingle", "M_roof_shake") else 1.0)
     finish(g, c, col, rough, normal, nstrength=0.7)
 
 
@@ -595,18 +601,20 @@ def mat_thatch_r2(mat):
     c = setup_common(g)
     a = sample(g, c, "thatch")
     # r1 multiplied by (1.35, 1.12, 0.78), a golden straw; r2 grades the dark reed towards olive
-    col = g.mix(1.0, a["color"], (0.95, 1.05, 0.55, 1.0), blend="MULTIPLY")
-    col = g.hsv(col, 0.5, 0.85, 0.72)
+    # client 2026-10-18: the roofs read far too green; the olive grade (0.95, 1.05, 0.55) was most of it, not the
+    # moss. Weathered straw / grey-brown reed instead.
+    col = g.mix(1.0, a["color"], (1.06, 1.0, 0.70, 1.0), blend="MULTIPLY")
+    col = g.hsv(col, 0.5, 0.8, 0.8)
     col = jitter(g, c, col, amount=0.07)
     col, rough = wear(g, c, col, _val(g, a["rough"]), light=0.08, rough_add=0.05, desat=0.3)
     # olive algae film over the whole roof (ref2), stronger on up-facing slopes
-    film = g.math("MULTIPLY_ADD", c["up"], 0.15, 0.2)
+    film = g.math("MULTIPLY_ADD", c["up"], 0.15 * ROOF_MOSS_SCALE, 0.2 * ROOF_MOSS_SCALE)
     col = g.mix(film, col, (0.085, 0.085, 0.025, 1.0))
     col = damp(g, c, col, 0.3)
     # moss: Mask B x up as before, plus broad world-space patches; more coverage than r1 (gain 5.5, lo 0.3)
     patches = world_noise(g, 0.45, 0.45, 0.62, 0.7)
     col, rough, normal = moss_layer(g, c, col, rough, a["normal"], gain=7.0, lo=0.25, hi=0.75, extra=patches,
-                                         hue=0.525)  # slightly greener moss than r1
+                                         hue=0.525, scale=ROOF_MOSS_SCALE)  # slightly greener moss than r1
     finish(g, c, col, rough, normal, nstrength=0.9)
 
 
