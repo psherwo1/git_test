@@ -1,0 +1,70 @@
+﻿BlenderMCP addon registered
+BlenderMCP addon unregistered
+PLACED v3_longhouse_roundend.blend x 0.0 w 17.77 d 8.56 top 11.34
+PLACED a1_longhouse_addons.blend x 21.77 w 17.77 d 9.2 top 11.34
+PLACED v5_harbour_house_r08_accepted.blend x 43.54 w 17.59 d 17.17 top 13.44
+PLACED v6_barn_r04_accepted.blend x 65.13 w 16.09 d 8.79 top 9.22
+PLACED v7_cottage.blend x 85.22 w 15.31 d 13.36 top 7.62
+PLACED wattle_roundhut.blend x 104.52 w 8.37 d 8.78 top 8.73
+blender.exe : C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra
+\dir_lineup_r04.py:37: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:677
++ ... | Out-Null; & $b -b --python "$d\dir_lineup_r04.py" -- $o "$r\buildin ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay = bpy.data.materials.new("_clay"); clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\dir_lineup_r0
+4.py:49: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_w"); world.use_nodes = True; scn.world = world
+00:03.609  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:13.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\L01_lineup_front_ortho.png'
+SHOT L01
+00:23.953  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\L02_lineup_three_quarter.png'
+SHOT L02
+00:35.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\L03_lineup_aerial.png'
+SHOT L03
+00:45.015  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\L04_lineup_back_ortho.png'
+SHOT L04
+00:55.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\L05_lineup_back_three_quarter.png'
+SHOT L05
+00:57.203  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T0_SW_v3_longhouse_roundend.png'
+SHOT T v3_longhouse_roundend SW
+00:58.031  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T0_SE_v3_longhouse_roundend.png'
+SHOT T v3_longhouse_roundend SE
+00:58.765  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T0_NE_v3_longhouse_roundend.png'
+SHOT T v3_longhouse_roundend NE
+01:00.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T1_SW_a1_longhouse_addons.png'
+SHOT T a1_longhouse_addons SW
+01:02.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T1_SE_a1_longhouse_addons.png'
+SHOT T a1_longhouse_addons SE
+01:03.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T1_NE_a1_longhouse_addons.png'
+SHOT T a1_longhouse_addons NE
+01:04.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T2_SW_v5_harbour_house_r08_accepted.png'
+SHOT T v5_harbour_house_r08_accepted SW
+01:06.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T2_SE_v5_harbour_house_r08_accepted.png'
+SHOT T v5_harbour_house_r08_accepted SE
+01:08.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T2_NE_v5_harbour_house_r08_accepted.png'
+SHOT T v5_harbour_house_r08_accepted NE
+01:09.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T3_SW_v6_barn_r04_accepted.png'
+SHOT T v6_barn_r04_accepted SW
+01:09.890  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T3_SE_v6_barn_r04_accepted.png'
+SHOT T v6_barn_r04_accepted SE
+01:11.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T3_NE_v6_barn_r04_accepted.png'
+SHOT T v6_barn_r04_accepted NE
+01:13.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T4_SW_v7_cottage.png'
+SHOT T v7_cottage SW
+01:14.515  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T4_SE_v7_cottage.png'
+SHOT T v7_cottage SE
+01:15.328  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T4_NE_v7_cottage.png'
+SHOT T v7_cottage NE
+01:17.015  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T5_SW_wattle_roundhut.png'
+SHOT T wattle_roundhut SW
+01:19.093  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T5_SE_wattle_roundhut.png'
+SHOT T wattle_roundhut SE
+01:20.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\director_extra\lineup\T5_NE_wattle_roundhut.png'
+SHOT T wattle_roundhut NE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

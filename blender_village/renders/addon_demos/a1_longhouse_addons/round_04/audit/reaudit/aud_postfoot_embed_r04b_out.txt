@@ -1,0 +1,36 @@
+﻿00:00.968  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\a1_longhouse_addons.blend"
+PAD verts 57 tris 96 boundary edges 16; z -0.0500..0.1400; xy [-1.784, 4.092] [-1.404, 4.452]
+POST foot z 0.1298; foot xy [-1.694, 4.172] [-1.494, 4.372]; axis (-1.594, 4.272)
+PAD top over the post footprint (81 pts): min 0.1400 max 0.1400 missing 0
+EMBEDMENT: post foot 0.1298 vs pad top 0.1400 -> gap -0.0102 m (<= 0 is contact)
+   ring z 0.1000: pass clean 1/72 [180]
+   ring z 0.1025: pass clean 1/72 [180]
+   ring z 0.1050: pass clean 1/72 [180]
+   ring z 0.1075: pass clean 1/72 [180]
+   ring z 0.1100: pass clean 1/72 [180]
+   ring z 0.1125: pass clean 1/72 [180]
+   ring z 0.1150: pass clean 1/72 [180]
+   ring z 0.1175: pass clean 1/72 [180]
+   ring z 0.1200: pass clean 1/72 [180]
+   ring z 0.1225: pass clean 1/72 [180]
+   ring z 0.1250: pass clean 1/72 [180]
+   ring z 0.1275: pass clean 1/72 [180]
+   ring z 0.1300: pass clean 0/72 []
+   ring z 0.1325: pass clean 0/72 []
+   ring z 0.1350: pass clean 0/72 []
+   ring z 0.1375: pass clean 0/72 []
+   ring z 0.1400: pass clean 0/72 []
+   ring z 0.1425: pass clean 0/72 []
+   ring z 0.1450: pass clean 0/72 []
+   ring z 0.1475: pass clean 0/72 []
+   ring z 0.1500: pass clean 0/72 []
+   ring z 0.1525: pass clean 0/72 []
+   ring z 0.1550: pass clean 0/72 []
+   ring z 0.1575: pass clean 0/72 []
+   ring z 0.1600: pass clean 0/72 []
+   old-ring clean ray z 0.08 az 180 deg: nearest geometry 0.00002 m (A1L_lean_to_pads) at [-1.7843, 4.272, 0.08]
+   old-ring clean ray z 0.11 az 180 deg: nearest geometry 0.00002 m (A1L_lean_to_pads) at [-1.7843, 4.272, 0.11]
+   old-ring clean ray z 0.12 az 180 deg: nearest geometry 0.00077 m (A1L_lean_to_pads) at [-1.4093, 4.272, 0.12]
+CAMERAS 144 x 180 rays at the post skin z 0.125..0.140: first hits {'A1L_lean_to_pads': 15825, 'A1L_lean_to_posts': 9585, 'A1L_lean_to_eave_roll': 510}
+   first hit on the POST below the pad top (a visible foot / gap): 0
+DONE

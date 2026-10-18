@@ -160,11 +160,13 @@ def _beam_along(acc, roof, xs, y, z_local, w, h, mat, c=0.02):
 
 
 def _wall_junction(g, name, pre, W, T, x_lo, x_hi, fillet, apron, below, below_clear, below_lift_max, below_roll,
-                   below_roll_near, register, trim_ends=False):
+                   below_roll_near, register, trim_ends=False, reg_parts=("covering", "verge", "eave_roll")):
     """a1 round 3: mono_roof's wall junction and host checks as one helper (shared with the rounded lean-to roof,
     round_lean_roof; mono_roof's behaviour is unchanged): the covering / wall line traced by rays between x_lo and
     x_hi along W["t"] (trim_ends: only the stretch where the covering meets the face), the lime flaunching on it, a
     lead apron at each end, the `below` host-eave and eave-roll checks, the seal-probe registration.
+    a1 round 4: reg_parts -- the <pre>_<part> objects registered for the seal probe (default = round 3's list; the
+    rounded roof passes only the parts it builds).
     -> (zb the roof line at the face, th its angles on the stand-in circle, C the circle centre)."""
     import bpy
     from .junctions import _bvh, _smooth_up, ride_fillet, wall_end_apron
@@ -237,7 +239,7 @@ def _wall_junction(g, name, pre, W, T, x_lo, x_hi, fillet, apron, below, below_c
                                          f"trim the add-on's verge / side")
     if register:
         from ..guards import register_junction
-        register_junction(g, f"{name} / wall", (f"{pre}_covering", f"{pre}_verge", f"{pre}_eave_roll"),
+        register_junction(g, f"{name} / wall", tuple(f"{pre}_{q}" for q in reg_parts),
                           C, lambda z, _R=W["R"]: _R, (float(zb.min()) - 0.3, float(zb.max()) + 0.3),
                           ring=(0.0, 0.6), arc=(float(th.min()), float(th.max())))
     return zb, th, C
@@ -433,6 +435,36 @@ class RoundLean:
         return x0[None] + R * dx[None], R * dy[None]
 
 
+class RoundLeanDecals:
+    """a1 round 4: the RoundLean seen through the few GableRoof members composite_decals' roof-moss pass reads
+    (covering, xa, xb, U, p, surf, to_world, dir_world, normal), so the rounded thatch gets moss anchors.  Its one
+    slope is sg = +1 (falling out from the wall); u is the slope distance up from the eave on the straight run."""
+
+    covering = "thatch"
+
+    def __init__(self, S, s0, s1, coat):
+        self.S, self.xa, self.xb, self.coat = S, float(s0), float(s1), float(coat)
+        self.p = S.p
+        self.U = (S.Ey - S.ridge_in) / math.cos(S.p)
+
+    def surf(self, x, u, sg, off=0.0):
+        y = self.S.Ey - float(u) * math.cos(self.p)
+        return np.array([float(x), y, float(self.S.z_ref(float(x), y)) + float(off)])
+
+    def to_world(self, Q):
+        Q = np.asarray(Q, float)
+        W = self.S.to_world(Q)
+        return W[0] if Q.ndim == 1 else W
+
+    def dir_world(self, d):
+        d = np.asarray(d, float)
+        v = d[0] * self.S.t + d[1] * self.S.n + np.array([0.0, 0.0, d[2]])
+        return v / max(float(np.linalg.norm(v)), 1e-9)
+
+    def normal(self, sg):
+        return np.array([0.0, math.sin(self.p), math.cos(self.p)])
+
+
 def _grid_faces(nr, nc, off=0):
     i = np.arange(nr - 1)[:, None]
     j = np.arange(nc - 1)[None, :]
@@ -445,7 +477,7 @@ def round_lean_roof(g, name, W, s0, s1, depth, z_face, pitch_deg=16.0, overhang=
                     thatch=(0.08, 0.05), course=0.26, fillet=(0.07, 0.10), apron=(0.12, 0.30), ledger=(0.15, 0.17),
                     rafters=None, plate=(0.17, 0.18), end_t=0.40, hip_rafters=(22.0, 45.0, 68.0), below=None,
                     below_clear=0.03, below_lift_max=None, below_roll=0.10, below_roll_near=True, register=True,
-                    verge_board=None):
+                    verge_board=None, eave_roll=None, decals=False):
     """KIT COMPONENT (kit 1.19, a1 round 3; CLIENT DIRECTION 00:22 / producer note 19): the lean-to's ROUNDED roof --
     a softly convex thatch slope whose two free ends curve round as rounded hips (RoundLean: one superellipse eave
     round each front corner and back to the wall, oversailing the end walls by end_over; no verge, no crease), in the
@@ -459,6 +491,14 @@ def round_lean_roof(g, name, W, s0, s1, depth, z_face, pitch_deg=16.0, overhang=
         ne         the superellipse exponent of the plan curve (2 = an ellipse; 3 = fuller corners)
         bulge      convexity of the fall (m at mid-slope); arch_wall / arch_eave: the arch along the wall (m)
         course     course spacing (plan m on the straight run)
+        eave_roll  a1 round 4 (None = round 3: the eave course's nose wrapped under the deck edge): a dict of
+                   GableRoof.eave_roll keywords ({} = the village defaults, the v3 host's) -- the VILLAGE eave roll:
+                   its D section (linear_roof.GableRoof.eave_roll / linear_roof._roll_prof, laid for this roof's
+                   pitch and coat) swept with thatch.d_roll round the whole oval lip, wall to wall, its ends trimmed
+                   at the wall face; the first course butt sits on it (the village's u_c + 0.20, as
+                   linear_roof._layered_courses)
+        decals     a1 round 4 (False = round 3): publish the roof on g.LINEAR_ROOFS as a RoundLeanDecals adapter so
+                   composite_decals lays its moss anchors on the thatch
     verge_board is accepted and ignored (there are no verges).  -> the lean_to record (roof = the RoundLean)."""
     import bpy
     from .junctions import clip_at_tower
@@ -500,10 +540,16 @@ def round_lean_roof(g, name, W, s0, s1, depth, z_face, pitch_deg=16.0, overhang=
     dk.add(V, [top, bot, edge_o, edge_i, end0, end1], "M_timber_weathered", wear=0.4)
     finalize(dk, g.coll, smooth_deg=30.0)
     # ---- the thatch: continuous course sheets round the whole contour ----------------------------------------------
+    ROLL = sec = None
+    if eave_roll is not None:                                # a1 round 4: the village eave roll's section
+        from .linear_roof import GableRoof as _GableRoof
+        sec = _GableRoof(x0=0.0, x1=1.0, half=1.0, wall_z=0.0, pitch_deg=pitch_deg, deck_t=dt, thick=T0, step=st,
+                         exposure=course, name=f"{name}_roll_section")
+        ROLL = sec.eave_roll(**dict(eave_roll))
     cov = Acc(pre + "_covering", 60)
     d_r = course / S.Ey
     butts = []
-    r_ = 1.0
+    r_ = 1.0 if ROLL is None else 1.0 - (ROLL["u_c"] + 0.20) * math.cos(S.p) / S.Ey
     while r_ > S.rho_face + 0.35 * d_r:
         butts.append(r_)
         r_ -= d_r
@@ -512,7 +558,7 @@ def round_lean_roof(g, name, W, s0, s1, depth, z_face, pitch_deg=16.0, overhang=
         Dm = course
         prof = [(-1.25 * Dm, T0 * 0.85), (-0.70 * Dm, T0 + 0.25 * st), (-0.30 * Dm, T0 + 0.65 * st),
                 (-0.06 * Dm, T0 + 0.95 * st), (0.0, T0 + st)]
-        if i == 0:                                           # the eave course: its nose wraps under the deck edge
+        if i == 0 and ROLL is None:                          # the eave course: its nose wraps under the deck edge
             prof += [(0.035, T0 + 0.55 * st), (0.055, 0.02), (0.045, -dt - 0.03), (0.0, -dt - 0.05),
                      (-0.10, -dt - 0.025)]
         else:
@@ -528,10 +574,28 @@ def round_lean_roof(g, name, W, s0, s1, depth, z_face, pitch_deg=16.0, overhang=
         X, Y = S.grid(R, cols)
         lift = 0.010 * n2(X * 0.9, Y * 0.9 + 4.1 * i, seed + 23)
         Z = S.z_ref(X, Y) + hh[:, None] + lift
-        if i == 0:                                           # the nose below the deck hangs from the deck's own edge
+        if i == 0 and ROLL is None:                          # the nose below the deck hangs from the deck's own edge
             Z = np.where(hh[:, None] < 0, S.z_ref(*S.grid(np.ones_like(R), cols)) + hh[:, None], Z)
         cov.add(world(X, Y, Z), _grid_faces(len(dm), nc), "M_thatch", wear=float(rng.uniform(0.2, 0.4)))
     finalize(cov, g.coll, smooth_deg=60.0, recalc=False)
+    n_roll = 0
+    if ROLL is not None:                                     # a1 round 4: the village eave roll round the oval lip
+        from .linear_roof import _roll_prof
+        from .thatch import d_roll
+        rprof, rvis = _roll_prof(sec)
+        colsr = S.columns(n_hip=48, step=0.05)
+        Xr, Yr = S.grid(np.ones((1, len(colsr[0]))), colsr)
+        path = world(Xr, Yr, S.z_ref(Xr, Yr))
+        k = len(path) // 2
+        Tm = path[k + 1] - path[k - 1]
+        if float(-Tm[1] * -S.n[0] + Tm[0] * -S.n[1]) < 0:   # sweep's profile x (inward) is LEFT of travel
+            path = path[::-1].copy()
+        roll = Acc(pre + "_eave_roll", 70)
+        d_roll(roll, path, rprof, rvis, seed + 11, np.random.default_rng(seed + 5), up=(0.0, 0.0, 1.0), var=0.010,
+               taper=(0.0, 0.0), tmin=(0.75, 0.75), ribs=False, step=0.06, z_wave=0.008, drop_hidden=True,
+               calm_taper=True, round_end=True)
+        finalize(roll, g.coll, smooth_deg=70.0)
+        n_roll = 1
     # ---- framing: ledger, common rafters, the plate, radial hip rafters ---------------------------------------------
     fr = Acc(pre + "_framing")
     rw, rh = RAFTER["w"], RAFTER["h"]
@@ -577,13 +641,16 @@ def round_lean_roof(g, name, W, s0, s1, depth, z_face, pitch_deg=16.0, overhang=
         Vb, Fb = sweep(world(xs, np.full(len(xs), y_pl), plate_c(xs)), EZ, prof_rect(plate[0], plate[1], 0.02))
         fr.add(Vb, Fb, "M_timber", wear=0.45)
     finalize(fr, g.coll, smooth_deg=30.0)
-    log(f"  {pre}: ROUNDED roof (note 19): {len(butts)} thatch courses round the contour, hips reach "
+    log(f"  {pre}: ROUNDED roof (note 19): {len(butts)} thatch courses round the contour (coat {T0:.2f} + "
+        f"{st:.2f} m, {course:.2f} m courses), " + ("the village eave roll round the lip (D section "
+                                                    f"{ROLL['H'] - ROLL['o_bot']:.2f} m deep, radius {ROLL['Ru']:.2f}), "
+                                                    if n_roll else "the eave nose wrapped, ") + "hips reach "
         f"{S.Ex:.2f} m along the wall ({end_over:.2f} m past the end walls), {S.Ey - S.ridge_in:.2f} m out; "
         f"ledger, {len(rafters)} common + radial hip rafters, plate at {depth:.2f} m out")
     # ---- trim at the wall face, then the junction and the guards (shared with mono_roof) ----------------------------
     T = wall_field(W, 0.5 * (S.x_lo + S.x_hi))
     done = []
-    for part, d in (("deck", 0.03), ("covering", 0.03), ("framing", -0.03)):
+    for part, d in (("deck", 0.03), ("covering", 0.03), ("eave_roll", 0.03), ("framing", -0.03)):
         ob = bpy.data.objects.get(f"{pre}_{part}")
         if ob is None or ob.type != "MESH" or d < 0:         # the framing (ledger let in) is not trimmed
             continue
@@ -592,7 +659,12 @@ def round_lean_roof(g, name, W, s0, s1, depth, z_face, pitch_deg=16.0, overhang=
         done.append(f"{part} {n0}->{len(ob.data.polygons)}")
     log(f"  {pre}: trimmed at the wall face: " + ", ".join(done))
     zb, th, C = _wall_junction(g, name, pre, W, T, S.x_lo + 0.015, S.x_hi - 0.015, fillet, apron, below, below_clear,
-                               below_lift_max, below_roll, below_roll_near, register, trim_ends=True)
+                               below_lift_max, below_roll, below_roll_near, register, trim_ends=True,
+                               reg_parts=("covering", "eave_roll") if n_roll else ("covering",))
+    if decals:                                               # a1 round 4: moss anchors on the rounded thatch
+        if not hasattr(g, "LINEAR_ROOFS"):
+            g.LINEAR_ROOFS = {}
+        g.LINEAR_ROOFS[name] = RoundLeanDecals(S, s0, s1, T0 + st)
 
     def plate_under(x):
         return float(plate_c(np.array([float(x)]))[0]) - plate[1] / 2
@@ -734,7 +806,8 @@ def lean_to(g, name, W, s0, s1, depth=1.8, z_face=2.25, pitch_deg=20.0, overhang
             base = roof.to_world(np.array([[x, yl, 0.0]]))[0]
             base[2] = 0.0
             pad_h = 0.14
-            obox(pd, (base - t * 0.19 + EZ * (pad_h / 2 - 0.08))[None], t, n, EZ, 0.38, 0.36, pad_h + 0.08,
+            # pad top at pad_h (0.14) so the post foot (pad_h - 0.01) sits 1 cm into it; round-4 audit: it floated 3 cm
+            obox(pd, (base - t * 0.19 + EZ * (pad_h / 2 - 0.04))[None], t, n, EZ, 0.38, 0.36, pad_h + 0.08,
                  0.03, "M_stone_dressed", nx=5, ny=5, nz=4)
             lean = rng.uniform(-0.012, 0.012)
             beam(fr, base + EZ * (pad_h - 0.01), base + EZ * (z_top + 0.01) + t * lean, post, post, 0.02, "M_timber",

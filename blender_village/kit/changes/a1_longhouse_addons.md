@@ -159,3 +159,47 @@ existing code calls; `lean_to.py` / `porch.py` are not used by any baseline buil
 - A lean-to under a 3.35 m eave without an eave lift (v5's eave walls: the crease must stay about 3.0 m) cannot
   reach the 2.10 m plate at a store's 1.8-2.0 m depth and a shingle pitch of 14 deg or more (about 1.9 m): the
   headroom guard would refuse it, so the second-host smoke shows the porch only.
+
+## Round 4 (a1 round 4, CLIENT DIRECTION 2026-10-18 09:40 "one more round": the Art Director's three round-3 must-fixes)
+
+### `components/lean_to.py` (this track's module; new optional keys, old defaults)
+
+- `round_lean_roof(eave_roll=None)`: a dict of `GableRoof.eave_roll` keywords (`{}` = the village defaults, the v3
+  host's) gives the rounded roof the **village eave roll**. Its D section is made by the village code itself: a
+  section-only `linear_roof.GableRoof` at the lean-to's pitch, coat and deck (`.eave_roll(**kw)`), turned into the
+  sweep profile by `linear_roof._roll_prof`, and swept with `thatch.d_roll` (the host's own call keywords) round the
+  whole oval lip, wall to wall, in ONE sweep (`<P>_<name>_eave_roll`, trimmed at the wall face like the covering).
+  The first course butt sits on it at the village's `u_c + 0.20` (as `linear_roof._layered_courses`); the eave
+  course no longer wraps its nose. `None` = round 3 (the wrapped nose). `linear_roof.py` is called, not edited.
+- `round_lean_roof(decals=False)`: `True` publishes the roof on `g.LINEAR_ROOFS[name]` as a new `RoundLeanDecals`
+  adapter (the few GableRoof members `composite_decals`' roof-moss pass reads), so the rounded thatch gets moss
+  anchors (a1: 104 -> 108 anchors).
+- `_wall_junction(reg_parts=("covering", "verge", "eave_roll"))`: the seal-probe registration list (default = the
+  round-3 list, so `mono_roof` / the porch are unchanged); the rounded roof registers only the parts it builds
+  (`covering`, `eave_roll`).
+- The rounded roof's log line now reports the coat, course spacing and roll section.
+
+### Recipe (`build_a1_longhouse_addons.py`)
+
+- Lean-to `round_kw`: `thatch=(0.22, 0.08)` (0.30 m coat at the butts, `mono_roof`'s thatch default), `course=0.30`
+  (the host's exposure), `eave_roll={}`, `decals=True`.
+- `seal_wall_head(min_lift=0)` now means "run the whole `x_lim`"; the back and front beddings run from 5 cm inside
+  the gable's outer face (`X_GABLE + 0.05`) to x -2.60 (round 3 stopped where the arch's lift fell under 0.03 m,
+  x -10.50: the `i13` sliver was just west of that).
+- New recipe-local `seal_gable_corner`: a mortar core slab 0.035-0.085 m inside the NW gable face, y 1.80..2.55,
+  z 2.30 to 1.2 cm into the deck (the last 2 px of `i15`, a ray through the host's rubble shell at the corner).
+- Porch `verge_board=dict(below=0.025, above=0.025)` (round 3: `above=0.0`): the slim board rises 2.5 cm over the
+  covering, so the shingle shells' hollow no longer shows along the verge.
+
+### Hash rule (round 4)
+
+Not triggered; not run. Only `lean_to.py` changed among the kit modules (new optional keys whose defaults keep
+round 3), and no baseline building uses `lean_to.py` / `porch.py`.
+
+### Known limitations (round 4)
+
+- The roll's D section is laid for the lean-to's 16 deg pitch along the whole lip; on the steeper rounded hips it is
+  the same section (no per-station pitch).
+- `seal_wall_head` / `seal_gable_corner` stay recipe-local (kit candidates: `path_stone_wall(head_seal=...)`).
+- `RoundLean` still has to converge with the cottage track's rounded-hip `GableRoof` (kit 1.20) later.
+- Thatch pitch 16 deg under the host eave (below the bible's thatch range) stays a recorded limit.

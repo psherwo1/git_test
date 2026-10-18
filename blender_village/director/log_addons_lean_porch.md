@@ -387,3 +387,327 @@ Client's words: "if the walls be square and angular we should counterbalance wit
 ## PRODUCER NOTE (2026-10-18, session 2, 01:45): round 3 built (lean-to rounded per note 19), grade NOT yet run
 
 The round-3 Art Director grade failed on a usage limit (it resets at 3 am New York time). It continues after the limit: the round-3 grade, then the audit if it passes.
+
+## a1_longhouse_addons round 3 — score 8.1/10
+
+Art Director, modularity rubric (note 12, pass 8.2), notes 15-19. The v3 host is accepted; this grades the lean-to, the porch and their junctions with the host, including host settings the demo changed for them. I checked the log before starting and again before writing. The only entries after the round-2 grade are the CLIENT DIRECTION of 00:22 (note 19 on the lean-to) and the PRODUCER NOTE of 01:45 (the grade was delayed by a usage limit).
+
+**What I looked at:**
+- the six views, `build_full.log`, `stats.json`, all 29 builder shots in `builder_extra/` and their twins, `dir_r02_cams/i06`, `smoke_v5/` (S01, S02 and its twin), `bx_smoke_v5_r03.log`;
+- the recipe, `smoke_v5/build_smoke_v5_porch.py`, `components/lean_to.py` (`RoundLean`, `round_lean_roof`, `_wall_junction`, `lean_to(roof_ends=)`) and the new `rubble_walls.orient_stones`;
+- 26 director shots in `round_03/director_extra/` (`dir_render_r03.py`, from `bx_render_r03.py` / my `dir_render_r02.py`):
+  - 13 interior-volume red checks: `i01`, `i04`-`i08` again, plus new `i10`-`i16` (both shed front corners, both hip end-wall heads from inside the shed, the host attic at the far W and far E of the back arch, and both gable corners);
+  - 9 rounded-hip shots: `h01`/`h02` end-on, `h03`/`h04` hip soffits, `h05` three-quarter, `h06` plan from above, `h07`/`h08` hip meets wall, `h09` lean-to eave next to the host roll;
+  - 3 porch shots: `p01`/`p02` profiles and `p03` the hood top at the W corner, plus the zoom `z05` (NW gable corner, outside);
+  - `dir_pick_r03.py` / `.log`, which traces the `i13` red pixels through every surface.
+- One note-16 line-up: `lineup/` (`dir_lineup_r03.py`, with new back views L04 and L05 and NE thumbnails), with v3, a1, v5 r08, v6 r04, v7 cottage and the roundhut.
+
+**Note 19 (the client's "an oval on the rectangle"): met in form.**
+- The plan from above (`h06`) is a rounded rectangle: one superellipse eave runs round both front corners and back to the wall. It oversails the quoined end walls by 0.45 m, with no verge and no hip crease.
+- The fall is gently convex and still arches along the wall with the plate (`h05`, `x10`).
+- The flaunching runs down both hip lines into lead aprons with 0 red / 0 yellow (`h07`, `h08`).
+- A flat plane with square ends is gone, so the 8.1 cap in the 00:22 direction no longer applies.
+
+**Sealing (verified):**
+- **Add-ons: sealed.**
+  - Shed: `i01` 0 red. The red in `i10`, `i11` and `i12` is the open front at the frame edge (checked on the clay frames); both end-wall heads are closed to the hip deck from inside (`i11`, `i12`).
+  - Under the hood: `i08` 0.
+  - Seal probe: 0 leaks on all three junctions.
+  - Hip and junction void twins: `h03` 0 / `h04` 69 yellow, `h07` and `h08` 0 / 0, builder `x01` 0, `z01` 4, `x15` 81.
+- **Round-2 fixes: confirmed.**
+  - `i06` reads 0 (round 2: 186); `i04` 0; `i14` (attic, far E) 0.
+  - Inverted stones: none visible on either end wall (`z01`, `x02`, `h01`, `h02`).
+  - `i05` / `i07` read 45 / 435: v3's own door, as before.
+- **New, small: host NW gable-corner sliver.** `i13` (host attic, far W of the back arch) reads 46 red px. `dir_pick_r03.log` traces them to the sky past the NW corner at world about (-6.20, 2.30, 2.76), where the back wall head, the gable and the lifted deck meet. There, `HEAD_SEAL` stops 0.30 m short of the gable (`x_lim` starts at `X_GABLE + 0.30`). A direct camera on the corner (`i15`) reads 3 px, and the SW corner (`i16`) reads 0. It is a light path into a closed volume, so it is listed as a must-fix, but it is cm-scale.
+- **Porch verge slot.** In profile (`p01`, `p02`), both porch verges show a continuous yellow sliver (2,749 / 3,785 px): the shingle shells' hollow, seen past the round-2 cut-to-line bargeboard (`verge_board above=0.0`). It is not see-through (0 red), but it reads as a dark slot along the verge at eye level (`p01`, beauty frame).
+
+| axis | score | notes |
+|---|---|---|
+| 1 Silhouette and massing | 8.3 | The lean-to now reads as an oval thatched outshot under the host's eyebrow (`h05`, `h06`, back.png, `x11`). Its plate and eave curve together. In the line-up, a1 still belongs with the barn's eyelid. Against: from the back (L04, `T1_NE`) the thin, shallow roof and the 3.2 m open front make it read nearly as a second door hood, and front and back now repeat one motif (an eyebrow over a small rounded hood). |
+| 2 Proportion and actor scale | 8.4 | Every art-bible-7 number is met and guarded: plate 2.202-2.333 m, brace foot 2.053 m, lip 2.347 m, 2.0 m deep. Porch: beam 2.32 m, lip 2.759 m over the door. |
+| 3 Construction logic | **8.1** | It is built and carried: a closed deck, radial hip rafters from the end-wall heads, the plate seated on the quoins, a ledger let in. But the thatch is a thin lid: `thatch=(0.08, 0.05)` is 0.13 m against the host's 0.30 m (with its fat eave roll beside it in `h09` and `x13`) and the bible's 0.4 m, and it has a wrapped nose, not a rounded eave roll (`h01`, `h02`, `x10`). At 16° it is far under the bible's 48-52° for thatch. I accepted 16° on shingle in rounds 1 and 2, and the host eave caps it, so the pitch is recorded as a limit, not a must-fix. The porch brace feet still stop on bare wall. |
+| 4 Seams and junctions | 8.3 | Zero light through any add-on junction, both round-2 defects fixed, and the hip flaunching is clean. Two small items remain: the `i13` gable-corner sliver (46 px, introduced by the demo's back arch) and the porch verge slot (`p01`, `p02`). |
+| 5 Distinctness, reuse, village theme | **8.1** | **Theme: mostly yes.** It uses the village's thatch, rubble with quoins, lime flaunching, lead aprons, hewn timber and curved knees, on 10 palette slots, and it reads as the same hands in the line-up (L02, L05). Against note 16: the round roof re-implements the thatch courses rather than reusing the village's (it is thinner and has no eave roll), and it gets no moss decal anchors (104 against 111). **Reuse:** the porch is now genuinely proved on a second accepted host (v5, unchanged module, guards logged, 0 leaks). The lean-to is still proved on one host only: it needs a hand-tuned 1.5 m host eave arch, and the v5 smoke honestly refused it. No gable-wall placement is shown. `RoundLean` is a second rounded-roof implementation beside the cottage track's coming module; they must converge later. |
+| 6 Technical compliance | 8.6 | 712,560 triangles (cap 1,000,000); hidden 13.5 % (≤ 15); 10 slots; Mask on every mesh; 104 validated anchors; seeded; 9.0 min build. The round roof has no decal anchors. The seal registration lists `A1L_lean_to_verge` / `_eave_roll`, which the round roof does not build (harmless; tidy it). |
+
+**Verdict: NOT PASSED (8.1; the lowest axes are 3 and 5 at 8.1; not rounded up, because both sit on the client's theme priority).** Round 3 did the client's 00:22 direction well and cleared every round-2 must-fix. What holds it at 8.1 is all parameter-sized. This was the last allowed round, so it is the producer's call: either one short fix pass (items 1-3 below, FAST plus full, about 30 min), or acceptance with them recorded as known limits.
+
+**Strengths:**
+- Note 19 is delivered as a reusable, guarded module option (`lean_to(roof_ends="round")`), and it reads as "an oval on the rectangle" in plan and at eye level.
+- The rounded roof shares `mono_roof`'s junction code (`_wall_junction`), so it got the flaunching, aprons, below / roll guards and seal probe for free, with 0 leaks.
+- Real root-cause fixes: the wall-head bedding for the warped deck (`i06` 186 -> 0), and `orient_stones`, which also caught 5 a1-only host flips. The v3 comparison was honest.
+- The new lateral roll check caught a porch clash on its first run, which inspection had missed.
+- Reuse was shown for the porch on v5 with no host tuning, and the lean-to's refusal there was logged honestly.
+
+**Must-fix (if the producer allows a fix pass; parameters and small options only):**
+1. **Village thatch on the rounded roof (note 16, art bible 2).**
+   - Thicken the coat to the host's: about 0.25-0.30 m at the eave, e.g. `round_kw.thatch=(0.18-0.20, 0.08)`.
+   - Give the eave course a rounded eave roll of the host roll's section (reuse its numbers / profile), not a wrapped nose.
+   - The below / roll / headroom guards must still pass. The face margin is 0.281 m against a 0.08 m rule, and a thicker coat raises the top, not the plate.
+   - Show it in `h01`, `h02`, `h09` and `x10`.
+2. **Close the NW gable-corner sliver.**
+   - Run `HEAD_SEAL` (and `HEAD_SEAL_S`) to the gable's outer face: `x_lim` from `X_GABLE`, with the corner closed.
+   - `dir_render_r03.py i13` must read ≤ 5 red px, and `i15` / `i16` 0.
+3. **Close the porch verge slot.**
+   - Bring the porch's verge board up to the covering top (`verge_board above` about 0.02-0.03 m), or add a cloak course, so the shingle hollow is hidden.
+   - The `p01` / `p02` void twins must show no continuous verge sliver (yellow ≤ about 300 px each), and the porch must not grow back its round-1 "ears".
+
+**Should-fix / record as known limits (do not build now):**
+- Moss decal anchors on the round roof (`composite_decals` reads only `LINEAR_ROOFS`): register the `RoundLean` or emit anchors in `round_lean_roof`.
+- The pitch is 16° under the host eave, below the bible's thatch range. It is only cured by a higher host wall or arch; record it as a known limit of thatch lean-tos.
+- The lean-to is shown on one host only. Next time it is used, place it against a gable wall (no eave lift needed) on a second design.
+- Converge `RoundLean` with the cottage track's rounded-roof module when that lands, so the kit has one rounded-roof implementation.
+- The porch brace-foot stop; tidy the round roof's seal-registration object list.
+
+## CLIENT DIRECTION (2026-10-18, session 2, 09:40): one more round (round 4) for the three parameter-sized fixes
+
+The client chose "One more round" after the round-3 grade (8.1). Do only the three round-3 must-fixes: village-thickness thatch on the lean-to, the NW gable-corner sliver, and the porch verge slot. Then grade and audit.
+
+## a1_longhouse_addons round 4 — builder entry
+
+**Scope:** the three round-3 must-fixes only (CLIENT DIRECTION 09:40), plus the two cheap tidies the task allowed: the seal-registration names and moss decal anchors on the rounded roof. I checked the log before starting and again before writing. The 09:40 direction is the only entry newer than the round-3 grade.
+
+**Files edited:**
+- `kit/village_kit/components/lean_to.py`: new optional keys only, with round-3 defaults (`round_lean_roof(eave_roll=None, decals=False)`, `_wall_junction(reg_parts=...)`), and a new `RoundLeanDecals` adapter.
+- The demo recipe.
+- `kit/changes/a1_longhouse_addons.md`: a "Round 4" section.
+
+Not edited: `linear_roof.py` and `roof_junction.py` (called, not edited), `porch.py`, `guards.py`, anything under `buildings/variants/`, and any accepted file.
+
+**Must-fixes:**
+
+| # | fix | result (full build, `round_04/build_full.log`; shots `round_04/builder_extra/bx_render_r04.log`) |
+|---|---|---|
+| 1 | **Village thatch on the rounded roof (note 16).** The coat is now `thatch=(0.22, 0.08)`: 0.30 m at the butts, which is `mono_roof`'s thatch default (round 3: 0.13 m). Courses are `course=0.30`, the host's exposure (round 3: 0.26). It has the **village eave roll**, from the village code: `round_kw.eave_roll={}` builds a section-only `linear_roof.GableRoof` at the lean-to's pitch and coat, calls `.eave_roll()` with the v3 host's defaults, turns that into a profile with `linear_roof._roll_prof`, and sweeps it with `thatch.d_roll` (the host's own keywords) round the whole oval lip, wall to wall, in one sweep. The first butt sits on the roll at the village's `u_c + 0.20`, and the wrapped nose is gone. | The log: 7 courses, roll D section 0.43 m deep, radius 0.16. **Guards still pass:** under the host eave, face 0.118 m (rule 0.08; was 0.281) and lip 0.266 m; roll belly vertical 0.265 m and lateral 0.240 m (rule 0.10); plate 2.202 / 2.333 m; brace foot 2.053 m; lip gate 2.347 m PASS; seal probe lean_to / wall 78,542 rays, 0 leaks. **Shots:** `h01`, `h02`, `h09` and `x10` show the fat rolled eave beside the host's roll. `h01` void has 1,637 yellow px, all on the cone shingles and the v3 door jamb, none on the lean-to. `h02` 4, `h03` 0, `h04` 77 (round 3: 69), `h07` / `h08` 0 / 0. |
+| 2 | **NW gable-corner sliver (`i13`).** `seal_wall_head(min_lift=0)` now runs the whole `x_lim`, so both beddings run from `X_GABLE + 0.05` (5 cm inside the gable's outer face) to x -2.60. Round 3 stopped at x -10.50, where the arch's lift fell under 0.03 m. The sliver was just west of that point (local x -10.8 to -10.95), not at the gable itself. On the FAST build `i15` still read 2 px. My trace (`bx_pick_r04.py`, `bx_pick_r04_fast.log`) found a ray through the host's rubble shell at the gable corner (local x -13.0, y 2.3, z 2.45-2.75). A recipe-local `seal_gable_corner` closes it: a mortar core slab 0.035-0.085 m inside the gable face, y 1.80..2.55, z 2.30 up to the deck. | **`i13` 0 red** (round 3: 46), **`i15` 0** (3), **`i16` 0**. `i06` 0, `i04` 0, `i14` 0. `i05` / `i07` read 51 / 429, which is v3's own door, as in round 3. |
+| 3 | **Porch verge slot (`p01`, `p02`).** `verge_board=dict(below=0.025, above=0.025)` (round 3: `above=0.0`). The slim board rises 2.5 cm over the covering. | Void twins: **`p01` 230 yellow, `p02` 490** (round 3: 2,749 / 3,785). The continuous verge sliver is gone. What remains are short, scattered shingle-butt edges near the bell-cast lip and the curled board foot, not a slot. `p02` is a little over the "about 300" target, so I record it here; I judged it not blocking. In the beauty frame (`p01`) the board's top just covers the shingles, with no round-1 "ears". |
+
+**Tidies:**
+- Seal registration: the rounded roof now registers only what it builds (`A1L_lean_to_covering`, `A1L_lean_to_eave_roll`). The `mono_roof` / porch list is unchanged.
+- Moss anchors on the round roof: `round_lean_roof(decals=True)` publishes a `RoundLeanDecals` adapter on `g.LINEAR_ROOFS`. There are 108 validated anchors (round 3: 104).
+
+**Interior-volume rays:** all 13 interior red checks were re-run on the full blend.
+- `i01`, `i04`, `i06`, `i08`, `i13`, `i14`, `i15` and `i16` read **0**.
+- `i10`, `i11` and `i12` show the open shed front at the frame edge, as in round 3.
+- `i05` / `i07` are v3's door.
+- Junction twins: `x01` 3, `x02` 0, `x13` 4, `x15` 86 (round 3: 81), `z01` 5.
+
+**Stats** (full build; `round_04/stats.json`):
+- 717,226 triangles (cap 1,000,000); est. hidden **14.1 %** (≤ 15; round 3: 13.5); 10 material slots; Mask on every mesh.
+- 58 objects; bbox 17.77 x 9.20 x 11.39 m; 108 anchors; recentre (+4.606, -0.328); build 8.2 min.
+
+**Renders:**
+- `round_04/preview/`: hero / side / back of the first FAST build.
+- `round_04/`: the six views.
+- `round_04/builder_extra/`: 29 shots. `bx_render_r04.py` is `dir_render_r03.py` with SY -0.075 for the new recentre, plus builder shots `x01`, `x02`, `x10`, `x13`, `x15` and `z01`. Counts are in `bx_render_r04.log`; `fast/` holds the FAST-build checks.
+
+**Known gaps:**
+- The roll section is laid for 16° along the whole lip, so on the steeper hips it is the same section.
+- The 16° thatch pitch is still a recorded limit.
+- `seal_wall_head` and `seal_gable_corner` stay recipe-local (kit candidates).
+- `RoundLean` has to converge with the cottage track's rounded-hip `GableRoof` (kit 1.20) later.
+- `p02` has 490 scattered yellow px (above).
+- The face margin under the host eave fell to 0.118 m (rule 0.08) with the thicker coat.
+
+**Hash rule:** not triggered, not run. The only change to a kit module is new optional keys in `lean_to.py` with round-3 defaults, and no baseline building uses `lean_to.py` or `porch.py`.
+
+## a1_longhouse_addons round 4 — score 8.2/10
+
+Art Director, modularity rubric (note 12, pass 8.2), notes 15-19. The v3 host is accepted; this grades the lean-to, the porch and their junctions with the host, including host settings the demo changed for them. I checked the log before starting and again before writing. The only entries after the round-3 grade are the CLIENT DIRECTION of 09:40 (one more round, the three round-3 must-fixes only) and the round-4 builder entry.
+
+**What I looked at:**
+- the six views, `preview/`, `build_full.log`, `stats.json`, all 29 builder shots in `builder_extra/` and their twins, `bx_render_r04.log`, `bx_pick_r04_fast.log`;
+- the recipe (`seal_wall_head(min_lift=0)`, the new `seal_gable_corner`, `LEAN.round_kw`, `PORCH.verge_board`) and `components/lean_to.py` (`round_lean_roof(eave_roll=, decals=)`, `RoundLeanDecals`, `_wall_junction(reg_parts=)`);
+- 41 director shots in `round_04/director_extra/` (`dir_render_r04.py` = `bx_render_r04.py`, which is my `dir_render_r03.py` with the r04 recentre, plus 12 new shots). Every builder count re-ran identically on my run. New:
+  - the eave roll: `r01` / `r02` (roll end meets the host wall, W / E), `r03` (roll soffit at the W front corner), `r04` (front, eye level), `r05` (W roll end from below);
+  - interior volumes: `i17` (host attic, NW corner low), `i18` (host attic, along the N wall head to the W), `i19` (shed, up to the W roll's wall end);
+  - `z06` / `z07` (NW corner and back wall head from outside), `p04` (porch hood top, E corner), `p05` (porch at eye level with the figure).
+- One note-16 line-up: `director_extra/lineup/` (`dir_lineup_r04.py`, the r03 rig unchanged), with v3, a1, v5 r08, v6 r04, the v7 cottage (its current rounded-hip build) and the roundhut, front and back plus SW / SE / NE thumbnails.
+
+**The three round-3 must-fixes: all met.**
+1. **Village thatch:** the coat is 0.30 m with 0.30 m courses, and the eave is the village D roll (0.43 m section, built by `GableRoof.eave_roll` / `_roll_prof` / `thatch.d_roll`, the same code as the host's), swept once round the oval lip. In `h01`, `h02`, `h09`, `x10` and `r04` it now reads as the same thatch as the host's roll beside it, not a lid. Guards still pass (under the host eave 0.118 m at the face against 0.08; roll 0.265 m vertical / 0.240 m lateral against 0.10).
+2. **NW gable-corner sliver:** `i13` 0 (round 3: 46), `i15` 0, `i16` 0, and my new `i17` (corner, low) and `i18` (the whole N wall head looking W) are 0.
+3. **Porch verge slot:** `p01` 230 / `p02` 490 yellow (round 3: 2,749 / 3,785). On the void frames, what is left is a few short shingle-butt flecks, not a slot. The 2.5 cm upstand reads as a cut-to-line board in `p01`, with no round-1 "ears". `p02` is over my "about 300" figure, but it is the kit-wide shingle-butt hollow, not this junction; I accept it.
+
+**Sealing (verified):**
+- No daylight into any closed volume: `i01`, `i04`, `i06`, `i08`, `i13`-`i19` all 0 red. `i10`-`i12` are the open shed front at the frame edge (clay frames checked). `i05` / `i07` (51 / 429) are v3's own door, as in every round.
+- The new roll is closed where it dies into the wall: `r01`, `r02`, `r05` and `i19` read 0 red / 0 yellow. The roll butts the wall inside the lead apron, and the hip flaunching is unchanged (`h07` / `h08` 0 / 0).
+- Seal probe: 0 leaks on all three junctions (lean_to / wall now 78,542 rays, the roll included).
+- The remaining yellow is the kit-wide shingle-butt hollow on the porch hood (`p03` 2,172, `p04` 3,048, in close-up from above) and on the host cone (`h01`). It is not an add-on seam.
+
+| axis | score | notes |
+|---|---|---|
+| 1 Silhouette and massing | 8.4 | The lean-to now reads at thumbnail size as a thatched oval outshot with a fat rolled lip (L05, `T1_NE`, back.png). It belongs with the host's roll and the barn's eyelid. It no longer reads as a second door hood. Still against: front and back repeat one motif (an eyebrow over a small rounded hood). |
+| 2 Proportion and actor scale | 8.4 | Every art-bible-7 number is unchanged and guarded: plate 2.202-2.333 m, brace foot 2.053 m, lip gate 2.347 m, 2.0 m deep; porch beam 2.32 m, 2.759 m over the door. The host eave now sits close over the roll's wall ends (0.118 m, `r01`, `r02`). That passes the rule, but it is the tightest spot. |
+| 3 Construction logic | 8.3 | The coat and the roll now carry the thatch weight visually, and the first course sits on the roll as on the village roofs. The deck, the radial hip rafters, the plate on the quoins and the let-in ledger are unchanged. Recorded limits: 16° is below the bible's thatch range; the roll's section is laid for 16° and is used unchanged on the steeper hips (`h01`, `h02` read fine at mid-shot); the porch brace feet still stop on bare wall. |
+| 4 Seams and junctions | 8.5 | Zero light through any add-on junction or the host attic. The round-3 sliver and slot are closed. The new roll is sealed at both wall ends. The only items left are kit-wide shingle-butt flecks. |
+| 5 Distinctness, reuse, village theme | **8.2** | **Theme: yes** (notes 16-19). The lean-to now uses the village's own thatch coat, courses and eave roll code, and it gets the village moss anchors (108). Its materials are rubble with quoins, lime flaunching, lead aprons, hewn timber and curved knees, on 10 palette slots. In the line-up (L02, L05) it reads as the same hands as v3, v5, v6, v7 and the roundhut. It is "an oval on the rectangle" in plan (`h06`), so note 19 is met; note 18 does not apply to an add-on. **Reuse: the porch is genuine** (proved on v5 in round 3, unchanged since). **The lean-to is reusable in its API, but not yet proven:** it is shown on one host, and needs a hand-tuned 1.5 m host arch. `RoundLean` is now a second rounded-hip implementation beside the cottage track's rounded-hip `GableRoof` (kit 1.20). `seal_wall_head` / `seal_gable_corner` are recipe-local. |
+| 6 Technical compliance | 8.6 | 717,226 triangles (cap 1,000,000); hidden 14.1 % (≤ 15, but up from 13.5 and close to the cap); 10 slots; Mask on every mesh; 108 validated anchors; seeded; 8.2 min build. The seal registration now lists only parts that are built. |
+
+**Verdict: PASSED (8.2; the lowest axis is 5 at 8.2; not rounded up, for the same reason as round 3: it sits on the client's theme / reuse priority).** Round 4 did exactly the three fixes the client allowed. Each one is a module option with a round-3 default, built from village code (not new code). Each is verified from inside every closed volume and against every guard. Both add-ons are on theme and sealed. What stops a higher grade is kit convergence, not this demo. Those items are recorded below as carry-forward work for the next design that uses them, not as a further round here.
+
+**Strengths:**
+- Must-fix 1 was done the note-16 way: the round roof calls the village's `eave_roll`, `_roll_prof` and `d_roll`, rather than imitating them. So the lean-to's thatch is the host's thatch.
+- Honest root-cause tracing on the sliver. The builder found it at x -10.8 (not at the gable) and then found a second path through the corner rubble with a ray pick.
+- No regressions: every guard and every round-1-3 camera reads the same or better. The tidies (registration names, moss anchors) were also done.
+- The roll's wall ends, the newest junction, are closed and flashed without any special-case code (`_wall_junction` unchanged).
+
+**Must-fix:** none blocking for this demo.
+
+**Carry forward (kit items, for the next design that uses these add-ons; do not reopen a1):**
+1. **One rounded-hip implementation.** Converge `RoundLean` / `round_lean_roof` with the cottage track's rounded-hip `GableRoof` (kit 1.20): a mono-pitch, wall-abutting mode of the one roof, or `RoundLean` rebuilt on its surface. Keep the lean-to's guards and `_wall_junction`.
+2. **Prove the lean-to on a second host,** against a gable wall or a high-eaved host (no host `eave_lift` hand-tuning), with its guard lines logged. This is the reuse proof the porch already has.
+3. **Promote the seals to the kit:** `seal_wall_head` as `path_stone_wall(head_seal=...)` (or a junction helper), and `seal_gable_corner` as a corner core in the same family. Then any lifted eave on any host gets them.
+4. **Lay the roll section for the local pitch** round the hips (`_roll_prof` per station, or sampled at two pitches).
+5. **Watch hidden %** (14.1 %). The next design that adds a lean-to to a host near 14 % must cull the add-ons' hidden faces (the round-1 known gap).
+6. Still open from earlier rounds: the porch brace-foot stop; a round-wall `W`; `flashing="lead"` for timber hosts; the neutral entrance-list name.
+
+**Housekeeping (director):** my render scripts used absolute paths. Nothing was written outside the repo. My first `z06` camera framed the host roll, not the corner (a coordinate slip); `z05`, `i15` and `i17` cover the corner instead.
+
+## a1_longhouse_addons round 4 — sign-off audit: REJECTED
+
+Independent auditor, read-only bpy, one Blender process at a time. Scripts and outputs: `renders/addon_demos/a1_longhouse_addons/round_04/audit/`. I read the log before starting and again before writing. There is no CLIENT DIRECTION or PRODUCER NOTE newer than 09:40; the newest entry is the round-4 grade (8.2, PASSED).
+
+**Verdict: REJECTED, on one blocking item. It is a one-line kit fix.** Every other hard requirement passes on independent evidence, so the re-audit only needs the post-foot check and `stats.json`.
+
+### Blocking item: the lean-to's front post floats 3 cm above its dressed pad
+
+- **Evidence:** `aud_contacts_r04.py` / `_out.txt` (geometry) and `aud_postfoot_r04.py` / `_out.txt` (visibility).
+- `A1L_lean_to_posts`: the foot is at z **0.130** (all 16 foot vertices). `A1L_lean_to_pads`: the top is flat at z **0.100**.
+  - A ray down the post axis meets the post foot at 0.130, then the pad at 0.100, with nothing between. The gap is 3.0-3.9 cm.
+  - Horizontal sight-lines aimed at the post axis pass clean right round at z 0.11 and 0.12 (36 of 36 rays each), and are blocked at 0.13 and above.
+  - The island test agrees. Every other add-on and seal island is within 2 cm of its neighbours; this pad / post pair is 3.0 cm apart. The post hangs from the plate.
+- **Visible from ground and 6 m cameras:** I used 144 cameras, 2.5-10 m out round the shed front, at heights 0.4 / 1.0 / 1.7 / 6.0 m.
+  - From 142 of them, the first hit on the line of sight is the pad's top face **under the post's footprint**, so the view passes into the gap. This includes every 1.7 m camera, and the 6 m cameras at 2.5-4 m out.
+  - It sits at the most-viewed spot: the open front of the shed, in the line of `x10` / `r04` / `p`-style actor shots.
+  - In clay Workbench close-ups (`audit/postfoot/*.png`) the hover hardly reads, because the pad top under the post is the same tone. Under real lighting it shows as a post with no bearing or contact shadow, and from any low camera it is a clean see-through slot.
+  - This is the brief's "floating piece > 2 cm visible from ground or 6 m cameras at a module junction" (post on pad), and rubric axis 3 ("nothing floats").
+- **Cause (kit, since round 1):** `kit/village_kit/components/lean_to.py` lines 808-812.
+  - The pad box is centred at `pad_h/2 - 0.08` with height `pad_h + 0.08`, so its top is `pad_h - 0.04` = 0.10.
+  - The post starts at `pad_h - 0.01` = 0.13.
+  - It is a module default, so every future lean-to on posts would inherit it.
+- **Fix:** one of these, in `lean_to.py` (no baseline building uses this module, so the hash rule is not triggered):
+  - centre the pad at `pad_h/2 - 0.04`, which puts its top at 0.14 and the post 1 cm into it;
+  - or start the post at `pad_h - 0.05`.
+- **Then:** a FAST build to check, then the full build. Then re-run `aud_contacts_r04.py` (post foot gap <= 0) and `aud_probe_r04.py` (the pad island <= 2 cm, stats unchanged).
+- The plate and its guards do not move: plate 2.202-2.333 m, brace foot 2.053 m, lip 2.347 m.
+
+### Hard requirements that pass (verified)
+
+- **Triangles:** **717,226**, evaluated. Cap 1,000,000: PASS (`aud_probe_r04_out.txt`).
+- **Palette:** **10** slots, all from the palette, no empty slots: M_iron, M_lead, M_mortar, M_roof_shake, M_roof_shingle, M_stone, M_stone_dressed, M_thatch, M_timber, M_timber_weathered.
+- **Mask and transforms:** `Mask` (CORNER, active) is on all 58 meshes; every transform is identity.
+- **Hidden:** my independent `tools/hidden_tris.py` run gives **14.4 %**, about ±1 % (`aud_hidden_out.txt`). `stats.json` gives 14.1 %. Both are within 15 %, with a thin margin.
+  - The estimator has no viewpoints under the shed roof or the hood. So `A1L_lean_to_framing` (83 %) and `_deck` (100 %) are over-counted, and the true figure is lower.
+  - The two seal beddings read 100 % hidden: they cannot be seen from outside.
+- **DECAL_ANCHORS:** 108 empties, all with the 6 properties. The collection and the JSON hold the same name set.
+  - Every anchor has a surface within 20 cm behind it, and none is buried.
+  - The rounded roof now carries 4 moss anchors on `A1L_lean_to_covering` (M_thatch). Types and heights are plausible.
+- **Door clearance:** rays straight up, lowest hit (`aud_probe_r04_out.txt`).
+  - **Host front door** (x -2.394, ±0.6 m, 0.05-1.2 m out from the face):
+    - the lowest add-on piece over the door path is the porch beam at **2.423 m**, under its arch;
+    - the porch framing over the door is at 2.684-2.888 m;
+    - the door head in the reveal is 2.22 m (v3's frame).
+    - Nothing stands in the 1.0 x 2.25 m approach path except the threshold / jamb stones at its edge. PASS.
+  - **Lean-to open front:**
+    - the lowest lip outside the front is the village eave roll at **2.527 m**, the posts aside. PASS for the 2.30 m rule.
+    - The plate over the two bays (1.38 m and 1.46 m clear at z 1.2) is at 2.25-2.33 m, which meets the plate guard (2.10 m).
+- **See-through / light leaks (interior-volume rays):** `aud_seethru_r04.py` is the barn's round-3 method, vectorised.
+  - **Rays:** 10.30 M camera rays, in 64 ring views (1.7 m at 6 / 12 m out; 6 m at 8 / 14 m out; 16 azimuths each), 27 of the director's r04 exterior camera positions, and 24 auditor views:
+    - into the shed and up at the crease and both hips;
+    - both end walls, at eye level and 6 m;
+    - the back wall head under the arch;
+    - the NW / SW gable corners;
+    - under the hood (up, W, E);
+    - the hood at eye level and 6 m;
+    - the front wall head.
+  - **Zones tested:**
+    - **HOST:** the body plus drum interior. Any ray that passes through it is a leak.
+    - **SHED:** the lean-to store. A leak if the ray's first hit is sky, ground outside, or the host roof.
+    - **HOOD:** the strip under the porch hood. Steep rays only; a leak if the first hit is sky or the host roof.
+  - **Results:**
+    - **SHED 0, HOOD 0.**
+    - **HOST: no leak at any add-on junction, seal or lifted wall head.** That covers the NW corner (`z05`, `z06`, `aud_NW_corner_*`), the back head (`z07`, `aud_back_head_*`), the roll ends (`r01`, `r02`, `r05`), the hips (`h0x`) and the crease.
+    - The 92 HOST rays that remain are v3's own:
+      - **door-leaf slits:** apertures 0.1-1.8 cm, at x -2.0..-2.8, z 0.4-2.2;
+      - **cone-roof slits** onto the cone blocker: z about 7.2, from the 6 m rings.
+  - **Attribution:** the same probe on the **accepted v3 blend**, aligned on the finial, gives the same clusters with matching counts. For example `aud_hood_under_W` / `_E` read 29 / 26 on v3 against 26 / 27 on a1, and the ring cone shots are identical (`aud_seethru_v3ref_out.txt`).
+  - **Windows:** 16,694 rays end on v3's window blockers. These are the designed openings (`WIN` column), not leaks.
+- **Floating pieces:** 6,719 islands; none is isolated (2 cm-inflated test). Every add-on and seal island is within 2 cm of another island, **except the post / pad above**.
+- **Clipping and reach:** nothing from an add-on reaches 0.25 m into the host interior.
+- **Hash rule (this track):** not triggered.
+  - Among the kit modules, this track changed only `lean_to.py` (09:58): new keys whose defaults keep round 3 (`eave_roll=None`, `decals=False`, `reg_parts` = the round-3 list). That module is used by no baseline building.
+  - `rubble_walls.py` was last changed at 01:00 (round 3, new functions only).
+- **Theme (notes 16, 17, 19):** confirmed in geometry.
+  - Village materials only.
+  - The rounded roof is real: one superellipse covering, plus `A1L_lean_to_eave_roll`, one D-roll swept wall to wall.
+  - The porch is a bell-cast hood on curved brackets.
+  - The Art Director's line-up is accepted. I did not block on surface detail.
+
+### Non-blocking notes (record; no round needed)
+
+1. **Pieces through the host's facing-skin wall.**
+   - v3's walls are about 4 cm facing skins over a hollow interior. Some add-on pieces pass through them into the hollow:
+     - the porch bracket arms by **0.20 m**;
+     - the porch framing by 0.09 m;
+     - the lean-to framing (ledger) by 0.047 m;
+     - the seal beddings by up to 0.085 m.
+   - They are visible only from inside the closed hollow. The one exterior path is a few rays through v3's door slit (`aud_hood_under_E`: 2 rays end on `A1L_lean_to_framing` at y 2.24).
+   - A kit item for when interiors matter: stop tenons and seals within the host's wall depth.
+2. **Shared module edited outside this track.** `composite.py` was modified at **09:54**, and `CHANGELOG.md` at 09:55, just after the v7 FAST build. Neither track's round-4 entry claims the edit, and I cannot diff it here (no git on PATH).
+   - The a1 full build (10:04-10:13) used that version.
+   - `linear_roof.py` / `roof_addons.py` changed again at 10:09, during the a1 build, which had already imported them.
+   - Producer: check the hash table for the `composite.py` edit with whichever track made it (most likely v7).
+3. **Hidden margin.** 14.1 % (builder) and 14.4 % (auditor) against 15 %. Carry forward the Art Director's item 5.
+
+**Housekeeping (auditor):** absolute paths only. Nothing was written outside `round_04/audit/`. No repo file was modified.
+
+## a1_longhouse_addons round 4 — sign-off re-audit: UPHELD
+
+Independent auditor, re-audit of the rebuilt blend (`a1_longhouse_addons.blend` 10:57:40, `build_r04b.log`, 717,226 tris). Read-only bpy (`.bpyenv` python `-I`), one process at a time. I read the log before starting and again before writing; there is no entry newer than the round-4 sign-off audit (REJECTED). Outputs: `renders/addon_demos/a1_longhouse_addons/round_04/audit/reaudit/` (`*_r04b_out.txt`, plus one supplementary check, `aud_postfoot_embed_r04b.py`).
+
+**Verdict: UPHELD.** The one blocking item is fixed. The post now bears 1 cm into its pad, nothing is visible through the joint, and every other audited number is unchanged from round 4.
+
+### The blocking item: closed
+- **The fix in the kit:** `kit/village_kit/components/lean_to.py` line 810 now centres the pad at `pad_h/2 - 0.04`. That is the audit's prescribed fix, and the post line (`pad_h - 0.01`) is untouched.
+- **Geometry** (`aud_contacts_r04b_out.txt`, `aud_postfoot_embed_r04b_out.txt`):
+  - the pad top is z **0.140**, flat over the whole post footprint (81 of 81 points);
+  - the post foot is at z **0.1298** (16 verts), so the gap is **-0.0102 m**: 1 cm embedded, where it was +3.0-3.9 cm;
+  - a ray down the post axis meets the pad at 0.14 first; the post's foot lies inside it.
+- **Sight-lines:**
+  - the ring aimed at the post axis is blocked 36 of 36 at every height from 0.13 up. At z 0.11 and 0.12 the round-4 run had 36 of 36 rays passing clean; now 1 of 36 does;
+  - that one ray, and the 1 of 36 at z 0.06-0.10 (also there in round 4), is the az-180° ray. It runs along the pad's own triangle seam (nearest geometry 0.00002 m from the pad face): a numerical edge-graze through the solid stone, not a gap;
+  - a dense ring (2.5 mm steps, 72 azimuths) shows **0 clean rays from z 0.130 up**.
+- **From the cameras:** I used the same 144 cameras (2.5-10 m out, z 0.4 / 1.0 / 1.7 / 6.0).
+  - The pad top under the post is seen from **0** of them (round 4: 142). The post bottom is seen from 0.
+  - I also aimed 25,920 rays at the post's skin between z 0.125 and the pad top. **0** first hits land on the post below the pad top; the pad (or the roll) is hit first.
+  - The clay close-up `reaudit/postfoot/post_foot_low_2m.png` shows the post seated in the dressed pad.
+- **Islands:** `A1L_lean_to_pads` is now **0** islands > 2 cm from a neighbour (worst 0.010 m; round 4: 0.030). `A1L_lean_to_posts` worst is 0.012 m.
+
+### No regression (re-run of all four round-4 scripts on the rebuilt blend)
+- **`aud_probe_r04.py`:** a line diff against round 4 differs **only** in the pad's bbox top (0.10 to 0.14) and the pad / post FLOAT lines above. Everything else is byte-identical:
+  - 717,226 triangles; 10 palette slots, none empty; Mask (CORNER, active) on all 58 meshes; identity transforms;
+  - 108 anchors, the JSON and collection name sets equal, 0 with no surface, 0 buried;
+  - door clearances: porch beam 2.423 m, door head 2.22 m, lean-to roll lip 2.527 m, bays 1.38 / 1.46 m;
+  - nothing reaches into the room;
+  - 6,719 islands, 0 isolated.
+- **`aud_seethru_r04.py all`:** all 112 shot lines are identical to round 4.
+  - TOTALS HOST 92 / SHED 0 / HOOD 0 on 10,296,000 rays; void 6,595; window blocker 16,694.
+  - The 92 HOST rays are the same v3 door-leaf and cone slits that round 4 attributed to the accepted v3 blend.
+  - That leaves 0 interior-volume leaks at any add-on junction.
+- **`aud_contacts_r04.py`:** all REACH and INNER lines are identical to round 4. The skin-depth note stays non-blocking.
+- **Hidden:** `tools/hidden_tris.py` (seeded) reads **14.4 %**, the same as round 4 (≤ 15).
+  - `round_04/stats.json` (10:14) was **not** regenerated for the rebuild. Its 14.1 % and triangle count still match, because the triangle count is unchanged at 717,226.
+
+### Hash rule: not triggered
+- `lean_to.py` (10:49:48) is imported only by the a1 demo recipe, its scratch probes and `guards.py`. No baseline building uses it.
+- `porch.py` is unchanged (10/17 23:01).
+- **Record, not blocking:** `linear_roof.py` (10:52:34) and `roof_addons.py` (10:51:04) were edited by another track during this rebuild's window (v7: `build_v7_cottage.py` 10:56, its FAST blend 10:58).
+  - The a1 geometry outside the pad is identical to the audited round-4 build (the probe diff above), so the a1 output is unaffected.
+  - Those edits belong to the v7 track's hash table.
+
+**Housekeeping (auditor):** absolute paths only. Only `round_04/audit/reaudit/` was written, plus this entry. No recipe, kit or git operation was used.
+
+## PRODUCER NOTE (2026-10-18, session 2, 11:15): wall add-ons ACCEPTED
+
+Director 8.2 (round 4); the independent re-audit upheld it after the producer applied the audit's prescribed one-line fix in `lean_to.py` (pad top at pad_h; the post now sits 1 cm into its pad). 717,226 tris. Deliverable: `buildings/addon_demos/a1_longhouse_addons/`; the kit add-ons are `components/lean_to.py` and `components/porch.py`.

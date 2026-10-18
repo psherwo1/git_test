@@ -1,0 +1,15 @@
+﻿00:00.532  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\a1_longhouse_addons.blend"
+00:02.313  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\audit\reaudit\postfoot\post_foot_eye_3m.png'
+00:02.407  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\audit\reaudit\postfoot\post_foot_eye_5m.png'
+00:02.469  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\audit\reaudit\postfoot\post_foot_low_2m.png'
+cameras 144 (rings of 2.5 / 4 / 6 / 10 m round the front, -80..+80 deg, eye z 0.4 / 1.0 / 1.7 / 6.0)
+pad_top_under_post: seen from 0 cameras; e.g. []
+   from z 1.7: []
+   from z 6.0: []
+post_bottom: seen from 0 cameras; e.g. []
+   from z 1.7: []
+   from z 6.0: []
+RENDER post_foot_eye_3m
+RENDER post_foot_eye_5m
+RENDER post_foot_low_2m
+DONE

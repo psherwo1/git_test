@@ -10,6 +10,9 @@ this recipe only adds steps, plus the host settings the add-ons need:
               shingle / verge description below is round 2's); the lean-to is 2.0 m deep; the front arch 7.0 m wide;
               the host's wall heads are bedded to the warped deck (seal_wall_head) and its stones face out
               (orient_stones)
+  round 4     the rounded roof in the village coat (0.22 + 0.08 m, 0.30 m courses) on the village eave roll
+              (round_kw eave_roll={}), with moss anchors (decals=True); the back wall-head bedding runs to the NW
+              gable corner; the porch's slim bargeboards rise 2.5 cm over the covering (no verge slot)
   lean-to     4.0 x 1.9 m on the back (north) long wall, taking in the east window: an open-fronted store in the
               village shingle (16 deg, its wall line arching up under the host's arch: ridge_sag < 0, swept eave,
               flared verges, slim 0.12 m bargeboards), its own small eave arch (0.18 m) so the plate and the eave
@@ -84,17 +87,25 @@ LEAN = dict(name="lean_to", W=plane_wall((LEAN_X, V3.HALF), (0.0, 1.0)), s0=-2.0
             # slope whose free ends curve round as rounded hips over the square shed (no verges); the arch along the
             # wall (0.15) and at the eave (0.18) are round 2's ridge_sag / eave_lift
             roof_ends="round", round_kw=dict(end_over=0.45, hip=0.55, ne=3.0, bulge=0.04, arch_wall=0.15,
-                                             arch_eave=0.18, wave=0.012, thatch=(0.08, 0.05), course=0.26))
+                                             arch_eave=0.18, wave=0.012,
+                                             # round 4 (AD r3 must-fix 1, note 16): the village coat and courses
+                                             # (0.22 + 0.08 m = mono_roof's thatch, 0.30 m courses = the host's
+                                             # exposure) on the village eave roll (GableRoof.eave_roll defaults =
+                                             # the v3 host's); moss anchors on the round roof
+                                             thatch=(0.22, 0.08), course=0.30, eave_roll={}, decals=True))
 PORCH = dict(name="porch", W=plane_wall((V3.DOOR_X, -V3.HALF), (0.0, -1.0)), width=2.1, depth=1.0, clear=2.32,
              pitch_deg=22.0, overhang=0.25, side=0.20, covering="shingle", brace=(0.65, 0.75),
              soft=dict(eave_sweep=0.08, sweep_len=0.5, wave=0.008,                # bell-cast lip
                        verge_flare=0.05, flare_len=0.45,                          # flared verges
                        eave_lifts=[eave_lift(0.0, side=1, width=2.6, height=0.22, fade=1.0)]),   # arched hood
-             verge_board=SLIM_VERGE,
+             # round 4 (AD r3 must-fix 3): the slim board rises 2.5 cm over the covering top (verge slot p01 / p02)
+             verge_board=dict(SLIM_VERGE, above=0.025),
              below=ROOF, below_lift_max=LIFT_MAX, below_roll=0.25, seed=1931)
 
-HEAD_SEAL = dict(lift=LIFT_N, y_face=V3.HALF, out=1.0, w=(0.035, 0.085), drop=0.30, tuck=0.012, min_lift=0.03,
-                 x_lim=(V3.X_GABLE + 0.30, -2.60), name="body_wall_head")          # back (round-2 i06 slits)
+# round 4 (AD r3 must-fix 2, i13): the bedding runs on past the arch's foot to the NW gable corner (min_lift 0:
+# x_lim as given; it stops 5 cm inside the gable's outer face, so its end is buried in the corner stones)
+HEAD_SEAL = dict(lift=LIFT_N, y_face=V3.HALF, out=1.0, w=(0.035, 0.085), drop=0.30, tuck=0.012, min_lift=0.0,
+                 x_lim=(V3.X_GABLE + 0.05, -2.60), name="body_wall_head")          # back (round-2 i06 slits)
 HEAD_SEAL_S = dict(HEAD_SEAL, lift=LIFT, y_face=-V3.HALF, out=-1.0, name="body_wall_head_s")   # front, the same
 
 
@@ -106,13 +117,13 @@ def seal_wall_head(g, lift, y_face, out, w, drop, tuck, min_lift, x_lim, name, s
     it, wherever the arch lifts the eave at the face by >= min_lift; the "_mortar" name keeps it out of the cull."""
     from village_kit.geom import Acc, finalize, prof_rect, sweep
     from village_kit.core import log
-    x0 = max(lift["x"] - 0.5 * lift["width"], x_lim[0])
-    x1 = min(lift["x"] + 0.5 * lift["width"], x_lim[1])
+    x0 = max(lift["x"] - 0.5 * lift["width"], x_lim[0]) if min_lift > 0 else x_lim[0]   # round 4: 0 = x_lim
+    x1 = min(lift["x"] + 0.5 * lift["width"], x_lim[1]) if min_lift > 0 else x_lim[1]
     xs = np.arange(x0, x1 + 1e-9, step)
     yc = y_face - out * 0.5 * (w[0] + w[1])
     P = np.column_stack([xs, np.full(len(xs), yc)])
     Q = ROOF.to_local(np.column_stack([xs, np.full(len(xs), y_face), np.zeros(len(xs))]))
-    keep = ROOF.lift_z(Q[:, 0], Q[:, 1]) >= min_lift
+    keep = ROOF.lift_z(Q[:, 0], Q[:, 1]) >= min_lift - 1e-9
     if keep.sum() < 2:
         return None
     i0, i1 = np.flatnonzero(keep)[[0, -1]]
@@ -125,6 +136,35 @@ def seal_wall_head(g, lift, y_face, out, w, drop, tuck, min_lift, x_lim, name, s
     finalize(acc, g.coll, smooth_deg=35.0)
     log(f"  {g.prefix}_{name}_mortar: wall-head bedding x {xs[0]:.2f}..{xs[-1]:.2f}, {drop:.2f} m deep, "
         f"{tuck * 100:.1f} cm into the deck, {w[0]:.3f}-{w[1]:.3f} m behind the face")
+
+
+CORNER_SEAL = dict(x_face=V3.X_GABLE, y=(V3.HALF - 0.80, V3.HALF - 0.035), w=(0.035, 0.085), z_lo=2.30, tuck=0.012,
+                   name="body_gable_corner_nw")
+
+
+def seal_gable_corner(g, x_face, y, w, z_lo, tuck, name, step=0.05):
+    """a1 round 4 (i15): a mortar core slab inside the host's NW gable corner, w[0]..w[1] m behind the gable's outer
+    face, from z_lo up `tuck` m into the deck, along the gable from y[0] to y[1] (5 cm inside the back face): the
+    rubble shell there leaves a ray path from the attic out through the corner (2 px in i15, under the wall head)."""
+    from village_kit.geom import Acc, finalize
+    from village_kit.core import log
+    ys = np.arange(y[0], y[1] + 1e-9, step)
+    xa, xb = x_face + w[0], x_face + w[1]
+    zt = ROOF.under_z_world(np.column_stack([np.full(len(ys), 0.5 * (xa + xb)), ys])) + tuck
+    n = len(ys)
+    V = np.concatenate([np.column_stack([np.full(n, xa), ys, np.full(n, z_lo)]),
+                        np.column_stack([np.full(n, xb), ys, np.full(n, z_lo)]),
+                        np.column_stack([np.full(n, xb), ys, zt]),
+                        np.column_stack([np.full(n, xa), ys, zt])])
+    i = np.arange(n - 1)
+    sides = [np.stack([k * n + i, k * n + i + 1, ((k + 1) % 4) * n + i + 1, ((k + 1) % 4) * n + i], 1)
+             for k in range(4)]
+    caps = [np.array([[3 * n, 2 * n, n, 0]]), np.array([[n - 1, 2 * n - 1, 3 * n - 1, 4 * n - 1]])]
+    acc = Acc(f"{g.prefix}_{name}_mortar")
+    acc.add(V, sides + caps, "M_mortar", wear=0.2)
+    finalize(acc, g.coll, smooth_deg=35.0)
+    log(f"  {g.prefix}_{name}_mortar: gable-corner core y {ys[0]:.2f}..{ys[-1]:.2f}, z {z_lo:.2f}..{zt.max():.2f}, "
+        f"{w[0]:.3f}-{w[1]:.3f} m behind the gable face")
 
 
 def orient_host_stones(g):
@@ -141,7 +181,8 @@ def steps():
         if fn is composite_hidden_cull or fn is recenter:
             continue
         st.append((fn, kw) if kw or isinstance(step, tuple) else fn)
-    st += [orient_host_stones, (seal_wall_head, HEAD_SEAL), (seal_wall_head, HEAD_SEAL_S)]
+    st += [orient_host_stones, (seal_wall_head, HEAD_SEAL), (seal_wall_head, HEAD_SEAL_S),
+           (seal_gable_corner, CORNER_SEAL)]
     st += [(lean_to, LEAN), (porch, PORCH)]
     return st + ([] if os.environ.get("A1_FAST") else [hidden_cull_host]) + [recenter]
 

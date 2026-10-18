@@ -1,0 +1,18 @@
+﻿00:01.906  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\a1_longhouse_addons.blend"
+00:03.516  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\audit\postfoot\post_foot_eye_3m.png'
+00:03.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\audit\postfoot\post_foot_eye_5m.png'
+00:03.672  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\audit\postfoot\post_foot_low_2m.png'
+cameras 144 (rings of 2.5 / 4 / 6 / 10 m round the front, -80..+80 deg, eye z 0.4 / 1.0 / 1.7 / 6.0)
+pad_top_under_post: seen from 142 cameras; e.g. [('d2.5_a-80_z0.4', 49), ('d2.5_a-80_z1.0', 31), ('d2.5_a-80_z1.7', 19), ('d2.5_a-60_z0.4', 49), ('d2.5_a-60_z1.0', 29), ('d2.5_a-60_z1.7', 19), ('d2.5_a-60_z6.0', 7), ('d2.5_a-40_z0.4', 49), ('d2.5_a-40_z1.0', 29), ('d2.5_a-40_z1.7', 24), ('d2.5_a-40_z6.0', 13), ('d2.5_a-20_z0.4', 49)]
+   from z 1.7: [('d2.5_a-80_z1.7', 19), ('d2.5_a-60_z1.7', 19), ('d2.5_a-40_z1.7', 24), ('d2.5_a-20_z1.7', 19), ('d2.5_a+0_z1.7', 14), ('d2.5_a+20_z1.7', 19), ('d2.5_a+40_z1.7', 24), ('d2.5_a+60_z1.7', 19), ('d2.5_a+80_z1.7', 19), ('d4.0_a-80_z1.7', 25)]
+   from z 6.0: [('d2.5_a-60_z6.0', 7), ('d2.5_a-40_z6.0', 13), ('d2.5_a-20_z6.0', 7), ('d2.5_a+0_z6.0', 7), ('d2.5_a+20_z6.0', 7), ('d2.5_a+40_z6.0', 13), ('d2.5_a+60_z6.0', 7), ('d4.0_a-80_z6.0', 6), ('d4.0_a-60_z6.0', 13), ('d4.0_a-40_z6.0', 13)]
+post_bottom: seen from 0 cameras; e.g. []
+   from z 1.7: []
+   from z 6.0: []
+RENDER post_foot_eye_3m
+RENDER post_foot_eye_5m
+RENDER post_foot_low_2m
+DONE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit
