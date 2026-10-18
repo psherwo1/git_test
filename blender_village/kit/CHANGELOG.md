@@ -17,7 +17,8 @@
   `mask.clear_walked_tops` (README section 3a).  A UV change must keep the geometry hash; measure it with
   `tools/uv_audit.py` (grain, collapsed UVs, walked tops).
 
-Kit 1.11.0 merges the variant builders' modules (below); its reference table is in the 1.11.0 Verification section.
+Kits 1.11.0 and 1.12.0 merge the variant builders' modules (below).  The current reference table (eight buildings) is
+in the 1.12.0 Verification section.
 
 **Reference builds at kit 1.10.1** (fingerprints in `kit/baseline/5_determinism/`; the keep and v3 were rebuilt 3x
 with identical hashes):
@@ -31,6 +32,184 @@ with identical hashes):
 | v2_tiered_hall | variant | 954,925 | 87ba64b7f9d4a746 |
 | v3_longhouse_roundend | variant | 483,508 (1.9.0 clearance fix) | 8a4e59687b3c7c4d (canonical c827824da304778d) |
 | v4_mixed | variant, accepted | 938,453 | 2e87caad61b68d34 |
+
+---
+
+## 1.12.0 (2026-10-17): timber / waterfront family, soft roofs, eyebrow and barn options (producer)
+
+Housekeeping step of the client's "Move forward with the quick fix, the housekeeping, and the add ons".  Two variant
+builders added modules and options under the kit edit rules after 1.11.0.  v5 harbour house (rounds 1-8) added the
+timber / rectangular / waterfront family, the soft `GableRoof` warp and the eyebrow-dormer add-on.  v6 barn (rounds
+1-3) added the barn options on the same family.  This release merges them into one record.  The full per-round records
+(signatures, proofs, hash re-runs) stay in `kit/changes/v5_harbour_house.md` and `kit/changes/v6_barn.md`.  The notes
+proposed other version numbers, and they are superseded by this release: 1.12.0 for v5, the docstring tags "kit 1.13" /
+"1.14" / "1.15" (v5 rounds 5 / 6 / 8), and 1.16 / 1.17 / 1.18 (v6 rounds 1 / 2 / 3).  The module docstrings still carry
+those tags; they were not retagged here.  This release does not include the add-on work started after the merge.
+
+### New modules
+
+- **`components/timber_walls.py`** (v5 r1, reworked r2; options v5 r5-r6, v6 r1): the timber family's walls.
+  `path_timber_wall(g, name, path, z0, top=2.6, top_fn=None, style="post_plank", gable_style="board_batten",
+  openings=(), ..., backing=True, seed=301, ground_z=0.0, rough=None, bow=0.0, head_rule="clamp")` builds a post /
+  plank (or board-and-batten gable) wall along a plan polyline on a sill beam, with plates, a closed backing and
+  cladding up to a roof (`roof_top_fn(roof, tuck=0.02)`, which reads `under_z_world` on a warped roof).  Its options
+  are `rough` (`ROUGH`: uneven board widths, fillets, out-of-true, sag, split arrises) and `bow` (every run bows at
+  mid-run).  Also `boat_door(width=2.6, height=2.6, leaves=2, ..., head_rule=None, to_ground=False, pad=None)`,
+  `loft_door`, `hoist_beam`, `rect_path`, `side_s`, `rect_openings`, `wbox`, `rough_opts`, `board_widths` (shared with
+  `cruck`), `resolve_timber` and `TIMBER_OPENING`.  Since round 2 every opening is built by
+  `wall_openings.build_opening(host=...)`, so the timber doors are the village's doors.  Used by v5 and v6.
+- **`components/floor_stack.py`** (v5 r1, unchanged since): `jetty_floor(g, name, lower, z, jetty=None,
+  joist=(0.15, 0.20), spacing=0.45, rim=0.20, proud=0.04, soffit_t=0.03, tail=0.70, seed=0)` builds the floor band
+  between two storeys.  On a jettied side the joist ends show and the soffit is closed; elsewhere a rim beam closes the
+  band.  `timber_storeys(g, name, rect, z_base, storeys, jetty=None, roof=None, floor=None, seed=500)` stacks
+  `path_timber_wall` storeys with a jetty floor between each pair and publishes `g.STOREYS`.  Kept clean, but no
+  building builds it (the ref4 hall has no jettied floor).
+- **`components/waterfront.py`** (v5 r1, reworked r2, r3): `pile(..., r=0.13, lean=0.01, taper=0.12, cap=True)`,
+  `pile_deck(g, name, rects, deck_z=0.5, bed_z=-2.5, ...)`, `ladder(g, name, top, out, z_bot, width=0.46, ...)`, and
+  `stone_quay(g, name, path, top_z=0.0, bed_z=-2.5, water=None, cfg=None, seed=651, coping=True, detail_z=-0.9,
+  core_blocks=False)`.  `stone_quay` is a quay edge of large blocks (`path_stone_wall` with `QUAY_BLOCKS`,
+  `base=bed_z`).  Only its water runs are built down to the bed (note 6), and `g.QUAYS` carries the water faces for the
+  waterline anchors.  Round 2 replaced `crib_quay` with `stone_quay` and removed `crib_quay`.  Used by v5.
+- **`components/cruck.py`** (v5 r2; options v5 r2-r3, v6 r2-r3):
+  `cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0.28, member_w=(-0.28, 0.02), post=0.24,
+  arch_t=0.24, blade=0.30, collar_at=0.50, collar=0.22, braces=True, pads=True, infill="plank", ..., rough=True,
+  seed=901, ...)` is the cruck / arched-brace gable frame over a wide opening.  It has jamb posts on dressed pads,
+  segmental arched braces, curved blades following the rake (a warped roof gives curved blades), a collar on curved
+  braces, and rough plank infill on a closed backing.  It publishes `g.CRUCKS`.  It is new because the kit had no
+  curved timber members and no arch framed in timber.  v6 r2 added `arched_doors` (below).  Used by v5 (the water
+  gable) and v6 (the cart entry).
+- **`components/timber_roof.py`, `components/timber_finish.py`** (v5 r1, retired r2 under the reuse mandate):
+  `timber_roof.verge_boards` is folded into `linear_roof(verge="board")`, without the crossed horns.
+  `timber_finish.timber_hidden_cull` / `timber_decals` are folded into `composite_hidden_cull(parts=BACKED_PARTS)` /
+  `composite_decals(timber=True, waterfront=True)`.  Both files are pointer stubs that raise `NotImplementedError`, and
+  nothing imports them.  See "To delete".
+
+### Optional parameters added to existing modules
+
+New functions in existing modules are listed here too.  "Existing" means that the module existed before the
+builder's round.  `timber_walls`, `waterfront` and `cruck` are this release's own new modules.
+
+| module | parameter / function | added by | default keeps old behaviour? |
+|---|---|---|---|
+| `linear_roof` | `GableRoof(ridge_sag=0, eave_sag=0, eave_sweep=0, sweep_len=1.0, verge_flare=0, flare_len=1.6, wave=0, wave_seed=33)`: the note-17 soft lines as ONE vertical warp field, followed by every part and query; new methods `warp_z(x, y)`, `under_z_world(P)`; denser `_deck` stations on warped roofs only | v5 r2 | yes (all zero: `warped = False`, `to_world` / `to_local` bit-identical) |
+| `linear_roof` | `linear_roof(verge=None)` (`"board"`: `VERGE_BOARD`, `_verge_boards`, the curved, apex-flared bargeboard), `apex_finial=None` (`"turned"`: `finial.turned_finial` on a fitted `finial.lead_hat`, `_apex_finials`); the plain path passes `rafter_skip` / `verge_apex` when given | v5 r2 | yes |
+| `linear_roof` | **the eyebrow-dormer add-on**: `GableRoof(eyebrows=())`, `eyebrow(x, side=1, **kw)`, `EYEBROW` (`d=1.5, width=2.0, height=0.75, flat=0.70, plateau=0.18, fade=1.20, lip=0.20, set_back=0.04, window=dict(width=0.56, height=0.36, sill=0.05), min_front=0.14, seed=0`); `to_world` / `to_local` / `warp_z(..., brow=None)`; `_brow_eave_strip`; `_eyebrow_fronts` (own seeded rng, kit window via the timber host, publishes `roof.EYEBROW_FRONTS`).  It raises with thatch, with unknown keys, and with a wave within 0.30 m of the ridge | v5 r5 | yes (no bumps: the same grid, face order and rng draws) |
+| `linear_roof` | `EYEBROW` keys `tilt=False`, `span_rows=False` (`_deck` split into `_deck` + `_deck_slab`: the old arrays in the old order without it), `eave_inset=0.0`, `close_ends=False` | v5 r6 | yes |
+| `linear_roof` | `EYEBROW` keys `profile="bell"` (`"arch"`: one continuous `(1 - t^2)^2` arch, `GableRoof.brow_bell`, flanks at most 40 deg, `flat` ignored, other values raise) and `respace=False` (`_brow_respace`: even course spacing over the roll, monotone in `u`, no rng draws) | v5 r8 | yes |
+| `linear_roof` | `GableRoof(eave_lifts=())` + `eave_lift()` / `EAVE_LIFT` (a soft arched eave lift over a wide door, a warp term that works on thatch and shingle); `GableRoof(ridge_seat=False)` (thatch ridge-roll flanks seated 3 cm under the covering) | v6 r1 | yes (`()` leaves `warped` / `warp_z` bit-identical) |
+| `linear_roof` | `linear_roof(verge_roll=False)` (`VERGE_ROLL`, `_verge_rolls`, `_verge_roll_path`, `_LocalAcc`: one continuous rolled thatch edge, raises without two free verges), `comb_step=0.92`, `comb_backing=False`, `rafter_lift_max=None` (+ `GableRoof.lift_z`); private `_verge_faces(u_from=None, top_max=None)`, `roof._deck_round`.  With `ridge_seat` the binding spars now follow `_ridge_centre(x)` | v6 r2 | yes (the spar change is gated by the barn-only `ridge_seat`) |
+| `linear_roof` | `VERGE_ROLL["apex_bend"]=None` (+ `_apex_bend`: the rake rolls bend over the apex in one sweep), `VERGE_ROLL["bend_over"]=0.24` | v6 r3 | yes (read only by `verge_roll`) |
+| `timber_walls` | the round-2 rework: `path_timber_wall(rough=None, bow=0.0, head_rule="clamp")`, `boat_door(head_rule=None)`, `wbox(tilt, sag, floor)`, the run frame's optional 4th element `bow(s)`, `rough_opts`, `board_widths`, `resolve_timber`, `_plate_cut`; its own `_build_opening` was retired for `wall_openings` | v5 r2 | the new options yes; the round-1 openings and object names changed (only v5 built the module) |
+| `timber_walls`, `wall_openings` | `TIMBER_OPENING["window"]["room_pad"]=(0.35, 0.6, 0.35)` | v5 r5 | yes (the old literals) |
+| `timber_walls`, `wall_openings` | `TIMBER_OPENING["window"]["lights"]=4` (`2`: one vertical mullion, no transom) | v5 r6 | yes |
+| `timber_walls`, `wall_openings` | `boat_door(to_ground=False, pad=None)` (a cart door from the ground on dressed stone pads, `_sill_cut`, `rec["sill_cut"]`); `window(gable=False)` (an opening above the plate, its head checked against the rake); `lights=0` (an open opening); `loft_door(width=1.20, height=1.70, sill=2.60, ...)`; `hoist_beam(g, name, at, out, z, length=1.10, tail=0.45, ...)` (new kit component); private `_build_opening(face=None)`, `_opening_layout(ground=None)`; backing z rows clamped at the sill line | v6 r1 | yes (the backing rows are the same set for every existing opening) |
+| `wall_openings` | `build_opening(host=None)` (`TIMBER_HOST`, `_build_timber_opening`: the timber host builds doors, windows and boat doors in timber walls), `TIMBER_HOST["head_rule"]` = `"clamp"` / `"trim"` | v5 r2 | yes (`host=None`: the masonry opening, unchanged) |
+| `rubble_walls` | `path_stone_wall(base=None, clip_z=None)`, `_quoin_courses(z0=-0.04)`, `RUBBLE_LARGE` (a `cfg=` override) | v5 r2 | yes (`None, None` run the old literals) |
+| `rubble_walls` | `path_stone_wall(flush_runs=None)`: flush footing courses on the listed runs (own stream `seed + 19`) | v5 r3 | yes (`None` is the old code path) |
+| `board_belt` | `board_belt(body=None, gaps=(), foot_ring=False, openings=())`: the belt on a plain round body on any frame | v5 r2 | yes (`body=None`: the tier-family belt) |
+| `composite` | `composite_hidden_cull(parts=None)`, `BACKED_PARTS`; `composite_decals(timber=False, waterfront=False)` (+ `timber_anchors`, `waterfront_anchors`; the old body is `_composite_decals`, called unchanged) | v5 r2 | yes |
+| `composite` | `composite_decals(timber_soot=True)` -> `timber_anchors(soot=)`: `False` drops the soot over timber openings only | v6 r2 | yes (the same call and the same rng draws) |
+| `waterfront` | `stone_quay` replaces `crib_quay` (removed); `stone_quay(core_blocks=False)` (the submerged core as low-poly large blocks on a recessed backing) | v5 r2 | `crib_quay` removed (only v5 used it); `core_blocks` yes |
+| `waterfront` | the `core_blocks=True` path: the joint backing is its own `<P>_<name>_backing_blocker` (in `composite.BACKING`); course beds per face group; convex water corners quoin-bonded | v5 r3 | `core_blocks=False` unchanged; the `True` path changed (only v5) |
+| `cruck` | `cruck_frame(brace=0.17, pointed=False, pointed_t=0.26, pointed_at=0.74)` | v5 r2 (relaunched fixer) | yes (the 11:00 frame) |
+| `cruck` | `cruck_frame(pad_clip_z=None, respond_z=None, respond_ch=(0.40, 0.56), king_strut=True)` (stone responds with their own stream `seed + 5`) | v5 r3 | yes (the round-2 frame) |
+| `cruck` | `arched_doors(g, name, frame=None, leaves=2, setback=0.012, ..., lap=0.06, rough=True, strap=True)` (new kit component: round-headed plank cart doors); `g.CRUCKS` entries gain `a_in`, `R`, `zc`, `member_w`, `post` | v6 r2 | yes (record keys only; no geometry change for v5) |
+| `cruck` | `cruck_frame(pad_top=None, gate=None)` + `_gate` (clearance envelopes, a FAIL raises `guards.ClearanceError`; sets `g.CRUCKS[-1]["gate"]` and `g.CRUCK_ENTRANCES`) | v6 r3 | yes (`None`: the same post / pad calls, no attribute set) |
+| `guards` | `entrances_of(g)` also reads `g.CRUCK_ENTRANCES`, so the eave-lip gate checks a gated arch like a door | v6 r3 | yes (only `cruck_frame(gate=...)` sets it) |
+
+### Behaviour changes to existing defaults
+
+- **None.**  No default that another building reaches changed.  The notes record every change to an existing module
+  as a new option, key or function whose default takes the old code path, with no rng draw added or moved.  This is
+  stated in each round's "Hash rule" section of `kit/changes/v5_harbour_house.md` and `kit/changes/v6_barn.md`.  The
+  hash runs confirm it.  The notes point to the director logs for the results:
+  - **`kit/baseline/v5r2_hash/`** (10:52-11:28, all seven) and **`v5r2b_hash/`** (12:13-12:30, the keep, hut and mill
+    rebuilt after the late `rubble_walls` / `board_belt` edits): "all seven buildings MATCH the 1.11.0 reference
+    (geometry, UV and Mask)" (`director/log_variant_v5_harbour_house.md`, round-2 builder entry, "Hash rule").
+  - **`kit/baseline/v5r3_hash/`** (13:09-13:45): "All seven MATCH the kit 1.11.0 reference (`6_r8kit_check`) on
+    geometry, UV and Mask", re-checked by the director in the round-3 grade (same log, round-3 entry).  v5 rounds 4
+    and 7 were recipe-only.  Rounds 5, 6 and 8 were defaults-off and had no run.
+  - **`kit/baseline/v6r3_hash/`** (the audit condition for the barn's round 3, all eight rebuilt with the kit of that
+    time): "keep, hut, mill, v1, v2, v3 and v4 are identical to `6_r8kit_check` on all three hashes (geometry, uv,
+    mask); `geom_diff`: no object differs.  **v5 is per-object identical to `7_v5_ref`**" (geometry
+    `c3d3a5343572dc73`, 714,452 tris) (`director/log_variant_v6_barn.md`, round-3 audit, "hash rule" row).  This run
+    covers the whole release: v5 rounds 5-8 and v6 rounds 1-3.  `v6_barn.md`'s round-3 section says "Not triggered;
+    not run".  It was written before the audit ran it.
+- **Changes inside this release's own modules**, made before another building used them (recorded above, not
+  defaults that another building reached): v5 r2 reworked `timber_walls` (openings moved onto `wall_openings`, so the
+  object names changed) and `waterfront` (`crib_quay` removed), and retired `timber_roof` / `timber_finish`.  v5 r3
+  changed `stone_quay(core_blocks=True)` (its own backing object, quoin-bonded corners).  v6 r2 made the barn-only
+  `ridge_seat` option (v6 r1) also re-lay the binding spars.
+
+### To delete (producer)
+
+- `kit/village_kit/components/timber_roof.py` and `kit/village_kit/components/timber_finish.py`: the retired pointer
+  stubs (v5 r2; deleting them was refused by the builder's permission guard).  No building or kit module imports them
+  (`buildings/**/*.py` has no reference).  They were not deleted in this merge.
+
+### Known limitations
+
+The 1.11.0 list still stands.  This release adds:
+
+- `GableRoof` warp (v5 r2): `ref_z` / `under_z` / `top_z` / `section_columns` stay the straight local profile (callers
+  that need the warped deck use `under_z_world`).  The warp is vertical only: there is no plan bow of the eave line.
+  `eave_lift` (v6 r1) is a vertical lift too.  It must stay clear of a junction body (it fades to 0 at +-width/2).
+- Eyebrow (v5 r5-r8): shingle only (a thatch eyebrow would need the course sheets split at the step).  There is no
+  overlap check against a verge, the eave band, another bump or a junction body.  It allows one front per bump, on a
+  straight slope.  The flank lip is one rolled course.  With `profile="arch"` the shoulders' course butts still read
+  as close diagonal lines square-on (spaced `e x cos(40 deg)`, a fixed course count).  `respace` spreads the
+  compression but does not remove it: every course on the roll shows about 0.80 of the plain exposure.
+- `cruck_frame` is symmetric about the gable centre, with one opening per frame.  The `gate` envelopes are centred.
+  They do not model door leaves, a cart's hub-height bulge, or a figure walking beside a cart.
+- `arched_doors`: the leaves' outer bottom corners stand into the proud pads' inner nosing, behind the posts.  The
+  v6 note says 10 cm; the round-3 audit measured up to 5.8 cm, not visible as clipping.
+- `stone_quay` water runs end in open, cut stone sections where the quay continues in the terrain (no `ends=` option).
+- `board_belt(body=...)`: lookouts only (no doors); the window gaps cut whole boards.
+- `floor_stack` has no building yet.  Two jettied sides that meet at a corner raise (a dragon beam is not built).
+- `ridge_seat`: the seat depth is set from the straight profile at mid-slope.  The roll's end caps shrink the flanks
+  over the last 16 cm before a verge face.
+- `verge_roll`: the fillet radius is limited by the roll's visible inward depth (about 0.34 m).  With `apex_bend` the
+  apex is two crossing sweeps, not one loop, and leaves a soft seam line under the lead hat's drip.  `comb_backing` is
+  a plain board.
+- `window(gable=True)`: one row only.  A gable opening's dark room is not checked against the roof deck (keep
+  `room_pad` small, as `loft_door` does).  `hoist_beam`: a straight beam on a straight face, with no rope.
+- `path_stone_wall` `RUBBLE_LARGE` hero stones (found by the v6 round-3 audit, not in either note): two large ground
+  stones under the barn's east gable have inside-out winding, and so do some in the accepted v5 (`HARB_hall_stones`,
+  `HARB_wing_stones`).  With one-sided UE materials they would drop out.  This is a kit item, still open.
+- Resolved and dropped: the eyebrow "not built" (v5 r2, built in r5); the flank-shingle shear (r5, `tilt` in r6); the
+  bell's flat top and steep 53 deg shoulders (r5-r7, `profile="arch"` in r8); the washboard course bunching on the
+  fade (r6, `respace` in r8, now the 0.80-exposure item above); the long hidden tear rows (`span_rows`, r6); the knot of
+  rake-roll ends at the apex (v6 r2, `apex_bend` in r3); and the kiln-junction notes of v6 r1 (the kiln was removed in
+  v6 r2).
+
+### Status
+
+| Design | Status | Round | Triangles |
+|---|---|---|---|
+| v5_harbour_house | **FINAL** (client decision 19:35), director 8.6, audit upheld; snapshotted as `*_r08_accepted.*` | 8 | 714,452 (14.1 % hidden) |
+| v6_barn | **PAUSED** at round 3 (client decision 22:05), director 8.4, audit rejected on one hard requirement: the see-through wedge at both cruck post heads, under the eyelid.  A quick fix (round 4, recipe / frame, defaults unchanged) is now running; it needs a re-audit, not a re-grade | 3 | 213,651 (audit) |
+
+### Verification
+
+The 1.12.0 kit is the kit `kit/baseline/v6r3_hash/` was built from (see "Behaviour changes").  The first seven rows
+are unchanged from 1.11.0.  v5_harbour_house is added from its delivered round-8 build
+(`kit/baseline/7_v5_ref/v5_harbour_house.json`), which `v6r3_hash` reproduced per object.  `tools/build_baseline.ps1`
+now rebuilds eight buildings (v5_harbour_house added).  v6_barn is not in the table: it is paused and not accepted.
+
+**Reference builds at kit 1.12.0** (the reference table for the HASH RULE from now on):
+
+| Building | State | Triangles | Geometry | UV | Mask |
+|---|---|---|---|---|---|
+| hilltop_keep | kit reference (phase 1 is the deliverable) | 1,166,874 | `3e2a219a5901afc5` = | `10326b66883e3031` = | `cacc4885b10b1370` = |
+| wattle_roundhut | kit reference (phase 1 is the deliverable) | 878,355 | `7e5e7c2df5c4d367` = | `c97c88e742be4887` = | `46bb1454fa4d264e` = |
+| tower_windmill | signed off (kit r8) | 1,146,243 | `89bf4a2a2c60e049` = | `b006e70c2dc4750b` = | `3c0753f38798dad6` = |
+| v1_stone_watchtower | accepted r5 | 937,933 | `465c7b1b8a7dbb22` = | `eadfb3aacdd78b6d` = | `37235edc68b2377f` = |
+| v2_tiered_hall | accepted r7 (client decision) | 980,405 | `9522f17ed8b09646` = | `e3e6c05a78940663` = | `252e24bcf02ccdf5` = |
+| v3_longhouse_roundend | accepted r8 | 617,342 | `38ff44b686efd26b` = | `ba1118a58beca64f` = | `e8e670cd18148d95` = |
+| v4_mixed | accepted r4 | 938,453 | `2e87caad61b68d34` = | `230f3672711b12d4` = | `07a9171c30138f67` = |
+| v5_harbour_house | FINAL r8 | 714,452 | `c3d3a5343572dc73` | `010c14c06ec9eb50` | `e23665ef913e5991` |
+
+(`=`: unchanged from the 1.11.0 table.)
 
 ---
 
