@@ -389,3 +389,20 @@ Client's words: "If the cottage will be rectangular / square it minimum needs a 
 - Other dormers, chimneys and add-ons may be added on top of it; they do not replace it.
 - **Director and auditor:** missing on such a design is a must-fix.
 - The eyebrow must work on both village coverings: shingle (exists) and **thatch** (the kit option is to be extended, defaults unchanged).
+### Producer note 19: CLIENT RULE — square, angular walls get rounded roofs: "an oval on the rectangle" (2026-10-18)
+
+Client's words: "if the walls be square and angular we should counterbalance with rounded roofs. Not just /\ An oval on the rectangle". The client chose the form: **"Rounded hips + soft crown"**.
+- **The form:** on a rectangular (or square) wall plan, the roof has **no flat gable ends**.
+  - Each free end curves round as a **half-cone / round hip**, so the roof reads as an **oval in plan** over the rectangle, oversailing the corners.
+  - The **cross-section is softly convex**: a gentle bulge with a rolled ridge, not a straight-sided triangle.
+  - The village soft options still apply: sag, swept eaves.
+  - This is the classic rounded thatch "loaf" roof, and it counterbalances the angular walls.
+- **Applies to every new design with square / angular walls** (cottages, houses, stores, add-on wings).
+  - Exceptions only where the client has chosen otherwise: the ref4 harbour house's cruck gable, and the barn's cart-entry gable.
+  - The accepted buildings are not retrofitted unless the client asks.
+- **Kit:** a reusable roof option or module (e.g. `GableRoof(hips="round", crown=...)` or a `loaf_roof` component) for **thatch first, shingle if feasible**, with defaults unchanged. It must work with:
+  - the valley, where wings meet (the joined end has no hip);
+  - the eyebrow (note 18);
+  - dormers;
+  - a chimney through the roof or rising through a round hip.
+- **Director and auditor:** a plain /\ gable roof on square walls in a new design is a must-fix.

@@ -361,3 +361,24 @@ Client's words: "If the cottage will be rectangular / square it minimum needs a 
 ## PRODUCER NOTE (2026-10-18, session 2, 00:11): the eyebrow is a MUST-FIX
 
 The round-2 fixer started before the 00:10 CLIENT DIRECTION. If you are still working, apply it now, and re-read this log before writing your entry. **Art Director:** a cottage round without an eyebrow dormer (producer note 18) cannot pass; give at most 8.1. **Next fixer:** do it first.
+
+## CLIENT DIRECTION (2026-10-18, session 2, 00:20): ROUNDED ROOFS, "an oval on the rectangle" (producer note 19); a cottage must-fix
+
+Client's words: "if the walls be square and angular we should counterbalance with rounded roofs. Not just /\ An oval on the rectangle". The client chose **"Rounded hips + soft crown"**. Read producer note 19 at the end of `director/art_bible.md`.
+
+**For the cottage:**
+- **Both wings keep their rectangular rubble walls**, but get **rounded roofs**:
+  - every FREE end is a round hip (half-cone), so there are no gable ends;
+  - the cross-section is softly convex with a rolled ridge;
+  - sag and swept eaves stay;
+  - thatch.
+- **The L junction stays a soft valley.** The wing's joined end has no hip.
+- **The chimney** moves through the roof (a ridge or slope stack) or rises against an end wall through the round hip. It stays short and chunky, with the round pot, and is flashed into the curved thatch.
+- **Keep the gabled dormer** (a dormer is allowed on the rounded roof) **and add the thatch eyebrow** (note 18, the 00:10 direction).
+- **Kit:** the rounded roof as a reusable option or module (note 19), defaults unchanged, hash rule if an existing default changes.
+
+**Order for the fixers (time matters, but get it right):** the rounded roof is the biggest change.
+- **Round-2 fixer:** if your round's builds are already done without it, finish the round-1 seam must-fixes and the eyebrow if you can, record what is left, and write your entry. Do NOT half-build the rounded roof.
+- **The next fixer:** do the rounded roof first.
+- **Art Director:** a cottage with /\ gable roofs, or without an eyebrow, cannot pass; give at most 8.1.
+- The producer may extend the cottage's round cap so it can be done properly.
