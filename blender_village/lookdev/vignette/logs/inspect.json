@@ -1,0 +1,493 @@
+{
+ "hilltop_keep": {
+  "n": 298,
+  "tris": 1166874,
+  "mn": [
+   -11.1,
+   -5.3,
+   -0.05
+  ],
+  "mx": [
+   5.3,
+   5.3,
+   14.0
+  ],
+  "types": [
+   "CAMERA",
+   "EMPTY",
+   "LIGHT",
+   "MESH"
+  ],
+  "parented": 0,
+  "mods": [],
+  "missing": [],
+  "ents": [
+   {
+    "name": "door",
+    "origin": [
+     0.35,
+     -3.99,
+     0.0
+    ],
+    "out": [
+     -0.0,
+     -1.0,
+     0.0
+    ],
+    "width": 1.05,
+    "head": 2.295
+   },
+   {
+    "name": "annex_door",
+    "origin": [
+     -5.05,
+     0.4,
+     0.0
+    ],
+    "out": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "width": 1.0,
+    "head": 2.2
+   }
+  ],
+  "imgs": 26,
+  "img0": [
+   "//..\\..\\textures\\lichen_rock_2k.blend\\textures\\lichen_rock_diff_2k.jpg",
+   "//..\\..\\textures\\lichened_rock_wall_visoeh2bw_2k\\Lichened_Rock_Wall_visoeh2bw_2K_BaseColor.jpg"
+  ],
+  "world": "LD_world",
+  "cols": [
+   "DECAL_ANCHORS",
+   "KEEP",
+   "KEEP_hall",
+   "KEEP_kit_instances",
+   "KEEP_roof_skirt",
+   "KEEP_tower",
+   "KEEP_turret",
+   "KEEP_wing"
+  ]
+ },
+ "wattle_roundhut": {
+  "n": 124,
+  "tris": 878355,
+  "mn": [
+   -4.19,
+   -4.59,
+   -0.04
+  ],
+  "mx": [
+   4.19,
+   4.2,
+   8.73
+  ],
+  "types": [
+   "CAMERA",
+   "EMPTY",
+   "LIGHT",
+   "MESH"
+  ],
+  "parented": 0,
+  "mods": [],
+  "missing": [],
+  "ents": [
+   {
+    "name": "framed_door",
+    "origin": [
+     0.0,
+     -3.72,
+     0.0
+    ],
+    "out": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "width": 1.0,
+    "head": 2.28
+   }
+  ],
+  "imgs": 23,
+  "img0": [
+   "//..\\..\\textures\\lichen_rock_2k.blend\\textures\\lichen_rock_diff_2k.jpg",
+   "//..\\..\\textures\\lichened_rock_wall_visoeh2bw_2k\\Lichened_Rock_Wall_visoeh2bw_2K_BaseColor.jpg"
+  ],
+  "world": "LD_world",
+  "cols": [
+   "DECAL_ANCHORS",
+   "HUT",
+   "HUT_kit_instances"
+  ]
+ },
+ "tower_windmill": {
+  "n": 210,
+  "tris": 1146243,
+  "mn": [
+   -6.54,
+   -3.39,
+   -0.0
+  ],
+  "mx": [
+   4.22,
+   5.75,
+   16.2
+  ],
+  "types": [
+   "CAMERA",
+   "EMPTY",
+   "LIGHT",
+   "MESH"
+  ],
+  "parented": 0,
+  "mods": [],
+  "missing": [],
+  "ents": [
+   {
+    "name": "drum_door",
+    "origin": [
+     0.0,
+     -2.6,
+     0.0
+    ],
+    "out": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "width": 1.05,
+    "head": 2.315
+   }
+  ],
+  "imgs": 20,
+  "img0": [
+   "//..\\..\\textures\\lichen_rock_2k.blend\\textures\\lichen_rock_diff_2k.jpg",
+   "//..\\..\\textures\\lichened_rock_wall_visoeh2bw_2k\\Lichened_Rock_Wall_visoeh2bw_2K_BaseColor.jpg"
+  ],
+  "world": "LD_world",
+  "cols": [
+   "DECAL_ANCHORS",
+   "MILL",
+   "MILL_kit_instances"
+  ]
+ },
+ "v1_stone_watchtower": {
+  "n": 58,
+  "tris": 937933,
+  "mn": [
+   -3.37,
+   -3.37,
+   -0.0
+  ],
+  "mx": [
+   3.37,
+   3.37,
+   16.11
+  ],
+  "types": [
+   "CAMERA",
+   "EMPTY",
+   "LIGHT",
+   "MESH"
+  ],
+  "parented": 0,
+  "mods": [],
+  "missing": [],
+  "ents": [
+   {
+    "name": "drum_door",
+    "origin": [
+     0.0,
+     -2.48,
+     0.0
+    ],
+    "out": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "width": 1.05,
+    "head": 2.315
+   }
+  ],
+  "imgs": 20,
+  "img0": [
+   "//..\\..\\textures\\lichen_rock_2k.blend\\textures\\lichen_rock_diff_2k.jpg",
+   "//..\\..\\textures\\lichened_rock_wall_visoeh2bw_2k\\Lichened_Rock_Wall_visoeh2bw_2K_BaseColor.jpg"
+  ],
+  "world": "LD_world",
+  "cols": [
+   "DECAL_ANCHORS",
+   "WATCH",
+   "WATCH_kit_instances"
+  ]
+ },
+ "v2_tiered_hall": {
+  "n": 167,
+  "tris": 980405,
+  "mn": [
+   -6.14,
+   -6.14,
+   -0.05
+  ],
+  "mx": [
+   7.34,
+   6.14,
+   18.51
+  ],
+  "types": [
+   "CAMERA",
+   "EMPTY",
+   "LIGHT",
+   "MESH"
+  ],
+  "parented": 0,
+  "mods": [],
+  "missing": [],
+  "ents": [
+   {
+    "name": "hall_door",
+    "origin": [
+     -0.0,
+     -4.95984,
+     0.0
+    ],
+    "out": [
+     -0.0,
+     -1.0,
+     0.0
+    ],
+    "width": 1.0,
+    "head": 2.2
+   }
+  ],
+  "imgs": 20,
+  "img0": [
+   "//..\\..\\textures\\lichen_rock_2k.blend\\textures\\lichen_rock_diff_2k.jpg",
+   "//..\\..\\textures\\lichened_rock_wall_visoeh2bw_2k\\Lichened_Rock_Wall_visoeh2bw_2K_BaseColor.jpg"
+  ],
+  "world": "LD_world",
+  "cols": [
+   "DECAL_ANCHORS",
+   "HALL",
+   "HALL_cap",
+   "HALL_drum",
+   "HALL_hall",
+   "HALL_kit_instances",
+   "HALL_lantern",
+   "HALL_openings",
+   "HALL_skirt1",
+   "HALL_skirt2",
+   "HALL_tur_e",
+   "HALL_tur_e_belt"
+  ]
+ },
+ "v3_longhouse_roundend": {
+  "n": 33,
+  "tris": 617342,
+  "mn": [
+   -8.89,
+   -4.28,
+   -0.05
+  ],
+  "mx": [
+   8.89,
+   4.28,
+   11.34
+  ],
+  "types": [
+   "CAMERA",
+   "EMPTY",
+   "LIGHT",
+   "MESH"
+  ],
+  "parented": 0,
+  "mods": [],
+  "missing": [],
+  "ents": [
+   {
+    "name": "body_wall_3",
+    "origin": [
+     -2.39171,
+     -2.60641,
+     0.0
+    ],
+    "out": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "width": 1.0,
+    "head": 2.22
+   }
+  ],
+  "imgs": 23,
+  "img0": [
+   "//..\\..\\textures\\lichen_rock_2k.blend\\textures\\lichen_rock_diff_2k.jpg",
+   "//..\\..\\textures\\lichened_rock_wall_visoeh2bw_2k\\Lichened_Rock_Wall_visoeh2bw_2K_BaseColor.jpg"
+  ],
+  "world": "LD_world",
+  "cols": [
+   "DECAL_ANCHORS",
+   "LONG",
+   "LONG_kit_instances"
+  ]
+ },
+ "v4_mixed": {
+  "n": 275,
+  "tris": 938453,
+  "mn": [
+   -4.67,
+   -3.42,
+   -0.04
+  ],
+  "mx": [
+   6.24,
+   5.85,
+   14.17
+  ],
+  "types": [
+   "CAMERA",
+   "EMPTY",
+   "LIGHT",
+   "MESH"
+  ],
+  "parented": 0,
+  "mods": [],
+  "missing": [],
+  "ents": null,
+  "imgs": 23,
+  "img0": [
+   "//..\\..\\textures\\lichen_rock_2k.blend\\textures\\lichen_rock_diff_2k.jpg",
+   "//..\\..\\textures\\lichened_rock_wall_visoeh2bw_2k\\Lichened_Rock_Wall_visoeh2bw_2K_BaseColor.jpg"
+  ],
+  "world": "LD_world",
+  "cols": [
+   "DECAL_ANCHORS",
+   "V4",
+   "V4_house",
+   "V4_junctions",
+   "V4_mill",
+   "V4H_kit_instances",
+   "V4M_kit_instances"
+  ]
+ },
+ "v5_harbour_house": {
+  "n": 75,
+  "tris": 714452,
+  "mn": [
+   -8.79,
+   -8.59,
+   -2.5
+  ],
+  "mx": [
+   8.79,
+   8.59,
+   13.44
+  ],
+  "types": [
+   "CAMERA",
+   "EMPTY",
+   "LIGHT",
+   "MESH"
+  ],
+  "parented": 0,
+  "mods": [],
+  "missing": [],
+  "ents": [
+   {
+    "name": "hall_0",
+    "origin": [
+     2.9925,
+     -5.77281,
+     0.0
+    ],
+    "out": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "width": 1.0,
+    "head": 2.22
+   },
+   {
+    "name": "wing_0",
+    "origin": [
+     -5.9075,
+     -7.67281,
+     0.0
+    ],
+    "out": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "width": 1.0,
+    "head": 2.22
+   }
+  ],
+  "imgs": 20,
+  "img0": [
+   "//..\\..\\textures\\lichen_rock_2k.blend\\textures\\lichen_rock_diff_2k.jpg",
+   "//..\\..\\textures\\lichened_rock_wall_visoeh2bw_2k\\Lichened_Rock_Wall_visoeh2bw_2K_BaseColor.jpg"
+  ],
+  "world": "LD_world",
+  "cols": [
+   "DECAL_ANCHORS",
+   "HARB",
+   "HARB_kit_instances"
+  ]
+ },
+ "v6_barn": {
+  "n": 42,
+  "tris": 213945,
+  "mn": [
+   -8.04,
+   -4.39,
+   -0.05
+  ],
+  "mx": [
+   8.04,
+   4.39,
+   9.22
+  ],
+  "types": [
+   "CAMERA",
+   "EMPTY",
+   "LIGHT",
+   "MESH"
+  ],
+  "parented": 0,
+  "mods": [],
+  "missing": [],
+  "ents": [
+   {
+    "name": "walls_1",
+    "origin": [
+     7.0831,
+     -1.29914,
+     0.0
+    ],
+    "out": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "width": 1.0,
+    "head": 2.58
+   }
+  ],
+  "imgs": 23,
+  "img0": [
+   "//..\\..\\textures\\lichen_rock_2k.blend\\textures\\lichen_rock_diff_2k.jpg",
+   "//..\\..\\textures\\lichened_rock_wall_visoeh2bw_2k\\Lichened_Rock_Wall_visoeh2bw_2K_BaseColor.jpg"
+  ],
+  "world": "LD_world",
+  "cols": [
+   "BARN",
+   "BARN_kit_instances",
+   "DECAL_ANCHORS"
+  ]
+ }
+}

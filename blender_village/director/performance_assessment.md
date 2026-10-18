@@ -95,18 +95,35 @@ These are the conditions under which Nanite works best.
   **This is the tightest budget.** Shader compilation after a material change and path-tracer BVH builds are the usual out-of-memory moments.
 - **Recommendation: upgrade to 32 GB of RAM** (2x16 GB DDR4-3200, inexpensive). It is the single most effective hardware change for this production. Until then, close other apps during MRQ renders and render long shots in segments.
 
-## 6. Measurements on the client's machine (Blender vignette, Cycles as a path-tracing proxy)
+## 6. Measurements on the client's machine (Blender vignette, Cycles as a path-tracing proxy) [measured]
 
-*To be filled in from `lookdev/vignette/renders/measurements.md`:*
-- the scene's triangles;
-- per-shot render time and peak memory;
-- the fog vs no-fog difference.
+The vignette assembles all nine buildings into one fjord-harbour scene (`lookdev/vignette/`, raw data in `renders/measurements.md`).
+- **Scene:** **7.92 M triangles** (buildings 7.59 M, terrain 0.33 M) in 1,288 mesh objects, with 26 unique 2K textures. Cycles OptiX on the RTX 3060, 1920x1080, OptiX denoiser, adaptive sampling.
 
-Cycles on the RTX 3060 is an order-of-magnitude stand-in for UE's path tracer, not for Lumen.
+| Shot | Samples | Seconds / frame | Cycles memory |
+|---|---|---|---|
+| Day (no fog), four shots | 128 | **10.6-12.9** | 2.6 GB |
+| Golden hour + volumetric fog, aerial / street | 128 | **21.8 / 21.2** | 2.8 GB |
+| Same, clean hero quality | 512 | **35.2 / 39.0** | 2.8 GB |
 
+What this shows:
+- **Fog costs time, not memory.** It takes about **2x the render time** at equal samples, and only about +175 MB of memory.
+- **Fog needs about 2x the samples to be clean without a denoiser** (about 400-550 against about 240-270). With the denoiser, **256 samples is enough for fog work, and 512 for hero frames.**
+- **Memory is comfortable.** The whole 8 M-triangle village used about **2.8 GB of GPU memory** (about 5.8 GB with everything else on the GPU). Blender's RAM peaked at about **4.3 GB** while loading; system RAM stayed at 10-11 GB of 16. This confirms the VRAM estimate in section 5 and shows the geometry budget is safe.
+- **The fog test was simple:** one uniform box, density 0.0025, anisotropy 0.6. Height-falloff or patchy fog, many local lights, motion blur and 4K all add cost.
+
+**What this changes in section 3.** Path tracing on this machine is **much faster than my earlier 1-5 min / frame estimate**: about 20-40 s / frame at 1080p **with fog**, in Cycles. UE's path tracer is broadly comparable in cost; confirm it in step 5. Revised [estimate]:
+- **Path-traced 1080p with fog:** about 30 s / frame, so **about 12 hours per film minute.**
+- **Path-traced 4K with fog:** about 4x that, so **about 2 days per film minute.**
+- **Lumen in MRQ stays several times faster,** and is still the safer choice for long sequences or 4K. But path tracing at 1080p (or 1440p) is now a **realistic option for a short hobby film** rendered overnight, shot by shot.
+
+**What the vignette says about the village** (not performance, but relevant before more designs):
+- Nine designs in one patch show **many conical turrets**: it reads as a cluster of fantasy towers more than a working village. The next designs should lean low and roofed (barns, stores, plain houses, roundhuts, the add-ons), not towers.
+- At eye level the 15-25 m gaps feel sparser than ref2. Tighter clustering and set dressing (vegetation, paving, fences, props) will matter in UE; they are out of the building kit's scope (note 10).
 ## 7. Recommendations
 
-1. **Render the film with Lumen in MRQ.** Use the path tracer for hero stills, a few signature shots, and as the reference to tune Lumen against.
+1. **Render long sequences or 4K with Lumen in MRQ.** The measured Cycles numbers (section 6) make **path tracing at 1080p, about 12 h per film minute with fog, a realistic choice** for a short film or for key sequences. Decide per sequence after the step-5 UE test.
+   Use the path tracer at least for hero stills, signature shots, and as the reference to tune Lumen against.
 2. **Fog stack:**
    - Exponential Height Fog everywhere;
    - Volumetric Fog for sunbeams and haze;

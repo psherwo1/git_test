@@ -1,0 +1,45 @@
+﻿00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\hilltop_keep_lookdev.blend"
+APPENDED wattle_roundhut 124 dropped 104
+APPENDED tower_windmill 210 dropped 112
+APPENDED v1_stone_watchtower 58 dropped 82
+APPENDED v2_tiered_hall 167 dropped 88
+APPENDED v3_longhouse_roundend 33 dropped 95
+APPENDED v4_mixed 275 dropped 126
+APPENDED v5_harbour_house 75 dropped 116
+APPENDED v6_barn 42 dropped 73
+IMAGES unique 26 duplicates merged 172
+IMAGES missing []
+PURGED 59
+PAD hilltop_keep h0 10.11 natural range 6.39..11.92
+PAD wattle_roundhut h0 1.14 natural range 0.83..1.65
+PAD tower_windmill h0 7.19 natural range 5.90..7.90
+PAD v1_stone_watchtower h0 1.35 natural range 1.15..1.45
+PAD v2_tiered_hall h0 2.55 natural range 1.84..3.02
+PAD v3_longhouse_roundend h0 2.53 natural range 1.14..3.57
+PAD v4_mixed h0 1.10 natural range 0.66..1.80
+PAD v6_barn h0 2.70 natural range 2.34..3.14
+TERRAIN verts 165406 quads 162872
+PLACED hilltop_keep (-17.0, 41.0, 18.0) z 10.068
+PLACED wattle_roundhut (-19.0, -13.0, -25.0) z 1.096
+PLACED tower_windmill (47.0, 36.0, -35.0) z 7.146
+PLACED v1_stone_watchtower (-33.0, -36.0, 35.0) z 1.305
+PLACED v2_tiered_hall (2.0, 6.0, -8.0) z 2.515
+PLACED v3_longhouse_roundend (-26.0, 2.0, 90.0) z 2.491
+PLACED v4_mixed (26.0, -7.0, 28.0) z 1.060
+PLACED v5_harbour_house (0.0, -26.0, 180.0) z 0.900
+PLACED v6_barn (24.0, 20.0, 180.0) z 2.661
+STATS mesh objects 1288 tris 7919786
+STATS_PER BLD_hilltop_keep 1166874
+STATS_PER BLD_tower_windmill 1146243
+STATS_PER BLD_v2_tiered_hall 980405
+STATS_PER BLD_v4_mixed 938453
+STATS_PER BLD_v1_stone_watchtower 937933
+STATS_PER BLD_wattle_roundhut 878355
+STATS_PER BLD_v5_harbour_house 714490
+STATS_PER BLD_v3_longhouse_roundend 617342
+STATS_PER VG_terrain 325744
+STATS_PER BLD_v6_barn 213945
+STATS_PER VG_water 2
+STATS images 26 materials 92
+Info: Saved as "vignette.blend"
+SAVED C:\GitHubDesktop\git_test\blender_village\lookdev\vignette\work\vignette.blend
