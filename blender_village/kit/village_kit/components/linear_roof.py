@@ -801,14 +801,19 @@ def _eave_rolls(roof, acc, rng, x_lo, x_hi, seed=0, ends=None, bundles=None, end
     return out
 
 
-VERGE_ROLL = dict(out=0.07, rc=0.28, top=0.01, face_from=0.35, apex=0.02, taper=0.12)
+VERGE_ROLL = dict(out=0.07, rc=0.28, top=0.01, face_from=0.35, apex=0.02, taper=0.12, apex_bend=None,
+                  bend_over=0.24)
 """kit 1.17 (v6 round 2): linear_roof(verge_roll=True) on a "courses" thatch with two free verges -- ONE rolled
 edge per slope: the eave roll's own D section (GableRoof.eave_roll) swept from the apex down the first rake, round
 the eave corner in one fillet of radius `rc` (m, in the slope plane), along the whole eave and up the other rake.
 out: the rake part's lip runs this far outside the covering's end (its crest then covers the course ends at the
 verge face); top: the verge face is clamped to T0 + step + top (no course-end tooth pokes out of the roll);
 face_from: the verge face starts this far up the slope (the corner roll covers it below); apex: the rake part
-stops this far short of the ridge plane (its end runs in under the capped ridge roll); taper: rounded end length."""
+stops this far short of the ridge plane (its end runs in under the capped ridge roll); taper: rounded end length.
+kit 1.18 (v6 round 3; None = the round-2 path): apex_bend=r (m) -- each rake roll runs on OVER THE APEX in one swept
+bend of radius r in the gable plane (the section turning with it, its up from the slope normal through vertical to
+the other slope's normal) and `bend_over` m down the far side, where its rounded end is buried in the other slope's
+roll: the two rolls cross in one closed knot under the ridge-roll end and the lead hat (no butts meeting in a V)."""
 
 
 class _LocalAcc:
@@ -843,10 +848,29 @@ def _verge_roll_path(roof, sg, x_lo, x_hi, out=0.05, rc=0.45, apex=0.02, ds=0.03
     return P if sg < 0 else P[::-1].copy()
 
 
-def _verge_rolls(roof, acc, x_lo, x_hi, seed=0, out=0.05, rc=0.45, apex=0.02, taper=0.12, **_):
+def _apex_bend(roof, x, sg, rb, over, first):
+    """kit 1.18: the apex bend of a verge roll on slope sg at ridge coordinate x (local points + ups): a circular arc
+    of radius rb in the gable plane, tangent to both rakes (centre on the ridge plane under the apex), from the
+    tangent point on slope sg over the apex to `over` m past the ridge plane on the far side.  first=True: ordered
+    far end -> tangent point (prepended to a path that starts down the rake), else tangent point -> far end; the
+    tangent point itself is excluded (it is the rake's own end station)."""
+    p = roof.p
+    zc = roof.z_lip + roof.U * math.sin(p) - rb / math.cos(p)
+    n_a = max(10, int((p + over / rb) * rb / 0.025) + 1)
+    ph = np.linspace(-sg * over / rb, sg * p, n_a)[:-1]
+    if not first:
+        ph = ph[::-1]
+    P = np.stack([np.full(len(ph), float(x)), rb * np.sin(ph), zc + rb * np.cos(ph)], 1)
+    U = np.stack([np.zeros(len(ph)), np.sin(ph), np.cos(ph)], 1)
+    return P, U
+
+
+def _verge_rolls(roof, acc, x_lo, x_hi, seed=0, out=0.05, rc=0.45, apex=0.02, taper=0.12, apex_bend=None,
+                 bend_over=0.24, **_):
     """kit 1.17 (see VERGE_ROLL): the eave roll and both verge rolls of each slope as ONE thatch.d_roll sweep (the
     same section, swelling and calm, rounded ends as _eave_rolls), laid in the roof's local frame with the slope
-    normal as the section's up and warped vertex by vertex.  Returns {sg: station points (world)}."""
+    normal as the section's up and warped vertex by vertex.  Returns {sg: station points (world)}.
+    kit 1.18: apex_bend (see VERGE_ROLL) -- both ends of each slope's sweep run on over the apex (_apex_bend)."""
     from .thatch import d_roll
     uo, vis = roof.roll_section()
     prof = np.asarray(uo, float).copy()                    # (u inward, o out of the slope) = (right, up)
@@ -856,9 +880,18 @@ def _verge_rolls(roof, acc, x_lo, x_hi, seed=0, out=0.05, rc=0.45, apex=0.02, ta
     out_ = {}
     la = _LocalAcc(acc, roof)
     for sg in (-1, 1):
-        XU = _verge_roll_path(roof, sg, x_lo, x_hi, out=out, rc=rc, apex=apex)
+        if apex_bend:
+            rb = float(apex_bend)
+            XU = _verge_roll_path(roof, sg, x_lo, x_hi, out=out, rc=rc, apex=rb * math.tan(roof.p))
+        else:
+            XU = _verge_roll_path(roof, sg, x_lo, x_hi, out=out, rc=rc, apex=apex)
         path = roof.surf(XU[:, 0], XU[:, 1], sg, np.zeros(len(XU)))
         ups = np.broadcast_to(roof.normal(sg), path.shape).copy()
+        if apex_bend:
+            Pa, Ua = _apex_bend(roof, XU[0, 0], sg, rb, float(bend_over), True)
+            Pb, Ub = _apex_bend(roof, XU[-1, 0], sg, rb, float(bend_over), False)
+            path = np.concatenate([Pa, path, Pb])
+            ups = np.concatenate([Ua, ups, Ub])
 
         def kb(P, sg=sg):
             return np.abs(np.asarray(P, float)[:, 1]) < 0.35          # the closed back at the two apex ends

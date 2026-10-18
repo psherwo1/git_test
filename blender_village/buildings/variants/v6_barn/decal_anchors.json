@@ -396,7 +396,7 @@
    "type": "moss",
    "position": [
     -0.3919,
-    3.72994,
+    3.72993,
     3.55707
    ],
    "normal": [
@@ -630,7 +630,7 @@
    "type": "damp_rise",
    "position": [
     4.25806,
-    -3.48606,
+    -3.48607,
     0.69
    ],
    "normal": [
@@ -656,7 +656,7 @@
    "type": "damp_rise",
    "position": [
     5.85812,
-    -3.47648,
+    -3.47649,
     0.69
    ],
    "normal": [
@@ -1020,7 +1020,7 @@
    "type": "damp_rise",
    "position": [
     -6.92438,
-    -1.49917,
+    -1.49918,
     0.69
    ],
    "normal": [
@@ -1098,7 +1098,7 @@
    "type": "damp_rise",
    "position": [
     -4.14194,
-    -3.4956,
+    -3.49561,
     0.69
    ],
    "normal": [
@@ -1124,7 +1124,7 @@
    "type": "damp_rise",
    "position": [
     -2.54187,
-    -3.47862,
+    -3.47863,
     0.69
    ],
    "normal": [
@@ -1176,7 +1176,7 @@
    "type": "repair_patch",
    "position": [
     6.15811,
-    -3.47896,
+    -3.47897,
     2.03988
    ],
    "normal": [
@@ -1254,7 +1254,7 @@
    "type": "repair_patch",
    "position": [
     3.35808,
-    3.48858,
+    3.48857,
     2.32573
    ],
    "normal": [
@@ -1384,7 +1384,7 @@
    "type": "grime",
    "position": [
     -6.92968,
-    -0.69916,
+    -0.69917,
     1.98136
    ],
    "normal": [
@@ -1540,7 +1540,7 @@
    "type": "water_streak",
    "position": [
     7.04968,
-    1.50095,
+    1.50094,
     1.23093
    ],
    "normal": [
@@ -1695,14 +1695,14 @@
    "name": "DA_water_streak_008",
    "type": "water_streak",
    "position": [
-    -1.55194,
-    -3.41883,
+    -1.55041,
+    -3.40921,
     3.13012
    ],
    "normal": [
-    0.0,
-    -1.0,
-    -0.0
+    0.38269,
+    -0.92388,
+    0.0
    ],
    "up": [
     0.0,
@@ -1710,8 +1710,8 @@
     1.0
    ],
    "size": [
-    0.1875,
-    0.4798
+    0.25,
+    0.6398
    ],
    "surface": "M_timber_weathered",
    "probability": 0.6,
@@ -1722,7 +1722,7 @@
    "type": "water_streak",
    "position": [
     1.66806,
-    -3.41414,
+    -3.4194,
     3.08325
    ],
    "normal": [
@@ -1736,8 +1736,8 @@
     1.0
    ],
    "size": [
-    0.1875,
-    0.5501
+    0.25,
+    0.7335
    ],
    "surface": "M_timber_weathered",
    "probability": 0.6,
@@ -1747,7 +1747,7 @@
    "name": "DA_damp_rise_018",
    "type": "damp_rise",
    "position": [
-    -1.82194,
+    -1.92194,
     -3.52314,
     0.35
    ],
@@ -1773,7 +1773,7 @@
    "name": "DA_damp_rise_019",
    "type": "damp_rise",
    "position": [
-    1.93806,
+    2.03806,
     -3.52314,
     0.35
    ],
@@ -1805,8 +1805,9 @@
   "wall_z": 3.1,
   "pitch": 50.0,
   "cart_x": 0.0,
-  "clear": 4.0,
+  "clear": 4.2,
   "spring": 1.9,
+  "pad_top": 0.13,
   "arch_t": 0.26,
   "z_tie": 3.52,
   "frame_half": 2.3,
@@ -1824,7 +1825,7 @@
   "snapped": 4,
   "max_move": 0.02,
   "renormal": 9,
-  "shrunk": 13,
+  "shrunk": 11,
   "no_surface": 2,
   "wrong_surface": 1,
   "excluded": 9,

@@ -121,3 +121,45 @@ No rng draw was added or moved on any default path.
 
 - `verge_roll`: the two rakes' roll ends meet under the capped ridge roll and the apex finial's lead hat (a small knot of roll ends there). The fillet radius is limited by the roll's visible inward depth (about 0.34 m): a larger `rc` leaves the course corner outside the roll.
 - `comb_backing` is a plain board: it only shows where two shakes part.
+
+## Round 3
+
+The round-2 grade's three must-fixes, all as defaults-off options (proposed kit 1.18). No other kit change.
+
+### `components/linear_roof.py` (existing module: new options only)
+
+| change | default | what it does |
+|---|---|---|
+| `VERGE_ROLL["apex_bend"]` (`linear_roof(verge_roll=dict(apex_bend=r))`) and `_apex_bend()` | `None` = the round-2 path | **the apex joint of the rolled verge.** Each slope's rake roll now stops at the tangent point of a radius-`r` arc in the gable plane (`apex` = `r tan(pitch)` below the ridge) and runs on **over the apex** in one swept bend. The section turns with it: its up runs from the slope normal, through vertical, to the other slope's normal, so the section's inward side stays along the ridge. It ends `bend_over` m (default 0.24) past the ridge plane, where its rounded taper is buried in the other slope's roll. The two rolls cross in one closed knot under the ridge-roll end and the lead hat: no butts and no V. The barn uses `r` 0.22 and `bend_over` 0.12. At 0.24 the two full-size sections share about 0.24 m and their +-1 cm swelling interleaves; at 0.12 the seam is one clean taper line. |
+| `VERGE_ROLL["bend_over"]` | 0.24 (read only with `apex_bend`) | how far each bend runs past the ridge plane. |
+
+### `components/cruck.py` (existing module: new options only)
+
+| change | default | what it does |
+|---|---|---|
+| `cruck_frame(pad_top=None)` | `None` = 0.0, the old pads (z -0.30..0) and posts from z 0 | **proud pad stones.** Each dressed pad is built from z -0.30 to `pad_top` with 3 cm arrises, and the jamb post starts 1 cm inside it, so the post visibly stands on a stone. The barn uses 0.13. |
+| `cruck_frame(gate=None)` + `_gate()` | `None` = no check, no record | **the arched opening's clearance gate.** It takes a list of `(label, width, height)` envelopes, centred. Each envelope is checked against the clear half-width at 57 heights up to its top: the pads' inner nosing below `pad_top`, the posts' inner faces up to the springing, and the arch intrados above. A height over the crown fails. Each envelope is logged PASS / FAIL; a FAIL raises `guards.ClearanceError`. The result is stored in `g.CRUCKS[-1]["gate"]`, and the frame is appended to `g.CRUCK_ENTRANCES` (origin, out = `n`, width = the opening `2 a_in`, head = the crown). |
+
+### `guards.py` (existing module: one new optional source)
+
+- `entrances_of(g)` also reads `g.CRUCK_ENTRANCES` when it exists. Only `cruck_frame(gate=...)` sets it, and the recentre shift is applied as for the wall doors. So the kit's eave-lip gate (`entrance_clearance`) checks the roof over a gated arch like any door. No other building sets the attribute.
+
+### Recipe-only changes (no kit change)
+
+- **The arch** (must-fix 3): `clear` 4.0 -> **4.2** (opening between the posts 3.40 -> 3.60 m, R 1.74 -> 1.87). The spring stays 1.90 and the crown 3.26, so the arch stays near-semicircular. At 2.8 m the clear width is 2.449 m (2.36 before).
+- `CART_GATE = [("cart", 2.4, 2.8), ("figure", 0.6, 1.8)]`.
+- `pad_top` 0.13.
+- The plinth's free ends now run 5 cm into the jamb posts (`PAD = clear/2 - 0.09`; before, 2 cm into the flush pads, 5 cm short of the post). The old end left a thin see-through slot between the last rubble stone and the post's outer face, under the sill. It is red in the d24 void twin in round 2, and in round 3's first full build (b07). A 1 cm run-in did not close it, because the rubble end stones stop short of the path end.
+
+### Hash rule (round 3)
+
+Not triggered; not run. No existing default changed:
+- `cruck_frame` with `pad_top=None` makes the same post `wbox` call (z0 = `0.0 - 0.0`) and the same pad call. With `gate=None`, `_gate` is never called and no attribute is set. The rng draw order is unchanged, and the harbour house uses neither option.
+- `entrances_of`: there is no `CRUCK_ENTRANCES` attribute without `gate`.
+- `_verge_rolls` with `apex_bend=None` is the round-2 code path. The two new `VERGE_ROLL` keys are only read there, and `verge_roll` is barn-only (kit 1.17).
+
+### Known limitations (round 3)
+
+- The apex knot is two crossing sweeps, not one loop. Where the second roll's taper dies into the first, there is a soft seam line, under the lead hat's drip.
+- The gate's envelopes are centred. It does not model door leaves (they open inward behind the frame), the hub-height bulge of a real cart, or a figure walking beside a cart.
+- The arched cart doors' outer bottom corners stand 10 cm into the proud pads' inner nosing, behind the posts.

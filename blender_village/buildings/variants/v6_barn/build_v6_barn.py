@@ -1,4 +1,4 @@
-"""v6_barn (BARN) -- the village barn, round 2.  A declarative RECIPE: every piece is a village_kit module; the building
+"""v6_barn (BARN) -- the village barn, round 3.  A declarative RECIPE: every piece is a village_kit module; the building
 is dimensions + the order of the steps.
 
 Run:  python -I build_v6_barn.py  -> v6_barn.blend + decal_anchors.json (next to this file)
@@ -14,6 +14,10 @@ Built centred on the plan (x along the ridge, the front long side at y = Y0, gro
          dressed pad stones, a near-semicircular arch, tie beam, short blades and plank infill up to the thatch) with
          round-headed plank cart doors filling the arch (cruck.arched_doors), under the thatch EYELID: the eave
          sweeps up over it in one soft arch (GableRoof eave_lift) -- one organic composition
+  r3     the rake rolls run on over each apex in one swept bend (verge_roll apex_bend: no open V under the lead hat);
+         the jamb posts stand on PROUD dressed pads (cruck_frame pad_top); the arch is 4.2 m clear (opening 3.60 m,
+         R 1.87) and gated: cruck_frame(gate=...) checks a 2.4 x 2.8 m cart and the 1.8 m figure inside the intrados
+         and publishes the entry to the kit's eave-lip clearance gate
   doors  a man door with steps in the east gable, a hayloft door high in the west gable under a hoist beam, small
          shuttered windows and slits
 """
@@ -37,7 +41,7 @@ BID = "v6_barn"
 
 # ---- the ONE dimension table ----------------------------------------------------------------------------------
 DIM = KitParams(half=3.5, x0=-7.0, x1=7.0, plinth=0.35, plate=3.0, wall_z=3.10, pitch=50.0,
-                cart_x=0.0, clear=4.0, spring=1.90, arch_t=0.26, z_tie=3.52, frame_half=2.30, end=1.90,
+                cart_x=0.0, clear=4.2, spring=1.90, pad_top=0.13, arch_t=0.26, z_tie=3.52, frame_half=2.30, end=1.90,
                 lift_w=10.0, lift_h=1.55, lift_fade=3.0)
 HALF = DIM["half"]
 X0, X1, Y0, Y1 = DIM["x0"], DIM["x1"], -HALF, HALF
@@ -47,7 +51,8 @@ ROOF = GableRoof(x0=X0, x1=X1, half=HALF, wall_z=DIM["wall_z"], pitch_deg=DIM["p
                  eave_sweep=0.22, sweep_len=1.2, verge_flare=0.24, flare_len=1.8, wave=0.03, wave_seed=61, ridge_seat=True,
                  eave_lifts=[eave_lift(DIM["cart_x"], side=-1, width=DIM["lift_w"], height=DIM["lift_h"],
                                        fade=DIM["lift_fade"])])
-PAD = DIM["clear"] / 2 + 0.03 - 0.02           # the plinth runs 2 cm into the cruck's pad stones
+PAD = DIM["clear"] / 2 - 0.04 - 0.05           # round 3: the plinth runs 5 cm into the jamb posts
+CART_GATE = [("cart", 2.4, 2.8), ("figure", 0.6, 1.8)]   # round 3: the arched entry's clearance envelopes
 
 # ---- plan: one open path round the barn from the entry's east post to its west post (interior on the left) -----
 PATH = [(XE, Y0), (X1, Y0), (X1, Y1), (X0, Y1), (X0, Y0), (XW, Y0)]
@@ -82,10 +87,12 @@ def steps():
         (cruck_frame, dict(name="cart_entry", O=(DIM["cart_x"], Y0, 0.0), t=(1.0, 0.0, 0.0), n=(0.0, -1.0, 0.0),
                            half=DIM["frame_half"], top_fn=ROOF_TOP, z_pier=DIM["z_tie"], clear=DIM["clear"],
                            spring=DIM["spring"], tie=0.26, member_w=(-0.28, 0.02), post=0.26, arch_t=DIM["arch_t"],
-                           blade=0.22, collar_at=0.45, collar=0.14, braces=False, king_strut=False, seed=901)),
+                           blade=0.22, collar_at=0.45, collar=0.14, braces=False, king_strut=False, seed=901,
+                           pad_top=DIM["pad_top"], gate=CART_GATE)),
         (arched_doors, dict(name="cart_doors", seed=911)),
         (linear_roof, dict(roof=ROOF, covering="thatch", seed=71, ridge_caps=True, verge_apex=True,
-                           apex_finial="turned", verge_roll=True, comb_step=0.75, comb_backing=True,
+                           apex_finial="turned", verge_roll=dict(apex_bend=0.22, bend_over=0.12),
+                           comb_step=0.75, comb_backing=True,
                            rafter_lift_max=0.08)),
         (hoist_beam, dict(name="hoist", at=(X0, 0.0), out=(-1.0, 0.0), z=6.30)),
     ] + ([] if os.environ.get("BARN_FAST") else [(composite_hidden_cull, dict(min_polys=200))]) + [recenter]

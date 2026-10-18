@@ -1,0 +1,61 @@
+﻿00:02.078  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+SHOT W_leaf_post_d39                rays  230400 LEAK   13 VOID   12 {'BARN_walls_frame': 12}
+     leak entry clusters (0.1 m): [(-1.4, -3.5, 0.2, 13)]
+     leak first-hit clusters (0.2 m): [('GROUND', -3.0, -2.2, 0.0, 4), ('GROUND', -2.8, -2.4, 0.0, 4), ('GROUND', -3.2, -2.0, 0.0, 3), ('GROUND', -3.4, -2.0, 0.0, 1), ('GROUND', -3.2, -2.2, 0.0, 1)]
+     void clusters (0.1 m): [('BARN_walls_frame', -7.0, -3.5, 0.4, 7), ('BARN_walls_frame', -6.7, -3.6, 0.5, 3), ('BARN_walls_frame', -6.7, -3.5, 0.5, 2)]
+     void (1, 80, [-6.738, -3.568, 0.515], 'BARN_walls_frame')
+     void (2, 80, [-6.733, -3.561, 0.515], 'BARN_walls_frame')
+     void (3, 80, [-6.728, -3.553, 0.515], 'BARN_walls_frame')
+     void (4, 80, [-6.722, -3.545, 0.515], 'BARN_walls_frame')
+SHOT W_leaf_post_eye                rays  230400 LEAK   39 VOID    0 {}
+     leak entry clusters (0.1 m): [(-0.5, -3.5, 0.9, 17), (-0.5, -3.5, 1.0, 12), (-0.5, -3.5, 1.1, 8), (-0.5, -3.5, 0.8, 2)]
+     leak first-hit clusters (0.2 m): [('GROUND', -3.4, 0.6, 0.0, 5), ('GROUND', -2.8, -0.2, 0.0, 5), ('GROUND', -2.6, -0.6, 0.0, 5), ('GROUND', -2.4, -0.8, 0.0, 5), ('GROUND', -2.2, -1.0, 0.0, 5), ('GROUND', -3.0, 0.0, 0.0, 3), ('GROUND', -2.4, -0.6, 0.0, 3), ('GROUND', -4.0, 1.4, 0.0, 2), ('GROUND', -2.8, 0.0, 0.0, 2), ('GROUND', -4.0, 1.6, 0.0, 1)]
+     void clusters (0.1 m): []
+SHOT W_post_head_close              rays  230400 LEAK  849 VOID    0 {}
+     leak entry clusters (0.1 m): [(-2.2, -3.5, 3.6, 318), (-2.3, -3.5, 3.6, 190), (-2.2, -3.5, 3.7, 122), (-2.0, -3.5, 3.7, 80), (-2.1, -3.5, 3.7, 75), (-1.9, -3.5, 3.7, 26), (-2.3, -3.5, 3.7, 17), (-1.9, -3.5, 3.8, 7)]
+     leak first-hit clusters (0.2 m): [('BARN_barn_roof_deck', -4.8, 1.4, 5.4, 202), ('BARN_barn_roof_deck', -4.8, 1.2, 5.6, 96), ('BARN_barn_roof_deck', -5.0, 1.4, 5.4, 85), ('BARN_barn_roof_deck', -4.6, 1.2, 5.6, 76), ('BARN_barn_roof_deck', -5.0, 1.4, 5.6, 70), ('BARN_barn_roof_deck', -4.8, 1.4, 5.6, 63), ('BARN_barn_roof_deck', -4.2, 1.2, 5.6, 61), ('BARN_barn_roof_deck', -4.4, 1.2, 5.6, 46), ('BARN_barn_roof_deck', -4.0, 1.2, 5.6, 23), ('BARN_barn_roof_deck', -3.6, 1.0, 5.8, 22)]
+     void clusters (0.1 m): []
+SHOT E_post_head_close              rays  230400 LEAK 1495 VOID    0 {}
+     leak entry clusters (0.1 m): [(2.4, -3.5, 3.6, 460), (2.3, -3.5, 3.6, 390), (2.5, -3.5, 3.6, 213), (2.2, -3.5, 3.7, 110), (2.1, -3.5, 3.7, 95), (2.3, -3.5, 3.7, 90), (2.0, -3.5, 3.7, 66), (2.6, -3.5, 3.6, 45)]
+     leak first-hit clusters (0.2 m): [('BARN_barn_roof_deck', 5.0, 1.4, 5.4, 332), ('BARN_barn_roof_deck', 5.2, 1.4, 5.4, 212), ('BARN_barn_roof_deck', 4.8, 1.4, 5.4, 149), ('BARN_barn_roof_deck', 5.4, 1.4, 5.4, 147), ('BARN_barn_roof_deck', 5.0, 1.4, 5.6, 82), ('BARN_barn_roof_deck', 5.6, 1.4, 5.4, 82), ('BARN_barn_roof_deck', 4.6, 1.2, 5.6, 67), ('BARN_barn_roof_deck', 4.8, 1.2, 5.6, 67), ('BARN_barn_roof_deck', 4.4, 1.2, 5.6, 66), ('BARN_barn_roof_deck', 4.2, 1.2, 5.6, 64)]
+     void clusters (0.1 m): []
+SHOT arch_springing_W               rays  230400 LEAK  193 VOID    0 {}
+     leak entry clusters (0.1 m): [(-1.2, -3.5, 2.3, 48), (-1.1, -3.5, 2.4, 41), (-1.3, -3.5, 2.1, 31), (-1.2, -3.5, 2.2, 29), (-1.3, -3.5, 2.2, 29), (-1.3, -3.5, 2.0, 8), (-1.1, -3.5, 2.3, 4), (-1.1, -3.5, 2.5, 2)]
+     leak first-hit clusters (0.2 m): [('BARN_walls_blockers', -5.8, 0.4, 4.0, 41), ('BARN_walls_blockers', -5.8, 0.6, 4.6, 24), ('BARN_walls_blockers', -5.8, 0.6, 4.4, 22), ('BARN_walls_blockers', -5.8, 0.4, 4.2, 20), ('BARN_walls_blockers', -5.8, 0.8, 4.8, 18), ('BARN_walls_blockers', -5.8, 0.2, 3.6, 13), ('BARN_walls_blockers', -5.8, 0.2, 3.8, 12), ('BARN_barn_roof_deck', -6.4, 1.4, 5.4, 11), ('BARN_walls_blockers', -5.8, 0.8, 5.0, 9), ('BARN_walls_blockers', -5.8, 0.6, 4.8, 7)]
+     void clusters (0.1 m): []
+SHOT arch_springing_E               rays  230400 LEAK  272 VOID    0 {}
+     leak entry clusters (0.1 m): [(1.4, -3.5, 2.1, 81), (1.4, -3.5, 2.2, 59), (1.3, -3.5, 2.3, 49), (1.3, -3.5, 2.2, 28), (1.2, -3.5, 2.4, 23), (1.5, -3.5, 2.0, 19), (1.4, -3.5, 2.0, 13)]
+     leak first-hit clusters (0.2 m): [('BARN_walls_blocker', 7.0, 1.2, 4.4, 42), ('BARN_walls_blocker', 7.0, 1.2, 4.2, 40), ('BARN_walls_blocker', 7.0, 1.4, 4.6, 39), ('BARN_walls_blocker', 7.0, 1.4, 4.8, 36), ('BARN_walls_blocker', 7.0, 1.2, 4.0, 26), ('BARN_walls_blocker', 7.0, 1.4, 5.0, 15), ('BARN_walls_blocker', 7.0, 1.0, 3.8, 15), ('BARN_walls_blocker', 7.0, 1.6, 5.0, 13), ('BARN_barn_roof_deck', 6.6, 1.6, 5.4, 12), ('BARN_walls_blocker', 7.0, 1.6, 5.2, 12)]
+     void clusters (0.1 m): []
+SHOT eyelid_6m                      rays  230400 LEAK  341 VOID    0 {}
+     leak entry clusters (0.1 m): [(-4.2, -3.5, 2.1, 26), (-4.4, -3.5, 2.1, 23), (-4.2, -3.5, 1.8, 23), (-4.3, -3.5, 2.1, 22), (-4.2, -3.5, 1.9, 20), (-4.4, -3.5, 1.8, 20), (-4.4, -3.5, 1.9, 19), (-4.4, -3.5, 2.0, 16)]
+     leak first-hit clusters (0.2 m): [('BARN_walls_blockers', -5.0, -2.8, 1.6, 63), ('BARN_walls_blockers', -5.0, -2.8, 1.4, 53), ('BARN_walls_blockers', -5.0, -3.0, 1.6, 49), ('BARN_walls_blockers', -5.0, -3.0, 1.4, 42), ('BARN_walls_blockers', -5.0, -3.0, 1.8, 41), ('BARN_walls_blockers', -5.0, -2.8, 1.2, 19), ('GROUND', -1.6, 2.0, 0.0, 5), ('GROUND', -1.4, 1.6, 0.0, 5), ('GROUND', -1.4, 1.4, 0.0, 5), ('GROUND', -1.2, 1.0, 0.0, 5)]
+     void clusters (0.1 m): []
+SHOT loft_hoist                     rays  230400 LEAK 49361 VOID    0 {}
+     leak entry clusters (0.1 m): [(-6.9, -0.5, 3.3, 368), (-6.9, -0.4, 3.4, 365), (-6.9, -0.5, 3.6, 364), (-6.9, -0.5, 3.4, 364), (-6.9, -0.4, 3.3, 362), (-6.9, -0.5, 3.5, 360), (-6.9, -0.4, 3.8, 358), (-6.9, -0.3, 3.6, 358)]
+     leak first-hit clusters (0.2 m): [('BARN_walls_blockers', -5.8, -0.2, 3.6, 889), ('BARN_walls_blockers', -5.8, -0.2, 3.4, 870), ('BARN_walls_blockers', -5.8, 0.0, 3.4, 858), ('BARN_walls_blockers', -5.8, -0.2, 3.8, 854), ('BARN_walls_blockers', -5.8, -0.2, 4.0, 850), ('BARN_walls_blockers', -5.8, -0.2, 4.2, 839), ('BARN_walls_blockers', -5.8, 0.0, 3.8, 839), ('BARN_walls_blockers', -5.8, 0.0, 3.6, 832), ('BARN_walls_blockers', -5.8, 0.0, 4.0, 829), ('BARN_walls_blockers', -5.8, 0.2, 3.4, 822)]
+     void clusters (0.1 m): []
+SHOT loft_hoist_6m                  rays  230400 LEAK 26205 VOID    0 {}
+     leak entry clusters (0.1 m): [(-6.9, 0.5, 4.7, 177), (-6.9, 0.4, 4.7, 172), (-6.9, 0.4, 4.6, 169), (-6.9, 0.5, 4.6, 169), (-6.9, 0.3, 4.7, 168), (-6.9, 0.5, 4.5, 168), (-6.9, 0.1, 4.7, 167), (-6.9, 0.2, 4.7, 167)]
+     leak first-hit clusters (0.2 m): [('BARN_walls_blockers', -5.8, 0.2, 4.4, 468), ('BARN_walls_blockers', -5.8, 0.0, 4.4, 443), ('BARN_walls_blockers', -5.8, 0.2, 4.0, 443), ('BARN_walls_blockers', -5.8, -0.2, 4.4, 440), ('BARN_walls_blockers', -5.8, 0.2, 4.2, 440), ('BARN_walls_blockers', -5.8, 0.0, 4.2, 436), ('BARN_walls_blockers', -5.8, -0.2, 4.2, 435), ('BARN_walls_blockers', -5.8, 0.2, 3.8, 424), ('BARN_walls_blockers', -5.8, -0.2, 4.0, 423), ('BARN_walls_blockers', -5.8, 0.0, 4.0, 422)]
+     void clusters (0.1 m): []
+SHOT man_door_E                     rays  230400 LEAK  185 VOID  749 {'BARN_plinth_stones': 749}
+     leak entry clusters (0.1 m): [(7.1, -1.6, 1.2, 23), (7.1, -1.4, 1.1, 22), (7.1, -1.4, 1.0, 22), (7.1, -1.4, 1.2, 21), (7.1, -1.4, 0.9, 20), (7.1, -1.6, 1.7, 16), (7.1, -1.6, 1.6, 16), (7.1, -1.4, 0.8, 14)]
+     leak first-hit clusters (0.2 m): [('BARN_walls_blockers', 5.4, -1.0, 1.0, 29), ('BARN_walls_blockers', 5.4, -0.8, 0.8, 29), ('BARN_walls_blockers', 5.4, -0.8, 1.0, 28), ('BARN_walls_blockers', 5.4, -0.8, 0.6, 25), ('BARN_walls_blockers', 5.4, -1.0, 1.6, 19), ('BARN_walls_blockers', 5.4, -1.0, 1.8, 13), ('BARN_walls_blockers', 6.2, -1.0, 0.6, 10), ('BARN_walls_blockers', 5.6, -0.8, 0.6, 7), ('BARN_walls_blockers', 5.4, -1.0, 1.2, 6), ('BARN_walls_blockers', 6.0, -1.0, 0.6, 6)]
+     void clusters (0.1 m): [('BARN_plinth_stones', 7.1, 0.1, 0.2, 141), ('BARN_plinth_stones', 7.1, 0.0, 0.2, 131), ('BARN_plinth_stones', 7.1, -0.1, 0.2, 118), ('BARN_plinth_stones', 7.1, -0.2, 0.2, 116), ('BARN_plinth_stones', 7.1, -0.3, 0.2, 108), ('BARN_plinth_stones', 7.1, 0.2, 0.2, 78), ('BARN_plinth_stones', 7.1, -0.4, 0.2, 16), ('BARN_plinth_stones', 7.2, -0.1, 0.2, 15)]
+     void (562, 349, [7.06, 0.133, 0.196], 'BARN_plinth_stones')
+     void (563, 349, [7.061, 0.139, 0.196], 'BARN_plinth_stones')
+     void (564, 349, [7.062, 0.145, 0.195], 'BARN_plinth_stones')
+     void (565, 349, [7.063, 0.151, 0.195], 'BARN_plinth_stones')
+SHOT back_eye                       rays  230400 LEAK  232 VOID    4 {'BARN_barn_roof_covering': 4}
+     leak entry clusters (0.1 m): [(4.5, 3.5, 2.3, 14), (4.4, 3.5, 2.3, 14), (4.5, 3.5, 2.2, 14), (4.4, 3.5, 2.2, 14), (4.5, 3.5, 2.0, 14), (4.4, 3.5, 2.0, 14), (4.5, 3.5, 2.1, 13), (0.0, 3.5, 2.3, 12)]
+     leak first-hit clusters (0.2 m): [('BARN_walls_blockers', 4.8, 2.4, 2.4, 46), ('BARN_walls_blockers', 4.8, 2.4, 2.0, 44), ('BARN_walls_blockers', 4.8, 2.4, 2.2, 42), ('BARN_walls_blockers', -0.2, 2.4, 2.0, 30), ('BARN_walls_blockers', -0.2, 2.4, 2.4, 29), ('BARN_walls_blockers', -0.2, 2.4, 2.2, 25), ('BARN_walls_blockers', -4.8, 2.8, 2.0, 10), ('BARN_walls_blockers', -4.8, 2.8, 2.4, 4), ('BARN_walls_blockers', -4.8, 2.8, 2.2, 2)]
+     void clusters (0.1 m): [('BARN_barn_roof_covering', -7.4, 0.4, 7.7, 3), ('BARN_barn_roof_covering', -7.4, 0.3, 7.7, 1)]
+     void (557, 0, [-7.432, 0.32, 7.743], 'BARN_barn_roof_covering')
+     void (558, 0, [-7.432, 0.358, 7.726], 'BARN_barn_roof_covering')
+     void (558, 1, [-7.432, 0.356, 7.698], 'BARN_barn_roof_covering')
+     void (558, 2, [-7.432, 0.355, 7.671], 'BARN_barn_roof_covering')
+DONE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

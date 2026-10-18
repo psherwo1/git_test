@@ -269,3 +269,265 @@ Kit changes are in `kit/changes/v6_barn.md` (round 2, proposed kit 1.17).
 - No round-3 polish was attempted: no hoist rope or longer beam, and no lean-to hook on the back.
 - The director's line-up / T-montage (`dir_lineup_r01.py`) was not re-run. d13 / d14 are the builder's thumbnails from the same rig.
 - A stray empty directory `C:\buildings` was created outside the repo by one render call with a relative path. Its contents were moved or removed. The tool guard blocks deleting the empty folder itself.
+
+## v6_barn round 2 — score 8.1/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only, no ground dressing (note 10), no surface-detail requests (note 12). Binding: producer notes 1-17, the CLIENT DIRECTION and Brief at the top, the CLIENT DIRECTION of 19:40 (cruck cart entry, low plinth) and the PRODUCER NOTE of 20:16. I re-read this log before starting and again before writing. Nothing was added after the round-2 builder entry. **The round has the client's cruck arched cart entry and no kiln, so the producer's 8.1 cap does not apply.**
+
+**Reviewed:**
+- the recipe `build_v6_barn.py` (112 lines);
+- `kit/changes/v6_barn.md` (round 2);
+- the new kit code: `cruck.arched_doors`, the `g.CRUCKS` record keys, and the `linear_roof` options `verge_roll`, `comb_step`, `comb_backing` and `rafter_lift_max`;
+- the six `round_02` views, `stats.json`, `hidden.json` and `decal_anchors.json` (68 anchors: 16 moss on `M_thatch`, no soot);
+- all 32 `builder_extra` shots.
+
+**Director checks** (`renders/variants/v6_barn/round_02/director_extra/`):
+- **`dir_render_r02.py`** (from `dir_render_r01.py`) makes 20 shots. It adds a **void twin**: front faces black, BACK faces yellow, red world. Yellow means a slot that looks into a hollow or the culled interior, which the plain red twin cannot see.
+  - d21 / d22: post head, wall head and eyelid soffit, W and E.
+  - d23: arch crown, tie and infill.
+  - d24: door threshold and pads.
+  - d25: arch springing.
+  - d26: the eyelid fading into the eave.
+  - d27 / d28 and d35 / d36: the W and E apex, from 3 m and from the ground at eye level.
+  - d29 / d30: the SW and NE corner soffit from below.
+  - d31: ridge end profile.
+  - d32: hoist side-on.
+  - d33: loft door at eye level.
+  - d34: back at eye level.
+  - d13-d15: thumbnails.
+  - d17: W three-quarter at eye level.
+- **`dir_lineup_r02.py`** makes the note-16 line-up (v3 longhouse, v5 harbour house, v6 barn and the roundhut hero, one scale): L01 ortho front, L02 three-quarter, L03 aerial. It also makes the one-rig thumbnails (46 m, lens 50, 320 x 180, SW / SE). `dir_montage_r02.py` composes them into `T_thumb_montage_v3_v5_v6_hut.png`.
+
+**Numbers:**
+- 213,945 tris (cap 1,000,000);
+- hidden 13.3 % (cap 15 %);
+- 9 palette slots;
+- no mesh missing `Mask`;
+- 68 decal anchors;
+- man-door clearance PASS. The cart entry is not gated.
+
+| # | axis | score | why |
+|---|---|---|---|
+| 1 | Silhouette and massing | **8.4** | **For:** one long, steep, slumped thatch roof whose eave sweeps up in a thatch **eyelid** over a round-arched timber entry. It is the client's "one organic composition", and it reads at once in L01, the hero and both thumbnails. The new rolled verge gives each rake one soft line on the sky, with no saw-tooth (b05_red, side). **Against:** (a) the front is mirror-symmetric: entry, eyelid, windows at +-4.4 and finials all stamped about x = 0 (front, L01). (b) The arch is modest at thumbnail; the eyelid carries the read. |
+| 2 | Proportion and actor scale | **8.3** | **Entry:** 3.40 m between the posts, crown 3.26 m, eave lip about 4.2 m. **Man door:** 2.05 m with steps. **Also good:** the loft door on the plate, small shuttered windows and slits, all right next to the 1.8 m figure; plate 3.0 m, roof 50 deg. **Against:** (a) the arch head falls fast to the sides: at 2.8 m the clear width is only **2.36 m** (round 1's cart door was 3.0 x 2.8). (b) The hoist hook hangs only about 0.5 m outside the now-thicker verge roll (d32), so a load would hit the thatch. |
+| 3 | Construction logic | **8.2** | **For:** the cruck frame is carried: posts, a near-semicircular arch ring springing off the posts' inner faces (d25), the tie on the posts, and the infill to the thatch. The wall runs into the posts and stops at the tie bearing. The doors stand behind the ring, so they can swing in. The 13 tails that stood on nothing under the lift are gone, and the boarded soffit closes the eave (s08, d26). Spars wrap the roll (s09). **Against:** (a) the posts appear to stand **straight on the ground**. The pads are built at z -0.30..0, so only a flush top face exists (d24, s18, s19, actor_closeup). The client asked for "posts on dressed pad stones". (b) The hoist barely clears the roof (axis 2b). |
+| 4 | Seams and junctions | **8.0** | **Closed:** every cart-entry junction (d21-d26 void twins black; s17, s20 0 red), the filleted eave-verge corners (s12, d09, s13, d29, d30: black, with single-pixel specks only), the comb (d10_red, s09_red: red only in the sky) and the lift soffit. **Against:** **an open hollow at BOTH gable apexes.** The two rake rolls end in rounded butts that meet in a V under the lead hat, leaving a dark open triangle into the roll / hat hollow. It is yellow in the void twins d27, d28, d35 and d36, and visible from the ground at eye level (d35) and in s10 / b05. This is the gable's most prominent point. |
+| 5 | Distinctness and reuse | **8.6** | **Distinctness:** clearly a different building. The montage shows two "block + stone drum + cone" buildings (v3, v5), the hut, and a long soft thatched barn with an arched timber entry and no drum or cone. This is exactly the client's 19:40 aim. **Note 16:** the same rubble plinth, rough boarding, thatch courses, lead hats, turned finials and timber language (L01 / L02). **Reuse is exemplary:** `cruck_frame` comes over from the harbour house unchanged, moved from the quay to dry land. The one new component (`arched_doors`) reads the frame's published arch. Every softness (verge roll, comb, lift tails) is a defaults-off `linear_roof` option that any thatched design can use. |
+| 6 | Technical compliance | **8.3** | **Within limits:** triangles, hidden %, palette, `Mask`, determinism. The thatch now carries 16 moss anchors, and there is no soot on a hay barn. **Against:** (a) the cart entry, the main entrance, is outside the clearance gate. The client said "with clearances passing", and today that rests on hand numbers. (b) The 16 thatch moss anchors sit on a rigid 1.6 m grid in two rows. (c) `linear_roof` changed in two rounds with the hash rule reasoned, not run. |
+
+**Overall 8.1 / 10: REVISE (round 3 of 3, the last).** The client's direction is met, and met well: the arched cruck entry under the thatch eyelid is integral, organic and distinct, and the round-1 roof defects (saw-tooth verge, corner blobs, comb slits, loose tails, no thatch decals) are all fixed. It is held under 8.2 by one real hole (the apex) and two client-direction gaps (visible pads, a gated cart clearance). All three are small, local fixes. Do only these, and do not reopen anything else.
+
+**Strengths:**
+- **The signature:** the eyelid and the arched entry are one gesture. The eave lifts 1.55 m over a near-semicircular timber arch, round-headed plank doors fill it, and the courses flow round it (b01, b02, hero).
+- **The rolled verge** (`verge_roll`): one continuous D-section edge from apex to apex via both eaves, with true fillet corners. It is the best thatch edge in the kit and reusable by every thatched design.
+- **The reuse story:** the harbour house's boat arch, on land, unchanged. The barn is a 112-line declarative recipe.
+- **Closed and clean:** every entry junction passes the void twin. 214k tris and 9 slots.
+
+**Must-fix (round 3):**
+1. **Apex verge-roll joint** (`linear_roof._verge_rolls` / `_verge_roll_path`, `verge_roll=True`; both gables, under the turned finial's lead hat).
+   - **Now:** the two rakes' rolls end in separate rounded butts that meet in a V, leaving an open hollow under the hat (d27, d28, d35, d36 yellow; s10, b05 dark slot).
+   - **Should be:** a closed apex. Either:
+     - continue the roll path over the apex as ONE swept bend (a fillet in the gable plane, like the eave corner, passing under the ridge-roll end); or
+     - end both rolls inside a closed apex cap: the lead hat or ridge-roll end cap carried down over both roll ends, with a closed underside.
+   - **Check:** d35 / d36 void twins show no yellow.
+2. **Visible pad stones under the cruck posts** (`cruck.cruck_frame`, pads `wbox(pd, ..., -0.30, 0.0, ...)`; both posts of the cart entry).
+   - **Now:** the pads stop at z = 0 and the posts start at z = 0, so the posts read as driven into the ground.
+   - **Should be:** a defaults-off option (e.g. `pad_top=None` -> 0.0, the old path). The barn passes `pad_top` of about 0.12-0.15, so each dressed pad stands proud like the plinth's stones, and the post starts on the pad top. Keep the 2 cm plinth run-in.
+3. **Gate the cart entry's clearance** (`cruck.cruck_frame` / `g.CRUCKS` + the kit clearance guard; recipe `DIM`).
+   - **Now:** the main entrance is not checked. At 2.8 m the arch is only 2.36 m wide.
+   - **Should be:** two parts.
+     - **The guard:** `cruck_frame` registers its arch intrados as a clearance opening, defaults off or record-only, and `build.log` prints PASS for a 2.4 m wide x 2.8 m high cart envelope plus the 1.8 m figure.
+     - **The arch:** make the envelope pass by raising the springing to about 2.10 (R about 1.83, crown unchanged), or by widening `clear` to about 4.2 (opening 3.6, R about 1.87), keeping the eyelid's lip at least 0.8 m over the crown.
+
+**Nice-to-have (only if free):**
+- **Hoist beam** (`hoist_beam`): lengthen it to about 1.5 m, so the hook hangs at least 0.9 m clear of the verge roll's outer face, and add a rope.
+- **Front symmetry:** set `cart_x` about 0.8-1.2 m off centre (the eyelid follows), or vary one window, so the long side is not mirror-stamped.
+- **SW / NE corner from below** (d29): the plate end, the verge rafter foot and a bargeboard sliver form a small loose cluster under the fillet. Tidy it (the harbour-house polish item).
+- **Course ends at the verge** (d31): the course butts poke into the verge roll with faceted points. End them under the roll's inner face.
+- **Moss anchors:** jitter the 1.6 m two-row grid on `M_thatch`.
+- **Audit:** run the hash rule (`v6r2_hash` against `kit/baseline/6_r8kit_check` / `7_v5_ref`), since `linear_roof` changed in rounds 1 and 2.
+
+**Note 17:**
+- **Round element: PASS.** It is integral: the arch frame carries the wall head and the infill, and the eyelid is the roof's own warp over it. It is **distinct**: no drum and no cone, a timber arch, not masonry. The thumbnail montage confirms it.
+- **Soft lines: PASS.** The ridge sag, the eyelid, swept eaves, flared verges and the continuous rolled verge.
+
+**Reuse: PASS, and exemplary.** One unchanged cross-design module (`cruck_frame`), one new component (`arched_doors`), and defaults-off options only.
+## v6_barn round 3 — builder entry
+
+I re-read this log before starting and again before writing. No CLIENT DIRECTION or PRODUCER NOTE was added after the round-2 grade, so this round does the grade's three must-fixes and nothing else, as the director asked ("do not reopen anything else"). There were no nice-to-haves. The hoist, front symmetry, corner cluster, course ends and moss grid are all as in round 2.
+
+**Built:** `buildings/variants/v6_barn/build_v6_barn.py` (119 lines, declarative) -> `v6_barn.blend` + `decal_anchors.json`. The barn is the round-2 building with the three fixes below. Build: 264 s full, about 9 s with `BARN_FAST=1`.
+
+**Must-fixes:**
+1. **Apex verge-roll joint** (`linear_roof(verge_roll=dict(apex_bend=0.22, bend_over=0.12))`; new `VERGE_ROLL` keys, defaults off; option (a) of the grade).
+   - Each slope's rake roll now stops at the tangent point of a 0.22 m arc in the gable plane. It runs on **over the apex in one swept bend**, with the section turning with it: its up goes from the slope normal, through vertical, to the other slope's normal.
+   - It ends 0.12 m down the far side, where its rounded taper is buried in the other slope's roll. The two rolls cross in one closed knot under the ridge-roll end and the lead hat. There are no butts and no V.
+   - **Check:** the void twins **d27, d28, d35 and d36 show no yellow** (`round_03/builder_extra/`). s10, b05 and the new b08 (the W apex from above, oblique) show no slot. In `side.png` the gable reads as one rolled arch.
+   - At `bend_over` 0.24 (first FAST build) the two full sections shared about 0.24 m and their +-1 cm swelling interleaved in a mottled patch. At 0.12 the join is one clean taper line.
+2. **Proud pad stones** (`cruck_frame(pad_top=0.13)`; new option, None = the old flush pads).
+   - Each dressed pad now runs from z -0.30 to 0.13 with 3 cm arrises, and each jamb post starts 1 cm inside its pad. So the posts stand visibly on stones: b07, s18, s19, d24 and `actor_closeup`.
+   - **Seam found and fixed:** with proud pads, the old plinth end (2 cm into a flush pad, 5 cm short of the post) left a thin see-through slot under the sill, between the last rubble stone and the post. It is red in b07_void of the first full build, and the same slot is red in round 2's d24_void. The plinth's free ends now run 5 cm into the posts (recipe `PAD`; a 1 cm run-in did not close it). b07, s18, s19 and the d24 void twins are now black.
+3. **The cart entry's clearance is gated** (`cruck_frame(gate=CART_GATE)`; new option, None = no check; `guards.entrances_of` reads the new `g.CRUCK_ENTRANCES`).
+   - **The arch:** `clear` 4.0 -> **4.2**: opening 3.60 m between the posts, R 1.87. The spring stays 1.90 and the crown 3.26, so the arch stays near-semicircular, and the eyelid is unchanged (lip about 4.2 m over the crown, 0.9 m above it).
+   - **`build.log`:**
+     - `clearance gate BARN cart_entry arch: cart envelope 2.40 x 2.80 m -> clear width 2.449 m at its head (arch crown 3.26 m): PASS`
+     - `... figure envelope 0.60 x 1.80 m -> clear width 3.500 m: PASS`
+     - the kit's eave-lip gate on the published entry: `cart_entry_arch: door head 3.26 m, eave lip over it 3.740 m (lowest station, at the opening's edge) on BARN_barn_roof_deck (rule >= 3.26 m): PASS`
+     - the east man door: PASS.
+   - A FAIL raises `ClearanceError`.
+
+**Reuse:** no new component. The three fixes are defaults-off options on existing modules: `linear_roof` (`VERGE_ROLL` + `_apex_bend`), `cruck.cruck_frame` (`pad_top`, `gate` + `_gate`) and `guards.entrances_of` (one optional source). Kit changes are in `kit/changes/v6_barn.md` (round 3, proposed kit 1.18).
+
+**Hash rule:** not triggered; not run. With `pad_top=None` the post and pad `wbox` calls are the old ones (z0 `0.0 - 0.0`). With `gate=None`, `_gate` is never called and no attribute is set, so `entrances_of` adds nothing. `apex_bend=None` is the round-2 `_verge_rolls` path, which is barn-only. No rng draw was added or moved, and the harbour house uses neither cruck option.
+
+**Stats (round_03/stats.json):**
+- 213,651 tris;
+- hidden 12.8 %;
+- 9 palette slots (iron, lead, mortar, roof_shake, stone, stone_dressed, thatch, timber, timber_weathered);
+- no mesh is missing `Mask`;
+- 68 decal anchors;
+- bbox 16.09 x 8.79 x 9.27 m;
+- clearance PASS (cart envelope, figure, entry eave lip, man door).
+
+**Renders:**
+- `renders/variants/v6_barn/round_03/`: the six views at 24 samples.
+- `builder_extra/` (`bld_render_r03.py`: the director's `dir_render_r02.py` rig and void twins), 16 shots:
+  - b01 / b02: the entry, eye level and three-quarter;
+  - d25: the springing;
+  - d24, s18, s19, b07: the pads;
+  - d27, d28, d35, d36, s10, b05, b08: the apex bend;
+  - d13 / d14: thumbnails.
+- FAST-iteration probes are in `buildings/variants/v6_barn/scratch/r03_fast/`.
+
+**Known gaps:**
+- The apex knot is two crossing sweeps, not one loop. A soft seam line shows where the second roll's taper dies into the first, under the lead hat's drip (s10, b08). It is closed: the void twins are black.
+- The gate's envelopes are centred rectangles. They do not model a cart's hub bulge or a figure beside the cart. The arched leaves open inward behind the frame and are not modelled open.
+- The cart leaves' outer bottom corners stand about 10 cm into the proud pads' inner nosing, behind the posts.
+- The director's line-up / T-montage was not re-run. The massing is unchanged apart from a 0.2 m wider arch (d13 / d14).
+
+## v6_barn round 3 — score 8.4/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only, no ground dressing (note 10), no surface-detail requests (note 12). Binding: producer notes 1-17, the CLIENT DIRECTION and Brief at the top, the CLIENT DIRECTION of 19:40 (cruck arched cart entry, low plinth) and the PRODUCER NOTE of 20:16. I re-read this log before starting and again before writing: nothing was added after the round-3 builder entry.
+
+**Reviewed:**
+- the recipe `build_v6_barn.py` (119 lines) and `build.log` (the gate lines, the decal gate);
+- the new kit code: `cruck.cruck_frame(pad_top=, gate=)` and `cruck._gate`, `guards.entrances_of` (`g.CRUCK_ENTRANCES`), `linear_roof.VERGE_ROLL` (`apex_bend`, `bend_over`) and `_apex_bend`;
+- the six `round_03` views, `stats.json`, `hidden.json` and `decal_anchors.json` (68 anchors: 20 moss, 19 damp rise, 9 streaks, 7 grime, 7 patches, 5 lichen, 1 rust; no soot);
+- all 16 `builder_extra` shots and their void twins.
+
+**Director checks** (`renders/variants/v6_barn/round_03/director_extra/`):
+- **`dir_render_r03.py`** (from `dir_render_r02.py`, same rig and void twin) makes 18 shots:
+  - d21 / d22 and the new close-ups d37 / d38: the post heads under the eyelid after the 0.1 m outward move of each post;
+  - d23: the arch crown, tie and infill;
+  - d39 / d40: the door-leaf feet against the proud pads, W and E (the builder's "10 cm into the nosing" gap);
+  - d26: the eyelid fade;
+  - d41: the E apex bend from above (the twin of the builder's b08 W);
+  - d42: the W apex from the ridge side;
+  - d31: the ridge-end profile (red twin);
+  - d29: the SW corner soffit;
+  - d32: the hoist; d34: the back at eye level;
+  - d13-d15 thumbnails and d17 W three-quarter at eye level.
+- **`dir_lineup_r03.py`** makes the note-16 line-up at one scale (v3 longhouse, v5 harbour house, v6 barn, roundhut hero): L01 ortho front, L02 three-quarter, L03 aerial. It also makes the one-rig thumbnails (46 m, lens 50, 320 x 180, SW / SE). `dir_montage_r03.py` composes them into `T_thumb_montage_v3_v5_v6_hut.png`.
+
+**Numbers:**
+- 213,651 tris (cap 1,000,000);
+- hidden 12.8 % (cap 15 %);
+- 9 palette slots;
+- no mesh missing `Mask`;
+- 68 decal anchors;
+- `build.log` gate:
+  - cart 2.40 x 2.80 m: 2.449 m clear at its head, PASS;
+  - figure 0.60 x 1.80 m: PASS;
+  - the entry's eave lip 3.740 m against the 3.26 m crown, PASS;
+  - the man door, PASS.
+
+| # | axis | score | why |
+|---|---|---|---|
+| 1 | Silhouette and massing | **8.4** | **For:** unchanged and right. One long, steep, slumped thatch roof whose eave lifts into the eyelid over the round-arched timber entry (front, hero, L01, d17). From the ground, each gable is now one rolled arch over the apex (side, d35, d36). **Against:** (a) the front is still mirror-stamped about x = 0 (the round-2 nice-to-have, not done). (b) From above, the apex reads as two crossing tubes with cut-off tips, not one bend (b08, d41). This is invisible from the ground and at thumbnail. |
+| 2 | Proportion and actor scale | **8.4** | **The entry:** 3.60 m between the posts, crown 3.26 m, and a gated 2.449 m clear at 2.8 m. The near-semicircle survives the widening (b01, actor_closeup). The posts now visibly stand on 13 cm dressed pads beside the figure (d39, d40, b07). **Also fine:** the man door, the loft door and the windows. **Against:** the hoist hook still hangs only about 0.4-0.5 m outside the verge roll (d32), so a load would brush the thatch. |
+| 3 | Construction logic | **8.4** | **For:** the posts stand on proud pads, and the plinth's free ends now run into the posts with no slot (d39_void, d40, b07_void). The arch springs off the posts, the tie bears on them, the infill rises to the thatch, and the leaves sit behind the ring. **Against:** (a) at both post heads (d37, d38, also visible in b01 / b02) the wall's last boards, the frame's infill boards and the tie end meet in a stepped, shadowed pocket under the soffit. It is closed (the void twins are black) but reads as loose board ends rather than a framed junction. (b) The hoist is short (axis 2). |
+| 4 | Seams and junctions | **8.3** | **Closed:** the round-2 apex hollow is gone. d27, d28, d35, d36, s10, b05, b08 and d41 void twins are black apart from single-pixel specks. Also black: all entry junctions (d21-d23, d26, d37, d38), the pads, and the corner soffit (d29). **Against (hairlines only):** (a) d42_void: a 1-px yellow hairline down the joint between the W ridge-roll end cap and the lead hat (a dark line in the clay view); (b) d39_void: a 1-px slit between the W post's inner face and the leaf edge at 0.15-0.6 m; (c) b08 / d41: the buried taper tips of the apex sweeps are ragged where they exit the other roll. |
+| 5 | Distinctness and reuse | **8.6** | **Distinctness:** the montage shows two block + stone drum + cone buildings (v3, v5), the round hut, and the barn: a long soft thatch with an arched timber entry under an eyelid, with no drum and no cone. It is a different building at 320 x 180 from both SW and SE. **Note 16:** the same rubble plinth, rough boarding, thatch courses, lead hats, turned finials and timber language (L01 / L02). **Reuse:** all three fixes are defaults-off options on existing modules (`cruck_frame`, `linear_roof`, `guards`). No new component was added this round. |
+| 6 | Technical compliance | **8.4** | **Within limits:** triangles, hidden %, palette, `Mask` and determinism. **The main entrance is now gated:** a FAIL raises `ClearanceError`, and it feeds the kit eave-lip gate. **Against:** (a) the hash rule has been reasoned, not run, for three rounds of `linear_roof` / `cruck` / `guards` changes; (b) the moss anchors are still on the regular grid. |
+
+**Overall 8.4 / 10: PASS (round 3 of 3).** The lowest axis is 8.3 (hairline seams only), rounded up by one, as every must-fix landed cleanly and no new defect reaches the eye-level or thumbnail views. Going to the independent audit.
+
+**Audit condition (not a builder round):** before the audit upholds the pass, run the hash rule (`v6r3_hash`) against `kit/baseline/6_r8kit_check` / `7_v5_ref`. `linear_roof` changed in all three rounds, and `cruck` / `guards` in rounds 2-3. v5 uses `cruck_frame`, so its hash must be bit-identical.
+
+**Strengths:**
+- **The signature:** the thatch eyelid over a round-arched cruck entry. It is one organic gesture, the client's 19:40 aim, and distinct from v3 / v5 at thumbnail.
+- **The rolled verge**, now with a closed apex bend: one D-section edge from the eave, up the rake, over the apex and down. From the ground the gable reads as one soft arch.
+- **A gated main entrance:** `cruck_frame(gate=)` is a reusable clearance check for any arched opening, and the boathouse can use it next.
+- **Reuse:** the harbour house's boat arch on dry land, in a 119-line declarative recipe. Every round-3 change is a defaults-off option.
+
+**Must-fix:** none for the pass.
+
+**Nice-to-have (carry to the kit polish list, ONLY where a later design uses the part):**
+1. **`linear_roof._apex_bend`** (both apexes): bury the far taper fully under the ridge-roll end or the lead hat's skirt, so the cut tips do not show from above (b08, d41). Then close the 1-px joint between the ridge-roll end cap and the lead hat (d42_void).
+2. **Post heads under an eave lift** (recipe `wall_top` / `cruck_frame` infill, d37 / d38): end the wall boards on the post with a cover board, or carry the frame infill out to the wall plane, so the pocket under the soffit reads framed.
+3. **`hoist_beam`:** lengthen it to about 1.5 m (hook 0.9 m clear of the verge roll) and add a rope.
+4. **Front symmetry:** `cart_x` about 1 m off centre, or vary one window.
+5. **`cruck.arched_doors`:** close the leaf-to-post hairline (d39_void); trim the leaves' outer bottom corners clear of the pads' nosing.
+6. **Moss anchors:** jitter the grid on `M_thatch`.
+
+**Note 17:**
+- **Round element: PASS.** It is integral: the arch frame carries the wall head and infill, and the eyelid is the roof's own warp over it. It is distinct: timber, not a stone drum and cone (montage).
+- **Soft lines: PASS.** The ridge sag, the eyelid, swept eaves, flared verges, and the rolled verge now continuous over the apex.
+
+**Reuse: PASS, and exemplary.** `cruck_frame` came over from v5 unchanged in its default path. There is one new component over the whole design (`arched_doors`) and one new kit component (`hoist_beam`, round 1). Every softness and every guard is a defaults-off option that other designs can use.
+
+## v6_barn round 3 — sign-off audit: REJECTED
+
+Independent auditor. I read this log (Brief, CLIENT DIRECTION, the 19:40 direction, the 20:16 PRODUCER NOTE and every entry) and producer notes 12-17 before starting, and re-read the log before writing. Nothing was added after the round-3 grade. Read-only bpy, one process at a time. Scripts and outputs are in `renders/variants/v6_barn/round_03/audit/`.
+
+**Verdict: REJECTED, on one hard requirement.** There is an open see-through gap into the barn at both cruck post heads, under the eyelid over the main entrance, and it is visible from ground (1.7 m) cameras. Everything else that is gated passes, including the director's audit condition (the hash rule, now run). The fix is small and local.
+
+**Blocking: the post-head wedge is OPEN into the interior** (both sides, x about cart_x +-1.8..2.8, z 3.5-4.0; `aud_seethru_r03.py`, `aud_holes_r03.py`).
+- **Method.** Pinhole camera rays, the same projection as the renders, cast on the whole building. A ray is counted as a hole if it passes into the barn's interior volume (the footprint shrunk 0.45 m, below the roof underside minus 0.8 m) before its first hit. Rays that end on a `*blocker*` dark room behind a designed opening are not counted.
+- **Result.** At each post head the rays pass between the wall boards' head (`BARN_walls_boards`), the frame's infill and tie end (`BARN_cart_entry_boards` / `_frame`) and the eyelid soffit (`BARN_barn_roof_deck`). They travel about 5 m into the barn and first hit the INSIDE of the roof deck at about (+-4.8, 1.5, 5.3).
+  - Ground eye level (1.7 m), 6 m out from the wall: 730 rays (E) and 493 rays (W) at 640 x 360 (`probe_img/E_post_head_eye_6m_out.png`, `W_post_head_eye_6m_out.png`: red = a ray into the interior).
+  - Eye level, 3.5 m out: 714 rays (`E_post_head_eye_4m_out`).
+  - The director's d37 / d38 cameras: 849 / 1495 rays.
+  - Over a 15-viewpoint eye-level grid (2-6 m out), it is open from 7 of 15 viewpoints (W) and 6 of 15 (E). Aperture (twice the narrowest clearance along the hole rays): median 11-13 mm, p90 39-49 mm, max 80-90 mm. From 6 m high it is closed (0 rays).
+- **Why the round-3 evidence missed it.** In d38 (clay) it is the black triangle in the "stepped, shadowed pocket". The void twin cannot see this kind of hole: the faces seen through it are the deck's FRONT faces inside the barn, which render black in the twin. So "closed (the void twins are black)" (axis 3 / axis 4, d37 / d38) is not supported.
+- **Fix (recipe / frame, defaults unchanged):** close the wedge between the wall head, the frame infill and the soffit. Either:
+  - stop `wall_top`'s `z_tie` cut at the infill's real edge, so the wall boards run up to the soffit beyond it; or
+  - carry the frame's infill / backing out to `frame_half` and up to the soffit, with a cover board on the post.
+  
+  Verify with `aud_seethru_r03.py` (interior-reach test, 0 rays at the post heads), not with the void twin.
+
+**Should-fix, same pass: the arch-to-leaf slit** (`cruck.arched_doors`, both sides of the arch between the springing and the haunch, z 2.1-2.95). Between the ring's back face (y about -3.219) and the leaves' arched top (front y -3.207, plus the `lap`), rays from eye level 2-4 m out pass over the leaf top into the barn. They hit the loft dark room 4-6 m inside. 133 of 30,240 grid rays; aperture median 4 mm, max 19 mm (`aud_holes_r03_out.txt`, `probe_img/arch_springing_W.png`). It is a hairline at eye level, but it is open: lap the leaf top tighter (setback 0, or a backing strip on the ring's back).
+
+**Checked and passing:**
+
+| item | evidence | result |
+|---|---|---|
+| triangles | 213,651 evaluated (`aud_probe_r03_out.txt`) = `stats.json` | PASS (cap 1,000,000) |
+| palette | 9 slots, all in the shared palette, no empty slot | PASS |
+| hidden | 12.6 % independent (`tools/hidden_tris.py`, `aud_hidden.json`) vs 12.8 % reported | PASS (cap 15 %) |
+| `Mask` | on all 42 meshes (CORNER, active) | PASS |
+| transforms | identity except the 14 pooled `BARN_pintle_*` instances (by design) | PASS |
+| decal anchors | 68 empties = 68 json entries, names equal, all props present; 0 anchors without a surface within 20 cm behind them; 0 buried; types and heights plausible (moss on thatch / boards, damp rise 0.35-0.69 m, lichen on the plinth, no soot) | PASS |
+| cart-entry clearance (measured on the mesh) | horizontal rays through the frame depth: 3.60 m clear to the springing, **2.446 m at 2.8 m** (gate 2.449); crown 3.256 m; 0 non-door hits inside a centred 2.4 x 2.8 m envelope; lowest eave / soffit over the doorway **3.748 m** (gate 3.740) | PASS (>= 2.30) |
+| man door | gate line in `build.log`: lip 5.03 m over a 2.58 m head | PASS |
+| floating pieces | 1,287 islands; 0 whose 2 cm-inflated box touches nothing; the hoist pieces sit 1.8 / 4.2 cm from the frame (the hook and block hang from the beam) | PASS |
+| pads | 13 cm proud; posts start 1 cm in; plinth into the posts; 0 interior rays at the post / pad / plinth junction from eye level | PASS |
+| leaf edge / post (d39 "1-px slit") | 0 interior rays over 59,850 eye-level and 6 m grid rays. The red in d39_void is the hidden ground plane under the leaf. Not a hole. | PASS |
+| apex bend, eave / verge corners, eyelid fade, comb | 0 interior rays from ground and 6 m. Back-face hits only as 1-30 px specks at the apex verge roll and ridge-comb end (ground: 0-1 px). | PASS (polish item, as graded) |
+| leaf / pad clipping | the leaves' outer bottom corners stand up to 5.8 cm into the proud pads, behind the post's inner face (x beyond the post). Seen from the ground the leaf meets the 5 cm nosing as a contact line. | not visible as clipping; construction nit (the director's nice-to-have 5) |
+| **hash rule** (the director's audit condition) | `kit/baseline/v6r3_hash/`: all 8 rebuilt with today's kit. keep, hut, mill, v1, v2, v3 and v4 are identical to `6_r8kit_check` on all three hashes (geometry, uv, mask); `geom_diff`: no object differs. **v5 is per-object identical to `7_v5_ref`** (the delivered r08: geometry `c3d3a5343572dc73`, 714,452 tris). | PASS: defaults-off holds for `linear_roof`, `cruck`, `guards` |
+
+**Observation (kit, not blocking, pre-existing):** two large `RUBBLE_LARGE` ground stones under the east gable have inside-out winding: about (7.15, -0.17, 0.12) and (7.15, 2.51, 0.16). From +x, 93 of 153 rays hit back faces. It is the same in the FAST (uncull) build, so the cull is not the cause. `aud_stones_r03.py` finds the same in the accepted v5 (`HARB_hall_stones`, `HARB_wing_stones`). This is a `path_stone_wall` hero-stone winding item for the kit list: with one-sided UE materials those stones would drop out.
+
+**Not re-judged:** silhouette, distinctness, note 16 and note 17. I agree with the grade: the cruck arched entry under the thatch eyelid is integral, distinct from v3 / v5, and built from reusable kit modules.
+
+**What a resubmission needs:** close the post-head wedge, and ideally the arch slit, then rebuild. Re-check with `aud_seethru_r03.py close` (post-head, eye-level and arch shots at 0 interior rays), hidden <= 15 % and the tri count. The hash rule does not need re-running if the fix is in the recipe or a defaults-off option.
+## CLIENT DECISION (2026-10-17, session 2, 22:05): barn PAUSED at round 3
+
+The Art Director passed round 3 at 8.4. The audit rejected it on one hard requirement: the open see-through wedge at both cruck post heads, under the eyelid (wall-board head / frame infill / eyelid soffit). The client chose "Pause the barn".
+
+Round 3 stays as work in progress in `buildings/variants/v6_barn/`. **When the barn resumes:**
+1. close that wedge only (the audit's fix: recipe / frame, defaults unchanged);
+2. re-audit (no full re-grade needed; the director's 8.4 stands unless the geometry changes otherwise).
+
+Kit changes (1.16-1.18) are in `kit/changes/v6_barn.md`. The hash rule was verified by the audit (`kit/baseline/v6r3_hash/`): all eight other buildings are identical.

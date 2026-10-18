@@ -1,0 +1,90 @@
+﻿[    0.2s] -- set_entrance
+[    0.2s] -- path_stone_wall
+[    0.6s]   plinth visible mortar 24.8% -> 1.6% after 245 pinning stones
+[    0.6s]   BARN_plinth: stones 290 (hero 45, pins 48)
+[    1.4s]   BARN_plinth_stones: 28672 verts, 26430 faces
+[    1.4s]   BARN_plinth_quoins: 492 verts, 480 faces
+[    1.4s]   BARN_plinth_mortar: 500 verts, 372 faces
+[    1.4s]   BARN_plinth: mortar cells 372
+[    1.4s] -- path_timber_wall
+[    4.7s]   BARN_walls_frame: 1576 verts, 1536 faces
+[    4.9s]   BARN_walls_boards: 26624 verts, 23856 faces
+[    4.9s]   BARN_walls_blocker: 1000 verts, 1012 faces
+[    5.1s]   BARN_walls_frames: 9224 verts, 9146 faces
+[    5.1s]   BARN_walls_dressed: 240 verts, 234 faces
+[    5.1s]   BARN_walls_ironwork: 1848 verts, 1762 faces
+[    5.1s]   BARN_walls_blockers: 72 verts, 45 faces
+[    5.1s]   BARN_walls: timber wall (post_plank), 5 runs, 9 openings
+[    5.1s] -- cruck_frame
+[    5.5s]   BARN_cart_entry_frame: 868 verts, 847 faces
+[    5.5s]   BARN_cart_entry_boards: 1768 verts, 1530 faces
+[    5.5s]   BARN_cart_entry_blocker: 606 verts, 610 faces
+[    5.5s]   BARN_cart_entry_pads: 96 verts, 80 faces
+[    5.5s]   BARN_cart_entry: cruck / arched-brace frame: clear 4.20 m, arch 1.90 -> 3.26 m (R 1.87), tie 3.52-3.78 over +-1.89, collar 3.91, apex 4.07, 34 infill boards
+[    5.5s]   clearance gate BARN cart_entry arch: cart envelope 2.40 x 2.80 m -> clear width 2.449 m at its head (arch crown 3.26 m): PASS
+[    5.5s]   clearance gate BARN cart_entry arch: figure envelope 0.60 x 1.80 m -> clear width 3.500 m at its head (arch crown 3.26 m): PASS
+[    5.5s] -- arched_doors
+[    5.6s]   BARN_cart_doors_leaves: 1348 verts, 1188 faces
+[    5.6s]   BARN_cart_doors_ledges: 320 verts, 312 faces
+[    5.6s]   BARN_cart_doors_backing: 1372 verts, 1388 faces
+[    5.6s]   BARN_cart_doors_ironwork: 272 verts, 264 faces
+[    5.6s]   BARN_cart_doors: round-headed cart doors in cart_entry: 2 leaves, 14 boards, opening 3.60 m, head 3.26 m
+[    5.6s] -- linear_roof
+[    5.6s]   BARN_barn_roof_deck: 4840 verts, 4750 faces
+[    5.7s]   barn_roof rafters: 13 tails dropped under the eave lift (> 0.08 m)
+[    5.7s]   BARN_barn_roof_rafters: 2072 verts, 1998 faces
+[    6.3s]   BARN_barn_roof_covering: 41679 verts, 37775 faces
+[    6.8s]   BARN_barn_roof_eave_roll: 18584 verts, 17700 faces
+[    6.8s]   BARN_barn_roof: 40 continuous thatch courses + eave rolls + verge faces
+[    6.8s]   BARN_barn_roof_ridge: 1924 verts, 1868 faces
+[    7.0s]   BARN_barn_roof_comb: 13260 verts, 12740 faces
+[    7.0s]   BARN_barn_roof_apex_cap_collar: 338 verts, 338 faces
+[    7.0s]   BARN_barn_roof_apex_finial: 1442 verts, 1442 faces
+[    7.0s]   BARN_barn_roof: apex finials on 2 gable(s), tips 9.18, 9.22
+[    7.0s] -- hoist_beam
+[    7.0s]   BARN_hoist_frame: 362 verts, 350 faces
+[    7.0s]   BARN_hoist_ironwork: 120 verts, 108 faces
+[    7.0s]   BARN_hoist: hoist beam 1.10 m out at z 6.30
+[    7.0s] -- recenter
+[    7.0s] recentred by (+0.058, +0.001); plan bbox 16.09 x 8.79 m, height 9.22 m
+[    7.0s] -- guards
+[    7.2s]   clearance gate BARN walls_1: door head 2.58 m, eave lip over it 5.034 m at (7.383, -1.799) on BARN_barn_roof_rafters (rule >= 2.58 m, 25 stations): PASS
+[    7.2s]   clearance gate BARN cart_entry_arch: door head 3.26 m, eave lip over it 3.740 m at (1.858, -3.899) on BARN_barn_roof_deck (rule >= 3.26 m, 25 stations): PASS
+[    7.5s] composite decals: 40 anchors before the gate
+[    7.7s] timber anchors: 53
+[    8.0s] decal anchor check (applied): checked 93, snapped 5, max_move 0.046, renormal 9, shrunk 5, no_surface 2, wrong_surface 1, excluded 7, occluded 0, footprint 11, duplicate 0, kept 72
+[    8.0s]     DA_damp_rise_001: on backing mesh BARN_plinth_mortar
+[    8.0s]     DA_damp_rise_002: footprint off the surface (n.n0 1.00) ['-', '-', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls', '-', '-', '-']
+[    8.0s]     DA_damp_rise_003: on backing mesh BARN_plinth_mortar
+[    8.0s]     DA_damp_rise_004: on backing mesh BARN_plinth_mortar
+[    8.0s]     DA_damp_rise_005: on backing mesh BARN_plinth_mortar
+[    8.0s]     DA_moss_001: on backing mesh BARN_plinth_mortar
+[    8.0s]     DA_moss_002: hit M_timber (BARN_walls_frame), declared M_stone
+[    8.0s]     DA_moss_003: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls']
+[    8.0s]     DA_moss_004: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls']
+[    8.0s]     DA_moss_005: on backing mesh BARN_plinth_mortar
+[    8.0s]     DA_damp_rise_006: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls']
+[    8.0s]     DA_damp_rise_007: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', '-']
+[    8.0s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls', '-', '-', '-']
+[    8.0s]     DA_damp_rise_009: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', '-']
+[    8.0s]     DA_damp_rise_017: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', '-']
+[    8.0s]     DA_damp_rise_022: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls']
+[    8.0s]     DA_damp_rise_024: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', '-']
+[    8.0s]     DA_repair_patch_004: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls']
+[    8.0s]     DA_water_streak_008: on backing mesh BARN_walls_blocker
+[    8.0s]     DA_water_streak_010: no surface within 6 cm
+[    8.0s]     DA_water_streak_011: no surface within 6 cm
+[    8.0s] decal anchors: 72
+[    8.4s] uv grain (kit 1.10.0): 30 meshes, 916 timber / shingle pieces (68 round, 0 sloped sheets), 62022 grain faces re-projected, 404 collapsed faces repaired
+[    8.5s]   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_doors_ironwork: 24 faces
+[    8.5s]   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_doors_ledges: 30 faces
+[    8.5s]   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_entry_pads: 12 faces
+[    8.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_plinth_stones: 73 faces
+[    8.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_blocker: 3 faces
+[    8.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_blockers: 1 faces
+[    8.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_dressed: 27 faces
+[    8.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_frame: 3 faces
+[    8.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_ironwork: 41 faces
+[    8.5s] objects 42 (instances 14, pooled meshes 2) triangles 298830
+Info: Saved as "v6_barn_fast.blend"
+[    8.5s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\v6_barn_fast.blend 7.0 MB

@@ -60,8 +60,15 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
                 post=0.24, arch_t=0.24, blade=0.30, collar_at=0.50, collar=0.22, braces=True, pads=True,
                 infill="plank", infill_w=(-0.125, -0.088), backing_w=(-0.16, -0.13), rough=True, seed=901,
                 brace=0.17, pointed=False, pointed_t=0.26, pointed_at=0.74, pad_clip_z=None, respond_z=None,
-                respond_ch=(0.40, 0.56), king_strut=True):
+                respond_ch=(0.40, 0.56), king_strut=True, pad_top=None, gate=None):
     """KIT COMPONENT (see the module doc).
+    pad_top      kit 1.18 (v6 round 3; None = 0.0, the old frame): the dressed pad stones' top z -- each pad stands
+                 proud of the ground (z -0.30 .. pad_top) like a plinth stone, and the jamb post starts on it
+    gate         kit 1.18 (None = no check, the old frame): the CLEARANCE GATE of the arched opening -- a list of
+                 (label, width, height) envelopes (e.g. [("cart", 2.4, 2.8), ("figure", 0.6, 1.8)]) that must fit
+                 inside the arch intrados and between the posts, centred; each is logged PASS / FAIL and a FAIL
+                 raises guards.ClearanceError.  The frame is also published as an entrance (g.CRUCK_ENTRANCES ->
+                 guards.entrances_of) so the kit's eave-lip gate checks the roof over it like any door.
     pad_clip_z   round 3: the finalize clip of the pad stones (None: the kit's -5 cm land clip, or just under
                  respond_z when responds are built) -- the pads are designed z -0.30 .. 0
     respond_z    round 3: None (default: the pads only, the round-2 frame) or the z of the bed / footing the pads are
@@ -100,13 +107,17 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
     rrng = np.random.default_rng(seed + 5)                # the responds' own stream (the frame's is unchanged)
     rb_ = Acc(pre + "_respond_blocker")
     n_resp = 0
+    zp = 0.0 if pad_top is None else float(pad_top)
     for sg in (-1, 1):
         s0, s1 = sorted((sg * a_in, sg * (clear / 2 - 0.04)))
-        wbox(fr, F, s0, s1, 0.0, z_pier + 0.01, w0, w1, "M_timber", r=0.018, ns=4, nz=6,
-             tilt=0.0 if ro is None else math.radians(0.4) * rng.uniform(-1, 1))
+        wbox(fr, F, s0, s1, zp - (0.0 if pad_top is None else 0.01), z_pier + 0.01, w0, w1, "M_timber", r=0.018,
+             ns=4, nz=6, tilt=0.0 if ro is None else math.radians(0.4) * rng.uniform(-1, 1))
         if pads:
             p0, p1 = sorted((sg * (a_in - 0.05), sg * (clear / 2 + 0.03)))
-            wbox(pd, F, p0, p1, -0.30, 0.0, w0 - 0.07, w1 + 0.05, "M_stone_dressed", r=0.02, ns=5, nz=4)
+            if pad_top is None:
+                wbox(pd, F, p0, p1, -0.30, 0.0, w0 - 0.07, w1 + 0.05, "M_stone_dressed", r=0.02, ns=5, nz=4)
+            else:                                         # a proud dressed stone (the post foot sits 1 cm in it)
+                wbox(pd, F, p0, p1, -0.30, zp, w0 - 0.07, w1 + 0.05, "M_stone_dressed", r=0.03, ns=5, nz=4)
             if respond_z is not None and respond_z < -0.35:
                 # the respond: dressed courses from respond_z up to the pad, on an inset closed core
                 z, k = float(respond_z), 0
@@ -264,7 +275,41 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
                          crown=crown, apex=apex, a_in=a_in, R=R, zc=zc, member_w=(w0, w1), post=post))
     log(f"  {pre}: cruck / arched-brace frame: clear {clear:.2f} m, arch {spring:.2f} -> {crown:.2f} m (R {R:.2f}), "
         f"tie {z_pier:.2f}-{tie_top:.2f} over +-{s_tie:.2f}, collar {z_col:.2f}, apex {apex:.2f}, {n_b} infill boards")
+    if gate:
+        _gate(g, pre, name, O, n, gate, a_in, R, zc, crown, zp if pads else 0.0, 0.05 if pads else 0.0)
     return g.CRUCKS[-1]
+
+
+def _gate(g, pre, name, O, n, gate, a_in, R, zc, crown, pad_z, pad_in):
+    """kit 1.18: cruck_frame(gate=...) -- each (label, width, height) envelope, centred, against the opening's clear
+    half width at every height up to its top (the pads' inner nosing below pad_z, the posts' inner faces up to the
+    springing, the arch intrados above); then the frame is published as an entrance for the eave-lip gate."""
+    from ..guards import ClearanceError
+
+    def half_w(z):
+        if z < pad_z:
+            return a_in - pad_in
+        dz = z - zc
+        return a_in if dz <= math.sqrt(max(R * R - a_in * a_in, 0.0)) else math.sqrt(max(R * R - dz * dz, 0.0))
+    bad = []
+    rec = []
+    for label, w, h in gate:
+        zs = np.linspace(0.0, float(h), 57)
+        m = min(half_w(float(z)) for z in zs)
+        ok = 2 * m >= float(w) - 1e-6 and float(h) <= crown + 1e-6
+        rec.append(dict(label=label, width=float(w), height=float(h), clear=round(2 * m, 3), ok=ok))
+        log(f"  clearance gate {g.prefix} {name} arch: {label} envelope {w:.2f} x {h:.2f} m -> clear width "
+            f"{2 * m:.3f} m at its head (arch crown {crown:.2f} m): {'PASS' if ok else 'FAIL'}")
+        if not ok:
+            bad.append(f"{label} {w:.2f} x {h:.2f} m (clear {2 * m:.3f} m)")
+    g.CRUCKS[-1]["gate"] = rec
+    if not hasattr(g, "CRUCK_ENTRANCES"):
+        g.CRUCK_ENTRANCES = []
+    g.CRUCK_ENTRANCES.append(dict(name=f"{name}_arch", origin=np.array([O[0], O[1], 0.0]), out=n[:2],
+                                  width=2 * a_in, head=crown))
+    if bad:
+        raise ClearanceError(f"{pre}: the arched opening does not clear " + "; ".join(bad)
+                             + ".  Raise the springing or widen `clear`.")
 
 
 def arched_doors(g, name, frame=None, leaves=2, setback=0.012, board_t=(0.034, 0.042), ledges=(0.45, 1.20),

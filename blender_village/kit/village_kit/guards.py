@@ -154,6 +154,11 @@ def entrances_of(g):
         O = np.asarray(o["O"], float) + shift
         out.append(_ent(o.get("label") or "wall_door", (O[0], O[1]), np.asarray(o["n"], float)[:2], o["width"],
                         o["z1"], d0=0.15))
+    # kit 1.18: arched timber openings that opted into the gate (cruck.cruck_frame(gate=...)): head = arch crown
+    for e in getattr(g, "CRUCK_ENTRANCES", None) or []:
+        O = np.asarray(e["origin"], float) + shift
+        out.append(_ent(e["name"], (O[0], O[1]), np.asarray(e["out"], float)[:2], e["width"], e["head"],
+                        d0=e.get("d0", 0.25)))
     _ = bpy
     return out
 

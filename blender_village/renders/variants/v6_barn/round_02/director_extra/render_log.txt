@@ -1,0 +1,53 @@
+﻿00:01.734  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+00:01.859  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:06.188  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d21_W_post_head_under_eyelid.png'
+00:06.688  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d21_W_post_head_under_eyelid_void.png'
+DEVICE GPU
+SHOT d21_W_post_head_under_eyelid
+00:10.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d22_E_post_head_under_eyelid.png'
+00:11.203  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d22_E_post_head_under_eyelid_void.png'
+SHOT d22_E_post_head_under_eyelid
+00:15.281  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d23_arch_crown_tie_infill.png'
+00:15.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d23_arch_crown_tie_infill_void.png'
+SHOT d23_arch_crown_tie_infill
+00:19.859  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d24_cart_doors_threshold_pads.png'
+00:20.344  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d24_cart_doors_threshold_pads_void.png'
+SHOT d24_cart_doors_threshold_pads
+00:24.344  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d25_arch_springing_W.png'
+00:24.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d25_arch_springing_W_void.png'
+SHOT d25_arch_springing_W
+00:28.813  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d26_eyelid_fade_E.png'
+00:29.313  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d26_eyelid_fade_E_void.png'
+SHOT d26_eyelid_fade_E
+00:33.234  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d27_W_apex_knot.png'
+00:33.719  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d27_W_apex_knot_void.png'
+SHOT d27_W_apex_knot
+00:37.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d28_E_apex_knot.png'
+00:37.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d28_E_apex_knot_void.png'
+SHOT d28_E_apex_knot
+00:41.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d29_SW_corner_soffit.png'
+00:42.484  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d29_SW_corner_soffit_void.png'
+SHOT d29_SW_corner_soffit
+00:46.344  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d30_NE_corner_soffit.png'
+00:46.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d30_NE_corner_soffit_void.png'
+SHOT d30_NE_corner_soffit
+00:50.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d31_ridge_end_E_profile.png'
+00:51.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d31_ridge_end_E_profile_red.png'
+SHOT d31_ridge_end_E_profile
+00:54.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d32_hoist_side_on_S.png'
+SHOT d32_hoist_side_on_S
+00:58.609  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d33_loft_door_eye_W.png'
+SHOT d33_loft_door_eye_W
+01:02.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d34_back_eye_N.png'
+SHOT d34_back_eye_N
+01:02.969  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d13_thumb_SW_45m.png'
+SHOT d13_thumb_SW_45m
+01:03.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d14_thumb_SE_45m.png'
+SHOT d14_thumb_SE_45m
+01:04.047  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d15_thumb_NE_back_45m.png'
+SHOT d15_thumb_NE_back_45m
+01:07.781  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d17_W_three_quarter_eye.png'
+SHOT d17_W_three_quarter_eye
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

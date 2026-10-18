@@ -1,0 +1,34 @@
+﻿00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\v6_barn_fast.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\dir_render_r02.py:25: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:511
++ ... t=Get-Date; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\dir_render_r02.py:35: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void = bpy.data.materials.new("_D_void"); void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\dir_render_r02.py:53: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_D_world"); world.use_nodes = True
+00:00.672  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.968  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d24_cart_doors_threshold_pads.png'
+00:05.562  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d24_cart_doors_threshold_pads_void.png'
+DEVICE GPU
+SHOT d24_cart_doors_threshold_pads
+00:09.484  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d27_W_apex_knot.png'
+00:10.062  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d27_W_apex_knot_void.png'
+SHOT d27_W_apex_knot
+00:13.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d28_E_apex_knot.png'
+00:14.515  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d28_E_apex_knot_void.png'
+SHOT d28_E_apex_knot
+00:18.343  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d35_W_apex_from_ground_eye.png'
+00:18.937  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d35_W_apex_from_ground_eye_void.png'
+SHOT d35_W_apex_from_ground_eye
+00:22.687  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d36_E_apex_from_ground_eye.png'
+00:23.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots1\d36_E_apex_from_ground_eye_void.png'
+SHOT d36_E_apex_from_ground_eye
