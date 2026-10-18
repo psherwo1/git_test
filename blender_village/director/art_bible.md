@@ -381,3 +381,11 @@ Client's words: "something that makes the initial concept art unique is the use 
 - **Round structures:** each design includes at least one round or polygonal element that is integral to its composition, not stuck on: for example a round stair or lookout turret, a round end or annex under a cone, a drum-like corner, a bowed or apsidal end, a round hoist or smoke hood. Prefer the kit's existing round families (drum, round stone body, cone roof, tiers, finials) so it also satisfies note 16.
 - **Soft, organic lines:** no ruler-straight silhouettes. Bell-cast or swept eaves, gently sagging ridges and settling courses, rolled and rounded eaves and verges (the thatch / shingle rolls), curved braces and brackets, slightly bowed walls and out-of-true timber, rounded thresholds and plinth stones. Keep it believable and structural, never cartoon-wobbly.
 - **Director and auditor:** judge it under **silhouette** and under **distinctness and reuse**. Make the new softness reusable: an option on the kit module (e.g. a swept eave or ridge sag on a roof, a bow on a wall run), not one-off code.
+### Producer note 18: CLIENT RULE — a rectangular or square cottage has at least one eyebrow dormer (2026-10-18)
+
+Client's words: "If the cottage will be rectangular / square it minimum needs a eyebrow dormer".
+
+- **Every cottage / house design whose plan is rectangular or square** (or built from rectangular wings) carries **at least one eyebrow dormer** (`linear_roof.GableRoof(eyebrows=[eyebrow(profile="arch", respace=True, ...)])`, the harbour-house form: one continuous arch, no flat run). This keeps a plain box in the village's organic language (notes 16 and 17).
+- Other dormers, chimneys and add-ons may be added on top of it; they do not replace it.
+- **Director and auditor:** missing on such a design is a must-fix.
+- The eyebrow must work on both village coverings: shingle (exists) and **thatch** (the kit option is to be extended, defaults unchanged).
