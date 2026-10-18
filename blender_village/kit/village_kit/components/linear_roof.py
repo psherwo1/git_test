@@ -1,4 +1,4 @@
-"""components.linear_roof -- a straight two-slope (gable) roof over a rectangular body (kit, variant v3_longhouse_roundend).
+﻿"""components.linear_roof -- a straight two-slope (gable) roof over a rectangular body (kit, variant v3_longhouse_roundend).
 
 A linear roof is described by ONE spec object, GableRoof, in its own local frame (x along the ridge, y across, z up)
 placed in the building by `origin` and `yaw`; every other module (walls, junctions, decals) reads its geometry from
@@ -827,21 +827,28 @@ class _LocalAcc:
         return self.acc.add(self.roof.to_world(np.asarray(V, float)), F, mat, *a, **k)
 
 
-def _verge_roll_path(roof, sg, x_lo, x_hi, out=0.05, rc=0.45, apex=0.02, ds=0.03):
+def _verge_roll_path(roof, sg, x_lo, x_hi, out=0.05, rc=0.45, apex=0.02, ds=0.03, lo_free=True, hi_free=True):
     """the wrapped roll's path on slope sg in slope coordinates (x, u): rake (x_lo - out) from the apex down, a
     fillet of radius rc into the eave (u = 0), the eave, a fillet, the other rake up to the apex.  Ordered so the
-    sweep's right-hand side is inward (sg = -1: +x along the eave; sg = +1: -x)."""
-    xa_, xb_ = x_lo - out, x_hi + out
+    sweep's right-hand side is inward (sg = -1: +x along the eave; sg = +1: -x).
+    kit 1.19 (v7; True = old): lo_free / hi_free=False -- that end is not a free verge (the roof runs into another
+    body there): the eave runs straight on to x_lo / x_hi, with no fillet and no rake."""
+    xa_ = x_lo - out if lo_free else x_lo
+    xb_ = x_hi + out if hi_free else x_hi
     u_top = roof.U - apex
     pts = []
-    us = np.arange(u_top, rc, -ds)
-    pts += [(xa_, u) for u in us]
-    for a in np.linspace(math.pi, 1.5 * math.pi, max(6, int(0.5 * math.pi * rc / ds)))[:]:
-        pts.append((xa_ + rc + rc * math.cos(a), rc + rc * math.sin(a)))
-    pts += [(x, 0.0) for x in np.arange(xa_ + rc + ds, xb_ - rc, ds)]
-    for a in np.linspace(1.5 * math.pi, 2.0 * math.pi, max(6, int(0.5 * math.pi * rc / ds))):
-        pts.append((xb_ - rc + rc * math.cos(a), rc + rc * math.sin(a)))
-    pts += [(xb_, u) for u in np.arange(rc + ds, u_top + 1e-9, ds)]
+    if lo_free:
+        us = np.arange(u_top, rc, -ds)
+        pts += [(xa_, u) for u in us]
+        for a in np.linspace(math.pi, 1.5 * math.pi, max(6, int(0.5 * math.pi * rc / ds)))[:]:
+            pts.append((xa_ + rc + rc * math.cos(a), rc + rc * math.sin(a)))
+    x_e0 = xa_ + rc + ds if lo_free else xa_
+    x_e1 = xb_ - rc if hi_free else xb_ + 1e-9
+    pts += [(x, 0.0) for x in np.arange(x_e0, x_e1, ds)]
+    if hi_free:
+        for a in np.linspace(1.5 * math.pi, 2.0 * math.pi, max(6, int(0.5 * math.pi * rc / ds))):
+            pts.append((xb_ - rc + rc * math.cos(a), rc + rc * math.sin(a)))
+        pts += [(xb_, u) for u in np.arange(rc + ds, u_top + 1e-9, ds)]
     P = np.array(pts)
     keep = np.concatenate([[True], np.linalg.norm(np.diff(P, axis=0), axis=1) > 1e-6])
     P = P[keep]
@@ -879,19 +886,31 @@ def _verge_rolls(roof, acc, x_lo, x_hi, seed=0, out=0.05, rc=0.45, apex=0.02, ta
         prof, vis = prof[::-1].copy(), vis[::-1].copy()
     out_ = {}
     la = _LocalAcc(acc, roof)
+    fr = dict(lo_free=roof.v0 > 0, hi_free=roof.v1 > 0)          # kit 1.19: both True on every older build
+    one = not (fr["lo_free"] and fr["hi_free"])
     for sg in (-1, 1):
+        kfr = fr if one else {}
         if apex_bend:
             rb = float(apex_bend)
-            XU = _verge_roll_path(roof, sg, x_lo, x_hi, out=out, rc=rc, apex=rb * math.tan(roof.p))
+            XU = _verge_roll_path(roof, sg, x_lo, x_hi, out=out, rc=rc, apex=rb * math.tan(roof.p), **kfr)
         else:
-            XU = _verge_roll_path(roof, sg, x_lo, x_hi, out=out, rc=rc, apex=apex)
+            XU = _verge_roll_path(roof, sg, x_lo, x_hi, out=out, rc=rc, apex=apex, **kfr)
         path = roof.surf(XU[:, 0], XU[:, 1], sg, np.zeros(len(XU)))
         ups = np.broadcast_to(roof.normal(sg), path.shape).copy()
         if apex_bend:
-            Pa, Ua = _apex_bend(roof, XU[0, 0], sg, rb, float(bend_over), True)
-            Pb, Ub = _apex_bend(roof, XU[-1, 0], sg, rb, float(bend_over), False)
-            path = np.concatenate([Pa, path, Pb])
-            ups = np.concatenate([Ua, ups, Ub])
+            parts, uparts = [], []
+            if not one or XU[0, 1] > 0.5 * roof.U:                # the path starts up a rake: bend over its apex
+                Pa, Ua = _apex_bend(roof, XU[0, 0], sg, rb, float(bend_over), True)
+                parts.append(Pa)
+                uparts.append(Ua)
+            parts.append(path)
+            uparts.append(ups)
+            if not one or XU[-1, 1] > 0.5 * roof.U:
+                Pb, Ub = _apex_bend(roof, XU[-1, 0], sg, rb, float(bend_over), False)
+                parts.append(Pb)
+                uparts.append(Ub)
+            path = np.concatenate(parts)
+            ups = np.concatenate(uparts)
 
         def kb(P, sg=sg):
             return np.abs(np.asarray(P, float)[:, 1]) < 0.35          # the closed back at the two apex ends
@@ -1427,8 +1446,9 @@ def _apex_finials(g, roof, pre, ends=None, hat_r=0.24, hat_pitch_deg=44.0, scale
     return tips
 
 
-def _roof_edges(g, roof, pre, rng, clip, verge, apex_finial):
-    """kit 1.12: the optional verge board and apex finials of a linear roof (see linear_roof)."""
+def _roof_edges(g, roof, pre, rng, clip, verge, apex_finial, apex_ends=None):
+    """kit 1.12: the optional verge board and apex finials of a linear roof (see linear_roof).
+    kit 1.19 (v7; None = every free verge, old): apex_ends -- the gable ends ("lo" / "hi") that get a finial."""
     if verge == "board":
         acc = Acc(pre + "_verge", 30)
         kw = dict(VERGE_BOARD)
@@ -1441,7 +1461,10 @@ def _roof_edges(g, roof, pre, rng, clip, verge, apex_finial):
     elif verge is not None:
         raise ValueError(f"linear_roof: verge {verge!r}; None or 'board'")
     if apex_finial == "turned":
-        _apex_finials(g, roof, pre)
+        if apex_ends is None:
+            _apex_finials(g, roof, pre)
+        else:
+            _apex_finials(g, roof, pre, ends=tuple(apex_ends))
     elif apex_finial is not None:
         raise ValueError(f"linear_roof: apex_finial {apex_finial!r}; None or 'turned'")
 
@@ -1560,7 +1583,8 @@ def _eyebrow_fronts(g, roof, pre):
 
 def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_cone=None, thatch_style="courses",
                 abut_wall_in=0.10, rafter_skip=None, ridge_caps=False, verge_apex=False, verge=None,
-                apex_finial=None, verge_roll=False, comb_step=0.92, comb_backing=False, rafter_lift_max=None):
+                apex_finial=None, verge_roll=False, comb_step=0.92, comb_backing=False, rafter_lift_max=None,
+                deck_clip=None, apex_ends=None):
     """KIT COMPONENT: a straight gable roof from its GableRoof spec (see module doc).  clip(P_world, margin=0) -> bool
     marks vertices inside another body; faces wholly inside are dropped from the covering, ridge, comb and rafters,
     and deck faces more than 10 cm inside it.  abut_cone=(cx, cy): the roof runs into the cone of the round frame g
@@ -1582,7 +1606,12 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
     kit 1.17 (v6 round 2; defaults = old, "courses" thatch only): verge_roll=True (or a VERGE_ROLL override dict) --
     each slope's eave roll runs round the eave corners in one fillet and up both free verges to the apex (one
     continuous rolled edge, _verge_rolls); comb_step / comb_backing -- the comb's overlap and continuous backing
-    (_ridge_comb); rafter_lift_max -- no rafter tails where an eave lift exceeds it (_rafters(lift_max=...))."""
+    (_ridge_comb); rafter_lift_max -- no rafter tails where an eave lift exceeds it (_rafters(lift_max=...)).
+    kit 1.19 (v7 cottage; None = old): deck_clip(P world) -> bool -- the deck's own cull (in place of
+    clip(P, margin=0.10)), e.g. roof_addons.deck_clip(other): two roofs meeting in a valley keep their decks up to the
+    line where the two DECKS cross, so the backing is closed under the valley (roof_addons.roof_valley);
+    apex_ends=("lo", ) / ("hi", ) -- with apex_finial, only those free gables get the finial (a chimney stands at
+    the other)."""
     if abut_cone is not None and clip is None:
         from .roof_junction import inside_cone
         cc = inside_cone(g, center=abut_cone)
@@ -1606,10 +1635,15 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
             kw17["comb_kw"] = dict(step=comb_step, backing=comb_backing)
         if rafter_lift_max is not None:
             kw17["rafter_lift_max"] = rafter_lift_max
+        if deck_clip is not None:
+            kw17["deck_clip"] = deck_clip
         out = _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=rafter_skip, ridge_caps=ridge_caps,
                                    verge_apex=verge_apex, **kw17)
         if verge is not None or apex_finial is not None:
-            _roof_edges(g, roof, f"{g.prefix}_{roof.name}", rng, clip, verge, apex_finial)
+            if apex_ends is None:
+                _roof_edges(g, roof, f"{g.prefix}_{roof.name}", rng, clip, verge, apex_finial)
+            else:
+                _roof_edges(g, roof, f"{g.prefix}_{roof.name}", rng, clip, verge, apex_finial, apex_ends=apex_ends)
         return out
     pre = f"{g.prefix}_{roof.name}"
     if not hasattr(g, "LINEAR_ROOFS"):
@@ -1661,10 +1695,11 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
 
 
 def _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=None, ridge_caps=False, verge_apex=False,
-                         verge_roll=None, comb_kw=None, rafter_lift_max=None):
+                         verge_roll=None, comb_kw=None, rafter_lift_max=None, deck_clip=None):
     """linear_roof, thatch_style "courses" (round 2): deck + rafters as before; the eave roll (thatch.d_roll),
     continuous layered courses, a closed verge face per free gable, the ridge roll and the comb.
-    kit 1.17: verge_roll (a resolved VERGE_ROLL dict) / comb_kw / rafter_lift_max -- see linear_roof."""
+    kit 1.17: verge_roll (a resolved VERGE_ROLL dict) / comb_kw / rafter_lift_max -- see linear_roof.
+    kit 1.19: deck_clip -- see linear_roof (None = clip(V, margin=0.10), old)."""
     pre = f"{g.prefix}_{roof.name}"
     if not hasattr(g, "LINEAR_ROOFS"):
         g.LINEAR_ROOFS = {}
@@ -1676,14 +1711,17 @@ def _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=None, ridge
     x_hi = roof.xb + 0.04 if roof.v1 > 0 else roof.xb
     VR = verge_roll
     if VR is not None:
-        if not (roof.v0 > 0 and roof.v1 > 0):
-            raise ValueError("linear_roof(verge_roll=True): needs two free verges (GableRoof verge > 0 at both ends)")
+        if not (roof.v0 > 0 or roof.v1 > 0):     # kit 1.19: one free verge is enough (the other end runs into a body)
+            raise ValueError("linear_roof(verge_roll=True): needs a free verge (GableRoof verge > 0 at an end)")
         roof._deck_round = dict(u=VR["rc"], r=VR["rc"] - 0.09,
-                                corners=[(x_lo - VR["out"] + VR["rc"], -1), (x_hi + VR["out"] - VR["rc"], 1)])
+                                corners=[c_ for c_, f_ in (((x_lo - VR["out"] + VR["rc"], -1), roof.v0 > 0),
+                                                           ((x_hi + VR["out"] - VR["rc"], 1), roof.v1 > 0)) if f_])
     deck = Acc(pre + "_deck")
     _deck(roof, deck)
     roof._deck_round = None
-    if clip is not None:
+    if deck_clip is not None:
+        deck.cull = deck_clip
+    elif clip is not None:
         deck.cull = lambda V: clip(V, margin=0.10)
     finalize(deck, g.coll, smooth_deg=30.0)
     raf = Acc(pre + "_rafters")

@@ -1,0 +1,21 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\v7_cottage_fast.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_01\builder_extra\b_render_r01.py:22: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:845
++ ... lder_extra; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_01\builder_extra\b_render_r01.py:47: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.672  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.329  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots3\d02_dormer_oblique_W.png'
+00:05.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots3\d02_dormer_oblique_W_red.png'
+SHOT d02_dormer_oblique_W
+00:09.938  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots3\c01_chimney_SE_eye.png'
+00:10.391  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots3\c01_chimney_SE_eye_red.png'
+SHOT c01_chimney_SE_eye

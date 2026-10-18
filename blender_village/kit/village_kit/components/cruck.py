@@ -60,8 +60,13 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
                 post=0.24, arch_t=0.24, blade=0.30, collar_at=0.50, collar=0.22, braces=True, pads=True,
                 infill="plank", infill_w=(-0.125, -0.088), backing_w=(-0.16, -0.13), rough=True, seed=901,
                 brace=0.17, pointed=False, pointed_t=0.26, pointed_at=0.74, pad_clip_z=None, respond_z=None,
-                respond_ch=(0.40, 0.56), king_strut=True, pad_top=None, gate=None):
+                respond_ch=(0.40, 0.56), king_strut=True, pad_top=None, gate=None, infill_soffit=False):
     """KIT COMPONENT (see the module doc).
+    infill_soffit v6 round 4 (after kit 1.12.0; False = the old frame): the plank infill boards and their backing
+                 rise to top_fn sampled over THEIR OWN inner face (O + s t + w n), not over the frame plane -- under
+                 a roof whose soffit rises inward (an eave lift / eyelid) the old tops stop 3-5 cm under the soffit at the
+                 boards' depth and leave a see-through wedge over the post heads.  The board layout and every rng
+                 draw are unchanged; only the infill / backing tops move up.
     pad_top      kit 1.18 (v6 round 3; None = 0.0, the old frame): the dressed pad stones' top z -- each pad stands
                  proud of the ground (z -0.30 .. pad_top) like a plinth stone, and the jamb post starts on it
     gate         kit 1.18 (None = no check, the old frame): the CLEARANCE GATE of the arched opening -- a list of
@@ -95,6 +100,10 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
 
     def rake(s):
         p = O + s * t
+        return float(top_fn(p[0], p[1]))
+
+    def rake_w(s, w):                                     # v6 r4: the rake over the plane at depth w
+        p = O + s * t + w * n
         return float(top_fn(p[0], p[1]))
     F = (O, t, n)
     tie_top = z_pier + tie
@@ -230,8 +239,15 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
                 continue
             th_ = rng.uniform(*rb["thick"])
             wj = rng.uniform(-rb["w_jit"], rb["w_jit"])
+            if infill_soffit:                             # v6 r4: up to the soffit over the boards' inner face
+                def top_b(s, wi=infill_w[0] + wj):
+                    return rake_w(s, wi) - 0.004
+                hi = max(hi, top_b(a), top_b(b))
+            else:
+                def top_b(s):
+                    return rake(s) - 0.004
             wbox(bd, F, a, b, lo, hi, infill_w[0] + wj, infill_w[0] + wj + th_, "M_timber_weathered",
-                 r=rb["edge_r"], ns=4, nz=max(4, int((hi - lo) / 0.6) + 3), clamp=lambda s: rake(s) - 0.004,
+                 r=rb["edge_r"], ns=4, nz=max(4, int((hi - lo) / 0.6) + 3), clamp=top_b,
                  floor=floor_up, skip_back=True, tilt=tilt * rng.uniform(-1, 1))
             n_b += 1
         # spandrels: between the arch's extrados and the tie's underside
@@ -252,14 +268,21 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
         zs = np.unique(np.round(np.concatenate([np.linspace(spring, apex + 0.05, int((apex - spring) / 0.12) + 2),
                                                 [z_pier, tie_top]]), 5))
 
+        if infill_soffit:                                 # v6 r4: the backing's top over its own inner face
+            def rake_bk(s):
+                return rake_w(s, backing_w[0])
+        else:
+            rake_bk = rake
+
         def keep(i, k):
             sm, zm = 0.5 * (ss[i] + ss[i + 1]), 0.5 * (zs[k] + zs[k + 1])
-            if zm > rake(sm) + 0.05:
+            if zm > rake_bk(sm) + 0.05:
                 return False
             if zm >= floor_up(sm) - 0.02:
                 return True
             return abs(sm) < a_in and zm > extrados(sm) - 0.06 and zm < z_pier + 0.02
-        _sheet(bk, F, ss, zs, keep, backing_w[0], backing_w[1], "M_timber_weathered", clamp=lambda s: rake(s) - 0.008)
+        _sheet(bk, F, ss, zs, keep, backing_w[0], backing_w[1], "M_timber_weathered",
+               clamp=lambda s: rake_bk(s) - 0.008)
     for a_ in (fr, bd, bk):
         if a_.n:
             finalize(a_, g.coll, smooth_deg=30.0)

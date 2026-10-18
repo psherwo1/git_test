@@ -238,16 +238,22 @@ def entrance_clearance(g, entrances=None, min_lip=MIN_LIP, head_margin=0.0, fail
 # =================================================================================================================
 # 2. the generic see-through probe at roof-through-body junctions
 # =================================================================================================================
-def register_junction(g, name, covering, center, radius, z_range, ring=(0.0, 0.6), poly=None):
+def register_junction(g, name, covering, center, radius, z_range, ring=(0.0, 0.6), poly=None, arc=None):
     """called by the kit modules that build a roof-through-body junction: covering = object names (full names or
     <prefix>_ fragments) of the roof covering, center = (x, y) of the body's axis in g's current coordinates,
     radius = callable(z) -> the body face radius (an inscribed radius for a polygonal body; poly = its side count,
-    for the log), z_range = (z_lo, z_hi) of the junction."""
+    for the log), z_range = (z_lo, z_hi) of the junction.
+    kit 1.19 (a1 add-ons; None = old): arc=(th0, th1) -- only this azimuth range (rad, about `center`) is sampled
+    by the seal probe, with the point count scaled to the arc.  A STRAIGHT wall is registered as the face of a
+    very large circle (components.lean_to.plane_wall) and the arc spans the roof's run along it."""
     if not hasattr(g, "SEAL_JUNCTIONS"):
         g.SEAL_JUNCTIONS = []
-    g.SEAL_JUNCTIONS.append(dict(name=name, covering=tuple(covering), center=np.asarray(center, float)[:2],
-                                 radius=radius, z_range=(float(z_range[0]), float(z_range[1])), ring=tuple(ring),
-                                 poly=poly, shift0=np.asarray(getattr(g, "SHIFT", np.zeros(3)), float).copy()))
+    rec = dict(name=name, covering=tuple(covering), center=np.asarray(center, float)[:2],
+               radius=radius, z_range=(float(z_range[0]), float(z_range[1])), ring=tuple(ring),
+               poly=poly, shift0=np.asarray(getattr(g, "SHIFT", np.zeros(3)), float).copy())
+    if arc is not None:
+        rec["arc"] = (float(arc[0]), float(arc[1]))
+    g.SEAL_JUNCTIONS.append(rec)
     core.log(f"  seal junction registered: {name} (covering {', '.join(covering)}; z {z_range[0]:.2f}-"
              f"{z_range[1]:.2f})")
 
@@ -291,8 +297,13 @@ def junction_seal_probe(objs, junctions, prefix="", el_deg=(10, 20, 30, 45, 60, 
         z_lo, z_hi = j["z_range"]
         r_mid = float(j["radius"](0.5 * (z_lo + z_hi)))
         ring = j["ring"]
-        n = int(2 * math.pi * (r_mid + 0.5 * (ring[0] + ring[1])) * (ring[1] - ring[0]) * density)
-        th = rng.uniform(0, 2 * math.pi, n)
+        arc = j.get("arc")
+        if arc is None:
+            n = int(2 * math.pi * (r_mid + 0.5 * (ring[0] + ring[1])) * (ring[1] - ring[0]) * density)
+            th = rng.uniform(0, 2 * math.pi, n)
+        else:                          # kit 1.19: an arc only (a straight wall: plane_wall)
+            n = int(abs(arc[1] - arc[0]) * (r_mid + 0.5 * (ring[0] + ring[1])) * (ring[1] - ring[0]) * density)
+            th = rng.uniform(min(arc), max(arc), n)
         dd = rng.uniform(ring[0], ring[1], n)
 
         def top_at(x, y, z_from):
