@@ -531,3 +531,9 @@ Round 3 stays as work in progress in `buildings/variants/v6_barn/`. **When the b
 2. re-audit (no full re-grade needed; the director's 8.4 stands unless the geometry changes otherwise).
 
 Kit changes (1.16-1.18) are in `kit/changes/v6_barn.md`. The hash rule was verified by the audit (`kit/baseline/v6r3_hash/`): all eight other buildings are identical.
+## PRODUCER NOTE (2026-10-17, session 2): barn RESUMED for the quick fix (round 4)
+
+The client: "Move forward with the quick fix". Close ONLY the audit's blocking issue: the open see-through wedge at both cruck post heads, under the eyelid. It lies between the wall boards' head (`BARN_walls_boards`), the frame's infill and tie end (`BARN_cart_entry_boards` / `_frame`) and the eyelid soffit (`BARN_barn_roof_deck`), at x about cart_x +-1.8..2.8, z 3.5-4.0. See the round-3 audit above, with its rays (`aud_seethru_r03.py`, `aud_holes_r03.py`).
+- Use the recipe / frame, with defaults unchanged.
+- **Do NOT edit `linear_roof.py` or `roof_junction.py`:** the add-on track owns them right now.
+- Then the independent audit re-checks, using its own ray method, which sees this kind of hole. No full re-grade: the director's 8.4 stands.
