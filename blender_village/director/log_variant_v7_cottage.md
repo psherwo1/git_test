@@ -358,3 +358,6 @@ Client's words: "If the cottage will be rectangular / square it minimum needs a 
   - This is the classic thatched eyebrow. Make it as smooth and continuous as the harbour house's round-8 eyelid.
   - Sealed (interior-volume rays); hidden <= 15 %; <= 1 M tris.
 - **Hash rule:** if an existing default changes, rebuild and compare (8 buildings).
+## PRODUCER NOTE (2026-10-18, session 2, 00:11): the eyebrow is a MUST-FIX
+
+The round-2 fixer started before the 00:10 CLIENT DIRECTION. If you are still working, apply it now, and re-read this log before writing your entry. **Art Director:** a cottage round without an eyebrow dormer (producer note 18) cannot pass; give at most 8.1. **Next fixer:** do it first.
