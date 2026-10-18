@@ -1,0 +1,4 @@
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\builder_extra\bld_render_r02.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\builder_extra\bld_render_r02.py:39: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_B_world"); world.use_nodes = True

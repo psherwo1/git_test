@@ -66,3 +66,58 @@ Not triggered. No existing default changed:
 - `gable=True` openings: one row; the head is checked against the rake, but a gable opening's dark room is not
   checked against the roof deck (keep `room_pad` small, as `loft_door` does).
 - `hoist_beam`: straight beam on a straight face; no rope.
+
+---
+
+## Round 2
+
+Again every change is a new option, key or function whose default takes the old code path (docstrings tag them
+"kit 1.17"), so **the hash rule is not triggered** (no `v6r2_hash` run; see "Hash rule (round 2)" below). Proposed
+CHANGELOG version 1.17.
+
+### `components/linear_roof.py` (existing module: new options only)
+
+| option | default | what it does when on |
+|---|---|---|
+| `linear_roof(..., verge_roll=True)` (or a dict overriding `VERGE_ROLL`) + `_verge_rolls`, `_verge_roll_path`, `_LocalAcc` | `False` | **one continuous rolled thatch edge** ("courses" thatch, two free verges): each slope's eave roll (the same `GableRoof.eave_roll` D section, `thatch.d_roll` swelling, calm rounded ends) is ONE sweep from the apex down the first rake, round the eave corner in one fillet (`rc` 0.28 m in the slope plane), along the whole eave and up the other rake. It is laid in the roof's local frame with the slope normal as the section's up, and warped vertex by vertex like the courses. The rake part's lip runs `out` 0.07 m outside the course ends, so its crest covers the course-end teeth (the saw-tooth verge). The verge face is clamped under the roll (`top` 1 cm over `T0 + step`) and starts `face_from` 0.35 m up the slope. The deck's two eave corners follow the fillet, and the verge rafters start above it (`_rafters(verge_u0=)`). The eave roll's end-cap blob at the verge (the old free end 5 cm past the face) no longer exists. Raises without two free verges. |
+| `linear_roof(..., comb_step=0.75)` -> `_ridge_comb(step=)` | `0.92` | the comb shake pairs advance `step` x width (25 % overlap instead of 8 %). |
+| `linear_roof(..., comb_backing=True)` -> `_ridge_comb(backing=True)` | `False` | a continuous comb backing board (M_roof_shake, 2.4 cm) stands in the saddle under the shakes' crossing, from inside the ridge roll to 1 cm under the crest. Together with `comb_step=0.75`, the red twin of the ridge skyline (d10) shows no slit. |
+| `linear_roof(..., rafter_lift_max=0.08)` -> `_rafters(lift_max=)` + `GableRoof.lift_z(x, y)` | `None` | no rafter tail where an eave lift raises the roof more than `lift_max` at the wall face. Under the barn's lifted eave the arched boarded soffit (the deck underside) closes the eave on its own: no loose tails stuck on the rising boarding (b02 / s08). The rng draw per tail is kept, so the other tails do not move. |
+| `GableRoof(ridge_seat=True)` binding spars (kit 1.16 option, barn only) | -- | each spar is laid on `_ridge_centre(x)` at its own x (the roll's wander in y and z), so it wraps the roll instead of floating off one end. Without `ridge_seat` the old constant-centre spars are built. |
+| `_verge_faces(u_from=None, top_max=None)` (private) | `None` | the face's start up the slope and a cap on its top (used by `verge_roll`). |
+| `_deck_slab`: `roof._deck_round` (private, set only by `verge_roll`) | unset | the deck's eave-corner vertices are pulled onto an arc inside the roll's fillet. |
+
+### `components/composite.py` (existing module: new options only)
+
+| option | default | what it does when on |
+|---|---|---|
+| `composite_decals(..., timber_soot=False)` -> `timber_anchors(soot=False)` | `True` | no soot over the TIMBER openings (a barn's cart, man and loft doors have no hearth behind them). The masonry openings keep theirs, so the kiln door keeps its soot. |
+
+### Recipe-only changes (no kit change)
+
+- **Moss on the thatch:** the barn's decal gate now uses v3's gate for stepped courses: `fp_skip_surfaces=("M_roof_shingle", "M_thatch")`, `normal_fp_dot=0.85`, `fp_ntol=0.12`, `fp_skip_need=6`. That is the course-mean normal test in place of the flat 3 x 3 footprint, which a 0.10 m course step on a 50 deg slope never passes. Result: 17 moss anchors on `M_thatch` (0 in round 1).
+- **Kiln:** first rebuilt per the round-1 grade (`round_stone_body` r 2.50, cone eave 4.15, pitch 44, `ball_finial`), then REMOVED per the client direction of 19:40 (the archived build is in `buildings/variants/v6_barn/scratch/r02_kiln/`). The barn now uses a `PlanFrame`, and its round element is the cruck cart entry below.
+- **Cart entry (client direction 19:40):** `cruck.cruck_frame` on dry land in the middle of the front long side: clear 4.0 m, posts on pads, a near-semicircular arch (spring 1.90, crown 3.26, R 1.74), tie 3.52-3.78, plank infill to the thatch. It is the harbour house's module with no change to its code paths. The front wall runs into the posts (an open path) and stops at the tie's bearing over the frame's width (the harbour house's `hall_top` pattern). Over it, `eave_lift` is widened to 10 m and 1.55 m high (the thatch eyelid).
+
+### `components/cruck.py` (existing module: one new component, one record extended)
+
+| change | default | what it does |
+|---|---|---|
+| `arched_doors(g, name, frame=None, leaves=2, setback=0.012, board_t, ledges=(0.45, 1.20), ledge, lap=0.06, seed, rough=True, strap=True)` (new KIT COMPONENT) | -- | **round-headed plank cart doors** filling a `cruck_frame`'s arched opening (a `g.CRUCKS` entry, default the last one). The leaves stand just behind the frame's inner face, each from the ground to the arch intrados + `lap` (their arched top edge hides behind the arch ring and the posts), split at the centre. They are rough vertical boards on a closed backing sheet (note 6), with ledges and forged strap hinges on the outer face. -> `<P>_<name>_leaves`, `_ledges`, `_backing`, `_ironwork`. |
+| `g.CRUCKS` entries | -- | they also carry `a_in`, `R`, `zc` (the arch's springing half-width, radius and centre height), `member_w` and `post`, which `arched_doors` reads. These are record keys only: no geometry changes for the harbour house. |
+
+### Hash rule (round 2)
+
+Not triggered. No existing default changed:
+- `linear_roof` / `_linear_roof_courses`: with `verge_roll=False`, `comb_step=0.92`, `comb_backing=False` and `rafter_lift_max=None`, the old calls are made with the old arguments. `x_lo` / `x_hi` are only computed earlier (pure arithmetic), and `x += w * step` with `step=0.92` is the same float operation as before.
+- `_rafters`: `lift_max=None` skips the new test; `verge_u0=0.0` is the old start.
+- `_deck_slab`: no `_deck_round` means no change. `_verge_faces` defaults keep the old `u_a` and envelope.
+- The spar change is gated by `ridge_seat`, a kit 1.16 option that only the barn uses.
+- `composite_decals`: `timber_soot=True` makes the old `timber_anchors` call, and the soot branch draws the same rng.
+
+No rng draw was added or moved on any default path.
+
+### Known limitations (round 2)
+
+- `verge_roll`: the two rakes' roll ends meet under the capped ridge roll and the apex finial's lead hat (a small knot of roll ends there). The fillet radius is limited by the roll's visible inward depth (about 0.34 m): a larger `rc` leaves the course corner outside the roll.
+- `comb_backing` is a plain board: it only shows where two shakes part.

@@ -261,10 +261,74 @@ def cruck_frame(g, name, O, t, n, half, top_fn, z_pier, clear, spring=2.2, tie=0
     if not hasattr(g, "CRUCKS"):
         g.CRUCKS = []
     g.CRUCKS.append(dict(name=name, O=O, t=t, n=n, half=half, clear=clear, tie_z=z_pier, spring=spring,
-                         crown=crown, apex=apex))
+                         crown=crown, apex=apex, a_in=a_in, R=R, zc=zc, member_w=(w0, w1), post=post))
     log(f"  {pre}: cruck / arched-brace frame: clear {clear:.2f} m, arch {spring:.2f} -> {crown:.2f} m (R {R:.2f}), "
         f"tie {z_pier:.2f}-{tie_top:.2f} over +-{s_tie:.2f}, collar {z_col:.2f}, apex {apex:.2f}, {n_b} infill boards")
     return g.CRUCKS[-1]
 
 
-__all__ = ["cruck_frame"]
+def arched_doors(g, name, frame=None, leaves=2, setback=0.012, board_t=(0.034, 0.042), ledges=(0.45, 1.20),
+                 ledge=(0.16, 0.035), lap=0.06, seed=911, rough=True, strap=True):
+    """KIT COMPONENT (kit 1.17, v6 round 2: the barn's arched cart entry): a pair of ROUND-HEADED plank cart doors
+    filling a cruck_frame's arched opening (`frame`: a g.CRUCKS entry, default the last one).  The leaves stand just
+    behind the frame's inner face (`setback` m), each from the ground to the arch intrados plus `lap` (the arched top
+    edge hides behind the arch ring and the posts), split at the centre; vertical rough boards (timber_walls board
+    widths) on a closed backing sheet (note 6: no see-through between the boards), horizontal ledges on the outer
+    face at `ledges` heights (clear of the posts and the arch), forged strap hinges on them (strap=True).
+    -> <P>_<name>_leaves (M_timber_weathered), _ledges (M_timber), _backing (BACKING), _ironwork (M_iron)."""
+    fr_ = frame if frame is not None else g.CRUCKS[-1]
+    O, t, n = np.asarray(fr_["O"], float), np.asarray(fr_["t"], float), np.asarray(fr_["n"], float)
+    a_in, R, zc = float(fr_["a_in"]), float(fr_["R"]), float(fr_["zc"])
+    w0 = float(fr_["member_w"][0])
+    rng = np.random.default_rng(seed)
+    ro = rough_opts(rough) or dict(w=(0.18, 0.30), fillet=(0.0, (0.1, 0.1)), tilt_deg=0.0, sag=0.0, edge_r=0.006,
+                                   end_jag=0.0, thick=(0.03, 0.03), w_jit=0.0)
+    pre = f"{g.prefix}_{name}"
+    lv, lg, bk, ir = Acc(pre + "_leaves"), Acc(pre + "_ledges"), Acc(pre + "_backing"), Acc(pre + "_ironwork")
+    F = (O, t, n)
+
+    def intrados(s):
+        s = min(abs(float(s)), a_in)
+        return zc + math.sqrt(max(R * R - s * s, 0.0))
+    wf = w0 - setback                                   # the leaves' outer face
+    reach = a_in + 0.05                                 # behind the posts
+    n_b = 0
+    halves = [(-reach, -0.006), (0.006, reach)] if leaves == 2 else [(-reach, reach)]
+    for a, b in halves:
+        xs = board_widths(rng, a, b, None, ro)
+        for j in range(len(xs) - 1):
+            s0, s1 = xs[j] + 0.003, xs[j + 1] - 0.003
+            hi = max(intrados(s0), intrados(s1)) + lap
+            th_ = float(rng.uniform(*board_t))
+            wbox(lv, F, s0, s1, 0.015, hi, wf - th_, wf, "M_timber_weathered", r=ro["edge_r"], ns=4,
+                 nz=max(4, int(hi / 0.5) + 3), clamp=lambda s: intrados(s) + lap, skip_back=True,
+                 tilt=math.radians(ro["tilt_deg"]) * float(rng.uniform(-0.5, 0.5)))
+            n_b += 1
+    # the closed backing behind the boards
+    ss = np.linspace(-reach, reach, int(2 * reach / 0.12) + 2)
+    zs = np.linspace(0.0, zc + R + lap + 0.02, int((zc + R + lap) / 0.15) + 2)
+    _sheet(bk, F, ss, zs, lambda i, k: True, wf - 0.075, wf - 0.055, "M_timber_weathered",
+           clamp=lambda s: intrados(s) + lap)
+    # ledges (and strap hinges) on each leaf's outer face, clear of the posts and the arch ring
+    for z in ledges:
+        for a, b in halves:
+            lo_, hi_ = max(a, -a_in + 0.04), min(b, a_in - 0.04)
+            lo_, hi_ = (lo_ + 0.02, hi_) if a < 0 else (lo_, hi_ - 0.02)
+            if hi_ - lo_ < 0.3 or z + ledge[0] > min(intrados(lo_), intrados(hi_)) - 0.05:
+                continue
+            wbox(lg, F, lo_, hi_, z, z + ledge[0], wf, wf + ledge[1], "M_timber", r=0.01, ns=6,
+                 sag=0.004 * float(rng.uniform(0.5, 1.0)))
+            if strap:
+                s_out = lo_ if a < 0 else hi_
+                s_in = s_out + (0.62 if a < 0 else -0.62)
+                wbox(ir, F, min(s_out, s_in), max(s_out, s_in), z + 0.05, z + 0.11, wf + ledge[1],
+                     wf + ledge[1] + 0.008, "M_iron", r=0.003, ns=5, nz=2)
+    for a_ in (lv, lg, bk, ir):
+        if a_.n:
+            finalize(a_, g.coll, smooth_deg=30.0)
+    log(f"  {pre}: round-headed cart doors in {fr_['name']}: {leaves} leaves, {n_b} boards, opening "
+        f"{2 * a_in:.2f} m, head {zc + R:.2f} m")
+    return n_b
+
+
+__all__ = ["cruck_frame", "arched_doors"]
