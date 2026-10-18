@@ -413,3 +413,10 @@ Client's words: "lets make sure that we are utilizing wattle and daub as right n
 - Every NEW design carries daub on a meaningful wall area: an upper storey, a gable or hip-end infill between timber posts, a round annex or oven house, a lean-to, or a whole wall. It sits on the usual rubble plinth and under the usual thatch (note 16). Prefer reuse of the kit daub / wattle modules; if they only do round walls, add an optional path-wall mode (defaults unchanged, kit edit rules).
 - Rubble, board-and-batten and daub should mix in each design (rubble where it takes weight and meets the ground, daub where it is light).
 - Director and auditor: a new design with no daub, or daub that looks pasted-on, is a must-fix under distinctness and reuse. Accepted buildings are not retrofitted unless the client asks.
+### Producer note 21: CLIENT DIRECTION - v8, v9, v10 are the LAST three building types; hero-comparable quality; 2 quality-lift rounds (2026-10-18)
+
+Client's words: "these should be our last three building types for the village before we start diversifying with add ons, decals, set dressing, etc so they should still remain a comparable quality. add 2 quality lift rounds. we can wait to see the textured renders before committing to this direction."
+- v8_byre_smokehouse, v9_ale_house and v10_net_loft_cottage complete the curated set (14 designs). Variety after them comes from add-ons, decals and set dressing.
+- They must stay comparable in quality to the hero buildings (the client judged the round-2 previews substantially lower). The director grades against the heroes' level of modelled detail, texture read and composition.
+- Budget: 2 quality-lift rounds per design (rounds 3 and 4), on top of the 2 done. Further rounds need the client's OK.
+- Gate: wait for the textured lookdev renders (lookdev/renders_r2/) and compare with the heroes before the lift list is fixed.
