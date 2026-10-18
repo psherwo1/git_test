@@ -1,0 +1,190 @@
+﻿[    1.1s] -- set_entrance
+[    1.1s] -- round_stone_body
+[    2.6s]   NETC_store_wall visible mortar 15.4% -> 8.4% after 267 pinning stones
+[    2.6s]   NETC_store_wall stones 736
+[    3.5s]   NETC_store_wall_stones: 43277 verts, 36835 faces
+[    3.5s]   NETC_store_wall_mortar: 2928 verts, 2787 faces
+[    3.6s]   NETC_store_wall_frames: 2604 verts, 2568 faces
+[    3.6s]   NETC_store_wall_dressed: 204 verts, 198 faces
+[    3.6s]   NETC_store_wall_ironwork: 280 verts, 266 faces
+[    3.6s]   NETC_store_wall_reveals: 8 verts, 4 faces
+[    3.6s]   NETC_store_wall_blockers: 8 verts, 5 faces
+[    3.6s] -- path_stone_wall
+[   13.8s]   walls visible mortar 20.2% -> 6.4% after 513 pinning stones
+[   13.8s]   NETC_walls: stones 963 (hero 188, pins 108)
+[   17.5s]   NETC_walls_stones: 72941 verts, 65976 faces
+[   17.5s]   NETC_walls_quoins: 2624 verts, 2560 faces
+[   24.5s]   NETC_walls_mortar: 4133 verts, 3632 faces
+[   24.5s]   NETC_walls: mortar cells 3632
+[   24.6s]   NETC_walls_frames: 4584 verts, 4491 faces
+[   24.6s]   NETC_walls_dressed: 824 verts, 798 faces
+[   24.6s]   NETC_walls_ironwork: 280 verts, 266 faces
+[   24.6s]   NETC_walls_reveals: 48 verts, 24 faces
+[   24.6s]   NETC_walls_blockers: 48 verts, 30 faces
+[   24.7s] -- path_timber_wall
+[   26.9s]   NETC_loft_front_frame: 488 verts, 474 faces
+[   27.0s]   NETC_loft_front_boards: 3292 verts, 3015 faces
+[   27.0s]   NETC_loft_front_blocker: 90 verts, 88 faces
+[   27.0s]   NETC_loft_front: timber wall (post_plank), 1 runs, 0 openings
+[   27.0s] -- path_timber_wall
+[   29.2s]   NETC_loft_back_frame: 432 verts, 420 faces
+[   29.2s]   NETC_loft_back_boards: 3186 verts, 2925 faces
+[   29.2s]   NETC_loft_back_blocker: 84 verts, 82 faces
+[   29.2s]   NETC_loft_back: timber wall (post_plank), 1 runs, 0 openings
+[   29.2s] -- path_timber_wall
+[   30.7s]   NETC_loft_west_frame: 328 verts, 318 faces
+[   30.8s]   NETC_loft_west_boards: 2072 verts, 1902 faces
+[   30.8s]   NETC_loft_west_blocker: 60 verts, 58 faces
+[   30.8s]   NETC_loft_west: timber wall (post_plank), 1 runs, 0 openings
+[   30.8s] -- path_timber_wall
+[   32.1s]   NETC_loft_east_frame: 304 verts, 294 faces
+[   32.1s]   NETC_loft_east_boards: 1750 verts, 1608 faces
+[   32.1s]   NETC_loft_east_blocker: 54 verts, 52 faces
+[   32.1s]   NETC_loft_east: timber wall (post_plank), 1 runs, 0 openings
+[   32.1s] -- linear_roof
+[   32.2s]   NETC_roof_deck: 2322 verts, 2337 faces
+[   32.3s]   roof rafters: 4 tails skipped (they would run into another body)
+[   32.3s]   NETC_roof_rafters: 2464 verts, 2376 faces
+[   32.6s]   NETC_roof_covering: 25499 verts, 22913 faces
+[   32.9s]   NETC_roof_eave_roll: 11756 verts, 11172 faces
+[   32.9s]   NETC_roof: 26 continuous thatch courses + eave rolls + verge faces + 1 eyebrow lip roll(s); round hips lo hi (centres -2.74 / +2.74, inset 1.26 m)
+[   33.0s]   NETC_roof_ridge: 1152 verts, 1200 faces
+[   33.5s]   NETC_roof_eyebrow0_frame: 410 verts, 408 faces
+[   33.5s]   NETC_roof_eyebrow0_boards: 692 verts, 621 faces
+[   33.5s]   NETC_roof_eyebrow0_blocker: 198 verts, 200 faces
+[   33.5s]   NETC_roof_eyebrow0_frames: 528 verts, 532 faces
+[   33.5s]   NETC_roof_eyebrow0_blockers: 8 verts, 5 faces
+[   33.5s]   NETC_roof: eyebrow 0 at x -1.20 (side -1): front 1.88 m wide, sill 3.89, eave 4.79 (world z before recentre), lift 0.90 m over 2.50 m
+[   33.5s] -- wall_abutment
+[   33.7s]   wall_abutment: trimmed at the wall face: deck 2337->2335, rafters 2376->2376, covering 22913->22877, eave_roll 11172->11097, ridge 1200->1200
+[   33.7s]   wall_abutment: run 0: 173 samples, azimuth 194.0..280.0 deg, z 2.93..3.36 (cone eave lip 3.85)
+[   33.8s]   NETC_roof_wall_abutment: 1371 verts, 1358 faces
+[   33.8s]   seal junction registered: roof / round wall (covering NETC_roof_covering, NETC_roof_eave_roll, NETC_roof_ridge; z 2.59-3.66)
+[   33.8s] -- cone_roof
+[   33.9s]   NETC_rafters: 1978 verts, 1675 faces
+[   33.9s]   NETC_purlin_rings: 168 verts, 150 faces
+[   33.9s]   NETC_battens: 216 verts, 162 faces
+[   34.6s] shingles: 104 full-length (covered part visible): 36
+[   34.7s]   NETC_roof_shingles: 11850 verts, 10668 faces
+[   34.7s]   NETC_roof_starter: 1620 verts, 1404 faces
+[   35.8s] underlap strips: 104
+[   35.8s]   NETC_roof_underlap: 1248 verts, 624 faces
+[   35.8s]   NETC_roof_blocker: 845 verts, 768 faces
+[   35.9s]   NETC_roof_soffit_deck: 1440 verts, 1296 faces
+[   35.9s] -- ball_finial
+[   35.9s]   NETC_cap_collar: 5569 verts, 5473 faces
+[   36.0s]   hat fit: -126 covering polygons under / through the hat; worst clearance kept 0.020 m
+[   36.0s]   NETC_apex_blocker: 362 verts, 400 faces
+[   36.0s]   ball finial: hat r 0.62 pitch 44 deg, top shingle under the drip at 5.086, apex 5.458, hat top 5.508
+[   36.0s]   NETC_finial: 642 verts, 672 faces
+[   36.0s] -- round_eave_fill
+[   36.0s]   eave fill from the round wall head z 3.750 m (no wall plate)
+[   36.0s]   NETC_eave_fill: 721 verts, 480 faces
+[   36.0s] -- lean_to
+[   36.0s]   NETC_lean_to_deck: 1350 verts, 1348 faces
+[   36.0s]   NETC_lean_to_covering: 2831 verts, 2464 faces
+[   36.1s]   NETC_lean_to_eave_roll: 2986 verts, 2814 faces
+[   36.2s]   NETC_lean_to_framing: 1400 verts, 1310 faces
+[   36.2s]   NETC_lean_to: ROUNDED roof (note 19): 7 thatch courses round the contour (coat 0.22 + 0.08 m, 0.30 m courses), the village eave roll round the lip (D section 0.43 m deep, radius 0.16), hips reach 1.00 m along the wall (0.45 m past the end walls), 2.22 m out; ledger, 7 common + radial hip rafters, plate at 2.00 m out
+[   36.3s]   NETC_lean_to: trimmed at the wall face: deck 1348->1140, covering 2464->2303, eave_roll 2814->2660
+[   36.3s]   NETC_lean_to_flashing: 1252 verts, 1239 faces
+[   36.3s]   NETC_lean_to: flaunching 156 stations, roof at the face z 2.81..3.50, crease 3.57
+[   36.3s]   NETC_lean_to: under the host eave: margin at the face 0.326 m (crease), at the host lip line 0.197 m (covering)
+[   36.4s]   NETC_lean_to: host eave roll belly over the add-on: smallest gap 0.209 m at (-3.02, -0.578, 2.771) (rule >= 0.10 m)
+[   36.4s]   NETC_lean_to: host eave roll, lateral (nearest from the same vertices): 0.164 m at (-3.02, -0.578, 2.771) (rule >= 0.10 m)
+[   36.4s]   seal junction registered: lean_to / wall (covering NETC_lean_to_covering, NETC_lean_to_eave_roll; z 2.51-3.80)
+[   36.7s]   lean_to_end0 visible mortar 20.4% -> 7.9% after 97 pinning stones
+[   36.7s]   NETC_lean_to_end0: stones 228 (hero 5, pins 17)
+[   37.0s]   NETC_lean_to_end0_stones: 13919 verts, 11930 faces
+[   37.0s]   NETC_lean_to_end0_quoins: 1476 verts, 1440 faces
+[   37.2s]   NETC_lean_to_end0_mortar: 312 verts, 251 faces
+[   37.2s]   NETC_lean_to_end0: mortar cells 251
+[   37.2s]   NETC_lean_to_end0_mortar: 37 mortar vertices clamped under the deck
+[   37.2s]   NETC_lean_to_end0_stones: stone facing check: 228 stones, 2 turned inside out -> flipped (348 faces), 0 left
+[   37.7s]   lean_to_end1 visible mortar 19.7% -> 7.8% after 102 pinning stones
+[   37.7s]   NETC_lean_to_end1: stones 238 (hero 5, pins 25)
+[   37.9s]   NETC_lean_to_end1_stones: 14263 verts, 12199 faces
+[   37.9s]   NETC_lean_to_end1_quoins: 1394 verts, 1360 faces
+[   38.1s]   NETC_lean_to_end1_mortar: 286 verts, 228 faces
+[   38.1s]   NETC_lean_to_end1: mortar cells 228
+[   38.1s]   NETC_lean_to_end1_mortar: 34 mortar vertices clamped under the deck
+[   38.1s]   NETC_lean_to_end1_stones: stone facing check: 238 stones, 0 turned inside out -> flipped (0 faces), 0 left
+[   38.1s]   NETC_lean_to_posts: 320 verts, 306 faces
+[   38.1s]   NETC_lean_to_pads: 57 verts, 48 faces
+[   38.1s]   NETC_lean_to: 1 posts on dressed pads under the plate
+[   38.1s]   NETC_lean_to: open front 3.00 m wide, plate underside 2.207 m (ends) .. 2.333 m (middle), lowest knee-brace foot 2.053 m (rule plate >= 2.10, brace >= 1.95 m)
+[   38.1s] -- orient_open_islands
+[   38.4s]   orient_open_islands NETC_store_wall_stones: 1 inverted island(s) flipped, 179 single face(s)
+[   38.7s]   orient_open_islands NETC_walls_stones: 3 inverted island(s) flipped, 280 single face(s)
+[   38.8s]   orient_open_islands NETC_lean_to_end0_stones: 0 inverted island(s) flipped, 36 single face(s)
+[   38.8s]   orient_open_islands NETC_lean_to_end1_stones: 0 inverted island(s) flipped, 67 single face(s)
+[   38.8s] -- orient_closed_slabs
+[   38.8s]   orient_closed_slabs NETC_roof_deck: 13 inward face(s) flipped
+[   38.8s]   orient_closed_slabs NETC_roof_soffit_deck: 0 inward face(s) flipped
+[   38.8s]   orient_closed_slabs NETC_lean_to_deck: 0 inward face(s) flipped
+[   38.8s] -- recenter
+[   38.8s] recentred by (+4.470, +2.363); plan bbox 12.97 x 8.73 m, height 6.51 m
+[   38.8s] -- guards
+[   39.2s]   clearance gate NETC store_wall_0: door head 1.92 m, eave lip over it 3.854 m at (5.428, 0.872) on NETC_rafters (rule >= 2.30 m, 25 stations): PASS
+[   39.2s]   clearance gate NETC walls_3: door head 2.07 m, eave lip over it 2.501 m at (-1.23, -4.087) on NETC_roof_eave_roll (rule >= 2.30 m, 25 stations): PASS
+[   39.2s]   clearance gate NETC lean_to_front: door head 2.21 m, eave lip over it 2.353 m at (0.52, 3.483) on NETC_lean_to_framing (rule >= 2.30 m, 25 stations): PASS
+[   40.7s]   seal probe [see-through] roof / round wall: 4930 points, 32207 rays, 257 grazing pass(es), 0 leak(s)
+[   42.1s]   seal probe [see-through] lean_to / wall: 10787 points, 75066 rays, 0 grazing pass(es), 0 leak(s)
+[   42.1s]   seal probe: 107273 rays on 2 junction(s) in 2.9 s
+[   42.6s] composite decals: 105 anchors before the gate
+[   43.1s] timber anchors: 20
+[   43.8s] decal anchor check (applied): checked 125, snapped 7, max_move 0.044, renormal 5, shrunk 15, no_surface 4, wrong_surface 0, excluded 10, occluded 3, footprint 22, duplicate 0, normal_off 1, kept 85
+[   43.8s]     DA_damp_rise_001: on backing mesh NETC_store_wall_mortar
+[   43.8s]     DA_moss_001: footprint off the surface (n.n0 1.00) ['-', '-', 'NETC_store', 'NETC_store', 'NETC_store', '-', 'NETC_store', 'NETC_store', '-']
+[   43.8s]     DA_damp_rise_002: on backing mesh NETC_store_wall_mortar
+[   43.8s]     DA_damp_rise_003: footprint off the surface (n.n0 1.00) ['NETC_store', 'NETC_store', '-', 'NETC_store', 'NETC_store', '-', '-', '-', '-']
+[   43.8s]     DA_damp_rise_004: footprint off the surface (n.n0 1.00) ['NETC_store', 'NETC_store', 'NETC_store', 'NETC_store', 'NETC_store', 'NETC_store', 'NETC_store', '-', 'NETC_store']
+[   43.8s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'NETC_store', 'NETC_store', '-', 'NETC_store', 'NETC_store', '-']
+[   43.8s]     DA_damp_rise_006: footprint off the surface (n.n0 1.00) ['NETC_store', 'NETC_store', '-', 'NETC_store', 'NETC_store', '-', 'NETC_store', 'NETC_walls', 'NETC_walls']
+[   43.8s]     DA_damp_rise_007: footprint off the surface (n.n0 1.00) ['-', 'NETC_walls', 'NETC_walls', 'NETC_store', 'NETC_walls', 'NETC_walls', '-', '-', '-']
+[   43.8s]     DA_damp_rise_008: on backing mesh NETC_store_wall_mortar
+[   43.8s]     DA_repair_patch_001: buried: occluded within 15 cm
+[   43.8s]     DA_water_streak_004: on backing mesh NETC_store_wall_mortar
+[   43.8s]     DA_water_streak_005: no surface within 6 cm
+[   43.8s]     DA_damp_rise_009: footprint off the surface (n.n0 1.00) ['NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls']
+[   43.8s]     DA_damp_rise_010: footprint off the surface (n.n0 1.00) ['NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', '-', '-', '-']
+[   43.8s]     DA_moss_002: footprint off the surface (n.n0 1.00) ['-', 'NETC_walls', '-', '-', 'NETC_walls', '-', '-', 'NETC_walls', '-']
+[   43.8s]     DA_moss_003: buried: occluded within 15 cm
+[   43.8s]     DA_damp_rise_012: on backing mesh NETC_walls_mortar
+[   43.8s]     DA_repair_patch_002: on backing mesh NETC_walls_mortar
+[   43.8s]     DA_repair_patch_004: on backing mesh NETC_walls_mortar
+[   43.8s]     DA_damp_rise_014: on backing mesh NETC_lean_to_end0_mortar
+[   43.8s]     DA_damp_rise_015: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'NETC_lean_', 'NETC_lean_', 'NETC_lean_', '-', '-', '-']
+[   43.8s]     DA_damp_rise_016: footprint off the surface (n.n0 1.00) ['NETC_lean_', 'NETC_lean_', '-', 'NETC_lean_', 'NETC_lean_', '-', '-', 'NETC_lean_', 'NETC_lean_']
+[   43.8s]     DA_moss_004: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'NETC_lean_', 'NETC_lean_', 'NETC_lean_', '-', '-', '-']
+[   43.8s]     DA_grime_001: footprint off the surface (n.n0 1.00) ['-', 'NETC_store', '-', '-', 'NETC_store', '-', '-', 'NETC_store', '-']
+[   43.8s]     DA_lichen_005: buried: occluded within 15 cm
+[   43.8s]     DA_soot_002: footprint off the surface (n.n0 1.00) ['NETC_store', 'NETC_store', '-', '-', 'NETC_store', 'NETC_store', '-', '-', 'NETC_store']
+[   43.8s]     DA_water_streak_006: no surface within 6 cm
+[   43.8s]     DA_crack_005: on backing mesh NETC_store_wall_mortar
+[   43.8s]     DA_crack_007: on backing mesh NETC_walls_mortar
+[   43.8s]     DA_crack_008: footprint off the surface (n.n0 1.00) ['NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls', 'NETC_walls']
+[   43.8s]     DA_water_streak_008: no surface within 6 cm
+[   43.8s]     DA_grime_003: footprint off the surface (n.n0 1.00) ['-', 'NETC_walls', '-', '-', 'NETC_walls', '-', '-', 'NETC_walls', '-']
+[   43.8s]     DA_grime_004: footprint off the surface (n.n0 1.00) ['-', 'NETC_walls', '-', '-', 'NETC_walls', '-', '-', 'NETC_walls', '-']
+[   43.8s]     DA_crack_022: footprint off the surface (n.n0 1.00) ['NETC_walls', 'NETC_walls', 'NETC_loft_', 'NETC_walls', 'NETC_walls', 'NETC_loft_', 'NETC_walls', 'NETC_walls', 'NETC_loft_']
+[   43.8s]     DA_water_streak_012: no surface within 6 cm
+[   43.8s]     DA_lichen_012: footprint off the surface (n.n0 1.00) ['-', '-', 'NETC_walls', '-', 'NETC_walls', 'NETC_walls', '-', '-', '-']
+[   43.8s]     DA_lichen_014: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'NETC_lean_', 'NETC_lean_', 'NETC_lean_', '-', 'NETC_lean_', 'NETC_lean_']
+[   43.8s]     DA_lichen_016: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'NETC_lean_', 'NETC_lean_', 'NETC_lean_', '-', '-', '-']
+[   43.8s]     DA_moss_007: normal 0.58 off the footprint-mean surface normal
+[   43.8s]     DA_grime_005: footprint off the surface (n.n0 0.82) ['NETC_loft_', 'NETC_loft_', 'NETC_roof_', 'NETC_loft_', 'NETC_roof_', 'NETC_roof_', 'NETC_loft_', 'NETC_loft_', '-']
+[   43.8s] decal anchors: 85
+[   44.5s] uv grain (kit 1.10.0): 63 meshes, 646 timber / shingle pieces (35 round, 95 sloped sheets), 44856 grain faces re-projected, 983 collapsed faces repaired
+[   44.7s]   walked tops (Mask B <= 0.04): lean_to_front -> NETC_lean_to_end0_quoins: 20 faces
+[   44.7s]   walked tops (Mask B <= 0.04): lean_to_front -> NETC_lean_to_end0_stones: 132 faces
+[   44.7s]   walked tops (Mask B <= 0.04): lean_to_front -> NETC_lean_to_end1_quoins: 20 faces
+[   44.7s]   walked tops (Mask B <= 0.04): lean_to_front -> NETC_lean_to_end1_stones: 131 faces
+[   44.7s]   walked tops (Mask B <= 0.04): lean_to_front -> NETC_lean_to_pads: 16 faces
+[   44.7s]   walked tops (Mask B <= 0.04): store_wall_0 -> NETC_store_wall_dressed: 9 faces
+[   44.7s]   walked tops (Mask B <= 0.04): store_wall_0 -> NETC_store_wall_ironwork: 35 faces
+[   44.7s]   walked tops (Mask B <= 0.04): walls_3 -> NETC_walls_dressed: 9 faces
+[   44.7s]   walked tops (Mask B <= 0.04): walls_3 -> NETC_walls_ironwork: 35 faces
+[   44.7s] objects 63 (instances 0, pooled meshes 0) triangles 465041
+Info: Saved as "preview.blend"
+[   44.8s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\scratch\preview.blend 11.7 MB

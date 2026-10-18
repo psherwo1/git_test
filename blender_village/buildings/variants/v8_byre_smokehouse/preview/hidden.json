@@ -1,0 +1,280 @@
+{
+  "triangles": 424272,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 36.2,
+  "est_hidden_triangles": 153745,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "BYRE_walls_stones",
+      "est_triangles": 178724,
+      "est_hidden_triangles": 50435,
+      "hidden_pct_of_object": 28.2
+    },
+    {
+      "object": "BYRE_roof_covering",
+      "est_triangles": 58549,
+      "est_hidden_triangles": 12569,
+      "hidden_pct_of_object": 21.5
+    },
+    {
+      "object": "BYRE_roof_eave_roll",
+      "est_triangles": 27842,
+      "est_hidden_triangles": 8432,
+      "hidden_pct_of_object": 30.3
+    },
+    {
+      "object": "BYRE_chimney_base_stones",
+      "est_triangles": 22168,
+      "est_hidden_triangles": 8008,
+      "hidden_pct_of_object": 36.1
+    },
+    {
+      "object": "BYRE_lean_to_end1_stones",
+      "est_triangles": 18614,
+      "est_hidden_triangles": 7424,
+      "hidden_pct_of_object": 39.9
+    },
+    {
+      "object": "BYRE_chimney_stones",
+      "est_triangles": 16440,
+      "est_hidden_triangles": 7000,
+      "hidden_pct_of_object": 42.6
+    },
+    {
+      "object": "BYRE_lean_to_end0_stones",
+      "est_triangles": 16281,
+      "est_hidden_triangles": 6947,
+      "hidden_pct_of_object": 42.7
+    },
+    {
+      "object": "BYRE_walls_mortar",
+      "est_triangles": 8167,
+      "est_hidden_triangles": 5515,
+      "hidden_pct_of_object": 67.5
+    },
+    {
+      "object": "BYRE_walls_frames",
+      "est_triangles": 8379,
+      "est_hidden_triangles": 4136,
+      "hidden_pct_of_object": 49.4
+    },
+    {
+      "object": "BYRE_roof_deck",
+      "est_triangles": 4401,
+      "est_hidden_triangles": 4136,
+      "hidden_pct_of_object": 94.0
+    },
+    {
+      "object": "BYRE_roof_rafters",
+      "est_triangles": 6204,
+      "est_hidden_triangles": 4030,
+      "hidden_pct_of_object": 65.0
+    },
+    {
+      "object": "BYRE_hip_end_W_boards",
+      "est_triangles": 3871,
+      "est_hidden_triangles": 3871,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BYRE_chimney_base_mortar",
+      "est_triangles": 4030,
+      "est_hidden_triangles": 2863,
+      "hidden_pct_of_object": 71.1
+    },
+    {
+      "object": "BYRE_lean_to_framing",
+      "est_triangles": 2810,
+      "est_hidden_triangles": 2333,
+      "hidden_pct_of_object": 83.0
+    },
+    {
+      "object": "BYRE_walls_quoins",
+      "est_triangles": 5038,
+      "est_hidden_triangles": 2174,
+      "hidden_pct_of_object": 43.2
+    },
+    {
+      "object": "BYRE_lean_to_deck",
+      "est_triangles": 2174,
+      "est_hidden_triangles": 2068,
+      "hidden_pct_of_object": 95.1
+    },
+    {
+      "object": "BYRE_lean_to_eave_roll",
+      "est_triangles": 5568,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 34.3
+    },
+    {
+      "object": "BYRE_lean_to_covering",
+      "est_triangles": 4348,
+      "est_hidden_triangles": 1803,
+      "hidden_pct_of_object": 41.5
+    },
+    {
+      "object": "BYRE_roof_chimney_abutment",
+      "est_triangles": 3129,
+      "est_hidden_triangles": 1750,
+      "hidden_pct_of_object": 55.9
+    },
+    {
+      "object": "BYRE_hip_end_E_n_boards",
+      "est_triangles": 1644,
+      "est_hidden_triangles": 1644,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BYRE_lean_to_flashing",
+      "est_triangles": 2810,
+      "est_hidden_triangles": 1537,
+      "hidden_pct_of_object": 54.7
+    },
+    {
+      "object": "BYRE_lean_to_end1_quoins",
+      "est_triangles": 2280,
+      "est_hidden_triangles": 1272,
+      "hidden_pct_of_object": 55.8
+    },
+    {
+      "object": "BYRE_hip_end_E_s_boards",
+      "est_triangles": 1272,
+      "est_hidden_triangles": 1272,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BYRE_chimney_mortar",
+      "est_triangles": 2439,
+      "est_hidden_triangles": 1272,
+      "hidden_pct_of_object": 52.2
+    },
+    {
+      "object": "BYRE_roof_eyebrow0_boards",
+      "est_triangles": 1272,
+      "est_hidden_triangles": 1113,
+      "hidden_pct_of_object": 87.5
+    },
+    {
+      "object": "BYRE_lean_to_end0_quoins",
+      "est_triangles": 1803,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 52.9
+    },
+    {
+      "object": "BYRE_roof_eyebrow0_frames",
+      "est_triangles": 1219,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 78.3
+    },
+    {
+      "object": "BYRE_hip_end_E_n_frame",
+      "est_triangles": 795,
+      "est_hidden_triangles": 795,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BYRE_chimney_weathering",
+      "est_triangles": 742,
+      "est_hidden_triangles": 742,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BYRE_roof_ridge",
+      "est_triangles": 3553,
+      "est_hidden_triangles": 689,
+      "hidden_pct_of_object": 19.4
+    },
+    {
+      "object": "BYRE_hip_end_W_frame",
+      "est_triangles": 689,
+      "est_hidden_triangles": 636,
+      "hidden_pct_of_object": 92.3
+    },
+    {
+      "object": "BYRE_hip_end_E_s_frame",
+      "est_triangles": 689,
+      "est_hidden_triangles": 583,
+      "hidden_pct_of_object": 84.6
+    },
+    {
+      "object": "BYRE_walls_dressed",
+      "est_triangles": 1803,
+      "est_hidden_triangles": 583,
+      "hidden_pct_of_object": 32.4
+    },
+    {
+      "object": "BYRE_lean_to_posts",
+      "est_triangles": 1484,
+      "est_hidden_triangles": 583,
+      "hidden_pct_of_object": 39.3
+    },
+    {
+      "object": "BYRE_roof_eyebrow0_frame",
+      "est_triangles": 530,
+      "est_hidden_triangles": 530,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BYRE_lean_to_end0_mortar",
+      "est_triangles": 265,
+      "est_hidden_triangles": 212,
+      "hidden_pct_of_object": 80.0
+    },
+    {
+      "object": "BYRE_roof_eyebrow0_blocker",
+      "est_triangles": 212,
+      "est_hidden_triangles": 212,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BYRE_lean_to_end1_mortar",
+      "est_triangles": 265,
+      "est_hidden_triangles": 212,
+      "hidden_pct_of_object": 80.0
+    },
+    {
+      "object": "BYRE_hip_end_W_blocker",
+      "est_triangles": 159,
+      "est_hidden_triangles": 159,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BYRE_chimney_cap",
+      "est_triangles": 530,
+      "est_hidden_triangles": 106,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "BYRE_hip_end_E_n_blocker",
+      "est_triangles": 106,
+      "est_hidden_triangles": 106,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BYRE_walls_ironwork",
+      "est_triangles": 265,
+      "est_hidden_triangles": 106,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "BYRE_chimney_crown",
+      "est_triangles": 477,
+      "est_hidden_triangles": 53,
+      "hidden_pct_of_object": 11.1
+    },
+    {
+      "object": "BYRE_lean_to_pads",
+      "est_triangles": 159,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "BYRE_chimney_flue_blocker",
+      "est_triangles": 53,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

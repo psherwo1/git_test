@@ -406,3 +406,10 @@ Client's words: "if the walls be square and angular we should counterbalance wit
   - dormers;
   - a chimney through the roof or rising through a round hip.
 - **Director and auditor:** a plain /\ gable roof on square walls in a new design is a must-fix.
+### Producer note 20: CLIENT DIRECTION - use wattle and daub across the village (2026-10-18)
+
+Client's words: "lets make sure that we are utilizing wattle and daub as right now we have a singular building using this technique so it seems out of place".
+- Wattle-and-daub (kit `daub.round_daub_wall`, `wattle`, `frame.RoundFrame`, path walls via `arc_path` / `line_path`) must appear on several buildings, not only the wattle_roundhut and the v4 house wing, so it reads as a village technique.
+- Every NEW design carries daub on a meaningful wall area: an upper storey, a gable or hip-end infill between timber posts, a round annex or oven house, a lean-to, or a whole wall. It sits on the usual rubble plinth and under the usual thatch (note 16). Prefer reuse of the kit daub / wattle modules; if they only do round walls, add an optional path-wall mode (defaults unchanged, kit edit rules).
+- Rubble, board-and-batten and daub should mix in each design (rubble where it takes weight and meets the ground, daub where it is light).
+- Director and auditor: a new design with no daub, or daub that looks pasted-on, is a must-fix under distinctness and reuse. Accepted buildings are not retrofitted unless the client asks.
