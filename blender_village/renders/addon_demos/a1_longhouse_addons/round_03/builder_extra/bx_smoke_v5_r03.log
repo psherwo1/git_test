@@ -1,0 +1,20 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\smoke_v5\smoke_v5_porch.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_03\builder_extra\b
+x_smoke_v5_r03.py:28: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:417
++ ... der_extra'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  world.use_nodes = True
+00:00.688  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_03\builder_extra\bx_smoke_v5_r0
+3.py:57: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+00:05.266  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_03\builder_extra\smoke_v5\S01_v5_porch_reuse.png'
+SHOT S01_v5_porch_reuse
+00:09.719  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_03\builder_extra\smoke_v5\S02_v5_porch_junction.png'
+00:10.782  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_03\builder_extra\smoke_v5\S02_v5_porch_junction_void.png'
+COUNT S02_v5_porch_junction void red 0 yellow 19870
+SHOT S02_v5_porch_junction

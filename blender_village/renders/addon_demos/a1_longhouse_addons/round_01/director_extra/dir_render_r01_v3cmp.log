@@ -1,0 +1,35 @@
+﻿00:01.734  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v3_longhouse_roundend\v3_longhouse_roundend.blend"
+blender.exe : C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra
+\dir_render_r01_v3cmp.py:29: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:631
++ ... oding utf8; & "C:\Program Files\Blender Foundation\Blender 5.2\blende ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\dir_render_r0
+1_v3cmp.py:40: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\dir_render_r0
+1_v3cmp.py:70: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:01.890  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:06.281  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\v3_compare\i05_host_room_S_head_under_arch.png'
+00:06.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\v3_compare\i05_host_room_S_head_under_arch_red.png'
+BlenderMCP addon registered
+DEVICE GPU
+COUNT i05_host_room_S_head_under_arch red red 52 yellow 0
+SHOT i05_host_room_S_head_under_arch
+00:11.031  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\v3_compare\i07_host_attic_S_lifted_eave.png'
+00:11.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\v3_compare\i07_host_attic_S_lifted_eave_red.png'
+COUNT i07_host_attic_S_lifted_eave red red 491 yellow 0
+SHOT i07_host_attic_S_lifted_eave
+00:15.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\v3_compare\x08_porch_W_brace_foot.png'
+00:16.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\v3_compare\x08_porch_W_brace_foot_void.png'
+COUNT x08_porch_W_brace_foot void red 0 yellow 429
+SHOT x08_porch_W_brace_foot
+BlenderMCP addon unregistered
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

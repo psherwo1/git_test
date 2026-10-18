@@ -1584,7 +1584,7 @@ def _eyebrow_fronts(g, roof, pre):
 def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_cone=None, thatch_style="courses",
                 abut_wall_in=0.10, rafter_skip=None, ridge_caps=False, verge_apex=False, verge=None,
                 apex_finial=None, verge_roll=False, comb_step=0.92, comb_backing=False, rafter_lift_max=None,
-                deck_clip=None, apex_ends=None):
+                deck_clip=None, apex_ends=None, eave_roll=None):
     """KIT COMPONENT: a straight gable roof from its GableRoof spec (see module doc).  clip(P_world, margin=0) -> bool
     marks vertices inside another body; faces wholly inside are dropped from the covering, ridge, comb and rafters,
     and deck faces more than 10 cm inside it.  abut_cone=(cx, cy): the roof runs into the cone of the round frame g
@@ -1611,7 +1611,10 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
     clip(P, margin=0.10)), e.g. roof_addons.deck_clip(other): two roofs meeting in a valley keep their decks up to the
     line where the two DECKS cross, so the backing is closed under the valley (roof_addons.roof_valley);
     apex_ends=("lo", ) / ("hi", ) -- with apex_finial, only those free gables get the finial (a chimney stands at
-    the other)."""
+    the other).
+    kit 1.19 r3 (v7; None = old): eave_roll=dict(radius=, proud=, drop=, front=, tail=) -- the "courses" thatch's
+    eave-roll SECTION (GableRoof.eave_roll keywords; the verge roll / hood uses the same section), e.g. a slim roll on
+    a small dormer roof (roof_addons.GabledDormer.roll)."""
     if abut_cone is not None and clip is None:
         from .roof_junction import inside_cone
         cc = inside_cone(g, center=abut_cone)
@@ -1637,6 +1640,8 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
             kw17["rafter_lift_max"] = rafter_lift_max
         if deck_clip is not None:
             kw17["deck_clip"] = deck_clip
+        if eave_roll:
+            kw17["eave_roll"] = dict(eave_roll)
         out = _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=rafter_skip, ridge_caps=ridge_caps,
                                    verge_apex=verge_apex, **kw17)
         if verge is not None or apex_finial is not None:
@@ -1695,7 +1700,7 @@ def linear_roof(g, roof, covering="thatch", clip=None, seed=71, comb=True, abut_
 
 
 def _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=None, ridge_caps=False, verge_apex=False,
-                         verge_roll=None, comb_kw=None, rafter_lift_max=None, deck_clip=None):
+                         verge_roll=None, comb_kw=None, rafter_lift_max=None, deck_clip=None, eave_roll=None):
     """linear_roof, thatch_style "courses" (round 2): deck + rafters as before; the eave roll (thatch.d_roll),
     continuous layered courses, a closed verge face per free gable, the ridge roll and the comb.
     kit 1.17: verge_roll (a resolved VERGE_ROLL dict) / comb_kw / rafter_lift_max -- see linear_roof.
@@ -1705,7 +1710,7 @@ def _linear_roof_courses(g, roof, clip, rng, seed, comb, rafter_skip=None, ridge
         g.LINEAR_ROOFS = {}
     g.LINEAR_ROOFS[roof.name] = roof
     roof.covering = "thatch"
-    roof.eave_roll()
+    roof.eave_roll(**(eave_roll or {}))              # kit 1.19 r3: the section keywords (None = the old default)
     # the covering runs 4 cm past the deck at a free verge (the verge face covers the deck end)
     x_lo = roof.xa - 0.04 if roof.v0 > 0 else roof.xa
     x_hi = roof.xb + 0.04 if roof.v1 > 0 else roof.xb

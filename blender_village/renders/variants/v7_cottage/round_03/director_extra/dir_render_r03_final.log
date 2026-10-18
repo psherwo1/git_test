@@ -1,0 +1,157 @@
+﻿00:00.546  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\v7_cottage.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\dir_render_r03.py:28: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:540
++ ... ython.exe'; & $py -I "$d\dir_render_r03.py" "$b\v7_cottage.blend" $d  ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\dir_render_r03.py:39: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\dir_render_r03.py:69: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.687  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i01_attic_to_W_valley.png'
+00:05.687  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i01_attic_to_W_valley_red.png'
+DEVICE GPU
+COUNT i01_attic_to_W_valley red red 81560 yellow 0
+SHOT i01_attic_to_W_valley
+00:10.265  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i02_attic_to_E_valley.png'
+00:10.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i02_attic_to_E_valley_red.png'
+COUNT i02_attic_to_E_valley red red 68651 yellow 0
+SHOT i02_attic_to_E_valley
+00:15.359  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i03_wing_attic_up_to_main.png'
+00:15.765  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i03_wing_attic_up_to_main_red.png'
+COUNT i03_wing_attic_up_to_main red red 4665 yellow 0
+SHOT i03_wing_attic_up_to_main
+00:20.328  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i04_attic_to_dormer.png'
+00:20.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i04_attic_to_dormer_red.png'
+COUNT i04_attic_to_dormer red red 655 yellow 0
+SHOT i04_attic_to_dormer
+00:25.328  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i05_dormer_back_from_attic_above.png'
+00:25.765  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i05_dormer_back_from_attic_above_red.png'
+COUNT i05_dormer_back_from_attic_above red red 0 yellow 0
+SHOT i05_dormer_back_from_attic_above
+00:30.312  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i06_attic_to_chimney_gable.png'
+00:30.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i06_attic_to_chimney_gable_red.png'
+COUNT i06_attic_to_chimney_gable red red 0 yellow 0
+SHOT i06_attic_to_chimney_gable
+00:35.218  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i07_room_W_inside_corner_head.png'
+00:35.640  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i07_room_W_inside_corner_head_red.png'
+COUNT i07_room_W_inside_corner_head red red 1 yellow 0
+SHOT i07_room_W_inside_corner_head
+00:40.187  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i08_room_E_inside_corner_head.png'
+00:40.609  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\i08_room_E_inside_corner_head_red.png'
+COUNT i08_room_E_inside_corner_head red red 0 yellow 0
+SHOT i08_room_E_inside_corner_head
+00:45.140  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x01_dormer_back_oblique_W.png'
+00:46.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x01_dormer_back_oblique_W_void.png'
+COUNT x01_dormer_back_oblique_W void red 0 yellow 1
+SHOT x01_dormer_back_oblique_W
+00:50.609  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x02_dormer_back_oblique_E.png'
+00:51.468  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x02_dormer_back_oblique_E_void.png'
+COUNT x02_dormer_back_oblique_E void red 0 yellow 2
+SHOT x02_dormer_back_oblique_E
+00:56.125  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x03_dormer_cheek_foot_E.png'
+00:56.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x03_dormer_cheek_foot_E_void.png'
+COUNT x03_dormer_cheek_foot_E void red 0 yellow 507
+SHOT x03_dormer_cheek_foot_E
+01:01.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x04_dormer_mid_far.png'
+01:02.203  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x04_dormer_mid_far_void.png'
+COUNT x04_dormer_mid_far void red 196338 yellow 204
+SHOT x04_dormer_mid_far
+01:06.968  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x05_W_inside_corner_soffit.png'
+01:07.781  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x05_W_inside_corner_soffit_void.png'
+COUNT x05_W_inside_corner_soffit void red 46 yellow 1216
+SHOT x05_W_inside_corner_soffit
+01:12.390  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x06_E_inside_corner_soffit.png'
+01:13.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x06_E_inside_corner_soffit_void.png'
+COUNT x06_E_inside_corner_soffit void red 0 yellow 1660
+SHOT x06_E_inside_corner_soffit
+01:17.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x07_W_valley_foot_mid.png'
+01:18.531  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x07_W_valley_foot_mid_void.png'
+COUNT x07_W_valley_foot_mid void red 0 yellow 498
+SHOT x07_W_valley_foot_mid
+01:23.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x08_wing_ridge_notch.png'
+01:23.859  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x08_wing_ridge_notch_void.png'
+COUNT x08_wing_ridge_notch void red 0 yellow 1586
+SHOT x08_wing_ridge_notch
+01:28.296  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x09_chimney_S_verge_into_stack.png'
+01:29.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x09_chimney_S_verge_into_stack_void.png'
+COUNT x09_chimney_S_verge_into_stack void red 154876 yellow 305
+SHOT x09_chimney_S_verge_into_stack
+01:33.468  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x10_chimney_N_verge_into_stack.png'
+01:34.281  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x10_chimney_N_verge_into_stack_void.png'
+COUNT x10_chimney_N_verge_into_stack void red 150689 yellow 17
+SHOT x10_chimney_N_verge_into_stack
+01:38.843  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x11_chimney_base_wall_crevice_S.png'
+01:39.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x11_chimney_base_wall_crevice_S_void.png'
+COUNT x11_chimney_base_wall_crevice_S void red 0 yellow 636
+SHOT x11_chimney_base_wall_crevice_S
+01:44.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x12_chimney_shoulder_side.png'
+01:44.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x12_chimney_shoulder_side_void.png'
+COUNT x12_chimney_shoulder_side void red 8212 yellow 13
+SHOT x12_chimney_shoulder_side
+01:49.687  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x13_door_eave_actor.png'
+SHOT x13_door_eave_actor
+01:50.343  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x14_thumb_SW.png'
+SHOT x14_thumb_SW
+01:51.015  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x15_thumb_NE.png'
+SHOT x15_thumb_NE
+01:55.421  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x17_E_valley_foot_mid.png'
+01:56.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x17_E_valley_foot_mid_void.png'
+COUNT x17_E_valley_foot_mid void red 0 yellow 113
+SHOT x17_E_valley_foot_mid
+02:00.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x18_W_valley_foot_eye.png'
+02:01.640  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x18_W_valley_foot_eye_void.png'
+COUNT x18_W_valley_foot_eye void red 0 yellow 487
+SHOT x18_W_valley_foot_eye
+02:05.953  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x19_dormer_hood_mid_eye.png'
+02:06.796  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x19_dormer_hood_mid_eye_void.png'
+COUNT x19_dormer_hood_mid_eye void red 305977 yellow 232
+SHOT x19_dormer_hood_mid_eye
+02:11.265  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x21_chimney_pot_head.png'
+02:12.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x21_chimney_pot_head_void.png'
+COUNT x21_chimney_pot_head void red 451651 yellow 0
+SHOT x21_chimney_pot_head
+02:16.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x22_E_corner_eye_wide.png'
+02:17.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x22_E_corner_eye_wide_void.png'
+COUNT x22_E_corner_eye_wide void red 14647 yellow 2799
+SHOT x22_E_corner_eye_wide
+02:22.265  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x23_W_corner_knot_close.png'
+02:23.062  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x23_W_corner_knot_close_void.png'
+COUNT x23_W_corner_knot_close void red 0 yellow 77
+SHOT x23_W_corner_knot_close
+02:27.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x24_wing_ridge_arch_side.png'
+02:28.390  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x24_wing_ridge_arch_side_void.png'
+COUNT x24_wing_ridge_arch_side void red 0 yellow 616
+SHOT x24_wing_ridge_arch_side
+02:32.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x25_dormer_front_cheek_W.png'
+02:33.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x25_dormer_front_cheek_W_void.png'
+COUNT x25_dormer_front_cheek_W void red 0 yellow 0
+SHOT x25_dormer_front_cheek_W
+02:38.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x26_dormer_apex_close.png'
+02:39.218  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x26_dormer_apex_close_void.png'
+COUNT x26_dormer_apex_close void red 0 yellow 149
+SHOT x26_dormer_apex_close
+02:43.718  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x27_E_corner_roll_above.png'
+02:44.562  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x27_E_corner_roll_above_void.png'
+COUNT x27_E_corner_roll_above void red 0 yellow 173
+SHOT x27_E_corner_roll_above
+02:49.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x28_W_corner_roll_above.png'
+02:49.968  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x28_W_corner_roll_above_void.png'
+COUNT x28_W_corner_roll_above void red 0 yellow 0
+SHOT x28_W_corner_roll_above
+02:54.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x29_E_corner_roll_close.png'
+02:55.437  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x29_E_corner_roll_close_void.png'
+COUNT x29_E_corner_roll_close void red 0 yellow 2124
+SHOT x29_E_corner_roll_close
+02:59.968  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x30_E_valley_foot_close.png'
+03:00.765  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\director_extra\x30_E_valley_foot_close_void.png'
+COUNT x30_E_valley_foot_close void red 0 yellow 1
+SHOT x30_E_valley_foot_close

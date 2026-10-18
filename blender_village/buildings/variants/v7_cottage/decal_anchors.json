@@ -1723,19 +1723,19 @@
    "name": "DA_moss_021",
    "type": "moss",
    "position": [
-    -1.42781,
-    -0.41443,
-    3.3958
+    -1.42956,
+    -0.4128,
+    3.38359
    ],
    "normal": [
-    -0.29317,
-    -0.40762,
-    0.86481
+    -0.73135,
+    0.0,
+    0.682
    ],
    "up": [
-    0.89707,
-    0.19555,
-    0.39627
+    0.682,
+    -0.0,
+    0.73135
    ],
    "size": [
     0.6794,
@@ -1801,9 +1801,9 @@
    "name": "DA_moss_024",
    "type": "moss",
    "position": [
-    -3.9693,
+    -3.96931,
     0.5072,
-    5.22907
+    5.06683
    ],
    "normal": [
     -0.76604,
@@ -1926,14 +1926,14 @@
   "checked": 136,
   "snapped": 4,
   "max_move": 0.0473,
-  "renormal": 16,
-  "shrunk": 21,
+  "renormal": 15,
+  "shrunk": 20,
   "no_surface": 8,
   "wrong_surface": 4,
   "excluded": 21,
   "occluded": 0,
-  "footprint": 29,
-  "duplicate": 2,
+  "footprint": 30,
+  "duplicate": 1,
   "kept": 72
  }
 }

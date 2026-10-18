@@ -1,0 +1,29 @@
+﻿00:00.578  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\a1_fast.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\b
+x_render_r02.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:744
++ ...  $env:X=''; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\bx_render_r02.
+py:39: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_BX_world"); world.use_nodes = True
+00:00.781  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.437  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\cu\L02_leanto_front_square.png'
+00:05.890  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\cu\L02_leanto_front_square_red.png'
+SHOT L02_leanto_front_square
+00:10.281  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\cu\L08_leanto_figure_headroom.png'
+SHOT L08_leanto_figure_headroom
+00:14.593  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\cu\L09_leanto_front_eave_arch.png'
+SHOT L09_leanto_front_eave_arch
+00:19.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\cu\P07_porch_E_verge_vs_roll.png'
+00:19.484  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\cu\P07_porch_E_verge_vs_roll_red.png'
+SHOT P07_porch_E_verge_vs_roll
+00:23.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\cu\P02_porch_square_eye.png'
+SHOT P02_porch_square_eye
+00:28.171  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\cu\P05_porch_crane_6m.png'
+00:28.640  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\fast\cu\P05_porch_crane_6m_red.png'
+SHOT P05_porch_crane_6m

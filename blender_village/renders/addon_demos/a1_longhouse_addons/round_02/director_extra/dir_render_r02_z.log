@@ -1,0 +1,39 @@
+﻿00:02.813  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\a1_longhouse_addons.blend"
+blender.exe : C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra
+\dir_render_r02.py:29: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:489
++ ... tor_extra"; & $B -b --python "$d\dir_render_r02.py" -- "$R\buildings\ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\dir_render_r0
+2.py:40: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\dir_render_r0
+2.py:72: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:03.266  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:09.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\z01_leanto_E_endwall_host_corner.png'
+00:11.641  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\z01_leanto_E_endwall_host_corner_void.png'
+BlenderMCP addon registered
+DEVICE GPU
+COUNT z01_leanto_E_endwall_host_corner void red 0 yellow 34365
+SHOT z01_leanto_E_endwall_host_corner
+00:16.485  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\z02_host_attic_N_wallhead_W.png'
+00:16.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\z02_host_attic_N_wallhead_W_red.png'
+COUNT z02_host_attic_N_wallhead_W red red 0 yellow 0
+SHOT z02_host_attic_N_wallhead_W
+00:21.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\z03_host_attic_N_wallhead_E.png'
+00:21.704  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\z03_host_attic_N_wallhead_E_red.png'
+COUNT z03_host_attic_N_wallhead_E red red 0 yellow 0
+SHOT z03_host_attic_N_wallhead_E
+00:25.938  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\z04_host_N_wallhead_outside.png'
+00:26.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\director_extra\z04_host_N_wallhead_outside_void.png'
+COUNT z04_host_N_wallhead_outside void red 0 yellow 0
+SHOT z04_host_N_wallhead_outside
+BlenderMCP addon unregistered
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

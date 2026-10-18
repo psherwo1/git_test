@@ -382,3 +382,179 @@ Client's words: "if the walls be square and angular we should counterbalance wit
 - **The next fixer:** do the rounded roof first.
 - **Art Director:** a cottage with /\ gable roofs, or without an eyebrow, cannot pass; give at most 8.1.
 - The producer may extend the cottage's round cap so it can be done properly.
+## v7_cottage round 3 — builder entry
+
+I re-read this log before starting and again before writing. **The 00:10 / 00:11 / 00:20 CLIENT DIRECTIONS and PRODUCER NOTE (producer notes 18 and 19: the thatch eyebrow and the ROUNDED-HIP "loaf" roofs) are NOT applied in this round.** They reached the log after I started, when this round's build was already running. The 00:20 note says "do NOT half-build the rounded roof", and it needs a new kit roof option (round hips, convex crown, thatch eyebrow, a valley with no hip at the joined end, a chimney through curved thatch). That is a re-design, not a seam fix, and it does not fit in this round's roughly 75 minutes. **As built, this round cannot pass (at most 8.1, per the notes).** I recommend the producer extend the cottage's cap by one round for notes 18 and 19, done first and done properly. Everything below addresses only the round-2 must-fixes on the existing gabled design, and it carries over to the rounded design: the valley, the corner roll, the dormer hood section and the ridge arch.
+
+**Must-fix, item by item** (code in `kit/village_kit/components/roof_addons.py`; one new option in `linear_roof.py`; table in `kit/changes/v7_cottage.md`, "Round 3"):
+
+1. **Valley foot tuck** (x07, x17, x18):
+   - At a closed corner the line now stops 0.22 m short of the wing roll's crest, off the round nose where the section twisted (`roof_valley(foot_back=)`).
+   - Each foot tuck runs on 0.26 m and sinks crown + 8 cm into the new corner roll.
+   - Void yellow, final blend, r2 -> r3: **x07 1,220 -> 498; x17 1,964 -> 113 (under 300); x18 1,024 -> 487.**
+   - Clay x17: the folded flap is gone, but a small dark lip remains where the tuck enters the corner roll.
+2. **Inside corners** (x05, x06, x16, x22, x23):
+   - **(a)** The ball knot is replaced by ONE swept internal-corner roll (`_corner_roll`): the eave roll's own D section turned round the re-entrant lip corner on a 0.25 m fillet, blending from one slope to the other. The two straight eave rolls are cut back inside it.
+   - **(b)** The soffit slab now spans from under the lower deck to just over the higher deck top, and stops 5 cm inside the lips under the roll bodies. The decks' crossing cut board ends are buried in it, so the X of boards is gone.
+   - Hero and x22: the eave reads as one rolled edge running round the corner.
+   - Yellow r2 -> r3: **x23 3,484 -> 77; x05 2,303 -> 1,216; x06 4,195 -> 1,660; x22 3,233 -> 2,799.** x05 and x06 are still above the ~600 target: thin slivers along the slab rim and the wall head, not a box or an X.
+3. **Dormer hood, the real scale fix:**
+   - NEW `linear_roof(eave_roll=None)`: a dict of `GableRoof.eave_roll` keywords sets the roll SECTION, which the verge hood also sweeps. `None` = the old call.
+   - `GabledDormer` now has a thinner dormer thatch (thick 0.13, step 0.05, deck 0.025), and `roll=dict(radius=0.15 * hw, proud=0.02, drop=0.015)` is passed by `gabled_dormer`.
+   - The `dormer_verge_roll` docstring is corrected (`rc` = the eave-corner fillet).
+   - x19 / x04 / hero: a slim rolled hood, about a fifth of the dormer's width, with no pretzel. A small notch remains where the two rakes meet at the apex. The optional single continuous arch over the apex was not done.
+4. **Wing ridge under the arch** (x08, x24):
+   - The skirts bury up to 0.12 m deeper over the ridge roll.
+   - The wing skirt is steered onto the ridge axis, and its end dives vertically (`_crease_roll(bury_dir=)`). The probe showed the radial dive over the tight bend folding the skirt end back on itself (ring 10 / 11 faces reversed).
+   - The ridge-cut fill faces are oriented outward.
+   - **Not fixed:** x08 1,641 -> 1,586 and x24 683 -> 616. The two dark wedges beside the comb remain in clay. The last change (the vertical dive) went into the final build without a FAST check, because of time. Next step: shorten the wing skirt to end before the comb gap, or drop the comb units under the whole skirt.
+
+**Sealing:** i01 / i02 / i03 / i07 / i08 give exactly the round-2 counts (81,560 / 68,651 / 4,665 / 1 / 0 red, all the open floor below the wall heads). The new corner roll and slab opened nothing.
+
+**Stats** (`round_03/stats.json`):
+- 438,685 triangles (cap 1,000,000);
+- est_hidden 11.8 %;
+- 9 palette slots;
+- Mask missing: none;
+- 53 objects;
+- bbox 12.2 x 12.2 x 8.4 m;
+- door eave lip 2.312 m: PASS.
+
+**Renders:**
+- `round_03/`: the six views.
+- `round_03/builder_extra/`, from the final blend (`b_render_r03.py`, copied from the director's r02 script; counts in `b_render_r03_final.log`):
+  - x04-x08, x13, x16-x19, x22-x24;
+  - i01-i03, i07, i08.
+- `builder_extra/fast/` and `fast2/`: the two FAST iterations.
+- `probe_*.py`: ray / mesh probes.
+
+**Hash rule:** not triggered. The only existing-module change is `linear_roof(eave_roll=None)`, whose default is the old `roof.eave_roll()` call; everything else is in `roof_addons.py`, which only v7 imports.
+
+**Known gaps:**
+- **Producer notes 18 and 19 not applied:** the eyebrow, the rounded hips and crown, and moving the chimney.
+- **x08 / x24:** the arch wedges.
+- **x05 / x06:** slivers above target.
+- **x17:** the small lip at the foot.
+- **Dormer:** the apex notch, and the finial is kept.
+- **Lead aprons:** not bent to the stack.
+- **Valley:** thatch only.
+- **Stray folders:** the first FAST render pass wrote into `C:\round_03\builder_extra\fast` (a relative path). The files were moved into `round_03/builder_extra/fast`, but the two empty folders remain at `C:\round_03` (removal was blocked).
+
+## v7_cottage round 3 — score 7.9/10
+
+Graded by the Art Director on the note-12 MODULARITY RUBRIC (pass mark 8.2). Geometry only, no ground dressing, no surface-detail requests. Binding: producer notes 1-19, the CLIENT DIRECTIONS of 2026-10-17 and of 2026-10-18 00:10 / 00:20, and the PRODUCER NOTES of 23:12 and 00:11. I re-read this log before starting and again before writing: the latest entries are the 00:10 / 00:11 / 00:20 directions (notes 18 and 19) and the builder's round-3 entry. Nothing came after those. **Under the 00:11 and 00:20 notes, a cottage with /\ gable roofs and no eyebrow cannot pass and is capped at 8.1.** Both conditions hold here, as the builder states openly.
+
+**Reviewed:**
+- the recipe `build_v7_cottage.py`;
+- the round-3 code in `roof_addons.py`: `_corner_roll`, `_corner_close`, `roof_valley(foot_back=, ridge_bury=)`, `_crease_roll(bury_dir=)`, `GabledDormer(roll=, thick=0.13)`, `dormer_verge_roll`;
+- `linear_roof.py` (`eave_roll=None`; line 1713 calls `roof.eave_roll(**(eave_roll or {}))`, so the default is the old call);
+- `kit/changes/v7_cottage.md`, "Round 3";
+- the six `round_03` views, `stats.json`, `render_review.log`, and every builder close-up and twin in `builder_extra/` (including `fast/` and `fast2/`).
+
+**Director checks** (`renders/variants/v7_cottage/round_03/director_extra/`; counts in `dir_counts_r03.txt`):
+- `dir_render_r03.py` (copied from r02) re-runs every r02 shot on the final blend: i01-i08 and x01-x25.
+- It adds five new add-on junction shots: x26 dormer apex close, x27 / x28 E / W corner roll from above, x29 E corner roll from below, and x30 E valley foot close.
+- `dir_lineup_r03.py` (copied from r02) renders the note-16 line-up of v3, v5, v6, **v7** and the roundhut (`lineup/L01-L03`, `T*`).
+
+**Numbers** (all compliant):
+- 438,685 tris (cap 1,000,000);
+- hidden 11.8 %;
+- 9 palette slots;
+- no mesh missing `Mask`;
+- door eave lip 2.312 m: PASS;
+- 53 objects.
+
+**Sealing (interior volumes): PASS.** i01-i08 give exactly the r1 / r2 counts: i01 81,560, i02 68,651, i03 4,665, i04 655, i05 0, i06 0, i07 1 px, i08 0. All the red is the open floor below the wall heads. The corner roll, the soffit slab, the thinner dormer thatch and the deeper arch bury opened nothing. Exterior twins show no see-through at any add-on junction: x05's 46 red px are sky beyond the soffit edge, and the other red counts are sky in frame.
+
+**Void yellow, r2 -> r3 (final blend; my counts equal the builder's):**
+
+| shot | r2 | r3 | note |
+|---|---|---|---|
+| x01 | 413 | 1 | the thinner dormer thatch |
+| x02 | 271 | 2 | the thinner dormer thatch |
+| x03 | 507 | 507 | |
+| x04 | 347 | 204 | |
+| x05 | 2,303 | 1,216 | |
+| x06 | 4,195 | 1,660 | |
+| x07 | 1,220 | 498 | |
+| x08 | 1,641 | 1,586 | |
+| x17 | 1,964 | 113 | |
+| x18 | 1,024 | 487 | |
+| x19 | 397 | 232 | |
+| x22 | 3,233 | 2,799 | |
+| x23 | 3,484 | 77 | |
+| x24 | 683 | 616 | |
+| x26 | new | 149 | |
+| x27 | new | 173 | |
+| x28 | new | 0 | |
+| x29 | new | 2,124 | thin slab and board rims |
+| x30 | new | 1 | |
+
+| # | axis | score | why |
+|---|---|---|---|
+| 1 | Silhouette and massing | **7.8** | **Better:** the dormer hood is now a slim roll about a fifth of the dormer's width. The pretzel is gone at mid distance and thumbnail (x19, x04, hero). The inside corners read as one rolled eave running round the corner (hero, x22). The low, domestic L is still right in the line-up. **Against (notes 18 / 19, client rules):** both wings are still plain /\ gables on square rubble walls, with three flat gable ends and no round hip or convex crown. There is also no eyebrow. In the line-up (L02) v7 is now the most angular roofline in the village: next to v3's round end, v5's tower, the barn's swept cart gable and the roundhut cone, it reads as the generic box the client warned against. The round element, the stack, sits at the back gable and cannot be seen from the front (front, hero). |
+| 2 | Proportion and actor scale | **8.3** | Unchanged and right against the 1.8 m figure: the 1.95 m door under the 2.31 m eave, small deep windows, the dormer window, and the stack head about 0.8 m over the ridge (actor_closeup, x13). The thinner dormer thatch suits a 1.3 m dormer. |
+| 3 | Construction logic | **8.3** | **Fixed:** the X of crossed wall-head / fascia boards is buried in the soffit slab (x05 / x06 / x29: only thin rim slivers remain). The corner is a built underside under one swept roll, not a ball plugged between two rolls (x23: 77). The walls carry both roofs, the dormer stands on its sill beam, and the stack is bonded and stepped. No floating or visibly interpenetrating parts. |
+| 4 | Seams and junctions | **8.1** | **Fixed or much better:** the valley-foot flap is gone (x17 113, x30 1). The dormer back is essentially clean (x01 / x02: 1 / 2). The corner knot is gone (x23 77). **Still visible:** (a) the **wing ridge under the arch**: the two dark wedges either side of the comb and a ragged, frilled arch-skirt edge, seen from the ridge side (x08 1,586, x24 616; clay x08). (b) **The corner-roll joints:** at eye level by the door, the swept corner roll meets the straight eave rolls with two flat-faced "sleeve" bands, a visible pipe-fitting seam (x13, x22). From above, where the valley-foot tuck enters the corner roll, a small lumpy knot with a dark crack and a slot remains (x27, x17). (c) Thin slab and board rim slivers under the corner (x29 2,124; x05 / x06 above the ~600 target). (d) The dormer apex: a small notch where the two rake rolls meet under the lead hat (x26). (e) The dormer foot-roll cheek (x03 507, unchanged). |
+| 5 | Distinctness and reuse | **7.9** | **Same village (note 16): PASS.** It uses the shared palette, the village rubble, the barn thatch with its rolled verges and comb, the lead hats and turned finials, the v3 / v5 lime flaunching and lead, the kit board-and-batten and window, and the round battered stack and pot. **Note 17 / 18 / 19 theme: NOT MET.** The client's 2026-10-18 rules make round hips, a convex crown and a thatch eyebrow the cottage's organic language; none is present. **Reuse:** `roof_valley`, `chimney` and `GabledDormer` are genuinely reusable kit functions with defaults. The new `linear_roof(eave_roll=)` and `GabledDormer(roll=)` make the hood scale correctly for any dormer, which is the right generic fix. **Against:** all three are thatch only, and none is yet proven with the note-19 rounded roof, which the bible says they must work with (valley, dormer, chimney through the roof or a round hip). |
+| 6 | Technical compliance | **8.5** | All limits are met, the build is deterministic and seeded, and the hash rule is not triggered: the one existing-module change keeps the old default call (verified at `linear_roof.py:1713`). **Minor:** the stray empty folders at `C:\round_03\builder_extra\fast` are outside the project and still need to be removed. CHANGELOG 1.19 is not merged. |
+
+**Overall 7.9 / 10: REVISE. Not a pass, and the 3-round cap is reached.** On its round-2 must-fixes this is the best round so far:
+- the valley foot, the dormer hood scale, the dormer back and the inside-corner construction are fixed;
+- the sealing is intact;
+- the seam axis alone would sit at about 8.1-8.2.
+
+It cannot pass, however. The client's 2026-10-18 rules (notes 18 and 19) are not applied, as the builder reported: there are plain /\ gables on square walls and no eyebrow, which puts silhouette and distinctness under the pass mark. **Recommendation to the producer:** extend the cottage by one round (the 00:20 note allows it). Do notes 18 and 19 first, as kit options, and carry the round-3 seam work over. The builder is right that this is a re-design of the roof form, not a seam fix.
+
+**Village theme (notes 16 / 17 / 18 / 19):**
+- **Notes 16 / 17:** materials and details PASS; soft lines PASS (sag, sweep, rolled verges, valleys and corners).
+- **Notes 18 / 19:** FAIL. There is no eyebrow and no rounded hips or crown, and the only round element is hidden at the back gable from the main views.
+
+**Add-on reusability:**
+- **`roof_valley`:** reusable (any yaw, L / T, dormer-into-host, auto corner roll, ridge cut, foot_back). Thatch only; not yet on a rounded roof.
+- **`chimney`:** reusable (gable `wall_abutment` and through-slope ring, proven in r2; pot default). PASS.
+- **`GabledDormer` / `gabled_dormer`:** reusable, and now scales its own hood section from the dormer (`roll=0.15 * hw`). PASS for shingle-free hosts; thatch only.
+
+**Strengths:**
+- Honest, measured reporting, including the notes not applied and why.
+- The right generic fixes: the roll section as a kit option rather than a recipe hack, and `foot_back` plus per-station `bury` / `bury_dir`.
+- x01 / x02 / x17 / x23 / x30 are essentially clean.
+- Interior volumes unchanged and closed.
+- The triangle count is flat (+68 tris).
+
+**Must-fix (the extension round; notes 18 / 19 FIRST):**
+1. **Note 19, the rounded "loaf" roof, as a kit option** (`GableRoof(hips="round", crown=...)` or a `loaf_roof` component; thatch first; old defaults; hash rule if a default changes):
+   - **Main wing:** a round hip (half-cone, oversailing the corners) at both free ends, W and E.
+   - **Cross wing:** a round hip at its free S end; no hip at the joined end.
+   - **Section and finish:** a softly convex cross-section with a rolled ridge; keep the sag and swept eaves.
+   - **Courses:** the thatch courses run round the hips continuously, with the eave roll following the oval in plan.
+   - **Proof:** the hero, front, side and back views; L02 (no flat gable ends); interior rays and i01-i08 red twins clean.
+2. **`roof_valley` on the rounded roofs:**
+   - the valley and the internal-corner roll work against the convex crown;
+   - the wing's ridge runs into the main slope under the arch.
+
+   Proof: x07 / x17 / x08 / x22 / x23 void twins and the i01-i03 red twins.
+3. **Note 18, a thatch eyebrow** (`eyebrow(profile="arch", respace=True)` extended to `linear_roof(covering="thatch")`, defaults unchanged):
+   - **Placement:** on the main roof's **back (north) slope**, which is a blank 10 m face in the back view. A second one on the main front slope's west half is optional.
+   - **Form:** the thatch courses roll over one continuous arch, with the eave roll as a rolled lip over the kit window in a small rough-boarded front. It should be as smooth as the harbour house's round-8 eyelid.
+   - **Proof:** sealed (interior red twin from the main attic toward it), plus one void twin of the lip ends.
+4. **Chimney:**
+   - Move it through the roof: a ridge or slope stack via the proven `_ring_abutment`, or rising through the E round hip.
+   - Keep it short and chunky (about 0.8-1.2 m over the ridge), with the round pot, flashed into the curved thatch by the ring.
+   - It should then read from the front views.
+   - Proof: the seal probe and one void twin of the ring.
+5. **Carry-over seams** (on whatever geometry survives the re-roof):
+   - **(a) The wing ridge under the arch** (x08 / x24): shorten the wing skirt to end before the comb gap, or drop the comb units under the whole skirt. Target x08 < 500, with no dark wedge in clay.
+   - **(b) The corner roll:** blend its ends into the straight rolls without the flat sleeve bands (x13 / x22 at eye level), and close the knot and crack where the valley-foot tuck enters it (x27).
+   - **(c) Housekeeping:** delete the empty `C:\round_03` folders (ask for permission if blocked) and merge CHANGELOG 1.19.
+
+**Nice-to-have:**
+- One continuous dormer hood arch over the apex (x26 notch).
+- Drop the dormer finial (fewer spikes).
+- Bend the lead aprons to the stack.
+- Taper the dormer foot roll under the valley skirt (x03).
+- Later: a shingle valley and dormer, so the add-ons serve the shingle-roofed designs.
+
+## PRODUCER NOTE (2026-10-18, session 2, 01:45): round 3 graded 7.9 (notes 18 / 19 not yet applied); client EXTENDS the cottage by up to 2 rounds
+
+Client: "Extend by up to 2 rounds" for the rounded 'oval' roofs (note 19) and the thatch eyebrow (note 18). **Round 4 does the rounded roof and the eyebrow FIRST**, keeping round 3's seam fixes; then grade and audit; round 5 only if needed. The run paused at a usage limit (it resets at 3 am New York time), and continues after it.

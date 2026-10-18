@@ -1,4 +1,4 @@
-﻿"""v7_cottage (COTT) -- a low L-plan village cottage, round 1: the proof of the kit 1.19 ROOF add-ons (plan step 4).
+"""v7_cottage (COTT) -- a low L-plan village cottage, round 3: the proof of the kit 1.19 ROOF add-ons (plan step 4).
 A declarative RECIPE: every piece is a village_kit module; the building is dimensions + the order of the steps.
 
 Run:  python -I build_v7_cottage.py  -> v7_cottage.blend + decal_anchors.json (next to this file)
@@ -8,13 +8,17 @@ Built on the plan (x along the main ridge, the front long side at y = -HALF, gro
   main    a storey-and-a-half rubble house 10.0 x 5.5 m (path_stone_wall, RUBBLE_LARGE) under a steep 52 deg soft
           thatch (GableRoof ridge sag, swept and sagging eaves, flared verges, out-of-true wave, seated ridge roll)
   wing    the cross wing 4.8 x 5.25 m projecting from the front under its own soft 47 deg thatch, which runs into the
-          main slope in a ROLLED THATCH VALLEY each side and over its ridge (roof_addons.roof_valley)
+          main slope in a ROLLED THATCH VALLEY each side and over its ridge (roof_addons.roof_valley); at each
+          inside corner the eave roll runs round in one swept internal-corner roll over a boarded soffit
   dormer  a GABLED DORMER on the main front slope over the door (roof_addons.gabled_dormer): rough board-and-batten
-          front and cheeks with the kit window, its own small soft thatch with a lead hat and turned finial, the
-          valley into the main slope and a rolled thatch foot round its walls
+          front and cheeks with the kit window, its own small soft thatch (seated ridge roll) with a lead hat and
+          turned finial, a slim rolled hood scaled to the dormer (kit default: thin dormer thatch, roll section
+          0.15 x half width), the valley into the main slope and a
+          rolled thatch foot round its walls
   chimney a ROUND battered rubble STACK at the east gable (roof_addons.chimney): the main roof runs into it with the
-          v3 / v5 lime-mortar flaunching and lead aprons (wall_abutment), a dressed drip-course cap, and a round
-          SMOKE LOUVRE -- dressed posts under a little lead cone with the village's turned finial
+          v3 / v5 lime-mortar flaunching and lead aprons (wall_abutment): a broad battered base, a rounded
+          dressed-stone weathering at the shoulder, a short stack about 0.8 m over the ridge, a dressed drip-course
+          cap and a ROUND dressed-stone POT (the kit default crown; no louvre, no cupola)
   doors   a plank door with a threshold stone under the dormer, small deep-set windows
 """
 import os
@@ -96,7 +100,7 @@ def steps():
                            clip=solid_clip(MAIN), deck_clip=deck_clip(MAIN), apex_finial="turned",
                            verge_roll=dict(apex_bend=0.22, bend_over=0.12), comb_step=0.75, comb_backing=True)),
         (roof_valley, dict(main=MAIN, wing=WING, name="wing_valley", seed=5)),
-        (gabled_dormer, dict(D=DORMER, seed=81, verge_roll=dict(rc=0.22, apex_bend=0.16, bend_over=0.10))),
+        (gabled_dormer, dict(D=DORMER, seed=81)),                    # the hood: dormer_verge_roll(D.hw)
         (chimney, dict(name="chimney", center=(DIM["stack_x"], 0.0), r_base=DIM["stack_r"],
                        batter_deg=DIM["stack_batter"], roof=MAIN, clip=in_house, crown="pot", over_ridge=0.62, seed=51,
                        shoulder=dict(z=DIM["shoulder_z"], r_base=0.72, batter_deg=1.5, h=0.30),

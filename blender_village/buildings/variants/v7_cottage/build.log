@@ -1,198 +1,206 @@
 ﻿[    0.1s]   dormer: window sill raised 0.30 -> 0.55 m (clears the host thatch)
-[    0.1s]   dormer: front y -2.40 (host local), sill-beam foot 3.19, floor 3.37, plate 4.59, roof wall_z 4.69, ridge 5.46 (top ~6.16), cheeks back to y -0.86
+[    0.1s]   dormer: front y -2.40 (host local), sill-beam foot 3.19, floor 3.37, plate 4.59, roof wall_z 4.69, ridge 5.46 (top ~5.94), cheeks back to y -0.86
 [    0.2s] -- set_entrance
 [    0.2s] -- path_stone_wall
 [   81.5s]   walls visible mortar 18.8% -> 7.7% after 1179 pinning stones
 [   81.5s]   COTT_walls: stones 2427 (hero 190, pins 273)
-[   86.9s]   COTT_walls_stones: 156156 verts, 136312 faces
-[   87.0s]   COTT_walls_quoins: 5002 verts, 4880 faces
-[  103.3s]   COTT_walls_mortar: 7576 verts, 6660 faces
-[  103.3s]   COTT_walls: mortar cells 6660
-[  103.4s]   COTT_walls_frames: 5376 verts, 5271 faces
-[  103.4s]   COTT_walls_dressed: 1072 verts, 1038 faces
-[  103.4s]   COTT_walls_ironwork: 280 verts, 266 faces
-[  103.4s]   COTT_walls_reveals: 64 verts, 32 faces
-[  103.4s]   COTT_walls_blockers: 64 verts, 40 faces
-[  103.5s] -- linear_roof
-[  103.5s]   COTT_roof_deck: 3176 verts, 3040 faces
-[  103.5s]   COTT_roof_rafters: 1496 verts, 1429 faces
-[  104.0s]   COTT_roof_covering: 23102 verts, 20711 faces
-[  104.5s]   COTT_roof_eave_roll: 12406 verts, 11786 faces
-[  104.5s]   COTT_roof: 34 continuous thatch courses + eave rolls + verge faces
-[  104.5s]   COTT_roof_ridge: 1436 verts, 1392 faces
-[  104.7s]   COTT_roof_comb: 9564 verts, 9188 faces
-[  104.7s]   COTT_roof_apex_cap_collar: 169 verts, 169 faces
-[  104.8s]   COTT_roof_apex_finial: 721 verts, 721 faces
-[  104.8s]   COTT_roof: apex finials on 1 gable(s), tips 8.15
-[  104.8s] -- linear_roof
-[  104.8s]   COTT_wing_roof_deck: 2162 verts, 2059 faces
-[  104.8s]   COTT_wing_roof_rafters: 976 verts, 930 faces
-[  105.0s]   COTT_wing_roof_covering: 11982 verts, 10725 faces
-[  105.3s]   COTT_wing_roof_eave_roll: 6294 verts, 5974 faces
-[  105.3s]   COTT_wing_roof: 26 continuous thatch courses + eave rolls + verge faces
-[  105.3s]   COTT_wing_roof_ridge: 996 verts, 957 faces
-[  105.5s]   COTT_wing_roof_comb: 6772 verts, 6463 faces
-[  105.5s]   COTT_wing_roof_apex_cap_collar: 169 verts, 169 faces
-[  105.5s]   COTT_wing_roof_apex_finial: 721 verts, 721 faces
-[  105.5s]   COTT_wing_roof: apex finials on 1 gable(s), tips 7.18
-[  105.5s] -- roof_valley
-[  163.4s]   COTT_wing_valley: 2256 verts, 2246 faces
-[  163.4s]   wing_valley: valley roll 186 stations, 9.96 m (z 3.14..5.98), wing y -2.77..+2.77; comb polygons dropped 655
-[  163.4s] -- gabled_dormer
-[  163.9s]   COTT_dormer_walls_frame: 392 verts, 378 faces
-[  163.9s]   COTT_dormer_walls_boards: 1736 verts, 1575 faces
-[  163.9s]   COTT_dormer_walls_blocker: 104 verts, 104 faces
-[  163.9s]   COTT_dormer_walls_frames: 472 verts, 478 faces
-[  163.9s]   COTT_dormer_walls_blockers: 8 verts, 5 faces
-[  163.9s]   COTT_dormer_walls: timber wall (board_batten), 3 runs, 1 openings
-[  163.9s]   COTT_dormer_roof_deck: 426 verts, 383 faces
-[  163.9s]   COTT_dormer_roof_rafters: 295 verts, 269 faces
-[  163.9s]   COTT_dormer_roof_covering: 1148 verts, 1013 faces
-[  164.0s]   COTT_dormer_roof_eave_roll: 1761 verts, 1682 faces
-[  164.0s]   COTT_dormer_roof: 8 continuous thatch courses + eave rolls + verge faces
-[  164.1s]   COTT_dormer_roof_ridge: 327 verts, 307 faces
-[  164.1s]   COTT_dormer_roof_comb: 1851 verts, 1735 faces
-[  164.1s]   COTT_dormer_roof_apex_cap_collar: 169 verts, 169 faces
-[  164.1s]   COTT_dormer_roof_apex_finial: 721 verts, 721 faces
-[  164.1s]   COTT_dormer_roof: apex finials on 1 gable(s), tips 7.03
-[  170.2s]   COTT_dormer_valley: 672 verts, 662 faces
-[  170.2s]   dormer_valley: valley roll 54 stations, 2.93 m (z 5.14..5.95), wing y -0.79..+0.79; comb polygons dropped 439
-[  170.2s]   COTT_dormer_foot_roll: 996 verts, 986 faces
-[  170.2s]   dormer: foot roll 81 stations, 3.24 m
-[  170.2s] -- chimney
-[  171.1s]   COTT_chimney_base visible mortar 14.5% -> 9.6% after 188 pinning stones
-[  171.1s]   COTT_chimney_base stones 398
-[  171.4s]   COTT_chimney_base_stones: 21725 verts, 18248 faces
-[  171.5s]   COTT_chimney_base_mortar: 2116 verts, 2006 faces
-[  172.7s]   COTT_chimney visible mortar 17.2% -> 9.1% after 267 pinning stones
-[  172.7s]   COTT_chimney stones 255
-[  172.8s]   COTT_chimney_stones: 10130 verts, 7885 faces
-[  172.8s]   COTT_chimney_mortar: 1209 verts, 1084 faces
-[  172.8s]   COTT_chimney_weathering: 320 verts, 320 faces
-[  172.8s]   chimney: broad base r 1.05.. head 0.76 to z 4.70, weathered offset to the stack (r 0.60)
-[  173.2s]   chimney_abutment: trimmed at the wall face: comb -1028 (whole units within 0.15 m), deck 3040->3024, rafters 1429->1387, covering 20711->20541, eave_roll 11786->11334, ridge 1392->1263, comb 8160->8160
-[  173.2s]   chimney_abutment: run 0: 461 samples, azimuth 65.0..295.0 deg, z 6.26..7.01 (cone eave lip nan)
-[  173.3s]   COTT_roof_chimney_abutment: 3387 verts, 3374 faces
-[  173.3s]   seal junction registered: roof / round wall (covering COTT_roof_covering, COTT_roof_eave_roll, COTT_roof_ridge; z 5.96-7.31)
-[  173.3s]   COTT_chimney_cap: 320 verts, 320 faces
-[  173.3s]   COTT_chimney_flue_blocker: 49 verts, 48 faces
-[  173.3s]   COTT_chimney_crown: 252 verts, 226 faces
-[  173.3s]   chimney: round stack r 0.72 -> 0.52 m (batter 1.5 deg), head 7.79, cap 7.94, crown pot to 8.40
-[  173.3s] -- composite_hidden_cull
-[  173.8s]   visibility: 540586 tris, 276 viewpoints
+[   87.0s]   COTT_walls_stones: 156156 verts, 136312 faces
+[   87.1s]   COTT_walls_quoins: 5002 verts, 4880 faces
+[  103.7s]   COTT_walls_mortar: 7576 verts, 6660 faces
+[  103.7s]   COTT_walls: mortar cells 6660
+[  103.8s]   COTT_walls_frames: 5376 verts, 5271 faces
+[  103.8s]   COTT_walls_dressed: 1072 verts, 1038 faces
+[  103.8s]   COTT_walls_ironwork: 280 verts, 266 faces
+[  103.8s]   COTT_walls_reveals: 64 verts, 32 faces
+[  103.8s]   COTT_walls_blockers: 64 verts, 40 faces
+[  103.9s] -- linear_roof
+[  103.9s]   COTT_roof_deck: 3176 verts, 3040 faces
+[  104.0s]   COTT_roof_rafters: 1496 verts, 1429 faces
+[  104.4s]   COTT_roof_covering: 23198 verts, 20806 faces
+[  104.9s]   COTT_roof_eave_roll: 12406 verts, 11786 faces
+[  104.9s]   COTT_roof: 34 continuous thatch courses + eave rolls + verge faces
+[  105.0s]   COTT_roof_ridge: 1436 verts, 1392 faces
+[  105.2s]   COTT_roof_comb: 9564 verts, 9188 faces
+[  105.2s]   COTT_roof_apex_cap_collar: 169 verts, 169 faces
+[  105.2s]   COTT_roof_apex_finial: 721 verts, 721 faces
+[  105.2s]   COTT_roof: apex finials on 1 gable(s), tips 8.15
+[  105.2s] -- linear_roof
+[  105.2s]   COTT_wing_roof_deck: 2162 verts, 2059 faces
+[  105.3s]   COTT_wing_roof_rafters: 976 verts, 930 faces
+[  105.5s]   COTT_wing_roof_covering: 11982 verts, 10725 faces
+[  105.8s]   COTT_wing_roof_eave_roll: 6294 verts, 5974 faces
+[  105.8s]   COTT_wing_roof: 26 continuous thatch courses + eave rolls + verge faces
+[  105.8s]   COTT_wing_roof_ridge: 996 verts, 957 faces
+[  105.9s]   COTT_wing_roof_comb: 6772 verts, 6463 faces
+[  106.0s]   COTT_wing_roof_apex_cap_collar: 169 verts, 169 faces
+[  106.0s]   COTT_wing_roof_apex_finial: 721 verts, 721 faces
+[  106.0s]   COTT_wing_roof: apex finials on 1 gable(s), tips 7.18
+[  106.0s] -- roof_valley
+[  160.5s]   COTT_wing_valley: 2210 verts, 2220 faces
+[  160.6s]   COTT_wing_valley_soffit_0: 128 verts, 126 faces
+[  160.6s]   COTT_wing_valley_soffit_0_roll: 784 verts, 805 faces
+[  160.6s]   wing_valley_soffit_0: corner roll r 0.25 at lip corner (+4.35, -3.20); straight eave rolls cut back (143 faces)
+[  160.7s]   COTT_wing_valley_soffit_1: 128 verts, 126 faces
+[  160.7s]   COTT_wing_valley_soffit_1_roll: 784 verts, 805 faces
+[  160.7s]   wing_valley_soffit_1: corner roll r 0.25 at lip corner (-1.35, -3.20); straight eave rolls cut back (139 faces)
+[  160.7s]   wing_valley: valley roll 176 stations, 9.66 m (z 3.14..5.98), wing y -2.62..+2.62; comb polygons dropped 655; ridge / comb closed at wing x -0.73 (2 parts); re-entrant corners closed (soffit fills, 161 rafter polygons dropped)
+[  160.7s] -- gabled_dormer
+[  161.1s]   COTT_dormer_walls_frame: 392 verts, 378 faces
+[  161.2s]   COTT_dormer_walls_boards: 1736 verts, 1575 faces
+[  161.2s]   COTT_dormer_walls_blocker: 104 verts, 104 faces
+[  161.2s]   COTT_dormer_walls_frames: 472 verts, 478 faces
+[  161.2s]   COTT_dormer_walls_blockers: 8 verts, 5 faces
+[  161.2s]   COTT_dormer_walls: timber wall (board_batten), 3 runs, 1 openings
+[  161.2s]   COTT_dormer_roof_deck: 427 verts, 384 faces
+[  161.2s]   COTT_dormer_roof_rafters: 297 verts, 271 faces
+[  161.2s]   COTT_dormer_roof_covering: 1164 verts, 1019 faces
+[  161.3s]   COTT_dormer_roof_eave_roll: 1744 verts, 1648 faces
+[  161.3s]   COTT_dormer_roof: 8 continuous thatch courses + eave rolls + verge faces
+[  161.3s]   COTT_dormer_roof_ridge: 345 verts, 323 faces
+[  161.4s]   COTT_dormer_roof_comb: 1719 verts, 1609 faces
+[  161.4s]   COTT_dormer_roof_apex_cap_collar: 169 verts, 169 faces
+[  161.4s]   COTT_dormer_roof_apex_finial: 721 verts, 721 faces
+[  161.4s]   COTT_dormer_roof: apex finials on 1 gable(s), tips 6.85
+[  167.9s]   COTT_dormer_valley: 782 verts, 792 faces
+[  167.9s]   dormer_valley: valley roll 57 stations, 3.19 m (z 4.84..5.78), wing y -0.83..+0.83; comb polygons dropped 409; ridge / comb closed at wing x -0.92 (2 parts)
+[  167.9s]   COTT_dormer_foot_roll: 998 verts, 1008 faces
+[  167.9s]   dormer: foot roll 75 stations, 2.95 m
+[  167.9s] -- chimney
+[  168.6s]   COTT_chimney_base visible mortar 14.5% -> 9.6% after 188 pinning stones
+[  168.6s]   COTT_chimney_base stones 398
+[  168.8s]   COTT_chimney_base_stones: 21725 verts, 18248 faces
+[  168.9s]   COTT_chimney_base_mortar: 2116 verts, 2006 faces
+[  169.9s]   COTT_chimney visible mortar 17.2% -> 9.1% after 267 pinning stones
+[  169.9s]   COTT_chimney stones 255
+[  170.1s]   COTT_chimney_stones: 10130 verts, 7885 faces
+[  170.1s]   COTT_chimney_mortar: 1209 verts, 1084 faces
+[  170.1s]   COTT_chimney_weathering: 320 verts, 320 faces
+[  170.1s]   chimney: broad base r 1.05.. head 0.76 to z 4.70, weathered offset to the stack (r 0.60)
+[  170.4s]   chimney_abutment: trimmed at the wall face: comb -1028 (whole units within 0.15 m), deck 3040->3024, rafters 1334->1292, covering 20806->20636, eave_roll 11638->11186, ridge 1392->1263, comb 8160->8160
+[  170.4s]   chimney_abutment: run 0: 461 samples, azimuth 65.0..295.0 deg, z 6.26..7.01 (cone eave lip nan)
+[  170.5s]   COTT_roof_chimney_abutment: 3387 verts, 3374 faces
+[  170.5s]   seal junction registered: roof / round wall (covering COTT_roof_covering, COTT_roof_eave_roll, COTT_roof_ridge; z 5.96-7.31)
+[  170.5s]   COTT_chimney_cap: 320 verts, 320 faces
+[  170.5s]   COTT_chimney_flue_blocker: 49 verts, 48 faces
+[  170.5s]   COTT_chimney_crown: 252 verts, 226 faces
+[  170.5s]   chimney: round stack r 0.72 -> 0.52 m (batter 1.5 deg), head 7.79, cap 7.94, crown pot to 8.40
+[  170.5s] -- composite_hidden_cull
+[  171.0s]   visibility: 543458 tris, 276 viewpoints
 [    0.1s]   dormer: window sill raised 0.30 -> 0.55 m (clears the host thatch)
-[    0.1s]   dormer: front y -2.40 (host local), sill-beam foot 3.19, floor 3.37, plate 4.59, roof wall_z 4.69, ridge 5.46 (top ~6.16), cheeks back to y -0.86
+[    0.1s]   dormer: front y -2.40 (host local), sill-beam foot 3.19, floor 3.37, plate 4.59, roof wall_z 4.69, ridge 5.46 (top ~5.94), cheeks back to y -0.86
 [    0.1s]   dormer: window sill raised 0.30 -> 0.55 m (clears the host thatch)
-[    0.1s]   dormer: front y -2.40 (host local), sill-beam foot 3.19, floor 3.37, plate 4.59, roof wall_z 4.69, ridge 5.46 (top ~6.16), cheeks back to y -0.86
-[  312.6s]   visibility cull COTT_walls_stones: -14669 of 136312 polygons
-[  322.7s]   visibility cull COTT_walls_quoins: -1675 of 4880 polygons
-[  336.7s]   visibility cull COTT_walls_frames: -2267 of 5271 polygons
-[  339.2s]   visibility cull COTT_walls_dressed: -379 of 1038 polygons
-[  339.6s]   visibility cull COTT_walls_ironwork: -43 of 266 polygons
-[  344.4s]   visibility cull COTT_roof_rafters: -617 of 1387 polygons
-[  392.5s]   visibility cull COTT_roof_covering: -7068 of 20541 polygons
-[  406.8s]   visibility cull COTT_roof_eave_roll: -1995 of 11334 polygons
-[  409.2s]   visibility cull COTT_roof_ridge: -315 of 1263 polygons
-[  440.2s]   visibility cull COTT_roof_comb: -4723 of 8160 polygons
-[  443.0s]   visibility cull COTT_wing_roof_rafters: -449 of 930 polygons
-[  456.8s]   visibility cull COTT_wing_roof_covering: -3151 of 10725 polygons
-[  461.9s]   visibility cull COTT_wing_roof_eave_roll: -1137 of 5974 polygons
-[  463.0s]   visibility cull COTT_wing_roof_ridge: -242 of 957 polygons
-[  478.7s]   visibility cull COTT_wing_roof_comb: -3506 of 5808 polygons
-[  482.1s]   visibility cull COTT_wing_valley: -416 of 2246 polygons
-[  484.3s]   visibility cull COTT_dormer_walls_frame: -347 of 378 polygons
-[  493.9s]   visibility cull COTT_dormer_walls_boards: -1405 of 1575 polygons
-[  495.7s]   visibility cull COTT_dormer_walls_frames: -268 of 478 polygons
-[  497.1s]   visibility cull COTT_dormer_roof_rafters: -195 of 269 polygons
-[  499.0s]   visibility cull COTT_dormer_roof_covering: -481 of 1013 polygons
-[  501.1s]   visibility cull COTT_dormer_roof_eave_roll: -407 of 1682 polygons
-[  501.5s]   visibility cull COTT_dormer_roof_ridge: -55 of 307 polygons
-[  504.7s]   visibility cull COTT_dormer_roof_comb: -589 of 1296 polygons
-[  505.7s]   visibility cull COTT_dormer_valley: -120 of 662 polygons
-[  508.4s]   visibility cull COTT_dormer_foot_roll: -356 of 986 polygons
-[  531.7s]   visibility cull COTT_chimney_base_stones: -2737 of 18248 polygons
-[  557.0s]   visibility cull COTT_chimney_stones: -2839 of 7885 polygons
-[  558.2s]   visibility cull COTT_chimney_weathering: -154 of 320 polygons
-[  558.5s]   visibility cull COTT_chimney_cap: -40 of 320 polygons
-[  558.6s] hidden-geometry cull: -52645 polygons on 31 objects
-[  558.6s] -- recenter
-[  558.6s] recentred by (-0.418, +2.587); plan bbox 12.21 x 12.20 m, height 8.38 m
-[  558.6s] -- guards
-[  559.0s]   clearance gate COTT walls_4: door head 2.09 m, eave lip over it 2.312 m at (-3.918, -0.463) on COTT_roof_rafters (rule >= 2.30 m, 25 stations): PASS
-[  560.2s]   seal probe [see-through] roof / round wall: 2184 points, 13757 rays, 575 grazing pass(es), 0 leak(s)
-[  560.2s]   seal probe: 13757 rays on 1 junction(s) in 1.2 s
-[  560.8s] composite decals: 129 anchors before the gate
-[  561.3s] timber anchors: 2
-[  561.8s]   chimney decals: 5 anchors
-[  562.4s] decal anchor check (applied): checked 136, snapped 4, max_move 0.047, renormal 16, shrunk 21, no_surface 8, wrong_surface 4, excluded 21, occluded 0, footprint 29, duplicate 2, kept 72
-[  562.4s]     DA_damp_rise_001: footprint off the surface (n.n0 1.00) ['COTT_walls', '-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', '-', '-', 'COTT_walls']
-[  562.4s]     DA_damp_rise_002: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', '-', '-', 'COTT_walls']
-[  562.4s]     DA_moss_002: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_damp_rise_003: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_damp_rise_004: footprint off the surface (n.n0 0.50) ['-', '-', '-', '-', 'COTT_walls', '-', '-', '-', '-']
-[  562.4s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls']
-[  562.4s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls']
-[  562.4s]     DA_damp_rise_010: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_lichen_001: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_lichen_004: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
-[  562.4s]     DA_repair_patch_002: footprint off the surface (n.n0 1.00) ['COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls']
-[  562.4s]     DA_damp_rise_011: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn']
-[  562.4s]     DA_damp_rise_012: on backing mesh COTT_chimney_base_mortar
-[  562.4s]     DA_damp_rise_013: footprint off the surface (n.n0 1.00) ['-', '-', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn']
-[  562.4s]     DA_damp_rise_015: footprint off the surface (n.n0 0.83) ['COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', '-', '-']
-[  562.4s]     DA_damp_rise_016: on backing mesh COTT_chimney_base_mortar
-[  562.4s]     DA_moss_003: footprint off the surface (n.n0 1.00) ['COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', '-', '-']
-[  562.4s]     DA_damp_rise_017: footprint off the surface (n.n0 1.00) ['COTT_chimn', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn', '-', '-', 'COTT_walls']
-[  562.4s]     DA_moss_004: on backing mesh COTT_chimney_base_mortar
-[  562.4s]     DA_damp_rise_018: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_repair_patch_005: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn']
-[  562.4s]     DA_lichen_007: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn']
-[  562.4s]     DA_lichen_008: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', 'COTT_chimn']
-[  562.4s]     DA_repair_patch_007: on backing mesh COTT_chimney_base_mortar
-[  562.4s]     DA_water_streak_003: hit M_stone (COTT_chimney_base_stones), declared M_mortar
-[  562.4s]     DA_water_streak_004: on backing mesh COTT_chimney_base_mortar
-[  562.4s]     DA_water_streak_005: no surface within 6 cm
-[  562.4s]     DA_lichen_009: on backing mesh COTT_roof_chimney_abutment
-[  562.4s]     DA_lichen_010: on backing mesh COTT_chimney_mortar
-[  562.4s]     DA_water_streak_007: no surface within 6 cm
-[  562.4s]     DA_water_streak_008: no surface within 6 cm
-[  562.4s]     DA_water_streak_009: no surface within 6 cm
-[  562.4s]     DA_water_streak_010: on backing mesh COTT_chimney_mortar
-[  562.4s]     DA_water_streak_011: on backing mesh COTT_chimney_mortar
-[  562.4s]     DA_soot_001: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_water_streak_012: no surface within 6 cm
-[  562.4s]     DA_crack_003: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_water_streak_013: hit M_stone (COTT_walls_stones), declared M_mortar
-[  562.4s]     DA_soot_003: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_soot_004: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
-[  562.4s]     DA_crack_010: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
-[  562.4s]     DA_crack_011: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
-[  562.4s]     DA_water_streak_015: hit M_stone (COTT_walls_stones), declared M_mortar
-[  562.4s]     DA_rust_stain_001: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', 'COTT_walls', '-', 'COTT_walls', 'COTT_walls', '-', 'COTT_walls', 'COTT_walls']
-[  562.4s]     DA_grime_001: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
-[  562.4s]     DA_crack_014: footprint off the surface (n.n0 1.00) ['COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls']
-[  562.4s]     DA_water_streak_016: hit M_stone (COTT_walls_stones), declared M_mortar
-[  562.4s]     DA_water_streak_017: no surface within 6 cm
-[  562.4s]     DA_crack_018: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_soot_007: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
-[  562.4s]     DA_water_streak_018: no surface within 6 cm
-[  562.4s]     DA_soot_008: footprint off the surface (n.n0 0.83) ['COTT_walls', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', 'COTT_walls']
-[  562.4s]     DA_water_streak_019: no surface within 6 cm
-[  562.4s]     DA_crack_024: on backing mesh COTT_walls_mortar
-[  562.4s]     DA_lichen_013: footprint off the surface (n.n0 1.00) ['-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_chimn', 'COTT_chimn']
-[  562.4s]     DA_lichen_018: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', '-', '-', '-']
-[  562.4s]     DA_lichen_019: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', '-']
-[  562.4s]     DA_moss_028: within 0.30 m of another moss
-[  562.4s]     DA_moss_030: within 0.30 m of another moss
-[  562.4s]     DA_damp_rise_019: on backing mesh COTT_dormer_walls_blocker
-[  562.4s]     DA_damp_rise_020: on backing mesh COTT_dormer_walls_blocker
-[  562.4s]     DA_soot_009: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', '-', '-', 'COTT_chimn', '-', 'COTT_chimn', '-', '-']
-[  562.4s]     DA_soot_010: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn']
-[  562.4s]     DA_soot_011: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'COTT_roof_', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn']
-[  562.4s] decal anchors: 72
-[  563.1s] uv grain (kit 1.10.0): 49 meshes, 524 timber / shingle pieces (7 round, 60 sloped sheets), 17519 grain faces re-projected, 793 collapsed faces repaired
-[  563.4s]   walked tops (Mask B <= 0.04): walls_4 -> COTT_walls_dressed: 6 faces
-[  563.4s]   walked tops (Mask B <= 0.04): walls_4 -> COTT_walls_ironwork: 35 faces
-[  563.4s] objects 49 (instances 0, pooled meshes 0) triangles 437617
+[    0.1s]   dormer: front y -2.40 (host local), sill-beam foot 3.19, floor 3.37, plate 4.59, roof wall_z 4.69, ridge 5.46 (top ~5.94), cheeks back to y -0.86
+[  314.8s]   visibility cull COTT_walls_stones: -14685 of 136312 polygons
+[  327.3s]   visibility cull COTT_walls_quoins: -1673 of 4880 polygons
+[  345.7s]   visibility cull COTT_walls_frames: -2268 of 5271 polygons
+[  348.9s]   visibility cull COTT_walls_dressed: -379 of 1038 polygons
+[  349.4s]   visibility cull COTT_walls_ironwork: -43 of 266 polygons
+[  353.8s]   visibility cull COTT_roof_rafters: -569 of 1292 polygons
+[  388.2s]   visibility cull COTT_roof_covering: -7090 of 20636 polygons
+[  398.5s]   visibility cull COTT_roof_eave_roll: -1973 of 11186 polygons
+[  400.2s]   visibility cull COTT_roof_ridge: -315 of 1263 polygons
+[  426.4s]   visibility cull COTT_roof_comb: -4723 of 8160 polygons
+[  430.8s]   visibility cull COTT_wing_roof_rafters: -405 of 864 polygons
+[  450.2s]   visibility cull COTT_wing_roof_covering: -3164 of 10725 polygons
+[  457.5s]   visibility cull COTT_wing_roof_eave_roll: -1110 of 5840 polygons
+[  458.7s]   visibility cull COTT_wing_roof_ridge: -243 of 957 polygons
+[  482.0s]   visibility cull COTT_wing_roof_comb: -3506 of 5808 polygons
+[  488.2s]   visibility cull COTT_wing_valley: -501 of 2220 polygons
+[  490.5s]   visibility cull COTT_wing_valley_soffit_0_roll: -316 of 805 polygons
+[  493.8s]   visibility cull COTT_wing_valley_soffit_1_roll: -342 of 805 polygons
+[  497.9s]   visibility cull COTT_dormer_walls_frame: -346 of 378 polygons
+[  511.8s]   visibility cull COTT_dormer_walls_boards: -1396 of 1575 polygons
+[  514.8s]   visibility cull COTT_dormer_walls_frames: -268 of 478 polygons
+[  516.4s]   visibility cull COTT_dormer_roof_rafters: -180 of 271 polygons
+[  520.7s]   visibility cull COTT_dormer_roof_covering: -595 of 1019 polygons
+[  523.9s]   visibility cull COTT_dormer_roof_eave_roll: -371 of 1648 polygons
+[  524.9s]   visibility cull COTT_dormer_roof_ridge: -104 of 323 polygons
+[  530.4s]   visibility cull COTT_dormer_roof_comb: -726 of 1200 polygons
+[  532.6s]   visibility cull COTT_dormer_valley: -196 of 792 polygons
+[  537.0s]   visibility cull COTT_dormer_foot_roll: -375 of 1008 polygons
+[  571.5s]   visibility cull COTT_chimney_base_stones: -2737 of 18248 polygons
+[  607.1s]   visibility cull COTT_chimney_stones: -2839 of 7885 polygons
+[  608.3s]   visibility cull COTT_chimney_weathering: -154 of 320 polygons
+[  608.7s]   visibility cull COTT_chimney_cap: -40 of 320 polygons
+[  608.7s] hidden-geometry cull: -53632 polygons on 33 objects
+[  608.7s] -- recenter
+[  608.7s] recentred by (-0.418, +2.587); plan bbox 12.21 x 12.20 m, height 8.38 m
+[  608.7s] -- guards
+[  609.1s]   clearance gate COTT walls_4: door head 2.09 m, eave lip over it 2.312 m at (-3.918, -0.463) on COTT_roof_rafters (rule >= 2.30 m, 25 stations): PASS
+[  610.1s]   seal probe [see-through] roof / round wall: 2184 points, 13757 rays, 575 grazing pass(es), 0 leak(s)
+[  610.1s]   seal probe: 13757 rays on 1 junction(s) in 1.0 s
+[  610.5s] composite decals: 129 anchors before the gate
+[  610.8s] timber anchors: 2
+[  611.2s]   chimney decals: 5 anchors
+[  611.6s] decal anchor check (applied): checked 136, snapped 4, max_move 0.047, renormal 15, shrunk 20, no_surface 8, wrong_surface 4, excluded 21, occluded 0, footprint 30, duplicate 1, kept 72
+[  611.6s]     DA_damp_rise_001: footprint off the surface (n.n0 1.00) ['COTT_walls', '-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', '-', '-', 'COTT_walls']
+[  611.6s]     DA_damp_rise_002: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', '-', '-', 'COTT_walls']
+[  611.6s]     DA_moss_002: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_damp_rise_003: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_damp_rise_004: footprint off the surface (n.n0 0.50) ['-', '-', '-', '-', 'COTT_walls', '-', '-', '-', '-']
+[  611.6s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls']
+[  611.6s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls']
+[  611.6s]     DA_damp_rise_010: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_lichen_001: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_lichen_004: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
+[  611.6s]     DA_repair_patch_002: footprint off the surface (n.n0 1.00) ['COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls']
+[  611.6s]     DA_damp_rise_011: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn']
+[  611.6s]     DA_damp_rise_012: on backing mesh COTT_chimney_base_mortar
+[  611.6s]     DA_damp_rise_013: footprint off the surface (n.n0 1.00) ['-', '-', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn']
+[  611.6s]     DA_damp_rise_015: footprint off the surface (n.n0 0.83) ['COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', '-', '-']
+[  611.6s]     DA_damp_rise_016: on backing mesh COTT_chimney_base_mortar
+[  611.6s]     DA_moss_003: footprint off the surface (n.n0 1.00) ['COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', '-', '-']
+[  611.6s]     DA_damp_rise_017: footprint off the surface (n.n0 1.00) ['COTT_chimn', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn', '-', '-', 'COTT_walls']
+[  611.6s]     DA_moss_004: on backing mesh COTT_chimney_base_mortar
+[  611.6s]     DA_damp_rise_018: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_repair_patch_005: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn']
+[  611.6s]     DA_lichen_007: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn']
+[  611.6s]     DA_lichen_008: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', 'COTT_chimn', '-', 'COTT_chimn', 'COTT_chimn']
+[  611.6s]     DA_repair_patch_007: on backing mesh COTT_chimney_base_mortar
+[  611.6s]     DA_water_streak_003: hit M_stone (COTT_chimney_base_stones), declared M_mortar
+[  611.6s]     DA_water_streak_004: on backing mesh COTT_chimney_base_mortar
+[  611.6s]     DA_water_streak_005: no surface within 6 cm
+[  611.6s]     DA_lichen_009: on backing mesh COTT_roof_chimney_abutment
+[  611.6s]     DA_lichen_010: on backing mesh COTT_chimney_mortar
+[  611.6s]     DA_water_streak_007: no surface within 6 cm
+[  611.6s]     DA_water_streak_008: no surface within 6 cm
+[  611.6s]     DA_water_streak_009: no surface within 6 cm
+[  611.6s]     DA_water_streak_010: on backing mesh COTT_chimney_mortar
+[  611.6s]     DA_water_streak_011: on backing mesh COTT_chimney_mortar
+[  611.6s]     DA_soot_001: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_water_streak_012: no surface within 6 cm
+[  611.6s]     DA_crack_003: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_water_streak_013: hit M_stone (COTT_walls_stones), declared M_mortar
+[  611.6s]     DA_soot_003: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_soot_004: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
+[  611.6s]     DA_crack_010: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
+[  611.6s]     DA_crack_011: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
+[  611.6s]     DA_water_streak_015: hit M_stone (COTT_walls_stones), declared M_mortar
+[  611.6s]     DA_rust_stain_001: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', 'COTT_walls', '-', 'COTT_walls', 'COTT_walls', '-', 'COTT_walls', 'COTT_walls']
+[  611.6s]     DA_grime_001: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
+[  611.6s]     DA_crack_014: footprint off the surface (n.n0 1.00) ['COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls']
+[  611.6s]     DA_water_streak_016: hit M_stone (COTT_walls_stones), declared M_mortar
+[  611.6s]     DA_water_streak_017: no surface within 6 cm
+[  611.6s]     DA_crack_018: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_soot_007: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', '-']
+[  611.6s]     DA_water_streak_018: no surface within 6 cm
+[  611.6s]     DA_soot_008: footprint off the surface (n.n0 0.83) ['COTT_walls', 'COTT_walls', '-', '-', 'COTT_walls', '-', '-', 'COTT_walls', 'COTT_walls']
+[  611.6s]     DA_water_streak_019: no surface within 6 cm
+[  611.6s]     DA_crack_024: on backing mesh COTT_walls_mortar
+[  611.6s]     DA_lichen_013: footprint off the surface (n.n0 1.00) ['-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_chimn', 'COTT_chimn']
+[  611.6s]     DA_lichen_018: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'COTT_walls', 'COTT_walls', 'COTT_walls', '-', '-', '-']
+[  611.6s]     DA_lichen_019: footprint off the surface (n.n0 1.00) ['-', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', 'COTT_walls', '-']
+[  611.6s]     DA_moss_028: within 0.30 m of another moss
+[  611.6s]     DA_moss_030: footprint off the surface (shingles)
+[  611.6s]     DA_damp_rise_019: on backing mesh COTT_dormer_walls_blocker
+[  611.6s]     DA_damp_rise_020: on backing mesh COTT_dormer_walls_blocker
+[  611.6s]     DA_soot_009: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', '-', '-', 'COTT_chimn', '-', 'COTT_chimn', '-', '-']
+[  611.6s]     DA_soot_010: footprint off the surface (n.n0 1.00) ['-', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', '-', '-', 'COTT_chimn', 'COTT_chimn']
+[  611.6s]     DA_soot_011: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'COTT_roof_', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn', 'COTT_chimn']
+[  611.6s] decal anchors: 72
+[  612.1s] uv grain (kit 1.10.0): 53 meshes, 499 timber / shingle pieces (4 round, 51 sloped sheets), 17484 grain faces re-projected, 788 collapsed faces repaired
+[  612.2s]   walked tops (Mask B <= 0.04): walls_4 -> COTT_walls_dressed: 6 faces
+[  612.2s]   walked tops (Mask B <= 0.04): walls_4 -> COTT_walls_ironwork: 35 faces
+[  612.2s] objects 53 (instances 0, pooled meshes 0) triangles 438685
 Info: Saved as "v7_cottage.blend"
-[  563.5s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\v7_cottage.blend 11.4 MB
+[  612.3s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\v7_cottage.blend 11.4 MB

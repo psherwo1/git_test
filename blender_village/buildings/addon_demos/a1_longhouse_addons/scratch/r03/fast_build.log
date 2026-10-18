@@ -1,0 +1,172 @@
+﻿[    0.2s] -- set_entrance
+[    0.2s] -- round_stone_body
+[   29.2s]   A1L_round_wall visible mortar 15.6% -> 9.6% after 967 pinning stones
+[   29.2s]   A1L_round_wall stones 2607
+[   30.9s]   A1L_round_wall_stones: 130517 verts, 107643 faces
+[   30.9s]   A1L_round_wall_mortar: 2695 verts, 2534 faces
+[   31.0s]   A1L_round_wall_frames: 1980 verts, 1950 faces
+[   31.0s]   A1L_round_wall_dressed: 620 verts, 600 faces
+[   31.0s]   A1L_round_wall_reveals: 40 verts, 20 faces
+[   31.0s]   A1L_round_wall_blockers: 40 verts, 25 faces
+[   31.0s] -- path_stone_wall
+[   49.4s]   body_wall visible mortar 20.2% -> 8.6% after 831 pinning stones
+[   49.4s]   A1L_body_wall: stones 1958 (hero 277, pins 232)
+[   53.2s]   A1L_body_wall_stones: 134676 verts, 119749 faces
+[   53.2s]   A1L_body_wall_quoins: 1640 verts, 1600 faces
+[   54.4s]   A1L_body_wall_mortar: 4899 verts, 4262 faces
+[   54.4s]   A1L_body_wall: mortar cells 4262
+[   54.5s]   A1L_body_wall_frames: 3792 verts, 3729 faces
+[   54.5s]   A1L_body_wall_dressed: 576 verts, 558 faces
+[   54.5s]   A1L_body_wall_ironwork: 280 verts, 266 faces
+[   54.5s]   A1L_body_wall_reveals: 32 verts, 16 faces
+[   54.5s]   A1L_body_wall_blockers: 32 verts, 20 faces
+[   54.5s] -- linear_roof
+[   54.6s]   A1L_body_roof_deck: 3567 verts, 3455 faces
+[   54.6s]   body_roof rafters: 6 tails skipped (they would run into another body)
+[   54.6s]   body_roof rafters: 23 tails dropped under the eave lift (> 0.08 m)
+[   54.6s]   A1L_body_roof_rafters: 728 verts, 702 faces
+[   54.8s]   A1L_body_roof_covering: 18769 verts, 16816 faces
+[   55.0s]   A1L_body_roof_eave_roll: 8445 verts, 7980 faces
+[   55.0s]   A1L_body_roof: 26 continuous thatch courses + eave rolls + verge faces
+[   55.1s]   A1L_body_roof_ridge: 1162 verts, 1121 faces
+[   55.2s]   A1L_body_roof_comb: 7060 verts, 6768 faces
+[   55.2s] -- wall_abutment
+[   55.4s]   wall_abutment: trimmed at the wall face: comb -240 (whole units within 0.15 m), deck 3455->3388, rafters 702->702, covering 16816->16669, eave_roll 7980->7865, ridge 1121->1121, comb 6528->6528
+[   55.4s]   wall_abutment: run 0: 262 samples, azimuth 114.5..245.0 deg, z 2.85..5.55 (cone eave lip 6.00)
+[   55.5s]   A1L_body_roof_wall_abutment: 1994 verts, 1981 faces
+[   55.5s]   seal junction registered: body_roof / round wall (covering A1L_body_roof_covering, A1L_body_roof_eave_roll, A1L_body_roof_ridge; z 2.49-5.85)
+[   55.5s] -- cone_roof
+[   55.6s]   A1L_rafters: 3474 verts, 2916 faces
+[   55.6s]   A1L_purlin_rings: 392 verts, 350 faces
+[   55.6s]   A1L_battens: 504 verts, 378 faces
+[   58.5s] shingles: 615 full-length (covered part visible): 127
+[   58.8s]   A1L_roof_shingles: 66750 verts, 57820 faces
+[   58.9s]   A1L_roof_starter: 3600 verts, 3120 faces
+[   63.5s] underlap strips: 610
+[   63.6s]   A1L_roof_underlap: 7320 verts, 3660 faces
+[   63.6s]   A1L_roof_blocker: 1186 verts, 1088 faces
+[   63.6s]   A1L_roof_soffit_deck: 1440 verts, 1296 faces
+[   63.6s] -- ball_finial
+[   63.7s]   A1L_cap_collar: 6529 verts, 6433 faces
+[   63.8s]   hat fit: -120 covering polygons under / through the hat; worst clearance kept 0.020 m
+[   63.8s]   A1L_apex_blocker: 362 verts, 400 faces
+[   63.8s]   ball finial: hat r 0.62 pitch 44 deg, top shingle under the drip at 10.130, apex 10.678, hat top 10.728
+[   63.8s]   A1L_finial: 642 verts, 672 faces
+[   63.8s] -- round_eave_fill
+[   63.8s]   eave fill from the round wall head z 6.286 m (no wall plate)
+[   63.8s]   A1L_eave_fill: 721 verts, 480 faces
+[   63.8s] -- orient_host_stones
+[   64.2s]   A1L_body_wall_stones: stone facing check: 1955 stones, 5 turned inside out -> flipped (240 faces), 0 left
+[   64.2s] -- seal_wall_head
+[   64.2s]   A1L_body_wall_head_mortar: 1272 verts, 1266 faces
+[   64.2s]   A1L_body_wall_head_mortar: wall-head bedding x -10.50..-2.60, 0.30 m deep, 1.2 cm into the deck, 0.035-0.085 m behind the face
+[   64.2s] -- seal_wall_head
+[   64.2s]   A1L_body_wall_head_s_mortar: 1016 verts, 1010 faces
+[   64.2s]   A1L_body_wall_head_s_mortar: wall-head bedding x -10.15..-3.85, 0.30 m deep, 1.2 cm into the deck, 0.035-0.085 m behind the face
+[   64.2s] -- lean_to
+[   64.2s]   A1L_lean_to_deck: 700 verts, 674 faces
+[   64.2s]   lean_to rafters: 12 tails skipped (they would run into another body)
+[   64.2s]   A1L_lean_to_rafters: 80 verts, 66 faces
+[   64.4s]   A1L_lean_to_covering: 9430 verts, 8181 faces
+[   64.4s]   A1L_lean_to: 168 shingle pieces
+[   64.4s]   A1L_lean_to_verge: 112 verts, 106 faces
+[   64.4s]   A1L_lean_to: 4 verge boards
+[   64.5s]   A1L_lean_to: trimmed at the wall face: deck 674->624, rafters 66->66, covering 8181->8181, verge 106->106
+[   64.5s]   A1L_lean_to_framing: 696 verts, 670 faces
+[   64.5s]   A1L_lean_to: ledger, 7 common rafters, plate at 2.00 m out
+[   64.5s]   A1L_lean_to_flashing: 1175 verts, 1162 faces
+[   64.5s]   A1L_lean_to: flaunching 145 stations, roof at the face z 3.20..3.30, crease 3.37
+[   64.5s]   A1L_lean_to: under the host eave: margin at the face 0.181 m (crease), at the host lip line 0.237 m (covering)
+[   64.6s]   A1L_lean_to: host eave roll belly over the add-on: smallest gap 0.238 m at (-8.4, 2.976, 3.104) (rule >= 0.10 m)
+[   64.6s]   A1L_lean_to: host eave roll, lateral (nearest from the same vertices): 0.212 m at (-8.378, 2.813, 3.18) (rule >= 0.10 m)
+[   64.6s]   seal junction registered: lean_to / wall (covering A1L_lean_to_covering, A1L_lean_to_verge, A1L_lean_to_eave_roll; z 2.90-3.60)
+[   65.0s]   lean_to_end0 visible mortar 21.2% -> 7.8% after 125 pinning stones
+[   65.0s]   A1L_lean_to_end0: stones 263 (hero 4, pins 35)
+[   65.1s]   A1L_lean_to_end0_stones: 15471 verts, 13195 faces
+[   65.2s]   A1L_lean_to_end0_quoins: 1476 verts, 1440 faces
+[   65.3s]   A1L_lean_to_end0_mortar: 277 verts, 217 faces
+[   65.3s]   A1L_lean_to_end0: mortar cells 217
+[   65.3s]   A1L_lean_to_end0_mortar: 27 mortar vertices clamped under the deck
+[   65.4s]   A1L_lean_to_end0_stones: stone facing check: 263 stones, 3 turned inside out -> flipped (818 faces), 0 left
+[   65.7s]   lean_to_end1 visible mortar 20.4% -> 8.0% after 103 pinning stones
+[   65.7s]   A1L_lean_to_end1: stones 241 (hero 4, pins 18)
+[   65.9s]   A1L_lean_to_end1_stones: 14407 verts, 12302 faces
+[   66.0s]   A1L_lean_to_end1_quoins: 1476 verts, 1440 faces
+[   66.1s]   A1L_lean_to_end1_mortar: 279 verts, 219 faces
+[   66.1s]   A1L_lean_to_end1: mortar cells 219
+[   66.1s]   A1L_lean_to_end1_mortar: 29 mortar vertices clamped under the deck
+[   66.2s]   A1L_lean_to_end1_stones: stone facing check: 241 stones, 0 turned inside out -> flipped (0 faces), 0 left
+[   66.2s]   A1L_lean_to_posts: 320 verts, 306 faces
+[   66.2s]   A1L_lean_to_pads: 57 verts, 48 faces
+[   66.2s]   A1L_lean_to: 1 posts on dressed pads under the plate
+[   66.2s]   A1L_lean_to: open front 3.20 m wide, plate underside 2.206 m (ends) .. 2.308 m (middle), lowest knee-brace foot 2.028 m (rule plate >= 2.10, brace >= 1.95 m)
+[   66.2s] -- porch
+[   66.2s]   A1L_porch_deck: 286 verts, 274 faces
+[   66.2s]   porch rafters: 6 tails skipped (they would run into another body)
+[   66.2s]   A1L_porch_rafters: 80 verts, 66 faces
+[   66.2s]   A1L_porch_covering: 3426 verts, 2967 faces
+[   66.2s]   A1L_porch: 61 shingle pieces
+[   66.2s]   A1L_porch_verge: 72 verts, 66 faces
+[   66.2s]   A1L_porch: 4 verge boards
+[   66.3s]   A1L_porch: trimmed at the wall face: deck 274->252, rafters 66->66, covering 2967->2967, verge 66->66
+[   66.3s]   A1L_porch_framing: 320 verts, 306 faces
+[   66.3s]   A1L_porch: ledger, 4 common rafters, plate at 1.00 m out
+[   66.3s]   A1L_porch_flashing: 741 verts, 728 faces
+[   66.3s]   A1L_porch: flaunching 83 stations, roof at the face z 3.17..3.21, crease 3.28
+[   66.3s]   A1L_porch: under the host eave: margin at the face 0.246 m (crease), at the host lip line 0.429 m (covering)
+[   66.3s]   A1L_porch: host eave roll belly over the add-on: smallest gap 0.415 m at (-8.2, -2.926, 3.107) (rule >= 0.25 m)
+[   66.3s]   A1L_porch: host eave roll, lateral (nearest from the same vertices): 0.319 m at (-5.739, -2.875, 3.131) (rule >= 0.25 m)
+[   66.3s]   seal junction registered: porch / wall (covering A1L_porch_covering, A1L_porch_verge, A1L_porch_eave_roll; z 2.87-3.51)
+[   66.4s]   A1L_porch_beam: 96 verts, 90 faces
+[   66.4s]   A1L_porch_arm0_frame: 224 verts, 216 faces
+[   66.4s]   A1L_porch_arm0: hoist beam 1.12 m out at z 2.37
+[   66.4s]   A1L_porch_arm1_frame: 224 verts, 216 faces
+[   66.4s]   A1L_porch_arm1: hoist beam 1.12 m out at z 2.37
+[   66.4s]   A1L_porch: porch 2.10 m between brackets, front beam underside 2.32 m, arm undersides 2.17 m, deck at the wall 3.10 m
+[   66.4s] -- recenter
+[   66.4s] recentred by (+4.606, -0.303); plan bbox 17.77 x 9.15 m, height 11.34 m
+[   66.4s] -- guards
+[   66.9s]   clearance gate A1L body_wall_3: door head 2.22 m, eave lip over it 2.759 m at (-2.644, -3.653) on A1L_porch_framing (rule >= 2.30 m, 25 stations): PASS
+[   66.9s]   clearance gate A1L lean_to_front: door head 2.21 m, eave lip over it 2.384 m at (-3.144, 4.417) on A1L_lean_to_framing (rule >= 2.30 m, 25 stations): PASS
+[   69.8s]   seal probe [see-through] body_roof / round wall: 16531 points, 112142 rays, 1518 grazing pass(es), 0 leak(s)
+[   71.1s]   seal probe [see-through] lean_to / wall: 9686 points, 68602 rays, 59 grazing pass(es), 0 leak(s)
+[   71.9s]   seal probe [see-through] porch / wall: 5187 points, 36253 rays, 36 grazing pass(es), 0 leak(s)
+[   71.9s]   seal probe: 216997 rays on 3 junction(s) in 5.0 s
+[   72.6s] composite decals: 134 anchors before the gate
+[   73.4s] decal anchor check (applied): checked 134, snapped 7, max_move 0.046, renormal 8, shrunk 9, no_surface 1, wrong_surface 3, excluded 0, occluded 0, footprint 20, duplicate 0, kept 110
+[   73.4s]     DA_damp_rise_001: footprint off the surface (n.n0 1.00) ['A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_']
+[   73.4s]     DA_damp_rise_006: footprint off the surface (n.n0 1.00) ['A1L_body_w', 'A1L_round_', 'A1L_body_w', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_']
+[   73.4s]     DA_repair_patch_002: hit M_mortar (A1L_body_roof_wall_abutment), declared M_stone
+[   73.4s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_body_w', 'A1L_round_', 'A1L_round_', '-', '-', '-']
+[   73.4s]     DA_damp_rise_011: footprint off the surface (n.n0 1.00) ['A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', '-', '-', '-']
+[   73.4s]     DA_damp_rise_014: footprint off the surface (n.n0 1.00) ['A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w']
+[   73.4s]     DA_repair_patch_004: footprint off the surface (n.n0 1.00) ['A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', '-', 'A1L_body_w', '-']
+[   73.4s]     DA_damp_rise_020: footprint off the surface (n.n0 1.00) ['-', 'A1L_lean_t', '-', '-', 'A1L_lean_t', '-', '-', 'A1L_lean_t', '-']
+[   73.4s]     DA_damp_rise_021: footprint off the surface (n.n0 1.00) ['A1L_lean_t', 'A1L_lean_t', '-', 'A1L_lean_t', 'A1L_lean_t', '-', 'A1L_lean_t', 'A1L_lean_t', '-']
+[   73.4s]     DA_moss_002: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'A1L_lean_t', 'A1L_lean_t', 'A1L_lean_t', '-', '-', '-']
+[   73.4s]     DA_damp_rise_022: footprint off the surface (n.n0 1.00) ['A1L_lean_t', 'A1L_lean_t', 'A1L_lean_t', 'A1L_lean_t', 'A1L_lean_t', 'A1L_lean_t', 'A1L_lean_t', 'A1L_lean_t', 'A1L_lean_t']
+[   73.4s]     DA_crack_002: footprint off the surface (n.n0 1.00) ['A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_']
+[   73.4s]     DA_crack_008: footprint off the surface (n.n0 1.00) ['A1L_round_', 'A1L_round_', '-', 'A1L_round_', 'A1L_round_', '-', 'A1L_round_', 'A1L_round_', '-']
+[   73.4s]     DA_water_streak_004: hit M_mortar (A1L_round_wall_mortar), declared M_stone
+[   73.4s]     DA_water_streak_005: hit M_stone (A1L_round_wall_stones), declared M_mortar
+[   73.4s]     DA_crack_015: footprint off the surface (n.n0 1.00) ['A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_', 'A1L_round_']
+[   73.4s]     DA_crack_019: footprint off the surface (n.n0 1.00) ['A1L_body_w', 'A1L_body_w', '-', '-', 'A1L_body_w', '-', '-', 'A1L_body_w', '-']
+[   73.4s]     DA_crack_020: footprint off the surface (n.n0 1.00) ['-', 'A1L_body_w', '-', '-', 'A1L_body_w', '-', '-', 'A1L_body_w', '-']
+[   73.4s]     DA_crack_023: footprint off the surface (n.n0 1.00) ['A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w']
+[   73.4s]     DA_water_streak_008: no surface within 6 cm
+[   73.4s]     DA_soot_009: footprint off the surface (n.n0 1.00) ['A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w']
+[   73.4s]     DA_lichen_008: footprint off the surface (n.n0 1.00) ['A1L_body_w', '-', '-', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', '-', 'A1L_body_w', 'A1L_body_w']
+[   73.4s]     DA_lichen_009: footprint off the surface (n.n0 1.00) ['A1L_lean_t', '-', '-', '-', 'A1L_lean_t', '-', '-', '-', 'A1L_lean_t']
+[   73.4s]     DA_lichen_010: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'A1L_body_w', 'A1L_body_w', 'A1L_body_w', '-', '-', '-']
+[   73.4s] decal anchors: 110
+[   74.4s] uv grain (kit 1.10.0): 58 meshes, 1753 timber / shingle pieces (35 round, 558 sloped sheets), 101858 grain faces re-projected, 1965 collapsed faces repaired
+[   74.7s]   walked tops (Mask B <= 0.04): body_wall_3 -> A1L_body_wall_dressed: 9 faces
+[   74.7s]   walked tops (Mask B <= 0.04): body_wall_3 -> A1L_body_wall_ironwork: 35 faces
+[   74.7s]   walked tops (Mask B <= 0.04): lean_to_front -> A1L_lean_to_end0_quoins: 20 faces
+[   74.7s]   walked tops (Mask B <= 0.04): lean_to_front -> A1L_lean_to_end0_stones: 101 faces
+[   74.7s]   walked tops (Mask B <= 0.04): lean_to_front -> A1L_lean_to_end1_quoins: 20 faces
+[   74.7s]   walked tops (Mask B <= 0.04): lean_to_front -> A1L_lean_to_end1_stones: 118 faces
+[   74.7s]   walked tops (Mask B <= 0.04): lean_to_front -> A1L_lean_to_pads: 16 faces
+[   74.7s] objects 58 (instances 0, pooled meshes 0) triangles 811434
+Info: Saved as "a1_fast.blend"
+[   74.8s] saved C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast\a1_fast.blend 21.7 MB

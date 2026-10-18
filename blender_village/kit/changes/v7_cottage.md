@@ -46,3 +46,38 @@ Not triggered; not run. No existing default changed:
 - Dormer: the dormer valley's skirts meet the host's cut course ends with some short ragged edges near the dormer eave ends. The dormer roof's rolled hood is large on a 1.3 m dormer (VERGE_ROLL section is the eave roll's).
 - Chimney through a slope / the ridge (`_ring_abutment`): written, not proven on a build. A gable stack is the proven case.
 - The rubble-wall windows (existing kit `window_spec`) let interior rays out at the sill line (40-65 mm pinch, `round_01/builder_extra/probe_interior_r01.txt`, ROOMS); not an add-on junction, every building has the same window.
+
+## Round 2 (kit 1.19 r2): `roof_addons.py` only. It is a new module used only by v7, so the hash rule is not triggered; `linear_roof.py` is untouched this round
+
+| change | what |
+|---|---|
+| `_crease_roll(sink=, n_tuck=4)` | Each end is now a **rounded tuck**: 4 rings on a quarter circle `end_out` past the end, shrinking to a point and diving `sink` under the bisector, closed by triangle fans. This replaces the flat, non-planar n-gon cap. |
+| `_continuous`, `_smooth_rows` | In `roof_valley`, the skirt directions a / b stay continuous station to station; the per-station probe is only a majority vote. The normals and skirts are smoothed, so the foot section no longer twists and the arch has no folded lip. |
+| `roof_valley(end_out=0.16, sink=0.06, ridge_cut=0.12, corner="auto")` | **ridge_cut**: `_cut_ridge_under_arch` bisects the wing's ridge roll and comb 0.12 m on the wing side of the arch crest, deletes the part toward the main roof and fills the cut, so the roll ends closed under the arch. **corner** ("auto" = eaves within 0.3 m of one height): `_corner_close` at each re-entrant eave corner does three things: drops rafter tails whole within 0.35 m of the other roof's plan columns; adds a closed boarded soffit slab (M_timber) between the wall faces and lips, under the lower deck; and adds a rounded thatch closing knot where the two eave rolls cross. |
+| `_ring_trace` | Starts low (`z_guess = roof.z_lip`, where the battered face is widest). Round 1 started above the ridge, inside the trimmed hole, so it never hit. Gaps under 15 % are interpolated. `_ring_abutment` is now **registered for the seal probe** ("<roof> / stack ring"). |
+| `DORMER_SOFT` | `ridge_seat=True`. |
+| `dormer_verge_roll(hw, ...)` / `gabled_dormer(verge_roll="auto")` | The hood is scaled to the dormer: rc 0.18 hw, apex_bend 0.155 hw, bend_over 0.12 hw. A recipe dict is capped at 0.20 hw / 0.17 hw. |
+| `_dormer_foot_roll(under_eave=0.16, taper=0.40, sink=0.10)` | Each end stops further under the dormer eave and tucks into the host thatch under the dormer valley's skirt. |
+| `chimney(crown="pot")` | The default crown is now the round pot. `"louvre"` is opt-in, with h 0.24 by default and clamped to 0.30 m, and no finial by default (`finial=None`). |
+
+**Proofs:**
+- `buildings/variants/v7_cottage/scratch/ring_stack.py` is a FAST build: the cottage plus an r 0.52 stack through the back slope.
+  - Ring flaunching: seal probe "roof / stack ring" 0 leaks in 57,961 rays.
+  - `round_02/builder_extra` r01 / r02 void and i09 red: 0 red inside the attic.
+
+## Round 3 (kit 1.19 r3)
+
+`linear_roof.py` (existing module) gains ONE optional parameter with the old default; the rest is in the new `roof_addons.py` (used only by v7).
+
+| change | what |
+|---|---|
+| `linear_roof(eave_roll=None)` -> `_linear_roof_courses(eave_roll=)` | NEW option: a dict of `GableRoof.eave_roll` keywords (radius / proud / drop / front / tail) for the "courses" thatch's eave-roll SECTION, which the verge roll / hood also sweeps. `None` calls `roof.eave_roll()` exactly as before (old behaviour, hash rule not triggered). |
+| `GabledDormer(thick=0.13, step=0.05, deck_t=0.025, roll=None)` | The dormer's thatch is thinner and its roll section is scaled to it: `roll` defaults to `dict(radius=0.15 * hw, proud=0.02, drop=0.015)` and `gabled_dormer` passes it as `linear_roof(eave_roll=D.roll)`. The hood section is now about a fifth of the dormer's width (it was the host's 0.16 m roll on a 0.24 m thatch: the "pretzel"). |
+| `dormer_verge_roll` docstring | Corrected: `rc` is the hood's eave-corner fillet and `apex_bend` the bend over the apex; the section comes from `GabledDormer(roll=)`. |
+| `_corner_close(corner_r=0.25, cut=0.13, past=-0.05)` | The r2 ball knot is replaced by `_corner_roll`: ONE swept internal-corner roll, the eave roll's own D section (`main.roll_section()`, x 1.05) carried round the re-entrant lip corner on a 0.25 m plan fillet with 0.30 m runs along both lips, lip height and up-vector blended from one slope to the other, its ends tapered inside the straight rolls. The two straight eave rolls are cut back 0.13 m past the fillet's tangent points (`_drop_faces`), so their open ends lie inside it. The soffit slab now spans from 1.5 cm under the lower deck underside to just over the HIGHER deck top and stops 5 cm inside the lips, so the two decks' cut board ends where they cross are buried in it (no X of boards). -> `<P>_<name>_roll` replaces `<P>_<name>_knot`. |
+| `roof_valley(foot_back=None, ridge_bury=0.12, ridge_bury_w=0.35)` | At a closed corner the line stops `foot_back` = 0.22 m short of the wing roll's crest (off the round nose where the section twisted), and each foot tuck runs on >= 0.26 m and sinks crown + 8 cm into the corner roll. Over the wing's ridge roll the skirts bury up to 0.12 m deeper, the wing skirt is steered onto the ridge axis and its END dives vertically (`_crease_roll(bury_dir=)`): the radial dive over the tight ridge-roll bend folded the skirt end back on itself (the two dark wedges). |
+| `_crease_roll(bury=(array, array), bury_dir=(dA, dB))` | Per-station bury and an optional dive direction per skirt; defaults unchanged. |
+| `_cut_ridge_under_arch` | The fill faces of the cut ridge roll / comb are oriented out of the kept part. |
+| `valley_line(foot_back=0.0)` | New option, default old. |
+
+**Hash rule:** not triggered. The only existing-module change is `linear_roof(eave_roll=None)`, whose default path is the old call; every other change is inside `roof_addons.py`, which only v7 imports.

@@ -5,14 +5,22 @@ this recipe only adds steps, plus the host settings the add-ons need:
   host eave   the thatch eave is lifted in one soft arch over the front door (GableRoof(eave_lifts=[eave_lift(...)]),
               the barn's "eyelid", kit 1.16) and a second over the lean-to on the back; the walls' heads follow the
               warped deck (under_z_world) and the rafter tails under the arches are dropped (rafter_lift_max, kit 1.17)
-  lean-to     4.0 x 2.2 m on the back (north) long wall, taking in the east window: an open-fronted store in the
-              village shingle (16 deg at its ends, its wall line arching up under the host's arch: ridge_sag < 0,
-              swept eave), rubble end walls with quoined fronts, a hewn plate on a middle post (dressed pad, curved
-              knee braces) with a 1.86 m clear opening, ledger + common rafters, lime flaunching and lead verge aprons
-              against the stone; checked to stay under the host's eave
-  porch       over the front door: an ARCHED, bell-cast shingle hood (its own eave_lift + eave_sweep) on two curved
-              brackets (the barn's hoist-beam arm + curved knee brace), an arched front beam >= 2.32 m (art bible 7),
-              ledger, rafters, flaunching and aprons; checked to stay under the lifted thatch soffit
+  round 3     the lean-to's roof is ROUNDED (CLIENT DIRECTION 00:22, producer note 19): lean_to(roof_ends="round"),
+              a softly convex thatch slope whose free ends curve round as rounded hips over the square shed (the
+              shingle / verge description below is round 2's); the lean-to is 2.0 m deep; the front arch 7.0 m wide;
+              the host's wall heads are bedded to the warped deck (seal_wall_head) and its stones face out
+              (orient_stones)
+  lean-to     4.0 x 1.9 m on the back (north) long wall, taking in the east window: an open-fronted store in the
+              village shingle (16 deg, its wall line arching up under the host's arch: ridge_sag < 0, swept eave,
+              flared verges, slim 0.12 m bargeboards), its own small eave arch (0.18 m) so the plate and the eave
+              curve together, rubble end walls with quoined fronts, the arched hewn plate on a middle post (dressed
+              pad, short curved knee braces), ledger + common rafters, lime flaunching and lead verge aprons against
+              the stone; guarded: plate >= 2.10 m, braces >= 1.95 m, eave lip over the opening >= 2.30 m (round 2),
+              under the host's eave and its thatch roll's belly
+  porch       over the front door: an ARCHED, bell-cast shingle hood (its own eave_lift + eave_sweep, flared verges,
+              slim bargeboards cut to the covering line) on two curved brackets (the barn's hoist-beam arm + curved
+              knee brace), an arched front beam >= 2.32 m (art bible 7), ledger, rafters, flaunching and aprons;
+              guarded >= 0.25 m under the lifted thatch roll's belly (round 2)
 Run:  python -I build_a1_longhouse_addons.py   -> a1_longhouse_addons.blend + decal_anchors.json (next to this file)
       A1_FAST=1 skips the hidden-geometry ray test (quick looks only); A1_OUT=<path.blend> writes elsewhere.
 """
@@ -32,6 +40,7 @@ from village_kit.components.frame import RoundFrame  # noqa: E402
 from village_kit.components.lean_to import lean_to, plane_wall  # noqa: E402
 from village_kit.components.linear_roof import GableRoof, eave_lift, linear_roof  # noqa: E402
 from village_kit.components.porch import porch  # noqa: E402
+from village_kit.components.rubble_walls import orient_stones  # noqa: E402
 
 BID = "a1_longhouse_addons"
 _spec = importlib.util.spec_from_file_location(
@@ -40,9 +49,14 @@ V3 = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(V3)                     # the accepted recipe, read only (its main() is never called)
 
 # ---- host settings: the thatch eave lifted in one soft arch over the porch (front) and over the lean-to (back) ------
-LIFT = eave_lift(V3.DOOR_X, side=-1, width=6.0, height=1.2, fade=2.5)          # front: over the door hood
-LEAN_X = -5.9                                   # the lean-to's centre on the back wall (it takes in the east window)
-LIFT_N = eave_lift(LEAN_X, side=1, width=8.0, height=1.2, fade=2.5)           # back: the lean-to dies in under it
+# round 2: front 1.2 -> 1.4 m (the thatch roll's belly >= 0.25 m over the hood, verges included); back 1.2 m / 8 m ->
+# 1.5 m / 9.5 m with a longer fade (the lean-to rises for its 2.10 m plate / 2.30 m lip and still dies in under it),
+# centred on the east north window so the arch stays clear of the round end (x -2)
+# round 3: the front arch 6.0 -> 7.0 m wide (gentler), so the roll also clears the hood's verge corners SIDEWAYS
+# by >= 0.25 m (mono_roof's new lateral roll guard: 0.216 m at the E verge with 6.0 m)
+LIFT = eave_lift(V3.DOOR_X, side=-1, width=7.0, height=1.4, fade=2.5)          # front: over the door hood
+LEAN_X = -6.2                                   # the lean-to's centre on the back wall (it takes in the east window)
+LIFT_N = eave_lift(LEAN_X, side=1, width=9.5, height=1.5, fade=2.8)           # back: the lean-to dies in under it
 ROOF = GableRoof(x0=V3.X_GABLE, x1=-0.6, half=V3.HALF, wall_z=V3.WALL_Z, pitch_deg=40.0, overhang=0.45,
                  verge=(0.40, 0.0), thick=0.30, step=0.10, exposure=0.30, name="body_roof", eave_lifts=[LIFT, LIFT_N])
 LIFT_MAX = 0.08                                   # no host rafter tails where the arch lifts the eave more than this
@@ -56,16 +70,67 @@ V3.ROOF = ROOF                                    # v3's steps() / body_top / un
 V3.body_top = body_top
 
 # ---- the add-ons ----------------------------------------------------------------------------------------------------
-LEAN = dict(name="lean_to", W=plane_wall((LEAN_X, V3.HALF), (0.0, 1.0)), s0=-2.0, s1=2.0, depth=2.2,
-            z_face=2.86, pitch_deg=16.0, overhang=0.30, verge=(0.18, 0.18), covering="shingle", ends="rubble",
-            end_t=0.40, max_span=1.8,
-            soft=dict(ridge_sag=-0.25, eave_sweep=0.06, sweep_len=0.6, wave=0.012),   # its wall line arches up
-            below=ROOF, below_lift_max=LIFT_MAX, below_clear=0.08, seed=1901)   # 8 cm: the roll belly
+# round 2: the bargeboards slimmed to 0.12 m and cut to the covering line (no "ears"); both verges flared (note 17)
+SLIM_VERGE = dict(below=0.025, above=0.0)
+LEAN = dict(name="lean_to", W=plane_wall((LEAN_X, V3.HALF), (0.0, 1.0)), s0=-2.0, s1=2.0, depth=2.0,
+            z_face=3.08, pitch_deg=16.0, overhang=0.22, verge=(0.18, 0.18), covering="shingle", ends="rubble",
+            end_t=0.40, max_span=1.8, brace=(0.36, 0.28), headroom=(2.10, 1.95),
+            soft=dict(ridge_sag=-0.15, eave_sweep=0.06, sweep_len=0.6, wave=0.012,    # its wall line arches up
+                      verge_flare=0.06, flare_len=0.5,                                # flared verges
+                      eave_lifts=[eave_lift(0.0, side=1, width=4.6, height=0.18, fade=1.5)]),  # plate + eave arch
+            verge_board=SLIM_VERGE,
+            below=ROOF, below_lift_max=LIFT_MAX, below_clear=0.08, below_roll=0.10, seed=1901,
+            # round 3 (CLIENT DIRECTION 00:22, producer note 19 "an oval on the rectangle"): a softly convex thatch
+            # slope whose free ends curve round as rounded hips over the square shed (no verges); the arch along the
+            # wall (0.15) and at the eave (0.18) are round 2's ridge_sag / eave_lift
+            roof_ends="round", round_kw=dict(end_over=0.45, hip=0.55, ne=3.0, bulge=0.04, arch_wall=0.15,
+                                             arch_eave=0.18, wave=0.012, thatch=(0.08, 0.05), course=0.26))
 PORCH = dict(name="porch", W=plane_wall((V3.DOOR_X, -V3.HALF), (0.0, -1.0)), width=2.1, depth=1.0, clear=2.32,
              pitch_deg=22.0, overhang=0.25, side=0.20, covering="shingle", brace=(0.65, 0.75),
              soft=dict(eave_sweep=0.08, sweep_len=0.5, wave=0.008,                # bell-cast lip
+                       verge_flare=0.05, flare_len=0.45,                          # flared verges
                        eave_lifts=[eave_lift(0.0, side=1, width=2.6, height=0.22, fade=1.0)]),   # arched hood
-             below=ROOF, below_lift_max=LIFT_MAX, seed=1931)
+             verge_board=SLIM_VERGE,
+             below=ROOF, below_lift_max=LIFT_MAX, below_roll=0.25, seed=1931)
+
+HEAD_SEAL = dict(lift=LIFT_N, y_face=V3.HALF, out=1.0, w=(0.035, 0.085), drop=0.30, tuck=0.012, min_lift=0.03,
+                 x_lim=(V3.X_GABLE + 0.30, -2.60), name="body_wall_head")          # back (round-2 i06 slits)
+HEAD_SEAL_S = dict(HEAD_SEAL, lift=LIFT, y_face=-V3.HALF, out=-1.0, name="body_wall_head_s")   # front, the same
+
+
+def seal_wall_head(g, lift, y_face, out, w, drop, tuck, min_lift, x_lim, name, step=0.05):
+    """a1 round 3: close the host's rubble wall head to the WARPED deck under a lifted eave arch.  On the arch's
+    flanks the deck rises along the wall faster than a flat-topped head stone follows it, so 1-2 cm wedge slits
+    open between the top course and the deck (i06: daylight into the attic).  A mortar bedding band (M_mortar,
+    w[0]..w[1] m behind the outer face, inside the stones' depth) runs from `drop` m under the deck up `tuck` m into
+    it, wherever the arch lifts the eave at the face by >= min_lift; the "_mortar" name keeps it out of the cull."""
+    from village_kit.geom import Acc, finalize, prof_rect, sweep
+    from village_kit.core import log
+    x0 = max(lift["x"] - 0.5 * lift["width"], x_lim[0])
+    x1 = min(lift["x"] + 0.5 * lift["width"], x_lim[1])
+    xs = np.arange(x0, x1 + 1e-9, step)
+    yc = y_face - out * 0.5 * (w[0] + w[1])
+    P = np.column_stack([xs, np.full(len(xs), yc)])
+    Q = ROOF.to_local(np.column_stack([xs, np.full(len(xs), y_face), np.zeros(len(xs))]))
+    keep = ROOF.lift_z(Q[:, 0], Q[:, 1]) >= min_lift
+    if keep.sum() < 2:
+        return None
+    i0, i1 = np.flatnonzero(keep)[[0, -1]]
+    xs, P = xs[i0:i1 + 1], P[i0:i1 + 1]
+    zt = ROOF.under_z_world(P) + tuck
+    path = np.column_stack([xs, P[:, 1], zt - 0.5 * drop])
+    acc = Acc(f"{g.prefix}_{name}_mortar")
+    V, F = sweep(path, np.array([0.0, 0.0, 1.0]), prof_rect(w[1] - w[0], drop, 0.01))
+    acc.add(V, F, "M_mortar", wear=0.2)
+    finalize(acc, g.coll, smooth_deg=35.0)
+    log(f"  {g.prefix}_{name}_mortar: wall-head bedding x {xs[0]:.2f}..{xs[-1]:.2f}, {drop:.2f} m deep, "
+        f"{tuck * 100:.1f} cm into the deck, {w[0]:.3f}-{w[1]:.3f} m behind the face")
+
+
+def orient_host_stones(g):
+    """a1 round 3: the host's rubble (laid on the warped head) with every stone facing out (orient_stones)."""
+    orient_stones(g, "body_wall")
+
 
 def steps():
     st = []
@@ -76,6 +141,7 @@ def steps():
         if fn is composite_hidden_cull or fn is recenter:
             continue
         st.append((fn, kw) if kw or isinstance(step, tuple) else fn)
+    st += [orient_host_stones, (seal_wall_head, HEAD_SEAL), (seal_wall_head, HEAD_SEAL_S)]
     st += [(lean_to, LEAN), (porch, PORCH)]
     return st + ([] if os.environ.get("A1_FAST") else [hidden_cull_host]) + [recenter]
 

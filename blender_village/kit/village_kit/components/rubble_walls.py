@@ -314,3 +314,95 @@ def round_stone_body(g, name, center=(0.0, 0.0), r_base=3.6, batter_deg=2.5, top
         g.WALL_FACES = []
     g.WALL_FACES.append(dict(kind="round", name=name, center=center, radius=radius_fn, top=z1, clip=clip))
     return radius_fn
+
+
+def _inward_stones(ob, pm, frac=0.3):
+    """the stone islands of a path wall's open-shell stones (front + sides, no back) whose FRONT points into the
+    wall: an open shell's area vector (sum of face normal x area) is its missing back's area along the front's
+    outward normal, so it must point along the outward normal of the path run it stands on.
+    -> (n islands, bad island mask, face -> island index)."""
+    me = ob.data
+    nP = len(me.polygons)
+    ls = np.zeros(nP, np.int64)
+    lt = np.zeros(nP, np.int64)
+    me.polygons.foreach_get("loop_start", ls)
+    me.polygons.foreach_get("loop_total", lt)
+    lv = np.zeros(len(me.loops), np.int64)
+    me.loops.foreach_get("vertex_index", lv)
+    fidx = np.repeat(np.arange(nP), lt)
+    lab = np.arange(len(me.vertices), dtype=np.int64)
+    big = np.iinfo(np.int64).max
+    while True:                                          # connected islands by label propagation
+        fm = np.full(nP, big, np.int64)
+        np.minimum.at(fm, fidx, lab[lv])
+        new = lab.copy()
+        np.minimum.at(new, lv, fm[fidx])
+        if np.array_equal(new, lab):
+            break
+        lab = new
+    flab = lab[lv[ls]]
+    M = np.array(ob.matrix_world)
+    nrm = np.zeros(nP * 3)
+    cen = np.zeros(nP * 3)
+    area = np.zeros(nP)
+    me.polygons.foreach_get("normal", nrm)
+    me.polygons.foreach_get("center", cen)
+    me.polygons.foreach_get("area", area)
+    nrm = nrm.reshape(-1, 3) @ M[:3, :3].T
+    cen = cen.reshape(-1, 3) @ M[:3, :3].T + M[:3, 3]
+    u, inv = np.unique(flab, return_inverse=True)
+    S = np.zeros((len(u), 3))
+    C = np.zeros((len(u), 3))
+    A = np.zeros(len(u))
+    np.add.at(S, inv, nrm * area[:, None])
+    np.add.at(C, inv, cen * area[:, None])
+    np.add.at(A, inv, area)
+    C /= np.maximum(A, 1e-12)[:, None]
+    q = C[:, :2]
+    best = np.full(len(u), np.inf)
+    N = np.zeros((len(u), 2))
+    for i in range(len(pm.L)):                           # the outward normal of the nearest run
+        uu = np.clip((q - pm.A[i]) @ pm.dir[i], 0.0, pm.L[i])
+        dd = np.linalg.norm(q - (pm.A[i] + uu[:, None] * pm.dir[i]), axis=1)
+        sel = dd < best
+        best[sel] = dd[sel]
+        N[sel] = pm.nrm[i]
+    Sl = np.linalg.norm(S, axis=1)
+    dot = S[:, 0] * N[:, 0] + S[:, 1] * N[:, 1]
+    bad = (Sl > 0.05 * A) & (dot < -frac * Sl)
+    return len(u), bad, inv
+
+
+def orient_stones(g, name, parts=("_stones",), frac=0.3):
+    """kit 1.19 (a1 round 3; a NEW function, nothing calls it by default): turn back out every stone of the
+    path_stone_wall `name` whose front points INTO the wall.  finalize's recalc_face_normals guesses the side of an
+    OPEN shell (the stones have no back) and now and then turns a whole stone inside out (one-sided in UE: a hole or an
+    inside-out stone).  Uses the PathMap the wall published on g.WALL_FACES; logs the count before / after.
+    -> {part: (islands, flipped, left after)}."""
+    import bmesh
+    import bpy
+    rec = next((w for w in getattr(g, "WALL_FACES", ()) if w.get("kind") == "path" and w.get("name") == name), None)
+    if rec is None:
+        raise ValueError(f"orient_stones: no path wall {name!r} on g.WALL_FACES")
+    pm = rec["map"]
+    out = {}
+    for part in parts:
+        ob = bpy.data.objects.get(f"{g.prefix}_{name}{part}")
+        if ob is None or ob.type != "MESH" or not len(ob.data.polygons):
+            continue
+        n_isl, bad, inv = _inward_stones(ob, pm, frac)
+        nb = int(bad.sum())
+        if nb:
+            fl = np.flatnonzero(bad[inv])
+            bm = bmesh.new()
+            bm.from_mesh(ob.data)
+            bm.faces.ensure_lookup_table()
+            bmesh.ops.reverse_faces(bm, faces=[bm.faces[int(i)] for i in fl])
+            bm.to_mesh(ob.data)
+            bm.free()
+            ob.data.update()
+        left = int(_inward_stones(ob, pm, frac)[1].sum()) if nb else 0
+        log(f"  {ob.name}: stone facing check: {n_isl} stones, {nb} turned inside out -> flipped "
+            f"({nb and len(fl)} faces), {left} left")
+        out[part] = (n_isl, nb, left)
+    return out

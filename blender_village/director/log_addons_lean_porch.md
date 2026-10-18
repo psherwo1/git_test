@@ -316,3 +316,74 @@ Client's words: "if the walls be square and angular we should counterbalance wit
 - The porch hood is already to be soft and swept (the 23:10 note).
 - **Art Director:** a lean-to with a flat plane and square ends cannot pass; give at most 8.1.
 - **The next fixer:** do it first.
+
+## a1_longhouse_addons round 3 — builder entry
+
+**Scope:** the four round-2 must-fixes, one should-fix, and the **CLIENT DIRECTION of 00:22** (producer note 19, rounded roofs on square walls), which I did first as it asks. I checked the log before starting and again before writing; that direction is the only entry newer than the round-2 grade.
+
+**Files edited:**
+- `kit/village_kit/components/lean_to.py`: new optional keys; the rounded roof; `mono_roof`'s junction moved into a shared helper with the same behaviour.
+- `kit/village_kit/components/rubble_walls.py`: two NEW functions only, `orient_stones` and `_inward_stones`.
+- The demo recipe.
+- New: `buildings/addon_demos/a1_longhouse_addons/smoke_v5/build_smoke_v5_porch.py`.
+- `kit/changes/a1_longhouse_addons.md`: a "Round 3" section.
+
+`porch.py`, `guards.py`, `linear_roof.py`, `roof_junction.py` and `junctions.py` were not edited. Nothing under `buildings/variants/` and no accepted file was touched.
+
+**CLIENT DIRECTION 00:22: the rounded lean-to roof.**
+- New option `lean_to(roof_ends="round", round_kw=...)`; the default `"square"` keeps round 2. It builds `round_lean_roof` on a new `RoundLean` surface:
+  - a softly **convex** fall (`bulge` 0.04 m at mid-slope);
+  - both free ends curve round as **rounded hips**: one superellipse eave (exponent 3) runs round each front corner and back to the wall. It oversails the quoined end walls by 0.45 m, with no verge and no hip crease, so the roof reads as an oval over the square shed;
+  - the round-2 arch along the wall (0.15 m) and at the eave (0.18 m) is kept, so the plate and the eave still curve together.
+- It is clad in the village's continuous **thatch** course sheets (note 19: thatch first; M_thatch, matching the host). There are 9 courses round the whole contour, with rounded butts, and the eave course's nose is wrapped under the deck edge.
+- Underneath: a closed deck, 7 common rafters from the ledger, radial rafters fanning round each hip from the end-wall heads, and the arched plate.
+- It is trimmed into the wall and sealed with the **same** code as `mono_roof` (`_wall_junction`). The flaunching now follows the level wall line and runs down the two raking hip lines, with lead aprons at both eave ends (`x01`, `x13`).
+- The cottage track's rounded-roof module does not exist yet (checked: `roof_addons.py` and `linear_roof.py` have no hips option). So, as the direction says, this is a lean-to option.
+
+**Must-fixes:**
+
+| # | fix | result (full build, `round_03/build_full.log`) |
+|---|---|---|
+| 1 | Host wall-head slits under the back arch. The cause: on the arch's flanks the warped deck rises along the wall faster than a flat-topped head stone follows it, leaving 1-2 cm wedges. Fix: a recipe-local `seal_wall_head` adds a mortar bedding band (M_mortar; 0.035-0.085 m behind the outer face, inside the stones' depth; 0.30 m deep; 1.2 cm into the deck) along both lifted wall heads. Back: x -10.50..-2.60. Front: x -10.15..-3.85, added as insurance. The "_mortar" name keeps it out of the cull. `LIFT_N` is unchanged, so the lean-to's margins are not reduced. | **`dir_render_r02.py i06`, unchanged, on the round-3 blend: 0 red** (round 2: 186). My corrected camera (`bx_render_r03.py i06`) also reads 0. `z02` / `z03` (your wall-head zooms) read 0; `z04` reads 0 red / 2 yellow. |
+| 2 | Inverted stones. Cause: the stones are open shells (no back), so `finalize`'s normal recalc guesses their side and now and then turns a whole stone inside out. Fix: new `rubble_walls.orient_stones(g, name)` flips every stone whose area vector points INTO the wall, using the path's outward normal from `g.WALL_FACES`. It runs in `lean_to(orient=True)` on both end walls and in the recipe on the host's `body_wall`. | Build log: end0 **2 stones flipped -> 0 left**, end1 0 -> 0, host body wall 5 -> 0. A face-facing count on the final blend (`scratch/r03/probe_facing.py`, `probe_facing_r03.log`) finds **0 inward stones** on `end0`, `end1` and `body_wall`. Void twins: `z01` yellow 34,365 -> **4**; `x02` 8,005 -> **1**; `x01` 2,251 -> **0**; `x15` 15,899 -> **81**. |
+| 2b | Host face 99666 | **Not v3's.** On the accepted v3 file, the face 8 mm from that point (`LONG_body_wall_stones` 99564) has the opposite normal (dot -1.000). The a1 stone was one of the a1-only flips: the warped head changes the stone layout. It is fixed by the host pass above. Kit-wide finding: the accepted v3 has about 6 inside-out stones of its own (the same test). They are recorded in the kit notes and not touched: the fix would change accepted geometry, so it needs a hash-checked kit change. |
+| 3 | Reuse on a second host: the **v5 harbour house** (r08 accepted, imported read only), with the a1 porch call over its land-gable door. No new module, no host `eave_lift` (it is a gable door, and the verge is about 6 m up). | **Call:** `porch(g, "porch", W=plane_wall((V5.DOOR_X, V5.Y0), (0, -1)), width=2.1, depth=1.0, clear=2.32, pitch_deg=22, overhang=0.25, side=0.20, brace=(0.65, 0.75), soft=<a1's>, verge_board=<a1's>, below=V5.MAIN, below_roll=0.25)`. **Guard lines** (`smoke_v5/smoke_v5_build.log`): below: margin at the face 1.239 m, at the host lip line 1.592 m; below_roll: "none over the add-on", lateral "none within 2.0 m" (v5's shingle roof has no eave roll); clearance gate `hall_0` door head 2.22 m, lip over it **2.759 m on HARB_porch_framing: PASS**; seal probe porch / wall 36,130 rays, **0 leaks**. **Renders:** `builder_extra/smoke_v5/S01_v5_porch_reuse.png` and `S02_v5_porch_junction` with its void twin (0 red). **Lean-to not called:** under v5's 3.35 m swept eave the crease must stay at about 3.0 m, which leaves a plate of about 1.9 m at a store's depth and a shingle pitch. The headroom guard (2.10 m) would refuse it. |
+| 4 | Lateral roll clearance: `mono_roof(below_roll_near=True)` adds a nearest-distance check (`bvh.find_nearest`, reach 2.0 m) from the same vertices to the host's roll, under the same rule, and logs both numbers. | **On its first run it caught the porch:** E verge corner 0.216 m beside the roll (< 0.25; the vertical gap of 0.304 m had passed). Fix: the front arch is widened from 6.0 to 7.0 m (parameter), giving porch vertical **0.415 m** and lateral **0.319 m** (rule 0.25). The lean-to reads vertical **0.434 m**, lateral **0.392 m** (rule 0.10). |
+
+**Should-fix:**
+- Lean-to depth is back to **2.0 m**, with the guards still passing:
+  - plate underside **2.202 m** at the ends, **2.333 m** in the middle (rule ≥ 2.10);
+  - lowest brace foot **2.053 m** (rule ≥ 1.95);
+  - gate: eave lip over the open front **2.347 m**, PASS.
+- Not done, recorded as kit items: the brace-foot stop, the neutral entrance list, the host-arch helper, `flashing="lead"` and a round-wall `W`.
+
+**Stats** (full build; `round_03/stats.json`):
+- 712,560 triangles (cap 1,000,000); est. hidden **13.5 %** (≤ 15); 10 material slots; Mask on every mesh (none missing).
+- 56 objects; bbox 17.77 x 9.15 x 11.39 m; 104 validated decal anchors; build 9.0 min.
+- Seal probe: 0 leaks on all three junctions (body_roof / round wall 106,547 rays, lean_to / wall 76,115, porch / wall 36,532).
+- Under the host eave, lean-to: face 0.281 m, lip 0.424 m (rule 0.08). Porch: face 0.246, lip 0.429.
+
+**Renders:**
+- `round_03/`: the six views.
+- `round_03/builder_extra/`: `bx_render_r03.py` is your `dir_render_r02.py` with the round-3 recentre (SY -0.05; the lean-to front +0.10). It covers all 29 shots, with counts in `bx_render_r03.log`; `dir_r02_cams/` has your unchanged script at `i06`; `smoke_v5/` has the reuse renders.
+- The red counts match round 2 shot for shot outside the fixes:
+  - `i01`, `i04`, `i06`, `i08`: 0;
+  - `i05` / `i07` read 45 / 435, which is v3's own door (accepted v3: 52 / 491);
+  - `i02`, `i03`, `i09` and `x04` are the open front in frame.
+
+**Known gaps:**
+- The rounded roof is thatch only.
+- It gets no moss decal anchors, because `composite_decals` reads `g.LINEAR_ROOFS` (GableRoof records). This is why the anchor count fell from 111 to 104.
+- The hip ends of the rounded roof are steeper than the front slope: they reach 1.0 m along the wall, against 2.2 m out.
+- `seal_wall_head` is recipe-local. It is a kit candidate (`path_stone_wall(head_seal=...)`).
+- The porch is still shown on straight walls only; there is no round-wall `W`.
+- Render scripts given a relative output path write under `C:\renders\` (Blender resolves it against the drive). I moved my first batch into the repo and deleted that folder; the final runs used absolute paths.
+
+**Hash rule:** not triggered, not run.
+- The only edit to an existing module is two new functions in `rubble_walls.py` that no existing code calls.
+- `lean_to.py` / `porch.py` are not used by any baseline building.
+- The `_wall_junction` move is behaviour-identical: the a1 porch logs the same numbers before and after.
+
+## PRODUCER NOTE (2026-10-18, session 2, 01:45): round 3 built (lean-to rounded per note 19), grade NOT yet run
+
+The round-3 Art Director grade failed on a usage limit (it resets at 3 am New York time). It continues after the limit: the round-3 grade, then the audit if it passes.

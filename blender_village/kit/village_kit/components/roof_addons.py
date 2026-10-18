@@ -1,4 +1,4 @@
-﻿"""components.roof_addons -- the ROOF add-ons (kit 1.19, v7 cottage; plan step 4): small reusable pieces that
+"""components.roof_addons -- the ROOF add-ons (kit 1.19, v7 cottage; plan step 4): small reusable pieces that
 attach to any GableRoof design.  Every piece is built from the kit's existing modules and materials (note 16) and
 carries the village's soft, round language (note 17).
 
@@ -33,9 +33,10 @@ carries the village's soft, round language (note 17).
                                       or through the slope or ridge), sealed with the v3 / v5 roof-into-round-wall
                                       junction (roof_junction.wall_abutment: trim, lime-mortar flaunching on the true
                                       line, lead end aprons; a ring of flaunching when the roof surrounds the stack),
-                                      a dressed drip-course cap, a dark flue, and a round crown: "louvre" (a round smoke
-                                      louvre: dressed posts under a little lead cone with the village's turned finial)
-                                      or "pot" (a round dressed-stone pot) -> <P>_<name>_* ; g.CHIMNEYS
+                                      a dressed drip-course cap, a dark flue, and a round crown: "pot" (default, a
+                                      round dressed-stone pot) or "louvre" (opt-in: a LOW round smoke louvre, dressed
+                                      posts under a little lead cone, no finial unless asked) -> <P>_<name>_* ;
+                                      g.CHIMNEYS
     chimney_decals(g, seed)           soot / lichen anchors on every chimney's head (run in the recipe's decals step)
 
 All functions take the frame g first, are deterministic for their seeds, and add nothing a recipe does not call.
@@ -134,12 +135,16 @@ def _unit(v):
 
 
 def _crease_roll(acc, P, nA, nB, a, b, width=(0.34, 0.34), crown=0.16, bury=(0.10, 0.10), var=0.06, seed=0,
-                 taper=0.30, end_out=0.10, mat="M_thatch", wear=0.45):
+                 taper=0.30, end_out=0.10, mat="M_thatch", wear=0.45, sink=(0.0, 0.0), n_tuck=4, bury_dir=None):
     """sweep ONE soft closed roll along the crease line P (n, 3) where surface A (normal nA, in-surface direction a
     pointing away from the crease) meets surface B (nB, b).  The section: a buried keel under the crease, each skirt
     `width` out along its surface ending `bury` under it, a rounded back rising to `crown` over the crease on the
     bisector; it swells +-var (one low-frequency wave, like thatch.d_roll), and both ends taper over `taper` m and
-    close in a small rounded cap `end_out` m past the line's ends."""
+    close in a ROUNDED TUCK (kit 1.19 r2): `n_tuck` rings on a quarter circle `end_out` m past the line's end,
+    shrinking to a point and diving sink[0] / sink[1] m (start / end) under the bisector -- the roll's end is tucked
+    into the coverings, no flat cap.  Each section is kept non-folding (the skirts never cross the bisector).
+    kit 1.19 r3: bury_dir=(dA, dB) (each None or (n, 3)): the direction each skirt END dives along (default -nA / -nB);
+    over a tight convex bend (a valley arch over a ridge roll) a radial dive folds the skirt end back on itself."""
     n = len(P)
     T = np.zeros_like(P)
     T[1:-1] = P[2:] - P[:-2]
@@ -156,9 +161,12 @@ def _crease_roll(acc, P, nA, nB, a, b, width=(0.34, 0.34), crown=0.16, bury=(0.1
     de = np.minimum(s, s[-1] - s)
     tf = 0.40 + 0.60 * np.clip(de / max(taper, 1e-3), 0, 1) ** 0.6
     f = (sw * tf)[:, None]
+    dA, dB = (bury_dir or (None, None))
+    dA = nA if dA is None else dA
+    dB = nB if dB is None else dB
     ring = [
         -bis * 0.5 * (bury[0] + bury[1]),
-        a * wa - nA * bury[0],
+        a * wa - dA * bury[0],
         a * wa * 0.84 + nA * 0.025,
         a * wa * 0.60 + nA * 0.075,
         a * wa * 0.34 + nA * 0.115 + bis * 0.015,
@@ -168,30 +176,291 @@ def _crease_roll(acc, P, nA, nB, a, b, width=(0.34, 0.34), crown=0.16, bury=(0.1
         b * wb * 0.34 + nB * 0.115 + bis * 0.015,
         b * wb * 0.60 + nB * 0.075,
         b * wb * 0.84 + nB * 0.025,
-        b * wb - nB * bury[1],
+        b * wb - dB * bury[1],
     ]
     L = np.stack([P + f * r for r in ring], 1)                     # (n, m, 3)
-    caps = []
-    for i, sgn in ((0, -1.0), (n - 1, 1.0)):
-        Pe = P[i] + T[i] * sgn * end_out
-        caps.append(Pe[None, :] + (L[i] - P[i][None, :]) * 0.30)
-    L = np.concatenate([caps[0][None], L, caps[1][None]])
+    # the rounded tucks: rings on a quarter circle past each end, shrinking and diving under the bisector
+    so = np.atleast_1d(np.asarray(end_out, float))
+    so = np.repeat(so, 2) if len(so) == 1 else so
+    sk = np.atleast_1d(np.asarray(sink, float))
+    sk = np.repeat(sk, 2) if len(sk) == 1 else sk
+    tucks, tips = [], []
+    for e, (i, sgn) in enumerate(((0, -1.0), (n - 1, 1.0))):
+        rr = []
+        for k in range(1, int(n_tuck) + 1):
+            th = 0.5 * math.pi * k / (n_tuck + 1)
+            c = P[i] + T[i] * sgn * so[e] * math.sin(th) - bis[i] * sk[e] * (1.0 - math.cos(th))
+            rr.append(c[None, :] + (L[i] - P[i][None, :]) * math.cos(th))
+        tucks.append(np.stack(rr))
+        tips.append(P[i] + T[i] * sgn * so[e] - bis[i] * sk[e])
+    L = np.concatenate([tucks[0][::-1], L, tucks[1]])
     nn, m = L.shape[:2]
-    V = L.reshape(-1, 3)
+    V = np.vstack([L.reshape(-1, 3), np.array(tips)])
+    t0, t1 = nn * m, nn * m + 1
     i = np.arange(nn - 1)[:, None]
     j = np.arange(m)[None, :]
     a_ = i * m + j
     b_ = i * m + (j + 1) % m
     Q = np.stack([a_, b_, b_ + m, a_ + m], -1).reshape(-1, 4)
-    C0 = np.arange(m)[::-1][None, :]
-    C1 = ((nn - 1) * m + np.arange(m))[None, :]
+    jj = np.arange(m)
+    C0 = np.stack([np.full(m, t0), (jj + 1) % m, jj], 1)
+    C1 = np.stack([np.full(m, t1), (nn - 1) * m + jj, (nn - 1) * m + (jj + 1) % m], 1)
     # outward: the face at the crest of the middle station must face along the bisector
-    k = (nn // 2) * m + 6
+    im = n // 2
+    k = (im + int(n_tuck)) * m + 6
     qq = V[[k, k + 1, k + 1 + m, k + m]]
-    if float(np.cross(qq[1] - qq[0], qq[3] - qq[0]) @ bis[min(nn // 2, n - 1)]) < 0:
+    if float(np.cross(qq[1] - qq[0], qq[3] - qq[0]) @ bis[im]) < 0:
         Q, C0, C1 = Q[:, ::-1], C0[:, ::-1], C1[:, ::-1]
     acc.add(V, [Q, C0, C1], mat, wear=wear)
     return float(s[-1])
+
+
+def _continuous(v, want):
+    """direction vectors v (n, 3) made continuous along the line (each flipped to agree with the previous one), then
+    flipped as a whole to agree with the majority of the per-station wishes `want` (n, 3) -- a valley skirt never
+    twists from one station to the next (kit 1.19 r2: the crumpled foot cap)."""
+    out = v.copy()
+    for i in range(1, len(out)):
+        if float(out[i] @ out[i - 1]) < 0:
+            out[i] = -out[i]
+    if float(np.sign((out * want).sum(1)).sum()) < 0:
+        out = -out
+    return out
+
+
+def _smooth_rows(v, passes=3):
+    """a few 1-2-1 passes along the line, renormalised (normals / skirt directions of a calm section)."""
+    v = v.copy()
+    for _ in range(passes):
+        v[1:-1] = 0.25 * v[:-2] + 0.5 * v[1:-1] + 0.25 * v[2:]
+    return _unit(v)
+
+
+def _plan_cols(roof, V, pad=0.0):
+    """V (world) inside `roof`'s plan columns padded by `pad` m (|local y| < Y + pad, xa - pad < x < xb + pad)."""
+    L = roof.to_local(np.asarray(V, float))
+    return (np.abs(L[:, 1]) < roof.Y + pad) & (L[:, 0] > roof.xa - pad) & (L[:, 0] < roof.xb + pad)
+
+
+def _plan_meet(main, wing, ym, yw):
+    """the plan point (world x, y) where main-local y = ym meets wing-local y = yw."""
+    p0 = main.to_world(np.array([[0.0, ym, 0.0]]))[0]
+    p1 = main.to_world(np.array([[1.0, ym, 0.0]]))[0]
+    w0, w1 = wing.to_local(np.array([p0, p1]))[:, 1]
+    t = (yw - w0) / (w1 - w0)
+    return p0[:2] + t * (p1[:2] - p0[:2])
+
+
+def _drop_faces(ob, pred):
+    """delete the faces of mesh object `ob` whose world centroid satisfies pred(C (n, 3)) -> bool; returns the count."""
+    import bmesh
+    mw = np.array(ob.matrix_world)
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    faces = list(bm.faces)
+    if not faces:
+        bm.free()
+        return 0
+    C = np.array([f.calc_center_median() for f in faces])
+    C = C @ mw[:3, :3].T + mw[:3, 3]
+    kill = np.asarray(pred(C), bool)
+    bmesh.ops.delete(bm, geom=[f for f, k in zip(faces, kill) if k], context="FACES")
+    bm.to_mesh(ob.data)
+    bm.free()
+    ob.data.update()
+    return int(kill.sum())
+
+
+def _lip_frame(main, wing, sgm, sgw):
+    """the re-entrant lip corner Cl (plan) and the two lip directions away from it: e_m along main's lip (away from
+    the wing), e_w along the wing's lip (away from main); the exterior quadrant is Cl + a e_m + b e_w (a, b > 0)."""
+    Cl = np.asarray(_plan_meet(main, wing, sgm * main.Y, sgw * wing.Y), float)
+    out = []
+    for r, o in ((main, wing), (wing, main)):
+        d = np.asarray(r.dir_world(np.array([1.0, 0.0, 0.0]))[:2], float)
+        d = d / np.linalg.norm(d)
+        q = np.array([[*(Cl + 0.6 * d), 0.0]])
+        if bool(_plan_cols(o, q)[0]):
+            d = -d
+        out.append(d)
+    return Cl, out[0], out[1]
+
+
+def _lip_z(roof, sg, Q):
+    """world z of `roof`'s lip line (u = 0 on its reference surface, warp included) at the local x of plan points Q."""
+    Q = np.atleast_2d(np.asarray(Q, float))
+    L = roof.to_local(np.column_stack([Q[:, :2], np.zeros(len(Q))]))
+    return roof.to_world(roof.surf(L[:, 0], np.zeros(len(Q)), int(sg), 0.0))[:, 2]
+
+
+def _corner_roll(acc, main, wing, sgm, sgw, r=0.25, ext=0.30, grow=1.05, end_f=0.94, seed=0):
+    """kit 1.19 r3: ONE swept INTERNAL-CORNER ROLL -- the eave roll's own D section (main.roll_section()) carried
+    round the re-entrant lip corner on a fillet of radius r in plan (tangent to both lips, in the exterior quadrant),
+    with `ext` m straight runs on along both lips; the lip height and the section's up blend smoothly from main's
+    slope to the wing's.  The section is `grow` x the straight rolls' (it envelops their cut ends, _corner_close) and
+    tapers to end_f x over the last 0.1 m of each run, where it dives inside the straight rolls."""
+    Cl, em, ew = _lip_frame(main, wing, sgm, sgw)
+    C = Cl + r * em + r * ew
+    ds = 0.03
+    s_m = np.arange(ext, 0.0, -ds)
+    ph = np.linspace(0.0, 0.5 * math.pi, max(8, int(0.5 * math.pi * r / ds) + 1))
+    s_w = np.arange(ds, ext + 1e-9, ds)
+    Pm = (Cl + r * em)[None] + em[None] * s_m[:, None]
+    Pa = C[None] - r * (np.cos(ph)[:, None] * ew[None] + np.sin(ph)[:, None] * em[None])
+    Pw = (Cl + r * ew)[None] + ew[None] * s_w[:, None]
+    Q = np.concatenate([Pm, Pa, Pw])
+    w = np.concatenate([np.zeros(len(Pm)), 0.5 - 0.5 * np.cos(2.0 * ph), np.ones(len(Pw))])
+    inward = np.concatenate([np.repeat(-ew[None], len(Pm), 0), (Pa - C[None]) / r, np.repeat(-em[None], len(Pw), 0)])
+    sd = np.concatenate([s_m, np.zeros(len(Pa)), s_w])           # distance out along a straight run
+    z = (1 - w) * _lip_z(main, sgm, Q) + w * _lip_z(wing, sgw, Q)
+    P = np.column_stack([Q, z])
+    Nm = np.asarray(main.dir_world(main.normal(int(sgm))), float)
+    Nw = np.asarray(wing.dir_world(wing.normal(int(sgw))), float)
+    N = _unit((1 - w)[:, None] * Nm[None] + w[:, None] * Nw[None])
+    T = np.zeros_like(P)
+    T[1:-1] = P[2:] - P[:-2]
+    T[0], T[-1] = P[1] - P[0], P[-1] - P[-2]
+    T = _unit(T)
+    N = _unit(N - (N * T).sum(1, keepdims=True) * T)
+    I = _unit(np.cross(N, T))
+    I3 = np.column_stack([inward, np.zeros(len(P))])
+    I = np.where(((I * I3).sum(1) < 0)[:, None], -I, I)
+    uo, _vis = main.roll_section()
+    uo = np.asarray(uo, float)
+    f = grow - (grow - end_f) * np.clip((sd - (ext - 0.10)) / 0.10, 0, 1)
+    L = P[:, None, :] + f[:, None, None] * (I[:, None, :] * uo[None, :, 0:1] + N[:, None, :] * uo[None, :, 1:2])
+    n, m = L.shape[:2]
+    V = np.vstack([L.reshape(-1, 3), L[0].mean(0)[None], L[-1].mean(0)[None]])
+    i = np.arange(n - 1)[:, None]
+    j = np.arange(m)[None, :]
+    a_ = i * m + j
+    b_ = i * m + (j + 1) % m
+    Qf = np.stack([a_, b_, b_ + m, a_ + m], -1).reshape(-1, 4)
+    jj = np.arange(m)
+    t0, t1 = n * m, n * m + 1
+    C0 = np.stack([np.full(m, t0), (jj + 1) % m, jj], 1)
+    C1 = np.stack([np.full(m, t1), (n - 1) * m + jj, (n - 1) * m + (jj + 1) % m], 1)
+    # outward: the crest face of the middle station must face along N
+    k = (n // 2) * m + int(np.argmax(uo[:, 1]))
+    qq = V[[k, k + 1, k + 1 + m, k + m]] if (k % m) < m - 1 else V[[k - 1, k, k + m, k - 1 + m]]
+    if float(np.cross(qq[1] - qq[0], qq[3] - qq[0]) @ N[n // 2]) < 0:
+        Qf, C0, C1 = Qf[:, ::-1], C0[:, ::-1], C1[:, ::-1]
+    acc.add(V, [Qf, C0, C1], "M_thatch", wear=0.45)
+    return Cl, em, ew, r
+
+
+def _corner_close(g, main, wing, sgm, sgw, name, clear=0.35, into=0.12, past=-0.05, t=0.035, n=8, corner_r=0.25,
+                  cut=0.13):
+    """kit 1.19 r2 / r3: the RE-ENTRANT EAVE CORNER of a valley (two eaves at one height meeting inside an L / T):
+    (1) every rafter tail of either roof within `clear` m of the other roof's plan columns is dropped WHOLE (no
+    clipped, open-ended box under the corner); (2) a BOARDED SOFFIT FILL closes the corner from below: one closed
+    board slab over the plan square between the two wall faces and the two lips (`into` m on into the walls, ending
+    `past` m from the lips, under the roll bodies).  r3: the slab runs from 1.5 cm under the lower deck underside up
+    to just over the HIGHER deck top, so the two decks' cut board ends where they cross are buried in it (no X of
+    boards); (3) r3, in place of the r2 ball knot: ONE swept internal-corner roll (_corner_roll, fillet radius
+    corner_r) -- the two straight eave rolls are cut back `cut` m from its tangent points (their open ends lie inside
+    it), so the eave roll visibly runs round the corner.
+    -> <P>_<name> (M_timber slab), <P>_<name>_roll (M_thatch); returns rafter units dropped."""
+    import bpy
+    from .composite import drop_units
+    dropped = 0
+    for r, other in ((main, wing), (wing, main)):
+        ob = bpy.data.objects.get(f"{g.prefix}_{r.name}_rafters")
+        if ob is not None and len(ob.data.polygons):
+            dropped += drop_units(ob, lambda V, o=other: _plan_cols(o, V, pad=clear), rule="any")
+    um = sgm * np.linspace(main.half - into, main.Y + past, n)
+    uw = sgw * np.linspace(wing.half - into, wing.Y + past, n)
+    G = np.array([[_plan_meet(main, wing, a, b) for b in uw] for a in um])        # (n, n, 2)
+    flat = G.reshape(-1, 2)
+    zb = np.minimum(main.under_z_world(flat), wing.under_z_world(flat)) - 0.015
+    zt = np.maximum(main.under_z_world(flat) + main.deck_t / math.cos(main.p),
+                    wing.under_z_world(flat) + wing.deck_t / math.cos(wing.p)) + 0.005
+    top = np.column_stack([flat, zt])
+    bot = np.column_stack([flat, zb])
+    V = np.vstack([top, bot])
+    nm = n * n
+    idx = np.arange(nm).reshape(n, n)
+    q = np.stack([idx[:-1, :-1], idx[:-1, 1:], idx[1:, 1:], idx[1:, :-1]], -1).reshape(-1, 4)
+    # the top must face up (+z): test the first quad
+    c = np.cross(V[q[0, 1]] - V[q[0, 0]], V[q[0, 3]] - V[q[0, 0]])
+    if c[2] < 0:
+        q = q[:, ::-1]
+    rim = np.concatenate([idx[0, :], idx[1:, -1], idx[-1, -2::-1], idx[-2:0:-1, 0]])
+    side = np.stack([rim, np.roll(rim, -1), np.roll(rim, -1) + nm, rim + nm], 1)
+    cs = np.cross(V[side[0, 1]] - V[side[0, 0]], V[side[0, 3]] - V[side[0, 0]])
+    ctr = V[:nm].mean(0)
+    if float(cs @ (V[side[0, 0]] - ctr)) < 0:
+        side = side[:, ::-1]
+    acc = Acc(f"{g.prefix}_{name}", 30)
+    acc.add(V, [q, q[:, ::-1] + nm, side], "M_timber", wear=0.55)
+    finalize(acc, g.coll, smooth_deg=30.0)
+    # r3: the swept internal-corner roll, and the two straight eave rolls cut back inside it
+    if getattr(main, "ROLL", None) is None:
+        main.eave_roll()
+    ak = Acc(f"{g.prefix}_{name}_roll", 70)
+    Cl, em, ew, rr = _corner_roll(ak, main, wing, sgm, sgw, r=corner_r)
+    finalize(ak, g.coll, smooth_deg=70.0)
+    n_cut = 0
+    for r, e_along, e_out in ((main, em, ew), (wing, ew, em)):
+        ob = bpy.data.objects.get(f"{g.prefix}_{r.name}_eave_roll")
+        if ob is None or ob.type != "MESH":
+            continue
+        T0 = Cl + rr * e_along
+
+        def pred(Cw, T0=T0, ea=e_along, eo=e_out):
+            d = Cw[:, :2] - T0[None]
+            s = d @ ea
+            q = (Cw[:, :2] - Cl[None]) @ eo
+            return (s < cut) & (s > -(rr + 1.2)) & (q > -1.0) & (q < 0.5)
+        n_cut += _drop_faces(ob, pred)
+    log(f"  {name}: corner roll r {rr:.2f} at lip corner ({Cl[0]:+.2f}, {Cl[1]:+.2f}); straight eave rolls cut back "
+        f"({n_cut} faces)")
+    return dropped
+
+
+def _cut_ridge_under_arch(g, wing, P, ys, toward, back=0.12):
+    """kit 1.19 r2: the wing's ridge roll and comb (and its backing) stop in a CLOSED end under the valley arch:
+    both are bisected at the plane `back` m (wing-local x) on the wing side of the arch's crest, the part toward the
+    main roof deleted and the cut filled -- no open roll end or comb-stop hole shows past the arch's skirt."""
+    import bmesh
+    import bpy
+    i_c = int(np.argmin(np.abs(ys)))
+    xc = float(wing.to_local(P[i_c][None])[0, 0])
+    x_cut = xc - toward * float(back)
+    o_l = np.array([[x_cut, 0.0, 0.0], [x_cut + toward, 0.0, 0.0]])
+    o_w = wing.to_world(o_l)
+    no = o_w[1] - o_w[0]
+    no[2] = 0.0
+    no = no / np.linalg.norm(no)
+    co = o_w[0]
+    n_cut = 0
+    for part in ("ridge", "comb"):
+        ob = bpy.data.objects.get(f"{g.prefix}_{wing.name}_{part}")
+        if ob is None or ob.type != "MESH" or not len(ob.data.polygons):
+            continue
+        mw = np.array(ob.matrix_world)
+        inv = np.linalg.inv(mw)
+        co_l = (inv @ np.append(co, 1.0))[:3]
+        no_l = inv[:3, :3].T @ no
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        res = bmesh.ops.bisect_plane(bm, geom=list(bm.verts) + list(bm.edges) + list(bm.faces), dist=1e-5,
+                                     plane_co=tuple(co_l), plane_no=tuple(no_l), clear_outer=True)
+        cut = [e for e in res["geom_cut"] if isinstance(e, bmesh.types.BMEdge) and e.is_valid and e.is_boundary]
+        if cut:
+            hf = bmesh.ops.holes_fill(bm, edges=cut, sides=0)
+            # r3: each fill faces OUT of the kept part, along the cut plane's normal (the cleared side)
+            nl = np.asarray(no_l, float)
+            nl = nl / max(float(np.linalg.norm(nl)), 1e-9)
+            for f in hf.get("faces", []):
+                f.normal_update()
+                if float(np.dot(np.array(f.normal), nl)) < 0:
+                    f.normal_flip()
+        bm.to_mesh(ob.data)
+        bm.free()
+        ob.data.update()
+        n_cut += 1
+    return x_cut, n_cut
 
 
 def _first_cross(fz, x_from, x_to, step=0.02):
@@ -213,7 +482,7 @@ def _first_cross(fz, x_from, x_to, step=0.02):
     return 0.5 * (a + b)
 
 
-def valley_line(main, wing, dy=0.03, edge=0.004, foot="crest"):
+def valley_line(main, wing, dy=0.03, edge=0.004, foot="crest", foot_back=0.0):
     """the junction line (world (n, 3), ordered across the wing from its -y lip to its +y lip) where the wing's
     covering top meets the main roof's top; also returns the wing-local y of each point.  The wing is scanned from
     its free end (the end farther from the main roof's centre) toward the main roof.  foot="crest": the line stops
@@ -228,7 +497,7 @@ def valley_line(main, wing, dy=0.03, edge=0.004, foot="crest"):
     y_max = float(ya[ok].max()) - edge
     R = getattr(wing, "ROLL", None)
     if foot == "crest" and R is not None:
-        y_max = min(y_max, wing.Y - (R["u_c"] + 0.02) * math.cos(wing.p))
+        y_max = min(y_max, wing.Y - (R["u_c"] + 0.02 + float(foot_back)) * math.cos(wing.p))
     ys = np.unique(np.concatenate([np.arange(-y_max, y_max + 1e-9, dy), [-y_max, y_max]]))
     pts, yy = [], []
     for y in ys:
@@ -247,51 +516,105 @@ def valley_line(main, wing, dy=0.03, edge=0.004, foot="crest"):
 
 
 def roof_valley(g, main, wing, name=None, width=(0.34, 0.34), crown=0.16, bury=(0.10, 0.10), dy=0.03,
-                comb_clear=0.22, var=0.06, seed=0, taper=0.30, end_out=0.10, smooth=2, foot="crest"):
+                comb_clear=0.22, var=0.06, seed=0, taper=0.30, end_out=0.16, smooth=2, foot="crest", corner="auto",
+                ridge_cut=0.12, sink=0.06, ridge_bury=0.12, ridge_bury_w=0.35, foot_back=None):
     """KIT COMPONENT (kit 1.19, v7): the rolled thatch valley where `wing` runs into `main` (both GableRoofs built by
     linear_roof; see the module doc).  Build the two roofs first with linear_roof(clip=solid_clip(other),
     deck_clip=deck_clip(other)) so the coverings and decks yield to each other at the valley; this then sweeps the
     roll on the true top-to-top line (valley_line) with each skirt `width` out on its own covering (main, wing),
     `bury` under it, the crest `crown` over the crease, and drops the wing's comb units within comb_clear m of the
-    main roof's top (they would stand through the roll).  -> <P>_<name> (M_thatch); records g.VALLEYS."""
+    main roof's top (they would stand through the roll).  -> <P>_<name> (M_thatch); records g.VALLEYS.
+    kit 1.19 r2: the skirt directions are continuous along the line (no twisted section at the foot), the normals
+    are smoothed (no folded lip over a ridge roll), each end is a rounded tuck (end_out past the end, diving `sink`
+    under the bisector); ridge_cut (m, None = off): the wing's ridge roll and comb end CLOSED that far on the wing
+    side of the arch's crest (_cut_ridge_under_arch); corner="auto" (eaves within 0.3 m of one height) / True /
+    False: each foot at a re-entrant eave corner gets _corner_close (rafter tails dropped, boarded soffit fill).
+    kit 1.19 r3: _corner_close sweeps ONE internal-corner roll round each re-entrant corner (no ball knot) and buries
+    the crossing deck ends in the soffit fill; at such a corner each foot tuck runs on >= 0.26 m and sinks by the
+    crown + 8 cm into that roll; ridge_bury (m, 0 = off) / ridge_bury_w: both skirts bury that much deeper where the
+    line crosses the wing's ridge roll (|wing y| < ridge_bury_w, fading), and the ridge cut's fill faces are oriented
+    outward (no dark wedge either side of the comb)."""
     from .composite import drop_units
     import bpy
     name = name or f"{wing.name}_valley"
-    P, ys = valley_line(main, wing, dy=dy, foot=foot)
+    same = abs(float(main.z_lip) - float(wing.z_lip)) < 0.3
+    closing = foot == "crest" and (corner is True or (corner == "auto" and same))
+    if foot_back is None:                    # r3: at a closed corner the line stops short of the roll's round nose
+        foot_back = 0.22 if closing else 0.0
+    P, ys = valley_line(main, wing, dy=dy, foot=foot, foot_back=foot_back)
     if len(P) < 6:
         raise ValueError(f"roof_valley: {wing.name} does not meet {main.name} (no valley line)")
     for _ in range(smooth):                                     # a calm line (the column table is stepped)
         P[1:-1] = 0.25 * P[:-2] + 0.5 * P[1:-1] + 0.25 * P[2:]
     zm = top_world(main, P)
     P[:, 2] = np.maximum(zm, top_world(wing, P))
-    nA, nB = top_normal(main, P), top_normal(wing, P)
+    nA, nB = _smooth_rows(top_normal(main, P)), _smooth_rows(top_normal(wing, P))
     T = np.zeros_like(P)
     T[1:-1] = P[2:] - P[:-2]
     T[0], T[-1] = P[1] - P[0], P[-1] - P[-2]
     T = _unit(T)
     a = _unit(np.cross(nA, T))
     b = _unit(np.cross(nB, T))
-    # orient: along main AWAY from the crease is where main is the higher of the two tops (a valley is their max)
+    # orient: along main AWAY from the crease is where main is the higher of the two tops (a valley is their max);
+    # the per-station wishes are only votes -- the directions stay continuous along the line
+    wa, wb = a.copy(), b.copy()
     for i in range(len(P)):
         q = P[i, :2] + a[i, :2] * 0.25
         if top_world(main, q[None])[0] < top_world(wing, q[None])[0]:
-            a[i] = -a[i]
+            wa[i] = -a[i]
         q = P[i, :2] + b[i, :2] * 0.25
         if top_world(wing, q[None])[0] < top_world(main, q[None])[0]:
-            b[i] = -b[i]
+            wb[i] = -b[i]
+    a, b = _smooth_rows(_continuous(a, wa), 2), _smooth_rows(_continuous(b, wb), 2)
+    if closing:
+        # r3: each foot dives INTO the internal-corner roll (_corner_close): a longer tuck sinking by more than the
+        # roll's own crown, so no folded flap or dark lip is left in the open at the eave
+        sink = max(float(np.max(sink)), float(crown) + 0.08)
+        end_out = max(float(np.max(end_out)), 0.26)
+    # r3: over the wing's ridge roll (|ys| < ridge_bury_w) both skirts bury deeper and the wing skirt is steered
+    # onto the roll's own axis (away from main, square to the line), so it lies down the ridge roll -- no lifted,
+    # folded skirt end (dark wedge) either side of the comb
+    rb = 0.0
+    if ridge_bury:
+        wgt = np.clip(1.0 - np.abs(ys) / float(ridge_bury_w), 0, 1)[:, None]
+        rb = float(ridge_bury) * wgt
+        cm_ = main.to_world(np.array([[0.5 * (main.xa + main.xb), 0.0, 0.0]]))[0]
+        tw_ = 1.0 if wing.to_local(np.array([[cm_[0], cm_[1], 0.0]]))[0, 0] > 0.5 * (wing.xa + wing.xb) else -1.0
+        bx = -tw_ * np.asarray(wing.dir_world(np.array([1.0, 0.0, 0.0])), float)
+        bx = _unit(bx[None] - (bx[None] * T).sum(1, keepdims=True) * T)
+        b = _unit((1 - wgt) * b + wgt * bx)
+        # the wing skirt's end dives VERTICALLY over the ridge roll (a radial dive folds it back: the dark wedges)
+        dB = _unit((1 - wgt) * nB + wgt * np.array([[0.0, 0.0, 1.0]]))
+    else:
+        dB = None
+    bur = (bury[0] + rb, bury[1] + rb)
     acc = Acc(f"{g.prefix}_{name}", 70)
-    length = _crease_roll(acc, P, nA, nB, a, b, width=width, crown=crown, bury=bury, var=var, seed=seed + 7,
-                          taper=taper, end_out=end_out)
+    length = _crease_roll(acc, P, nA, nB, a, b, width=width, crown=crown, bury=bur, var=var, seed=seed + 7,
+                          taper=taper, end_out=end_out, sink=sink, bury_dir=(None, dB))
     ob = finalize(acc, g.coll, smooth_deg=70.0)
     dropped = 0
     cb = bpy.data.objects.get(f"{g.prefix}_{wing.name}_comb")
     if cb is not None and comb_clear:
         dropped = drop_units(cb, lambda V: main.top_depth(V) > -float(comb_clear), rule="any")
+    # the wing's side toward the main roof (wing-local x)
+    cm = main.to_world(np.array([[0.5 * (main.xa + main.xb), 0.0, 0.0]]))[0]
+    toward = 1.0 if wing.to_local(np.array([[cm[0], cm[1], 0.0]]))[0, 0] > 0.5 * (wing.xa + wing.xb) else -1.0
+    msg = ""
+    if ridge_cut and float(np.abs(ys).min()) < 0.1:
+        x_cut, n_cut = _cut_ridge_under_arch(g, wing, P, ys, toward, back=ridge_cut)
+        msg += f"; ridge / comb closed at wing x {x_cut:+.2f} ({n_cut} parts)"
+    if closing:
+        wc = wing.to_world(np.array([[0.5 * (wing.xa + wing.xb), 0.0, 0.0]]))
+        sgm = -1.0 if float(main.to_local(wc)[0, 1]) < 0 else 1.0
+        nd = 0
+        for k, sgw in enumerate((-1.0, 1.0)):
+            nd += _corner_close(g, main, wing, sgm, sgw, f"{name}_soffit_{k}")
+        msg += f"; re-entrant corners closed (soffit fills, {nd} rafter polygons dropped)"
     if not hasattr(g, "VALLEYS"):
         g.VALLEYS = []
     g.VALLEYS.append(dict(main=main.name, wing=wing.name, P=P, name=name))
     log(f"  {name}: valley roll {len(P)} stations, {length:.2f} m (z {P[:, 2].min():.2f}..{P[:, 2].max():.2f}), "
-        f"wing y {ys.min():+.2f}..{ys.max():+.2f}; comb polygons dropped {dropped}")
+        f"wing y {ys.min():+.2f}..{ys.max():+.2f}; comb polygons dropped {dropped}" + msg)
     return ob
 
 
@@ -299,8 +622,26 @@ def roof_valley(g, main, wing, name=None, width=(0.34, 0.34), crown=0.16, bury=(
 # the gabled dormer
 # =================================================================================================================
 DORMER_SOFT = dict(ridge_sag=0.03, eave_sag=0.0, eave_sweep=0.08, sweep_len=0.45, verge_flare=0.10, flare_len=0.7,
-                   wave=0.008)
-"""the dormer roof's soft options (GableRoof keywords; note 17: the small roof sags and sweeps like its host)."""
+                   wave=0.008, ridge_seat=True)
+"""the dormer roof's soft options (GableRoof keywords; note 17: the small roof sags and sweeps like its host).
+kit 1.19 r2: ridge_seat=True (as its host) -- the ridge roll is seated on the top course (no dark slot under it)."""
+
+
+def dormer_verge_roll(hw, rc=None, apex_bend=None, bend_over=None, **kw):
+    """kit 1.19 r2: the dormer hood's PATH (linear_roof(verge_roll=...)) scaled to the dormer: rc is the radius of
+    the hood's EAVE-CORNER FILLET in the slope plane (not the roll's section), apex_bend the radius of the bend over
+    the apex: rc = 0.18 * hw, apex_bend = 0.155 * hw, bend_over = 0.12 * hw by default, a recipe's rc / apex_bend
+    capped at 0.20 * hw / 0.17 * hw.  The roll's SECTION (its fatness) is the dormer roof's eave roll:
+    GabledDormer(roll=...) -> linear_roof(eave_roll=...), radius 0.15 * hw on a thin dormer thatch (kit 1.19 r3)."""
+    cap_rc, cap_ab = 0.20 * hw, 0.17 * hw
+    out = dict(kw)
+    out["rc"] = min(float(rc if rc is not None else 0.18 * hw), cap_rc)
+    out["apex_bend"] = min(float(apex_bend if apex_bend is not None else 0.155 * hw), cap_ab)
+    out["bend_over"] = float(bend_over if bend_over is not None else 0.12 * hw)
+    if (rc is not None and rc > cap_rc) or (apex_bend is not None and apex_bend > cap_ab):
+        log(f"  dormer hood capped to the dormer: rc {rc} -> {out['rc']:.3f}, apex_bend {apex_bend} -> "
+            f"{out['apex_bend']:.3f} (half width {hw:.2f})")
+    return out
 
 
 class GabledDormer:
@@ -317,13 +658,18 @@ class GabledDormer:
     soft     the dormer roof's soft options (DORMER_SOFT)
     back_run plan metres the cheeks run on past the point where their head meets the host deck (buried)"""
 
-    def __init__(self, main, x, side=-1, d=0.55, width=1.30, pitch=50.0, overhang=0.22, verge=0.28, thick=0.24,
-                 step=0.08, window=None, plate_gap=0.10, soft=None, back_run=0.30, name="dormer", sill_beam=0.18,
-                 z0_drop=0.06, clear_thatch=0.06, head=0.16):
+    def __init__(self, main, x, side=-1, d=0.55, width=1.30, pitch=50.0, overhang=0.22, verge=0.28, thick=0.13,
+                 step=0.05, window=None, plate_gap=0.10, soft=None, back_run=0.30, name="dormer", sill_beam=0.18,
+                 z0_drop=0.06, clear_thatch=0.06, head=0.16, roll=None, deck_t=0.025):
         from .linear_roof import GableRoof
         self.main, self.name = main, name
         self.x, self.sg = float(x), (1 if side > 0 else -1)
         self.hw = 0.5 * float(width)
+        # kit 1.19 r3: the dormer's eave / hood roll SECTION scaled to the dormer (linear_roof(eave_roll=...)): radius
+        # 0.15 * hw, a thin dormer thatch (thick / step / deck_t) and a low crest, so the hood's section is about a
+        # fifth of the dormer's width or less (the host's 0.16 m roll on a 0.28 m thatch read as a "pretzel" knot)
+        self.roll = dict(radius=0.15 * self.hw, proud=0.02, drop=0.015)
+        self.roll.update(roll or {})
         self.win = dict(width=0.55, height=0.50, sill=0.30)
         self.win.update(window or {})
         sg, hw = self.sg, self.hw
@@ -351,7 +697,7 @@ class GabledDormer:
         vg = (float(verge), 0.0) if sg < 0 else (0.0, float(verge))
         self.roof = GableRoof(x0=x0, x1=x1, half=hw, wall_z=self.wall_z, pitch_deg=pitch, overhang=overhang,
                               verge=vg, origin=(float(o[0]), float(o[1])),
-                              yaw_deg=math.degrees(main.yaw) + 90.0, thick=thick, step=step,
+                              yaw_deg=math.degrees(main.yaw) + 90.0, thick=thick, step=step, deck_t=deck_t,
                               ridge_roll=(0.26, 0.15), name=f"{name}_roof", **kw)
         r = self.roof
         top_d = r.z_ridge + (r.T0 + r.step) / math.cos(r.p) + r.roll_h + 0.05
@@ -437,8 +783,11 @@ def _foot_path(D, w_face=0.03, rc=0.12, ds=0.03):
     return np.concatenate(out), np.concatenate(nrm)
 
 
-def _dormer_foot_roll(g, D, width=(0.24, 0.20), crown=0.12, bury=(0.09, 0.035), seed=0, under_eave=0.05):
-    """the rolled thatch foot round the dormer: where the host thatch top meets the cheek / front boards."""
+def _dormer_foot_roll(g, D, width=(0.24, 0.20), crown=0.12, bury=(0.09, 0.035), seed=0, under_eave=0.16,
+                      taper=0.40, sink=0.10):
+    """the rolled thatch foot round the dormer: where the host thatch top meets the cheek / front boards.
+    kit 1.19 r2: it stops `under_eave` m under the dormer's eave soffit and tapers over `taper` m into a tuck that
+    dives `sink` m into the host thatch, so each end dies under the dormer valley's skirt instead of crossing it."""
     main, r = D.main, D.roof
     Q, Nn = _foot_path(D)
     z = top_world(main, Q)
@@ -459,14 +808,14 @@ def _dormer_foot_roll(g, D, width=(0.24, 0.20), crown=0.12, bury=(0.09, 0.035), 
     b = np.repeat(up[None], len(P), 0)
     acc = Acc(f"{g.prefix}_{D.name}_foot_roll", 70)
     L = _crease_roll(acc, P, na, nb, a, b, width=width, crown=crown, bury=bury, var=0.05, seed=seed + 3,
-                     taper=0.18, end_out=0.04)
+                     taper=taper, end_out=0.10, sink=sink)
     finalize(acc, g.coll, smooth_deg=70.0)
     log(f"  {D.name}: foot roll {len(P)} stations, {L:.2f} m")
     return L
 
 
 def gabled_dormer(g, D, seed=81, covering="thatch", finial=True, foot_roll=True, valley=None, walls=None,
-                  verge_roll=None):
+                  verge_roll="auto"):
     """KIT COMPONENT (kit 1.19, v7): build the gabled dormer `D` (GabledDormer) after its host roof D.main (built
     with linear_roof(clip=any_clip(..., D.clip_main()), deck_clip=any_clip(..., D.deck_clip_main()))).  Steps:
     the walls (timber_walls.path_timber_wall: board_batten front and cheeks, rough, from the sill-beam foot under the
@@ -474,7 +823,9 @@ def gabled_dormer(g, D, seed=81, covering="thatch", finial=True, foot_roll=True,
     to the host: clip / deck_clip; finial=True puts the village's lead hat and turned finial on its front apex), the
     valley into the host (roof_valley, kwargs `valley`) and the foot roll round the walls (foot_roll).
     walls: extra path_timber_wall keywords; verge_roll: linear_roof(verge_roll=...) for the dormer's front verge
-    (the rolled rake of kit 1.17 / 1.18, one free verge: kit 1.19); None = the plain verge face."""
+    (the rolled rake of kit 1.17 / 1.18, one free verge: kit 1.19); None = the plain verge face.
+    kit 1.19 r2: verge_roll="auto" (default) = the hood scaled to the dormer (dormer_verge_roll(D.hw)); a dict is
+    passed through dormer_verge_roll too, so its rc / apex_bend are capped to the dormer's width."""
     from .linear_roof import linear_roof
     from .openings import window as _window
     from .timber_walls import path_timber_wall, roof_top_fn
@@ -493,9 +844,13 @@ def gabled_dormer(g, D, seed=81, covering="thatch", finial=True, foot_roll=True,
     kw.update(walls or {})
     path_timber_wall(g, name=f"{D.name}_walls", path=path, z0=D.z0, top=D.plate, top_fn=roof_top_fn(D.roof),
                      openings=[(L_ch + D.hw, WIN)], **kw)
+    if isinstance(verge_roll, str) and verge_roll == "auto":
+        verge_roll = dormer_verge_roll(D.hw)
+    elif isinstance(verge_roll, dict):
+        verge_roll = dormer_verge_roll(D.hw, **verge_roll)
     linear_roof(g, D.roof, covering="thatch", clip=solid_clip(D.main, under=True), deck_clip=deck_clip(D.main),
                 seed=seed, ridge_caps=True, verge_apex=True, apex_finial="turned" if finial else None,
-                comb_step=0.75, comb_backing=True, verge_roll=verge_roll)
+                comb_step=0.75, comb_backing=True, verge_roll=verge_roll, eave_roll=D.roll)
     vk = dict(width=(0.26, 0.24), crown=0.13, bury=(0.09, 0.08), comb_clear=0.18, seed=seed)
     vk.update(valley or {})
     roof_valley(g, D.main, D.roof, name=f"{D.name}_valley", **vk)
@@ -534,8 +889,14 @@ def _ring_trace(bvh, T, step_deg=1.0, z_guess=3.0, offsets=(0.006, 0.02)):
             z = max(hs)
         else:
             Z[i] = z
-    if not np.isfinite(Z).all():
+    ok = np.isfinite(Z)
+
+    log(f"  ring trace: {int(ok.sum())} / {len(Z)} azimuths hit the roof top"
+        + (f", z {np.nanmin(Z):.2f}..{np.nanmax(Z):.2f}" if ok.any() else ""))
+    if ok.mean() < 0.85:                                     # the roof does not surround the stack
         return None
+    if not ok.all():                                         # rays slipping through a course joint: close the gaps
+        Z = np.interp(th, th[ok], Z[ok], period=2 * math.pi)
     k = int(round(20.0 / step_deg))
     th2 = np.concatenate([th, th[:k] + 2 * math.pi])
     Z2 = np.concatenate([Z, Z[:k]])
@@ -559,18 +920,26 @@ def _ring_abutment(g, roof, center, radius, name, parts):
     objs = [o for o in (bpy.data.objects.get(f"{pre}_{p}") for p in ("covering", "eave_roll", "ridge", "comb"))
             if o is not None and len(o.data.polygons)]
     bvh = _bvh(objs)
-    runs = _ring_trace(bvh, T, z_guess=float(roof.z_ridge) + 1.0)
+    runs = _ring_trace(bvh, T, z_guess=float(roof.z_lip))       # low: the battered face is widest (r2 fix)
     if not runs:
         raise ValueError(f"chimney {name}: the roof does not surround the stack (use the gable placement)")
     acc = Acc(f"{pre}_{name}", 35)
     for th, P in runs:
         ride_fillet(acc, th, _smooth_up(P[:, 2]), T, bvh, h_up=0.12, out=0.12, lift=0.05, bury=0.035, taper=0.15)
-    log(f"  {name}: ring flaunching round the stack, {len(runs[0][0])} samples")
-    return finalize(acc, g.coll, smooth_deg=35.0)
+    log(f"  {name}: ring flaunching round the stack, {len(runs[0][0])} samples, z {runs[0][1][:, 2].min():.2f}.."
+        f"{runs[0][1][:, 2].max():.2f}")
+    ob = finalize(acc, g.coll, smooth_deg=35.0)
+    # kit 1.19 r2: registered for the seal-probe guard like wall_abutment (the ring is the whole junction)
+    from ..guards import register_junction
+    zs = runs[0][1][:, 2]
+    register_junction(g, f"{roof.name} / stack ring", (f"{pre}_covering", f"{pre}_eave_roll", f"{pre}_ridge"), C,
+                      lambda z, f=radius: float(np.asarray(f(np.asarray(z, float)), float)),
+                      (float(zs.min()) - 0.3, float(zs.max()) + 0.3))
+    return ob
 
 
 def chimney(g, name="chimney", center=(0.0, 0.0), r_base=0.62, batter_deg=2.0, top=None, roof=None,
-            over_ridge=0.85, clip=None, cfg=None, seed=51, crown="louvre", cap=None, parts=None, louvre=None,
+            over_ridge=0.85, clip=None, cfg=None, seed=51, crown="pot", cap=None, parts=None, louvre=None,
             pot=None, abut=None, shoulder=None):
     """KIT COMPONENT (kit 1.19, v7): a round rubble chimney stack (see the module doc).
     center, r_base, batter_deg   the stack's axis (plan), face radius at the ground and batter (the village's
@@ -585,8 +954,9 @@ def chimney(g, name="chimney", center=(0.0, 0.0), r_base=0.62, batter_deg=2.0, t
     shoulder     None (one battered stack) or dict(z, r_base, batter_deg, h): a BROAD BASE (r_base / batter_deg above)
                  up to z, a weathered offset (a rounded dressed-stone weathering `h` m high, the soft shoulder) and the
                  narrower upper stack (its own r_base at the ground and batter) from there to the head
-    crown        "louvre" (a round smoke louvre: `louvre` = dict(n posts, h, ring, hat pitch, finial scale) under a
-                 little lead cone with the turned finial) or "pot" (a round dressed-stone pot: `pot` = dict(r, h))
+    crown        "pot" (default, kit 1.19 r2: a round dressed-stone pot, `pot` = dict(r, h)) or "louvre" (opt-in: a
+                 low round smoke louvre, `louvre` = dict(n posts, h <= 0.3 m, ring, hat pitch, finial scale -- None =
+                 no finial, the default) under a little lead cone; producer note 23:12: no lantern / cupola read)
     -> <P>_<name>_stones / _mortar (stack), _cap (M_stone_dressed), _flue_blocker (dark flue), _crown (posts or pot),
        _cap_collar (the lead cone), _finial; the roof's <P>_<roof>_<name>_abutment.  Records g.CHIMNEYS."""
     from .rubble_walls import round_stone_body
@@ -687,8 +1057,11 @@ def chimney(g, name="chimney", center=(0.0, 0.0), r_base=0.62, batter_deg=2.0, t
     # ---- the round crown ------------------------------------------------------------------------------------------
     cr = Acc(f"{g.prefix}_{name}_crown", 35)
     if crown == "louvre":
-        lk = dict(n=6, h=0.34, ring=0.70, post=(0.12, 0.10), hat_r=0.95, hat_pitch=38.0, finial=0.34)
+        lk = dict(n=6, h=0.24, ring=0.70, post=(0.12, 0.10), hat_r=0.95, hat_pitch=34.0, finial=None)
         lk.update(louvre or {})
+        if lk["h"] > 0.30:                                    # producer note 23:12: a low louvre, never a lantern
+            log(f"  {name}: louvre h {lk['h']:.2f} -> 0.30 m (kept low)")
+            lk["h"] = 0.30
         r_l = lk["ring"] * R
         for k in range(int(lk["n"])):
             t = 2 * math.pi * (k + 0.5) / lk["n"] + rng.uniform(-0.05, 0.05)

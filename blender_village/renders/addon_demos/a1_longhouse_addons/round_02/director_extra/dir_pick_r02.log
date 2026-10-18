@@ -1,0 +1,22 @@
+﻿00:01.641  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\a1_longhouse_addons.blend"
+BlenderMCP addon registered
+PICK z01 720 600 A1L_lean_to_end1_stones face 6995 at (0.415, 2.505, 2.601) BACK
+PICK z01 390 500 A1L_body_wall_stones face 99666 at (0.65, 2.352, 2.706) BACK
+PICK z01 700 650 A1L_lean_to_end1_stones face 6994 at (0.414, 2.481, 2.549) BACK
+PICK i06 430 355 miss
+PICK i06 440 355 miss
+PICK i06 450 355 miss
+PICK i06 507 355 miss
+PICK i06 1012 354 miss
+  through A1L_body_roof_deck (-0.178, 2.71, 3.629) -> A1L_body_roof_deck (-0.134, 2.775, 3.617)
+PICK i06 1015 353 A1L_body_roof_deck face 3000 at (-0.178, 2.71, 3.629) front
+  through A1L_body_wall_stones (-2.226, 2.376, 3.713) -> SKY 
+PICK i06 440 345 A1L_body_wall_stones face 79025 at (-2.226, 2.376, 3.713) BACK
+  through A1L_body_wall_mortar (-2.219, 2.345, 3.655) -> A1L_body_wall_stones (-2.221, 2.35, 3.654)
+PICK i06 440 365 A1L_body_wall_mortar face 223 at (-2.219, 2.345, 3.655) BACK
+PICK x02 400 380 A1L_lean_to_end1_stones face 6995 at (0.414, 2.508, 2.604) BACK
+PICK x02 255 335 A1L_body_wall_stones face 99666 at (0.652, 2.352, 2.705) BACK
+BlenderMCP addon unregistered
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit
