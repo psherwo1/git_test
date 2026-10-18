@@ -1,4 +1,4 @@
-# Handoff: continuing the village production (updated 2026-10-17, desktop session 1 -> session 2)
+# Handoff: continuing the village production (updated 2026-10-18, desktop session 2)
 
 This file lets a new Claude Code session pick up the work with full continuity. Everything is in this repository on branch `claude/blender-buildings-film-nfzv6a`. **Treat the director files as the source of truth and do not re-litigate recorded client decisions.**
 
@@ -41,43 +41,50 @@ This file lets a new Claude Code session pick up the work with full continuity. 
 - **The client asked for a textured check** of whether the remaining junction defects are visible at ground level or in a quick pan.
 - Never modify `buildings/*/signoff_phase1/` or `buildings/tower_windmill/signoff_kit_r08/`.
 
-## 4. State at handoff (2026-10-17)
+## 4. State at handoff (2026-10-18 01:50, end of desktop session 2)
 
-**Designs (7 of 12-15):**
+**Designs (10 built; 9 accepted or final):**
 
 | Design | State |
 |---|---|
-| tower_windmill | **Signed off on the kit** (round 8, 9.0, audit upheld); snapshot in `signoff_kit_r08/` |
-| hilltop_keep | Phase-1 version is the signed-off deliverable. The kit build (1,166,874 tris) is the reference |
-| wattle_roundhut | Phase-1 version is the signed-off deliverable. The kit build (878,355 tris) is the reference |
-| v4_mixed (mill-house) | **ACCEPTED** (round 4, 8.4, 938,453 tris) |
-| v1_stone_watchtower (square cabin) | **ACCEPTED** (round 5, 8.5, 937,933 tris) |
-| v2_tiered_hall (approved building 2) | **ACCEPTED by client decision** (round 7, director 8.2, 980,405 tris): the remaining junction defects are judged not worth more effort after the textured test (lookdev/junction_test/REPORT.md). Optional lookdev polish: darker, textured lead on the turret aprons |
-| v3_longhouse_roundend (approved building 1) | **Redesign IN PROGRESS** (see below). The last complete build is round 6 (director 8.1) |
+| tower_windmill | Signed off on the kit (round 8, 9.0) |
+| hilltop_keep, wattle_roundhut | Phase-1 versions are the deliverables; the kit builds are the references |
+| v1_stone_watchtower | ACCEPTED (r5, 8.5, 937,933) |
+| v2_tiered_hall | ACCEPTED by client decision (r7, 980,405), with the darker grimy turret lead in lookdev |
+| v3_longhouse_roundend | ACCEPTED (r8 redesign, 8.3, 617,342); round 6 archived |
+| v4_mixed | ACCEPTED (r4, 8.4, 938,453) |
+| v5_harbour_house (approved building 3, the client's ref4 concept) | **FINAL** (r8, 8.6, 714,452): cruck boat hall, round tower, slumped roof, the eyebrow as one continuous arch. r04-r08 snapshots `*_rNN_accepted.*` |
+| v6_barn | **ACCEPTED** (r3 8.4 + the r4 quick fix, audit upheld, 213,529): thatch barn with a cruck arched cart entry under a thatch eyelid |
+| v7_cottage (roof add-ons: valley, chimney, gabled dormer) | Round 3: 7.9, not accepted. **The client extended it by up to 2 rounds:** round 4 does producer note 19 (rounded hips + soft crown, "an oval on the rectangle") and note 18 (a thatch eyebrow) FIRST |
+| a1_longhouse_addons (wall add-ons: lean-to, porch, on a demo copy of v3) | Round 3 BUILT (the lean-to rounded per note 19), **grade NOT run** (usage limit). Round 2 was 8.1 |
 
-**Kit: 1.10.1.**
-- **1.8.0:** consolidation. One API per concern (eave closure, polygon roofs with any number of sides, masonry, openings); `PlanFrame`; single cull and decal dispatch.
-- **1.9.0:** guard-rails on by default (`guards.py`: clearance, decal_validate, seal probe, steep-cone door flags, LOD scope) and a README rewrite.
-- **1.10.0:** the UV fix (`uvgrain.py`: grain along pieces, shingles up-slope, no collapsed UVs, no moss on walked tops).
-- **1.10.1:** deterministic needle repair. It fixed the keep's turret cap flipping winding.
-- **Afterwards:** variant builders added `tier_flashing`, `tier_cull`, `level_probe`, `square_cabin` and `pyramid_roof` upgrades (records in `kit/changes/*.md`). They are **not yet merged into the CHANGELOG**: merge them.
-- **Tools:**
-  - `tools/build_baseline.ps1`: rebuild buildings, at most 2-3 at once. From PowerShell use `-Only @('id1','id2')`; a comma list via `-File` does not work.
-  - `tools/geom_hash.py` (geometry, uv and mask hashes), `tools/geom_diff.py`, `tools/uv_audit.py`, `tools/check_headers.py`.
-  - The canonical (order-independent) hasher: `kit/baseline/4_verify/verify_tools/canon_hash.py`.
+**Kit 1.12.0** (CHANGELOG merged; the reference table covers 8 buildings incl. v5; `tools/build_baseline.ps1` rebuilds 8). Since 1.12.0:
+- the add-on modules `roof_addons.py` (valley, chimney, dormer), `lean_to.py` and `porch.py`;
+- `cruck_frame(infill_soffit=)`, `linear_roof(eave_roll=)`.
 
-**Texturing.**
-- Lookdev script: `lookdev/scripts/apply_lookdev.py` (`--look r2`). Renders: `lookdev/renders_r2/`, with compare sheets.
-- The keep looks good.
-- **To tune:**
-  - the roundhut's plaster: the trowel pattern still shows up close, so consider a less patterned clay texture;
-  - the longhouse's moss: too heavy and uniform;
-  - the dressed stone: slightly bright.
+All are defaults-off, recorded in `kit/changes/v7_cottage.md`, `kit/changes/a1_longhouse_addons.md` and `kit/changes/v6_barn.md`, and still to be merged. The retired stubs `components/timber_roof.py` and `timber_finish.py` are to be deleted.
 
-**Jobs at handoff:**
-1. **Longhouse redesign: STOPPED on the client's request, to relaunch in the new session.** It was stopped about 25 min into round 8's fix step (09:07). The builder had rewritten `buildings/variants/v3_longhouse_roundend/build_v3_longhouse_roundend.py` (08:57) but not yet built or rendered; the last complete build is round 6 (07:36). **To relaunch:** run `workflows/kit_close_variants.js` with args `{root, py, render_flags, only: ['v3_longhouse_roundend'], start: {v3_longhouse_roundend: {stage: 'fix', round: 8}}}` (MAX_ROUNDS is 10). The fixer reads the CLIENT DIRECTION and the PRODUCER NOTE at the end of `director/log_variant_v3_longhouse_roundend.md`, which tell it to review the partial edits.
-2. ~~Textured junction test~~ **DONE**: `lookdev/junction_test/REPORT.md`. The client then accepted the tiered hall as it stands.
+**New producer notes this session (binding):**
+- 16: same builders, techniques and materials;
+- 17: round structures and soft, organic lines;
+- 18: a rectangular / square cottage has at least one eyebrow dormer;
+- 19: square walls get rounded roofs (round hips + soft crown).
 
+**Client preference (memory):** time matters. Fold direction into the current round, show early previews, and skip avoidable work.
+
+**Lookdev and studies:**
+- `lookdev/village_r2/`: all nine buildings textured, with contact sheets;
+- `lookdev/harbour_house/`: the textured r05-r08 look tests;
+- `lookdev/vignette/`: the nine buildings in a fjord village, day and golden-hour fog, with measurements;
+- `director/performance_assessment.md`: Lumen vs the path tracer, fog costs, memory; the client should upgrade to 32 GB RAM.
+
+**Lookdev to tune:** the flat daub on the roundhut / v4, the bark proxy texture, the v2 pale shingles, and the heavy moss.
+
+**NEXT (when resuming):**
+1. **Wall track:** run the round-3 Director grade, and the audit if it passes. `log_addons_lean_porch.md` has the context.
+2. **Cottage rounds 4-5:** the rounded roof and the thatch eyebrow first (log `log_variant_v7_cottage.md`), then grade and audit.
+3. Merge the add-on kit notes into the CHANGELOG, delete the two stubs, and refresh this file.
+4. Then: more low, roofed designs (notes 18 / 19); then step 5, the Unreal exporter and the UE 5.8 lookdev test.
 ## 5. Practical notes for this machine
 
 - **Git:** there is no system git. Use GitHub Desktop's bundled git: `C:\GitHubDesktop\app-3.6.7\resources\app\git\cmd\git.exe`. Push auth works.
