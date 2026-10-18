@@ -1,0 +1,30 @@
+﻿   BARN_plinth_stones: 28029 verts, 25892 faces
+   BARN_plinth_quoins: 492 verts, 480 faces
+   BARN_plinth_mortar: 500 verts, 372 faces
+   BARN_walls_frame: 1576 verts, 1536 faces
+   BARN_walls_boards: 26624 verts, 23856 faces
+   BARN_walls_blocker: 1000 verts, 1012 faces
+   BARN_walls_frames: 9224 verts, 9146 faces
+   BARN_walls_dressed: 240 verts, 234 faces
+   BARN_walls_ironwork: 1848 verts, 1762 faces
+   BARN_walls_blockers: 72 verts, 45 faces
+   BARN_cart_entry_frame: 868 verts, 847 faces
+   BARN_cart_entry_boards: 1768 verts, 1530 faces
+   BARN_cart_entry_blocker: 606 verts, 610 faces
+   BARN_cart_entry_pads: 96 verts, 80 faces
+   BARN_cart_entry: cruck / arched-brace frame: clear 4.20 m, arch 1.90 -> 3.26 m (R 1.87), tie 3.52-3.78 over +-1.89, collar 3.91, apex 4.07, 34 infill boards
+   BARN_cart_doors_leaves: 1348 verts, 1188 faces
+   BARN_cart_doors_ledges: 320 verts, 312 faces
+   BARN_cart_doors_backing: 1372 verts, 1388 faces
+   BARN_cart_doors_ironwork: 272 verts, 264 faces
+   BARN_barn_roof_deck: 4840 verts, 4750 faces
+   BARN_barn_roof_rafters: 2072 verts, 1998 faces
+   BARN_barn_roof_covering: 41679 verts, 37775 faces
+   BARN_barn_roof_eave_roll: 18584 verts, 17700 faces
+   BARN_barn_roof_ridge: 1924 verts, 1868 faces
+   BARN_barn_roof_comb: 13260 verts, 12740 faces
+   BARN_barn_roof_apex_cap_collar: 338 verts, 338 faces
+   BARN_barn_roof_apex_finial: 1442 verts, 1442 faces
+   BARN_hoist_frame: 362 verts, 350 faces
+   BARN_hoist_ironwork: 120 verts, 108 faces
+   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_entry_pads: 12 faces

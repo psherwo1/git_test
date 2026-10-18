@@ -1,0 +1,21 @@
+﻿00:01.656  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+triangles: 213,529  objects: 42
+estimated hidden: 12.9% (~27,566 tris), below ground: 0.0%
+  BARN_barn_roof_deck                      hidden  90.1%  ~9,064 of 10,057
+  BARN_walls_boards                        hidden  27.5%  ~6,203 of 22,591
+  BARN_walls_blocker                       hidden  86.6%  ~1,868 of 2,156
+  BARN_barn_roof_covering                  hidden   2.6%  ~1,473 of 57,353
+  BARN_barn_roof_eave_roll                 hidden   4.5%  ~1,334 of 29,840
+  BARN_cart_entry_blocker                  hidden  98.3%  ~1,227 of 1,249
+  BARN_barn_roof_comb                      hidden   8.7%  ~907 of 10,377
+  BARN_plinth_stones                       hidden   2.0%  ~886 of 44,798
+  BARN_walls_frames                        hidden   6.6%  ~822 of 12,395
+  BARN_plinth_mortar                       hidden  74.6%  ~469 of 629
+  BARN_barn_roof_rafters                   hidden  14.6%  ~298 of 2,049
+  BARN_walls_ironwork                      hidden   9.1%  ~277 of 3,064
+  BARN_walls_frame                         hidden  16.1%  ~245 of 1,526
+  BARN_cart_doors_backing                  hidden  37.5%  ~192 of 512
+  BARN_cart_doors_leaves                   hidden  11.7%  ~170 of 1,462
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

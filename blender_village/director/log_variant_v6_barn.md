@@ -537,3 +537,104 @@ The client: "Move forward with the quick fix". Close ONLY the audit's blocking i
 - Use the recipe / frame, with defaults unchanged.
 - **Do NOT edit `linear_roof.py` or `roof_junction.py`:** the add-on track owns them right now.
 - Then the independent audit re-checks, using its own ray method, which sees this kind of hole. No full re-grade: the director's 8.4 stands.
+## v6_barn round 4 — builder entry
+
+I re-read this log before starting and again before writing. The latest entry is the PRODUCER NOTE (round 4: close ONLY the post-head wedge; recipe / frame, defaults unchanged; do not touch `linear_roof.py` / `roof_junction.py`). Nothing was added after it. This round is that quick fix and nothing else. The arch-to-leaf slit (the audit's should-fix) is left as it was.
+
+**Cause** (measured on a FAST build with per-object rays, `buildings/variants/v6_barn/scratch/r04_fast/diag2_posthead.py`):
+- **The frame infill was short of the soffit.** `cruck_frame` sampled `top_fn` over the frame plane (y -3.50), but the eyelid soffit rises inward. So at their own depth the infill boards (y -3.39) stopped 3 cm under the soffit, and the frame backing (y -3.355) 5 cm under it, over x 1.8-2.3. Nothing stood in front of them above the post heads.
+- **The recipe's `wall_top` cut ran past the infill.** It ran to `frame_half + 0.02` (2.32 m), 3 cm past the infill's edge (2.29 m). So the first wall board beyond it sloped up from the tie height and stood about 8 cm under the soffit (x 2.3-2.65).
+
+**Fix:**
+1. **`cruck_frame(infill_soffit=True)`**, a new option (False = the old frame). The infill boards and backing rise to `top_fn` over their own inner face, so they tuck about 2 cm into the deck. The board layout and the rng draws are unchanged.
+2. **Recipe `wall_top`:** the cut now ends at `end + 0.10`. Only the front runs' open end posts (x 1.90-2.12) stop at the tie, and the wall boards from x 2.12 run up to the soffit, in front of the infill's edge.
+
+No other change: the frame members, tie, arch, leaves, roof, plinth and decal set are as in round 3. The build log's object counts match round 3, apart from `BARN_cart_entry_blocker` (+30 backing cells).
+
+**Verification with the audit's own scripts** (on the full build; outputs in `renders/variants/v6_barn/round_04/builder_extra/`):
+- **`aud_holes_r03.py`** (`holes_r04_out.txt`): POST HEAD W eye 1.7 m, 0 interior rays (round 3: 241); W 6 m: 0; E eye 1.7 m, 0 (round 3: 415); E 6 m: 0. The arch / leaf top is unchanged at 133 (the should-fix, not in scope); leaf edge / post: 0.
+- **`aud_seethru_r03.py close`** (`seethru_r04_posthead_out.txt`, red-ray images in `probe_img/`):
+  - 0 leaks at the post heads in every post-head shot: `W/E_post_head`, `_close` (round 3: 849 / 1495), `_eye` (11 / 150), `E/W_post_head_eye_6m_out` (730 / 493), `E_post_head_eye_4m_out` (714).
+  - Also 0: `arch_crown` and `eyelid_fade_E/W`.
+  - **Remaining leaks are elsewhere** and identical to or fewer than round 3:
+    - `_eye_far` 2 / 14 (round 3: 5 / 25) and `_6m` 9 / 21 (round 3: 9 / 21) all enter at x about cart_x +-0.15, z 2.4-2.9, inside the arch. That is the arch / leaf area, not the post heads.
+    - `eyelid_6m` 341 (round 3: 341) end on `BARN_walls_blockers`, the SW window's dark room (a designed opening).
+- **Close-ups** (the director's `dir_render_r03.py` rig, clay + void twin): d21, d22, d37 and d38 (post heads), d23 and d26. In d38 the black triangle of round 3 is gone: the boards meet the soffit and the infill fills the head behind the post.
+
+**Stats (round_04/stats.json):**
+- 213,529 tris (round 3: 213,651);
+- hidden 13.3 % (round 3: 12.8 %; the boards now tuck into the deck);
+- 9 palette slots; no mesh is missing `Mask`;
+- 68 decal anchors;
+- bbox unchanged (16.09 x 8.79 x 9.27 m);
+- clearance PASS (cart 2.449 m clear, figure, the entry's eave lip 3.740 m, man door).
+
+Full build 268 s.
+
+**Kit:** `kit/changes/v6_barn.md`, "Round 4". **Hash rule:** not triggered; not run. With `infill_soffit=False` the infill clamp is `rake(s) - 0.004` and the backing uses `rake`, exactly the old values in the same rng order; v5 does not pass the option.
+
+**Renders:** `renders/variants/v6_barn/round_04/`, the six views at 24 samples.
+
+**Known gaps:**
+- The arch-to-leaf slit (133 grid rays, max 19 mm) is still open. It was the audit's should-fix and is out of this round's scope.
+- At the post head, a narrow strip of infill shows set back between the post / end post and the first full-height wall board. It is closed, not covered by a cover board (the director's nice-to-have 2).
+
+## v6_barn round 4 — sign-off audit: UPHELD
+
+Independent auditor. I read this log (the Brief, the CLIENT DIRECTIONs, the 22:05 CLIENT DECISION, the round-4 PRODUCER NOTE and the round-4 builder entry) and producer notes 12-17 in full before starting, and re-read the log before writing. Nothing was added after the round-4 builder entry. Read-only bpy on `buildings/variants/v6_barn/v6_barn.blend` (written 22:58:40), one process at a time. The round-3 scripts were re-run unchanged as `*_r04.py`. Scripts and outputs are in `renders/variants/v6_barn/round_04/audit/`.
+
+**Verdict: UPHELD.** The round-3 blocker, the post-head wedge, is closed on both sides from ground and 6 m. Nothing regressed against round 3. The kit change is a true defaults-off option, so the hash rule is not triggered. The director's 8.4 stands.
+
+**The blocker: closed** (the same interior-volume ray test as round 3)
+- **`aud_holes_r04.py`** (the round-3 target grid, x cart_x +-1.80..2.70, z 3.35-4.10):
+
+  | viewpoints | round 3 | round 4 |
+  |---|---|---|
+  | W, eye level 1.7 m (15 viewpoints, 2-6 m out) | 241 rays | **0** |
+  | E, eye level 1.7 m | 415 rays | **0** |
+  | W, 6 m (9 viewpoints) | 0 | **0** |
+  | E, 6 m | 0 | **0** |
+- **`aud_holes_wide_r04.py`** (a wider window: x +-1.60..3.40, z 2.90-4.40; 328,320 rays): **0** interior rays from all 24 eye-level and 6 m viewpoints, both sides. This window covers the moved `wall_top` cut and the first full-height wall boards beyond it, so the fix did not move the hole along the wall.
+- **`aud_seethru_r04.py close`** (all 46 shots at 640 x 360, `aud_seethru_close_out.txt`; red-ray images in `probe_img/`). **0 leaks** in every shot that leaked at the post heads in round 3:
+  - `W/E_post_head_close`: 849 / 1495 -> 0 / 0;
+  - `W/E_post_head_eye`: 11 / 150 -> 0 / 0;
+  - `E/W_post_head_eye_6m_out`: 730 / 493 -> 0 / 0;
+  - `E_post_head_eye_4m_out`: 714 -> 0.
+
+**Residual leaks: none at the post heads, and every one is the same as in round 3**
+- **`W/E_post_head_eye_far` (2 / 14) and `_6m` (9 / 21).** These are the same counts as round 3 (or fewer). They do not come from the post heads. `aud_slit_size_r04.py` traces every one of these 46 rays to the **meeting joint between the two cart leaves** (x 0.05-0.07, y -3.20, z 2.35-2.77). The aperture there is a median of 1-1.5 mm and a maximum of 4.9 mm. It is the hairline where the two leaves meet. It is under the 2 cm threshold, unchanged, and not a module junction.
+- **`arch_springing_W/E` (193 / 272), and ARCH / LEAF TOP: 133 grid rays** (median 4.3 mm, max 19.0 mm). This is the round-3 should-fix arch-to-leaf slit. It is unchanged and bit-for-bit the same counts. It is under 2 cm and out of the round-4 scope, as the PRODUCER NOTE set. It is still open: it is carried to the kit polish list (`cruck.arched_doors`).
+- **Leaks that end on dark rooms behind designed openings** (`*blocker*`): `eyelid_6m` 341, `loft_hoist` 49,361 / `_6m` 26,205, `man_door_E` 185 and `back_eye` 232. These are identical to round 3.
+- **Small leaks that end on the ground**: `W_leaf_post_d39` 13 and `W_leaf_post_eye` 39 are identical to round 3. The LEAF EDGE / POST grid is 0 of 59,850 rays.
+- **Every other shot** has the same LEAK / VOID counts as round 3. That covers the apexes, corners, eyelid fades, arch crown, pads and ridge. The VOID specks are back-face hits from looking into hollow or single-sided parts, as before.
+
+**Checked and passing**
+
+| item | evidence | result |
+|---|---|---|
+| triangles | 213,529 evaluated (`aud_probe_r04_out.txt`) = `stats.json` (round 3: 213,651) | PASS (cap 1,000,000) |
+| palette | 9 slots, all in the shared palette, no empty slot | PASS (<= 15) |
+| hidden | 12.9 % independent (`tools/hidden_tris.py`, `aud_hidden.json`) vs 13.3 % reported | PASS (cap 15 %) |
+| `Mask` | on all 42 meshes (CORNER, active) | PASS |
+| transforms | identity, except the 14 pooled `BARN_pintle_*` instances (by design, as in round 3) | PASS |
+| what changed | per-object tris and bbox vs round 3: only **3 of 42** objects differ, `BARN_walls_boards` (22,702 -> 22,596), `BARN_cart_entry_boards` (414 -> 338; top 4.06 -> 4.072) and `BARN_cart_entry_blocker` (1,204 -> 1,264; top 4.066 -> 4.088). Every other object has the same tri count and bbox. | the change is local to the wedge |
+| decal anchors | 68 empties = 68 json entries, names equal, all props present; 0 with no surface within 20 cm behind them; 0 buried; types, heights and surfaces as in round 3 | PASS |
+| cart-entry clearance (measured on the mesh) | 3.60 m clear to the springing; **2.446 m at 2.8 m**; crown 3.256 m; 0 non-door hits inside the centred 2.4 x 2.8 m envelope; lowest eave / soffit over the doorway **3.748 m** | PASS (>= 2.30) |
+| man door | head 3.008 m; the gate line in `build.log` passes | PASS |
+| floating pieces | 1,287 islands; 0 whose 2 cm-inflated box touches nothing; the hoist pieces sit 1.8 / 4.2 cm from the frame, as in round 3 | PASS |
+| clipping | leaf / pad: the same 5.8 cm behind the post's inner face as round 3, not visible (the round-3 construction nit) | no new clipping |
+| **hash rule** | `cruck.py` diffed against the last commit (`8bef8d7`, extracted from the raw .git store with `aud_gitshow.py`; `git_blobs/`). The only changes are: the new `infill_soffit=False` parameter, a new local `rake_w`, and `if infill_soffit:` branches whose `else` keeps the old expressions exactly (`rake(s) - 0.004` for the board clamp, `hi` unchanged, `rake` for the backing `keep` / clamp). The `wj` rng draw was already there, so no draw was added or moved. The `wall_top` change is in the barn recipe only. | not triggered: no existing default changed; v5 does not pass the option |
+| village theme (notes 16 / 17) | the massing, the round-arched cruck entry, the eyelid, the rolled verges and the materials are all unchanged (`front.png`, d38). The fix uses the same boards and backing that run up to the soffit. | PASS (as graded) |
+| new parts are kit modules | `cruck_frame(infill_soffit=)` is a reusable, defaults-off option. Any cruck frame under an eave lift can use it. | PASS |
+
+**Observation (not the barn's, not blocking).** `linear_roof.py` (22:56) and `guards.py` (22:57) changed after the last commit. This is the add-on track's kit 1.19 work (`deck_clip`, `apex_ends`, `register_junction(arc=)`), and on inspection all three are defaults-off. The barn uses none of them. Its `build.log` run started before those edits and its geometry matches round 3 outside the three objects above. The add-on track's own hash rule covers them.
+
+**Carried to the kit polish list (unchanged, not blocking):**
+- the arch-to-leaf slit (`cruck.arched_doors`, max 19 mm);
+- the leaf meeting-joint hairline (max 4.9 mm);
+- the director's round-3 nice-to-haves 1-6;
+- the inside-out `RUBBLE_LARGE` hero stones under the east gable (the same 93 back-face rays as round 3; also in v5).
+
+## PRODUCER NOTE (2026-10-17, session 2): barn ACCEPTED at round 4
+
+Director 8.4 (round 3) stands; the round-4 audit upheld the quick fix (0 interior rays at the post heads). 213,529 tris, 13.3 % hidden. Deliverable: `buildings/variants/v6_barn/`.

@@ -18,6 +18,8 @@ Built centred on the plan (x along the ridge, the front long side at y = Y0, gro
          the jamb posts stand on PROUD dressed pads (cruck_frame pad_top); the arch is 4.2 m clear (opening 3.60 m,
          R 1.87) and gated: cruck_frame(gate=...) checks a 2.4 x 2.8 m cart and the 1.8 m figure inside the intrados
          and publishes the entry to the kit's eave-lip clearance gate
+  r4     the post heads under the eyelid are closed: the frame's infill and backing rise to the soffit over their own
+         plane (cruck_frame infill_soffit) and the front walls' boards run up to the soffit right from the end posts
   doors  a man door with steps in the east gable, a hayloft door high in the west gable under a hoist beam, small
          shuttered windows and slits
 """
@@ -70,10 +72,12 @@ ROOF_TOP = roof_top_fn(ROOF)
 
 
 def wall_top(x, y):
-    """the walls' heads: 2 cm into the soft roof deck; over the cruck frame's width (front wall) they stop at the
-    tie beam's bearing, where the frame's plank infill takes over (as the harbour house's piers)."""
+    """the walls' heads: 2 cm into the soft roof deck; at the front runs' open ends (the end posts inside the cruck's
+    jamb posts) they stop at the tie beam's bearing, where the frame's plank infill takes over (as the harbour house's
+    piers).  round 4: the cut stops at the end post (it used to run on to frame_half + 2 cm, past the infill's real
+    edge, and the first boards' heads sloped down to the tie under the eyelid soffit: the open post-head wedge)."""
     z = ROOF_TOP(x, y)
-    if y < Y0 + 0.30 and abs(x - DIM["cart_x"]) < DIM["frame_half"] + 0.02:
+    if y < Y0 + 0.30 and abs(x - DIM["cart_x"]) < DIM["end"] + 0.10:
         return min(z, DIM["z_tie"])
     return z
 
@@ -88,7 +92,7 @@ def steps():
                            half=DIM["frame_half"], top_fn=ROOF_TOP, z_pier=DIM["z_tie"], clear=DIM["clear"],
                            spring=DIM["spring"], tie=0.26, member_w=(-0.28, 0.02), post=0.26, arch_t=DIM["arch_t"],
                            blade=0.22, collar_at=0.45, collar=0.14, braces=False, king_strut=False, seed=901,
-                           pad_top=DIM["pad_top"], gate=CART_GATE)),
+                           pad_top=DIM["pad_top"], gate=CART_GATE, infill_soffit=True)),   # r4: infill to the soffit
         (arched_doors, dict(name="cart_doors", seed=911)),
         (linear_roof, dict(roof=ROOF, covering="thatch", seed=71, ridge_caps=True, verge_apex=True,
                            apex_finial="turned", verge_roll=dict(apex_bend=0.22, bend_over=0.12),

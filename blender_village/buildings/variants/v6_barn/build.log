@@ -4,10 +4,10 @@
 [    0.5s]   BARN_plinth: stones 275 (hero 45, pins 40)
 [    1.3s]   BARN_plinth_stones: 28029 verts, 25892 faces
 [    1.3s]   BARN_plinth_quoins: 492 verts, 480 faces
-[    1.3s]   BARN_plinth_mortar: 500 verts, 372 faces
-[    1.3s]   BARN_plinth: mortar cells 372
-[    1.3s] -- path_timber_wall
-[    4.6s]   BARN_walls_frame: 1576 verts, 1536 faces
+[    1.4s]   BARN_plinth_mortar: 500 verts, 372 faces
+[    1.4s]   BARN_plinth: mortar cells 372
+[    1.4s] -- path_timber_wall
+[    4.7s]   BARN_walls_frame: 1576 verts, 1536 faces
 [    4.9s]   BARN_walls_boards: 26624 verts, 23856 faces
 [    4.9s]   BARN_walls_blocker: 1000 verts, 1012 faces
 [    5.0s]   BARN_walls_frames: 9224 verts, 9146 faces
@@ -18,7 +18,7 @@
 [    5.0s] -- cruck_frame
 [    5.5s]   BARN_cart_entry_frame: 868 verts, 847 faces
 [    5.5s]   BARN_cart_entry_boards: 1768 verts, 1530 faces
-[    5.5s]   BARN_cart_entry_blocker: 606 verts, 610 faces
+[    5.5s]   BARN_cart_entry_blocker: 636 verts, 636 faces
 [    5.5s]   BARN_cart_entry_pads: 96 verts, 80 faces
 [    5.5s]   BARN_cart_entry: cruck / arched-brace frame: clear 4.20 m, arch 1.90 -> 3.26 m (R 1.87), tie 3.52-3.78 over +-1.89, collar 3.91, apex 4.07, 34 infill boards
 [    5.5s]   clearance gate BARN cart_entry arch: cart envelope 2.40 x 2.80 m -> clear width 2.449 m at its head (arch crown 3.26 m): PASS
@@ -32,83 +32,83 @@
 [    5.5s] -- linear_roof
 [    5.6s]   BARN_barn_roof_deck: 4840 verts, 4750 faces
 [    5.6s]   barn_roof rafters: 13 tails dropped under the eave lift (> 0.08 m)
-[    5.7s]   BARN_barn_roof_rafters: 2072 verts, 1998 faces
-[    6.3s]   BARN_barn_roof_covering: 41679 verts, 37775 faces
+[    5.6s]   BARN_barn_roof_rafters: 2072 verts, 1998 faces
+[    6.2s]   BARN_barn_roof_covering: 41679 verts, 37775 faces
 [    6.7s]   BARN_barn_roof_eave_roll: 18584 verts, 17700 faces
 [    6.7s]   BARN_barn_roof: 40 continuous thatch courses + eave rolls + verge faces
-[    6.8s]   BARN_barn_roof_ridge: 1924 verts, 1868 faces
-[    7.0s]   BARN_barn_roof_comb: 13260 verts, 12740 faces
-[    7.0s]   BARN_barn_roof_apex_cap_collar: 338 verts, 338 faces
-[    7.0s]   BARN_barn_roof_apex_finial: 1442 verts, 1442 faces
-[    7.0s]   BARN_barn_roof: apex finials on 2 gable(s), tips 9.18, 9.22
-[    7.0s] -- hoist_beam
+[    6.7s]   BARN_barn_roof_ridge: 1924 verts, 1868 faces
+[    6.9s]   BARN_barn_roof_comb: 13260 verts, 12740 faces
+[    6.9s]   BARN_barn_roof_apex_cap_collar: 338 verts, 338 faces
+[    6.9s]   BARN_barn_roof_apex_finial: 1442 verts, 1442 faces
+[    6.9s]   BARN_barn_roof: apex finials on 2 gable(s), tips 9.18, 9.22
+[    6.9s] -- hoist_beam
 [    7.0s]   BARN_hoist_frame: 362 verts, 350 faces
 [    7.0s]   BARN_hoist_ironwork: 120 verts, 108 faces
 [    7.0s]   BARN_hoist: hoist beam 1.10 m out at z 6.30
 [    7.0s] -- composite_hidden_cull
-[    7.2s]   visibility: 297751 tris, 279 viewpoints
-[   26.9s]   visibility cull BARN_plinth_stones: -2433 of 25892 polygons
-[   27.9s]   visibility cull BARN_plinth_quoins: -173 of 480 polygons
-[   33.0s]   visibility cull BARN_walls_frame: -787 of 1536 polygons
-[  117.3s]   visibility cull BARN_walls_boards: -12505 of 23856 polygons
-[  136.3s]   visibility cull BARN_walls_frames: -2920 of 9146 polygons
-[  136.9s]   visibility cull BARN_walls_dressed: -120 of 234 polygons
-[  138.6s]   visibility cull BARN_walls_ironwork: -203 of 1762 polygons
-[  141.3s]   visibility cull BARN_cart_entry_frame: -428 of 847 polygons
-[  149.3s]   visibility cull BARN_cart_entry_boards: -1323 of 1530 polygons
-[  152.2s]   visibility cull BARN_cart_doors_leaves: -447 of 1188 polygons
-[  152.8s]   visibility cull BARN_cart_doors_ledges: -80 of 312 polygons
-[  158.6s]   visibility cull BARN_cart_doors_backing: -1123 of 1388 polygons
-[  159.0s]   visibility cull BARN_cart_doors_ironwork: -42 of 264 polygons
-[  165.0s]   visibility cull BARN_barn_roof_rafters: -889 of 1998 polygons
-[  207.8s]   visibility cull BARN_barn_roof_covering: -8804 of 37775 polygons
-[  222.8s]   visibility cull BARN_barn_roof_eave_roll: -2881 of 17700 polygons
-[  224.9s]   visibility cull BARN_barn_roof_ridge: -424 of 1868 polygons
-[  261.7s]   visibility cull BARN_barn_roof_comb: -7464 of 12740 polygons
-[  262.4s]   visibility cull BARN_hoist_frame: -77 of 350 polygons
-[  262.4s] hidden-geometry cull: -43123 polygons on 19 objects
-[  262.4s] -- recenter
-[  262.4s] recentred by (+0.058, +0.001); plan bbox 16.09 x 8.79 m, height 9.22 m
-[  262.4s] -- guards
-[  262.6s]   clearance gate BARN walls_1: door head 2.58 m, eave lip over it 5.034 m at (7.383, -1.799) on BARN_barn_roof_rafters (rule >= 2.58 m, 25 stations): PASS
-[  262.6s]   clearance gate BARN cart_entry_arch: door head 3.26 m, eave lip over it 3.740 m at (1.858, -3.899) on BARN_barn_roof_deck (rule >= 3.26 m, 25 stations): PASS
-[  262.8s] composite decals: 39 anchors before the gate
-[  262.9s] timber anchors: 53
-[  263.2s] decal anchor check (applied): checked 92, snapped 4, max_move 0.020, renormal 9, shrunk 11, no_surface 2, wrong_surface 1, excluded 9, occluded 0, footprint 11, duplicate 1, kept 68
-[  263.2s]     DA_damp_rise_001: on backing mesh BARN_plinth_mortar
-[  263.2s]     DA_damp_rise_002: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', '-']
-[  263.2s]     DA_damp_rise_003: on backing mesh BARN_plinth_mortar
-[  263.2s]     DA_damp_rise_004: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', 'BARN_walls']
-[  263.2s]     DA_damp_rise_005: on backing mesh BARN_plinth_mortar
-[  263.2s]     DA_moss_001: on backing mesh BARN_plinth_mortar
-[  263.2s]     DA_moss_002: footprint off the surface (n.n0 0.79) ['BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_walls', 'BARN_walls']
-[  263.2s]     DA_moss_003: on backing mesh BARN_plinth_mortar
-[  263.2s]     DA_moss_004: on backing mesh BARN_plinth_mortar
-[  263.2s]     DA_moss_005: on backing mesh BARN_plinth_mortar
-[  263.2s]     DA_damp_rise_006: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls']
-[  263.2s]     DA_damp_rise_007: hit M_timber (BARN_walls_frame), declared M_stone
-[  263.2s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls', '-', '-', '-']
-[  263.2s]     DA_damp_rise_009: on backing mesh BARN_plinth_mortar
-[  263.2s]     DA_lichen_002: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint']
-[  263.2s]     DA_lichen_004: within 0.30 m of another lichen
-[  263.2s]     DA_moss_018: footprint off the surface (shingles)
-[  263.2s]     DA_damp_rise_017: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', '-']
-[  263.2s]     DA_damp_rise_022: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls']
-[  263.2s]     DA_damp_rise_024: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', '-']
-[  263.2s]     DA_repair_patch_004: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls']
-[  263.2s]     DA_water_streak_008: on backing mesh BARN_walls_blocker
-[  263.2s]     DA_water_streak_010: no surface within 6 cm
-[  263.2s]     DA_water_streak_011: no surface within 6 cm
-[  263.2s] decal anchors: 68
-[  263.4s] uv grain (kit 1.10.0): 30 meshes, 924 timber / shingle pieces (69 round, 43 sloped sheets), 33814 grain faces re-projected, 289 collapsed faces repaired
-[  263.5s]   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_doors_ironwork: 24 faces
-[  263.5s]   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_doors_ledges: 30 faces
-[  263.5s]   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_entry_pads: 12 faces
-[  263.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_blocker: 3 faces
-[  263.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_blockers: 1 faces
-[  263.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_dressed: 21 faces
-[  263.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_frame: 2 faces
-[  263.5s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_ironwork: 41 faces
-[  263.5s] objects 42 (instances 14, pooled meshes 2) triangles 213651
+[    7.1s]   visibility: 297811 tris, 279 viewpoints
+[   27.0s]   visibility cull BARN_plinth_stones: -2433 of 25892 polygons
+[   28.0s]   visibility cull BARN_plinth_quoins: -173 of 480 polygons
+[   33.2s]   visibility cull BARN_walls_frame: -787 of 1536 polygons
+[  118.7s]   visibility cull BARN_walls_boards: -12558 of 23856 polygons
+[  137.9s]   visibility cull BARN_walls_frames: -2920 of 9146 polygons
+[  138.6s]   visibility cull BARN_walls_dressed: -120 of 234 polygons
+[  140.3s]   visibility cull BARN_walls_ironwork: -203 of 1762 polygons
+[  143.0s]   visibility cull BARN_cart_entry_frame: -428 of 847 polygons
+[  151.2s]   visibility cull BARN_cart_entry_boards: -1361 of 1530 polygons
+[  154.1s]   visibility cull BARN_cart_doors_leaves: -447 of 1188 polygons
+[  154.6s]   visibility cull BARN_cart_doors_ledges: -80 of 312 polygons
+[  160.7s]   visibility cull BARN_cart_doors_backing: -1123 of 1388 polygons
+[  161.1s]   visibility cull BARN_cart_doors_ironwork: -42 of 264 polygons
+[  167.2s]   visibility cull BARN_barn_roof_rafters: -889 of 1998 polygons
+[  210.3s]   visibility cull BARN_barn_roof_covering: -8804 of 37775 polygons
+[  225.5s]   visibility cull BARN_barn_roof_eave_roll: -2881 of 17700 polygons
+[  227.7s]   visibility cull BARN_barn_roof_ridge: -424 of 1868 polygons
+[  264.8s]   visibility cull BARN_barn_roof_comb: -7464 of 12740 polygons
+[  265.6s]   visibility cull BARN_hoist_frame: -77 of 350 polygons
+[  265.6s] hidden-geometry cull: -43214 polygons on 19 objects
+[  265.6s] -- recenter
+[  265.6s] recentred by (+0.058, +0.001); plan bbox 16.09 x 8.79 m, height 9.22 m
+[  265.6s] -- guards
+[  265.7s]   clearance gate BARN walls_1: door head 2.58 m, eave lip over it 5.034 m at (7.383, -1.799) on BARN_barn_roof_rafters (rule >= 2.58 m, 25 stations): PASS
+[  265.7s]   clearance gate BARN cart_entry_arch: door head 3.26 m, eave lip over it 3.740 m at (1.858, -3.899) on BARN_barn_roof_deck (rule >= 3.26 m, 25 stations): PASS
+[  265.9s] composite decals: 39 anchors before the gate
+[  266.1s] timber anchors: 53
+[  266.3s] decal anchor check (applied): checked 92, snapped 4, max_move 0.020, renormal 9, shrunk 11, no_surface 2, wrong_surface 1, excluded 9, occluded 0, footprint 11, duplicate 1, kept 68
+[  266.3s]     DA_damp_rise_001: on backing mesh BARN_plinth_mortar
+[  266.3s]     DA_damp_rise_002: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', '-']
+[  266.3s]     DA_damp_rise_003: on backing mesh BARN_plinth_mortar
+[  266.3s]     DA_damp_rise_004: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', 'BARN_walls']
+[  266.3s]     DA_damp_rise_005: on backing mesh BARN_plinth_mortar
+[  266.3s]     DA_moss_001: on backing mesh BARN_plinth_mortar
+[  266.3s]     DA_moss_002: footprint off the surface (n.n0 0.79) ['BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_plint', '-', 'BARN_plint', 'BARN_walls', 'BARN_walls']
+[  266.3s]     DA_moss_003: on backing mesh BARN_plinth_mortar
+[  266.3s]     DA_moss_004: on backing mesh BARN_plinth_mortar
+[  266.3s]     DA_moss_005: on backing mesh BARN_plinth_mortar
+[  266.3s]     DA_damp_rise_006: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls']
+[  266.3s]     DA_damp_rise_007: hit M_timber (BARN_walls_frame), declared M_stone
+[  266.3s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', 'BARN_walls', 'BARN_plint', 'BARN_plint', 'BARN_walls', '-', '-', '-']
+[  266.3s]     DA_damp_rise_009: on backing mesh BARN_plinth_mortar
+[  266.3s]     DA_lichen_002: footprint off the surface (n.n0 1.00) ['BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint', 'BARN_plint']
+[  266.3s]     DA_lichen_004: within 0.30 m of another lichen
+[  266.3s]     DA_moss_018: footprint off the surface (shingles)
+[  266.3s]     DA_damp_rise_017: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', '-']
+[  266.3s]     DA_damp_rise_022: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls']
+[  266.3s]     DA_damp_rise_024: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', '-']
+[  266.3s]     DA_repair_patch_004: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls']
+[  266.3s]     DA_water_streak_008: on backing mesh BARN_walls_blocker
+[  266.3s]     DA_water_streak_010: no surface within 6 cm
+[  266.3s]     DA_water_streak_011: no surface within 6 cm
+[  266.3s] decal anchors: 68
+[  266.6s] uv grain (kit 1.10.0): 30 meshes, 924 timber / shingle pieces (69 round, 43 sloped sheets), 33749 grain faces re-projected, 285 collapsed faces repaired
+[  266.7s]   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_doors_ironwork: 24 faces
+[  266.7s]   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_doors_ledges: 30 faces
+[  266.7s]   walked tops (Mask B <= 0.04): cart_entry_arch -> BARN_cart_entry_pads: 12 faces
+[  266.7s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_blocker: 3 faces
+[  266.7s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_blockers: 1 faces
+[  266.7s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_dressed: 21 faces
+[  266.7s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_frame: 2 faces
+[  266.7s]   walked tops (Mask B <= 0.04): walls_1 -> BARN_walls_ironwork: 41 faces
+[  266.7s] objects 42 (instances 14, pooled meshes 2) triangles 213529
 Info: Saved as "v6_barn.blend"
-[  263.5s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend 5.2 MB
+[  266.7s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend 5.2 MB

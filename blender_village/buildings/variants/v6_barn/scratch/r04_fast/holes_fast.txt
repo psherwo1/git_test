@@ -1,0 +1,12 @@
+﻿00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r04_fast\r04_fast.blend"
+POST HEAD W eye 1.7 m: rays 45750, rays into the interior 0; per viewpoint {'eye_-3_2': 0, 'eye_-3_4': 0, 'eye_-3_6': 0, 'eye_-2_2': 0, 'eye_-2_4': 0, 'eye_-2_6': 0, 'eye_+0_2': 0, 'eye_+0_4': 0, 'eye_+0_6': 0, 'eye_+2_2': 0, 'eye_+2_4': 0, 'eye_+2_6': 0, 'eye_+3_2': 0, 'eye_+3_4': 0, 'eye_+3_6': 0}
+POST HEAD W 6 m: rays 27450, rays into the interior 0; per viewpoint {'6m_-3_4': 0, '6m_-3_6': 0, '6m_-3_9': 0, '6m_+0_4': 0, '6m_+0_6': 0, '6m_+0_9': 0, '6m_+3_4': 0, '6m_+3_6': 0, '6m_+3_9': 0}
+POST HEAD E eye 1.7 m: rays 45750, rays into the interior 0; per viewpoint {'eye_-3_2': 0, 'eye_-3_4': 0, 'eye_-3_6': 0, 'eye_-2_2': 0, 'eye_-2_4': 0, 'eye_-2_6': 0, 'eye_+0_2': 0, 'eye_+0_4': 0, 'eye_+0_6': 0, 'eye_+2_2': 0, 'eye_+2_4': 0, 'eye_+2_6': 0, 'eye_+3_2': 0, 'eye_+3_4': 0, 'eye_+3_6': 0}
+POST HEAD E 6 m: rays 27450, rays into the interior 0; per viewpoint {'6m_-3_4': 0, '6m_-3_6': 0, '6m_-3_9': 0, '6m_+0_4': 0, '6m_+0_6': 0, '6m_+0_9': 0, '6m_+3_4': 0, '6m_+3_6': 0, '6m_+3_9': 0}
+ARCH / LEAF TOP: rays 30240, rays into the interior 133; per viewpoint {'eye_-3_2': 17, 'eye_-3_4': 15, 'eye_-3_7': 6, 'eye_-2_2': 36, 'eye_-2_4': 1, 'eye_-2_7': 0, 'eye_+0_2': 4, 'eye_+0_4': 1, 'eye_+0_7': 0, 'eye_+2_2': 26, 'eye_+2_4': 2, 'eye_+2_7': 1, 'eye_+3_2': 15, 'eye_+3_4': 6, 'eye_+3_7': 2, '6m_-3_4': 1, '6m_-3_8': 0, '6m_+0_4': 0, '6m_+0_8': 0, '6m_+3_4': 0, '6m_+3_8': 0}
+   aperture (2 x narrowest clearance on the hole rays): median 4.3 mm, max 19.0 mm, p90 11.8 mm
+   pinch points bbox x -1.677..1.817  y -3.236..-3.174  z 2.080..2.951
+   widest pinch at [-1.584, -3.214, 2.308] bounded by [('BARN_cart_doors_leaves', (0.0, 1.0, 0.0), 0.015), ('BARN_cart_entry_frame', (0.0, -1.0, 0.0), 0.013)]
+LEAF EDGE / POST: rays 59850, rays into the interior 0; per viewpoint {'eye_-3_2': 0, 'eye_-3_4': 0, 'eye_-3_7': 0, 'eye_-2_2': 0, 'eye_-2_4': 0, 'eye_-2_7': 0, 'eye_+0_2': 0, 'eye_+0_4': 0, 'eye_+0_7': 0, 'eye_+2_2': 0, 'eye_+2_4': 0, 'eye_+2_7': 0, 'eye_+3_2': 0, 'eye_+3_4': 0, 'eye_+3_7': 0, '6m_-3_4': 0, '6m_-3_8': 0, '6m_+0_4': 0, '6m_+0_8': 0, '6m_+3_4': 0, '6m_+3_8': 0}
+PLINTH E gable delivered: tris in the zone 1049 (+x facing 357, -x facing 465); rays from +x: {'front': 44, 'back': 93, 'miss': 0, 'other': {'BARN_walls_dressed': 4, 'BARN_plinth_mortar': 12}}
+DONE

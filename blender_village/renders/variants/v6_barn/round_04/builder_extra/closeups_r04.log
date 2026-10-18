@@ -1,0 +1,37 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\director_extra\dir_render_r03.py:25: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:411
++ ... t=Get-Date; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\director_extra\dir_render_r03.py:35: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void = bpy.data.materials.new("_D_void"); void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\director_extra\dir_render_r03.py:53: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_D_world"); world.use_nodes = True
+00:00.610  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.953  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d21_W_post_head_under_eyelid.png'
+00:05.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d21_W_post_head_under_eyelid_void.png'
+DEVICE GPU
+SHOT d21_W_post_head_under_eyelid
+00:09.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d22_E_post_head_under_eyelid.png'
+00:10.094  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d22_E_post_head_under_eyelid_void.png'
+SHOT d22_E_post_head_under_eyelid
+00:14.235  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d37_W_post_head_notch_close.png'
+00:14.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d37_W_post_head_notch_close_void.png'
+SHOT d37_W_post_head_notch_close
+00:18.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d38_E_post_head_notch_close.png'
+00:19.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d38_E_post_head_notch_close_void.png'
+SHOT d38_E_post_head_notch_close
+00:23.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d23_arch_crown_tie_infill.png'
+00:24.110  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d23_arch_crown_tie_infill_void.png'
+SHOT d23_arch_crown_tie_infill
+00:28.141  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d26_eyelid_fade_E.png'
+00:28.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_04\builder_extra\d26_eyelid_fade_E_void.png'
+SHOT d26_eyelid_fade_E

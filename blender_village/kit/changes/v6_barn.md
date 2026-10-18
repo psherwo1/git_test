@@ -163,3 +163,26 @@ Not triggered; not run. No existing default changed:
 - The apex knot is two crossing sweeps, not one loop. Where the second roll's taper dies into the first, there is a soft seam line, under the lead hat's drip.
 - The gate's envelopes are centred. It does not model door leaves (they open inward behind the frame), the hub-height bulge of a real cart, or a figure walking beside a cart.
 - The arched cart doors' outer bottom corners stand 10 cm into the proud pads' inner nosing, behind the posts.
+
+## Round 4 (quick fix: the post-head wedge)
+
+The round-3 audit's one blocking issue only: the see-through wedge at both cruck post heads under the eyelid. One defaults-off option, after kit 1.12.0 (the producer assigns the version). `linear_roof.py` and `roof_junction.py` were not touched.
+
+**Cause** (measured on a FAST build, `buildings/variants/v6_barn/scratch/r04_fast/diag2_posthead.py`):
+- the frame's infill boards and backing rose to `top_fn` sampled over the frame plane (y -3.50). The eyelid soffit rises inward, so at their own depth (y -3.39 / -3.355) they stopped 3-5 cm under the soffit;
+- the recipe's `wall_top` cut ran to `frame_half + 0.02` (2.32 m), 3 cm past the infill's edge (2.29 m). So the first wall board beyond it sloped from the tie height (3.52) and stood about 8 cm under the soffit.
+
+### `components/cruck.py` (existing module: new option only)
+
+| change | default | what it does |
+|---|---|---|
+| `cruck_frame(infill_soffit=False)` (+ the local `rake_w(s, w)`) | `False` = the old frame | the plank infill boards and their backing rise to `top_fn` sampled over **their own inner face** (`O + s t + w n`), minus the same 4 mm / 8 mm as before, not over the frame plane. Under a soffit that rises inward, the tops now tuck about 2 cm into the deck at the boards' depth. The board layout, the skip test and every rng draw are unchanged; only the tops move up. |
+
+### Recipe-only changes
+
+- `infill_soffit=True` on the cart entry.
+- `wall_top`'s cut now ends at `end + 0.10` (2.00 m from the entry axis): only the front runs' open end posts (x 1.90-2.12) stop at the tie. The first boards (from x 2.12) run up to the soffit, lapping 17 cm in front of the infill's edge.
+
+### Hash rule (round 4)
+
+Not triggered; not run. With `infill_soffit=False`, `top_b(s)` is `rake(s) - 0.004` (the old clamp), `hi` is unchanged, and `rake_bk` is `rake` (the old backing `keep` / clamp). The rng draws are in the same order. So the default path makes the same calls with the same values. The harbour house does not pass the option.
