@@ -16,14 +16,14 @@
   "lichen",
   "grime"
  ],
- "count": 56,
+ "count": 57,
  "counts": {
-  "moss": 18,
+  "moss": 19,
   "repair_patch": 2,
-  "lichen": 12,
-  "damp_rise": 5,
-  "water_streak": 3,
-  "crack": 12,
+  "lichen": 14,
+  "damp_rise": 3,
+  "water_streak": 4,
+  "crack": 11,
   "rust_stain": 1,
   "soot": 3
  },
@@ -266,6 +266,32 @@
    "name": "DA_lichen_004",
    "type": "lichen",
    "position": [
+    6.21336,
+    0.26099,
+    1.93658
+   ],
+   "normal": [
+    0.12865,
+    0.9908,
+    0.04209
+   ],
+   "up": [
+    -0.00542,
+    -0.04174,
+    0.99911
+   ],
+   "size": [
+    0.3882,
+    0.301
+   ],
+   "surface": "M_stone",
+   "probability": 0.5,
+   "seed": 165964259
+  },
+  {
+   "name": "DA_lichen_005",
+   "type": "lichen",
+   "position": [
     6.64805,
     -0.30706,
     4.81579
@@ -315,6 +341,32 @@
    "seed": 1033735761
   },
   {
+   "name": "DA_damp_rise_003",
+   "type": "damp_rise",
+   "position": [
+    -0.96261,
+    2.9217,
+    0.32105
+   ],
+   "normal": [
+    -0.16698,
+    -0.95004,
+    0.2637
+   ],
+   "up": [
+    0.04565,
+    0.25972,
+    0.9646
+   ],
+   "size": [
+    0.9145,
+    0.4916
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 831843257
+  },
+  {
    "name": "DA_crack_001",
    "type": "crack",
    "position": [
@@ -333,12 +385,38 @@
     0.9831
    ],
    "size": [
-    0.1735,
-    0.3155
+    0.2039,
+    0.3707
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 90558178
+   "seed": 220236607
+  },
+  {
+   "name": "DA_water_streak_002",
+   "type": "water_streak",
+   "position": [
+    4.19957,
+    1.87321,
+    0.66776
+   ],
+   "normal": [
+    -0.03456,
+    0.99938,
+    0.00722
+   ],
+   "up": [
+    0.00025,
+    -0.00721,
+    0.99997
+   ],
+   "size": [
+    0.32,
+    0.6246
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 776444414
   },
   {
    "name": "DA_crack_002",
@@ -359,12 +437,12 @@
     0.95429
    ],
    "size": [
-    0.1696,
-    0.2713
+    0.1628,
+    0.2604
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 191167179
+   "seed": 324298695
   },
   {
    "name": "DA_crack_003",
@@ -385,12 +463,12 @@
     0.99627
    ],
    "size": [
-    0.19,
-    0.3455
+    0.1825,
+    0.3319
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 619859182
+   "seed": 46130044
   },
   {
    "name": "DA_crack_004",
@@ -411,12 +489,12 @@
     0.97705
    ],
    "size": [
-    0.184,
-    0.3345
+    0.2258,
+    0.4106
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 734843437
+   "seed": 56759352
   },
   {
    "name": "DA_crack_005",
@@ -437,46 +515,20 @@
     0.94436
    ],
    "size": [
-    0.1945,
-    0.3537
+    0.2465,
+    0.4481
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 574546253
+   "seed": 589981773
   },
   {
-   "name": "DA_crack_006",
-   "type": "crack",
-   "position": [
-    -6.02363,
-    0.69596,
-    1.99058
-   ],
-   "normal": [
-    -0.98945,
-    -0.00469,
-    0.14479
-   ],
-   "up": [
-    0.14479,
-    0.00069,
-    0.98946
-   ],
-   "size": [
-    0.2097,
-    0.3813
-   ],
-   "surface": "M_stone",
-   "probability": 0.55,
-   "seed": 490681315
-  },
-  {
-   "name": "DA_water_streak_002",
+   "name": "DA_water_streak_003",
    "type": "water_streak",
    "position": [
-    -6.01917,
-    0.15531,
-    0.58112
+    -6.02089,
+    0.15523,
+    0.614
    ],
    "normal": [
     -0.99791,
@@ -489,15 +541,15 @@
     0.99906
    ],
    "size": [
-    0.32,
-    0.7982
+    0.24,
+    0.5495
    ],
    "surface": "M_stone",
    "probability": 0.6,
-   "seed": 46130044
+   "seed": 976448058
   },
   {
-   "name": "DA_crack_007",
+   "name": "DA_crack_006",
    "type": "crack",
    "position": [
     -6.01371,
@@ -515,20 +567,20 @@
     0.99587
    ],
    "size": [
-    0.2053,
-    0.3285
+    0.17,
+    0.272
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 56759352
+   "seed": 121318565
   },
   {
    "name": "DA_rust_stain_001",
    "type": "rust_stain",
    "position": [
     -3.20031,
-    -3.07863,
-    1.63039
+    -3.07864,
+    1.63745
    ],
    "normal": [
     -0.04381,
@@ -542,14 +594,14 @@
    ],
    "size": [
     0.08,
-    0.3593
+    0.3451
    ],
    "surface": "M_timber_weathered",
    "probability": 0.7,
-   "seed": 21519930
+   "seed": 359835404
   },
   {
-   "name": "DA_lichen_005",
+   "name": "DA_lichen_006",
    "type": "lichen",
    "position": [
     -4.07035,
@@ -572,10 +624,10 @@
    ],
    "surface": "M_stone",
    "probability": 0.6,
-   "seed": 976448058
+   "seed": 1020020904
   },
   {
-   "name": "DA_lichen_006",
+   "name": "DA_lichen_007",
    "type": "lichen",
    "position": [
     -1.12918,
@@ -598,10 +650,10 @@
    ],
    "surface": "M_stone",
    "probability": 0.6,
-   "seed": 478361154
+   "seed": 364431977
   },
   {
-   "name": "DA_crack_008",
+   "name": "DA_crack_007",
    "type": "crack",
    "position": [
     1.18995,
@@ -619,15 +671,15 @@
     0.99993
    ],
    "size": [
-    0.1788,
-    0.3251
+    0.2256,
+    0.4102
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 616753640
+   "seed": 718024191
   },
   {
-   "name": "DA_crack_009",
+   "name": "DA_crack_008",
    "type": "crack",
    "position": [
     0.01021,
@@ -645,15 +697,15 @@
     0.9999
    ],
    "size": [
-    0.1524,
-    0.2772
+    0.1739,
+    0.3162
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 487448409
+   "seed": 255379987
   },
   {
-   "name": "DA_crack_010",
+   "name": "DA_crack_009",
    "type": "crack",
    "position": [
     4.73992,
@@ -671,15 +723,15 @@
     0.99999
    ],
    "size": [
-    0.1382,
-    0.2513
+    0.2214,
+    0.4026
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 194567150
+   "seed": 300772414
   },
   {
-   "name": "DA_crack_011",
+   "name": "DA_crack_010",
    "type": "crack",
    "position": [
     3.65969,
@@ -697,20 +749,20 @@
     0.9994
    ],
    "size": [
-    0.2243,
-    0.4077
+    0.146,
+    0.2655
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 1060061769
+   "seed": 168725117
   },
   {
-   "name": "DA_water_streak_003",
+   "name": "DA_water_streak_004",
    "type": "water_streak",
    "position": [
-    4.20007,
-    -3.1564,
-    0.61221
+    4.20008,
+    -3.15637,
+    0.63327
    ],
    "normal": [
     -0.18529,
@@ -723,15 +775,15 @@
     0.99976
    ],
    "size": [
-    0.24,
-    0.5516
+    0.32,
+    0.6933
    ],
    "surface": "M_stone",
    "probability": 0.6,
-   "seed": 718024191
+   "seed": 158294987
   },
   {
-   "name": "DA_crack_012",
+   "name": "DA_crack_011",
    "type": "crack",
    "position": [
     4.6497,
@@ -749,15 +801,15 @@
     0.99875
    ],
    "size": [
-    0.2108,
-    0.3373
+    0.1894,
+    0.3031
    ],
    "surface": "M_stone",
    "probability": 0.55,
-   "seed": 255379987
+   "seed": 65326998
   },
   {
-   "name": "DA_lichen_007",
+   "name": "DA_lichen_008",
    "type": "lichen",
    "position": [
     6.05984,
@@ -775,15 +827,15 @@
     0.00721
    ],
    "size": [
-    0.2399,
-    0.1439
+    0.2137,
+    0.1282
    ],
    "surface": "M_stone",
    "probability": 0.523,
-   "seed": 158294987
+   "seed": 395788986
   },
   {
-   "name": "DA_lichen_008",
+   "name": "DA_lichen_009",
    "type": "lichen",
    "position": [
     -1.89981,
@@ -801,15 +853,41 @@
     0.06263
    ],
    "size": [
-    0.1617,
-    0.097
+    0.1574,
+    0.0944
    ],
    "surface": "M_stone",
    "probability": 0.678,
-   "seed": 478179133
+   "seed": 228043663
   },
   {
-   "name": "DA_lichen_009",
+   "name": "DA_lichen_010",
+   "type": "lichen",
+   "position": [
+    -4.20042,
+    1.91598,
+    0.38639
+   ],
+   "normal": [
+    -0.06538,
+    0.0,
+    0.99786
+   ],
+   "up": [
+    -0.90753,
+    0.41576,
+    -0.05946
+   ],
+   "size": [
+    0.1739,
+    0.1043
+   ],
+   "surface": "M_stone",
+   "probability": 0.604,
+   "seed": 517139545
+  },
+  {
+   "name": "DA_lichen_011",
    "type": "lichen",
    "position": [
     -6.06016,
@@ -827,64 +905,64 @@
     -0.01579
    ],
    "size": [
-    0.2193,
-    0.1316
+    0.2722,
+    0.1633
    ],
    "surface": "M_stone",
    "probability": 0.5,
-   "seed": 496887932
+   "seed": 162267811
   },
   {
-   "name": "DA_lichen_010",
+   "name": "DA_lichen_012",
    "type": "lichen",
    "position": [
-    -3.46016,
-    2.45543,
-    0.19032
+    -3.30769,
+    2.04573,
+    0.21821
    ],
    "normal": [
-    0.0,
-    -0.13856,
-    0.99035
+    0.01828,
+    0.27525,
+    0.9612
    ],
    "up": [
-    -0.8181,
-    0.56953,
-    0.07968
+    -0.86018,
+    0.49438,
+    -0.12521
    ],
    "size": [
-    0.1626,
-    0.0976
+    0.2874,
+    0.1724
    ],
    "surface": "M_stone",
-   "probability": 0.645,
-   "seed": 271808627
+   "probability": 0.631,
+   "seed": 777099871
   },
   {
-   "name": "DA_lichen_011",
+   "name": "DA_lichen_013",
    "type": "lichen",
    "position": [
-    1.06208,
-    2.95656,
-    0.207
+    -1.92972,
+    2.84145,
+    0.3005
    ],
    "normal": [
-    0.56024,
-    0.14425,
-    0.81567
+    -0.25734,
+    -0.50085,
+    0.82639
    ],
    "up": [
-    0.16441,
-    0.94576,
-    -0.28019
+    -0.65518,
+    0.71905,
+    0.23177
    ],
    "size": [
-    0.2835,
-    0.1701
+    0.2011,
+    0.1207
    ],
    "surface": "M_stone",
-   "probability": 0.735,
-   "seed": 326032373
+   "probability": 0.707,
+   "seed": 913823105
   },
   {
    "name": "DA_moss_003",
@@ -905,12 +983,12 @@
     0.71934
    ],
    "size": [
-    0.6369,
-    0.4484
+    0.6527,
+    0.4093
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 698394374
+   "seed": 8358722
   },
   {
    "name": "DA_moss_004",
@@ -931,12 +1009,12 @@
     0.71934
    ],
    "size": [
-    0.6228,
-    0.4968
+    0.6086,
+    0.4362
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 517139545
+   "seed": 210711159
   },
   {
    "name": "DA_moss_005",
@@ -957,12 +1035,12 @@
     0.71934
    ],
    "size": [
-    0.5858,
-    0.618
+    0.7056,
+    0.4875
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 777099871
+   "seed": 1065594343
   },
   {
    "name": "DA_moss_006",
@@ -983,15 +1061,41 @@
     0.71934
    ],
    "size": [
-    0.5396,
-    0.6888
+    0.7216,
+    0.6084
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 679328153
+   "seed": 648264681
   },
   {
    "name": "DA_moss_007",
+   "type": "moss",
+   "position": [
+    -0.93921,
+    1.96153,
+    4.03289
+   ],
+   "normal": [
+    0.0,
+    0.71934,
+    0.69466
+   ],
+   "up": [
+    0.0,
+    -0.69466,
+    0.71934
+   ],
+   "size": [
+    0.6433,
+    0.5005
+   ],
+   "surface": "M_thatch",
+   "probability": 0.75,
+   "seed": 277259475
+  },
+  {
+   "name": "DA_moss_008",
    "type": "moss",
    "position": [
     -0.93921,
@@ -1009,15 +1113,15 @@
     0.71934
    ],
    "size": [
-    0.886,
-    0.4137
+    0.6806,
+    0.5754
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 342345649
+   "seed": 971690769
   },
   {
-   "name": "DA_moss_008",
+   "name": "DA_moss_009",
    "type": "moss",
    "position": [
     0.66079,
@@ -1035,15 +1139,15 @@
     0.71934
    ],
    "size": [
-    0.7336,
-    0.6021
+    0.8834,
+    0.5262
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 955059469
+   "seed": 345931423
   },
   {
-   "name": "DA_moss_009",
+   "name": "DA_moss_010",
    "type": "moss",
    "position": [
     0.66079,
@@ -1061,15 +1165,15 @@
     0.71934
    ],
    "size": [
-    0.569,
-    0.5776
+    0.5885,
+    0.5399
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 1052146026
+   "seed": 672043835
   },
   {
-   "name": "DA_moss_010",
+   "name": "DA_moss_011",
    "type": "moss",
    "position": [
     2.26079,
@@ -1087,15 +1191,15 @@
     0.71934
    ],
    "size": [
-    0.586,
-    0.5327
+    0.8465,
+    0.5465
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 167158652
+   "seed": 288188153
   },
   {
-   "name": "DA_moss_011",
+   "name": "DA_moss_012",
    "type": "moss",
    "position": [
     2.26079,
@@ -1113,15 +1217,15 @@
     0.71934
    ],
    "size": [
-    0.7584,
-    0.6709
+    0.8379,
+    0.4174
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 199343592
+   "seed": 33106089
   },
   {
-   "name": "DA_moss_012",
+   "name": "DA_moss_013",
    "type": "moss",
    "position": [
     3.86079,
@@ -1139,15 +1243,15 @@
     0.71934
    ],
    "size": [
-    0.8293,
-    0.5232
+    0.7422,
+    0.6718
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 216996510
+   "seed": 931710957
   },
   {
-   "name": "DA_moss_013",
+   "name": "DA_moss_014",
    "type": "moss",
    "position": [
     -2.80016,
@@ -1165,15 +1269,15 @@
     0.22495
    ],
    "size": [
-    0.7025,
-    0.5379
+    0.8379,
+    0.4031
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 406782731
+   "seed": 332815783
   },
   {
-   "name": "DA_moss_014",
+   "name": "DA_moss_015",
    "type": "moss",
    "position": [
     -2.80016,
@@ -1191,15 +1295,15 @@
     0.22495
    ],
    "size": [
-    0.8514,
-    0.5455
+    0.8291,
+    0.5439
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 924382988
+   "seed": 390055349
   },
   {
-   "name": "DA_moss_015",
+   "name": "DA_moss_016",
    "type": "moss",
    "position": [
     -1.20016,
@@ -1217,15 +1321,15 @@
     0.22495
    ],
    "size": [
-    0.5104,
-    0.5018
+    0.6348,
+    0.4244
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 163650037
+   "seed": 476015828
   },
   {
-   "name": "DA_moss_016",
+   "name": "DA_moss_017",
    "type": "moss",
    "position": [
     -1.20016,
@@ -1243,15 +1347,15 @@
     0.22495
    ],
    "size": [
-    0.6221,
-    0.6915
+    0.851,
+    0.4923
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 459859738
+   "seed": 540596562
   },
   {
-   "name": "DA_moss_017",
+   "name": "DA_moss_018",
    "type": "moss",
    "position": [
     0.39984,
@@ -1269,15 +1373,15 @@
     0.22495
    ],
    "size": [
-    0.6146,
-    0.5658
+    0.7289,
+    0.6369
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 477210832
+   "seed": 691994452
   },
   {
-   "name": "DA_moss_018",
+   "name": "DA_moss_019",
    "type": "moss",
    "position": [
     0.39984,
@@ -1295,90 +1399,12 @@
     0.22495
    ],
    "size": [
-    0.8311,
-    0.4673
+    0.7462,
+    0.4982
    ],
    "surface": "M_thatch",
    "probability": 0.75,
-   "seed": 139115692
-  },
-  {
-   "name": "DA_damp_rise_003",
-   "type": "damp_rise",
-   "position": [
-    -6.0481,
-    0.91789,
-    2.44
-   ],
-   "normal": [
-    -1.0,
-    0.0,
-    0.0
-   ],
-   "up": [
-    0.0,
-    0.0,
-    1.0
-   ],
-   "size": [
-    0.8623,
-    0.3903
-   ],
-   "surface": "M_timber_weathered",
-   "probability": 0.55,
-   "seed": 245277273
-  },
-  {
-   "name": "DA_damp_rise_004",
-   "type": "damp_rise",
-   "position": [
-    6.02384,
-    -2.20592,
-    2.28
-   ],
-   "normal": [
-    1.0,
-    -0.0,
-    0.0
-   ],
-   "up": [
-    0.0,
-    0.0,
-    1.0
-   ],
-   "size": [
-    0.606,
-    0.2368
-   ],
-   "surface": "M_timber",
-   "probability": 0.55,
-   "seed": 163531938
-  },
-  {
-   "name": "DA_damp_rise_005",
-   "type": "damp_rise",
-   "position": [
-    6.02384,
-    0.35598,
-    2.28
-   ],
-   "normal": [
-    1.0,
-    -0.0,
-    0.0
-   ],
-   "up": [
-    0.0,
-    0.0,
-    1.0
-   ],
-   "size": [
-    0.6845,
-    0.2455
-   ],
-   "surface": "M_timber",
-   "probability": 0.55,
-   "seed": 740094574
+   "seed": 895692453
   },
   {
    "name": "DA_soot_001",
@@ -1459,7 +1485,7 @@
    "seed": 1317180911
   },
   {
-   "name": "DA_lichen_012",
+   "name": "DA_lichen_014",
    "type": "lichen",
    "position": [
     6.67931,
@@ -1507,18 +1533,17 @@
   "note": "built on the plan, then recentred"
  },
  "validation": {
-  "checked": 106,
-  "snapped": 2,
+  "checked": 101,
+  "snapped": 1,
   "max_move": 0.0128,
-  "renormal": 6,
-  "shrunk": 15,
+  "renormal": 4,
+  "shrunk": 13,
   "no_surface": 2,
   "wrong_surface": 3,
-  "excluded": 15,
+  "excluded": 12,
   "occluded": 1,
-  "footprint": 27,
+  "footprint": 26,
   "duplicate": 0,
-  "normal_off": 2,
-  "kept": 56
+  "kept": 57
  }
 }

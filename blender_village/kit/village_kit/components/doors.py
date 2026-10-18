@@ -143,7 +143,8 @@ def build_door(g, coll, seed=1212):
                 wane=(1,), n_checks=2, check_faces=(1,), end_checks=2, sag=0.008, ns=9, nc=6, ds=0.016,
                 hero=(1, 2), hidden=(0, 3), **hk)
     # infill above the lintel up to the rafters: short vertical boards
-    xx = -1.05
+    daub_inf = bool(getattr(g, "DOOR_INFILL_DAUB", False))      # kit 1.17: optional daub infill over the lintel
+    xx = 9.9 if daub_inf else -1.05
     k = 0
     # kit 1.7 r4 (v4_mixed, director r3 probe): optional frame attribute DOOR_INFILL_DECK -- the infill boards run up
     # to just under the batten / shingle deck instead of the rafter underside, closing the gap between the rafters
@@ -169,6 +170,34 @@ def build_door(g, coll, seed=1212):
                            seed=60 + k)
         xx += bw
         k += 1
+    if daub_inf:
+        # kit 1.17 (v10 r2, producer note 20; default off): the infill above the lintel is a daub panel (one slab, top
+        # on the rafter underside, front 9 cm behind the lintel face) instead of short vertical boards
+        from .timber_walls import _daub_slab
+        dd = g.acc("door_infill_daub", 35)
+        h0_ = g.HEAD_Z + 0.215
+        tp_ = lambda x_: float(rafter_underside_z_at_r(g, math.hypot(x_, g.FRONT_Y + 0.1))) + 0.02 + deck  # noqa: E731
+        z_hi_ = max(tp_(x_) for x_ in np.linspace(-1.0, 1.0, 9))
+        Fd = (np.array([0.0, g.FRONT_Y + 0.10, 0.0]), np.array([1.0, 0.0, 0.0]), np.array([0.0, -1.0, 0.0]))
+        _daub_slab(dd, Fd, -1.0, 1.0, h0_, z_hi_, -0.07, 0.0, np.random.RandomState(seed + 7), clamp=tp_)
+        # ... and the return panels from each door post to its wall post (the strip over the cheek panels, on a wall
+        # taller than the door head, would otherwise be open to the room)
+        for side_ in (-1, 1):
+            wp_ = az_pt(g.WALL_POST_AZ_DOOR * side_, g.R_WALL, 0)
+            q_ = np.array([side_ * 1.0, g.FRONT_Y + 0.13])
+            d_ = wp_[:2] - q_
+            L_ = float(np.hypot(*d_))
+            t_ = d_ / L_
+            n_ = np.array([t_[1], -t_[0]])
+            if float(np.dot(n_, 0.5 * (q_ + wp_[:2]))) < 0:
+                n_ = -n_
+            Fr_ = (np.array([q_[0], q_[1], 0.0]), np.array([t_[0], t_[1], 0.0]), np.array([n_[0], n_[1], 0.0]))
+
+            def tp2_(s_, q_=q_, t_=t_):
+                p_ = q_ + s_ * t_
+                return float(rafter_underside_z_at_r(g, float(np.hypot(*p_)))) + 0.02 + deck
+            _daub_slab(dd, Fr_, 0.0, L_ + 0.05, h0_, max(tp2_(s_) for s_ in np.linspace(0, L_, 5)), -0.07, 0.0,
+                       np.random.RandomState(seed + 9 + side_), clamp=tp2_)
     # threshold (director r3 #3c): three flat slabs under the sill front, front edges wandering, depth
     # 0.22-0.35 m, 1-2 cm steps between the pieces, chipped notches of 3-6 cm
     trs = np.random.RandomState(5300)
@@ -318,6 +347,8 @@ def build_door(g, coll, seed=1212):
     leaf.build(coll)
     iron.build(coll)
     thr.build(coll)
+    if daub_inf:
+        dd.build(coll)
 
 
 def door_step(g):

@@ -19,3 +19,15 @@ Deviations to the kit defaults, all in the recipe: lean-to below_clear 0.05 (def
 
 ## PRODUCER NOTES
 (placeholder)
+
+## Round 2 BUILD (producer note 20, wattle and daub across the village) -- FAST preview, ungraded
+Changed in `build_v8_byre_smokehouse.py` (kit: new `components/daub_wall.py`, optional `lean_to(ends="none")`; see kit/CHANGELOG.md 1.21.0):
+- The rounded lean-to is now an enclosed wattle-and-daub APSE outshot: no end walls / posts / plate (lean_to ends="none", plate=None), a superellipse
+  apse (half width 2.0, depth 1.55, ne 2.2, max eave rho 0.83 = inside the oval roof with 0.3-0.45 m oversail) of a rubble plinth
+  (0.55 m, 0.40 thick, a hand wider than the wall, path_stone_wall RUBBLE_LARGE, quoins off on the curve) under a daub wall between 4 hewn
+  posts (5 bays) with the hut's coat section, bedded foot, post slit dips, and 2 fallen-out patches showing the hut's woven wattle (49 rods).
+  The porch-hood reading is gone: the roof is the oval over a round wall.
+- The three hip-end gablets (W, E_s, E_n) are daub infill between hewn posts on a sill (path_daub_wall, sill=True) instead of board-and-batten.
+  They sit under the round hips and are NOT visible from outside in the six views (weakness, see report).
+- Preview: 458,601 tris (uncut; was 424,272), seal probes 0 leaks (roof/stack ring, lean_to/wall), clearance gate PASS. Images in `preview_r2/`
+  (six clay views + apse_*_colour / apse_*_clay close-ups and east_end). Not graded or audited. kit 8-building baseline NOT re-run (required before grading).

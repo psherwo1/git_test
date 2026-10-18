@@ -59,6 +59,11 @@ STYLES = dict(
                       backing=(-0.030, 0.0), cover_sill=True, h=(0.19, 0.24), casing=True),
     board_batten=dict(rows=False, mid_posts=False, board=(0.0, 0.030), post_out=0.05, sill_out=0.0, plate=False,
                       backing=(-0.030, 0.0), cover_sill=True, w=(0.20, 0.30), casing=True),
+    # kit 1.17 (v10 r2, producer note 20): STRAIGHT WATTLE-AND-DAUB -- timber posts every <= bay_max rising to the roof
+    # line, the infill between them a hand-plastered daub coat (M_daub) a little behind the post faces, with the odd
+    # exposed wattle patch (M_wattle).  Opt-in only (style / gable_style = "post_daub"); no other style changes.
+    post_daub=dict(rows=False, mid_posts=True, board=(-0.140, -0.030), post_out=0.02, sill_out=0.0, plate=False,
+                   backing=(-0.150, -0.120), cover_sill=False, w=(0.60, 0.90), casing=False, daub=True),
 )
 """per style: horizontal rows or vertical boards, visible intermediate posts, cladding w-range (m, + = out of the
 frame face), how proud the corner posts / sill stand, whether the plate is visible, the backing's w-range, whether the
@@ -440,7 +445,8 @@ def path_timber_wall(g, name, path, z0, top=2.6, top_fn=None, style="post_plank"
     pd_, ph = plate
     pw, pdp = post
     from .wall_openings import finish_accs, opening_accs
-    accs = dict(frame=Acc(pre + "_frame"), boards=Acc(pre + "_boards"), back=Acc(pre + "_blocker"))
+    accs = dict(frame=Acc(pre + "_frame"), boards=Acc(pre + "_boards"), back=Acc(pre + "_blocker"),
+                daub=Acc(pre + "_daub"), wattle=Acc(pre + "_wattle"))
     oaccs = opening_accs(g, name)                    # <P>_<name>_frames, _dressed, _ironwork, _reveals, _blockers
     ro = rough_opts(rough)
 
@@ -543,7 +549,10 @@ def path_timber_wall(g, name, path, z0, top=2.6, top_fn=None, style="post_plank"
                 nb = int(math.ceil((v - u) / bay_max))
                 for k in range(1, nb):
                     sm = u + (v - u) * k / nb
-                    wbox(accs["frame"], F, sm - pw / 2, sm + pw / 2, p_lo, p_hi_frame, -pdp, 0.0, "M_timber",
+                    zt_p = p_hi_frame
+                    if st.get("daub") and rake is not None:        # daub posts rise to the roof line
+                        zt_p = max(p_lo + 0.4, min(rake(sm + k_ * pw / 2) for k_ in (-1, 0, 1)) - 0.03)
+                    wbox(accs["frame"], F, sm - pw / 2, sm + pw / 2, p_lo, zt_p, -pdp, 0.0, "M_timber",
                          r=0.016)
                     occ.append((sm - pw / 2, sm + pw / 2))
         # ---- openings: wall_openings.build_opening with the timber host (it records them on g.OPENINGS)
@@ -568,7 +577,7 @@ def path_timber_wall(g, name, path, z0, top=2.6, top_fn=None, style="post_plank"
         has_gable = rake is not None and zt_max > top + 0.03
         if has_gable and not st["plate"] and gst is st and not st["rows"]:
             # vertical cladding with a hidden plate runs on unbroken from the sill to the roof line
-            _clad(accs, F, L, z_lo, zt_max, st, corner_occ, blocks, rng,
+            _clad(accs, F, L, z_lo, zt_max, st, occ if st.get("daub") else corner_occ, blocks, rng,
                   lambda s, rake=rake: max(rake(s), top), rough=ro)
         else:
             _clad(accs, F, L, z_lo, z_hi, st, occ if st["mid_posts"] else corner_occ, blocks, rng, None, rough=ro)
@@ -604,6 +613,8 @@ def path_timber_wall(g, name, path, z0, top=2.6, top_fn=None, style="post_plank"
 def _clad(accs, F, L, z_lo, z_hi, st, occ, blocks, rng, rake, gable=False, rough=None):
     """the cladding of one run between z_lo and z_hi (rake: the roof line above), minus posts and opening blocks.
     rough (ROUGH, round 2): rough timber at form level (see ROUGH)."""
+    if st.get("daub"):                                  # kit 1.17: wattle-and-daub infill (style "post_daub")
+        return _clad_daub(accs, F, L, z_lo, z_hi, st, occ, blocks, rng, rake)
     if rough is not None:
         return _clad_rough(accs, F, L, z_lo, z_hi, st, occ, blocks, rng, rake, rough)
     acc = accs["boards"]
@@ -680,6 +691,81 @@ def _clad(accs, F, L, z_lo, z_hi, st, occ, blocks, rng, rake, gable=False, rough
                         continue
                     wbox(acc, F, a, b, c, d, w1, w1 + 0.022, "M_timber_weathered", r=0.006, ns=4, nz=4, clamp=clamp)
 
+
+def _daub_slab(acc, F, a, b, c, d, w0, w1, rng, clamp=None, bulge=0.022):
+    """kit 1.17: one hand-plastered daub panel, s in [a, b], z in [c, d], w in [w0, w1] (front face bulged by up to
+    `bulge` m, with a softer second swell; clamp(s) -> z lowers the top onto a roof rake)."""
+    O, t, n = F[0], F[1], F[2]
+    Ls, Lz, LZ = b - a, d - c, w1 - w0
+    if Ls < 0.05 or Lz < 0.05:
+        return
+    zc = 0.5 * (c + d)
+    org = O + a * t + 0.5 * (w0 + w1) * n + zc * EZ
+    ph = rng.uniform(0.0, 2 * math.pi, 2)
+    kk = rng.uniform(1.5, 3.0, 2)
+    A = bulge * rng.uniform(0.6, 1.0)
+
+    def deform(P):
+        P = P.copy()
+        u = np.clip(P[..., 0] / Ls, 0, 1)
+        v = np.clip((P[..., 1] + 0.5 * Lz) / Lz, 0, 1)
+        f = np.clip((P[..., 2] + 0.5 * LZ) / LZ, 0, 1)
+        bump = (A * (np.sin(np.pi * u) * np.sin(np.pi * v)) ** 0.7
+                + 0.010 * np.sin(kk[0] * np.pi * u + ph[0]) * np.sin(kk[1] * np.pi * v + ph[1]) * np.sin(np.pi * u))
+        P[..., 2] = P[..., 2] + f * bump
+        if clamp is not None:
+            s = a + P[..., 0]
+            P[..., 1] = np.minimum(P[..., 1], np.vectorize(clamp)(s) - zc)
+        return P
+    obox(acc, org[None], t, EZ, n, Ls, Lz, LZ, 0.02, "M_daub", nx=max(4, int(Ls / 0.16) + 3),
+         ny=max(4, int(Lz / 0.16) + 3), nz=3, deform=deform, skip_back=True)
+
+
+def _clad_daub(accs, F, L, z_lo, z_hi, st, occ, blocks, rng, rake):
+    """kit 1.17: the wattle-and-daub infill of one run between its posts (`occ`), from z_lo to z_hi (rake: the roof
+    line above, panels end 2 cm under it).  Panels longer than 1.7 m are split.  About every second large panel has
+    an exposed wattle patch low in it (rods + stakes, M_wattle) so the coat reads as daub over woven wattle."""
+    w0, w1 = st["board"]
+    clamp = None if rake is None else (lambda s, rake=rake: rake(s) - 0.02)
+    pieces = []
+    for (u, v) in _free(0.0, L, occ):
+        n_ = max(1, int(math.ceil((v - u) / 1.7)))
+        for k in range(n_):
+            a, b = u + (v - u) * k / n_, u + (v - u) * (k + 1) / n_
+            hi = z_hi if rake is None else min(max(rake(a), rake(b), rake(0.5 * (a + b))), z_hi)
+            if hi < z_lo + 0.12:
+                continue
+            pieces.append((a - (0.02 if k == 0 else 0.0), b + (0.02 if k == n_ - 1 else 0.0), z_lo, hi))
+    for (a, b, c, d) in _subtract(pieces, blocks):
+        if b - a < 0.08 or d - c < 0.10:
+            continue
+        sub = [(a, b, c, d)]
+        zmax = d if rake is None else min(rake(s_) for s_ in np.linspace(a + 0.05, b - 0.05, 7)) - 0.04
+        if (b - a) > 0.85 and zmax - c > 0.70 and rng.random() < 0.55:
+            pw_, ph_ = rng.uniform(0.34, 0.52), rng.uniform(0.28, 0.40)
+            ps0 = rng.uniform(a + 0.14, b - 0.14 - pw_)
+            pz0 = c + rng.uniform(0.06, 0.22)
+            if pz0 + ph_ < zmax - 0.10:
+                ps1, pz1 = ps0 + pw_, pz0 + ph_
+                sub = _sub_rect((a, b, c, d), (ps0, ps1, pz0, pz1))
+                sx_ = list(np.linspace(ps0 + 0.04, ps1 - 0.04, 4))      # stakes, then rods woven in front of / behind them
+                z_, row = pz0 + 0.03, int(rng.integers(2))
+                while z_ < pz1 - 0.02:
+                    for j_ in range(len(sx_) + 1):
+                        s_a = ps0 - 0.02 if j_ == 0 else sx_[j_ - 1]
+                        s_b = ps1 + 0.02 if j_ == len(sx_) else sx_[j_]
+                        front = (j_ + row) % 2 == 0
+                        wbox(accs["wattle"], F, s_a, s_b, z_ - 0.014, z_ + 0.014, -0.062 if front else -0.119,
+                             -0.036 if front else -0.093, "M_wattle", r=0.008, ns=3, nz=2)
+                    z_ += rng.uniform(0.045, 0.062)
+                    row += 1
+                for sx in sx_:
+                    wbox(accs["wattle"], F, sx - 0.017, sx + 0.017, pz0 - 0.02, pz1 + 0.02, -0.095, -0.060,
+                         "M_wattle", r=0.008, ns=2, nz=3)
+        for (sa, sb, sc_, sd_) in sub:
+            if sb - sa < 0.05 or sd_ - sc_ < 0.05:
+                continue
+            _daub_slab(accs["daub"], F, sa, sb, sc_, sd_, w0, w1, rng, clamp=clamp if sd_ >= d - 1e-6 else None)
 
 def _clad_rough(accs, F, L, z_lo, z_hi, st, occ, blocks, rng, rake, ro):
     """_clad with ROUGH (round 2): irregular widths / row heights with fillets, pieces out of true, sagging rows,

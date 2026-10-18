@@ -1,4 +1,4 @@
-# village_kit CHANGELOG
+﻿# village_kit CHANGELOG
 
 ## Kit edit rules (all agents)
 
@@ -7,7 +7,7 @@
 - After any kit edit:
   1. re-run every OTHER building script that imports `village_kit`;
   2. confirm it still builds without errors;
-  3. confirm its triangle count is unchanged (within ±0.5 %);
+  3. confirm its triangle count is unchanged (within Â±0.5 %);
   4. record the edit below, with the buildings you re-ran.
 - Since kit 1.9.0 the guard-rails (`village_kit/guards.py`: clearance, decal_validate, seal_probe, steep_cone_door,
   lod_scope) run on every build by default.  Never switch one off silently: a recipe opts out per guard (per junction
@@ -35,6 +35,38 @@ with identical hashes):
 
 ---
 
+## 1.22.0 (2026-10-18, UNVERIFIED): optional "post_daub" timber-wall style + daub door-head infill (producer note 20; v10_net_loft_cottage round 2)
+
+- `timber_walls.STYLES["post_daub"]` (new key, opt-in via `style=` / `gable_style="post_daub"` in `path_timber_wall`): posts <= `bay_max` apart rising
+  to the roof line, the infill between them a hand-plastered `M_daub` panel (`_daub_slab`: 2 cm bulge, rounded edges, top lowered onto the rake) with
+  about every second large panel carrying an exposed `M_wattle` patch (rods woven in front of / behind stakes). New objects `<P>_<wall>_daub`, `_wattle`.
+  Existing styles, defaults and signatures untouched (new `daub` / `wattle` accumulators are empty and not built unless the style is used).
+- `doors.build_door`: optional frame attribute `DOOR_INFILL_DAUB` (default absent / False = unchanged): the infill above the lintel (and the return
+  panels door post -> wall post) is daub (`<P>_door_infill_daub`) instead of short vertical boards -- needed on a round wall taller than the door head.
+- Used by: v10_net_loft_cottage (round 2). Buildings re-run: only v10. REQUIRED before any grading: the 8-building baseline
+  (`tools/build_baseline.ps1`) -- the edits are additive and default-off but unverified.
+- **Duplicate to converge:** 1.21.0 (`daub_wall.path_daub_wall`, `daub_path.path_daub`) landed while this round was being built; `post_daub` solves the
+  straight-infill-between-posts-under-a-rake case inside `path_timber_wall` (shared sill / posts / rake logic) and was not rebuilt on those modules for
+  time. The producer should fold the three into one coat section.
+## 1.21.0 (2026-10-18, UNVERIFIED): optional PATH-wall daub mode (producer note 20; v8_byre_smokehouse round 2)
+
+- NEW `village_kit/components/daub_wall.py`: `path_daub_wall(g, name, path, z0, top_fn, sill=, patches=, end_posts=, ...)` -- wattle-and-daub infill
+  between hewn posts on any straight / curved plan path (PlanFrame), on a sill or bedded on a rubble plinth, with the hut's coat section, an
+  interior skin, and optional fallen-out patches that reuse `wattle.weave_panel` unchanged. `daub.py`, `wattle.py`, `frame.py` are untouched.
+- `lean_to(..., ends="none")`: OPTIONAL third value (default stays "rubble"): the roof only, no end walls, posts, plate checks or headroom guard; the
+  recipe builds its own enclosing wall. Behaviour for "rubble" / "open" is unchanged.
+- Used by: v8_byre_smokehouse (round 2). Buildings re-run: only v8. REQUIRED before any grading: run the 8-building baseline
+  (`tools/build_baseline.ps1`) to confirm hash identity / triangle counts (the edits are additive, defaults unchanged, but this is unverified).
+- NEW (v9_ale_house round 2, written at the same time, UNVERIFIED) `village_kit/components/daub_path.py`: the path-wall daub mode for runs that
+  `daub_wall.py` does not cover -- **an ARC / FULL CIRCLE run (a round daub turret or oven house on a rubble plinth)**, polylines with
+  corner posts, `windows=` (a hole in the coat and inner skin with a `wall_openings` window set in it), the hut's round-hewn posts
+  (`timber.round_post`, moved into place), the hut's coat section (6.2 cm face, 2-2.5 cm hand lumps, post slits, tucked foot and head), ragged
+  exposed-wattle patches (`wattle.weave_panel` unchanged) and a hewn sill beam.  `line_run` / `arc_run` / `even_posts` / `polyline_posts` /
+  `path_daub`.  Optional and additive: no existing module is touched (`daub.py`, `wattle.py`, `frame.py`, `daub_wall.py` unchanged).
+  **Duplicate to converge:** `daub_wall.path_daub_wall` (v8) and `daub_path.path_daub` (v9) solve the same straight-wall problem with two coat
+  sections (5.2 cm vs the hut's 6.2 cm); the producer should fold one into the other (keep the arc / windows of daub_path, the closed
+  slab of daub_wall) before the kit is released.  Used by: v9_ale_house round 2 (hall gablets, cross-wing half-storey, round stair turret).
+  Buildings re-run: only v9.  REQUIRED before grading: the 8-building baseline (nothing existing imports daub_path).
 ## 1.20.0 (2026-10-18): the WALL add-ons -- lean-to and porch (a1 longhouse demo; producer merge)
 
 The plan-step-4 wall add-ons were proved on a demo copy of the accepted v3 longhouse (`buildings/addon_demos/a1_longhouse_addons/`, director 8.2, re-audit upheld). The full per-round record is `kit/changes/a1_longhouse_addons.md`.
@@ -1169,7 +1201,7 @@ not reused: `fracture_patch_r9` / `stepped_margin` and the bite backing (unteste
   94 anchors (103 placed: 5 footprint, 4 duplicate cracks dropped), every anchor within 4 mm of its declared slot,
   open, same-type spacing >= 0.33 m.  Seeded: two full builds gave the same 827,563 triangles and the same 94
   anchors by name and type (between them only the gate's normal rule changed).  Details in
-  `director/log_wattle_roundhut.md` ("Round 9 — builder entry").
+  `director/log_wattle_roundhut.md` ("Round 9 â€” builder entry").
 - **Other buildings re-run after the edits** (to scratch files, `KEEP_OUT` / `MILL_OUT`), twice because the keep
   and mill builders changed their own scripts / modules during this round:
   - `tower_windmill`, first run (before the mill's 1.4.0 part): builds without errors, **1,135,006 triangles**
@@ -1350,14 +1382,14 @@ spec key, `decals.py` helper options); the keep did not touch `decals.py`, `asse
 - **`mask.py`.** The one `Mask` writer. It replaces the hut's `Acc` writer, the keep's `write_mask` and the mill's
   `set_mask`.
   - The values are now stored raw (`color_srgb`), as the keep and mill already did. The phase-1 hut wrote them
-    through a linear→sRGB conversion.
+    through a linearâ†’sRGB conversion.
 - **`pools.py`.** Shared-mesh variant pools and linked duplicates.
 - **`stones.py`.** One generator, `make_stone(style, ...)`.
   - The hut's generators: facet / field / plinth / pad / spall / boulder / shell / box.
   - New styles: `rubble`, `dressed`, `voussoir` and `chink`.
   - `min_relief` / `fine_scale` / `spall_scale` implement note 11.
 - **`shingles.py`.**
-  - `SIZE_TABLE`, the village roofing scale. The shared unit is the chunky 0.35–0.55 m shingle. `shingle_apex`
+  - `SIZE_TABLE`, the village roofing scale. The shared unit is the chunky 0.35â€“0.55 m shingle. `shingle_apex`
     (0.40 m target) is a documented exception.
   - The hut's 16 shingle variants and `shingle_mesh`.
   - New: `shake_mesh`, `board_mesh`, `course_widths`, `units_per_course`.
@@ -1392,8 +1424,9 @@ spec key, `decals.py` helper options); the keep did not touch `decals.py`, `asse
 | est_hidden_pct | 7.7 % | 6.6 % |
 | Material slots | 10 | 10 |
 | Mask missing | none | none |
-| Needle / zero-area faces | 0 / 0 | — |
+| Needle / zero-area faces | 0 / 0 | â€” |
 | Decal anchors | 105 | 98 |
-| Deterministic rebuild | 0 of 229 objects differ | — |
+| Deterministic rebuild | 0 of 229 objects differ | â€” |
 
 - The variant hut has a 2.9 m radius and a 2.60 m eave.
+

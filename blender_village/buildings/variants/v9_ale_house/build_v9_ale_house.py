@@ -1,4 +1,4 @@
-"""v9_ale_house (ALEH) -- a low T-plan village ale-house / inn, round 1 (preview): the kit's ROOF and WALL add-ons
+﻿"""v9_ale_house (ALEH) -- a low T-plan village ale-house / inn, round 1 (preview): the kit's ROOF and WALL add-ons
 on rounded "loaf" thatch roofs (producer notes 16-19).  A declarative RECIPE: every piece is a village_kit module.
 
 Run:  python -I build_v9_ale_house.py  -> v9_ale_house.blend + decal_anchors.json (next to this file)
@@ -37,7 +37,8 @@ from village_kit.components.roof_addons import (GabledDormer, any_clip, chimney,
                                                 roofs_top_fn, solid_clip, straight_span)
 from village_kit.components.roof_junction import wall_abutment  # noqa: E402
 from village_kit.components.rubble_walls import RUBBLE_LARGE, path_stone_wall, round_stone_body  # noqa: E402
-from village_kit.components.timber_walls import path_timber_wall  # noqa: E402
+from village_kit.components.daub_path import (COAT, arc_run, even_posts, line_run, path_daub,  # noqa: E402
+                                              polyline_posts)
 from village_kit.core import log  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -90,12 +91,10 @@ SMALL = window(width=0.40, height=0.45, sill=1.20)
 DOOR_S = S_WW + (-HALF - DOOR_Y)                       # the entrance: the wing's west wall, under the porch
 OPENINGS = [(S_N + (X1 - DIM["dormer_x"]), WIN), (S_N + (X1 - DIM["brow_b"]), SMALL),            # back
             (S_N + (X1 - 4.4), SMALL),
-            (S_W + (HALF - 0.9), SMALL),                                                       # west end
+            # (the west-end window moved up into the hip end's daub wall, see daub_walls)
             (S_F + (DIM["brow_f"] - X0), SMALL), (S_F + (-0.2 - X0), WIN),                     # hall front
             (DOOR_S, door(width=1.0, height=1.95, threshold=0.14)),                            # the entrance
-            (S_WW + 4.7, WIN),                                                                 # wing west, by the turret
-            (S_WS + WH + 0.9, window(width=0.55, height=0.65, sill=1.05)),                     # wing south end
-            (S_WE + 2.3, WIN), (S_WE + 4.6, WIN),                                              # wing east side
+            # (round 2: the wing's windows moved up into its daub half-storey, see daub_walls)
             (S_FE + 0.45, SMALL)]                                                              # front, east
 TOP = roofs_top_fn([MAIN, WING])
 Z_CAP = DIM["wall_z"] - 0.30
@@ -111,25 +110,78 @@ YT = _end_span(lambda s: (X1, s), HALF)
 YT_W = _end_span(lambda s: (WX + s, WY0), WH)
 
 
+# ---- round 2 (producer note 20): WATTLE AND DAUB across the village ------------------------------------------------
+# rubble where it takes weight and meets the ground, daub where it is light:
+#   * the hall's round-hip gablets (above the rubble cap) are daub between hewn posts;
+#   * the cross wing is a rubble ground storey (ZS) with a daub half-storey above it on the east wall, the south hip end
+#     and the west wall either side of the masonry entrance bay (which stays rubble to the lifted eave);
+#   * the stair turret is a round daub wall (posts + wattle + coat) on a rubble plinth (ZP).
+ZH = 1.50                       # the hall's hip-end rubble ground storey (the roof hip overhangs 2 m: the end wall above is
+                                # the daub "gablet" the eye sees under the thatch)
+ZS = 1.45                       # the wing's rubble ground storey (top of the stone, under the sill beam)
+DOOR_BAY = 1.15                 # half length of the wing's masonry entrance bay (rubble to the eave)
+ZP = 0.62                       # the turret's rubble plinth
+RW = 1.0                        # the turret's wattle radius (coat face 1.062, posts out to ~1.14)
+INS = 0.107                     # the wattle line stands this far inside the rubble face (coat 6.2 cm + 4.5 cm)
+YT_ = YT + 0.04
+
+
 def stone_top(x, y):
     z = TOP(x, y)
-    if ((abs(x - X1) < 0.75 or abs(x - X0) < 0.75) and abs(y) < YT) or (abs(y - WY0) < 0.75 and abs(x - WX) < YT_W):
-        return min(z, Z_CAP)
+    if (abs(x - X1) < 0.75 or abs(x - X0) < 0.75) and abs(y) < YT:
+        return min(z, ZH)                                # the hall's hip ends: rubble ground storey, daub above it
+    if -9.1 < y < -HALF:                                 # the cross wing's walls (y < -3): rubble ground storey
+        if 0.74 < x < 1.45:                              # west wall: the entrance bay stays masonry to the eave
+            return z if abs(y - DOOR_Y) < DOOR_BAY else min(z, ZS)
+        if 4.55 < x < 5.26:                              # east wall
+            return min(z, ZS)
+    if -9.1 < y < -8.4 and 0.74 < x < 5.26:              # south hip end
+        return min(z, ZS)
     return z
 
 
-GABLETS = [("hip_end_W", [(X0, YT), (X0, -YT)], 0.0),
-           ("hip_end_E_s", [(X1, -YT), (X1, -0.30)], 0.16), ("hip_end_E_n", [(X1, 0.30), (X1, YT)], 0.16),
-           ("hip_end_S", [(WX - YT_W, WY0), (WX + YT_W, WY0)], 0.0)]
 FOOT = [(X0, -HALF), (WX - WH, -HALF), (WX - WH, WY0), (WX + WH, WY0), (WX + WH, -HALF), (X1, -HALF), (X1, HALF),
         (X0, HALF)]
 
-# the turret's wall head: a hair into the dome's deck all round
-_th = np.linspace(0, 2 * np.pi, 24, endpoint=False)
-_ring = np.column_stack([CX + (R_TOP - 0.05) * np.cos(_th), CY + (R_TOP - 0.05) * np.sin(_th)])
-TUR_TOP = float(np.min(DOME.under_z_world(_ring))) + 0.02
-TUR_OPEN = [(300.0, window(width=0.30, height=0.60, sill=1.40)), (10.0, window(width=0.30, height=0.60, sill=1.40)),
-            (255.0, window(width=0.30, height=0.55, sill=2.60)), (345.0, window(width=0.30, height=0.55, sill=2.60))]
+
+def _deck(run, off=-0.01):
+    """z_hi(s) of a straight daub run: the roofs' deck underside over the wattle line (a hair into the deck)."""
+    def fn(s):
+        pts, _ = run.f(np.asarray(s, float))
+        return np.array([TOP(float(x), float(y)) for x, y in pts]) + off
+    return fn
+
+
+def _patch(run, posts, bay, f, zfrac, hw, hz, seed, z_lo, z_hi):
+    """an exposed-wattle patch inside bay `bay` of a run: centre f along the bay, zfrac up between foot and head."""
+    sc = posts[bay] + f * (posts[bay + 1] - posts[bay])
+    zl, zh = float(z_lo(sc)), float(z_hi(np.array([sc]))[0])
+    hz = min(hz, 0.5 * (zh - zl) - 0.2)
+    return (sc, zl + zfrac * (zh - zl), hw, hz, seed)
+
+
+def _dec_window(w, sill, height=0.50):
+    return window(width=w, height=height, sill=sill, depth=0.15, room=0.7)
+
+
+# the hall's hip-end walls / gablets (were board-and-batten, hidden under the hip): daub on the rubble ground storey
+# (name, wattle line, post spacing, patches [(bay, f, zfrac, hw, hz, seed)], windows [(bay, spec)])
+HALL_GABLETS = [("hip_end_W", [(X0 + INS, YT_), (X0 + INS, -YT_)], 1.4, [(3, 0.5, 0.40, 0.32, 0.26, 3301)],
+                 [(1, _dec_window(0.50, 1.85))]),
+                ("hip_end_E_s", [(X1 - INS, -YT_), (X1 - INS, -0.30)], 1.3, [(0, 0.5, 0.40, 0.30, 0.24, 3302)], []),
+                ("hip_end_E_n", [(X1 - INS, 0.30), (X1 - INS, YT_)], 1.3, [], [(1, _dec_window(0.50, 1.85))])]
+# the cross wing's daub half-storey: runs along the wattle line (outward = right of travel)
+WX0, WX1 = WX - WH + INS, WX + WH - INS                 # west / east wattle lines (0.907, 5.093)
+WSY = WY0 + INS                                         # south wattle line (-8.893)
+WING_RUNS = dict(
+    west_n=[(WX0, -HALF - 0.04), (WX0, DOOR_Y + DOOR_BAY - 0.07)],        # between the hall and the entrance bay
+    west_s=[(WX0, DOOR_Y - DOOR_BAY + 0.07), (WX0, -8.70)],               # entrance bay to the turret
+    south_east=[(1.12, WSY), (WX1, WSY), (WX1, -HALF - 0.04)])            # south hip end, corner, east wall
+DEEP_W = _dec_window(0.50, 1.85)
+# the turret: a round daub wall, posts at 45 + 60 k deg (one in the wing's re-entrant corner), on the rubble plinth
+TUR_POSTS = [RW * (np.radians(45.0) + k * np.radians(60.0)) for k in range(6)]
+TUR_WIN = [(195.0, _dec_window(0.30, 1.45, 0.60)), (255.0, _dec_window(0.30, 2.75, 0.55)),
+           (315.0, _dec_window(0.30, 1.45, 0.60)), (135.0, _dec_window(0.30, 2.75, 0.55))]
 
 LEAN_PORCH = dict(name="porch", W=plane_wall((WX - WH, DOOR_Y), (-1.0, 0.0)), width=1.8, depth=0.95, clear=2.32,
                   pitch_deg=20.0, overhang=0.25, side=0.15, covering="shingle", brace=(0.65, 0.75),
@@ -139,21 +191,75 @@ LEAN_PORCH = dict(name="porch", W=plane_wall((WX - WH, DOOR_Y), (-1.0, 0.0)), wi
                   seed=1931)
 
 
+R_FACE = RW + COAT + 0.03                       # the daub turret's face the wing's thatch runs into (coat + a post's flank)
+
+
 def turret_attrs(g):
     """the round-wall junction pieces read a RoundFrame's cone profile (g.PZ / g.PR / g.R_WALL) only to register the
-    seal-probe junction; publish the turret's battered face on the PlanFrame so they can."""
-    tb = float(np.tan(np.radians(DIM["tur_batter"])))
-    g.R_WALL = DIM["tur_r"] - 0.14
+    seal-probe junction; publish the turret's (vertical) daub face on the PlanFrame so they can."""
+    g.R_WALL = R_FACE - 0.14
     g.PZ = np.array([0.0, 12.0])
-    g.PR = np.array([DIM["tur_r"], DIM["tur_r"] - 12.0 * tb])
+    g.PR = np.array([R_FACE, R_FACE])
 
 
 def turret_abutment(g):
     """the wing's thatch runs into the turret wall (flaunched on the true line); a failure here is logged, not fatal."""
     try:
-        wall_abutment(g, WING, center=(CX, CY), name="turret_abutment", min_clear=0.0)
+        wall_abutment(g, WING, center=(CX, CY), radius=lambda z: np.full(np.shape(z), R_FACE), name="turret_abutment",
+                      min_clear=0.0)
     except Exception as e:  # noqa: BLE001
         log(f"  turret_abutment FAILED: {type(e).__name__}: {e}")
+
+
+def turret_cap(g):
+    """a flat mortar-and-earth cap on the turret's rubble plinth (the stone ring is a shell): the daub wall's bed."""
+    th = np.linspace(0, 2 * np.pi, 48, endpoint=False)
+    r = DIM["tur_r"] - ZP * float(np.tan(np.radians(DIM["tur_batter"]))) - 0.03
+    V = np.column_stack([CX + r * np.cos(th), CY + r * np.sin(th), np.full(len(th), ZP - 0.03)])
+    acc = g.acc("turret_cap", 40)
+    acc.add(V, [np.arange(len(th))], "M_mortar")
+    acc.build(g.coll)
+
+
+def daub_walls(g):
+    """wattle and daub (kit daub_path, the path-wall mode of daub.round_daub_wall) on the rubble: the hall's hip-end
+    gablets, the cross wing's half-storey and the stair turret's round wall."""
+    # ---- hall gablets: posts between the rubble cap and the roof deck, a sill beam on the cap
+    for k, (nm, pts, sp, pats, wins) in enumerate(HALL_GABLETS):
+        run = line_run(pts)
+        posts = even_posts(run.L, sp)
+        zh = _deck(run)
+        P = [_patch(run, posts, b, f, zf, hw, hz, sd, lambda s: ZH, zh) for (b, f, zf, hw, hz, sd) in pats]
+        W = [(0.5 * (posts[b] + posts[b + 1]), spec) for (b, spec) in wins]
+        path_daub(g, nm, run, posts, ZH, zh, seed=330 + k, patches=P, windows=W, sill=True)
+    # ---- the cross wing's half-storey
+    r_wn, r_ws = line_run(WING_RUNS["west_n"]), line_run(WING_RUNS["west_s"])
+    path_daub(g, "wing_west_n", r_wn, even_posts(r_wn.L, 2.0), ZS, _deck(r_wn), seed=341,
+                   windows=[(0.5 * r_wn.L, _dec_window(0.50, 1.90))], sill=True)
+    path_daub(g, "wing_west_s", r_ws, even_posts(r_ws.L, 2.0), ZS, _deck(r_ws), seed=342, sill=True)
+    r_se = line_run(WING_RUNS["south_east"])
+    posts = polyline_posts(r_se, 1.5)
+    zh = _deck(r_se)
+    s_corner = float(r_se.cum[1])
+    south_b = [i for i in range(len(posts) - 1) if posts[i + 1] <= s_corner + 1e-6]
+    east_b = [i for i in range(len(posts) - 1) if posts[i] >= s_corner - 1e-6]
+    mid = lambda i: 0.5 * (posts[i] + posts[i + 1])  # noqa: E731
+    wins = [(mid(south_b[1]), _dec_window(0.55, 2.20, 0.55)), (mid(east_b[1]), DEEP_W), (mid(east_b[3]), DEEP_W)]
+    pats = [_patch(r_se, posts, south_b[2], 0.5, 0.40, 0.30, 0.24, 3431, lambda s: ZS, zh),
+            _patch(r_se, posts, east_b[0], 0.5, 0.45, 0.30, 0.24, 3432, lambda s: ZS, zh)]
+    path_daub(g, "wing_south_east", r_se, posts, ZS, zh, seed=343, windows=wins, patches=pats, sill=True)
+    # ---- the turret: a full round daub wall on the plinth
+    run = arc_run((CX, CY), RW)
+    P0 = np.array([CX, CY])
+
+    def z_dome(s):
+        pts, nn = run.f(np.asarray(s, float))
+        return DOME.under_z_world(pts + nn * COAT) + 0.01
+    posts = list(TUR_POSTS)
+    ps = posts + [posts[0] + run.L]
+    tw = [(RW * np.radians(a if a > 100 else a + 360.0), sp) for a, sp in TUR_WIN]
+    pat = [(RW * np.radians(375.0), 1.45, 0.30, 0.26, 3441), (RW * np.radians(255.0) - 0.0, 1.20, 0.26, 0.22, 3442)]
+    path_daub(g, "turret_daub", run, posts, ZP, z_dome, seed=344, closed=True, windows=tw, patches=pat)
 
 
 def steps():
@@ -162,9 +268,16 @@ def steps():
     in_wing = inside_box(WX - WH + 0.15, WX + WH - 0.15, WY0 + 0.15, -HALF + 0.15, z_fn=deck(WING))
     base = inside_round((DIM["stack_x"], 0.0), DIM["stack_r"], depth=0.12, batter_deg=DIM["stack_batter"])
     upper = inside_round((DIM["stack_x"], 0.0), 0.72, depth=0.12, batter_deg=1.5)
-    in_tur = inside_round((CX, CY), DIM["tur_r"], depth=0.12, batter_deg=DIM["tur_batter"])
-    in_drum = inside_round((CX, CY), DIM["tur_r"], depth=0.10, batter_deg=DIM["tur_batter"])
-    at_round = inside_round((CX, CY), DIM["tur_r"], depth=-0.04, batter_deg=DIM["tur_batter"])
+    tb = float(np.tan(np.radians(DIM["tur_batter"])))
+    # the wing's rubble stops at the turret's plinth face; above the plinth the round daub wall (r = R_FACE) is the face
+    in_tur_plinth = inside_round((CX, CY), DIM["tur_r"], depth=0.12, batter_deg=DIM["tur_batter"])
+    in_tur_daub = inside_round((CX, CY), R_FACE, depth=0.02, batter_deg=0.0)
+
+    def in_tur(P, margin=0.0):
+        P = np.asarray(P, float)
+        return np.where(P[:, 2] < ZP, in_tur_plinth(P, margin), in_tur_daub(P, margin))
+    in_drum = inside_round((CX, CY), R_FACE, depth=0.02, batter_deg=0.0)
+    at_round = inside_round((CX, CY), R_FACE, depth=-0.06, batter_deg=0.0)
 
     def in_stack(P, margin=0.0):
         P = np.asarray(P, float)
@@ -175,11 +288,11 @@ def steps():
         (path_stone_wall, dict(name="walls", path=PATH, top_fn=stone_top, openings=OPENINGS,
                                clip=any_clip(in_stack, in_tur), cfg=RUBBLE_LARGE,
                                hero_s=(DOOR_S - 2.5, DOOR_S + 2.5), seed=31)),
+        # the turret's rubble PLINTH (the daub wall above it is daub_walls): same stone, same batter as before
         (round_stone_body, dict(name="turret", center=(CX, CY), r_base=DIM["tur_r"], batter_deg=DIM["tur_batter"],
-                                top=TUR_TOP, openings=TUR_OPEN, clip=in_wing, seed=61)),
-    ] + [(path_timber_wall, dict(name=nm, path=pth, z0=Z_CAP - dz, top=Z_CAP + 0.26, top_fn=TOP, style="post_plank",
-                                 gable_style="board_batten", rough=True, seed=331 + k))
-         for k, (nm, pth, dz) in enumerate(GABLETS)] + [
+                                top=ZP, openings=(), clip=in_wing, seed=61)),
+        turret_cap,
+        daub_walls,
         (linear_roof, dict(roof=MAIN, covering="thatch", seed=71, comb=False,
                            clip=any_clip(solid_clip(WING), DORMER.clip_main()),
                            deck_clip=any_clip(deck_clip(WING), DORMER.deck_clip_main()))),
@@ -229,3 +342,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -744,8 +744,8 @@ def lean_to(g, name, W, s0, s1, depth=1.8, z_face=2.25, pitch_deg=20.0, overhang
                   keys (end_over, hip, ne, bulge, arch_wall, arch_eave, thatch, ...)
     -> the mono_roof / round_lean_roof record (+ "posts", "headroom")."""
     from .rubble_walls import orient_stones, path_stone_wall
-    if ends not in ("rubble", "open") or front not in ("open",):
-        raise ValueError(f"lean_to: ends {ends!r} ('rubble' | 'open'), front {front!r} ('open')")
+    if ends not in ("rubble", "open", "none") or front not in ("open",):
+        raise ValueError(f"lean_to: ends {ends!r} ('rubble' | 'open' | 'none'), front {front!r} ('open')")
     rafters = kw.pop("rafters", None)
     if rafters is None and ends == "rubble":
         a, b = s0 + end_t + 0.10, s1 - end_t - 0.10
@@ -760,6 +760,10 @@ def lean_to(g, name, W, s0, s1, depth=1.8, z_face=2.25, pitch_deg=20.0, overhang
     else:
         raise ValueError(f"lean_to: roof_ends {roof_ends!r} ('square' | 'round')")
     roof = rec["roof"]
+    if ends == "none":                                       # kit 1.21.0 (optional): the roof only -- the recipe builds
+        rec["posts"] = []                                    # its own enclosing wall (daub_wall.path_daub_wall apse)
+        rec["headroom"] = None
+        return rec
     n, t, O = W["n"], W["t"], W["O"]
     pre = f"{g.prefix}_{name}"
 

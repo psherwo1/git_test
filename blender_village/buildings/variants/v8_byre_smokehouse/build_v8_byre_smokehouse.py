@@ -21,7 +21,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from village_kit.assembly import KitParams, build_building  # noqa: E402
 from village_kit.components.composite import (composite_decals, inside_box, inside_round, recenter,  # noqa: E402
                                               set_entrance)
-from village_kit.components.lean_to import lean_to, plane_wall  # noqa: E402
+from village_kit.components.daub_wall import path_daub_wall  # noqa: E402
+from village_kit.components.lean_to import behind, lean_to, plane_wall  # noqa: E402
 from village_kit.components.linear_roof import GableRoof, eave_lift, eyebrow, linear_roof  # noqa: E402
 from village_kit.components.openings import door, window  # noqa: E402
 from village_kit.components.orient_fix import orient_closed_slabs, orient_open_islands  # noqa: E402
@@ -86,13 +87,56 @@ FOOT = [(X0, -HALF), (X1, -HALF), (X1, HALF), (X0, HALF)]
 
 LEAN = dict(name="lean_to", W=plane_wall((DIM["lean_x"], HALF), (0.0, 1.0)), s0=-2.2, s1=2.2,
             depth=DIM["lean_depth"], z_face=DIM["lean_zface"], pitch_deg=13.0, overhang=0.12, verge=(0.18, 0.18),
-            covering="shingle", ends="rubble", end_t=0.40, max_span=1.8, brace=(0.36, 0.20), headroom=(1.7, 1.55),
+            covering="shingle", ends="none", end_t=0.40, max_span=1.8, brace=(0.36, 0.20), headroom=(1.7, 1.55),
             soft=dict(ridge_sag=-0.15, eave_sweep=0.06, sweep_len=0.6, wave=0.012, verge_flare=0.06, flare_len=0.5),
             below=MAIN, gate=False, below_lift_max=LIFT_MAX, below_clear=0.05, below_roll=0.10, seed=1901,
             roof_ends="round", round_kw=dict(end_over=0.45, hip=0.55, ne=3.0, bulge=0.04, arch_wall=0.15,
                                              arch_eave=0.18, wave=0.012, thatch=(0.22, 0.08), course=0.30,
-                                             eave_roll={}, decals=True))
+                                             eave_roll={}, decals=True, plate=None))
 
+
+# ---- the lean-to as a wattle-and-daub APSE outshot (producer note 20): rubble plinth + daub between hewn posts -------
+AP = dict(sa=2.0, da=1.55, ne=2.2, thick=0.40, plinth=0.55, n=24, ledge=0.06)
+
+
+def _apse_curve(sa, da, ne, n):
+    ph = np.linspace(0.0, np.pi, n)
+    c, s = np.cos(ph), np.sin(ph)
+    return sa * np.sign(c) * np.abs(c) ** (2.0 / ne), da * np.abs(s) ** (2.0 / ne)
+
+
+def apse(g):
+    from village_kit.components.rubble_walls import orient_stones
+    roof = g.ADDONS[-1]["roof"]
+    W = LEAN["W"]
+    O, t, nn = W["O"], W["t"], W["n"]
+
+    def world(ss, yy):
+        return [(float(O[0] + t[0] * a + nn[0] * b), float(O[1] + t[1] * a + nn[1] * b)) for a, b in zip(ss, yy)]
+    so, yo = _apse_curve(AP["sa"], AP["da"], AP["ne"], AP["n"])
+    si, yi = _apse_curve(AP["sa"] - AP["thick"], AP["da"] - AP["thick"], AP["ne"], AP["n"])
+    outer = world(np.r_[so[0], so, so[-1]], np.r_[-0.10, yo, -0.10])
+    sp_, yp_ = _apse_curve(AP["sa"] + AP["ledge"], AP["da"] + AP["ledge"], AP["ne"], AP["n"])
+    p_outer = world(np.r_[sp_[0], sp_, sp_[-1]], np.r_[-0.10, yp_, -0.10])     # the plinth is a hand wider than the wall
+    inner = world(np.r_[si[-1], si[::-1], si[0]], np.r_[-0.10, yi[::-1], -0.10])
+    # the apse must stand inside the rounded roof's eave oval (rho 1) with an eave overhang to spare
+    xl, yl = roof.local(np.array([[p[0], p[1], 0.0] for p in outer[1:-1]]))
+    rho = roof.rho(xl, yl)
+    print("APSE max eave rho", round(float(rho.max()), 3), flush=True)
+    assert rho.max() < 0.97, "apse outside the eave oval"
+    in_host = lambda P: behind(W, P) > 0.04  # noqa: E731
+    path_stone_wall(g, "apse_plinth", p_outer + inner, top=AP["plinth"], clip=in_host, cfg=RUBBLE_LARGE, quoins=False,
+                    seed=1941)
+    orient_stones(g, "apse_plinth")
+
+    def top_fn(x, y):
+        return float(roof.under_z_world(np.array([[x, y]]))[0]) + 0.02
+    from village_kit.components.rubble_walls import PathMap
+    L = PathMap(outer).total
+    patches = [dict(s=0.29 * L, z=AP["plinth"] + 0.30, hs=0.36, hz=0.26, seed=7),
+               dict(s=0.71 * L, z=AP["plinth"] + 0.80, hs=0.24, hz=0.20, seed=9)]
+    return path_daub_wall(g, "apse_daub", outer, z0=AP["plinth"], top_fn=top_fn, sill=False, end_posts=(False, False),
+                          bay_max=1.35, patches=patches, seed=1951)
 
 def steps():
     deck = lambda roof: (lambda P: roof.under_z_world(P))  # noqa: E731
@@ -107,8 +151,8 @@ def steps():
         (set_entrance, dict(xy=(DIM["door_x"], -HALF))),
         (path_stone_wall, dict(name="walls", path=PATH, top_fn=stone_top, openings=OPENINGS, clip=in_stack,
                                cfg=RUBBLE_LARGE, hero_s=(DOOR_S - 2.5, DOOR_S + 2.5), seed=31)),
-    ] + [(path_timber_wall, dict(name=nm, path=pth, z0=Z_CAP - dz, top=Z_CAP + 0.26, top_fn=TOP, style="post_plank",
-                                 gable_style="board_batten", rough=True, seed=331 + k))
+    ] + [(path_daub_wall, dict(name=nm, path=pth, z0=Z_CAP - dz, top_fn=lambda x, y: TOP(x, y) - 0.04, sill=True,
+                               bay_max=1.1, seed=331 + k))
          for k, (nm, pth, dz) in enumerate(GABLETS)] + [
         (linear_roof, dict(roof=MAIN, covering="thatch", seed=71, comb=False, rafter_lift_max=LIFT_MAX)),
         (chimney, dict(name="chimney", center=(DIM["stack_x"], 0.0), r_base=DIM["stack_r"],
@@ -118,6 +162,7 @@ def steps():
         (orient_open_islands, dict(parts=("_stones",))),
         (orient_closed_slabs, dict(parts=("_deck",))),
         (lean_to, LEAN),
+        (apse, {}),
     ] + ([] if os.environ.get("BYRE_FAST") else
          [(hidden_cull, dict(min_polys=200, extra_views=reentrant_views(FOOT)))]) + [recenter]
 
@@ -147,6 +192,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
 
 
