@@ -1,4 +1,4 @@
-﻿"""Builds the village master material + 15 material instances in Unreal Engine 5 (tested on UE 5.8).
+"""Builds the village master material + 15 material instances in Unreal Engine 5 (tested on UE 5.8).
 
 Run in the editor:  Tools > Execute Python Script > this file   (Python Editor Script Plugin must be enabled)
 Run headless:       UnrealEditor-Cmd.exe <project>.uproject -run=pythonscript -script="<this file>" -unattended
@@ -128,7 +128,7 @@ def hue(v, t):
     return HUE.format(v=v, t=t)
 
 
-CODE_MASK = "return lerp(pow(saturate(VC), MaskGamma), MaskOverride, MaskOverrideAmount);"
+CODE_MASK = "return lerp(pow(saturate(VC) + 1e-4, max(MaskGamma, 0.05)), MaskOverride, saturate(MaskOverrideAmount));"
 
 CODE_UV = ("float2 p = UV + Mask.r*PieceOffset*float2(37.1,91.7) + Extra;"
            " return p*Scale*float2(TileX,TileY);")
@@ -152,11 +152,11 @@ for (int o = 0; o < 4; o++) {
 v = v/tot;
 // widen the value-noise histogram towards Blender's noise (mean 0.5, wider spread)
 v = saturate(0.5 + (v-0.5)*1.8);
-return smoothstep(Lo, Hi, v)*Amount;"""
+return smoothstep(Lo, max(Hi, Lo + 1e-3), v)*Amount;"""
 
 CODE_MOSSFAC = """float h = (MH - HMean)*HGain;
 float f = Mask.b*Up*Gain + h*0.6 + Patch;
-return smoothstep(Lo, Hi, f)*Amount;"""
+return smoothstep(Lo, max(Hi, Lo + 1e-3), f)*Amount;"""
 
 CODE_COLOR = "\n".join([
     "float3 cap = float3(0.21,0.205,0.195);",
@@ -199,7 +199,7 @@ CODE_COLOR = "\n".join([
     hue("m", "MossHue"),
     sv("m", "1.05", "0.95"),
     "col = lerp(col, m, MossFac);",
-    "return col;",
+    "return max(col, 0.0);",
 ])
 
 CODE_ROUGH = """float r = lerp(ARough, BRough, MixB);
@@ -211,7 +211,7 @@ return lerp(RMin, RMax, saturate(r));"""
 CODE_NORMAL = """float3 n = lerp(AN, BN, MixB);
 n = lerp(n, MN, MossFac);
 n.xy *= Strength;
-return normalize(n);"""
+return n / max(length(n), 1e-3);"""
 
 CODE_METAL = """float l = dot(ACol, float3(0.2126,0.7152,0.0722));
 float fromLuma = lerp(0.75, 0.1, saturate((l-0.05)/0.2));
@@ -253,6 +253,8 @@ class Builder:
         n.set_editor_property("group", "Textures")
         n.set_editor_property("sampler_type", stype)
         n.set_editor_property("texture", EAL.load_asset(f"{DEST_T}/{asset}"))
+        # all texture parameters share ONE wrap sampler slot (instead of 10 separate samplers)
+        n.set_editor_property("sampler_source", unreal.SamplerSourceMode.SSM_WRAP_WORLD_GROUP_SETTINGS)
         conn(uv[0], uv[1], n, "UVs")
         self.cache[key] = n
         return n
@@ -496,20 +498,58 @@ def verify(master):
     return errors
 
 
+def _current_level():
+    try:
+        w = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
+        return w.get_path_name().split(".")[0] if w else None
+    except Exception:  # noqa
+        return None
+
+
+def _enter_empty_level():
+    """The v1 crash (GPU hang inside UpdateGPUScene, 1169 primitives) happened while the script ran with a populated
+    level open.  Build in an empty untitled level instead and restore the user's level afterwards.
+    Returns the level package path to restore (or None)."""
+    if os.environ.get("VILLAGE_KEEP_LEVEL") == "1":
+        return None
+    prev = _current_level()
+    if not prev:
+        return None
+    if unreal.EditorLoadingAndSavingUtils.get_dirty_map_packages():
+        raise RuntimeError("Village: the open level has unsaved changes - save it (Ctrl+S) and run the script again. "
+                           "Nothing was changed.")
+    unreal.EditorLoadingAndSavingUtils.new_blank_map(False)       # empty untitled level, nothing is saved
+    unreal.log(f"Village: switched to an empty level for the build (will reopen {prev} afterwards)")
+    return None if prev.startswith("/Temp/") else prev
+
+
+def _leave_empty_level(prev):
+    if prev:
+        try:
+            unreal.get_editor_subsystem(unreal.LevelEditorSubsystem).load_level(prev)
+            unreal.log(f"Village: reopened {prev}")
+        except Exception as e:  # noqa
+            unreal.log_warning(f"Village: could not reopen {prev} ({e}); open it from the Content Browser")
+
+
 def main():
-    unreal.log("Village: step 1/3 textures")
-    present = IMP.import_textures(PACK)
-    need = [f"T_Village_{s}_{x}" for s in ("RockWall", "LichenRock", "NordicMoss", "RoughWood", "Thatch", "RustyMetal", "ClayPlaster")
-            for x in ("BC", "N", "ORM")] + ["T_Village_GrimeMask_MR"]
-    miss = [n for n in need if n not in present]
-    if miss:
-        raise RuntimeError(f"textures missing after import: {miss}")
-    unreal.log("Village: step 2/3 master material")
-    master = build_master()
-    unreal.log("Village: step 3/3 material instances")
-    made = build_instances(master)
-    err = verify(master)
-    unreal.log(f"Village: DONE master={MASTER} instances={len(made)} verify_errors={err}")
+    prev = _enter_empty_level()
+    try:
+        unreal.log("Village: step 1/3 textures")
+        present = IMP.import_textures(PACK)
+        need = [f"T_Village_{s}_{x}" for s in ("RockWall", "LichenRock", "NordicMoss", "RoughWood", "Thatch", "RustyMetal", "ClayPlaster")
+                for x in ("BC", "N", "ORM")] + ["T_Village_GrimeMask_MR"]
+        miss = [n for n in need if n not in present]
+        if miss:
+            raise RuntimeError(f"textures missing after import: {miss}")
+        unreal.log("Village: step 2/3 master material")
+        master = build_master()
+        unreal.log("Village: step 3/3 material instances")
+        made = build_instances(master)
+        err = verify(master)
+        unreal.log(f"Village: DONE master={MASTER} instances={len(made)} verify_errors={err}")
+    finally:
+        _leave_empty_level(prev)
 
 
 main()
