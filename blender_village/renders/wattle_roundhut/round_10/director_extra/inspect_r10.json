@@ -1,0 +1,4279 @@
+{
+ "objects": [
+  [
+   "HUT_daub",
+   316733,
+   [
+    "M_daub"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_plinth_stones",
+   120280,
+   [
+    "M_stone"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_roof_shingles",
+   110162,
+   [
+    "M_roof_shingle"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_door_frame",
+   100764,
+   [
+    "M_timber"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_wattle_rods",
+   59796,
+   [
+    "M_wattle"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_posts",
+   29222,
+   [
+    "M_timber"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_threshold",
+   18935,
+   [
+    "M_stone",
+    "M_timber"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_daub_interior",
+   14460,
+   [
+    "M_daub"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_cap_collar",
+   10264,
+   [
+    "M_lead"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_roof_underlap",
+   7116,
+   [
+    "M_roof_shingle"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_roof_starter",
+   6668,
+   [
+    "M_roof_shingle"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_rafters",
+   5708,
+   [
+    "M_timber"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_step_stone",
+   5248,
+   [
+    "M_stone"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_finial",
+   4992,
+   [
+    "M_lead",
+    "M_timber",
+    "M_iron"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_door_leaf",
+   3468,
+   [
+    "M_timber"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_floor",
+   3328,
+   [
+    "M_earth"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_roof_blocker",
+   2176,
+   [
+    "M_timber_weathered"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_wall_plate",
+   1874,
+   [
+    "M_timber"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_hearth",
+   1698,
+   [
+    "M_stone"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_eave_closure",
+   956,
+   [
+    "M_daub"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_battens",
+   756,
+   [
+    "M_timber_weathered"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_wattle_stakes",
+   624,
+   [
+    "M_wattle"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_door_ironwork",
+   452,
+   [
+    "M_iron"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_door_panel_backing",
+   352,
+   [
+    "M_daub"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_purlin_rings",
+   232,
+   [
+    "M_timber"
+   ],
+   "HUT",
+   1
+  ],
+  [
+   "HUT_plinth_chink_001",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_plinth_chink_002",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_003",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_004",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_005",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_006",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_007",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   3
+  ],
+  [
+   "HUT_plinth_chink_008",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_009",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_010",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_011",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_012",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   3
+  ],
+  [
+   "HUT_plinth_chink_013",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_014",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_plinth_chink_015",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_plinth_chink_016",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_017",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_plinth_chink_018",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_019",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_020",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_021",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_022",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_plinth_chink_023",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   3
+  ],
+  [
+   "HUT_plinth_chink_024",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_025",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_026",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_027",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_plinth_chink_028",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_029",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_030",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_031",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_032",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_033",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   4
+  ],
+  [
+   "HUT_plinth_chink_034",
+   168,
+   [
+    "M_mortar"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_door_hinge_pintle_087",
+   152,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   2
+  ],
+  [
+   "HUT_door_hinge_pintle_095",
+   152,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   2
+  ],
+  [
+   "HUT_door_clench_nail_073",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   6
+  ],
+  [
+   "HUT_door_clench_nail_074",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_clench_nail_075",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   1
+  ],
+  [
+   "HUT_door_clench_nail_076",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   6
+  ],
+  [
+   "HUT_door_clench_nail_077",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_clench_nail_078",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_clench_nail_079",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   6
+  ],
+  [
+   "HUT_door_clench_nail_080",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_clench_nail_081",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   6
+  ],
+  [
+   "HUT_door_clench_nail_082",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   6
+  ],
+  [
+   "HUT_door_clench_nail_083",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   6
+  ],
+  [
+   "HUT_door_clench_nail_084",
+   108,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_peg_035",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_036",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_peg_037",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_038",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_peg_039",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_040",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_041",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   8
+  ],
+  [
+   "HUT_peg_042",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_043",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_044",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_045",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_046",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_047",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_048",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_049",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_050",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_peg_051",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   8
+  ],
+  [
+   "HUT_peg_052",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   8
+  ],
+  [
+   "HUT_peg_053",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_054",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_055",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_056",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_057",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_058",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   8
+  ],
+  [
+   "HUT_peg_059",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   8
+  ],
+  [
+   "HUT_peg_060",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_peg_061",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_062",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_063",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_064",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_065",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_066",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   8
+  ],
+  [
+   "HUT_peg_067",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   8
+  ],
+  [
+   "HUT_peg_068",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   11
+  ],
+  [
+   "HUT_peg_069",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   8
+  ],
+  [
+   "HUT_peg_070",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_071",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   7
+  ],
+  [
+   "HUT_peg_072",
+   92,
+   [
+    "M_timber"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_hinge_knuckle_086",
+   68,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   2
+  ],
+  [
+   "HUT_door_hinge_knuckle_094",
+   68,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   2
+  ],
+  [
+   "HUT_door_nail_088",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_nail_089",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   3
+  ],
+  [
+   "HUT_door_nail_090",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   3
+  ],
+  [
+   "HUT_door_nail_091",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   2
+  ],
+  [
+   "HUT_door_nail_092",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_nail_096",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_nail_097",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   2
+  ],
+  [
+   "HUT_door_nail_098",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   3
+  ],
+  [
+   "HUT_door_nail_099",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_nail_100",
+   64,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   5
+  ],
+  [
+   "HUT_door_hinge_strap_085",
+   38,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   2
+  ],
+  [
+   "HUT_door_hinge_strap_093",
+   38,
+   [
+    "M_iron"
+   ],
+   "HUT_kit_instances",
+   2
+  ]
+ ],
+ "rod_clusters": [
+  {
+   "az": [
+    -180,
+    -173
+   ],
+   "z": [
+    0.225,
+    0.357
+   ],
+   "n": 115
+  },
+  {
+   "az": [
+    -132,
+    -126
+   ],
+   "z": [
+    0.222,
+    0.257
+   ],
+   "n": 75
+  },
+  {
+   "az": [
+    -116,
+    -114
+   ],
+   "z": [
+    0.227,
+    0.236
+   ],
+   "n": 4
+  },
+  {
+   "az": [
+    -94,
+    -75
+   ],
+   "z": [
+    0.267,
+    2.165
+   ],
+   "n": 3383
+  },
+  {
+   "az": [
+    -65,
+    -59
+   ],
+   "z": [
+    0.23,
+    0.368
+   ],
+   "n": 32
+  },
+  {
+   "az": [
+    -53,
+    -51
+   ],
+   "z": [
+    0.23,
+    0.26
+   ],
+   "n": 24
+  },
+  {
+   "az": [
+    -45,
+    -10
+   ],
+   "z": [
+    0.228,
+    2.308
+   ],
+   "n": 16542
+  },
+  {
+   "az": [
+    10,
+    21
+   ],
+   "z": [
+    0.383,
+    2.307
+   ],
+   "n": 10878
+  },
+  {
+   "az": [
+    27,
+    29
+   ],
+   "z": [
+    0.291,
+    0.298
+   ],
+   "n": 4
+  },
+  {
+   "az": [
+    54,
+    59
+   ],
+   "z": [
+    0.229,
+    0.288
+   ],
+   "n": 54
+  },
+  {
+   "az": [
+    71,
+    92
+   ],
+   "z": [
+    0.952,
+    1.711
+   ],
+   "n": 4384
+  },
+  {
+   "az": [
+    102,
+    111
+   ],
+   "z": [
+    0.234,
+    0.344
+   ],
+   "n": 83
+  },
+  {
+   "az": [
+    113,
+    115
+   ],
+   "z": [
+    0.259,
+    0.277
+   ],
+   "n": 8
+  },
+  {
+   "az": [
+    126,
+    130
+   ],
+   "z": [
+    0.313,
+    0.336
+   ],
+   "n": 17
+  },
+  {
+   "az": [
+    144,
+    164
+   ],
+   "z": [
+    0.227,
+    0.755
+   ],
+   "n": 3217
+  }
+ ],
+ "anchors": [
+  {
+   "name": "DA_damp_rise_001",
+   "type": "damp_rise",
+   "pos": [
+    2.162,
+    -2.853,
+    0.728
+   ],
+   "n": [
+    0.67,
+    -0.73,
+    -0.11
+   ],
+   "size": [
+    0.7536,
+    0.3019
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.98
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.994
+  },
+  {
+   "name": "DA_damp_rise_002",
+   "type": "damp_rise",
+   "pos": [
+    3.102,
+    -1.787,
+    0.696
+   ],
+   "n": [
+    0.86,
+    -0.5,
+    -0.09
+   ],
+   "size": [
+    1.0548,
+    0.4818
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.994
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.997
+  },
+  {
+   "name": "DA_damp_rise_003",
+   "type": "damp_rise",
+   "pos": [
+    3.54,
+    -0.519,
+    0.723
+   ],
+   "n": [
+    0.99,
+    -0.12,
+    -0.0
+   ],
+   "size": [
+    0.8822,
+    0.4289
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.999
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.999
+  },
+  {
+   "name": "DA_damp_rise_004",
+   "type": "damp_rise",
+   "pos": [
+    3.48,
+    0.828,
+    0.643
+   ],
+   "n": [
+    0.96,
+    0.12,
+    -0.24
+   ],
+   "size": [
+    1.0796,
+    0.3826
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.953
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.974
+  },
+  {
+   "name": "DA_damp_rise_005",
+   "type": "damp_rise",
+   "pos": [
+    2.53,
+    2.55,
+    0.619
+   ],
+   "n": [
+    0.69,
+    0.72,
+    -0.07
+   ],
+   "size": [
+    1.1194,
+    0.4468
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.998
+   ],
+   "fp_ok": 5,
+   "fp_ndot": 0.988
+  },
+  {
+   "name": "DA_damp_rise_006",
+   "type": "damp_rise",
+   "pos": [
+    0.43,
+    3.559,
+    0.653
+   ],
+   "n": [
+    0.2,
+    0.98,
+    -0.03
+   ],
+   "size": [
+    0.7652,
+    0.5761
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.997
+   ],
+   "fp_ok": 5,
+   "fp_ndot": 0.996
+  },
+  {
+   "name": "DA_damp_rise_007",
+   "type": "damp_rise",
+   "pos": [
+    -0.201,
+    3.569,
+    0.61
+   ],
+   "n": [
+    -0.04,
+    1.0,
+    -0.02
+   ],
+   "size": [
+    0.7508,
+    0.4138
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.999
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.968
+  },
+  {
+   "name": "DA_damp_rise_008",
+   "type": "damp_rise",
+   "pos": [
+    -1.325,
+    3.312,
+    0.678
+   ],
+   "n": [
+    -0.38,
+    0.92,
+    -0.02
+   ],
+   "size": [
+    1.0018,
+    0.5118
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.997
+  },
+  {
+   "name": "DA_damp_rise_009",
+   "type": "damp_rise",
+   "pos": [
+    -2.605,
+    2.447,
+    0.61
+   ],
+   "n": [
+    -0.72,
+    0.69,
+    0.09
+   ],
+   "size": [
+    0.8544,
+    0.4638
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.99
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.994
+  },
+  {
+   "name": "DA_damp_rise_010",
+   "type": "damp_rise",
+   "pos": [
+    -3.479,
+    0.843,
+    0.665
+   ],
+   "n": [
+    -0.96,
+    0.26,
+    -0.08
+   ],
+   "size": [
+    0.7708,
+    0.5337
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.995
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.996
+  },
+  {
+   "name": "DA_damp_rise_011",
+   "type": "damp_rise",
+   "pos": [
+    -3.554,
+    -0.288,
+    0.666
+   ],
+   "n": [
+    -1.0,
+    -0.01,
+    0.05
+   ],
+   "size": [
+    0.8558,
+    0.5753
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.991
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.992
+  },
+  {
+   "name": "DA_damp_rise_012",
+   "type": "damp_rise",
+   "pos": [
+    -3.061,
+    -1.849,
+    0.715
+   ],
+   "n": [
+    -0.84,
+    -0.54,
+    -0.1
+   ],
+   "size": [
+    0.8524,
+    0.3815
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    0.999
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.997
+  },
+  {
+   "name": "DA_moss_001",
+   "type": "moss",
+   "pos": [
+    2.949,
+    -2.313,
+    0.16
+   ],
+   "n": [
+    0.69,
+    -0.71,
+    0.09
+   ],
+   "size": [
+    0.5091,
+    0.2208
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.994
+  },
+  {
+   "name": "DA_moss_002",
+   "type": "moss",
+   "pos": [
+    3.752,
+    -0.29,
+    0.16
+   ],
+   "n": [
+    1.0,
+    -0.02,
+    0.01
+   ],
+   "size": [
+    0.4149,
+    0.2109
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    0.999
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.969
+  },
+  {
+   "name": "DA_moss_003",
+   "type": "moss",
+   "pos": [
+    3.125,
+    2.075,
+    0.16
+   ],
+   "n": [
+    0.82,
+    0.57,
+    0.06
+   ],
+   "size": [
+    0.4781,
+    0.2835
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    0.998
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.978
+  },
+  {
+   "name": "DA_moss_004",
+   "type": "moss",
+   "pos": [
+    1.161,
+    3.497,
+    0.139
+   ],
+   "n": [
+    0.32,
+    0.84,
+    0.44
+   ],
+   "size": [
+    0.5687,
+    0.2865
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    0.836
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_moss_005",
+   "type": "moss",
+   "pos": [
+    -1.314,
+    3.514,
+    0.16
+   ],
+   "n": [
+    -0.39,
+    0.92,
+    0.08
+   ],
+   "size": [
+    0.6131,
+    0.2136
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.972
+  },
+  {
+   "name": "DA_moss_006",
+   "type": "moss",
+   "pos": [
+    -3.734,
+    -0.1,
+    0.16
+   ],
+   "n": [
+    -0.99,
+    0.05,
+    0.1
+   ],
+   "size": [
+    0.6436,
+    0.234
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.987
+  },
+  {
+   "name": "DA_moss_007",
+   "type": "moss",
+   "pos": [
+    -3.091,
+    -2.106,
+    0.16
+   ],
+   "n": [
+    -0.81,
+    -0.58,
+    0.1
+   ],
+   "size": [
+    0.4769,
+    0.2152
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.972
+  },
+  {
+   "name": "DA_lichen_001",
+   "type": "lichen",
+   "pos": [
+    -2.839,
+    -2.361,
+    0.215
+   ],
+   "n": [
+    -0.7,
+    -0.37,
+    0.61
+   ],
+   "size": [
+    0.3016,
+    0.2413
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.989
+  },
+  {
+   "name": "DA_lichen_002",
+   "type": "lichen",
+   "pos": [
+    1.942,
+    -3.138,
+    0.26
+   ],
+   "n": [
+    0.06,
+    -0.08,
+    1.0
+   ],
+   "size": [
+    0.215,
+    0.172
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.918
+  },
+  {
+   "name": "DA_lichen_003",
+   "type": "lichen",
+   "pos": [
+    -3.671,
+    -0.395,
+    0.313
+   ],
+   "n": [
+    -0.53,
+    -0.1,
+    0.84
+   ],
+   "size": [
+    0.2116,
+    0.1693
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.992
+  },
+  {
+   "name": "DA_lichen_004",
+   "type": "lichen",
+   "pos": [
+    2.932,
+    -2.245,
+    0.26
+   ],
+   "n": [
+    0.67,
+    -0.22,
+    0.71
+   ],
+   "size": [
+    0.2449,
+    0.1959
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.959
+  },
+  {
+   "name": "DA_lichen_005",
+   "type": "lichen",
+   "pos": [
+    3.316,
+    -1.622,
+    0.223
+   ],
+   "n": [
+    0.1,
+    -0.52,
+    0.85
+   ],
+   "size": [
+    0.2675,
+    0.214
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    0.86
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.983
+  },
+  {
+   "name": "DA_lichen_006",
+   "type": "lichen",
+   "pos": [
+    2.362,
+    -2.826,
+    0.289
+   ],
+   "n": [
+    0.35,
+    -0.71,
+    0.61
+   ],
+   "size": [
+    0.2139,
+    0.175
+   ],
+   "surf": "M_stone",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_plinth_stones",
+    "M_stone",
+    0.004,
+    0.9
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_moss_008",
+   "type": "moss",
+   "pos": [
+    0.634,
+    2.452,
+    4.578
+   ],
+   "n": [
+    0.14,
+    0.66,
+    0.74
+   ],
+   "size": [
+    0.7,
+    0.5
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.999
+  },
+  {
+   "name": "DA_moss_009",
+   "type": "moss",
+   "pos": [
+    2.993,
+    2.313,
+    2.932
+   ],
+   "n": [
+    0.53,
+    0.44,
+    0.72
+   ],
+   "size": [
+    0.7,
+    0.5
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.998
+  },
+  {
+   "name": "DA_moss_010",
+   "type": "moss",
+   "pos": [
+    -0.756,
+    2.417,
+    4.583
+   ],
+   "n": [
+    -0.15,
+    0.67,
+    0.73
+   ],
+   "size": [
+    0.7,
+    0.5
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.998
+  },
+  {
+   "name": "DA_moss_011",
+   "type": "moss",
+   "pos": [
+    0.06,
+    3.782,
+    2.988
+   ],
+   "n": [
+    0.0,
+    0.7,
+    0.72
+   ],
+   "size": [
+    0.7,
+    0.5
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_moss_012",
+   "type": "moss",
+   "pos": [
+    1.793,
+    1.788,
+    4.654
+   ],
+   "n": [
+    0.41,
+    0.54,
+    0.74
+   ],
+   "size": [
+    0.7,
+    0.5
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 4,
+   "fp_ndot": 0.997
+  },
+  {
+   "name": "DA_water_streak_001",
+   "type": "water_streak",
+   "pos": [
+    0.437,
+    -1.035,
+    6.304
+   ],
+   "n": [
+    0.11,
+    -0.64,
+    0.76
+   ],
+   "size": [
+    0.22,
+    0.7
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.989
+  },
+  {
+   "name": "DA_water_streak_002",
+   "type": "water_streak",
+   "pos": [
+    0.677,
+    0.897,
+    6.301
+   ],
+   "n": [
+    0.24,
+    0.61,
+    0.75
+   ],
+   "size": [
+    0.22,
+    0.7
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.985
+  },
+  {
+   "name": "DA_water_streak_003",
+   "type": "water_streak",
+   "pos": [
+    -0.437,
+    1.035,
+    6.285
+   ],
+   "n": [
+    -0.1,
+    0.66,
+    0.75
+   ],
+   "size": [
+    0.22,
+    0.7
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.99
+  },
+  {
+   "name": "DA_water_streak_004",
+   "type": "water_streak",
+   "pos": [
+    -1.115,
+    0.138,
+    6.266
+   ],
+   "n": [
+    -0.67,
+    -0.03,
+    0.75
+   ],
+   "size": [
+    0.22,
+    0.7
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.995
+  },
+  {
+   "name": "DA_water_streak_005",
+   "type": "water_streak",
+   "pos": [
+    -0.677,
+    -0.896,
+    6.21
+   ],
+   "n": [
+    -0.41,
+    -0.51,
+    0.76
+   ],
+   "size": [
+    0.22,
+    0.7
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_soot_001",
+   "type": "soot",
+   "pos": [
+    0.768,
+    -0.425,
+    6.569
+   ],
+   "n": [
+    0.68,
+    -0.38,
+    0.63
+   ],
+   "size": [
+    0.5,
+    0.4
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    0.974
+   ],
+   "fp_ok": 5,
+   "fp_ndot": 0.985
+  },
+  {
+   "name": "DA_soot_002",
+   "type": "soot",
+   "pos": [
+    0.425,
+    0.768,
+    6.574
+   ],
+   "n": [
+    0.38,
+    0.68,
+    0.63
+   ],
+   "size": [
+    0.5,
+    0.4
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    0.973
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.984
+  },
+  {
+   "name": "DA_soot_003",
+   "type": "soot",
+   "pos": [
+    -0.8,
+    0.407,
+    6.54
+   ],
+   "n": [
+    -0.69,
+    0.35,
+    0.63
+   ],
+   "size": [
+    0.5,
+    0.4
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    0.965
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.974
+  },
+  {
+   "name": "DA_soot_004",
+   "type": "soot",
+   "pos": [
+    -0.407,
+    -0.8,
+    6.521
+   ],
+   "n": [
+    -0.35,
+    -0.69,
+    0.63
+   ],
+   "size": [
+    0.375,
+    0.3
+   ],
+   "surf": "M_roof_shingle",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_roof_shingles",
+    "M_roof_shingle",
+    0.004,
+    0.985
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.985
+  },
+  {
+   "name": "DA_water_streak_006",
+   "type": "water_streak",
+   "pos": [
+    -0.97,
+    -3.722,
+    1.8
+   ],
+   "n": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size": [
+    0.12,
+    0.8
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_frame",
+    "M_timber",
+    0.004,
+    0.924
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.988
+  },
+  {
+   "name": "DA_water_streak_007",
+   "type": "water_streak",
+   "pos": [
+    0.97,
+    -3.721,
+    1.8
+   ],
+   "n": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size": [
+    0.12,
+    0.8
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_frame",
+    "M_timber",
+    0.004,
+    0.986
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.982
+  },
+  {
+   "name": "DA_grime_001",
+   "type": "grime",
+   "pos": [
+    -0.62,
+    -3.715,
+    1.05
+   ],
+   "n": [
+    0.09,
+    -0.99,
+    0.08
+   ],
+   "size": [
+    0.1542,
+    0.3855
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_frame",
+    "M_timber",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.914
+  },
+  {
+   "name": "DA_grime_002",
+   "type": "grime",
+   "pos": [
+    0.62,
+    -3.722,
+    1.049
+   ],
+   "n": [
+    -0.08,
+    -0.99,
+    -0.13
+   ],
+   "size": [
+    0.1568,
+    0.392
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_frame",
+    "M_timber",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.966
+  },
+  {
+   "name": "DA_grime_003",
+   "type": "grime",
+   "pos": [
+    -1.0,
+    -3.716,
+    1.15
+   ],
+   "n": [
+    -0.04,
+    -1.0,
+    -0.04
+   ],
+   "size": [
+    0.1962,
+    0.4905
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_frame",
+    "M_timber",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.979
+  },
+  {
+   "name": "DA_grime_004",
+   "type": "grime",
+   "pos": [
+    1.0,
+    -3.717,
+    0.999
+   ],
+   "n": [
+    -0.11,
+    -0.98,
+    -0.13
+   ],
+   "size": [
+    0.1857,
+    0.4643
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_frame",
+    "M_timber",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.971
+  },
+  {
+   "name": "DA_rust_stain_001",
+   "type": "rust_stain",
+   "pos": [
+    0.551,
+    -3.478,
+    1.813
+   ],
+   "n": [
+    -0.96,
+    -0.27,
+    0.0
+   ],
+   "size": [
+    0.08,
+    0.2441
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_leaf",
+    "M_timber",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.999
+  },
+  {
+   "name": "DA_rust_stain_002",
+   "type": "rust_stain",
+   "pos": [
+    0.467,
+    -3.166,
+    0.324
+   ],
+   "n": [
+    -0.96,
+    -0.27,
+    -0.0
+   ],
+   "size": [
+    0.08,
+    0.2661
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_leaf",
+    "M_timber",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_rust_stain_003",
+   "type": "rust_stain",
+   "pos": [
+    0.467,
+    -3.166,
+    1.795
+   ],
+   "n": [
+    -0.97,
+    -0.26,
+    0.0
+   ],
+   "size": [
+    0.08,
+    0.3297
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_leaf",
+    "M_timber",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_rust_stain_004",
+   "type": "rust_stain",
+   "pos": [
+    0.311,
+    -2.588,
+    0.83
+   ],
+   "n": [
+    -0.98,
+    -0.21,
+    -0.0
+   ],
+   "size": [
+    0.07,
+    0.2931
+   ],
+   "surf": "M_timber",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_door_leaf",
+    "M_timber",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_001",
+   "type": "crack",
+   "pos": [
+    -0.516,
+    3.534,
+    0.538
+   ],
+   "n": [
+    -0.36,
+    0.92,
+    -0.17
+   ],
+   "size": [
+    0.123,
+    0.3513
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.932
+  },
+  {
+   "name": "DA_crack_002",
+   "type": "crack",
+   "pos": [
+    1.79,
+    3.087,
+    2.058
+   ],
+   "n": [
+    0.49,
+    0.86,
+    -0.13
+   ],
+   "size": [
+    0.1204,
+    0.3441
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.994
+  },
+  {
+   "name": "DA_crack_003",
+   "type": "crack",
+   "pos": [
+    -1.741,
+    3.115,
+    1.973
+   ],
+   "n": [
+    -0.51,
+    0.86,
+    0.04
+   ],
+   "size": [
+    0.1201,
+    0.3431
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_004",
+   "type": "crack",
+   "pos": [
+    3.287,
+    1.424,
+    0.961
+   ],
+   "n": [
+    0.93,
+    0.38,
+    0.0
+   ],
+   "size": [
+    0.1188,
+    0.3393
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_005",
+   "type": "crack",
+   "pos": [
+    1.798,
+    -3.088,
+    1.463
+   ],
+   "n": [
+    0.49,
+    -0.87,
+    0.06
+   ],
+   "size": [
+    0.1187,
+    0.3392
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.995
+  },
+  {
+   "name": "DA_crack_006",
+   "type": "crack",
+   "pos": [
+    -3.363,
+    1.206,
+    1.661
+   ],
+   "n": [
+    -0.95,
+    0.3,
+    -0.04
+   ],
+   "size": [
+    0.1185,
+    0.3385
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.998
+  },
+  {
+   "name": "DA_crack_007",
+   "type": "crack",
+   "pos": [
+    -2.704,
+    2.319,
+    1.38
+   ],
+   "n": [
+    -0.77,
+    0.63,
+    0.04
+   ],
+   "size": [
+    0.1168,
+    0.3337
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_008",
+   "type": "crack",
+   "pos": [
+    2.704,
+    2.322,
+    2.554
+   ],
+   "n": [
+    0.74,
+    0.67,
+    0.05
+   ],
+   "size": [
+    0.1125,
+    0.3214
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_009",
+   "type": "crack",
+   "pos": [
+    -3.406,
+    1.083,
+    2.074
+   ],
+   "n": [
+    -0.96,
+    0.3,
+    -0.01
+   ],
+   "size": [
+    0.1099,
+    0.314
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_010",
+   "type": "crack",
+   "pos": [
+    3.28,
+    -1.366,
+    0.659
+   ],
+   "n": [
+    0.92,
+    -0.39,
+    -0.01
+   ],
+   "size": [
+    0.1067,
+    0.3049
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.999
+  },
+  {
+   "name": "DA_crack_011",
+   "type": "crack",
+   "pos": [
+    -3.53,
+    -0.49,
+    0.696
+   ],
+   "n": [
+    -0.99,
+    -0.14,
+    0.01
+   ],
+   "size": [
+    0.1056,
+    0.3017
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_012",
+   "type": "crack",
+   "pos": [
+    3.135,
+    -1.716,
+    0.544
+   ],
+   "n": [
+    0.88,
+    -0.48,
+    -0.07
+   ],
+   "size": [
+    0.0855,
+    0.2444
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.999
+  },
+  {
+   "name": "DA_crack_013",
+   "type": "crack",
+   "pos": [
+    3.514,
+    -0.601,
+    1.936
+   ],
+   "n": [
+    0.97,
+    -0.23,
+    -0.06
+   ],
+   "size": [
+    0.0815,
+    0.2329
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_014",
+   "type": "crack",
+   "pos": [
+    2.875,
+    -2.109,
+    1.98
+   ],
+   "n": [
+    0.81,
+    -0.59,
+    -0.01
+   ],
+   "size": [
+    0.0807,
+    0.2306
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_015",
+   "type": "crack",
+   "pos": [
+    2.491,
+    2.567,
+    0.981
+   ],
+   "n": [
+    0.74,
+    0.68,
+    0.01
+   ],
+   "size": [
+    0.08,
+    0.2101
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_016",
+   "type": "crack",
+   "pos": [
+    -1.669,
+    -3.15,
+    1.717
+   ],
+   "n": [
+    -0.49,
+    -0.87,
+    -0.03
+   ],
+   "size": [
+    0.08,
+    0.2024
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_crack_017",
+   "type": "crack",
+   "pos": [
+    -2.033,
+    2.917,
+    1.724
+   ],
+   "n": [
+    -0.59,
+    0.81,
+    -0.02
+   ],
+   "size": [
+    0.08,
+    0.2
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.995
+  },
+  {
+   "name": "DA_crack_018",
+   "type": "crack",
+   "pos": [
+    3.574,
+    -0.133,
+    1.708
+   ],
+   "n": [
+    1.0,
+    -0.01,
+    0.02
+   ],
+   "size": [
+    0.14,
+    0.26
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.935
+  },
+  {
+   "name": "DA_crack_019",
+   "type": "crack",
+   "pos": [
+    3.503,
+    -0.708,
+    0.957
+   ],
+   "n": [
+    0.99,
+    -0.16,
+    0.06
+   ],
+   "size": [
+    0.14,
+    0.26
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.97
+  },
+  {
+   "name": "DA_crack_020",
+   "type": "crack",
+   "pos": [
+    3.572,
+    -0.218,
+    0.94
+   ],
+   "n": [
+    1.0,
+    -0.08,
+    0.04
+   ],
+   "size": [
+    0.14,
+    0.26
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.961
+  },
+  {
+   "name": "DA_crack_021",
+   "type": "crack",
+   "pos": [
+    3.407,
+    -1.027,
+    1.013
+   ],
+   "n": [
+    0.95,
+    -0.31,
+    -0.03
+   ],
+   "size": [
+    0.14,
+    0.26
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.979
+  },
+  {
+   "name": "DA_crack_022",
+   "type": "crack",
+   "pos": [
+    1.05,
+    3.419,
+    0.762
+   ],
+   "n": [
+    0.27,
+    0.96,
+    0.02
+   ],
+   "size": [
+    0.14,
+    0.26
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.986
+  },
+  {
+   "name": "DA_crack_023",
+   "type": "crack",
+   "pos": [
+    1.603,
+    3.208,
+    0.831
+   ],
+   "n": [
+    0.44,
+    0.9,
+    0.01
+   ],
+   "size": [
+    0.105,
+    0.195
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.931
+  },
+  {
+   "name": "DA_crack_024",
+   "type": "crack",
+   "pos": [
+    -3.496,
+    -0.728,
+    1.445
+   ],
+   "n": [
+    -0.97,
+    -0.21,
+    -0.08
+   ],
+   "size": [
+    0.14,
+    0.26
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.992
+  },
+  {
+   "name": "DA_crack_025",
+   "type": "crack",
+   "pos": [
+    -3.501,
+    -0.701,
+    2.252
+   ],
+   "n": [
+    -0.96,
+    -0.24,
+    0.11
+   ],
+   "size": [
+    0.14,
+    0.26
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.974
+  },
+  {
+   "name": "DA_crack_026",
+   "type": "crack",
+   "pos": [
+    -3.57,
+    -0.106,
+    1.542
+   ],
+   "n": [
+    -1.0,
+    -0.05,
+    -0.04
+   ],
+   "size": [
+    0.14,
+    0.26
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 7,
+   "fp_ndot": 0.991
+  },
+  {
+   "name": "DA_crack_027",
+   "type": "crack",
+   "pos": [
+    -3.572,
+    0.011,
+    2.16
+   ],
+   "n": [
+    -1.0,
+    0.02,
+    0.02
+   ],
+   "size": [
+    0.14,
+    0.26
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 8,
+   "fp_ndot": 0.965
+  },
+  {
+   "name": "DA_crack_028",
+   "type": "crack",
+   "pos": [
+    2.749,
+    -2.273,
+    2.462
+   ],
+   "n": [
+    0.76,
+    -0.65,
+    -0.02
+   ],
+   "size": [
+    0.2,
+    0.4
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.988
+  },
+  {
+   "name": "DA_crack_029",
+   "type": "crack",
+   "pos": [
+    3.27,
+    1.398,
+    2.418
+   ],
+   "n": [
+    0.93,
+    0.37,
+    -0.02
+   ],
+   "size": [
+    0.2,
+    0.4
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.979
+  },
+  {
+   "name": "DA_crack_030",
+   "type": "crack",
+   "pos": [
+    -1.026,
+    3.424,
+    2.48
+   ],
+   "n": [
+    -0.23,
+    0.97,
+    0.1
+   ],
+   "size": [
+    0.2,
+    0.4
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.931
+  },
+  {
+   "name": "DA_crack_031",
+   "type": "crack",
+   "pos": [
+    -3.518,
+    0.623,
+    2.438
+   ],
+   "n": [
+    -0.99,
+    0.16,
+    0.0
+   ],
+   "size": [
+    0.2,
+    0.4
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.981
+  },
+  {
+   "name": "DA_plaster_patch_001",
+   "type": "plaster_patch",
+   "pos": [
+    1.398,
+    3.276,
+    1.494
+   ],
+   "n": [
+    0.36,
+    0.93,
+    0.05
+   ],
+   "size": [
+    0.3553,
+    0.5414
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.998
+  },
+  {
+   "name": "DA_plaster_patch_002",
+   "type": "plaster_patch",
+   "pos": [
+    0.045,
+    3.573,
+    1.621
+   ],
+   "n": [
+    0.04,
+    1.0,
+    0.01
+   ],
+   "size": [
+    0.6693,
+    0.3183
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_plaster_patch_003",
+   "type": "plaster_patch",
+   "pos": [
+    2.876,
+    2.108,
+    1.335
+   ],
+   "n": [
+    0.81,
+    0.58,
+    0.06
+   ],
+   "size": [
+    0.4828,
+    0.544
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.997
+  },
+  {
+   "name": "DA_plaster_patch_004",
+   "type": "plaster_patch",
+   "pos": [
+    3.44,
+    0.927,
+    1.951
+   ],
+   "n": [
+    0.96,
+    0.26,
+    0.05
+   ],
+   "size": [
+    0.4471,
+    0.323
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_plaster_patch_005",
+   "type": "plaster_patch",
+   "pos": [
+    -2.956,
+    -2.002,
+    1.28
+   ],
+   "n": [
+    -0.81,
+    -0.58,
+    0.02
+   ],
+   "size": [
+    0.3773,
+    0.4289
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_plaster_patch_006",
+   "type": "plaster_patch",
+   "pos": [
+    -2.954,
+    2.004,
+    2.035
+   ],
+   "n": [
+    -0.83,
+    0.56,
+    -0.03
+   ],
+   "size": [
+    0.6492,
+    0.3795
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 6,
+   "fp_ndot": 0.96
+  },
+  {
+   "name": "DA_plaster_patch_007",
+   "type": "plaster_patch",
+   "pos": [
+    -0.84,
+    3.448,
+    1.112
+   ],
+   "n": [
+    -0.23,
+    0.97,
+    -0.01
+   ],
+   "size": [
+    0.6552,
+    0.3012
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_plaster_patch_008",
+   "type": "plaster_patch",
+   "pos": [
+    -2.77,
+    -2.249,
+    1.815
+   ],
+   "n": [
+    -0.77,
+    -0.63,
+    -0.0
+   ],
+   "size": [
+    0.4319,
+    0.4972
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_repair_patch_001",
+   "type": "repair_patch",
+   "pos": [
+    2.385,
+    2.653,
+    2.028
+   ],
+   "n": [
+    0.67,
+    0.74,
+    -0.01
+   ],
+   "size": [
+    0.2556,
+    0.3126
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_repair_patch_002",
+   "type": "repair_patch",
+   "pos": [
+    2.333,
+    -2.711,
+    2.253
+   ],
+   "n": [
+    0.67,
+    -0.74,
+    -0.02
+   ],
+   "size": [
+    0.4053,
+    0.368
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 0.999
+  },
+  {
+   "name": "DA_repair_patch_003",
+   "type": "repair_patch",
+   "pos": [
+    3.523,
+    0.591,
+    1.567
+   ],
+   "n": [
+    0.98,
+    0.18,
+    -0.01
+   ],
+   "size": [
+    0.499,
+    0.3151
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  },
+  {
+   "name": "DA_repair_patch_004",
+   "type": "repair_patch",
+   "pos": [
+    -1.913,
+    -3.013,
+    1.07
+   ],
+   "n": [
+    -0.53,
+    -0.77,
+    0.36
+   ],
+   "size": [
+    0.4772,
+    0.4222
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 4,
+   "fp_ndot": 0.95
+  },
+  {
+   "name": "DA_repair_patch_005",
+   "type": "repair_patch",
+   "pos": [
+    -2.392,
+    2.633,
+    2.225
+   ],
+   "n": [
+    -0.69,
+    0.72,
+    -0.0
+   ],
+   "size": [
+    0.3495,
+    0.3776
+   ],
+   "surf": "M_daub",
+   "empty": [
+    true,
+    1.0,
+    true
+   ],
+   "centre": [
+    "HUT_daub",
+    "M_daub",
+    0.004,
+    1.0
+   ],
+   "fp_ok": 9,
+   "fp_ndot": 1.0
+  }
+ ],
+ "empties_in_col": 93,
+ "json_count": 93
+}

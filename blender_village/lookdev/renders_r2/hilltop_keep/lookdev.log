@@ -1,0 +1,28 @@
+00:00.719  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\r2_src\hilltop_keep.blend"
+00:01.235  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:19.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\hero.png'
+00:34.328  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\front.png'
+01:04.110  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\entrance_closeup.png'
+01:28.907  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\roof_detail.png'
+01:52.782  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\thatch_closeup.png'
+look r2 | bark PROXY (rough_wood)
+hidden objects: 116 []
+building bounds (-11.1, -5.3, -0.05) (5.3, 5.3, 14.0)
+rebuilt palette materials: ['M_daub', 'M_iron', 'M_lead', 'M_mortar', 'M_roof_shake', 'M_roof_shingle', 'M_stone', 'M_stone_dressed', 'M_thatch', 'M_timber', 'M_timber_weathered']
+sky type MULTIPLE_SCATTERING
+devices [('NVIDIA GeForce RTX 3060', 'CUDA', False), ('AMD Ryzen 5 5600X 6-Core Processor', 'CPU', False), ('NVIDIA GeForce RTX 3060', 'OPTIX', True)]
+door: KEEP_door_leaf (0.35, -3.67, 1.22)
+camera hero (-19.97, -26.06, 12.47)
+camera front (-2.9, -35.21, 10.05)
+camera entrance_closeup (1.25, -8.19, 1.7)
+camera roof_detail (-0.8, -10.5, 8.6)
+camera thatch_closeup (-11.2, -3.4, 2.7)
+Info: Saved as "hilltop_keep_lookdev.blend"
+Info: Total files 26 | Changed 26 | Failed 0
+Info: Saved "hilltop_keep_lookdev.blend"
+saved C:\GitHubDesktop\git_test\blender_village\lookdev\r2_src\hilltop_keep_lookdev.blend
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\hero.png
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\front.png
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\entrance_closeup.png
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\roof_detail.png
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\renders_r2\hilltop_keep\thatch_closeup.png

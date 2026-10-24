@@ -1,0 +1,1670 @@
+
+## Round 1 (builder report): full asset built from scratch
+- Script: `buildings/wattle_roundhut/build_wattle_roundhut.py` (deterministic: the geometry hash is identical across reruns; the build takes about 6 s). Output: `buildings/wattle_roundhut/wattle_roundhut.blend` (23.8 MB, compressed).
+- Renders: `renders/wattle_roundhut/round_01/` (all 6 views at 32 samples, plus stats.json).
+- Stats: 1,215,014 tris, 23 objects in collection `HUT`. bbox min (-4.55, -6.16, -0.094), max (4.62, 4.72, 8.60). size_m 9.17 x 10.88 x 8.69. Materials: M_daub, M_earth, M_iron, M_lead, M_roof_shingle, M_rubble, M_stone, M_timber, M_timber_weathered, M_wattle.
+- Built:
+  - Plinth: 40 sub-angular plinth boulders, plus pinning stones and chinking.
+  - Posts: 14 round-hewn posts with lean, taper and adze flats, some with drying checks.
+  - Wattle: real woven rods around stakes, about 580k tris, with taper, pairs, split rows with flicked stub tips and a drifting field.
+  - Daub: an eroded bay left of the door, a full bay at the back right and a partial patch on the +X side. There is also a daubed inner skin.
+  - Wall plate: 7 half-lapped segments with pegs.
+  - Door frame: projecting, flat-fronted frame with jambs, lintel on the door posts, wattle side and cheek panels, tie beams, pegs and a boarded tympanum.
+  - Threshold and path: a worn sill on a threshold stone, a step stone (top 0.09) and 7 flagstones.
+  - Door leaf: 6 boards with ledges, a brace, latch and keeper, open 75 deg inward. Ironwork: strap hinges with spear ends, nails, pintles and a ring pull.
+  - Roof structure: 28 pole rafters, with every 5th end split and the tips uneven. Also purlin rings, batten rings and a hub.
+  - Shingles: 17 courses of individually modelled shingles with a doubled starter. They are tapered to the cone and include slipped, split and missing ones.
+  - Apex: lead-hat collar with 10 standing seams and a drip roll, an upper collar, and a turned finial with a spike tip at 8.60.
+  - Ground: earth apron with a drip-line trench, plus rubble.
+  - Interior: floor and hearth.
+- Key dimensions:
+  - Eave lip about 2.42 (2.40 or more over the door).
+  - Plate 2.66-2.86.
+  - Door clear opening 1.00 x 2.08 from the sill (sill top 0.20, head 2.28).
+  - Collar base dia 1.46 at z 6.72.
+- Deviations from the spec numbers, and why:
+  - Course exposure is 0.318 m. The spec's 17-19 courses at 0.36-0.40 do not fit the 5.4 m slope between the eave (r 4.13) and the collar (r 0.73) at 51 deg.
+  - The collar sits 0.17 m higher than the spec says (drip at 6.72, not 6.55). A 44 deg collar has to clear a 51 deg shingle cone.
+  - The lintel is 2.3 m long so that it sits on the door posts with 0.21 m side panels.
+  - Plate top is 2.86, not 3.05, because the rafters seat on the plate with the eave lip held at 2.42.
+
+## Round 1 — score 7/10
+
+**Director review.** I reviewed all 6 views and stats.json in `renders/wattle_roundhut/round_01/` side by side with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`. I also rendered 8 extra close-ups (apex, apex_side, profile, eave_under, daub_bay, door_front, wattle_macro, plinth) into `round_01/director_extra/` and measured the evaluated meshes.
+
+**Verdict.** This is a strong first round and a complete, well-engineered asset.
+- The overall cone/wall/plinth massing overlays ref2 closely. Roof + finial to wall height is about 2.3 (ref 2.4) and eave width to roof height is 1.34 (ref 1.36).
+- Actor scale is correct.
+- The shingle cone is genuinely good.
+
+Four things hold it at 7:
+- The apex reads wrong at every distance (collar too short and shallow, needle spike).
+- The wattle reads as a fine, regular basket mat or screen rather than ref2's coarse open weave.
+- The plinth stones are uniform pillowy loaves (the strongest CG tell in the actor close-up).
+- The daub panels read as flat boards.
+
+Axes:
+- Silhouette 7 (apex).
+- Proportion and scale 8.
+- Construction 8.
+- Detail and craft 7.
+- Age 7.
+- Technical 8 (apron seam artefact, extra `M_earth` slot).
+
+**Strengths**
+- The silhouette and massing match ref2: squat round wall on a plinth under a huge 51° cone. The convex profile, eave kick and eave wobble all read.
+- **Shingles are hero quality.** About 690 individually modelled chunky shingles with thickness, cup, curl, stagger, slips and missing pieces. The profile render looks right, and they read at about 0.45 m next to the figure.
+- **Scale is correct.** Clear door 1.00 x 2.08, eave lip 2.42 over the door, head clearance for the 1.8 m figure, and sensible step risers.
+- **The roof structure reads from below.** Rafter pole ends (some split), battens in the eave gap, the plate and real eave thickness are all visible.
+- **The door assembly is complete.** Projecting flat-fronted frame, leaf open 75° inward with ledges, brace and strap hinges, sill on a threshold stone, step stone and flag path. The interior reads dark and deep, with rafters, purlins and the hearth visible through the door. There is no sky void.
+- **The wattle is real woven tube geometry.** In/out alternation is visible, the daub's eroded lower edge exposes it, and the bay placement matches ref2.
+- **Technical work is clean.** Deterministic 6 s build, identity transforms, UVs, named slots, 1.215 M tris, 23.8 MB.
+
+**Spec amendments (these supersede spec §H/§I and the art bible §1.5 "44°" for this hut).** I re-measured the reference crops (`hut_overall`, `hut_cap_finial`):
+- **Lead-hat collar pitch.** It runs at the same pitch as the roof or slightly steeper (about 51–55°), not shallower.
+- **Collar height.** The lower collar is about 0.65 m tall from the drip to a top Ø of about 0.5 m.
+- **Upper collar.** It is a separate bell cone, base Ø about 0.55 m, with its own drip, about 0.3 m tall.
+- **Finial.** It is chunky: spindle Ø up to about 0.2 m, and the spike base about 0.14–0.16 m Ø.
+- **Wattle row pitch.** It is about 6–8 cm in ref2 (rods about 2.5–3.5 cm with dark gaps between rows), not 3.5–4 cm.
+- **Shingle exposure.** The builder's 17 courses at 0.318 m exposure is ACCEPTED, because the spec's 0.36–0.40 cannot fit the 5.4 m slope.
+- **Other accepted deviations.** The plate at 2.66–2.86, the 2.3 m lintel and `M_earth` are also accepted.
+
+**Must-fix (priority order)**
+
+1. **APEX COLLAR + FINIAL (silhouette; HUT_cap_collar, HUT_finial).**
+   - *Problem:* the lower collar rises only 0.35 m (z 6.66 → 7.01, r 0.765 → 0.40) at 44°. Above it, the "upper collar" is a flat drum ring (r 0.40, 5 cm tall) plus a low cone. In hero, front and side the lead hat is invisible at thumbnail and merges into the shingle cone. In ref2 it is the second most recognisable feature.
+   - *Lower collar:* rebuild it as a smooth cone at about 52–54°, drip edge at about 6.60 with base Ø 1.45–1.50, rising to z ≈ 7.25 with top Ø ≈ 0.50.
+   - *Drip edge:* give it a vertical fascia 5–7 cm deep that stands 8–10 cm off the shingle surface, so a hard shadow line reads at 30 m. Keep the rolled lip, the slight dents and the 10 seams.
+   - *Upper collar:* replace the drum + cone with a bell-cast cone, base Ø 0.55 at z 7.25 with a 4–5 cm drip overhanging the lower collar's top, rising to about 7.55 (top Ø about 0.16).
+   - *Finial:* a turned spindle 7.55 → 7.95, with a bead ring Ø 0.20, a neck Ø 0.10 and a vase bulb Ø 0.18. Then a sharp conical spike from Ø 0.14–0.16 at 7.95 to a point at 8.60 (tip r ≤ 5 mm; currently r 0.021). The spike is currently a needle (r 0.05 → 0.02) that vanishes at distance.
+   - Keep the 1° lean.
+
+2. **WATTLE WEAVE READS AS A FINE MAT (HUT_wattle_rods; all bays and door side panels).**
+   - *Problem:* row pitch is r_row + r_next (about 2.1–3.5 cm), so the rods touch and the wall reads as a regular screen in hero, side and back, and like a basket in close-up.
+   - *Rows:* change to a row pitch of 6–8 cm (±1.5 cm random), with rods Ø 2.4–3.6 cm, so dark gaps of 2–4 cm show between rows as in `hut_wattle_daub_plinth`.
+   - *Rods:* increase vertical drift to ±3 cm over 1 m (low-frequency noise per rod, not a shared field), add knots or kinks (Ø +15% bumps every 0.3–0.6 m) and a slight non-circular (oval/knobbly) section. About 15% of rows should be paired or tripled.
+   - *Weave depth:* keep the in/out amplitude at ±2.5–3 cm.
+   - *Budget:* this should also free about 300k tris; spend them on items 3–5.
+
+3. **PLINTH STONES ARE PILLOWY LOAVES (HUT_plinth_stones, HUT_plinth_chinking, HUT_ground_rubble, step stone).**
+   - *Problem:* all 40 boulders are similar rounded boxes (r_frac 0.3–0.5, D 0.40–0.52, nearly all full plinth height). They read as marshmallows or teeth in a ring (actor_closeup, director_extra/plinth.png).
+   - *Shape:* make them sub-angular. Corner rounding should be 2–4 cm (r_frac 0.08–0.18), with 3–6 large flat fracture facets per stone and flatter bedding faces.
+   - *Size and height:* vary heights 0.18–0.42. About 40% should be two-high (a big flat lower stone 0.15–0.25 tall plus a flatter upper stone or slab), and lengths should vary 0.25–0.85. Include 2–3 long through-stones.
+   - *Faces:* the outer faces should form a rough wall line (±4 cm) with stones in contact, not a row of separated blobs.
+   - *Chinking:* the chinking pieces currently stick out between stones as flat tabs. Recess them 2–5 cm behind the adjacent faces and make them wedge-shaped.
+   - *Rubble and step stone:* apply the same sub-angular treatment. The step stone currently reads as a pillow/pill disc: give it a flat, slightly dished top with chipped edges and bury it 3–4 cm.
+
+4. **DAUB READS AS FLAT BOARDS (HUT_daub; large bay left of the door, back-right bay, side patch).**
+   - *Problem:* lumps are about ±1 cm at a 0.45 m wavelength, and in clay the panels read as planar sheets (daub_bay, back, side).
+   - *Bulges:* add low-frequency bulges of 2.5–4 cm amplitude at 0.4–0.8 m wavelength, following the rods beneath (a faint horizontal ridging of 0.5–1 cm at the 6–8 cm rod pitch where the daub is thinner).
+   - *Surface:* add hand-pressed trowel or palm smears of 0.5–1 cm and 3–6 shrinkage cracks per bay (0.3–0.8 m long, 0.5–1 cm wide, 1–2 cm deep).
+   - *Edges:* chip the edges where the daub meets the posts, with no clean vertical cut lines. On the eroded lower edge, vary the break height by ±12 cm (currently it reads nearly straight) and leave 2–3 detached clumps clinging to the rods.
+
+5. **ENTRANCE TIMBER IS CG-CLEAN (HUT_door_frame, HUT_posts).**
+   - *Problem:* in door_front the door posts, jambs and cheek members read as straight, smooth extruded boxes. The 14 round posts read as smooth tubes in daub_bay.
+   - *Frame members:* add visible hewing: adze facets 4–8 cm wide and 3–6 mm deep, wane (bark-edge rounding) on 1–2 arrises of the door posts, ±8 mm width swell along the length, and 2–3 drying checks (3–6 mm wide, 15–40 cm long) on the two door posts.
+   - *Lintel and pegs:* show end-grain checks at the projecting lintel ends, and make the pegs proud 1.5 cm.
+   - *Round posts:* give them 6–10 visible adze flats (5–8 mm deep) and a knot or two.
+
+6. **DOOR SIDE WATTLE PANELS READ AS LADDERS (HUT_door_frame side panels).**
+   - *Problem:* each 0.21 m panel has rods crossing a single central stake, so it looks like rungs.
+   - *Fix:* use 2 stakes per panel and the coarser woven rods from item 2. Alternatively, follow `hut_door.png`, which shows a diagonal, rope-like twisted weave in those narrow panels.
+
+7. **APRON SEAM ARTEFACT (HUT_ground_apron).**
+   - *Problem:* the apron's outer rim at r about 4.74 sits about 2 mm above the review ground plane, and renders as a dashed or z-fighting ring (actor_closeup, director_extra/plinth.png).
+   - *Fix:* give the apron a flat outer band at least 0.4 m wide at exactly the bbox-min level, so the rim is coplanar and hidden, or tuck the rim under the plane by feathering it.
+   - Keep M_earth (accepted).
+
+**Nice to have**
+- Standing seams on the collar: make them folded seams (a 6–8 mm raised fin with soft fillets) instead of round rods.
+- Shingle butts: more raggedness (2–3 notches per butt, ±1.5 cm), and a few more cracked/split shingles near the eave on the door side.
+- Path flagstones: bed them 3–5 cm into the apron (they currently sit on top), with tufts of apron height between them.
+- Optional low-poly moss cushions at the collar drip and a few eave butts.
+- Door leaf: a little more visible ironwork scale. Hinge straps should be 45–55 mm wide so they read in actor_closeup.
+
+## Round 2 (builder report): all 7 must-fix items + nice-to-haves
+- Script: `buildings/wattle_roundhut/build_wattle_roundhut.py` (deterministic; geometry hash identical across reruns; build ~6 s). Output `buildings/wattle_roundhut/wattle_roundhut.blend` (29.3 MB compressed).
+- Renders: `renders/wattle_roundhut/round_02/` (all 6 views, 32 samples, stats.json).
+- Stats: 1,465,554 tris, 23 objects. bbox min (-5.10, -6.12, -0.095), max (5.11, 5.21, 8.71); size_m 10.20 x 11.33 x 8.81. Materials unchanged (M_daub, M_earth, M_iron, M_lead, M_roof_shingle, M_rubble, M_stone, M_timber, M_timber_weathered, M_wattle).
+- Changes:
+  1. Apex: lower collar is a smooth 53 deg cone, drip dia 1.49, 6.5 cm vertical drip fascia with rolled bead standing ~8-10 cm off the shingles, 10 folded standing-seam fins (7.5 mm, filleted). Upper collar: bell-cast cone dia 0.57 with its own 4.5 cm drip. Spindle: seat, bead ring dia 0.20, neck 0.10, vase bulb 0.18, top ring (0.385 tall, M_timber). Spike: conical dia 0.15 -> tip r 1.2 mm (M_iron). 1 deg lean kept. Heights: drip 6.705, fascia top 6.77, lower collar top 7.43, upper 7.73, spindle 8.11, tip 8.71.
+  2. Wattle: row pitch 5.8-7.8 cm, rods dia 2.7-3.6 cm (2-4 cm gaps), per-rod drift (+-3 cm/m), knots (+15 % dia every 0.3-0.6 m with extra rings), kinks, oval knobbly 6-side section, ~15 % paired/tripled rows. 411k tris. Inner daub skin moved 8 cm behind the wattle line so gaps read recessed/shadowed.
+  3. Plinth: new `rock()` primitive (2-segment 2-4 cm rounding, 4-7 filleted fracture facets, broken outer faces, flat beds, batter). 37 bays: 12 single, 13 two-high, 9 low+pinning slabs, 3 through-stones with uppers (43 % two-high). Faces on a +-2 cm wavy line, stones in contact; wedge chinking recessed 2-7 cm. Rubble, door-post pads and threshold stone are sub-angular too. Step stone: thin chipped slab with wear-dished top, earth banked round it (~5 cm proud).
+  4. Daub: 0.75 cm grid front coat; 2.5-3.5 cm bulges at ~0.6 m, patchy 0.5-0.7 cm rod ridging where thin, curved palm smears, 4-6 shrinkage cracks/bay (snapped V grooves 0.5-1 cm wide, 1-2 cm deep, some branched), ragged chipped margins at the posts, eroded edge 0.51-0.78 m (+-13 cm) with 3 clinging clumps.
+  5. Entrance timber: `hewn_member()` for door posts, jambs, lintel, tie beams, sole rails: adze strokes in 2-3 skewed lanes per face (4-8 cm, 3-6.5 mm), +-8 mm swell, wane on 1-2 arrises, 2-3 drying checks per door post (4-6 mm, 15-40 cm), end-grain checks at lintel/tie-beam ends, whittled octagonal pegs proud 1.5-1.8 cm, 28 deg auto-smooth so ridges read. Round posts: 48 sides, 6-10 long adze flats 5-8 mm (15 deg sharp edges so they read), 1-2 branch-stub knots, narrow V drying checks.
+  6. Door side panels: 2 stakes each, steep diagonal rope-like weave (slant 0.85) as in hut_door.png; cheek panels 2 stakes, slant 0.6.
+  7. Apron: polar mesh with a >= 0.4 m flat outer band at exactly the bbox-min level (Z -0.095), irregular soil margin (no grid stair-steps). A hairline remains where the band edge sits 2 mm above the review plane (the review plane is always 2 mm below bbox min, so no edge can be coplanar).
+- Nice-to-haves: folded seams done; shingle butts ragged (per-column offsets, 2-3 notches, skew +-1.2 cm) plus extra split shingles in the 4 eave courses on the door side; flags bedded 0.6-2 cm proud; hinge straps 52 mm x 7 mm. Moss cushions not added (optional).
+- Deviation: lead-hat drip is 6.70 not 6.60 and tip 8.71 not 8.60 (+1.3 %), because a 53 deg collar must clear the 17th-course shingle stack (accepted roof geometry). Roof+finial / wall ratio rises toward ref's 2.4.
+
+## Round 2 — score 8/10
+
+**What I reviewed.**
+- All 6 views and stats.json in `renders/wattle_roundhut/round_02/`, side by side with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` (plus a 2x zoom of its open bay) and `hut_cap_finial`.
+- 14 Director close-ups at 16 spp in `round_02/director_extra/`: apex, apex_eye, profile, door_front, daub_bay, wattle_macro, wattle_mid, plinth, eave_under, side_wall, flags, threshold, frame_raking and plinth_back.
+- `tools/hidden_tris.py` on the round-2 .blend, which gives est_hidden_pct 46.0%.
+- I read `weave_panel()`, `flagstone()`, `build_collar_finial()` and the plinth chinking code.
+
+**Verdict.** This is a clear step up from round 1.
+- The apex now reads at every distance.
+- The daub bay beside the door is now convincing.
+- The door side panels match ref2.
+
+It is now a solid game asset (rubric 8), but it is not yet close-up worthy:
+- The open wattle, which is the hut's identity, still reads as a garden trellis or grid at every distance.
+- The plinth still reads as stacked rounded cuboids.
+- The path flags are polygon "cookies".
+- The entrance timber is still CG-clean at actor distance.
+
+**Axes:**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 8 | The apex is fixed. The walls read as a regular grid, not ref2's dark woven band. |
+| Proportion and scale | 9 | |
+| Construction | 8 | Rods pass through the stakes. Flags have contact gaps. |
+| Detail and craft | 7 | |
+| Age and irregularity | 7 | Regular stake grid, cuboid stones, polygon flags. |
+| Technical | 8 | Clean this round. Producer notes 3 and 6 become binding from round 3. |
+
+**Strengths**
+- **Apex fixed.** The 53° lead hat, Ø1.49 with a 6.5 cm drip fascia, now casts a hard shadow line and reads as ref2's second signature feature in hero, front, side and apex_eye. The folded seams, upper collar drip, spindle and spike all read. The +0.1 m on the apex heights (tip 8.71) is ACCEPTED.
+- **Daub bay is close to ref2.** The thick, bulging coat, branched shrinkage cracks, chipped post margins and eroded, ragged lower edge exposing the rods (with clinging clumps) all match `hut_wattle_daub_plinth`.
+- **Door side panels.** The diagonal rope-like weave with dark slots now matches `hut_door.png`.
+- **Roof is still hero quality.** Ragged butts and split eave shingles add age. The eave underside reads from eye level, with rafter ends, battens, plate and real lip thickness.
+- **Round posts.** The 48-sided posts with adze flats and knots no longer read as smooth tubes.
+- **Scale is correct.** Door 1.00 × 2.08, eave lip ≥ 2.40 over the door, and the figure reads right.
+- **Technical work is clean.** The build is deterministic and takes about 6 s. It has 1.466 M tris, 29.3 MB, identity transforms, UVs, and 10 slots, all in the producer palette.
+
+**Closed or accepted**
+- Round-1 items 1, 3 (partly), 4, 5 (partly) and 6 are done.
+- Item 7, the apron hairline, is WAIVED. It is a review-plane artefact: the plane sits 2 mm under the bbox minimum. The new polar flat band removed the dashed z-fighting.
+- Moss stays optional.
+
+**Spec amendment (supersedes spec §C and art bible §5 stake spacing for this hut).** I re-measured the 2x zoom of ref2's open bay:
+- **Stakes:** thin (Ø3–4 cm), only about 3 per 1.57 m bay (spacing 0.38–0.50 m), and mostly hidden behind the rods.
+- **Rods:** continuous across several stakes, wavy, and visibly bending round each stake.
+- **Gaps:** narrow (0.5–2.5 cm) and dark.
+- My round-1 call of "2–4 cm gaps" over-opened the weave. Use the numbers below.
+
+### Must-fix (priority order)
+
+1. **WATTLE READS AS A TRELLIS OR GRID** (`HUT_wattle_rods`, `HUT_wattle_stakes`; every open bay). See profile.png, side_wall.png, wattle_macro.png, wattle_mid.png, side and back.
+   - **(a) Rods run through the stakes.** In `weave_panel()` the in/out amplitude is A = 2.5–3 cm. Stake radius (2.0–2.7 cm) plus rod radius (1.35–1.8 cm) is 3.4–4.5 cm, so every rod intersects every stake it should wrap. No rod visibly bends round a stake, and each row looks laid in front of a fence.
+   - **(b) Stakes form a vertical grid.** About 5 stakes per bay at Ø4–5.4 cm and 0.29 m spacing make a regular grid that dominates the walls at 30 m.
+   - **(c) Gaps show a lit wall.** The 2–4 cm gaps show the sunlit inner skin 8 cm behind, with rod shadows, so it reads as "sticks in front of a wall", not a dark woven wall.
+   - **Fix, stakes:** Ø3–4 cm at 0.38–0.50 m spacing (3 per bay). Jitter them ±4 cm and lean them ±1.5°.
+   - **Fix, weave offset:** set it per rod to stake_r + rod_r + 3–5 mm (about ±3.5–4.5 cm), so the bend round each stake is visible. Keep the cosine path, but give it a tighter wrap at the stake: 60% of the swing within ±6 cm of it.
+   - **Fix, rows:** pitch 4.5–6.5 cm with rods Ø2.5–3.8 cm, so gaps are 0.5–2.5 cm and the open area is ≤ 20% in front view. Use per-rod drift of ±1 rod diameter at 0.5–1 m wavelength, so neighbouring rows occasionally touch or cross.
+   - **Fix, rod lengths:** rods 1.2–2.5 m long, not post-to-post. Taper butt to tip 1.0 → 0.55, staggering the ends at least 0.3 m between consecutive rows, and flick the tips 2–5 cm outward.
+   - **Fix, inner skin:** move it at least 0.15 m behind the rod centreline, or delete it behind the open bays and close the interior with a dark blocker about 0.6 m inside (see producer note 6).
+   - **Acceptance:** in profile and side, the open bays read as horizontal woven texture with no vertical grid. In wattle_macro, every rod visibly wraps its stakes with zero rod/stake intersection (verify with a BVH overlap test). The gaps read dark.
+
+2. **PLINTH STILL READS AS ROUNDED CUBOIDS** (`HUT_plinth_stones`, `HUT_plinth_chinking`, door-post pad stones). See plinth.png, plinth_back.png, actor_closeup.
+   - **Problem, stones:** in elevation the stones are rectangles, with parallel vertical sides, planar faces and uniform edge rounding. The `rock()` fracture facets do not read. The two-high stacks form tidy courses, like bricks or soap bars.
+   - **Problem, pad stones:** the two door pad stones are about 0.55 m near-cubes that read as concrete blocks.
+   - **Problem, chinking:** many chinking pieces stick OUT 1–4 cm as flat rectangular tabs. In plinth_back.png see the joints right of centre and the pinning slabs under the post stone.
+   - **Fix, outlines:** use irregular elevation outlines (rounded trapezoid, D-shape, rounded triangle; 5–8 corners) with no two parallel vertical sides.
+   - **Fix, faces:** dome the outer faces 2–5 cm and tilt them 5–15° in random directions. Run 1–2 fracture planes visibly across the face, with edge breaks of 3–8 cm.
+   - **Fix, rounding:** vary arris rounding per stone from 1 to 6 cm.
+   - **Fix, courses:** follow ref2, which is mostly one course of low rounded stones 0.2–0.3 m tall and 0.4–0.7 m long. Cut the two-high stacks to about 20–25%, with uppers clearly smaller than the stone below.
+   - **Fix, pad stones:** rough boulders about 0.45 × 0.35 × 0.25 with an irregular plan and a flat bed for the post.
+   - **Fix, chinking:** measure the recess locally, so each chink sits at least 2 cm behind BOTH adjacent stone faces (ray-test against the stones and push back any that fail). Make them wedge-pointed, with a visible face of no more than 6 × 10 cm.
+
+3. **PATH FLAGS AND STEP STONE ARE POLYGON COOKIES** (`HUT_threshold`; see flags.png, actor_closeup, threshold.png).
+   - **Problem:** `flagstone()` lathes a convex 5–7-corner polygon. The flags read as hexagons and octagons with uniform chamfers. The outer flags show black contact hairlines (they sit on the review plane beyond the apron band). The step stone is a flat slab with straight facet edges.
+   - **Fix, outlines:** non-convex, 10–16 corners, plus 3–8 cm-scale edge noise and 1–2 notches.
+   - **Fix, shape:** thickness varying ±2 cm, tops tilted 1–3°, edge rounding varying 0.5–3 cm around the outline.
+   - **Fix, bedding:** tops 1–3 cm above the surrounding earth, bases buried at least 3 cm, with a soft earth lip (apron) wrapping each edge. Keep every flag inside the apron's flat band, with none past its edge.
+   - **Fix, step stone:** the same outline treatment, with a visibly dished wear hollow (1–2 cm) where feet land.
+
+4. **ENTRANCE TIMBER STILL CG-CLEAN AT ACTOR DISTANCE** (`HUT_door_frame`, `HUT_threshold` sill, `HUT_door_leaf`; see frame_raking.png, door_front.png, threshold.png).
+   - **Problem:** the 3–6.5 mm adze strokes vanish except under grazing light. The drying checks are single uniform knife slits with pointed ends. The sill reads as a rounded extrusion. The leaf boards are near-uniform width with ruler-straight gaps.
+   - **Fix, adze:** on the outward faces of the door posts, jambs and lintel, use scallops 6–12 mm deep and 5–9 cm wide.
+   - **Fix, checks:** 6–10 mm wide at the mouth, tapering in both width and depth, wandering ±3 mm, and some with a short parallel or branch check.
+   - **Fix, arrises:** vary the chamfer 1.5–3 cm along each member, and let the wane come and go.
+   - **Fix, sill:** a 1.5–2.5 cm worn dip over the middle 0.6 m, a worn outer arris, and end checks.
+   - **Fix, leaf:** board widths 16–30 cm, gaps 0.5–1.5 cm varying along the length, board ends uneven ±1 cm, and 1–2 boards cupped 3–5 mm.
+
+5. **DAUB PATCH AND RIDGING** (`HUT_daub`).
+   - **Patch:** the +X partial patch (side_wall.png) is a rectangle pasted onto the wattle, with straight vertical left and right edges and uniform thickness. Give it an irregular outline with no straight run over 15 cm. Feather the thickness 0 → 4 cm at the edge, expose some rods through thin spots, and add a crumbled lower margin.
+   - **Ridging:** in the large bay, the upper-third ridging over the rods reads as regular corrugation (daub_bay.png). Break it into patches of 0.3 m or less with varying pitch and amplitude, only where the coat is thin.
+
+6. **INTERIOR FLOOR SEAM** (`HUT_floor` / `HUT_threshold`). A dark curved seam line crosses the earthen floor about 0.1–0.3 m inside the sill (threshold.png, door_front.png). Close the gap or overlap, and make the floor meet the sill and the inner skin without a visible line.
+
+7. **APEX POLISH** (`HUT_finial`). See apex.png, compared with hut_cap_finial.
+   - **Upper collar:** its profile is a concave trumpet (`(1-f)**1.9`), which reads as a vase foot. Ref2's is a straight-to-slightly-convex cone. Make it straight at about 54°, r 0.285 → 0.07 over 0.30 m, keeping the drip bead with 1.5 cm projection.
+   - **Spindle:** simplify the double-bulb baluster, which reads as furniture, to ref2's stack: bead ring → tapered spindle → ring.
+   - **Spike:** base Ø 0.18–0.20, with a knop ring (+3 cm Ø, 3 cm tall) about 0.2 m up, then a straight taper to the point.
+
+8. **TECHNICAL: producer notes 3 and 6 are binding from round 3.**
+   - **Hidden triangles:** est_hidden_pct is 46.0% (674,887 of 1,465,554); the target is ≤ 15%. Hidden share and count per object:
+
+     | Object | Hidden share | Hidden tris |
+     |---|---|---|
+     | rods | 50.5% | 206k |
+     | shingles | 55.8% | 124k |
+     | door frame | 41% | 49k |
+     | plinth stones | 55% | 48k |
+     | daub | 14% | 38k |
+     | apron | 76% | 34k |
+     | battens | 83% | 33k |
+     | posts | 40% | 27k |
+     | rubble | 65% | 18k |
+     | purlins | 92% | 16k |
+     | rafters | 75% | 15k |
+     | chinking | 51% | 14k |
+     | starter | 60% | 12k |
+     | wall plate | 97% | 6k |
+
+   - **Cuts:**
+     - Drop rod backs facing the daub and inner skin, and every rod section buried under daub.
+     - Trim covered shingle bodies to the exposed part plus about 5 cm of overlap.
+     - Delete stone backs and sides behind the face line, and anything more than 5 cm below ground.
+     - Keep battens, purlins and rafters only where they are visible under the eave or through the door.
+   - **Reinvest** the saved triangles in item 1 (wattle) and items 2–4.
+   - **Sharing:** build variant pools for pegs, nails, hinge parts, chinking and rubble (6–12 each) as linked-duplicate (shared mesh data) objects, staying under the 400-object limit. Shingles may stay joined, but generate them from a pool of 12–20 variant base meshes.
+   - **Stats:** report est_hidden_pct and material_slot_count from the new render_review.
+
+**Nice to have**
+- Low-poly moss cushions at the collar drip and a few door-side eave butts.
+- Slightly irregular rafter-end cuts: more saw/axe facets on 4–6 ends.
+
+## Round 3 — builder entry
+- Script `buildings/wattle_roundhut/build_wattle_roundhut.py` (deterministic: the geometry/transform hash matches across reruns; the build takes about 10 s). It saves `wattle_roundhut.blend` (23.5 MB, compressed, no `.blend1` backups). Renders are in `renders/wattle_roundhut/round_03/` (all 6 views at 32 spp, plus stats.json and hidden.json).
+- **Stats:**
+  - 1,083,921 tris, down from 1.466 M.
+  - **est_hidden_pct 14.2 %**, down from 46 %. Below ground 0 %.
+  - **material_slot_count 10**, all from the 15-slot palette, and the build asserts palette membership.
+  - `mask_attribute_missing` is empty.
+  - bbox min (-5.10, -7.48, -0.045), max (5.11, 5.21, 8.73).
+  - 168 objects: 23 unique meshes plus 145 linked duplicates from 32 pooled meshes, in the sub-collection `HUT_kit_instances`.
+- **Must-fix 1 (wattle):**
+  - Stakes are Ø2.8-3.6 cm, 3 per bay, jittered ±4 cm, leaning ±1.5° and set 2.2 cm back.
+  - Every rod wraps its stakes. The offset is stake_r + 1.24·rod_r + 3-5 mm, using a Hermite wrap with 30 % of the half-swing within 6 cm of each stake. By construction, no rod intersects a stake.
+  - Rods are Ø2.5-3.8 cm with 0-1 cm packing gaps, plus taper 1.0→0.55. Drift is ±1 rod diameter at 0.35-0.75 m wavelength.
+  - About 65 % of rows have staggered rod joints (≥0.3 m stagger, 0.18-0.32 m overlaps) with tips flicked 2-5 cm outward and capped.
+  - Rods are trimmed wherever the daub buries them. The inner skin is a single lumpy sheet 0.17 m behind the rod centreline, so the gaps read dark.
+- **Must-fix 2 (plinth):**
+  - New `shell_stone()`: irregular outlines (trap / D / tri, 5-8 corners, no parallel sides), domed and tilted faces, 1-2 crisp fracture planes (4.5-8 cm edge breaks) plus 3-5 split facets, and arris rounding of 0.8-5 cm that varies round each stone.
+  - One course, top about 0.33 m, earth banked about 5 cm, 22 % two-high with clearly smaller uppers.
+  - Door pad stones are irregular boulders with a flat bed.
+  - Chinking: a pool of 8 wedges, ray-tested against the stones so each one sits ≥2 cm behind both neighbouring faces and is placed only where an open joint shows it (44 placed).
+- **Must-fix 3 (flags and step):** non-convex 10-16-corner outlines with edge noise and notches, ±2 cm thickness, 1-3° tilt, arris 0.5-3 cm, 2.2-3.2 cm proud, and soft earth lips modelled into the apron. The apron now extends under the whole path, so no flag is off the earth. The step stone has a 1.6 cm wear dish.
+- **Must-fix 4 (entrance timber):**
+  - `hewn_member` gives hero faces adze scallops 6-12 mm deep and 5-9 cm long.
+  - Chamfers vary 1.5-3 cm along each member, and the wane comes and goes.
+  - Checks are 6-10 mm wide at the mouth, taper in width and depth, wander ±3 mm, and 60 % have a branch.
+  - Sill: a 2.2 cm trodden dip over the middle 0.6 m, a worn outer arris and end checks.
+  - Leaf boards are 16-30 cm wide, with gaps that vary along the length, ends uneven by ±1 cm, and 2 cupped boards.
+- **Must-fix 5 (daub):** the side patch is an irregular blob with a crumbled lower margin, thin spots and rods showing through. It feathers over about 12 cm. The ridging is broken into patches of 0.3 m or less with varying pitch and amplitude, only where the coat is thin.
+- **Must-fix 6 (floor seam):** the floor now runs under the sill in the door sector and steps down about 2.5 cm inside the sill, so the seam is gone.
+- **Must-fix 7 (apex):** the upper collar is a straight 54° cone (r 0.285→0.07 over 0.30 m) with its drip bead. The spindle is bead ring → tapered spindle → ring. The spike base is Ø0.19 with a knop ring 0.2 m up, then a straight taper.
+- **Producer notes 6 and 7, and must-fix 8:**
+  - Shingles are modelled as the exposed part plus 6.5 cm overlap. They are full length only where the covered part can be seen: under missing shingles, and in the back-arc window seen through the door. Undersides and heads are dropped above course 1. 16 pooled base shapes.
+  - Rods and stakes are open-backed shells with arcs that depend on height and how proud the rod sits.
+  - Posts are open at the back.
+  - Hidden faces of hewn members are closed with coarse quads.
+  - Rafters are eave stubs, full length only in the back arc. Purlins and battens are kept only where visible (eave gap / doorway).
+  - A dark roof blocker keeps the interior dark.
+  - Nothing is below -4.5 cm.
+  - Pools: pegs 6, nails 3, clench nails 3, hinge strap / knuckle / pintle, chinking 8, rubble 10.
+- **Producer note 9:** every mesh has a CORNER `Mask` (R per piece, G wear: higher on slipped or split shingles and the worn sill, B ground / up-facing / north dirt).
+- **Known gaps:**
+  - The flags read faintly in the frontal clay light.
+  - Stakes still show as thin verticals at close range.
+  - The apron margin hairline remains (waived r2).
+  - Instanced pieces carry transforms, and their Mask R is per variant, not per instance.
+  - Plinth top (0.33) and wattle base (0.345) are about 4 cm below spec §A, following the r2 note that the stones should be 0.2-0.3 m visible.
+
+## Round 3 — score 8/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_03/`, side by side with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`.
+- 16 Director close-ups at 16 spp in `round_03/director_extra/`: apex, apex_eye, profile, eave_under, eave_close, door_front, door_near, frame_raking, threshold, flags, plinth, plinth_back, daub_bay, side_wall, wattle_mid and wattle_macro. Ground plane at bbox min (-0.047).
+- Ray-picks on suspect pixels. I read `weave_panel()` (junction logic), `make_daub_fields()`, `plan_path()`/`build_path()` and the threshold-stone code.
+
+**Verdict.** This is a real step forward, but not yet a 9.
+- The trellis is gone. At hero, front, side and back distance the walls now read as a dark woven band like ref2.
+- The apex now overlays `hut_cap_finial` (apex_eye is the best view of the asset).
+- The producer notes are all met: 14.2 % hidden, 10 palette slots, Mask on every mesh, pooled instances.
+
+What holds it at 8 is the eye-level and actor-distance read, which producer note 4 says matters most:
+- At mid-shot the wattle reads as stacked kindling, because rod ends float in mid-span everywhere.
+- The door side panels read as fishbone ribs at actor distance.
+- Every ground-contact stone (plinth, pad stones, threshold stone, step stone, rubble) still reads as soft boxes or pillows.
+- The path flags read as puddles.
+- The back daub bay has a ruler-straight lower edge, and the side patch reads as a decal.
+
+The entrance is therefore still not close-up worthy, which is the rubric-8 marker.
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | Apex, cone and walls all read as ref2 at thumbnail. |
+| Proportion and scale | 9 | Door 1.00 × 2.08, eave ≥ 2.40, plinth top 0.33 (accepted, see below). |
+| Construction | 8 | Rod joints float in mid-span. Side panels are ribs. The threshold stone is a kerb. |
+| Detail and craft | 7 | Ground-contact stones, flags, side panels and timber checks are not close-up worthy. |
+| Age and irregularity | 8 | Good on the roof and apex. The stones are still uniform soft blocks. |
+| Technical | 9 | All producer notes are met. Two rulings are below. |
+
+**Strengths**
+- **The wattle reads as woven at distance.** The 3 thin stakes per bay, packed rows and dark inner skin give ref2's dark horizontal woven band in hero, side, back and side_wall. Rods wrap the stakes with no rod/stake intersection. Round-2 must-fix 1(a)-(c) is substantially closed.
+- **The apex is now a match.** The 53° lead hat has its drip shadow line. The upper collar is a straight 54° cone. The bead ring / spindle / ring stack and the Ø0.19 knopped spike overlay `hut_cap_finial` (apex_eye.png). Round-2 item 7 is CLOSED.
+- **The shingle roof is still hero quality** (profile.png). It has chunky, ragged butts, staggered joints, slips, a convex profile and eave kick, and it reads at about 0.45 m next to the figure.
+- **The door assembly and interior.** The leaf is open 75° with ledges, brace and strap hinge. The interior is dark and deep, with the floor, hearth ring and rafters visible, and there is no sky void. The floor seam is gone (round-2 item 6 CLOSED).
+- **The large daub bay beside the door** still matches ref2's bay: a thick coat, an eroded lower edge exposing rods, and clinging clumps.
+- **Technical work is clean.**
+  - 1.084 M tris, est_hidden_pct 14.2 % (round-2 item 8 CLOSED).
+  - 10 slots, all in the palette. `mask_attribute_missing` is empty.
+  - 168 objects (32 pools, 145 linked duplicates). Deterministic 10 s build, 23.5 MB.
+  - Components are parameterised: `shell_stone`, `hewn_member`, `weave_panel`, `shingle_mesh` and `pool_mesh`.
+
+**Rulings**
+- **Pooled instances.** Linked-duplicate pool instances carrying object transforms are ACCEPTED. That is what producer note 3 asks for, and they become ISMs. Mask R per variant (not per instance) is ACCEPTED for pooled pieces, because Unreal's PerInstanceRandom supplies the per-instance value.
+- **Plinth height.** The plinth top at 0.33 and the wattle base at 0.345 are ACCEPTED, following my round-2 note on ref2 stone height.
+- **Apron hairline.** The apron's outer hairline stays WAIVED as a review-plane artefact.
+- **Budget constraint.** est_hidden_pct must stay ≤ 15 % after the fixes below. Aim for ≤ 13 % to leave headroom.
+
+### Must-fix (priority order)
+
+1. **WATTLE READS AS KINDLING AT MID-SHOT: mid-span rod ends** (`HUT_wattle_rods`; every open bay; see wattle_mid.png, wattle_macro.png, daub_bay.png).
+   - **Problem, ends:** in `weave_panel()`, 65 % of rows get a junction at a random `sj` anywhere in the bay. Each junction leaves two free ends floating between stakes, flicked 2-5 cm outward, so a bay face shows roughly 40 or more loose stick ends. The wall reads as a hairy stack of sticks, not ref2's continuous wavy rows.
+   - **Problem, doubled rows:** the two pieces are also offset vertically by ±0.55·rod_r (`dzf`). Every overlap therefore reads as a doubled, thickened row and causes the rod/rod intersections listed in the known gaps.
+   - **Fix, joint frequency:** cut junction rows to 20-25 %.
+   - **Fix, joint position:** put every joint AT a stake. Each end stops 2-5 cm past the stake on the side where that rod passes BEHIND it, so the end is hidden.
+   - **Fix, row lane:** drop the `dzf` split, so the two pieces share the row lane (one in front of the shared stake, one behind).
+   - **Fix, flicked tips:** keep an outward flick (1-3 cm) on no more than 10 % of ends.
+   - **Acceptance:** at most about 6 visible rod ends per bay face in wattle_mid, and the rows read as continuous wavy bands in side_wall.
+
+2. **DOOR SIDE AND CHEEK PANELS READ AS FISHBONE RIBS** (`HUT_door_frame` side panels, slant 0.85, and cheek panels, slant -0.6; see door_near.png, door_front.png, frame_raking.png). At actor distance each diagonal rod is a separate rib, with ends poking past the outer stake and 2-3 cm see-through slots between rods.
+   - **Fix, ends:** start and end every rod behind the jamb, sole rail or outer stake, with no protruding ends.
+   - **Fix, rods:** use rods Ø2.4-3.0 cm packed with a perpendicular gap of 0.5 cm or less. Each rod is a continuous S-curve that visibly wraps both stakes, so the panel reads as the twisted rope of `hut_door.png`.
+   - **Fix, gaps:** no see-through gap to the interior wider than 1 cm.
+
+3. **GROUND-CONTACT STONES STILL READ AS SOFT BOXES OR PILLOWS** (`HUT_plinth_stones`, door-post pad stones, threshold stone, step stone, `HUT_ground_rubble_*`; see side_wall.png, plinth.png, plinth_back.png, threshold.png, actor_closeup).
+   - **(a) Plinth.** The stones have a flat top plateau, a planar front and near-vertical sides. In elevation they read as a row of similar trapezoid kerb blocks of near-equal height, with 4-10 cm gaps holding round nubs.
+     - Crown the tops 4-8 cm with the high point off-centre, and bulge the fronts 3-6 cm.
+     - No planar area wider than about 12 cm, except the fracture facets, which should be on only about 35 % of stones.
+     - Vary visible heights 0.18-0.34 with neighbours differing by at least 4 cm.
+     - Close the face joints to 3 cm or less.
+     - Replace the round chinking nubs with flat wedges.
+   - **(b) Door-post pad stones** are drums with vertical sides. Make them low irregular boulders, about 0.45 × 0.35 × 0.22, with sloping sides and a post bed only about 0.25 wide.
+   - **(c) Threshold stone** (`shell_stone(0.98, 0.10, …)` at FRONT_Y-0.03) is a 1.96 × 0.20 m kerb with a ruler-parallel front edge.
+     - Split it into 2-3 stones, or give it a front edge wandering ±5 cm with depth 0.22-0.35.
+     - Add 1-2 chipped notches of 3-6 cm and 1-2 cm height steps between pieces.
+   - **(d) Step stone** reads as a pillow. Flatten the top to a slightly dished plane with a 1-1.5 cm arris, slope the sides, and add 1-2 edge chips of 4-8 cm.
+   - **(e) Rubble pool** reads as rounded sugar cubes. Make the 10 variants sub-angular with 3-5 flat fracture facets, thickness 0.4-0.6 × length, and bury them 30-50 %.
+
+4. **PATH FLAGS READ AS PUDDLES** (`HUT_path_stones`; see actor_closeup, flags.png). The flags are 2.2-3.2 cm proud, with a 1.4-2 cm earth lip on the full perimeter, so only about 1 cm of edge reads. They are small (`plan_path`: 0.36-0.84 × 0.34-0.53 m) and widely spaced.
+   - **Fix, height and lip:** tops 3.5-5 cm proud. The earth lip should wrap only 30-50 % of each perimeter.
+   - **Fix, edges:** arris 0.8-1.5 cm with 2-3 chipped breaks per flag.
+   - **Fix, size and spacing:** enlarge to 0.5-0.9 m (spec §F) and tighten joints to 5-15 cm, so the path reads as the paving in `hut_door.png`. All flags stay on the apron.
+
+5. **DAUB: BACK BAY EDGE, SIDE PATCH, CLOTH FOLDS** (`HUT_daub`).
+   - **(a) Back-right bay.** `back_field` (z > 0.50 + 0.05·noise) gives a ruler-straight lower edge with a square corner, exposing a strip of rods (plinth_back.png). Spec §D says this bay is fully daubed.
+     - Carry it down to the plinth top, with an eroded margin of 0.35-0.60 at 0.3-0.6 m wavelength.
+     - Crumble the edge, with no straight run over 15 cm and no square corners.
+   - **(b) Side patch** (`side_field`, bay 2). It reads as a flat jigsaw-piece decal with drawn-on cracks (side_wall.png, wattle_mid.png).
+     - Make it 2-4 cm thick at the centre with lumps, feathering into the rods over 8-12 cm, with rod ridges showing through the thin margin.
+     - Remove or soften the long crack lines.
+   - **(c) Ridging.** In the large bay and back bay the ridging reads as draped cloth folds: long smooth ridges, diagonal at the upper left of daub_bay.png and vertical in eave_under.png.
+     - Ridging may only follow the horizontal rod rows (pitch 4.5-6.5 cm, 3-6 mm amplitude).
+     - No vertical or diagonal folds. Break the long undulations with 1-3 cm palm-press dents.
+
+6. **ENTRANCE TIMBER: RECTANGULAR CHECK POCKETS AND SOFT ADZE NOISE** (`HUT_door_frame` door posts and jambs; see door_front.png, door_near.png, frame_raking.png).
+   - **Problem, checks:** the branched checks render as rectangular pockets with vertical walls, for example the right jamb at (0.59, -3.71, 1.41) and the left jamb at (-0.60, -3.72, 1.56). This is a CG tell at 2 m.
+   - **Fix, checks:** make the checks V-section, closing to zero width at both ends, with branches leaving at 30° or less.
+   - **Problem, adze:** the scallops read as low-frequency lumpy noise ("soft clay"), not tool work.
+   - **Fix, adze:** give the scallop boundaries crisp creases (20-35°, sharp-edged or split normals), and run the scallops in consistent diagonal lanes per face, so they read under frontal light.
+
+7. **SMALL HYGIENE: PALE CHIPS UNDER THE PLATE** (eave_close.png, eave_under.png). A `HUT_daub` fragment at about (-1.78, -3.10, 2.60) and a `HUT_posts` sliver at about (-2.49, -2.58, 2.63) show as floating pale chips just under the wall plate at about az -30°. Trim the daub to at least 2 cm below the plate underside, and close or trim the open-backed post top so no sliver shows.
+
+**Nice to have**
+- Low-poly moss cushions at the collar drip and a few door-side eave butts (still optional).
+- A Mask G/B tuning pass: B high on plinth and flag tops, G high on the sill dip and the step-stone dish.
+- More hidden-tris headroom: the rods (16 % hidden) and the wall top in the eave shadow are the cheapest cuts.
+
+## Round 4 — builder entry
+- Script `buildings/wattle_roundhut/build_wattle_roundhut.py` (deterministic: geometry/transform hash identical across rebuilds; ~18 s build). Saves `wattle_roundhut.blend` (23.1 MB, compressed). Renders: `renders/wattle_roundhut/round_04/` (6 views, 32 spp, stats.json, hidden.json).
+- **Stats:** 1,061,091 tris; **est_hidden_pct 13.8 %** (standalone runs 13.1-13.3 %); **material_slot_count 10** (all palette); `mask_attribute_missing` empty; 144 objects (120 linked duplicates from 31 pools); bbox min (-5.10, -7.48, -0.045), max (5.11, 5.21, 8.73).
+- **#1 Wattle:** `weave_panel()` junctions now in 22 % of rows (`junction_p`), always AT a stake the row passes behind, never the same stake in consecutive rows; the old rod stops 2-5 cm past that stake, the new rod starts 2-5 cm before it tucked just behind it (`dzf` split removed, shared lane); only ~10 % of those tips flick out 1-3 cm. Rows now read as continuous wavy bands (side_wall, wattle_mid).
+- **#2 Door side/cheek panels:** new `rope_panel()`: diagonal rods Ø2.4-3.0 cm, 2-5 mm perpendicular gap, each one continuous S-curve wrapping both stakes in alternate phase; every end buried 3-5 cm in jamb / door post / sole rail / lintel / tie beam / wall post; daub backing sheet behind (no see-through). New hewn sole rail under each cheek panel; plinth now runs on under the cheeks.
+- **#3 Ground stones:** new `facet_stone()` / `field_stone()` (implicit curved facets, log-sum-exp joined, ray-bisection meshed): crowned tops 4-8 cm with off-centre high point, fronts bulging 3-6 cm and battered back, top-front bevel and corner facets, arris radius varying along the edge, crisp fracture facets on ~35 % (actual 9/38 + uppers); crown heights alternate (visible 0.20-0.34, neighbours >= 4 cm apart), ends overlap so joints close; flat pooled wedge chinking. Weave and posts are bedded onto the actual stone tops (`wall_floor`, `stone_top`). Door pads: low boulders ~0.46 x 0.36 x ~0.22 visible, sloping sides, ~0.25 m bearing bed (post base lowered to 0.27, earth mound). Threshold: 3 flat slabs, wandering fronts, depth 0.26-0.34, 1-2 cm steps, chipped notches. Step stone: flat slightly dished top, 1-1.5 cm arris, sloping sides, 2 edge chips (moved 8 cm out). Rubble pool: sub-angular, 3-5 crisp facets, thickness 0.4-0.6 x length, buried 30-50 %, kept off the flags.
+- **#4 Flags:** 8 flags 0.5-0.85 m laid in staggered rows from their real outline extents (5-11 cm nearest-point joints), 3.5-5 cm proud, earth lip on only 30-50 % of each perimeter, 0.8-1.5 cm arris with 2-3 chipped breaks; geometry now uses the planned outline (lip and stone match).
+- **#5 Daub:** (a) back bay carried down to the stone tops with eroded bites up to ~0.6 m, rounding up into the posts (no straight run / square corner); (b) side patch: smooth organic outline, 2-4 cm proud with lumps, feathered over ~10 cm, no cracks; (c) ridging horizontal only (one pitch per bay 5.0-6.2 cm, phase independent of height drift, 3-6 mm), strokes replaced by round palm dents; cracks shorter (0.12-0.35 m).
+- **#6 Timber:** checks are V-section (mouth width and depth both run to zero at the ends, depth ~1-1.3 x width), branches are en-echelon (parallel, own lips); adze strokes run in one consistent 25-40° diagonal per face with a steep-entry scoop profile (crisp creases), hero members sampled at 9.5 mm.
+- **#7 Hygiene:** daub stops 2 cm under the plate and tucks back; rods continue up under the plate there (no visible plate underside gap); post heads taper over the top 0.26 m to r 0.082 and bury 3.5 cm into the plate.
+- **Known gaps:** adze lanes stair-step slightly at grazing angles (rings are perpendicular to the member); the rope panel nearest the camera reads as hooked rods when seen very obliquely; the plinth stones are still on the smooth side in flat light; moss cushions not modelled.
+
+## Round 4 — score 8/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_04/`, side by side with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`.
+- 21 Director close-ups at 16 spp in `round_04/director_extra/`: apex_eye, profile, door_front, door_near, frame_raking, rope_panel, inside_left, threshold, flags, pad_stone, plinth, plinth_side, plinth_back, daub_bay, daub_full, back_bay, side_wall, wattle_mid, wattle_macro, eave_under and eave_close. Ground plane at -0.047.
+- Ray-picks on suspect pixels. A ray-grid open-area measurement on 5 open bays (horizontal rays normal to the wall, z 0.6-2.4). I read `weave_panel()`, `build_inner_skin()`, `build_plinth()`/`field_stone()` and the door pad-stone code.
+
+**Verdict.** Real progress on the round-3 list, but the asset is still an 8, not a 9.
+- The rope panels beside the door are now a match for `hut_door.png`.
+- The mid-span rod ends are gone. Rows read as continuous wavy bands, with at most about 4 visible ends per bay face in wattle_mid.
+- The back bay now runs down to the stones.
+- Roof, apex and scale are still hero quality.
+
+What holds it at 8 is the same rubric-8 marker as last round: the entrance and eye-level wall are not close-up worthy.
+- The open wattle measures 40-45 % open, so it reads as sticks in front of a wall rather than ref2's packed weave.
+- Every ground-contact stone is still a smooth soft form. The door-post pads are now literal hemispheres.
+- The door posts and jambs show stair-stepped, voxel-like adze patches.
+- Culling has opened see-through holes that are visible through the doorway from an actor-position camera. That breaks producer note 6 ("never open holes when culling").
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | Cone, lead hat, finial, plinth and door frame all overlay ref2 at thumbnail. |
+| Proportion and scale | 9 | Unchanged and correct: door 1.00 × 2.08, eave ≥ 2.40, shingles read about 0.45 m. |
+| Construction | 8 | See-through wall and roof through the door, a void under the left cheek sole rail, and sugar-cube daub clumps. |
+| Detail and craft | 7 | Weave 44 % open; pad, plinth, threshold and flag stones read as soft pillows or soap; blocky adze. |
+| Age and irregularity | 8 | Roof and apex convincing. The stones are uniform soft loaves, and the side daub patch is a lobed cookie. |
+| Technical | 8 | 1.061 M tris, 13.8 % hidden, 10 palette slots, Mask complete, 144 objects. But holes are open after culling, and the r3 #7 daub chip is still there. |
+
+**Strengths**
+- **Door rope panels (r3 #2 CLOSED).** `rope_panel()` reads as the twisted rope of `hut_door.png` in door_front, rope_panel and daub_full. Ends are buried, and nothing shows through. The left panel's hooked read at very oblique angles is acceptable.
+- **Wattle rod ends (r3 #1 junction part CLOSED).** Joints sit at stakes. Rows are continuous wavy bands, with at most about 4 visible ends per bay face in wattle_mid and wattle_macro. Rods wrap the stakes.
+- **Roof and apex are still hero quality.** In profile and apex_eye: chunky ragged shingles, stagger, slips, a convex profile with eave kick, a 53° lead hat with drip shadow and seams, and the knopped spike.
+- **Back bay (r3 #5a CLOSED).** It reaches the stone tops with bites and rounds into the posts. The ridging is horizontal only (r3 #5c CLOSED).
+- **Timber checks (r3 #6 checks part CLOSED).** They are V-section and close to zero at the ends. The branches are en-echelon.
+- **Technical.** The build is deterministic and takes 18 s. It has 1,061,091 tris, est_hidden_pct 13.8 % (≤ 15 %), 10 slots all in the palette and `mask_attribute_missing` empty. There are 120 linked duplicates from 31 pools, the file is 23.1 MB, and components are parameterised (`rope_panel`, `field_stone`, `facet_stone`, `boulder`, `stone_top`).
+
+**Closed or accepted**
+- Round-3 items 2, 5a, 5c and the check part of 6 are CLOSED.
+- Item 1 is closed for ends and junctions, but reopened below for open area.
+- The plinth top 0.33, pooled-instance Mask R and the apron hairline rulings all stand.
+
+### Must-fix (priority order)
+
+1. **OPEN WATTLE IS 40-45 % OPEN: it reads as sticks in front of a wall, not ref2's packed weave** (`HUT_wattle_rods`; every open bay; see side_wall.png, wattle_mid.png, wattle_macro.png, plinth_side.png, daub_full.png left bay, and the pale crosshatch in hero and actor_closeup).
+   - **Measured:** horizontal rays normal to the wall at z 0.6-2.4 give rods + stakes / inner skin of:
+
+     | Bay (az) | Rods + stakes | Inner skin |
+     |---|---|---|
+     | 100-120° | 45 % | 35 % |
+     | -150 to -130° | 51 % | 31 % |
+     | -110 to -90° | 48 % | 31 % |
+
+     The rest is posts. Excluding posts, the open area is 38-44 %. The spec (r2 amendment) is ≤ 20 % with 0.5-2.5 cm dark gaps.
+   - **Cause:** `gap=(-0.004, 0.01)` is applied to the row envelope at the butt radius. The 1.0 → 0.55 taper, the in/out swing and the ±1-diameter drift then open 2-4 cm gaps over most of each rod.
+   - **Fix, taper:** reduce it to 1.0 → 0.8.
+   - **Fix, row spacing:** derive it from the *local* rod radius along s, not the butt radius, so that the envelope gap is 0.3-1.5 cm everywhere.
+   - **Fix, drift:** let neighbouring rows touch or overlap by up to 0.5 cm where the drift brings them together, rather than opening.
+   - **Fix, rods:** keep Ø 2.8-3.8 cm at the butt.
+   - **Acceptance:** the same ray-grid gives inner skin ≤ 20 % of (rods + stakes + skin) in every open bay, and side_wall reads as a dark packed woven band.
+   - **Budget:** pay for it by thinning the hidden rod arcs. Keep est_hidden_pct ≤ 15 %.
+
+2. **GROUND-CONTACT STONES ARE STILL SMOOTH PILLOWS, AND THE DOOR PADS ARE HEMISPHERES** (pad_stone.png, plinth.png, plinth_back.png, plinth_side.png, threshold.png, flags.png). This is the single biggest close-up CG tell at the entrance.
+   - **(a) Door-post pad stones** (`boulder((0.23, 0.18, 0.15)…, taper=0.32)` at (±1.04, -3.61)). Both render as smooth, rotationally symmetric domes with the post on a small flat.
+     - Make them low and wide, with a visible height of 0.16-0.20 against a plan of 0.46 × 0.36, so the visible width:height is ≥ 2.2:1.
+     - Give them an irregular 6-9-corner plan and 2-3 planar split faces meeting at visible arrises (radius 0.5-1.5 cm).
+     - The flat bed should be about 0.25 m across, tilted 1-3°. No symmetric profile.
+   - **(b) Plinth stones** (`field_stone`). In elevation every stone is a rounded-rectangle loaf with the same 5-8 cm arris and a perfectly smooth surface. The "fracture facets" do not read in any view.
+     - **Surface:** add 6-12 shallow conchoidal facets per visible face (8-20 cm across, 4-10 mm deep, crease radius ≤ 5 mm), lumps of 1-2 cm at 10-15 cm wavelength, and a few pits.
+     - **Arrises:** vary the radius 1-3 cm.
+     - **Fractures:** ≥ 50 % of stones should show one planar fracture face with a crisp edge that reads in plinth.png.
+     - **Shape mix:** about 30 % sub-rounded boulders with an irregular, non-rectangular top profile, about 40 % flattish slabs (height:length ≤ 0.45), and the rest blocky. No two neighbours of the same type.
+   - **(c) Threshold slabs and step stone.** They read as soap bars: perfectly flat tops and a uniform 2-3 cm rounded arris all round.
+     - **Tops:** undulate 0.5-1.5 cm at 15-25 cm wavelength, with 2-3 shallow spalls 2-5 mm deep.
+     - **Arrises:** vary 0.5-2.5 cm along the edge, with chipped breaks.
+     - **Bedding:** the step stone shows a dark undercut on its +X edge (flags.png). Bed it so no underside arris is visible.
+   - **(d) Flags.** The earth lip is a smooth fillet, so the flags read as melted dough or puddles.
+     - Where there is no lip, show ≥ 2.5 cm of near-vertical stone edge face.
+     - Where there is a lip, keep it ≤ 1.5 cm high and ≤ 4 cm wide.
+     - Apply the top undulation from (c).
+   - **(e) Clinging daub clumps** on the door-bay rods (daub_full.png, plinth.png). They are three rounded cubes. Replace them with 2-3 flattened, torn blobs (4-8 cm) wrapped around the rods, conforming to them.
+   - **(f) Rubble.** It reads as smooth beans in plinth.png and flags.png. The 3-5 crisp facets must read at 2 m.
+
+3. **SEE-THROUGH HOLES FROM CULLING, VISIBLE THROUGH THE DOOR** (producer note 6; frame_raking.png, inside_left.png).
+   - **(a) Wall.** From an eye-level camera 1.3-2.5 m to the right of the door axis, for example (2.2, -4.9, 1.65) looking at (-0.6, -3.2, 1.5), lit stripes show on the inside of the left wall at az -45° to -55°, z 1.0-2.6.
+     - `build_inner_skin()` drops the skin behind the daub bay (`sb0+0.06`). The posts and rods there are open-backed shells, so rays exit to the sky.
+     - Ray-picked: frame_raking pixels (600,100), (605,200) and (610,300) MISS; (600,420) passes posts (back open) → rods → MISS.
+     - Keep the inner skin (or a dark blocker) over the full circumference, including behind the daub bays. It is a few thousand tris.
+   - **(b) Roof.** Through the same door view, the roof underside at az about -72° shows shingles from below with sky behind them (pixels (690,42) and (650,30): shingles, then MISS). `interior_visible()` and the roof blocker cover only ±110° about the back.
+     - Extend `HUT_roof_blocker` (low-poly) to the full 360°, or at least to the ±150° about the back that the door can see.
+   - **(c) Cheek sole rail.** There is a black void under the left cheek sole rail between the pad stone and the first plinth stone (pad_stone.png, x 400-500, y 300-420). Close it with chinking or an earth bank.
+   - **Acceptance:** from eye-level cameras on an arc r = 5 m, az -60° to +60° about the door axis, no ray through the doorway misses geometry.
+
+4. **ENTRANCE TIMBER: STAIR-STEPPED, VOXEL-LIKE ADZE PATCHES** (`HUT_door_frame` door posts and jambs; door_front.png, door_near.png, rope_panel.png left jamb, inside_left.png right jamb x 730-800, pad_stone.png).
+   - The diagonal strokes are cut on rings perpendicular to the member. They render as rectangular steps and blocks a few mm high, which reads as low-res displacement at 1-2 m. The builder's known gap understates it: it shows under frontal light, not only at grazing angles.
+   - **Fix:** generate the hero-face surface on a grid aligned to each stroke, or subdivide to ≤ 4 mm with the crease placed on the stroke boundary curve. Each scallop edge must be a continuous line with no step > 1.5 mm.
+   - **Keep:** scallops 5-9 cm, 6-12 mm deep, one diagonal per face.
+   - **Sill:** remove the periodic bead lumps along the sill's front face (threshold.png). They read as a repeating pattern. Replace them with irregular wear (1-3 lumps per metre, varied).
+
+5. **DAUB: DOOR-BAY EROSION SHAPE, SIDE PATCH, STAIR-STEP EDGES** (`HUT_daub`).
+   - **(a) Door bay.** The erosion reads as an arched "mouse hole": a smooth arch whose daub comes down to the plinth at both posts (daub_full.png, actor_closeup). In ref2 (`hut_wattle_daub_plinth`) the broken edge runs across the full bay width and exposes the bottom wattle post to post.
+     - Put the lower edge at z 0.65-0.95 across the whole bay: ragged ±12 cm at 5-15 cm wavelength, plus 2-3 deeper bites.
+     - Nothing below z 0.5 except ≤ 2 small remnants.
+     - Keep the lip thickness feathering 4 → 1 cm.
+   - **(b) Side patch** (+X, side_wall.png, plinth_side.png). It is still a lobed "cloud" or cookie with a scalloped outline, standing proud of the rods as a separate slab.
+     - Make it an elongated horizontal patch, 0.5-0.9 × 0.3-0.5 m. Its top and bottom margins should break along rod rows (stepped horizontally), with no round lobes.
+     - Press it into the weave so that the rod ridges show over its whole outer 8-12 cm.
+   - **(c) Stair-steps.** Daub margins show grid stair-steps: a comb at the door-bay edge (plinth.png x 720-770, y 130-160) and on the side-patch rim (plinth_side.png x 360-540, y 90-195). Resample the boundary at ≤ 1 cm, or clip the mesh along the contour, so no grid steps show.
+   - **(d) Daub chip (r3 #7, not closed).** It is still a pale chip under the plate at (-1.78, -3.08, 2.61) (eave_under.png), and thin pale post-head slivers show at about (-2.48, -2.55, 2.61). Drop the daub top to ≥ 4 cm under the plate underside there, and give the post-head taper a dark tuck or hide it behind the plate.
+
+**Nice to have**
+- Low-poly moss cushions at the collar drip and a few door-side eave butts (still optional).
+- A Mask G/B tuning pass: B high on the plinth and flag tops, G on the sill dip and step dish.
+
+## Round 5 — builder entry
+- Script `buildings/wattle_roundhut/build_wattle_roundhut.py` (deterministic: geometry/transform hash identical across rebuilds; ~25 s build). Saves `wattle_roundhut.blend` (27.7 MB, compressed). Renders: `renders/wattle_roundhut/round_05/` (6 views, 32 spp, stats.json, hidden.json).
+- **Stats:** 1,274,341 tris; **est_hidden_pct 13.9 %** (standalone 13.8 %); **material_slot_count 10** (all palette); `mask_attribute_missing` empty; 162 objects (137 linked duplicates from 31 pools); bbox min (-5.10, -7.48, -0.045), max (5.11, 5.21, 8.73).
+- **#1 Open wattle:** in `weave_panel()` each row is now laid on the row below. Its centre line is the previous row's real envelope top (local tapered radius along s), plus a 0.2-0.9 cm gap that wanders slowly and is clipped to -0.3..+1.2 cm (rows touch, never open), smoothed over about 3.5 cm. Taper is 1.0 → 0.8, butt Ø 2.8-3.8 cm, and the old ±1-diameter free drift is gone. The rod section arcs were also wrong: below eye level the visible top stopped at 46°. Now the side facing the viewers runs past vertical (98-112°) and the far side stops at 76-90°. Same ray-grid as the director (horizontal rays normal to the wall, z 0.6-2.4, skin / (rods + stakes + skin)): **12.3-14.4 %** in all 7 bays tested (100-120: 13.2; -150..-130: 13.1; -110..-90: 14.1; 60-80: 12.3; -80..-60: 13.3; 20-40: 14.4).
+- **#2 Stones:** new parameterised `pad_stone()`, `plinth_kind_stone()`, `spall_stone()`, `stone_skin()` and `dir_grid()` (dense mesh over the visible front and top, sparse back and bed).
+  - **(a) Pads:** 6-8-corner irregular plan 0.46 × 0.36. Battered planar sides, 2-3 planar split faces at about 3-5 mm LSE arrises, flat bed tilted 1-3°. Visible about 0.17 (PAD_TOP 0.225, earth banked 5 cm).
+  - **(b) Plinth:** kinds slab / block / boulder, never the same kind twice in a row. Built 15 / 10 / 11 (42 / 28 / 31 %); slabs are 0.62-0.84 long and 0.17-0.22 visible. Each stone has 6-12 planar flake scars (plane tilted 6-16°, 4-10 mm deep, 8-20 cm, soft window so the crease is the plane line), 1-1.4 cm lumps at about 12 cm, and pits. Arris k varies by kind (slab 4-6 mm, block 6-9, boulder 10-14) and along each edge. A crisp fracture plane is on 62 % (actual 19/36 plus uppers). Auto-smooth is 30° so the creases read.
+  - **(c) Threshold and step:** tops undulate about 1.3 cm at about 20 cm, with 2-3 planar spalls 2-5 mm deep. The arris varies 0.5-2.5 cm with chips. The fracture planes are removed (they stair-stepped on the polar mesh). The step is bedded deeper (0.16) with an earth lip on about 55 %.
+  - **(d) Flags:** tops 4.7-6.2 cm proud, so ≥ 2.5 cm of vertical edge shows where there is no lip. Lips are 0.8-1.4 cm high and 3-4 cm wide on 30-50 % of the perimeter. The apron is a 2 cm grid over the path, with vertices snapped onto each flag outline, and is culled only below the bare earth (no saw-tooth). Same undulation and spalls as (c).
+  - **(e) Clumps:** 3 torn daub sleeves 4-8 cm long, wrapped round real rod paths (stored from `weave_panel`) just under the break.
+  - **(f) Rubble:** 5-8 planar fracture faces with 2.5 mm arrises.
+- **#3 Holes:**
+  - (a) `HUT_daub_interior` now runs the full circumference.
+  - (b) New `build_eave_closure()`: a daub band on the inner half of the plate, from the plate top into the shingle stack. Its top is lowered automatically wherever a missing shingle would expose it. Note: this band, not a full-360° `HUT_roof_blocker` as the must-fix asked, is what seals the roof underside; the blocker still leaves the back window open where full-length shingles are seen through the door.
+  - (c) Two split packing stones under each cheek sole rail.
+  - Acceptance test: rays through the doorway from eye-level cameras on r = 5 m and r = 2.2 m arcs (az -60..+60°, 13 each), plus the frame_raking and inside_left cameras, give **0 misses of 54,804**.
+- **#4 Adze:** `hewn_member()` now uses stroke-aligned topology. Each adzed face's vertex columns are slid along the member by -skew·across (plus a slight per-face bow), so every vertex row lies on a stroke boundary, with no stair-steps. The shear ramps out over the last 12 cm so the end cuts stay square. Hero posts and jambs are sampled at 7 mm along the member with 10-11 points across each face. One stroke lane per face (no lane-seam steps). The sill has no adze beads; it has 3-4 irregular soft lumps or hollows plus slow undulation on the front.
+- **#5 Daub:**
+  - (a) The door-bay edge runs post to post at z 0.62-1.0 (base 0.79, ±5 cm at about 8/m plus ±3.5 cm at about 15/m), with 3 asymmetric bites of 8-13 cm. Scabs stay within 10 cm of the edge, so nothing is below z 0.5.
+  - (b) The side patch is 0.74 × 0.42, elongated horizontally. Its top and bottom margins step by one or two rod rows (36 mm) at 6-22 cm runs, the ends are ragged and there are no lobes. It is pressed in about 0-1 cm proud of the rod fronts, with rods kept over the outer 13 cm.
+  - (c) The cut boundary of every sheet is Newton-snapped onto the field contour, so there are no grid steps.
+  - (d) The daub top sits 4.5 cm under the plate and the rods above it are kept. Posts are cut square under the plate (1.6 cm head chamfer only), so there is no tapered post-head sliver.
+- **Known gaps:**
+  - A drying check that crosses the adze strokes on the hero face of the left door post leaves a small zipper-like crease (post_close).
+  - A few flag-lip margins still show a faint fringe from the 2 cm grid.
+  - 4 short spans of the eave closure sit in the shadow of missing shingles. The band is lowered there, but those spans still show through the shingle gap from above.
+  - Moss cushions are not modelled.
+
+
+## CLIENT CORRECTION — the exterior is MOSTLY INTACT DAUB (supersedes the earlier exposed-wattle balance)
+
+The client says there is too much exposed wattle.
+
+- **Daub coverage.** The exterior walls must be **mostly intact daub, about 80–90% of the wall face**.
+- **Exposed wattle** appears only in **small sections**: about 3–5 patches around the whole hut, each roughly 0.3–1.0 m², where the daub has fallen away. Each patch has an eroded, ragged, thick daub edge, with rods visible beneath and a few clinging clumps. This is the existing "daub bay" erosion language, inverted.
+- **The door side panels** may keep their visible woven rope look if they read as intentional framing. Otherwise daub them too.
+- **Daub surface.** Keep a hand-applied, slightly bulging coat with shrinkage cracks, a weathered lower margin and slight sag. Avoid flat board-like daub.
+- **Hidden geometry.** Rods behind intact daub become hidden geometry. **Delete them.** Keep wattle only inside the exposed patches, plus about 10 cm under the patch edges. Re-check est_hidden_pct ≤ 15%.
+- **Ground dressing.** Per producer note 10, delete all path flags, stepping stones, ground rubble and the ground apron. Keep the stone plinth, the door-post pad stones and the threshold.
+
+## Round 6 — builder entry
+- Script `buildings/wattle_roundhut/build_wattle_roundhut.py` (seeded, ~27 s build), saves `wattle_roundhut.blend` (28.6 MB). Renders: `renders/wattle_roundhut/round_06/` (6 views, 32 spp, stats.json, hidden.json).
+- **Stats:** 1,333,964 tris. **est_hidden_pct 12.9 %.** **material_slot_count 10**, all from the palette. `mask_attribute_missing` is empty. 123 objects (99 linked duplicates from 22 pools). bbox min (-4.19, -4.59, -0.041), max (4.19, 4.20, 8.73).
+- **Client correction: mostly intact daub.**
+  - Every one of the 13 bays now carries the daub coat (`make_daub_fields`, `low_margin`, `daub_hole`, `poly_sdf`).
+  - Coverage was ray-measured with horizontal rays at z 0.45-2.6 all round. Daub is the first hit on **86 %** of the wall face; posts are 11 %, exposed rods 2 % and stakes 0.1 %. Leaving out the posts, the coat covers 97 % of the infill.
+  - **Exposed wattle: 4 patches.**
+    - (1) The ref2 eroded band left of the door, kept as approved: post to post, edge at z 0.62-1.0, about 0.7 m² (front, hero, actor_closeup).
+    - (2) A break at mid-height on the +X side, about 0.4 m² (side view).
+    - (3) A low break above the plinth, back-right, about 0.35 m² (back view).
+    - (4) A break under the eave, back-left, about 0.3 m² (hero, aerial).
+  - **Patch outlines.** Patches 2-4 are fracture polygons: 9-14 straight breaks with sharp corners and 2-3 re-entrant notches, so no oval ports. Their top and bottom margins step along the rod rows. The thick broken edge is the existing erosion ramp (behind the rods, up to 8.8 cm proud in about 4.5 cm). Two torn daub sleeves are wrapped round the exposed rods in each patch, and three in the door bay.
+  - **Coat surface.**
+    - Hand-applied dabs (handful pats 6-11 cm) and a sag belly 0.6-0.9 m up.
+    - Palm dents, bulges, and 2-4 shrinkage cracks per bay.
+    - A splash-eroded foot: thinner and pitted over the bottom 25 cm, with occasional bites that show the bottom rod row.
+    - Rod ridging only where the coat thins at a patch margin.
+  - **Coat top.** The coat now runs up into the wall plate. There is no gap, so there are no rods and no pale chips under the plate.
+  - **Mesh.** A graded tensor grid: 7.5 mm at patch margins and cracks, 1.05 cm at the foot, 1.6 × 1.3 cm on the intact coat.
+- **Hidden geometry.**
+  - Rods and stakes buried in the coat are deleted. Rods are kept only in the patches, plus 7 cm under their margins and about 3.5 cm (the bottom row) under the foot. `HUT_wattle_rods` went from 404k to about 80k tris, about half of it the door rope panels.
+  - The post flanks buried in the coat and the post backs are culled (`post_cull`). The two door-bay wall posts are kept whole on their door side.
+  - The plinth tops under the daub foot are culled (`plinth_under_coat` / `cull_object`).
+- **Producer note 10.**
+  - Deleted: `HUT_ground_apron`, all path flags, ground rubble and the earth mound, drip trench and bank, with their code (`build_apron`, `build_rubble`, `_mound`, `_path_mound`, `apron_phi`, flag lips).
+  - The building stands on a flat Z = 0 datum. Footing, pads, step and threshold keep a buried skirt of at most 4 cm (`GROUND_SKIRT`).
+  - Kept: plinth and chinking, door-post pads, cheek packing stones, threshold slabs and sill, and the built-in step (`HUT_step_stone`).
+  - The pad stones now have near-upright sides (batter 5-13°), so no flared foot shows on bare ground.
+- **Unchanged from round 5:** door rope side panels (they read as intentional framing, so they are kept), entrance timber (stroke-aligned adze), plinth stones, roof, apex.
+- **Known gaps:**
+  - A few plinth stones show small stair-stepped flake-scar edges at about 1 m (pre-existing `stone_skin`).
+  - Crack groove lips can zigzag slightly at under 1 m.
+  - The drying-check crease on the left door post from round 5 is still there.
+  - Moss cushions are not modelled.
+
+## Round 6 — score 8.3/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_06/`, side by side with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`, and the CLIENT CORRECTION (mostly intact daub) plus producer note 10.
+- 12 Director close-ups at 12 spp in `round_06/director_extra/`, rendered with the ground plane at **Z = 0** (the Unreal datum, not the review's -0.041): patch_side, patch_side_near, patch_back_low, patch_eave, door_bay, wall_eye, wall_rake, coat_rake2, coat_close (too dark, ignore), foot_ground, under_plate and door_near.
+- Ray-measured radial profiles of the coat and the posts (horizontal rays, az 60-128°, z 1.0 / 1.5 / 2.2). Listed every object in the .blend. Read `DAUB_PATCHES`, `daub_hole()`, `daub_edge_door_bay()`, `low_margin()` and the clinging-clump code in `build_daub()`.
+- Ground dressing is **not scored** (producer note 10). Its absence is correct.
+
+**Verdict.** The client correction has landed.
+- The hut now reads as a daubed hut with a few breaks, not a wattle hut. Daub is 86 % of the wall face, there are 4 patches of 0.3-0.7 m², and the buried rods are gone.
+- All the ground dressing is gone, and the footing sits convincingly on a flat Z = 0 plane.
+- Roof, apex, silhouette and scale stay hero quality.
+
+What keeps it below 9 is how the new daub work is crafted. Four CG tells show at actor or thumbnail distance:
+- the door-bay break, the most visible one, which reads as dripping icing in the actor close-up;
+- the clinging clumps, which render as round beads threaded on the rods;
+- a five-point star cut-out on the +X side;
+- posts that sit flush with, or behind, a quilted coat.
+
+A continuous dark slot also runs under the coat foot all round the hut. Every one of these is a contained fix. **8.3 clears the user's revised pass mark of 8.2.**
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | The cone, lead hat, finial, plinth and projecting door frame all overlay ref2. The daubed wall now matches the client brief. |
+| Proportion and scale | 9 | Unchanged and correct: door 1.00 × 2.08, eave ≥ 2.40, shingles about 0.45 m. bbox 8.37 × 8.78 × 8.77. |
+| Construction | 8 | Posts are flush with the coat (0-4 cm proud), so the frame does not read as carrying the infill. The coat hangs above the plinth on a continuous slot. |
+| Detail and craft | 8 | Bead clumps, an icing-drip door-bay edge and a star-shaped side patch. The coat dabs and cracks read only in raking light. The rope panels, adze work and stones hold up. |
+| Age and irregularity | 8 | The roof and stones are convincing. The patch outlines are formulaic: a radial star, and evenly spaced drip teeth. |
+| Technical | 9 | 1,333,964 tris (≤ 1.5 M), est_hidden_pct 12.9 % (≤ 15 %), 10 slots all in the palette (M_earth is only the interior floor and M_rubble only the chinking), Mask complete, 123 objects, 22 pools, below-ground 0 %. HUT_daub alone is 718k tris (54 %); see the nice-to-haves. |
+
+**Strengths**
+- **Client correction met in substance.**
+  - Daub is 86 % of the wall face (97 % of the infill), with 4 small patches and rods deleted behind the intact coat. `HUT_wattle_rods` went from 404k to 81k tris.
+  - The back-low patch (patch_back_low.png) is exactly the right language: a near-straight break above the stones, rods exposed down to the plinth and a thick broken coat edge. Use it as the model for the others.
+- **Producer note 10 met.** The apron, flags, rubble, mound, trench and their code are all deleted. Rendered on a true Z = 0 plane (foot_ground.png), the plinth, pads, threshold and step meet the ground cleanly with no flared feet and no floating parts. The pad stones now read as upright-sided boulders.
+- **The coat surface is not board-like.** Raking light (coat_rake2.png) shows hand-dab relief and a palm dent. The shrinkage cracks are V-section, and a natural shrinkage slit opens at the post. There is no gap and no pale chip under the wall plate any more (under_plate.png; r3 #7 / r4 #5d **CLOSED**).
+- **The entrance holds.**
+  - The rope side panels read as intentional framing, as the client allowed.
+  - The stroke-aligned adze has no stair-steps (door_near.png).
+  - The doorway gives dark depth with no see-through (r4 #3 holds).
+- **Roof and apex are unchanged hero quality.**
+
+**Closed or accepted**
+- These r4 items are CLOSED: #3 (holes), #4 (adze and sill) and #5d (plate chip).
+- The r4 #1 open-weave item is superseded by the client correction.
+- The r4 #2 pad and plinth items are accepted at r5/r6 quality. Ground dressing items r4 #2d and #2f are void under producer note 10.
+- The r4 #5a door-bay edge, #2e clumps and #5b side patch are reopened below, in the new daub context.
+
+### Must-fix (priority order)
+
+1. **DOOR-BAY BREAK READS AS DRIPPING ICING** (`HUT_daub`, door bay az -45..-21°; actor_closeup.png, hero.png, front.png, director_extra/door_bay.png). This is the most visible tell, because it sits in the hero close-up.
+   - **What's wrong:** `daub_edge_door_bay()` adds Gaussian bites and n2 noise, which gives evenly spaced rounded lobes pointing DOWN. They are about 12-18 cm apart and 6-10 cm deep, with a soft pillowed lip, so they read as frosting or wax drips. ref2 (`hut_wattle_daub_plinth`) shows a ragged but essentially horizontal fracture line.
+   - **Fix, break line:** make the break a fracture line at z 0.72-0.95.
+     - Build it from straight runs of 8-25 cm that step by 1-2 whole rod rows (3.6-7.2 cm; reuse `stepped_curve`).
+     - Join the runs with short vertical or diagonal breaks that have sharp corners (radius ≤ 1 cm).
+     - **No downward-pointing convex tooth narrower than 12 cm.**
+   - **Fix, bites:** turn the 3 bites into flat-floored notches stepped UP by 2-3 rod rows (7-11 cm), not Gaussian dips.
+   - **Fix, edge face:** the broken edge face is 2.5-4 cm thick and within 30° of the wall normal, with a crisp outer arris (radius ≤ 5 mm) and 3-6 mm grit relief on the fracture face. Feather the coat thin over the rods (ridging) along only about 30 % of the edge length.
+
+2. **CLINGING CLUMPS RENDER AS ROUND BEADS ON THE RODS** (`HUT_daub` "sleeves", `build_daub()` lines about 2722-2772; actor_closeup.png shows 3, plus door_bay, patch_side_near, patch_back_low, patch_eave and foot_ground).
+   - **What's wrong:** a 4-8 cm, 12-sided closed tube with a (1-t²)^0.6 thickness profile, up to about 2.5 cm proud, is a spindle bead. It reads as knots or beads threaded on the withies.
+   - **Fix:** replace each clump with a flat torn FLAKE of coat.
+     - Size: 8-15 cm wide × 5-10 cm tall, bridging 2-3 adjacent rod rows on their front face. Thickness 1-2 cm, with a flat dab-textured front.
+     - Outline: polygonal and torn, with 4-7 straight breaks, the same fracture language as #1.
+     - Placement: preferably still attached to, or within 8 cm of, the main break.
+   - **Not allowed:** a closed sleeve round a single rod, or any rotationally symmetric bulge.
+   - **Count:** at most 2 per patch and 3 in the door bay. Deleting them is better than keeping beads.
+
+3. **+X SIDE PATCH IS A FIVE-POINT STAR CUT-OUT** (`DAUB_PATCHES` bay 2, az about 82°, z 1.0-1.6; side.png, where it reads at thumbnail size; patch_side.png, patch_side_near.png).
+   - **What's wrong:** `daub_hole()` places 9-14 vertices at radius 0.72-1.12 × the half-size and pulls 2-3 of them in to 0.55-0.75, which alternates spikes and notches into a star.
+   - **Fix, outline:** build the outline as a broken, irregular quadrilateral or pentagon.
+     - Use 4-6 principal breaks, a width:height of 1.4-2.2:1, and top and bottom margins near horizontal along the rod rows (stepped by 1 row over runs of 8-25 cm).
+     - Sides are vertical (often following a stake) or diagonal at 30-60°.
+     - Allow at most ONE re-entrant notch, ≤ 25 % of the patch height deep. No convex corner sharper than 70°.
+   - **Eave patch (bay 10, az about 275°, patch_eave.png):** it is a rounded lens with a pillowed lip. Give it the same outline and the crisp edge face of #1.
+   - **Target:** match the back-low patch (patch_back_low.png).
+
+4. **POSTS SIT FLUSH WITH THE COAT, SO THE WALL READS AS QUILTED CUSHIONS** (`HUT_daub` against `HUT_posts`; wall_eye.png, coat_rake2.png, side.png, back.png).
+   - **Measured:** horizontal rays at z 1.0, 1.5 and 2.2 put the post fronts at r 3.58-3.63 and the coat at r 3.56-3.61. Posts are 0-4 cm proud, and the post at az about 93° is flush. Each bay bulges up to the post, so the posts read as narrow grooves between pillows. In ref2 the posts stand clearly proud of the infill.
+   - **Fix, coat face:** bring the mean coat face back to r 3.555-3.57 (2-4 cm over the rod fronts, lumps ±1.5 cm).
+   - **Fix, post margin:** within 8-12 cm of each post, let the coat dip a further 1-2 cm into the existing shrinkage slit, so every post face stands **5-8 cm proud** of the coat over its full height.
+   - **Fix, sag belly:** keep it, but at ≤ 1.5 cm amplitude.
+
+5. **CONTINUOUS DARK SLOT UNDER THE COAT FOOT ALL ROUND** (`low_margin()`; hero.png, side.png and back.png show it as a dark ring line at thumbnail; wall_eye.png, patch_back_low.png).
+   - **What's wrong:** the coat stops 2.8 cm or more above the stone tops in every bay, so a black slot and the bottom rod row run unbroken round the hut, and the coat reads as a curtain hanging over the plinth.
+   - **Fix, contact:** bed the coat foot onto the stone tops, as a rough fillet pressed into the stone joints, along **≥ 65 % of each bay's length**.
+   - **Fix, bites:** show the bottom rod row only in 1-3 splash-eroded bites per bay, each 10-30 cm long and 3-8 cm tall.
+   - **Keep** the culling of plinth tops under the coat consistent with the new contact line, so no holes open.
+
+**Nice to have**
+- **Daub budget.** `HUT_daub` is 718k tris (54 % of the asset) at a 1.6 × 1.3 cm grid over the intact coat, but the relief that reads is ≥ 6 cm wavelength.
+  - Coarsen the intact field to about 3 cm and keep 7.5 mm only at margins and cracks. That should give about 250-300k.
+  - Spend part of the saving on the fracture faces of #1 and #3.
+- Pre-existing items:
+  - Small stair-stepped flake-scar edges on a few plinth stones at about 1 m.
+  - The drying-check zipper crease on the left door post.
+  - Crack-lip zigzag under 1 m.
+- Moss cushions remain optional.
+- **Mask:** set G high on the patch fracture faces and B high on the coat foot.
+
+## Round 7 — builder entry
+- Script `buildings/wattle_roundhut/build_wattle_roundhut.py` (seeded, ~26 s build), saves `wattle_roundhut.blend` (28.0 MB). Renders: `renders/wattle_roundhut/round_07/` (6 views, 32 spp, stats.json, hidden.json).
+- **Stats:** 1,309,222 tris. **est_hidden_pct 13.7 %.** **material_slot_count 10**, all from the palette (`M_rubble` is gone: the plinth chinking is now on `M_mortar`, per note 7). `mask_attribute_missing` is empty. 123 objects (99 linked duplicates, 22 pools). bbox min (-4.19, -4.59, -0.041), max (4.19, 4.20, 8.73). Ground dressing is still absent (note 10). The only stone outside the plinth is the built-in step.
+- **#1 Door-bay break.** The new `stepped_break()` builds the break and `daub_edge_door_bay()` turns it into a coat polygon. The field is now an exact signed distance (`poly_sdf`), not z minus a noisy curve.
+  - The break is made of straight runs of 8-25 cm at z 0.72-0.83, each 1-2 rod rows (3.6/7.2 cm) above or below the last. Runs carry 3-6 mm kinks and are joined by vertical or diagonal jogs of 0-3 cm.
+  - The 3 bites are now flat-floored notches stepped UP by 2-3 rows (to z ≤ 0.94). Each has one clearly diagonal side.
+  - Any run lower than both neighbours and narrower than 13 cm is raised, so there are no narrow downward teeth.
+  - The arris is crisp: grid vertices within 0.42 cells of the contour are Newton-snapped onto it, so there is an edge loop on the break. The fracture face drops about 10 cm over 2.4 cm (about 14° off the wall normal) and carries 3-6 mm grit.
+  - The coat at every fracture margin is at least 6.8 cm (≥ 2.5 cm over the rod fronts).
+  - Along about 30 % of the margin the edge is feathered: a softer profile over 4.4 cm.
+  - The scabs below the break, the pock holes and the old rod ridging are removed. The ridging read as corrugation.
+- **#2 Clumps → flakes.** The sleeves are deleted. `flake_mesh()` and `daub_flakes()` replace them.
+  - Each flake is a flat torn flake: 9-15 × 5-10 cm, 1.1-1.8 cm thick, with an irregular outline of 5-7 straight breaks (Dirichlet-spaced) and broken sides at varying slopes.
+  - Its back sits on the local rod fronts (90th percentile from `ROD_STORE`), and it bridges at least 2 rows.
+  - Flakes sit 4.5-8.5 cm inside the break, with a small in-plane rotation and a slight peel.
+  - Count: 3 in the door bay and 2 in each patch bay except the eave patch's 1. That is 8 in total.
+- **#3 Patches.** `fracture_patch()` makes the +X side patch (bay 2) and the eave patch (bay 10). Each is a broken quadrilateral 1.5-1.6:1, with top and bottom margins stepped by 1 rod row over 8-25 cm runs and near-vertical sides (±2 cm lean). One corner, or two opposite corners, are cut on a 35-55° diagonal, which makes a pentagon or hexagon. There is no notch and no star. The crisp edge face from #1 applies. The back-low patch keeps its approved outline.
+- **#4 Posts proud.**
+  - The wall posts stand 2 cm outside the wattle line, and the wall plate moves out 1 cm. The radial lean and bow are damped to 30 %; the tangential lean of ±0.7° is kept.
+  - `post_profiles()` measures each built post (a robust quadratic fit of centre and front along its height) and the coat fits to it.
+  - The mean coat face is `COAT_R_NOM` 0.062. Ray-measured at z 0.9-2.3 it is r 3.558 (p5 3.542, p95 3.572). Lumps are about ±1.5 cm. The sag belly is ≤ 1.2 cm.
+  - Within 8-12 cm of each post flank the coat dips a further 1.2-2.0 cm into the shrinkage slit, and it is capped at the post front minus 5.8 cm.
+  - Ray profiles across posts give: post fronts r 3.617-3.635, slit coat r 3.540-3.555, and mid-bay coat r 3.555-3.577. So posts stand **6.5-9 cm proud of the adjacent coat** and 5-7.5 cm proud of the mid-bay coat.
+- **#5 Foot.**
+  - `low_margin()` beds the coat foot 3 cm into the stone tops along `coat_floor()`. That is the stone top sampled under the coat face, so the coat follows down into the joints.
+  - A rough fillet of 0.9 ± 0.4 cm is squeezed out at the contact.
+  - Each bay has 1-2 splash-eroded bites of 10-26 cm × 3-6.5 cm at random positions, capped at 27 % of the bay length. The rod row is kept only above the bites.
+  - The coat sheet inside the stones is dropped.
+  - `plinth_under_coat()` now culls stone tops only where the foot is bedded (dilated 8 cm from any bite or patch), up to r 3.545.
+  - Ray test (rays at stone top + 1.2 cm): the coat reaches the stones along 68-100 % of every intact bay. The door bay (52 %) is the ref2 exposed band.
+- **Hole checks.** About 853k rays round every post margin, and about 197k rays at the foot (az 24-336°, pitch 5-40°), hit nothing but geometry. The only interior hits are through the open weave of the exposed patches, the door bay and the bites (the inner skin or the floor edge), which is expected. One see-through gap at the post at about 289° was found and fixed: the post fit was being skewed by a knot stub.
+- **Known gaps.**
+  - The flakes are still fairly crisp polygonal chips in clay and could read slightly stone-like at under 1 m.
+  - The low back patch keeps its round-6 outline and has one lens-ish flake.
+  - The foot bites still show as small dark slots at thumbnail, though they are now irregular.
+  - The round-6 pre-existing items (plinth flake-scar steps, the drying-check crease, crack-lip zigzag) are unchanged.
+  - HUT_daub is still about 705k tris; the intact grid was not coarsened, to keep the hidden % margin.
+- User note relayed: the pass criterion moves to 8.2 once these corrections are in.
+
+## Round 7 — score 8.5/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_07/`, side by side with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`. I applied the CLIENT CORRECTION (mostly intact daub with small exposed-wattle patches) and producer note 10.
+- I made 10 Director close-ups at 12 spp in `round_07/director_extra/`. They use the round-6 camera set, so the two rounds compare one to one, with the ground at Z = 0: door_bay, patch_side, patch_side_near, patch_eave, patch_back_low, wall_eye, wall_rake, coat_rake2, foot_ground and door_near.
+- I also made 3x crops of the back, hero and side walls to judge at thumbnail size, and listed every object in the .blend.
+- **Ground dressing.** It is **not scored** (producer note 10). The .blend holds no rubble, flag, path or apron object. The only stone outside the plinth is `HUT_step_stone`, the built-in door step (x -0.61..0.67, y -4.59..-3.97, top 0.11). That is correct.
+
+**Verdict.**
+- **Client brief.** The user's corrections are in.
+  - The hut is a daubed hut with a few small breaks. Daub is about 84 % of the wall face, with 4 small patches.
+  - There is no ground dressing.
+- **Round-6 must-fixes.** All five structural complaints are addressed, and three are genuinely closed:
+  - The posts now stand clearly proud, so the frame carries the infill.
+  - The coat foot is bedded onto the plinth, and the continuous slot is gone.
+  - The door-bay break is now a stepped, near-horizontal fracture that reads correctly in the actor close-up.
+- **Remaining tells.** They are second-order and live in the daub craft:
+  - The +X patch has overcorrected from a star into a clean rectangular vent with a constant-width bevel ring.
+  - The new flakes read as small leaves or arrowheads peeling off the rods.
+  - The foot bites read as a row of punched dark holes at thumbnail.
+  - The shrinkage cracks are smooth C-arcs.
+- Roof, apex, silhouette and scale remain hero quality.
+- **8.5 clears the user's revised pass mark of 8.2.**
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | The cone, lead hat, spike finial, dry-stone plinth and projecting flat-fronted door frame overlay ref2. The wall reads as intact daub per the client. |
+| Proportion and scale | 9 | Unchanged and correct: door 1.00 × 2.08, eave ≥ 2.40, shingles about 0.45 m next to the 1.8 m figure. bbox 8.37 × 8.78 × 8.77. |
+| Construction | 9 | Posts stand 5-9 cm proud of the coat (wall_eye: they read as the frame carrying the infill). The coat is bedded onto the stone tops with a fillet. The plate, rafters and door frame are all carried. |
+| Detail and craft | 8 | Better than r6. But the side patch is a cut rectangle, the flakes are leaf-like chips, the cracks are C-arcs, and the door-bay tabs have soft U-bottoms. |
+| Age and irregularity | 8 | The roof and stones are convincing. The patch outlines and foot bites are still visibly procedural: crenellated 1-row steps, an equal-width edge ring, and bites spaced like vents. |
+| Technical | 9 | 1,309,222 tris (≤ 1.5 M) and est_hidden_pct 13.7 % (≤ 15 %). 10 slots, all in the palette; `M_rubble` is gone and the chinking is now `M_mortar`. Mask is complete, 123 objects, below-ground 0 %. `HUT_daub` alone is 703k tris (54 %), which is inefficient (see the nice-to-haves). |
+
+**Strengths**
+- **The client corrections have landed.**
+  - The exterior is mostly intact daub: about 84 % first-hit, 4 small patches, and rods behind the coat deleted.
+  - There is no loose stone, path, rubble or apron anywhere in the file; only the built-in step stays.
+- **Posts proud (r6 #4 CLOSED).**
+  - In wall_eye.png and the back and side crops the posts read as real members standing in front of the coat, with a slit dip at each flank.
+  - The quilted-pillow look is gone.
+- **Foot bedded (r6 #5 CLOSED as a structural item).** The coat now sits on the stones round the whole hut (back and side crops). The continuous dark ring at the plinth line has disappeared.
+- **Door-bay break (r6 #1 largely CLOSED).** In actor_closeup.png the break is a ragged, stepped, essentially horizontal fracture over exposed wattle down to the plinth. This is the ref2 `hut_wattle_daub_plinth` language, and the icing drips are gone.
+- **Beads gone (r6 #2 superseded).** No rotationally symmetric sleeves remain.
+- **Star gone (r6 #3 superseded).** No star outline remains. The eave patch has a cut-corner pentagon.
+- **Unchanged hero areas.** The entrance (rope panels, adze-worked jambs and frame, open plank leaf, dark interior depth with no see-through), the roof shingles, eave construction, collar and finial are all unchanged and still hero quality.
+
+### Must-fix (priority order)
+
+1. **+X SIDE PATCH READS AS A RECTANGULAR VENT OR GRILLE** (`HUT_daub` `fracture_patch()`, bay 2, az about 82°, z about 1.0-1.6). It reads at thumbnail size in side.png and clearly in director_extra/patch_side.png. The eave patch, bay 10 (patch_eave.png), has the same language to a lesser degree.
+   - **What's wrong:**
+     - The two sides are dead vertical and parallel, and three of the four corners are about 90°.
+     - The 1-row steps on the top and bottom margins pair up into square merlons and crenels about 6-10 cm wide.
+     - The fracture face is a constant-width bevel ring all round, so the hole looks cut with a knife and framed.
+   - **Fix, sides:** lean the sides 8-25° off vertical, in opposite senses, and break each side into 2-3 segments.
+   - **Fix, corners:** no more than one corner may lie within 80-100°. At least two corners are obtuse (110-150°) or chamfered.
+   - **Fix, steps:** steps on the top and bottom margins are 1 or 2 rows, chosen at random, with runs of 5-30 cm. Never place an up-step and a down-step less than 12 cm apart, because that makes a merlon.
+   - **Fix, edge face:**
+     - Vary the visible edge face width from 1.5 to 5 cm along the perimeter.
+     - Add 2-3 shallow spall scallops (6-12 cm wide) where the coat thins to 1-1.5 cm over the rod fronts with faint rod ridging, on 15-25 % of the perimeter, so the hole has no picture-frame ring.
+   - **Eave patch:** apply the same rules. Also delete the curled, rolled lip on its lower-left margin (patch_eave.png, lower left).
+   - **Target:** the ragged, chunky reading of ref2's break, not a window.
+
+2. **FLAKES READ AS LEAVES OR ARROWHEADS PEELING OFF THE RODS** (`daub_flakes()` / `flake_mesh()`, 8 flakes). They are visible in director_extra/door_bay.png (2 below the break), patch_side_near.png (top-left and bottom-right), patch_eave.png (left and right) and foot_ground.png.
+   - **What's wrong:** each flake is a thin pointed lens, 1.1-1.8 cm, tilted off the rods, isolated mid-panel with daylight under one end. In clay it reads as a leaf, scale or chip of stone, not a daub remnant.
+   - **Fix, contact and attachment:**
+     - The back is in full contact with at least 2 rod fronts, with a peel of 5° or less.
+     - At least one edge of each flake is coincident with, or within 2 cm of, the main fracture line, so it reads as a part-detached piece of the margin.
+   - **Fix, shape:**
+     - Thickness 2.5-4 cm, matching the coat, with a squared broken edge face.
+     - Outline: 4-6 breaks, no tip sharper than 60°, and no lens or spindle shape.
+     - Size 10-18 × 6-12 cm.
+   - **Count:** at most 1 per patch and 2 in the door bay. Deleting them is preferable to keeping leaves.
+
+3. **FOOT BITES READ AS A ROW OF PUNCHED DARK HOLES AT THUMBNAIL** (`low_margin()` splash bites). In the back.png and side.png crops there are about 15-20 small dark oval pockets, each sitting on a stone top at roughly even spacing. They read as vents or mouse holes.
+   - **Cause:** each bite exposes a black void behind the bottom rod row.
+   - **Fix, number:** 0-1 bites per bay, at most 6 round the hut, never in two adjacent bays at the same height.
+   - **Fix, shape:** longer and shallower, 20-40 cm long × 2-4 cm tall, with a ragged top following the rod row. No ovals.
+   - **Fix, backing:** back each bite with the coat (or `HUT_daub_interior`) no more than 4 cm behind the rod fronts, so the bite shows rods against a mid-grey surface, not a black slot.
+
+4. **SHRINKAGE CRACKS ARE SMOOTH C-SHAPED ARCS** (`HUT_daub` crack grooves). They are visible in director_extra/wall_eye.png, coat_rake2.png and the back crop, reading as fingernail scratches or hairline swooshes.
+   - **Fix, crack shape:** rebuild cracks as polylines.
+     - 3-6 straight segments of 3-12 cm, with direction changes of 20-60° at sharp vertices.
+     - 1-2 branches per crack, meeting at about 120°.
+     - Width tapering 4 mm → 1 mm and depth 3-6 mm, with V-section lips no smoother than the coat.
+   - **Fix, placement:** place them radiating from patch corners and post slits, and in 2-4 crack networks per bay. No isolated single arcs.
+
+5. **DOOR-BAY HANGING TABS HAVE SOFT U-BOTTOMS** (`daub_edge_door_bay()`, two tabs at about az -38° and -28°, z about 0.72-0.80; director_extra/door_bay.png, actor_closeup.png at close inspection).
+   - **What's wrong:** the two downward tabs, about 15-20 cm wide, end in rounded lobes. Together with the vertical fold in the coat at the left post flank they give a hanging-fabric-hem reading at 1.5 m.
+   - **Fix:**
+     - Make each tab bottom a straight run (8-20 cm) with corner radii of 1 cm or less, like the rest of the stepped break.
+     - The edge face shows the full coat thickness (4 cm or more visible from 30° below).
+     - Reduce the post-flank slit transition so that no vertical fold wider than 3 cm reads in the coat.
+
+**Nice to have**
+- **Daub budget.**
+  - `HUT_daub` is 703k tris (54 % of the asset), at a 1.6 × 1.3 cm grid over the intact coat. The relief that reads is at a wavelength of 6 cm or more.
+  - Coarsen the intact field to about 3 cm (target about 250-300k) and keep 7.5 mm only at margins and cracks.
+  - Re-check est_hidden_pct afterwards. The share is a ratio, so cutting a mostly-visible mesh raises it slightly; keep the margin with the existing culls.
+- **Near-post slit steps.** They read as soft vertical curtain folds in shadowed oblique views (patch_back_low.png). Soften the transition width to 8-12 cm.
+- **Pre-existing items:**
+  - The plinth flake-scar steps.
+  - The drying-check crease on the left door post.
+  - The crack-lip zigzag; fold this into #4.
+- **Mask:** set G high on the patch fracture faces and flakes, and B high on the coat foot.
+- **Moss cushions** remain optional.
+
+## Round 8 — builder entry (kit migration)
+
+### Files
+
+- **Script.** `buildings/wattle_roundhut/build_wattle_roundhut.py` is now a thin declarative assembly (about 90 lines) on the shared kit `kit/village_kit/`. It is seeded and deterministic: a second build gave 0 of 229 objects different and a byte-identical `decal_anchors.json`. A build takes about 5.5 min, about 4.6 min of which is the hidden-geometry ray test.
+- **Outputs.** `wattle_roundhut.blend` (16.0 MB, compressed) and `decal_anchors.json`.
+- **Renders.** `renders/wattle_roundhut/round_08/` holds the 6 views at 32 samples, `stats.json` and `hidden.json`. The variant renders are in `round_08/kit_variant/`.
+
+### Stats
+
+| | Round 7 | Round 8 |
+|---|---|---|
+| Triangles | 1,309,222 | 744,105 |
+| est_hidden_pct | 13.7 % | 7.7 % |
+
+- `material_slot_count` is 10, all from the palette, and `mask_attribute_missing` is empty.
+- There are 124 objects: 100 linked duplicates from 22 pools.
+- The bbox is (-4.19, -4.59, -0.041) to (4.19, 4.20, 8.73), unchanged from round 7.
+- Nanite: 0 needle triangles and 0 zero-area faces. Round 7 had 1,829 and 737; the 737 were all in `HUT_wattle_stakes`.
+
+### Kit migration
+
+1. **Pure refactor first.** The round-7 script's module globals became an explicit frame `g` (`components.frame.RoundFrame`). Every component became a kit function: `drystone_plinth`, `round_daub_wall` (wattle, posts, coat, inner skin), `wall_plate`, `conical_roof`, `finial`, `door_step`, `framed_door`, `interior`. Shared machinery moved to `core`, `palette`, `mask`, `pools`, `stones` and `shingles`. **The kit build was bit-identical to the signed-off round 7**: 123 of 123 objects, vertex and matrix hashes equal, 1,309,222 tris. Only then were the intentional changes below applied.
+2. **`kit_set()` and `HUT_KIT_VARIANT`.**
+   - One dimension table, `KIT` (`radius`, `eave_z`, `overhang`, `pitch_deg`, `finial_tip`, `cone_age`, `detail_rule`). Unknown keys raise.
+   - Everything that was hard-coded for r = 3.5 is now derived from the radius and the eave height:
+     - the door-frame front plane, the door-post azimuth, the plinth face and run, and the floor edge;
+     - the eave shadow heights, the doorway shingle window and the eave-closure door gap;
+     - the post count (1.57 m spacing), the rafter count, the course count and the wall-plate segments;
+     - the default daub patches, now given by azimuth.
+   - `HUT_KIT_VARIANT=1` builds a 2.9 m radius hut (wall dia 5.8 m) with a 0.2 m taller wall (eave 2.60). It has 12 posts, 24 rafters and 14 courses, and its finial is derived from the collar. It writes `kit_variant/wattle_roundhut_kit_variant.blend`: 662,300 tris, 6.6 % hidden, 10 slots, Mask complete, 98 decal anchors, bbox 7.21 × 7.62 × 8.58 m.
+3. **Ensemble age pass on the cone** (`components.cone.age_defaults`).
+   - **Eave wave.** An extra low-frequency eave wave (k ≤ 4): the eave reference line now spans 2.354-2.435 (±4.0 cm; round 7 was ±2.6 cm).
+   - **Sag.** The shingle surface sags between every pair of rafters (sin^1.5 across the bay, its own amplitude per bay, scaled by span), up to 2.3 cm at mid-slope, 1.2 cm near the eave and fading out under the collar. The rafters, the plate height and the eave over the rafters are unchanged.
+   - **Door guard.** A flat-topped guard keeps the lip over the door at **≥ 2.398 starter / 2.414 shingles** (round 7: 2.402 / 2.417).
+   - **Finial lean.** Unchanged at 0.99°, inside the 0.5-1° asked for.
+4. **Producer note 11: detail-scale rule** (`core.DetailRule`).
+   - **Entrance zone.** 3 m round the door, 0-2.5 m high. Relief of 1 cm or more is kept there.
+   - **Daub.** Shrinkage cracks, dabs, palm dents, fine noise, foot pitting and fracture-face grit are no longer modelled. The longest of the dropped crack polylines (up to 22) became `crack` decal anchors in the same places.
+     - Kept: the low-frequency bulge and sag of the coat (the client's "slightly bulging" coat), the 2.5-4 cm crisp fracture margins, the post slits (posts still stand 5-8 cm proud) and the bedded foot with its fillet.
+     - The intact coat moved from a 1.6/1.3 cm grid to a 3 cm grid (the director's nice-to-have): `HUT_daub` went from 698k to 228k tris.
+   - **Timber.**
+     - Wood checks and splits are no longer modelled.
+     - Adze flats on the wall posts are no longer modelled. Knot swellings are kept only at the door posts, inside the entrance zone. Knot stubs, lean, bow and taper are kept everywhere.
+     - In the entrance zone the hero-face adze strokes are deepened to 1.0-1.3 cm, so they stay above the 1 cm threshold, and the non-hero faces are smooth.
+     - Sill wear lumps are no longer modelled. The sill keeps its 2.2 cm trodden dip and worn arris.
+   - **Stones.** The hand-split skin (flake scars of 4-10 mm, lumps of 1-1.4 cm, pits) is dropped outside the entrance zone. The threshold and step lose their sub-cm spalls and grit but keep their undulation and their 1-2 cm chips. Stone shapes are unchanged, because the random draws are identical.
+   - **Other parts.** Sub-mm knots are removed from the wattle rods, and the dents are removed from the lead collar.
+5. **Decal anchors (note 11).** There are **105** anchors in the `DECAL_ANCHORS` collection: empties `DA_<type>_<nnn>`, with −Z into the surface and the custom properties `decal_type`, `size_w`, `size_h`, `surface`, `probability` and `seed`. The same data is in `buildings/wattle_roundhut/decal_anchors.json`, with a units and axes header.
+
+   | Type | Count | Placement |
+   |---|---|---|
+   | damp_rise | 12 | the coat foot, more likely on north faces |
+   | moss | 14 | plinth faces at the ground, and north shingle butts |
+   | lichen | 8 | stone tops, the step and the threshold |
+   | water_streak | 8 | 6 below the collar drip, 2 below the lintel ends |
+   | soot | 5 | 1 over the door head, 4 round the smoke outlet under the collar |
+   | rust_stain | 5 | under the strap hinges, the pintles and the ring pull |
+   | grime | 4 | the jambs and door posts at hand height |
+   | crack | 36 | the dropped shrinkage cracks (up to 22), plus patch corners and settlement under the plate beside the posts |
+   | plaster_patch | 8 | intact coat |
+   | repair_patch | 5 | intact coat |
+
+6. **Hidden geometry (note 6) and hygiene.**
+   - `round_hidden_cull` deletes faces that none of 439 viewpoints can see. The viewpoints are the review tool's 77, actor rings at knee, waist, eye and raised-hand height, crane rings, door close-ups and the 6 review cameras.
+   - It runs on these objects: plinth, rods, posts, door frame, threshold, shingles, starter, plate, rafters, purlins and daub. It never runs on the backing surfaces (inner skin, blocker, eave closure, panel backing, floor).
+   - Result: -55k polygons and 7.7 % hidden.
+   - Every mesh also gets `nanite_clean`: remove doubles, dissolve degenerates, needle fix.
+
+### Kept from phase 1
+
+The client corrections are all still in:
+
+- The wall is mostly intact daub, with the ref2 eroded band in the door bay and 3 small fracture patches. Rods behind the coat are deleted.
+- There is no ground dressing. The only stone outside the plinth is the built-in step.
+- The roof, collar, finial, door assembly, rope panels, plinth language, silhouette and scale are unchanged. The bbox is identical to round 7: door 1.00 × 2.08, eave ≥ 2.40 over the door, shingles about 0.45 m.
+
+### Side by side with round 7
+
+Compared in all 6 views:
+
+- **Silhouette.** It overlays round 7. The cone outline and the eave now waver slightly, and the courses show soft sag creases between the rafters, most visibly in back.png and aerial.png.
+- **Wall.** The coat reads smoother at actor distance, because the cracks and dabs now come from decals and materials. That is the intended note-11 result.
+- **Holes.** None were found in any view: no see-through and no holes from the cull.
+
+### Known gaps
+
+- At the actor close-up, the daub coat without its sub-2 cm dabs reads plainer in clay than round 7. The relief is meant to come back through the Megascans material, the normal maps and the `plaster_patch` / `repair_patch` / `crack` decals.
+- The round-7 must-fixes 1-3 and 5 are not addressed in this migration round: the side-patch outline, the flakes, the foot bites and the door-bay tabs. Must-fix 4 (the C-arc cracks) is superseded by note 11, because the cracks are now decal anchors.
+- The variant's top courses (2.9 m radius) read slightly busier than the hero's. The sag is scaled by span, but the narrow courses under the collar exaggerate it.
+- The hidden-geometry ray test dominates the build time (about 4.6 of 5.5 min).
+
+## Round 8 — score 8.4/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_08/`, side by side with round 07 and with `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`. I also looked at the kit variant set in `round_08/kit_variant/`.
+- I made 15 Director close-ups at 16 spp in `round_08/director_extra/`. Each one exists as `*_r08` (this build) and `*_r07` (the phase-1 blend in `signoff_phase1/`) from identical cameras: door_bay, door_right, wall_rake, plinth_left, roof_mid, roof_flank and apex. `lintel_r08` is r08 only. I also made 2x/3x crops of the hero, back, side and aerial roofs and walls for r07 and r08.
+- **Decal anchors.** I opened the .blend. `DECAL_ANCHORS` holds 105 empties, and they match `decal_anchors.json` one to one: same position, −Z matching −normal, and every required property present. For each anchor I cast a ray along −normal from 15 cm outside to find the surface under it and its material.
+- **Roof see-through.** I cast 40k rays per camera at the cone from the hero, back, side and aerial cameras on both blends and counted what each ray hits first.
+- **Code read.** I read `kit/village_kit/core.py` (DetailRule), `components/daub.py`, `components/doors.py`, `components/plinth.py` and `stones.py` to check how the note-11 rule is applied.
+- **Ground dressing.** It is not scored (producer note 10). Only the built-in step is outside the plinth, and that is correct.
+- **Producer note 11.** The removal of cracks, dabs, wood checks, sub-cm stone skin and collar dents is **not penalised**. It is the intended result.
+
+**Verdict.**
+- **PASS at 8.4.** That clears the 8.2 pass mark, so the kit-migrated hut can replace the phase-1 deliverable.
+- **What the migration got right.**
+  - It is a clean refactor: bit-identical to r7 before the intentional changes.
+  - There is a real `kit_set()` with `HUT_KIT_VARIANT`.
+  - The ensemble age pass on the cone is in.
+  - Triangles drop 43 % (1.31 M → 744k) and hidden drops from 13.7 % to 7.7 %.
+  - Degenerate faces are gone, and decal anchors are exported as note 11 asks.
+  - Silhouette, scale, entrance timberwork, collar and finial are unchanged and still hero quality.
+- **Why 8.4 and not 8.5.**
+  - **The coat at the entrance is flat.** The note-11 entrance exception was never applied to the daub. `build_daub` sets `k_fine = 0` everywhere, so the door-bay coat has lost relief of 1 cm or more that it should have kept. In clay the coat now reads as flat boards, which goes against the client correction ("avoid flat board-like daub").
+  - **Roof joints have opened up.** The cone sag pass roughly doubled the near-black open joints.
+  - **3 of the 105 decal anchors are misplaced.**
+  - **4 round-7 must-fixes are still open.** The builder says so.
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | Overlays r7 and ref2. The cone outline and eave now waver slightly (eave ±4 cm), which closes the ensemble item. Lead hat, spike, plinth and projecting frame are unchanged. |
+| Proportion and scale | 9 | bbox 8.37 × 8.78 × 8.77, same as r7. Door 1.00 × 2.08. Eave lip over the door ≥ 2.398 / 2.414. Shingles about 0.45 m. |
+| Construction | 9 | Posts stand 5-8 cm proud. Foot bedded. Plate, rafters, frame and leaf all carried. Nothing changed structurally. |
+| Detail and craft | 8 | Entrance-zone daub is under-modelled (flat board-like coat in door_bay_r08 vs door_bay_r07). Roof open joints have doubled. r7 #1/#2/#3/#5 still open. |
+| Age and irregularity | 8 | The cone is no longer the most perfect surface in the lineup: wave and sag read in back.png and aerial.png. The patch outlines, flakes and foot bites are still visibly procedural. |
+| Technical | 9 | 744,105 tris and 7.7 % hidden. 10 palette slots. Mask complete. 0 needles and 0 zero-area faces. Deterministic. 105 anchors with correct structure. Minus: the note-11 entrance rule is not wired into the daub, and 3 anchors are misplaced. |
+
+**Strengths**
+- **Kit migration done properly.** A 90-line declarative script on `village_kit`. A proven bit-identical refactor (123 of 123 objects, hashes equal) before any change. One `KIT` table where unknown keys raise. Post, rafter, course and plate counts and the door geometry are derived from radius and eave. The `HUT_KIT_VARIANT` hut (r 2.9 m, eave 2.60) builds from the same components at 662k tris, 6.6 % hidden, Mask complete and 98 anchors.
+- **Ensemble age pass on the cone.**
+  - Eave wave 2.354-2.435 (±4 cm), and sag between rafters up to 2.3 cm.
+  - The door guard keeps the lip at 2.398 or more over the door.
+  - Finial lean is 0.99°.
+  - In back.png and aerial.png the cone now matches the keep's lived-in wobble.
+- **Budget and Nanite hygiene.**
+  - Triangles are −43 %. HUT_daub went from 703k to 232k (the r7 nice-to-have).
+  - Hidden is 7.7 %, with plinth 1.9 % and shingles 6.7 %.
+  - Ray tests at 4 cameras find no new see-through: sky hits are confined to grazing rays at the eave flanks, as in r7.
+- **Note-11 drops done correctly elsewhere.**
+  - Timber: checks are gone, and the hero-face adze strokes are deepened to 1.0-1.3 cm in the entrance zone (lintel_r08, actor_closeup).
+  - Plinth stones keep shape and chips, and use `g.detail.min_at()`, so the 1 cm rule applies near the door.
+  - The threshold keeps its trodden dip.
+- **Decal anchors are mostly well judged.**
+  - 105 anchors, inside the 40-120 range, and the structure matches the json.
+  - 102 of 105 sit within 0.4 cm (up to 7 cm for some roof and plinth anchors, see the nice-to-haves) of a surface carrying the declared palette slot.
+  - Placements are physically plausible: damp_rise at the coat foot and weighted to the north; moss on plinth faces and north shingle butts; lichen on stone tops; soot at the head and smoke seep under the collar; water streaks under the collar drip; rust under the hinges and pintles; cracks at patch corners, under the plate beside the posts and at the former crack sites; plaster and repair patches on the intact coat.
+
+### Must-fix (priority order)
+
+1. **DAUB COAT READS AS FLAT BOARDS. THE NOTE-11 ENTRANCE EXCEPTION IS MISSING IN THE DAUB** (`components/daub.py` `build_daub()`, lines ~418-420 and 591-648). It is visible in director_extra/door_bay_r08 vs door_bay_r07, wall_rake_r08, actor_closeup.png (the bays left and right of the door) and side.png (the bays read as smooth planks between the posts).
+   - **Measured (Director ray profiles).** I took vertical profiles every 1 cm over z 0.9-2.3 and subtracted a 31 cm moving average, which leaves the hand-applied relief at wavelengths under about 30 cm. The figure is the mean 2.5-97.5 % residual span, r7 → r8:
+     - door bay: 9.5 → 5.4 mm (what remains is mostly the break edge);
+     - right-of-door bay: **6.1 → 1.5 mm**;
+     - side bays: 7.1 → 2.5 mm;
+     - back bays: 7.7 → 3.0 mm.
+     The total p5-p95 radial spread (2.0-3.0 cm) is only low-frequency bulge plus the post slits, so between posts the coat reads as a smooth turned board.
+   - **Cause.** `k_fine = 0.0 if rule else 1.0` is global, so the palm-press dents (A 0.6-1.2 cm) and every other short-wavelength term are zeroed even inside the entrance zone. What remains is `0.0062*clip(bul,±2.2)` at a wavelength of about 0.6 m, plus a sag of 1.2 cm or less.
+   - **Fix (a), entrance zone (producer-note-11 compliance).** The zone is plan distance ≤ 3.0 m from `(0, FRONT_Y)` and z ≤ 2.5 m: the door bay at az −20…−48° and the right-of-door bay at az +20…+48°.
+     - Gate each relief term per vertex with `g.detail.scale(depth, p)` instead of the global `k_fine`.
+     - Inside the zone, keep palm-press dents at 1.0-1.5 cm deep, 7-12 cm across, about 5-7 per m², with their squeezed-up rims. The r7 density was right; the r7 depths of 0.6-1.0 cm move up to 1.0 cm or more so they are kept.
+   - **Fix (b), every bay (client correction "avoid flat board-like daub").**
+     - Add sparse hand-applied lumps of 2.0-2.5 cm relief at a wavelength of 15-35 cm, about 2-3 per m². Note 11 keeps relief of 2 cm or more as geometry, so they are allowed.
+     - Keep the sag belly at 1-1.5 cm.
+     - Do not reintroduce cracks or sub-2 cm dabs; they stay decals.
+   - **Acceptance.**
+     - Same profile test: the high-pass span is 10 mm or more in the two entrance bays and 6 mm or more on every other intact bay.
+     - At least 6 dents of 1 cm or more read in grazing light in a door_bay-style close-up.
+     - side.png no longer reads as smooth planks between the posts.
+     - Hidden stays at 15 % or below.
+
+2. **ROOF OPEN JOINTS ROUGHLY DOUBLED AFTER THE CONE AGE PASS AND CULL** (`HUT_roof_shingles`, `components/cone.py` sag, `round_hidden_cull` on the shingles). It is visible in hero.png, front.png, side.png and back.png, where there are visibly more black vertical slits in the upper half of the cone, and in director_extra/roof_flank_r08 vs roof_flank_r07.
+   - **Measured.**
+     - Near-black pixels (< 35/255) in the roof crop: hero 444 → 1002, front 381 → 701, side 887 → 1325, back 817 → 1180.
+     - Ray test from the hero camera: rays whose first hit is not a shingle went from 2.5 % to 4.1 % (blocker 730 → 1199, rafters 105 → 231). From the side camera it went from 2.7 % to 4.1 % (rafters 234 → 484).
+   - **Cause (likely).** The sag is applied per vertex, so shingles that straddle a bay edge shear and fan apart, and the vertical joints open. The cull may also have removed under-lap faces that were visible through those widened joints.
+   - **Fix.**
+     - Apply the sag as a rigid per-shingle offset: evaluate it at the shingle centre, translate along the cone normal and tilt by at most 1.5°, so each joint width keeps its r7 value.
+     - Cap side-joint gaps at 1.5 cm.
+     - Keep at least 8 cm of under-lap beside every side joint, excluded from `round_hidden_cull`.
+   - **Acceptance.** Near-black roof pixels and non-shingle ray hits back to r7 levels or below (hero roof crop ≤ 450 px; non-shingle hits ≤ 2.5 %), with the eave wave and sag kept.
+
+3. **DECAL ANCHORS: 3 MISPLACED, 2 DUPLICATED** (`components/round_decals.py`, `decal_anchors.json`).
+   - **`DA_water_streak_007`** (−1.07, −3.30, 2.07) has normal (0.02, −0.44, −0.90). It faces the ground, and no surface lies within 50 cm along −normal, so it is floating. **`DA_water_streak_008`** (1.14, −3.87, 1.90) has normal (0.42, −0.79, 0.45) and sits 20.6 cm proud of `HUT_door_frame`. The pair is not even mirrored.
+     - **Fix:** put the two "below the lintel ends" streaks on the front faces of the outer frame posts at x = ±0.92 (±2 cm), y = the frame front face, top at z 2.20, size 0.12 × 0.80, normal (0, −1, 0) and up (0, 0, 1).
+     - Snap each anchor to the surface by ray, to within 1 cm.
+   - **`DA_lichen_008`** (−0.62, −3.75, 0.086) is on `M_stone`, but it is buried 10.9 cm under the timber sill (`HUT_threshold`), so it can never be seen. **Fix:** move it to an exposed stone top, for example the left door-post pad stone top at about (−1.04, −3.61, `PAD_TOP`), or delete it.
+   - **`DA_damp_rise_006`** (1.39, 3.04, 0.65) lies over the back-low exposed-wattle patch: its ray hits `HUT_daub_interior` through the weave. **Fix:** shift it along the wall to intact coat, or shrink it so it does not overlap the patch polygon by more than 10 %.
+   - **Near-duplicates:** `DA_crack_014` and `DA_crack_019` are 11 cm apart, and `DA_crack_016` and `DA_crack_021` are 6 cm apart. **Fix:** set a minimum spacing of 0.25 m between same-type anchors, or merge each pair.
+   - **Add an anchor validator to the kit.** It should require, for every anchor, a ray hit within 2 cm along −normal on the declared `surface`, not occluded by another mesh. Run it in the build.
+
+4. **r7 #1 (still open): the +X side patch reads as a rectangular vent, and the eave patch has the same language.** It is unchanged in side.png (crop): dead-vertical parallel sides, about 90° corners, paired 1-row merlons and a constant-width bevel ring. The fix spec is as written in round 7 #1.
+
+5. **r7 #2 (still open): flakes read as leaves or arrowheads.** They are unchanged in actor_closeup.png, door_bay_r08 and plinth_left_r08 (top). The fix spec is as written in round 7 #2: thickness 2.5-4 cm, edge within 2 cm of the fracture, at most 1 per patch and 2 in the door bay, or delete them.
+
+6. **r7 #3 (still open): foot bites read as a row of punched dark holes.** They are unchanged in side.png and back.png (about 15-20 dark slots on the stone tops). The fix spec is as written in round 7 #3: at most 6 in total, 20-40 × 2-4 cm, and backed by coat no more than 4 cm behind the rod fronts.
+
+7. **r7 #5 (still open): the door-bay hanging tabs have soft U-bottoms.** They are unchanged in door_bay_r08 at the bottom-centre break. The fix spec is as written in round 7 #5.
+
+(r7 #4, the C-arc cracks, is **closed**, superseded by note 11: the cracks are now `crack` decal anchors.)
+
+**Nice to have**
+- **Anchor layout.**
+  - All 12 `damp_rise` anchors sit at exactly z 0.650, spaced 24°, and the 8 plinth `moss` anchors are spaced exactly 36°. Jitter height by ±8 cm and azimuth by ±6°, so a PCG pass at probability 1 does not print a ring.
+  - 11 of the 13 plaster and repair patches are on the +X half. Balance them onto the −X bays.
+  - `DA_moss_004` floats 4.1 cm off its stone, and the roof `water_streak` anchors float 2-7 cm off the shingles. Snap them to within 1 cm.
+- **Kit variant.** The top 4-5 courses under the collar read busy and broken, with many black slits (kit_variant/hero.png). Scale the sag down with course width, not span alone, and cap it at 1 cm for courses narrower than 2 m in circumference.
+- **Post-flank slit transition.** It still reads as soft vertical curtain folds (door_bay_r08, left post). Widen the transition to 8-12 cm (carried from r7).
+- **Build time.** The hidden-geometry ray test takes about 4.6 of the 5.5 min. Cache the visibility mask per kit parameter set.
+- **Mask.** Set G high on patch fracture faces and flakes, and B high on the coat foot (carried from r7).
+
+
+## Round 9 — builder entry
+
+### Files
+
+- **Kit (1.3.0, hut part; recorded in `kit/CHANGELOG.md`).** New `kit/village_kit/anchor_validate.py`. Optional additions to `assembly.build_building` (`decal_validate`), `decals.wall_scatter` (`accept`), `components/frame.RoundFrame` (`wall_finish`), `components/daub` (`WALL_FINISH_R9`), `components/cone` (`surf(..., sag=)`, `AGE_R9`), `components/conical_roof` (rigid sag, under-lap, joint cap) and `components/round_decals` (`layout=2`). Every default keeps the old behaviour.
+- **Script.** `buildings/wattle_roundhut/build_wattle_roundhut.py` opts in: `wall_finish=wall_finish_r9()`, `cone_age=age_defaults(**AGE_R9)`, `decals=partial(round_building_decals, layout=2)`, `decal_validate=DECAL_VALIDATE`.
+- **Outputs.** `wattle_roundhut.blend` (17.9 MB, compressed) and `decal_anchors.json` (94 anchors plus a `validation` block). The renders are in `renders/wattle_roundhut/round_09/`: 6 views at 32 samples, `stats.json` and `hidden.json`.
+- **Partial round-9 patch.** From `director/partial_fix_wattle_roundhut_r9.patch` I reused the `surf(sag=)` switch, the rigid per-shingle offset, the `wall_finish` frame key, the foot-bite limiter, the lumps and the flake switch. I did not reuse `fracture_patch_r9`, `stepped_margin` or the bite backing: they were untested, and they belong to must-fixes #4 and #6, which are outside this round's three items.
+
+### Stats
+
+| | Round 7 (sign-off) | Round 8 | Round 9 |
+|---|---|---|---|
+| Triangles | 1,309,222 | 744,105 | 827,563 |
+| est_hidden_pct | 13.7 % | 7.7 % | 7.7 % |
+| Material slots | 10 | 10 | 10 |
+| Decal anchors | — | 105 | 94 |
+
+- `mask_attribute_missing` is empty, and the bbox is unchanged at (-4.19, -4.59, -0.041) to (4.19, 4.20, 8.73).
+- Most of the extra triangles are in `HUT_daub`. The entrance bays use a 1.6 cm grid and the other bays 2.5 cm; round 8 used 3 cm.
+- A build takes about 17 min on this machine. The visibility cull runs single-process on Windows.
+
+### Must-fix 1: the daub coat read as flat boards, and the note-11 entrance exception was missing
+
+**What changed.** `build_daub` now applies the entrance exception per vertex with `g.detail.min_at_v()`. The relief of every feature is kept wherever its depth is at least the local threshold.
+
+- **Inside the entrance zone (3 m from the door, 0-2.5 m high).**
+  - The round-7 palm dents come back in their round-7 places, with the same rng draws, deepened from 0.6-1.2 cm to 1.0-1.5 cm and keeping their squeezed-up rims.
+  - Every third round-7 hand dab comes back in its round-7 place at 1.0-1.3 cm.
+  - This relief fades out over the last 25 cm inside the zone boundary, so there is no step at the edge of the zone.
+- **On every bay.**
+  - There are sparse hand-applied lumps of 2.0-2.5 cm, about 2-3 per m², 15-35 cm across, with a slightly sharper lower lip. The 2 cm rule keeps them anywhere.
+  - The sag belly is now 1.1-1.5 cm.
+- **Unchanged.**
+  - The cracks stay decal anchors.
+  - The relief fades into the post slits and the fracture margins, so the crisp arrises and the 5-8 cm post reveal are unchanged.
+
+**Measured.** I repeated the profile test: vertical ray profiles every 1 cm over z 0.9-2.3, every 3 cm across each bay and kept 17 cm clear of the posts, minus a 31 cm moving average, scored as the mean 2.5-97.5 % span. My numbers for r7 and r8 are close to the director's.
+
+| Bay | r7 | r8 | r9 |
+|---|---|---|---|
+| Right of the door (bay 0, entrance) | 6.7 mm | 1.7 mm | **13.1 mm** |
+| Door bay (bay 12, entrance) | 10.9 mm | 6.2 mm | **16.7 mm** |
+| Bays 1 and 11 (part in the zone) | 8.0 / 8.4 mm | 3.0 / 2.8 mm | 10.2 / 10.8 mm |
+| Other intact bays (3-9) | 7.1-8.4 mm | 2.5-3.4 mm | **8.0-11.7 mm** |
+
+- The acceptance targets were 10 mm or more in the entrance bays and 6 mm or more elsewhere. Both are met.
+- A crop of actor_closeup.png (r7 | r8 | r9 side by side) shows the right-of-door bay in grazing light. The dents and lumps are back, at least as many as in r7, without the crack lines. The door-bay coat no longer reads as a smooth board.
+- Hidden stays at 7.7 %.
+
+**Also from the patch.**
+- The clinging flakes are deleted (r7 #2 / r8 #5: they read as leaves).
+- The foot bites are limited to 6 round the hut, at most 1 per bay and never in adjacent bays, each 20-40 × 2-4 cm (r7 #3 / r8 #6). side.png and back.png now show 1-2 small bites instead of a row of slots.
+
+### Must-fix 2: the roof's open joints had doubled
+
+**What changed.** The cone sag is now applied rigidly per shingle.
+- Each shingle is laid on the unsagged surface.
+- It is then translated along the cone normal by the sag at its centre, and tilted about its own axis by at most 1.5°.
+- The joints therefore keep their width, while the sag between the rafters and the eave wave still read course by course.
+
+**Under-lap.** Under every side joint of courses 1 and up there is now a 2 × 8 cm strip of covered shingle: 535 strips, 12 triangles each. The strips sit 4 mm under the deeper neighbour. They are in their own object, `HUT_roof_underlap`, which is not a cull target, so they are never culled. Side-joint gaps are capped at 1.5 cm.
+
+**Measured.**
+
+| Near-black (< 35/255) pixels | r7 | r8 | r9 |
+|---|---|---|---|
+| hero | 443 | 1011 | **252** |
+| front | 392 | 728 | **113** |
+| side | 892 | 1334 | **272** |
+| back | 826 | 1202 | **413** |
+| aerial | 216 | 327 | **27** |
+
+- These counts cover the upper 60 % of each frame; for aerial, a central crop.
+- I also cast 12k rays at the cone from hero, front, side and back. First hits on something other than a shingle (blocker, rafters, eave closure) were 2.0-2.6 % in r7 and 2.7-3.7 % in r8, and are **0.5-0.6 %** in r9. A further 1.9-2.4 % of rays land on the under-lap strips, which are shingle material.
+- Both acceptance targets are met: the hero roof crop is at most 450 px, and non-shingle hits are at most 2.5 %.
+
+### Must-fix 3: decal anchors
+
+**The kit gate.** `anchor_validate.validate_anchors`, which `build_building(decal_validate=...)` runs before the collection and the json are written, checks every anchor:
+- It must have a surface within 5 cm along −normal, or it is dropped. A ray from 5 cm outside snaps the anchor onto that surface plus a 4 mm lift.
+- It must be on its declared slot and not on a backing mesh.
+- Its normal must point outward. The generator's normal is kept where the face agrees with it (dot ≥ 0.8); otherwise the face normal is used.
+- It must be open for 15 cm in front, or it counts as buried and is dropped.
+- Its 3 × 3 footprint must lie on the surface. If not, it is shrunk to 0.75 once, and dropped if it still fails.
+- Same-type anchors closer than 0.25 m are thinned.
+
+**Placement changes (`layout=2`).**
+- The lintel-end streaks are now on the front faces of the door-frame posts, mirrored at x = ±0.97, y = frame front, top at z 2.20, size 0.12 × 0.80, normal (0, −1, 0). The post fronts span |x| 0.91-1.13, so a 12 cm streak centred at 0.92 would overhang the inner edge.
+- The threshold lichen is now on the left door-post pad stone top, at (−1.04, −3.61, 0.23).
+- The damp_rise ring is jittered by ±6° and −4 to +8 cm (z now 0.61-0.73), and kept clear of the back-low wattle patch. The plinth moss ring is jittered by ±6°.
+- The collar water streaks are found by their own ray at the streak centre.
+- Plaster and repair patches are split between +X and −X, and placed only where their footprint is on intact coat.
+
+**Result.**
+- 103 anchors were placed and **94 kept**. 5 were dropped by the footprint test (2 roof moss, 1 lichen on a stone flank, 1 collar soot, 1 rust stain) and 4 crack near-duplicates were thinned; these are the director's 014/019 and 016/021 pairs.
+- I re-checked the saved .blend independently:
+  - all 94 empties match the json;
+  - each one sits 4 mm off a face of its declared slot along −Z;
+  - none is occluded;
+  - the minimum spacing between same-type anchors is 0.33 m.
+- Counts: damp_rise 12, moss 12, lichen 6, water_streak 7, soot 4, grime 4, rust_stain 4, crack 32, plaster_patch 8, repair_patch 5.
+
+### Kit edit rules: other buildings re-run
+
+- **tower_windmill:** 1,135,006 triangles before the mill builder's own 1.4.0 edits (record 1,134,993, +0.001 %). On the final kit it gives 1,146,243 triangles, which equals the mill's 1.4.0 record.
+- **hilltop_keep:** 1,159,180 triangles on the final kit, which equals the keep's 1.3.0 record.
+- Both build without errors. Their anchors are unchanged, because the hut gate only reports for them, and it passes all 106 of the mill's anchors and all 113 of the keep's.
+
+### Not addressed this round (still open from the round-8 list)
+
+- #4: the +X side patch outline. `fracture_patch_r9` in the partial patch was not tested, so it was not used.
+- #7: the soft U-bottoms of the door-bay tabs.
+- The post-flank transition, the Mask G/B on fracture faces and the build-time cache.
+- I did not rebuild or re-render the kit variant this round. A quick no-cull variant build ran without errors at 836k triangles before the cull.
+
+## Round 9 — score 8.6/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_09/`, side by side with round 08, round 07 (the phase-1 sign-off) and the crops `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`.
+- 16 Director close-ups at 24 spp in `round_09/director_extra/`. Each one exists as `*_r09` (this build) and `*_r07` (`signoff_phase1/` blend) from identical cameras: door_bay, door_right, wall_rake, side_patch, back_low, roof_flank, apex and lintel.
+- **Independent daub profile test** (my own script, same method as round 8): horizontal rays onto `HUT_daub`, vertical profiles every 1 cm over z 0.9-2.3, every 0.5° of azimuth, any column touching a post dropped, minus a 31 cm moving average, mean 2.5-97.5 % span.
+
+  | Bay | r7 (sign-off) | r9 |
+  |---|---|---|
+  | right of door (az +20…+48) | 7.1 mm | **12.1 mm** |
+  | door bay (az −48…−20) | 8.4 mm | **12.9 mm** |
+  | side +X (az 95…120) | 7.3 mm | **8.3 mm** |
+  | back (az 160…200) | 8.0 mm | **8.0 mm** |
+  | side −X (az −120…−95) | 8.1 mm | **9.4 mm** |
+
+  The targets were ≥ 10 mm in the entrance bays and ≥ 6 mm elsewhere. Both are met, and they match the builder's figures.
+- **Decal anchors.** I opened the .blend. `DECAL_ANCHORS` holds 94 empties, which match `decal_anchors.json` one to one (position, −Z = −normal, all six custom properties, 94 unique seeds). For each anchor I cast a ray along −normal from 15 cm out, and a 3 × 3 footprint grid at 0.9 × size.
+  - 94 of 94 have their centre within 0.4 cm of a face carrying the declared slot.
+  - 82 have a footprint with ≤ 2 of 9 misses.
+  - The rest are listed below.
+- **Light-leak trace.** From the bright diagonal streak on the lintel in actor_closeup.png, I traced the sun direction (−0.485, −0.621, 0.616) back through the eave.
+- **Ground dressing.** Not scored (producer note 10). Only the built-in step stone is outside the plinth.
+- **Note-11 drops** (cracks, dabs, checks, sub-cm stone skin, collar dents): not penalised.
+
+**Verdict.**
+- **PASS at 8.6.** The kit-migrated hut now beats the phase-1 sign-off (8.5) on the axes where round 8 had fallen behind, so it can replace the phase-1 deliverable.
+- **What this round closed.** All three priority items from round 8 are closed, and two of the old round-7 tells with them:
+  - The coat relief is back (measured above r7 in every bay).
+  - The roof joints are tighter than in r7.
+  - The anchors are validated by a kit gate.
+  - The leaf-like flakes are gone.
+  - The row of foot bites is down to 1-2 per view.
+- **Why not higher.**
+  - The fracture patches still read as cut rectangular vents. In side.png the +X patch reads as a grille at thumbnail size, and in hero.png the eave patch at the upper left does too. This is the hut's most visible procedural tell, and it has been open since round 7.
+  - The door-bay tabs keep their U-bottoms.
+  - One anchor has a wrong normal.
+  - A pinhole in the eave over the door throws a sun streak across the lintel in the actor close-up. It has been there since r7 but was not caught until now.
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | Overlays r7 and ref2: huge 51° cone with an eave wave of ±4 cm, a lead hat, a spike finial, the dry-stone plinth and the projecting flat-fronted frame. bbox unchanged at 8.37 × 8.78 × 8.77. |
+| Proportion and scale | 9 | Door 1.00 × 2.08. Eave lip over the door ≥ 2.40. Shingles about 0.45 m next to the 1.8 m figure. |
+| Construction | 9 | Posts 5-8 cm proud, foot bedded on the stones, and the plate, rafters, frame and leaf all carried. The under-lap strips put real covered shingle under every side joint (courses 1 and up). |
+| Detail and craft | 8.5 | The coat is hand-applied again: palm dents and lumps read in door_right_r09 and actor_closeup. Roof_flank_r09 has tighter joints than r07. Minus: the patch outlines are still rectangles with a constant bevel ring and merlon steps (side_patch_r09), and the door-bay tabs are soft lobes. |
+| Age and irregularity | 8.5 | Cone wave and sag are kept with no shear. The flakes are gone and the bites are sparse (back_low_r09 vs r07). Minus: the patch geometry is still visibly procedural, and the dents are all similar diagonal ovals in door_right_r09. |
+| Technical | 9 | 827,563 tris and est_hidden_pct 7.7 %. 10 slots, all in the palette. Mask complete. 125 objects. Deterministic. Note 11 now wired per vertex (`g.detail.min_at_v`). 94 anchors in the 40-120 range, with a validator in the build. Minus: DA_soot_001 has a wrong normal that the gate let through, and there is a 1 cm eave pinhole over the door. |
+
+**Strengths**
+- **Note-11 entrance exception, done right.** The relief is gated per vertex. In the entrance bays it reaches 12-13 mm against r7's 7-8 mm, and every other bay is at 8 mm or more. Sparse 2-2.5 cm lumps sit everywhere. No cracks or sub-2 cm dabs came back. The client's "avoid flat board-like daub" is satisfied: side.png no longer reads as turned boards, and the coat in door_right_r09 reads hand-pressed.
+- **Roof.** The rigid per-shingle sag plus the 535 under-lap strips removed the sheared, fanned joints. In roof_flank_r09 against r07 the vertical slits are narrower and fewer than at sign-off, while the course-by-course sag and the eave wave still read in back.png and aerial.png. The builder's counts (hero 252 px against r7's 443) are consistent with what I see.
+- **Anchors and kit gate.**
+  - `anchor_validate` snaps anchors to their surface, checks the declared slot, occlusion and footprint, and thins same-type anchors closer than 0.25 m.
+  - The round-8 floating, buried and duplicated anchors are all fixed: the lintel streaks are mirrored at x ±0.97 on the frame posts, and the lichen is on the pad-stone top.
+  - The placement logic is physically plausible: damp and moss at the foot and weighted to the north (+Y); roof moss only on the north butts; soot round the smoke seep under the collar; rust under the hinges and pintles; grime at hand height on the jambs; plaster and repair patches now on both halves.
+- **Old tells retired.** No leaf-like flakes remain. The foot bites are capped at 6, so back_low_r09 shows one small bite where back_low_r07 showed five slots.
+- **Budget and hygiene.** 827k tris (−37 % on r7) and 7.7 % hidden. The extra triangles over r8 went where the camera goes: the entrance daub on a 1.6 cm grid.
+
+### Must-fix (priority order)
+
+1. **FRACTURE PATCHES STILL READ AS CUT RECTANGULAR VENTS** (r7 #1 / r8 #4, still open; `components/daub.py` `fracture_patch()`). There are three patches:
+   - the +X side patch, bay 2, az ≈ 82°, z ≈ 1.0-1.6 (side.png at x 590-650, y 495-540; director_extra/side_patch_r09.png);
+   - the eave patch, bay 10, high on the −X front quarter (hero.png at x 425-455, y 440-480);
+   - the back-low patch (back.png at x 520-565, y 590-610; back_low_r09.png at the left).
+
+   **What's wrong:**
+   - The sides are dead vertical and parallel, and 3 of the 4 corners are about 90°.
+   - The top and bottom margins step in 1-row merlons 6-10 cm wide.
+   - The fracture face is a constant-width bevel ring of about 2.5 cm all round.
+
+   **Fix:** apply the round-7 #1 numbers.
+   - Lean the sides 8-25° off vertical, in opposite senses, with 2-3 segments per side.
+   - No more than 1 corner may be inside 80-100°, and at least 2 corners must be 110-150° or chamfered.
+   - Margin steps are 1-2 rows at random, with runs of 5-30 cm, and an up-step and a down-step are never less than 12 cm apart.
+   - The edge-face width varies from 1.5 to 5 cm, with 2-3 spall scallops 6-12 cm wide on 15-25 % of the perimeter.
+
+   **Acceptance:** none of the three reads as a window or grille in side.png, hero.png or back.png at 1280 × 720, and the patch area stays at 0.3-1.0 m² each.
+
+   The `crack` anchors DA_crack_019-022 and 025-028 sit on the exact rectangle corners (identical azimuth pairs). Re-derive them from the new outline.
+
+2. **DOOR-BAY HANGING TABS HAVE SOFT U-BOTTOMS** (r7 #5 / r8 #7, still open; `daub_edge_door_bay()`, two tabs at az ≈ −38° and −28°, z ≈ 0.72-0.80; director_extra/door_bay_r09.png at the bottom centre, x 760-960).
+   - Each tab bottom must be a straight run of 8-20 cm with corner radii of 1 cm or less.
+   - The edge face must show the full coat thickness (≥ 4 cm visible from 30° below).
+   - No vertical fold wider than 3 cm may read at the left post flank.
+
+3. **EAVE PINHOLE OVER THE DOOR THROWS A SUN STREAK ACROSS THE LINTEL** (`HUT_roof_starter` / `HUT_roof_shingles` at the doorway, pre-existing since r7). It is visible in actor_closeup.png as a thin bright diagonal line from the eave to the right jamb (x ≈ 665-695, y ≈ 160-215) and in director_extra/lintel_r09.png and lintel_r07.png.
+   - **Trace:** sun rays reach the lintel face at x 0.48-0.51, z 2.30-2.36 through a gap of about 1 cm between the starter and the first shingle course at about (0.28, −4.02, 2.58).
+   - **Cause (likely):** the r9 under-lap strips cover side joints of courses 1 and up only, so the starter and course-1 joints over the doorway shingle window are unbacked.
+   - **Fix:**
+     - Extend the under-lap strips (2 × 8 cm) to the starter and course-1 joints, or carry `HUT_eave_closure` up behind the starter by at least 6 cm across the doorway window (x −1.0…+1.0).
+     - Re-run the sun-ray scan on the lintel and jamb faces (z 2.0-2.5). Acceptance: 0 lit points under the eave shadow.
+
+4. **DA_soot_001 HAS A WRONG NORMAL, AND THE GATE PASSED IT** (`components/round_decals.py` collar soot, `anchor_validate.py`).
+   - **The anchor:** position (0.74, −0.37, 6.61), normal (0.73, 0.55, 0.40). That normal is about 64° off the local radial direction (0.89, −0.45) and much flatter than the other three soot anchors (n.z 0.75-0.76). The centre ray lands on a shingle side face. In the 3 × 3 footprint, 3 points miss entirely, 1 lands on `HUT_rafters` and 1 lands 14 cm off on `HUT_cap_collar`.
+   - **Fix:** orient it like DA_soot_002/003, normal ≈ (0.59, −0.30, 0.75), and keep its footprint at ≥ 7 of 9 on `M_roof_shingle`.
+   - **Validator:** require dot(normal, smoothed surface normal over the footprint) ≥ 0.9, not the single hit face, so that hits on a butt or side face cannot pass.
+
+**Nice to have**
+- **Crack anchor overlap.** DA_crack_029-032 all sit at exactly z 2.46, and in each one a third of the 0.20 m footprint lands on the adjacent post, which stands 6-7 cm proud. The same is true of DA_damp_rise_006's left third. Shift each one at least 0.12 m off the post flank, and jitter z by ±8 cm.
+- **Dent variety.** In door_right_r09 the palm dents are similar elongated ovals at one diagonal orientation. Randomise orientation over ±60° and aspect over 1.0-1.8.
+- **Foot-bite backing (r7 #3 remainder).** The surviving bite in back_low_r09 still shows a near-black slot. Back it with coat no more than 4 cm behind the rod fronts.
+- **Kit variant.** Rebuild and re-render `HUT_KIT_VARIANT=1` on kit 1.3.0 (rigid sag, under-lap and the anchor gate). Check that the busy top courses from r8 are calmer.
+- **Carried from earlier rounds.** The post-flank transition (8-12 cm), Mask G high on fracture faces and B high on the coat foot, and the build-time cache (17 min on this machine).
+
+
+## Round 10 — builder entry
+
+### Files
+
+- **Kit (1.5.0, hut part; recorded in `kit/CHANGELOG.md`).** All opt-in, defaults unchanged:
+  - `components/daub`: `WALL_FINISH_R10` / `wall_finish_r10()`, `fracture_patch_r10()`, `_ragged_margin()`, `clump_mesh()`, `daub_clumps()`.
+  - `components/cone`: `AGE_R10`, which adds `underlap_k0` to AGE_R9. `components/conical_roof` reads it.
+  - `stones.stone_skin` / `plinth_kind_stone` and `plinth.plinth_stone`: `scar_keep`, read from `wall_finish["stone_scars"]`.
+  - `anchor_validate`: `footprint_normal()`, and `validate_anchors(normal_fp_dot, fp_ntol, fp_skip_need, no_tops)`.
+  - `components/round_decals`: `layout=3`.
+- **Script.** `buildings/wattle_roundhut/build_wattle_roundhut.py` opts in with `wall_finish_r10()`, `AGE_R10` and `layout=3`, and extends `DECAL_VALIDATE` with `normal_fp_dot=0.9`, `fp_skip_need=7` and `no_tops` (no lichen or moss on `HUT_step_stone`). The env var `HUT_NO_CULL=1` runs a look-dev build without the visibility cull in about 35 s. It is never used for the deliverable.
+- **Outputs.** `wattle_roundhut.blend` (18.2 MB, compressed) and `decal_anchors.json` (93 anchors plus the `validation` block).
+- **Renders.** `renders/wattle_roundhut/round_10/`: 6 views at 32 spp, `stats.json` and `hidden.json`.
+
+### Stats
+
+| | r7 (sign-off) | r9 | r10 |
+|---|---|---|---|
+| Triangles | 1,309,222 | 827,563 | **837,924** |
+| est_hidden_pct | 13.7 % | 7.7 % | **7.3 %** |
+| Material slots | 10 | 10 | 10 |
+| Decal anchors | — | 94 | 93 |
+
+- `mask_attribute_missing` is empty.
+- There are 125 objects.
+- The bbox is unchanged at (-4.19, -4.59, -0.041) to (4.19, 4.20, 8.73).
+- The build took about 15 min. That time is mostly the single-process visibility cull, and two other builds were running at the same time.
+
+### Audit item 1: the clinging clumps and the patch outlines (client correction; r7 #1 / r8 #4 / r9 #1)
+
+**Clumps.** `daub_clumps` replaces the deleted flakes, which read as leaves. There are 9 clumps: 2 on each of the three patches and 3 along the door-bay break.
+
+Each clump:
+- is a faceted, convex, broken lump of 20-40 flat facets, 6-11 cm wide and 5-8.5 cm tall;
+- is built bottom-heavy, from a broad base ring, a mid ring and a small crown;
+- stands **2.2-3.4 cm proud of the rod fronts**;
+- has its back bedded at the rod centre line, so the rods run into it and it hugs them;
+- sits 3-7.5 cm inside the fracture contour, so its rim meets the broken edge;
+- prefers the underside of the top margin.
+
+They use their own random stream (8800 + bay), so no other draw changes. They are on `M_daub` with Mask G 0.85.
+
+**Outlines.** `fracture_patch_r10` is used for the two holes and for the back-low patch. The low patch is open below: its sides run down into the stones.
+
+- **Sides.** Each side leans at its own angle, one 8-14° and the other 16-25°, in opposite senses, so they are never parallel or mirrored. The sides mostly converge upward, so the patch is wider at the bottom and reads as a chunk that broke out, not a vent or a basket. Each side has 2-3 segments with ±9° kinks.
+- **Margins.** Runs of 5-30 cm slope up to about 12°. Steps are 1-2 rod rows on 2-5.5 cm diagonal breaks, not vertical merlon sides, and an up-step and a down-step are never within 12 cm. Each margin as a whole tilts 4-9°.
+- **Corners.** Principal corners under 100° get a broken 3-point chamfer, at least 2 per patch.
+- **Spalls.** There are 2-3 conchoidal spall scallops, 6-16 cm wide and 1.5-3 cm into the coat.
+- **Rag.** A ±5 mm rag at about 11 cm wavelength runs along every margin.
+- **Edge face.** The visible fracture face now varies from 1.5 to 5 cm round each patch and opens to about 5.5 cm at the spalls, so there is no constant bevel ring. The door-bay break keeps its r9 profile.
+
+**Measured on the outline polygons:**
+
+| Patch | Area | Corners at 80-100° | Corners at 110-150° | Spalls |
+|---|---|---|---|---|
+| +X side (bay 2) | 0.58 m² (r9: 0.59) | 0 | 14 | 2 |
+| Back-low (bay 5) | 0.40 m², above the stones | 0 | 6 | 3 |
+| Eave (bay 10) | 0.42 m² (r9: 0.45) | 0 | 11 | 2 |
+
+**In the round-10 renders:**
+- side.png (x 590-650, y 495-540): the +X patch is an irregular, spalled break that widens downward. It has no grille or window read.
+- back.png: the back-low patch has a leaning, sloping top.
+- hero.png (x 425-455, y 440-480): the eave patch is a leaning, tapered shape. It still reads as a darker slanted slot at thumbnail size, because the eave shadow sits over it.
+- actor_closeup.png: the clumps read as small chunks hanging off the door-bay break.
+
+**Plinth (the "pillow" remark).** With `stone_scars=0.008`, the deepest third of the hand-split flake scars (8-10 mm in r7) is kept as spalls deepened to the note-11 threshold: 2-2.5 cm, or 1-1.25 cm in the entrance zone. They are widened by up to 1.6×. The stone shapes and every random draw are unchanged. The shallower scars and the 1-1.4 cm lumps are still left to the material.
+
+### Audit item 2: the light leak over the door (r9 #3)
+
+`AGE_R10` (`underlap_k0`) puts the 2 × 8 cm under-lap strips under the side joints of the **first course** too. That includes the split door-eave shingles, which sit over the doubled starter. The strips go from 535 to 593.
+
+**Sun-ray scan.** I sampled the frame front at 1 cm spacing and cast a ray toward the review sun (−0.485, −0.621, 0.616). I counted only points where that ray passes the eave circle above the lip, so the roof should shade them.
+
+| Lit points under the eave | r9 | r10 |
+|---|---|---|
+| Lintel / right-jamb streak (x 0.48-0.55, z 2.20-2.37) | 26 | **0** |
+| Grazing points (x 1.07-1.13, z 2.10, right outer post) | 6 | 6 |
+
+The 6 grazing points are unchanged and pre-existing: they are rays that skim the eave lip at the edge of the shadow. The streak is gone in round_10/actor_closeup.png (x 665-695, y 160-215).
+
+### Audit item 3: decal anchors (r9 #4)
+
+- **Collar soot (`layout=3`).** Each collar soot now takes the cone's macro normal at its azimuth: radial × sin 51° plus z × cos 51°. Its centre sits 0.15 m below the collar drip, so the footprint clears the collar. It uses the first spot within ±4° and ±4 cm whose face agrees with that normal (dot ≥ 0.9), and never an under-lap strip.
+  - Result: DA_soot_001-004 have normals (0.68, −0.38, 0.63), (0.38, 0.68, 0.63), (−0.69, 0.35, 0.63) and (−0.35, −0.69, 0.63). They are consistent with each other and with the cone.
+- **Validator.** `normal_fp_dot=0.9` judges every normal against the surface normal **averaged over the 3 × 3 footprint**, not the single face hit.
+  - If the generator's normal agrees, it is kept.
+  - Otherwise the footprint-mean normal is used, if it is self-consistent; if not, the anchor is dropped.
+  - Shingle anchors now also need at least 7 of 9 footprint rays on the shingles (`fp_skip_need=7`).
+  - `no_tops` rejects lichen or moss on `HUT_step_stone`.
+- **Step lichen.** The lichen that sat on the step moved to the plinth weather top right of the door, at (2.36, −2.83, 0.29). No anchor is on the step.
+- **Patch-corner cracks.** They are now derived from the sharpest convex corners of the actual new outlines, 6 cm out along each corner's bisector and aligned with it.
+- **Settlement cracks.** They sit 0.30 m off the posts with z jittered ±8 cm, so they no longer straddle a post.
+
+**Gate result.** 104 placed, 93 kept. Counts: crack 31, damp_rise 12, moss 12, plaster_patch 8, water_streak 7, lichen 6, repair_patch 5, soot 4, grime 4, rust_stain 4.
+
+The dropped anchors are:
+- footprint off its surface: 2 plinth anchors, the door-head soot and 1 rust stain;
+- landed on the wrong slot: 1 lichen on chinking and 1 crack on the wall plate;
+- same-type near-duplicates: 5.
+
+The door-head soot's lower footprint row falls in the door opening. It failed the same test in r9, so the soot above the door is still not exported.
+
+### Kit edit rules: other buildings re-run (to scratch, `KEEP_OUT` / `MILL_OUT`)
+
+- **tower_windmill:** 1,146,243 triangles, which equals its 1.4.0 record. 106 anchors, built without errors.
+- **hilltop_keep:** 1,160,238 triangles against the 1,159,180 record (+0.09 %). Built without errors.
+  - The keep builder was editing its own 1.5.0 modules (oct_hall, thatch, geom and stones `coursed_batch`) during this run. None of the hut changes reach a keep code path, because every hut option is off by default.
+
+### Not addressed / known gaps
+
+- **r9 #2:** the door-bay tabs' soft U-bottoms.
+- **Eave patch at thumbnail size:** it is improved, but in hero.png it can still read as a dark slanted slot under the eave.
+- **Door-head soot:** not exported (see above).
+- **Grazing points:** the 6 points on the right outer frame post, which were already there in r9.
+- **Nice-to-haves not done:** dent variety, foot-bite backing, the kit variant re-render, the post-flank transition, Mask G/B on the fracture faces and the build-time cache.
+
+## Round 10 — score 8.8/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_10/`, side by side with the round-09 set and director_extra, and with the crops `hut_overall`, `hut_door`, `hut_wattle_daub_plinth` and `hut_cap_finial`.
+- 12 Director close-ups at 32 spp (review clay, sun and world) in `round_10/director_extra/`: eave_patch, eave_patch_hero_tele (hero camera at 135 mm), side_patch, side_patch_side_tele (side camera at 135 mm), back_low, door_bay, lintel (actor camera at 85 mm), eave_under_door, roof_flank, apex, entrance_plinth and door_depth. Scripts: `dir_render_r10.py`, `dir_inspect_r10.py` and `dir_fp_r10.py`. Raw anchor audit: `inspect_r10.json`.
+- **Decal anchors.** I opened the .blend. `DECAL_ANCHORS` holds 93 empties that match `decal_anchors.json` one to one: position within 1 mm, empty +Z equal to the json normal (dot 1.0), and all six custom properties present. The json header states units, space and axes. For every anchor I cast a centre ray along −normal from 15 cm out, plus a 3 × 3 footprint at ±0.45 × size.
+  - All 93 have their centre 4 mm off a face that carries the declared slot.
+  - Counts: crack 31, damp_rise 12, moss 12, plaster_patch 8, water_streak 7, lichen 6, repair_patch 5, soot 4, grime 4, rust_stain 4. That is inside 40-120 and sensibly distributed.
+  - The exceptions are listed under must-fix 2.
+- **Ground dressing.** Not scored (producer note 10). Only the built-in step stone sits outside the plinth.
+- **Note-11 drops** (daub cracks, fine scars, wood checks): not penalised. Cracks are decal anchors, not geometry.
+
+**Verdict.**
+- **PASS at 8.8.** It is better than round 9 (8.6) and the phase-1 sign-off (8.5), so it stays a valid replacement for the phase-1 deliverable. It complies with producer notes 1-11:
+  - 837,924 tris; est_hidden_pct 7.3 %;
+  - 10 slots, all in the palette;
+  - `mask_attribute_missing` is empty;
+  - 125 objects;
+  - bbox 8.37 × 8.78 × 8.77 m, unchanged.
+- **What this round closed.** Three of the four round-9 must-fixes:
+  - **#1, the fracture patches.** The +X side patch (side_patch_r10, side_patch_side_tele_r10) and the back-low patch (back_low_r10) now read as broken-out chunks: leaning, non-parallel sides, spall scallops and a varying edge face. Neither reads as a grille or vent in side.png or back.png. The eave patch also reads as a broken hole up close (eave_patch_r10). At hero thumbnail size it is still a dark slanted slot under the eave shadow (nice-to-have 2).
+  - **#3, the eave light leak.** It is gone. There is no streak on the lintel in actor_closeup.png (x 665-695, y 160-215) or in lintel_r10.png. The under-lap strips now run under the first-course joints.
+  - **#4, DA_soot_001.** Its normal is now (0.68, −0.38, 0.63), consistent with soot 002-004 and with the cone (centre dot 0.97, footprint-mean dot 0.985). The validator now averages the normal over the footprint.
+- **Why not higher.**
+  - The door-bay tabs are still soft lobes. This is r9 #2, open since r7.
+  - The anchor gate's 0.9 normal tolerance is too loose for vertical walls. It let through a repair patch tilted 21° in the entrance bay.
+  - Several wall anchors still straddle posts or the wall plate.
+  - The clinging clumps read as round beads at the patch corners.
+  - The door-frame adze hatching is a uniform chevron.
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | It still overlays ref2: a huge 51° chunky shingle cone, a lead hat with standing seams, a spike finial, the dry-stone plinth and the projecting flat-fronted frame. No patch reads as a window at thumbnail size in side or back. |
+| Proportion and scale | 9 | Door 1.00 × 2.08. Eave lip over the door ≥ 2.40. Shingles read at about 0.45 m next to the 1.8 m figure. |
+| Construction | 9 | The plate, rafters, frame, leaf, pintles and step are all carried. The under-lap now backs course 1, so there is no light path through the eave. The interior reads as dark depth with the hearth ring (door_depth_r10). |
+| Detail and craft | 8.7 | Patch outlines are now properly fractured, with a varying edge face. Minus: the door-bay tabs are still rounded lobes; the clumps are spherical beads; and the frame hatching is a uniform pitch and angle across every member. |
+| Age and irregularity | 8.8 | The cone wave and sag hold (back.png, aerial.png, roof_flank_r10), and the patches are no longer procedural rectangles. Minus: the entrance plinth stones have soft, flared, melted-looking skirts (entrance_plinth_r10). |
+| Technical | 8.8 | Budget, hidden share, palette, Mask, determinism and naming are all clean. Anchors: 93 of 93 match json ↔ empties. Minus: the gate passes a 21° wall-normal error and off-slot footprints (must-fix 2). |
+
+**Strengths**
+- **Patch outlines are fixed where it matters.** In side_patch_r10 the +X patch has one side at about 10° and the other at about 20°. It widens downward and has two spall bays along the bottom and a ragged top. In side.png at 1280 × 720 it is a fracture, not a vent. Back-low runs into the stones with a sloped, broken top.
+- **The light leak is truly closed.** I traced it in lintel_r10 and the actor close-up: the lintel face is evenly shaded under the eave. The builder's scan (26 → 0 points) agrees.
+- **Anchor export is production-grade in structure.** One-to-one json and empties, the documented header, a seeded and validated gate, physically plausible placement (damp and moss at the foot and weighted north, roof moss on north butts only, soot at the collar seep, rust under the hinges, grime at hand height on the jambs, water streaks under the lintel ends, lichen on plinth tops and no longer on the step), and patch-corner cracks derived from the real outline corners.
+- **Budget discipline.** 838k tris, which is −36 % on the phase-1 sign-off, at 7.3 % hidden. Detail has gone to the entrance and the patches.
+
+### Must-fix (priority order)
+
+1. **DOOR-BAY HANGING TABS ARE STILL SOFT LOBES** (r7 #5 / r8 #7 / r9 #2, still open; `components/daub.py` `daub_edge_door_bay()`; az −48…−20, z 0.72-0.80; director_extra/door_bay_r10.png x 200-1060, y 290-460).
+   - **What's wrong:**
+     - The break is still a chain of rounded lobes. At the centre (x 480-680) there is an up-arched U notch with a crown radius of about 6-8 cm.
+     - The tab corners are rounded at about 3-5 cm radius.
+     - The visible edge face is only about 2 cm.
+   - **Fix:** rebuild this margin with the r10 `_ragged_margin()` language that already works on the patches.
+     - Tab bottoms are straight runs of 8-20 cm sloping ≤ 12°, with corner radii ≤ 1 cm.
+     - Steps are 2-5.5 cm diagonal breaks, not U notches. No concave arc may have a radius above 2 cm.
+     - Coat edge face ≥ 4 cm visible from 30° below.
+     - No vertical fold wider than 3 cm at the left post flank.
+   - **Acceptance:** door_bay_r10 and actor_closeup.png show a ragged, essentially horizontal fracture as in `hut_wattle_daub_plinth.png`, with no rounded lobe or U.
+
+2. **ANCHOR GATE TOO LOOSE ON WALLS: one tilted normal and off-slot footprints** (`kit/village_kit/anchor_validate.py`, `components/round_decals.py` layout 3).
+   - **DA_repair_patch_004:** position (−1.913, −3.013, 1.07), size 0.48 × 0.42, normal (−0.53, −0.77, **0.36**).
+     - It is in the door bay at hand height, in shot in actor_closeup.
+     - The wall radial there is (−0.536, −0.844, 0.0), so the normal is about 21° off.
+     - The footprint depth runs +6.4 cm (top row) to −8.2 cm (bottom row), and only 4 of 9 points lie within 6 cm of the decal plane.
+     - It passed because the centre face is a tilted lump (dot 1.0) and the footprint-mean dot is 0.95, above the 0.9 gate.
+     - **Fix:** normal ≈ (−0.54, −0.84, 0.0) (|n.z| ≤ 0.10).
+   - **DA_crack_030:** position (−1.026, 3.424, 2.48), size 0.20 × 0.40. Its top footprint row (z ≈ 2.66) lands on `HUT_wall_plate` (M_timber), 4-5 cm proud of the coat, so 3 of 9 points are off slot.
+     - **Fix:** settlement-crack footprints must end at least 5 cm below the plate underside at their azimuth. That gives a centre z of about 2.35 or lower for h 0.40. Jitter ±8 cm downward only.
+   - **DA_damp_rise_005 and DA_damp_rise_006** (r9 nice-to-have, still open): the right third (005) or left third (006) of each footprint is on `HUT_posts`, 1-6.5 cm proud.
+     - **Fix:** shift each one at least 0.12 m off the post flank, or split it into two anchors.
+   - **Gate rules:**
+     - For anchors on vertical-wall slots (M_daub, M_timber on posts and frame), require a footprint-mean normal dot ≥ 0.97 and |n.z| ≤ 0.15.
+     - Extend `fp_skip_need=7` (≥ 7 of 9 footprint points on the declared slot, within 4 cm of the plane) from shingles to every slot.
+   - **Acceptance:** re-run my `dir_inspect_r10.py`. Every wall anchor must have fp ≥ 7 and footprint-mean dot ≥ 0.97, the count must stay at 40-120, and the distribution by type must stay plausible.
+
+**Nice to have**
+- **Clumps read as round beads.** Examples: eave_patch_r10 at (497, 168) and (418, 323); back_low_r10 at (455, 200) and (985, 235). They are near-spherical knobs at the rod ends and patch corners.
+  - Make them flake-like lumps hugging the rod front, at a width:depth of 1.5-2.5:1 with an irregular base.
+  - Keep at most one at a corner. Put the rest under the top margin.
+- **Eave patch at thumbnail size** (hero.png x 425-455, y 440-480). It still reads as a dark slot under the eave shadow.
+  - Lower its top to ≤ 1.95 m (at least 0.25 m below the plate shadow line), or reduce its height to ≤ 0.5 m. Keep the area at 0.3-1.0 m².
+- **Door-head soot is not exported.** It is the only opening, and note 11 asks for soot above openings.
+  - Place DA_soot on the lintel front, centre (0, frame-front y, 2.42), 0.9 × 0.20, normal (0, −1, 0), M_timber.
+  - Clip its height so that no footprint row falls into the opening.
+- **Door-frame adze hatching** (lintel_r10, eave_under_door_r10, door_depth_r10). The diagonal grooves have one pitch (about 4-5 cm) and one angle across the jambs, outer posts and lintel, so they read as a carved chevron pattern rather than hewing. ref2 shows plain weathered posts.
+  - Vary pitch to 3-8 cm and angle ±15°, and break the runs into 20-40 cm hewing passes.
+  - Keep only relief ≥ 1 cm, per note 11. Anything finer goes to the material.
+- **Entrance plinth and pad stones** (entrance_plinth_r10, actor_closeup.png lower left). The bases flare into a soft melted skirt on the ground.
+  - Give them a flat bed contact, with the buried skirt ≤ 1 cm proud of the face and 1-2 split facets at 5-15° per hero-zone stone.
+- **Daub budget.** HUT_daub is 316,733 tris (38 % of the building). Coarsen the 2.5 cm grid to about 4 cm on bays outside the entrance zone wherever relief stays ≥ 2 cm, and spend the saving at the entrance or keep it.
+- **Carried from earlier rounds.** Dent variety (±60° orientation, aspect 1.0-1.8), foot-bite backing, a re-render of the kit variant `HUT_KIT_VARIANT=1` on kit 1.5.0, the post-flank transition (8-12 cm), Mask G high on fracture faces and B high on the coat foot, and the build-time cache.
+
+
+## Round 11 — builder entry
+
+### Files
+
+- **Kit 1.6.0, hut part** (recorded in `kit/CHANGELOG.md`; all opt-in, defaults unchanged): `anchor_validate` (`STRICT_R11`, `strict_footprint`, `validate_anchors(strict=)`), `components/round_decals` (`layout=4`), `components/daub` (`WALL_FINISH_R11`, `door_break_r11`, slab clumps, per-feature entrance gating), `stones` (`_split_scar`, `stone_skin(split=)`, `spall_stone(lump=, pit=)`, `chink_stone(min_relief=)`), `components/plinth` (split stones, denser entrance stones, flat bed), `components/doors` (gated step dish and cheek spalls).
+- **Script.** `build_wattle_roundhut.py` opts in: `wall_finish_r11()`, `layout=4`, `DECAL_VALIDATE[strict]=STRICT_R11`.
+- **Outputs.** `wattle_roundhut.blend` (19.1 MB, compressed), `decal_anchors.json` (98 anchors). Renders: `renders/wattle_roundhut/round_11/` (6 views, 32 spp, stats.json, hidden.json).
+
+### Stats
+
+| | r7 (sign-off) | r10 | r11 |
+|---|---|---|---|
+| Triangles | 1,309,222 | 837,924 | **876,619** |
+| est_hidden_pct | 13.7 % | 7.3 % | **7.4 %** |
+| Material slots | 10 | 10 | 10 |
+| Decal anchors | — | 93 | **98** |
+
+`mask_attribute_missing` is empty; 124 objects; bbox unchanged (-4.19, -4.59, -0.041) to (4.19, 4.20, 8.73). The +39k triangles are the 1.6x denser entrance plinth stones and the finer door-bay break.
+
+### Audit item 1: decal anchors (note 11, director r10 #2)
+
+- **Gate.** `validate_anchors(strict=STRICT_R11)` now runs the director's own inspection as the gate: 3 x 3 rays at ±0.45 x size from 15 cm out, first hit of any mesh; ≥ 7 of 9 on the declared slot **within 4 cm** on every slot (shingles too); footprint-mean raw face normal · anchor normal ≥ 0.97; wall slots |n.z| ≤ 0.15. A failing anchor is retried over small shifts (≤ 12 cm) and sizes (1.0/0.8/0.65), else dropped.
+- **(a) Repair patch.** Plaster / repair patches are placed only where every corner and edge midpoint lies ≥ 5 cm inside intact coat by the daub field (clear of the door-bay break and every patch polygon) and the strict footprint passes. The old DA_repair_patch_004 spot is gone; the door-bay repair patch now sits above the break at (-2.26, -2.76, 1.25), normal (-0.63, -0.78, 0.00), fp 9/9.
+- **(b) Settlement cracks** end ≥ 5 cm under the plate (jitter downward only): DA_crack_030 is at z 2.38, fp 9/9.
+- **(c) damp_rise**: one per bay, centred between the posts, width capped to the span 0.12 m clear of each post flank; 11 anchors, all fp ≥ 8/9 (6 cm) and ≥ 7/9 (4 cm), |n.z| ≤ 0.06.
+- **(d) Shingles**: DA_soot_001-004 fp 8, 8, 9, 7 of 9; roof moss all ≥ 7.
+- **(e) Re-run of the director's method** (`dir_inspect_r10.py` logic, run on the saved .blend + json): **0 of 98 anchors fail** (fp ≥ 7 of 9 and footprint-mean dot ≥ 0.97), and every anchor also has ≥ 7 of 9 within 4 cm. Empties = json one to one.
+- **(f) Door-head soot**: `DA_soot_005` on the lintel front at (0.00, -3.735, 2.365), 0.90 x 0.11, normal (0.05, -1.0, -0.04), M_timber, its lower edge ≥ 2 cm above the head (the lintel front between the opening and the eave is the clip box), fp 9/9.
+- Counts: crack 31, damp_rise 11, moss 14, lichen 9, plaster_patch 8, water_streak 7, repair_patch 5, soot 5, grime 4, rust_stain 4. One rust stain (on a face whose raw normal points into the leaf) was dropped by the gate.
+
+### Audit item 2: entrance plinth stones (pillows / melted feet)
+
+- `stone_style="split"`: the scars kept under note 11 are **planar split-facet pockets** (`stones._split_scar`: a floor tilted 6-16° plus step / side / exit break planes; every rim is a plane-plane crease), deepened to the local threshold (≥ 1 cm entrance, ≥ 2 cm elsewhere) and **not widened**. In the entrance zone scars drawn ≥ 6 mm qualify, so the stones left of the door carry more facets.
+- The 1-1.4 cm fbm skin lumps (the soft pillow and the flare at the foot) are not modelled on the hut plinth.
+- Entrance-zone stones are meshed 1.6x denser so the creases fall on vertices.
+- **Flat bed**: below z 0.5 cm no vertex stands more than 1 cm (radially) proud of the stone's own face just above the ground at the same arc position.
+- All main random draws are unchanged (extra split values come from a side stream), so the ring layout, heights and kinds are the r10 / r07 ones.
+
+### Audit item 3: door-bay break (client correction: eroded, ragged, THICK edge)
+
+- `door_break_r11`: the break is rebuilt in the patches' `_ragged_margin` language: straight 8-25 cm runs sloping ≤ 12°, 1-2 rod-row steps on 2-5.5 cm diagonal breaks, no U notch, the line tilted 1.5-3.5°.
+- The field is the slope-normalised vertical offset from that line (mitred), so tab corners are not rounded by a distance field. The edge face is a steep 3 cm face that ends on the snapped -3 cm contour (no saw teeth), the coat is 7.4 cm thick at the arris, and there is no feathered lip or grit.
+- Clumps (`clump_style="slab"`): flat-fronted broken slabs (irregular 5-8 corner base, planar front tilted 4-12°), width:depth 1.6-2.4, at most one per break where the margin turns, the rest under a top margin.
+- In round_11/actor_closeup.png the break left of the door reads as a ragged, near-horizontal fracture, as in r07 and ref2.
+
+### Audit item 4: sub-threshold relief
+
+1. Plinth chinking (pooled, 35 instances): the 1.5 mm noise and 0.6 mm pits are gated by the entrance threshold (1 cm), so they are dropped.
+2. Cheek packing spalls (`doors.build_door`): the 1.2 mm lumps and 0.6 mm pits are gated by `g.detail.min_at`, so they are dropped.
+3. Step dish (9 mm): gated by `g.detail.min_at`, so it is dropped.
+4. Entrance-zone dents and dabs: gated **per feature** by `g.detail.min_at(centre)`. Each is kept whole (1.0-1.5 cm) or not at all, so the 0-1 cm fade band is gone.
+
+### Kit edit rules: other buildings re-run (to scratch)
+
+- **hilltop_keep:** 1,166,874 triangles, equal to its 1.5.0 record. Built without errors, 116 anchors.
+- **tower_windmill:** 1,146,243 triangles, equal to its record. Built without errors, 106 anchors, its audit has 0 failing.
+
+### Known gaps
+
+- The plinth stone bodies (curved facet_stone faces) still read slightly soft next to r07's fully scarred skin. The crispness now comes from the split facets only.
+- The door soot is 0.11 m tall. The visible lintel front between the opening and the eave is only about 13 cm.
+- Not done: the frame adze-hatching variety, the eave-patch thumbnail read, the daub budget coarsening, and the kit-variant re-render.
+
+## Round 11 — score 8.9/10
+
+**What I reviewed.**
+- All 6 views, stats.json and hidden.json in `renders/wattle_roundhut/round_11/`, side by side with round_10 and with the crops `hut_overall`, `hut_door` and `hut_wattle_daub_plinth`.
+- 16 Director close-ups at 32 spp (review clay, sun and world) plus 3 upscaled crops in `round_11/director_extra/`: door_bay, door_bay_below (30° from below), door_bay_tele (actor camera at 135 mm), entrance_plinth, entrance_plinth_right, plinth_az42, lintel, door_depth, eave_patch, eave_patch_hero_tele, side_patch, back_low, left_flank_low, left_flank_hero_tele, roof_flank, apex; crop_actor_plinth_left/right and crop_hero_wall. Scripts: `dir_render_r11.py`, `dir_inspect_r11.py` (my r10 audit tightened to 4 cm), `dir_adze_r11.py` and `dir_adze2_r11.py` (ray-scan of the frame groove depth). Raw anchor audit: `inspect_r11.json`.
+- **Decal anchors.** `DECAL_ANCHORS` holds 98 empties that match `decal_anchors.json` one to one: position within 1 mm, empty +Z = json normal (dot 1.0), and all six custom properties on every empty. The json header states units, space and axes, plus the kit params and the validation block.
+  - My strict audit: **98 of 98 pass**. Every anchor has ≥ 7 of 9 footprint points on the declared slot within 4 cm, and a footprint-mean normal dot ≥ 0.971. All wall anchors have |n.z| ≤ 0.09.
+  - Counts: crack 31, moss 14, damp_rise 11, lichen 9, plaster_patch 8, water_streak 7, repair_patch 5, soot 5, grime 4, rust_stain 4. That is inside 40-120.
+  - Placement is plausible: damp_rise one per bay between the posts; moss at the plinth foot and on the north (+Y) shingle butts; lichen on plinth tops (none on the step); soot at the collar seep and now on the lintel front (DA_soot_005); water streaks under the collar drip and under the lintel ends; rust under the hinge straps; grime at hand height on the jambs; cracks at patch corners and settlement points ≥ 5 cm below the plate.
+  - The old DA_repair_patch_004 is gone. The new one at (−2.26, −2.76, 1.25) has normal (−0.63, −0.78, 0.00) and fp 9/9. DA_crack_030 is at z 2.38, fp 9/9. DA_damp_rise_005/006 are now clear of the posts.
+- **Ground dressing.** Not scored (producer note 10).
+- **Note-11 drops** (daub cracks, fine scars, chinking noise, step dish): not penalised.
+
+**Verdict.**
+- **PASS at 8.9.** It is better than round 10 (8.8) and the phase-1 sign-off (8.5), so the kit version stays a valid replacement for the phase-1 deliverable. It is ready for the phase-2 kit sign-off audit. It complies with producer notes 1-10:
+  - 876,619 tris; est_hidden_pct 7.4 %;
+  - 10 slots, all in the palette;
+  - `mask_attribute_missing` is empty;
+  - 124 objects;
+  - bbox 8.37 × 8.78 × 8.77 m, unchanged.
+- One marginal note-11 defect remains: the frame adze hatching (must-fix 1).
+- **What this round closed.** Both round-10 must-fixes, plus two nice-to-haves.
+  - **#1, the door-bay tabs.** The break now reads as straight, slightly tilted runs with stepped diagonal breaks (door_bay_r11, door_bay_tele_r11, actor_closeup.png x 60-280, y 480-500). There is no U notch and no rounded lobe. From 30° below (door_bay_below_r11) the coat shows a real broken face of about 5-6 cm. It now matches `hut_wattle_daub_plinth.png`.
+  - **#2, the anchor gate.** The gate is now my own inspection, and it holds: 98 of 98 pass.
+  - **Nice-to-have, the door-head soot.** It is exported on the lintel front.
+  - **Nice-to-have, the entrance plinth.** The melted skirts are gone. The stones have flat beds and planar split facets (entrance_plinth_r11, crop_actor_plinth_left_r11).
+- **Why not 9+.**
+  - The frame adze hatching is still a uniform chevron. It is also measurably below the note-11 entrance threshold.
+  - The new split scars leave comb-like serrations on some entrance plinth stones.
+  - The patch clumps are still round beads.
+  - The eave patch still reads as a dark slot in the hero thumbnail.
+
+**Axes**
+
+| Axis | Score | Why |
+|---|---|---|
+| Silhouette | 9 | It still overlays ref2: a huge 51° chunky cone, the lead hat with standing seams, the spike finial, the dry-stone plinth and the flat-fronted projecting frame. |
+| Proportion and scale | 9 | Door 1.00 × 2.08. Eave lip over the door ≥ 2.40. Shingles read at about 0.45 m next to the figure. |
+| Construction | 9 | The plate, rafters, battens, frame, leaf, pintles and step are all carried. The interior gives dark depth with the hearth ring (door_depth_r11). There is no eave light leak. |
+| Detail and craft | 8.9 | The door-bay break is now a true fracture with a thick coat edge, and the entrance stones have split facets. Minus: the uniform chevron adze hatching on all five frame members, round-bead clumps on the patches, and comb serrations on the split scars. |
+| Age and irregularity | 8.9 | The cone wave and sag hold (roof_flank_r11, back.png). Patches and break are no longer procedural. Minus: the split facets on the plinth stones read slightly as crumpled foil on soft bodies (back_low_r11 x 450-580, y 500-600). |
+| Technical | 8.9 | Budget, hidden share, palette, Mask, naming and anchors are clean (98/98 under the strict audit). Minus: the sub-threshold frame relief (must-fix 1) and the scar serrations (must-fix 2). |
+
+**Strengths**
+- **The door-bay break is finally right.** In the actor close-up it reads as an eroded, ragged, near-horizontal fracture with a thick coat edge over the woven rods. That matches the ref2 bay left of the door.
+- **The anchor export is production-grade.** It matches one to one, is seeded, and is validated by the director's own footprint test (98/98 at 4 cm and dot ≥ 0.97). The anchors are physically sensible, and DA_soot_005 now covers the only opening.
+- **The entrance ground contact is improved.** The plinth stones sit on flat beds with no melted skirt (crop_actor_plinth_left_r11). The hand-split facets give crisp creases where the actor camera looks.
+- **Budget discipline.** 877k tris, which is −33 % on the phase-1 sign-off, at 7.4 % hidden. The +39k went to the entrance stones and the door-bay break, where note 4 says close-up quality matters.
+
+### Must-fix (priority order)
+
+1. **DOOR-FRAME ADZE HATCHING IS SUB-THRESHOLD AND A UNIFORM CHEVRON** (producer note 11, entrance exception; `components/doors` frame members `HUT_door_frame`; lintel_r11, door_depth_r11, actor_closeup.png x 330-790, y 150-620).
+   - **Measured** (`dir_adze_r11.py` / `dir_adze2_r11.py`, ray scans at 1-2 mm spacing, depth below the most proud point within ±5-6 cm):
+     - **Lintel front** (z 2.33-2.36): groove depth p90 0.78-0.80 cm, max 0.96 cm.
+     - **Right jamb and outer post** (x 0.58-0.62): p90 0.82 cm, max 0.92 cm.
+     - **Left members** (x −0.98 to −0.58): p90 0.91-0.93 cm, max 1.11-1.13 cm.
+   - So most of this relief is under the 1 cm entrance threshold. Note 11 sends sub-threshold adze and saw marks to materials. It is also one pitch (about 4-5 cm) and one angle on every member, so at actor distance it reads as a carved chevron pattern, not hewing. ref2 `hut_door.png` shows plain weathered posts.
+   - **Fix: choose ONE of these.**
+     - **(a) Remove the hatching from the geometry.** Keep only the member chamfers (1.5-3 cm) and the ±1 cm taper and swell. Add `DA_grime` or wood-wear anchors if needed.
+     - **(b) Rebuild it as real hewing facets.** Facets 1.2-2.0 cm deep, at a 3-8 cm pitch, with the angle varied ±15° per pass, in 20-40 cm hewing passes that break and overlap. No facet shallower than 1.0 cm.
+   - **Acceptance:** re-running `dir_adze2_r11.py` either shows no groove signal above 0.3 cm, or shows p90 ≥ 1.0 cm with no two adjacent passes at the same angle. No chevron reads in actor_closeup.png.
+
+2. **SPLIT-SCAR SERRATIONS AND A BED GAP ON THE ENTRANCE PLINTH STONES** (`stones._split_scar`, `stone_skin(split=)`, `components/plinth`; entrance zone az −50…+50).
+   - **What's wrong:**
+     - Where a scar's break plane cuts the curved stone body, the rim is stair-stepped into comb teeth about 0.5-1.5 cm tall, not a single plane-plane crease. See plinth_az42_r11 at x 280-380, y 230-330 and x 590-620, y 380-520 (stone at about (−2.45, −2.75, 0.15-0.35)), and entrance_plinth_r11 at x 10-70, y 330-400.
+     - Thin vertical slivers stand on the stone flanks next to the door-post pad: entrance_plinth_r11 at x 360-410, y 350-440 and x 650-690, y 340-450.
+     - A dark bed gap about 1.5 × 1 cm shows under the leftmost hero stone in actor_closeup.png at about x 78-95, y 655-662.
+   - **Fix:**
+     - Clip the scar planes against the stone body with a proper boolean or bisect, so that each rim is one clean crease. No rim edge should be shorter than 1 cm, and no step should exceed 3 mm.
+     - Merge or drop any facet strip narrower than 1 cm.
+     - Close the bed gap: the bed must meet Z ≤ 0 along its whole visible contact.
+   - **Acceptance:** plinth_az42 and entrance_plinth at 32 spp show clean creases with no serration or sliver, and actor_closeup.png shows no dark gap at the stone feet.
+
+**Nice to have**
+- **Patch clumps still read as round beads.** Examples: eave_patch_r11 at (495, 165) and (415, 325), side_patch_r11 at (715, 135) and back_low_r11 at (445, 195) and (980, 240). Use the r11 `slab` clump style on the patches as well, not only on the door-bay break.
+- **The door-break slab clump** in door_bay_below_r11 at (860-960, 375-465) and door_bay_r11 at (760-810, 450-475) reads as a sharp folded-paper triangle. Break its front into 2-3 facets and round the arris 3-5 mm.
+- **The door-break edge face** is a constant 3 cm (`door_edge_w` [0.03, 0.03]). Vary it to 2-5 cm as on the patches.
+- **Small saw-teeth** at two step corners: door_bay_below_r11 at x 240-280, y 240-275 and x 545-580, y 280-320.
+- **The eave patch still reads as a dark slot under the eave** (hero.png x 425-455, y 440-480; eave_patch_hero_tele_r11). Lower its top to ≤ 1.95 m or cut its height to ≤ 0.5 m.
+- **Plinth split facets outside the entrance** read as crumpled foil on soft bodies (back_low_r11 x 450-580, y 500-600). Use fewer, larger facets (2-3 per stone, ≥ 6 cm across).
+- **Daub budget.** HUT_daub is now 329,280 tris (38 % of the building). Coarsen the grid outside the entrance zone wherever relief stays ≥ 2 cm.
+- **Carried over:** a re-render of the kit variant `HUT_KIT_VARIANT=1` on kit 1.6.0, dent variety, the post-flank transition, Mask G on the fracture faces, and the build-time cache.

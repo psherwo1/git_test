@@ -1,0 +1,753 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\v5r2b_hash\\wattle_roundhut\\wattle_roundhut.blend",
+ "objects": {
+  "HUT_battens": {
+   "tris": 756,
+   "geometry": "79710785dab74fbc",
+   "uv": "16ad7d2912a9c94a",
+   "mask": "bf058c380475d628"
+  },
+  "HUT_cap_collar": {
+   "tris": 10264,
+   "geometry": "6978f00b9be2f0e3",
+   "uv": "8611aa5c0896cc75",
+   "mask": "3f668460406bad75"
+  },
+  "HUT_daub": {
+   "tris": 320931,
+   "geometry": "80d36cb5e8a88b6b",
+   "uv": "7ceebacb729e6ade",
+   "mask": "ebacbf3254234af9"
+  },
+  "HUT_daub_interior": {
+   "tris": 14460,
+   "geometry": "fa300b85d3d139ad",
+   "uv": "13a1ba9012377432",
+   "mask": "983ce7c2e5b8b3d7"
+  },
+  "HUT_door_clench_nail_072": {
+   "tris": 108,
+   "geometry": "3a6dd95bb767d2cc",
+   "uv": "2636d854e1a36fe5",
+   "mask": "dde112c6e16a55cf"
+  },
+  "HUT_door_clench_nail_073": {
+   "tris": 108,
+   "geometry": "f9ba0c3af79fb789",
+   "uv": "21ee444d988b0879",
+   "mask": "a0a29f3011bb9f61"
+  },
+  "HUT_door_clench_nail_074": {
+   "tris": 108,
+   "geometry": "22813c695d9b8a37",
+   "uv": "9ff8b8481b31e6a0",
+   "mask": "03552fdcf4cbf356"
+  },
+  "HUT_door_clench_nail_075": {
+   "tris": 108,
+   "geometry": "d69837435334e0c2",
+   "uv": "2636d854e1a36fe5",
+   "mask": "dde112c6e16a55cf"
+  },
+  "HUT_door_clench_nail_076": {
+   "tris": 108,
+   "geometry": "d196a079f2923da9",
+   "uv": "21ee444d988b0879",
+   "mask": "a0a29f3011bb9f61"
+  },
+  "HUT_door_clench_nail_077": {
+   "tris": 108,
+   "geometry": "5ed880db765a8997",
+   "uv": "21ee444d988b0879",
+   "mask": "a0a29f3011bb9f61"
+  },
+  "HUT_door_clench_nail_078": {
+   "tris": 108,
+   "geometry": "30437b0bf8701d65",
+   "uv": "2636d854e1a36fe5",
+   "mask": "dde112c6e16a55cf"
+  },
+  "HUT_door_clench_nail_079": {
+   "tris": 108,
+   "geometry": "0d4087315233e723",
+   "uv": "21ee444d988b0879",
+   "mask": "a0a29f3011bb9f61"
+  },
+  "HUT_door_clench_nail_080": {
+   "tris": 108,
+   "geometry": "078cf143f3e5a02c",
+   "uv": "2636d854e1a36fe5",
+   "mask": "dde112c6e16a55cf"
+  },
+  "HUT_door_clench_nail_081": {
+   "tris": 108,
+   "geometry": "944fa1b06d61b5ab",
+   "uv": "2636d854e1a36fe5",
+   "mask": "dde112c6e16a55cf"
+  },
+  "HUT_door_clench_nail_082": {
+   "tris": 108,
+   "geometry": "9e2e7e5b4bf936fc",
+   "uv": "2636d854e1a36fe5",
+   "mask": "dde112c6e16a55cf"
+  },
+  "HUT_door_clench_nail_083": {
+   "tris": 108,
+   "geometry": "78d63777a64386d2",
+   "uv": "21ee444d988b0879",
+   "mask": "a0a29f3011bb9f61"
+  },
+  "HUT_door_frame": {
+   "tris": 100734,
+   "geometry": "dcde930fe197b91b",
+   "uv": "794611322b99fe06",
+   "mask": "196bd1edf5f27cf4"
+  },
+  "HUT_door_hinge_knuckle_085": {
+   "tris": 68,
+   "geometry": "4e45a89c89cf6e87",
+   "uv": "0ea9878e28319841",
+   "mask": "6b693983df7364c4"
+  },
+  "HUT_door_hinge_knuckle_093": {
+   "tris": 68,
+   "geometry": "92f700b8762bd05f",
+   "uv": "0ea9878e28319841",
+   "mask": "6b693983df7364c4"
+  },
+  "HUT_door_hinge_pintle_086": {
+   "tris": 152,
+   "geometry": "69cba3adbe26d4e4",
+   "uv": "5f012838d65e6b00",
+   "mask": "634dd19b4b271fe9"
+  },
+  "HUT_door_hinge_pintle_094": {
+   "tris": 152,
+   "geometry": "d9e4a8939c74473e",
+   "uv": "5f012838d65e6b00",
+   "mask": "634dd19b4b271fe9"
+  },
+  "HUT_door_hinge_strap_084": {
+   "tris": 38,
+   "geometry": "1f75a78526ad7d1d",
+   "uv": "19601001d0c3add0",
+   "mask": "36be4cead78c1383"
+  },
+  "HUT_door_hinge_strap_092": {
+   "tris": 38,
+   "geometry": "a8377428eab79915",
+   "uv": "19601001d0c3add0",
+   "mask": "36be4cead78c1383"
+  },
+  "HUT_door_ironwork": {
+   "tris": 452,
+   "geometry": "9b8db20e71dc6906",
+   "uv": "a47126df5536039e",
+   "mask": "15aa2629ca35ea41"
+  },
+  "HUT_door_leaf": {
+   "tris": 3468,
+   "geometry": "5f5a458d6b70b64b",
+   "uv": "eba4cf71fa59c3bb",
+   "mask": "945c2f39b82877a2"
+  },
+  "HUT_door_nail_087": {
+   "tris": 64,
+   "geometry": "394812f149bf9496",
+   "uv": "ff68519b1233adf2",
+   "mask": "2cb3ad0579740ead"
+  },
+  "HUT_door_nail_088": {
+   "tris": 64,
+   "geometry": "758ba4774f4be820",
+   "uv": "730d51432c633dbe",
+   "mask": "f79de4755ab91e26"
+  },
+  "HUT_door_nail_089": {
+   "tris": 64,
+   "geometry": "64b666b8adf20bfa",
+   "uv": "730d51432c633dbe",
+   "mask": "f79de4755ab91e26"
+  },
+  "HUT_door_nail_090": {
+   "tris": 64,
+   "geometry": "672d1fcdb0bc7515",
+   "uv": "8af8678bf5a0fd94",
+   "mask": "860eb8db3247704c"
+  },
+  "HUT_door_nail_091": {
+   "tris": 64,
+   "geometry": "655b6d0539e19718",
+   "uv": "ff68519b1233adf2",
+   "mask": "2cb3ad0579740ead"
+  },
+  "HUT_door_nail_095": {
+   "tris": 64,
+   "geometry": "aaa55a0163a56c38",
+   "uv": "ff68519b1233adf2",
+   "mask": "2cb3ad0579740ead"
+  },
+  "HUT_door_nail_096": {
+   "tris": 64,
+   "geometry": "5c7c049ec1461b8b",
+   "uv": "8af8678bf5a0fd94",
+   "mask": "860eb8db3247704c"
+  },
+  "HUT_door_nail_097": {
+   "tris": 64,
+   "geometry": "3da10bfda5f366cc",
+   "uv": "730d51432c633dbe",
+   "mask": "f79de4755ab91e26"
+  },
+  "HUT_door_nail_098": {
+   "tris": 64,
+   "geometry": "29cb16008a01f2a9",
+   "uv": "ff68519b1233adf2",
+   "mask": "2cb3ad0579740ead"
+  },
+  "HUT_door_nail_099": {
+   "tris": 64,
+   "geometry": "b151baae357a1664",
+   "uv": "ff68519b1233adf2",
+   "mask": "2cb3ad0579740ead"
+  },
+  "HUT_door_panel_backing": {
+   "tris": 352,
+   "geometry": "d1e2309b9ab4490a",
+   "uv": "1d3ad379a0e0f740",
+   "mask": "1aed10a727fbe32c"
+  },
+  "HUT_eave_closure": {
+   "tris": 2876,
+   "geometry": "1bf25f72f02e0f2a",
+   "uv": "17d3c91a5b59034b",
+   "mask": "8cc5c5b2919ada6f"
+  },
+  "HUT_finial": {
+   "tris": 4992,
+   "geometry": "e2a6456f55caafdd",
+   "uv": "0b1046ec6eaf0eb8",
+   "mask": "62f32afd0e186c44"
+  },
+  "HUT_floor": {
+   "tris": 3328,
+   "geometry": "f626fd9be67adefb",
+   "uv": "f6e7239971ee580c",
+   "mask": "d4c63cd073d45c5d"
+  },
+  "HUT_hearth": {
+   "tris": 1698,
+   "geometry": "9433d480ac7549b7",
+   "uv": "d74aee16cf933666",
+   "mask": "284594d4a19a1466"
+  },
+  "HUT_peg_034": {
+   "tris": 92,
+   "geometry": "0d64d52faa2bf4ea",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_035": {
+   "tris": 92,
+   "geometry": "e1a9e3ed973e3279",
+   "uv": "7dabd5692b68d74c",
+   "mask": "769921c2d6ad344f"
+  },
+  "HUT_peg_036": {
+   "tris": 92,
+   "geometry": "9d0932df240bcd08",
+   "uv": "e0d0a5b44e3c4aa2",
+   "mask": "ffdf38466194c601"
+  },
+  "HUT_peg_037": {
+   "tris": 92,
+   "geometry": "13afd2fc02b5e357",
+   "uv": "7dabd5692b68d74c",
+   "mask": "769921c2d6ad344f"
+  },
+  "HUT_peg_038": {
+   "tris": 92,
+   "geometry": "10a5ecde4d89b56f",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_039": {
+   "tris": 92,
+   "geometry": "db4c9d4edd06716d",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_040": {
+   "tris": 92,
+   "geometry": "10e11dfe8feaf73d",
+   "uv": "a8405404fe64feaa",
+   "mask": "17120153aa56b747"
+  },
+  "HUT_peg_041": {
+   "tris": 92,
+   "geometry": "27df6f1f4e1d1e63",
+   "uv": "a072e673c39e5a40",
+   "mask": "99a8942d264ada7c"
+  },
+  "HUT_peg_042": {
+   "tris": 92,
+   "geometry": "5346e328dc339a7b",
+   "uv": "e0d0a5b44e3c4aa2",
+   "mask": "ffdf38466194c601"
+  },
+  "HUT_peg_043": {
+   "tris": 92,
+   "geometry": "4578049be37624ae",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_044": {
+   "tris": 92,
+   "geometry": "dac0b84936ee9d1a",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_045": {
+   "tris": 92,
+   "geometry": "8a11740d8f321f32",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_046": {
+   "tris": 92,
+   "geometry": "34b64280d39d2af5",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_047": {
+   "tris": 92,
+   "geometry": "4e33e82fb9765e66",
+   "uv": "a072e673c39e5a40",
+   "mask": "99a8942d264ada7c"
+  },
+  "HUT_peg_048": {
+   "tris": 92,
+   "geometry": "fc191ecc7838a4ff",
+   "uv": "e0d0a5b44e3c4aa2",
+   "mask": "ffdf38466194c601"
+  },
+  "HUT_peg_049": {
+   "tris": 92,
+   "geometry": "aa898ff0720213b0",
+   "uv": "7dabd5692b68d74c",
+   "mask": "769921c2d6ad344f"
+  },
+  "HUT_peg_050": {
+   "tris": 92,
+   "geometry": "e38a8ed60ab389b6",
+   "uv": "a8405404fe64feaa",
+   "mask": "17120153aa56b747"
+  },
+  "HUT_peg_051": {
+   "tris": 92,
+   "geometry": "65040e03957bf9b3",
+   "uv": "a8405404fe64feaa",
+   "mask": "17120153aa56b747"
+  },
+  "HUT_peg_052": {
+   "tris": 92,
+   "geometry": "58f95ba9cc128af7",
+   "uv": "a072e673c39e5a40",
+   "mask": "99a8942d264ada7c"
+  },
+  "HUT_peg_053": {
+   "tris": 92,
+   "geometry": "e1410aae0a526eb4",
+   "uv": "e0d0a5b44e3c4aa2",
+   "mask": "ffdf38466194c601"
+  },
+  "HUT_peg_054": {
+   "tris": 92,
+   "geometry": "a018fdc792bc87df",
+   "uv": "e0d0a5b44e3c4aa2",
+   "mask": "ffdf38466194c601"
+  },
+  "HUT_peg_055": {
+   "tris": 92,
+   "geometry": "e139cb0b552e012d",
+   "uv": "e0d0a5b44e3c4aa2",
+   "mask": "ffdf38466194c601"
+  },
+  "HUT_peg_056": {
+   "tris": 92,
+   "geometry": "cbc86b75adda7c3a",
+   "uv": "a072e673c39e5a40",
+   "mask": "99a8942d264ada7c"
+  },
+  "HUT_peg_057": {
+   "tris": 92,
+   "geometry": "c49ebcf0eedab611",
+   "uv": "a8405404fe64feaa",
+   "mask": "17120153aa56b747"
+  },
+  "HUT_peg_058": {
+   "tris": 92,
+   "geometry": "142f7ef4412aa0d9",
+   "uv": "a8405404fe64feaa",
+   "mask": "17120153aa56b747"
+  },
+  "HUT_peg_059": {
+   "tris": 92,
+   "geometry": "d8a81d2f38c47611",
+   "uv": "7dabd5692b68d74c",
+   "mask": "769921c2d6ad344f"
+  },
+  "HUT_peg_060": {
+   "tris": 92,
+   "geometry": "fd4cc676547aeae3",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_061": {
+   "tris": 92,
+   "geometry": "c43898a322c86b39",
+   "uv": "a072e673c39e5a40",
+   "mask": "99a8942d264ada7c"
+  },
+  "HUT_peg_062": {
+   "tris": 92,
+   "geometry": "386801eb84866f44",
+   "uv": "a072e673c39e5a40",
+   "mask": "99a8942d264ada7c"
+  },
+  "HUT_peg_063": {
+   "tris": 92,
+   "geometry": "2e7759b84a60530d",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_064": {
+   "tris": 92,
+   "geometry": "b82ad04f077cd0cb",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_065": {
+   "tris": 92,
+   "geometry": "464bec1606b38770",
+   "uv": "a8405404fe64feaa",
+   "mask": "17120153aa56b747"
+  },
+  "HUT_peg_066": {
+   "tris": 92,
+   "geometry": "aa4bc77d4a45cbb4",
+   "uv": "a8405404fe64feaa",
+   "mask": "17120153aa56b747"
+  },
+  "HUT_peg_067": {
+   "tris": 92,
+   "geometry": "6e7e6d57f17c2c13",
+   "uv": "24b99df9a08d4661",
+   "mask": "f1f6bdc45feb9c9e"
+  },
+  "HUT_peg_068": {
+   "tris": 92,
+   "geometry": "8fcc34efe02e1ba0",
+   "uv": "a8405404fe64feaa",
+   "mask": "17120153aa56b747"
+  },
+  "HUT_peg_069": {
+   "tris": 92,
+   "geometry": "4803639f7528902e",
+   "uv": "e0d0a5b44e3c4aa2",
+   "mask": "ffdf38466194c601"
+  },
+  "HUT_peg_070": {
+   "tris": 92,
+   "geometry": "7a9ff16129ba2a7e",
+   "uv": "a072e673c39e5a40",
+   "mask": "99a8942d264ada7c"
+  },
+  "HUT_peg_071": {
+   "tris": 92,
+   "geometry": "323d5730ee5715e2",
+   "uv": "7dabd5692b68d74c",
+   "mask": "769921c2d6ad344f"
+  },
+  "HUT_plinth_chink_001": {
+   "tris": 168,
+   "geometry": "56232638c321bd94",
+   "uv": "0b3147392e169d8a",
+   "mask": "8ac67875eee80f12"
+  },
+  "HUT_plinth_chink_002": {
+   "tris": 168,
+   "geometry": "01ba373b4e10ec58",
+   "uv": "7673524ea942a65a",
+   "mask": "1ae6504ee55d7a1c"
+  },
+  "HUT_plinth_chink_003": {
+   "tris": 168,
+   "geometry": "252d786ab72170d6",
+   "uv": "1da836aedd3a8b8a",
+   "mask": "153b5d037c422987"
+  },
+  "HUT_plinth_chink_004": {
+   "tris": 168,
+   "geometry": "cef0ec1601373a4b",
+   "uv": "cc03c77a80f718c7",
+   "mask": "1379c7891cd71889"
+  },
+  "HUT_plinth_chink_005": {
+   "tris": 168,
+   "geometry": "eedd5a22c84f09eb",
+   "uv": "7673524ea942a65a",
+   "mask": "1ae6504ee55d7a1c"
+  },
+  "HUT_plinth_chink_006": {
+   "tris": 168,
+   "geometry": "a4774c56c0c2df7a",
+   "uv": "d9060b1eb1fa7846",
+   "mask": "5368da073e0da212"
+  },
+  "HUT_plinth_chink_007": {
+   "tris": 168,
+   "geometry": "8b965ffdd00cf442",
+   "uv": "d9060b1eb1fa7846",
+   "mask": "5368da073e0da212"
+  },
+  "HUT_plinth_chink_008": {
+   "tris": 168,
+   "geometry": "caa6df842cef2ee4",
+   "uv": "1d15668094571260",
+   "mask": "337b165aea7d237e"
+  },
+  "HUT_plinth_chink_009": {
+   "tris": 168,
+   "geometry": "d0f3c0fdb6c45f4a",
+   "uv": "f6478422039686ac",
+   "mask": "f63952af4bb4a634"
+  },
+  "HUT_plinth_chink_010": {
+   "tris": 168,
+   "geometry": "8395591a3d712cc5",
+   "uv": "3cc37a36435f495e",
+   "mask": "e83bc0107119a129"
+  },
+  "HUT_plinth_chink_011": {
+   "tris": 168,
+   "geometry": "3974b20e74895ca2",
+   "uv": "d9060b1eb1fa7846",
+   "mask": "5368da073e0da212"
+  },
+  "HUT_plinth_chink_012": {
+   "tris": 168,
+   "geometry": "5b7fb75760463ad3",
+   "uv": "3cc37a36435f495e",
+   "mask": "e83bc0107119a129"
+  },
+  "HUT_plinth_chink_013": {
+   "tris": 168,
+   "geometry": "3c3979360730826e",
+   "uv": "3cc37a36435f495e",
+   "mask": "e83bc0107119a129"
+  },
+  "HUT_plinth_chink_014": {
+   "tris": 168,
+   "geometry": "aea1413063857bdb",
+   "uv": "cc03c77a80f718c7",
+   "mask": "1379c7891cd71889"
+  },
+  "HUT_plinth_chink_015": {
+   "tris": 168,
+   "geometry": "15ad841ac0b2677f",
+   "uv": "3cc37a36435f495e",
+   "mask": "e83bc0107119a129"
+  },
+  "HUT_plinth_chink_016": {
+   "tris": 168,
+   "geometry": "2fe0b4d799b0384c",
+   "uv": "cc03c77a80f718c7",
+   "mask": "1379c7891cd71889"
+  },
+  "HUT_plinth_chink_017": {
+   "tris": 168,
+   "geometry": "a3f092bf49360a93",
+   "uv": "1da836aedd3a8b8a",
+   "mask": "153b5d037c422987"
+  },
+  "HUT_plinth_chink_018": {
+   "tris": 168,
+   "geometry": "2f8d99211553a706",
+   "uv": "cc03c77a80f718c7",
+   "mask": "1379c7891cd71889"
+  },
+  "HUT_plinth_chink_019": {
+   "tris": 168,
+   "geometry": "7f15dd62b77dd034",
+   "uv": "f6478422039686ac",
+   "mask": "f63952af4bb4a634"
+  },
+  "HUT_plinth_chink_020": {
+   "tris": 168,
+   "geometry": "21a5fd069a40f826",
+   "uv": "3cc37a36435f495e",
+   "mask": "e83bc0107119a129"
+  },
+  "HUT_plinth_chink_021": {
+   "tris": 168,
+   "geometry": "90ab30908d8c738c",
+   "uv": "f6478422039686ac",
+   "mask": "f63952af4bb4a634"
+  },
+  "HUT_plinth_chink_022": {
+   "tris": 168,
+   "geometry": "e816c3d54c94691f",
+   "uv": "cc03c77a80f718c7",
+   "mask": "1379c7891cd71889"
+  },
+  "HUT_plinth_chink_023": {
+   "tris": 168,
+   "geometry": "2b54fc8e10f46cca",
+   "uv": "1d15668094571260",
+   "mask": "337b165aea7d237e"
+  },
+  "HUT_plinth_chink_024": {
+   "tris": 168,
+   "geometry": "af27069ecc9555c1",
+   "uv": "f6478422039686ac",
+   "mask": "f63952af4bb4a634"
+  },
+  "HUT_plinth_chink_025": {
+   "tris": 168,
+   "geometry": "37972920d7a61e84",
+   "uv": "3cc37a36435f495e",
+   "mask": "e83bc0107119a129"
+  },
+  "HUT_plinth_chink_026": {
+   "tris": 168,
+   "geometry": "f7c794d36c7a97d7",
+   "uv": "cc03c77a80f718c7",
+   "mask": "1379c7891cd71889"
+  },
+  "HUT_plinth_chink_027": {
+   "tris": 168,
+   "geometry": "6f6bd378209de781",
+   "uv": "1d15668094571260",
+   "mask": "337b165aea7d237e"
+  },
+  "HUT_plinth_chink_028": {
+   "tris": 168,
+   "geometry": "233398bf7dd5c915",
+   "uv": "f6478422039686ac",
+   "mask": "f63952af4bb4a634"
+  },
+  "HUT_plinth_chink_029": {
+   "tris": 168,
+   "geometry": "060be8ff3554e3e2",
+   "uv": "cc03c77a80f718c7",
+   "mask": "1379c7891cd71889"
+  },
+  "HUT_plinth_chink_030": {
+   "tris": 168,
+   "geometry": "287b12dc68b7227e",
+   "uv": "1da836aedd3a8b8a",
+   "mask": "153b5d037c422987"
+  },
+  "HUT_plinth_chink_031": {
+   "tris": 168,
+   "geometry": "742ec6154d4369a7",
+   "uv": "cc03c77a80f718c7",
+   "mask": "1379c7891cd71889"
+  },
+  "HUT_plinth_chink_032": {
+   "tris": 168,
+   "geometry": "5c02127e3a9aa224",
+   "uv": "cc03c77a80f718c7",
+   "mask": "1379c7891cd71889"
+  },
+  "HUT_plinth_chink_033": {
+   "tris": 168,
+   "geometry": "dbbe062b5a761d99",
+   "uv": "1da836aedd3a8b8a",
+   "mask": "153b5d037c422987"
+  },
+  "HUT_plinth_stones": {
+   "tris": 155234,
+   "geometry": "45cc96ddc423e650",
+   "uv": "8e275a3b8d80a36e",
+   "mask": "ba9b6c9a4ade0040"
+  },
+  "HUT_posts": {
+   "tris": 29130,
+   "geometry": "c5d1b0349dbf21d5",
+   "uv": "6651b2154c0b12b8",
+   "mask": "71337e7b13d20537"
+  },
+  "HUT_purlin_rings": {
+   "tris": 232,
+   "geometry": "fddb20b1872c55ba",
+   "uv": "ac0160fc7c7d0256",
+   "mask": "74d843b47ab514a8"
+  },
+  "HUT_rafters": {
+   "tris": 5704,
+   "geometry": "82786dfbab3c0855",
+   "uv": "647843b0ca33b696",
+   "mask": "a20fb158b758bd15"
+  },
+  "HUT_roof_blocker": {
+   "tris": 2176,
+   "geometry": "ad419b874a219e0f",
+   "uv": "03a3ab5921076a64",
+   "mask": "13a75ae9ff9df67f"
+  },
+  "HUT_roof_shingles": {
+   "tris": 110140,
+   "geometry": "8cc68df442e8d6c7",
+   "uv": "1c02afe19be975f8",
+   "mask": "cea102336b5d956c"
+  },
+  "HUT_roof_starter": {
+   "tris": 6668,
+   "geometry": "f2fc23f29cbf9bab",
+   "uv": "39faad44d9a9fc48",
+   "mask": "2b9e4a1506ac63d5"
+  },
+  "HUT_roof_underlap": {
+   "tris": 7116,
+   "geometry": "8b7bbf4938b2ce8e",
+   "uv": "84f57d88310883cf",
+   "mask": "a184df9a9a746944"
+  },
+  "HUT_step_stone": {
+   "tris": 5248,
+   "geometry": "0f4827cbd1c680c3",
+   "uv": "3d4d29821ed8d4f4",
+   "mask": "ff8c3b9d676887cf"
+  },
+  "HUT_threshold": {
+   "tris": 18920,
+   "geometry": "a3f195d911e20dd8",
+   "uv": "cb5cc75f15434141",
+   "mask": "c8defe2672464093"
+  },
+  "HUT_wall_plate": {
+   "tris": 1716,
+   "geometry": "f83fa75d9df3b5ee",
+   "uv": "798215f36068aab2",
+   "mask": "ccbff5ed00b101cd"
+  },
+  "HUT_wattle_rods": {
+   "tris": 59636,
+   "geometry": "6fdfe3dd80465624",
+   "uv": "cb20313dacdc5ca9",
+   "mask": "0b6b87b13692666b"
+  },
+  "HUT_wattle_stakes": {
+   "tris": 632,
+   "geometry": "bb3d2ed9aefe011f",
+   "uv": "a88f37d9360086d7",
+   "mask": "87d582574ac3f35e"
+  }
+ },
+ "triangles": 878355,
+ "geometry": "7e5e7c2df5c4d367",
+ "uv": "c97c88e742be4887",
+ "mask": "46bb1454fa4d264e"
+}

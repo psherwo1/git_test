@@ -1,0 +1,23 @@
+﻿00:01.703  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+BlenderMCP addon registered
+triangles: 714,795  objects: 75
+estimated hidden: 14.1% (~100,750 tris), below ground: 1.9%
+  HARB_hall_stones                         hidden  10.4%  ~20,192 of 193,352
+  HARB_roof_covering                       hidden   8.8%  ~13,759 of 156,182
+  HARB_quay_core                           hidden  97.8%  ~7,969 of 8,148
+  HARB_wing_stones                         hidden  10.5%  ~6,862 of 65,082
+  HARB_roof_deck                           hidden  81.4%  ~5,646 of 6,933
+  HARB_wing_roof_covering                  hidden   9.9%  ~4,038 of 40,600
+  HARB_hall_mortar                         hidden  51.7%  ~3,859 of 7,469
+  HARB_tower_stones                        hidden   4.7%  ~3,752 of 79,878
+  HARB_water_gable_blocker                 hidden  93.3%  ~3,502 of 3,752
+  HARB_roof_shingles                       hidden   6.5%  ~2,930 of 44,746
+  HARB_wing_mortar                         hidden  52.7%  ~2,108 of 4,002
+  HARB_roof_wall_abutment                  hidden  49.5%  ~1,929 of 3,895
+  HARB_jetty_structure                     hidden 100.0%  ~1,822 of 1,822
+  HARB_roof_soffit_deck                    hidden  54.0%  ~1,679 of 3,109
+  HARB_wing_roof_deck                      hidden  80.4%  ~1,608 of 2,001
+BlenderMCP addon unregistered
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

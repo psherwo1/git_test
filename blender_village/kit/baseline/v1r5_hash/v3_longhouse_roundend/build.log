@@ -1,0 +1,127 @@
+[    0.3s] -- set_entrance
+[    0.3s] -- round_stone_body
+[    3.6s]   LONG_round_wall visible mortar 15.2% -> 8.2% after 409 pinning stones
+[    3.6s]   LONG_round_wall stones 878
+[    4.7s]   LONG_round_wall_stones: 54534 verts, 46947 faces
+[    4.7s]   LONG_round_wall_mortar: 2384 verts, 2251 faces
+[    4.7s]   LONG_round_wall_frames: 792 verts, 780 faces
+[    4.7s]   LONG_round_wall_dressed: 248 verts, 240 faces
+[    4.7s]   LONG_round_wall_reveals: 16 verts, 8 faces
+[    4.8s]   LONG_round_wall_blockers: 16 verts, 10 faces
+[    4.8s] -- path_stone_wall
+[   25.6s]   body_wall visible mortar 20.5% -> 8.3% after 785 pinning stones
+[   25.6s]   LONG_body_wall: stones 1821 (hero 286, pins 209)
+[   29.5s]   LONG_body_wall_stones: 127205 verts, 113539 faces
+[   29.5s]   LONG_body_wall_quoins: 1640 verts, 1600 faces
+[   30.0s]   LONG_body_wall_mortar: 4166 verts, 3672 faces
+[   30.0s]   LONG_body_wall: mortar cells 3672
+[   30.1s]   LONG_body_wall_frames: 3792 verts, 3729 faces
+[   30.1s]   LONG_body_wall_dressed: 576 verts, 558 faces
+[   30.1s]   LONG_body_wall_ironwork: 280 verts, 266 faces
+[   30.1s]   LONG_body_wall_reveals: 32 verts, 16 faces
+[   30.1s]   LONG_body_wall_blockers: 32 verts, 20 faces
+[   30.1s] -- linear_roof
+[   30.1s]   LONG_body_roof_deck: 368 verts, 334 faces
+[   30.2s]   body_roof rafters: 6 tails skipped (they would run into another body)
+[   30.2s]   LONG_body_roof_rafters: 2016 verts, 1944 faces
+[   30.5s]   LONG_body_roof_covering: 20414 verts, 18292 faces
+[   30.7s]   LONG_body_roof_eave_roll: 8261 verts, 7803 faces
+[   30.7s]   LONG_body_roof: 26 continuous thatch courses + eave rolls + verge faces
+[   30.7s]   LONG_body_roof_ridge: 1389 verts, 1341 faces
+[   30.9s]   LONG_body_roof_comb: 8571 verts, 8189 faces
+[   30.9s] -- cone_roof
+[   31.0s]   LONG_rafters: 3474 verts, 2916 faces
+[   31.1s]   LONG_purlin_rings: 392 verts, 350 faces
+[   31.1s]   LONG_battens: 504 verts, 378 faces
+[   34.1s] shingles: 615 full-length (covered part visible): 127
+[   34.6s]   LONG_roof_shingles: 66750 verts, 57820 faces
+[   34.6s]   LONG_roof_starter: 3600 verts, 3120 faces
+[   44.9s] underlap strips: 610
+[   44.9s]   LONG_roof_underlap: 7320 verts, 3660 faces
+[   45.0s]   LONG_roof_blocker: 1186 verts, 1088 faces
+[   47.2s]   cone soffit: 1 spans cut by the keep-out, closed end faces
+[   47.2s]   LONG_roof_soffit_deck: 990 verts, 890 faces
+[   48.0s]   cut units: 21 removed parts are soaker footprints too
+[   48.4s]   cone soakers: 54 dropped units within 0.30 m of the roof, 23307 cells
+[   48.5s]   LONG_cone_soakers: 2004 verts, 1952 faces
+[   48.5s] cone keep-out (body_roof): -roof_shingles 12938, roof_starter 832, roof_underlap 771, battens 114, rafters 654, purlin_rings 56 polygons
+[   48.5s]   even cut line (trim_units): roof_shingles 16 units / 13 caps, roof_starter 4 units / 4 caps, roof_underlap 12 units / 0 caps, battens 5 units / 5 caps, rafters 2 units / 0 caps
+[   48.5s] -- ball_finial
+[   48.7s]   LONG_cap_collar: 6529 verts, 6433 faces
+[   49.0s]   hat fit: -120 covering polygons under / through the hat; worst clearance kept 0.020 m
+[   49.0s]   LONG_apex_blocker: 362 verts, 400 faces
+[   49.0s]   ball finial: hat r 0.62 pitch 44 deg, top shingle under the drip at 6.430, apex 6.978, hat top 7.028
+[   49.0s]   LONG_finial: 642 verts, 672 faces
+[   49.0s] -- round_eave_fill
+[   49.0s]   eave fill from the round wall head z 2.586 m (no wall plate)
+[   49.0s]   LONG_eave_fill: 550 verts, 364 faces
+[   49.0s] -- cone_abutment
+[   58.3s]   end apron -1: w_in from kept units 0.12-0.25 m
+[   59.6s]   end apron +1: w_in from kept units 0.12-0.24 m
+[   59.6s]   LONG_body_roof_abutment: 1500 verts, 1490 faces
+[   59.6s]   abutment: 114 stations, length 8.05 m, end aprons [21, 21] rows
+[   59.6s]   cheek board -1: x -2.59..-1.87 (local), z 2.29..2.82
+[   59.6s]   cheek board +1: x -2.59..-1.87 (local), z 2.29..2.82
+[   59.6s]   LONG_body_roof_cheek: 192 verts, 188 faces
+[   59.6s]   seal junction registered: body_roof / round body (covering LONG_body_roof_covering, LONG_body_roof_eave_roll; z 2.81-5.87)
+[   59.6s] -- composite_hidden_cull
+[   60.8s]   visibility: 549983 tris, 286 viewpoints
+[  133.5s]   visibility cull LONG_round_wall_stones: -4051 of 46947 polygons
+[  136.4s]   visibility cull LONG_round_wall_frames: -378 of 780 polygons
+[  137.1s]   visibility cull LONG_round_wall_dressed: -80 of 240 polygons
+[  241.7s]   visibility cull LONG_body_wall_stones: -10769 of 113539 polygons
+[  245.1s]   visibility cull LONG_body_wall_quoins: -553 of 1600 polygons
+[  255.4s]   visibility cull LONG_body_wall_frames: -1476 of 3729 polygons
+[  256.8s]   visibility cull LONG_body_wall_dressed: -194 of 558 polygons
+[  257.1s]   visibility cull LONG_body_wall_ironwork: -43 of 266 polygons
+[  264.0s]   visibility cull LONG_body_roof_rafters: -989 of 1944 polygons
+[  292.1s]   visibility cull LONG_body_roof_covering: -3375 of 18292 polygons
+[  305.5s]   visibility cull LONG_body_roof_eave_roll: -2266 of 7803 polygons
+[  306.7s]   visibility cull LONG_body_roof_ridge: -114 of 1341 polygons
+[  339.7s]   visibility cull LONG_body_roof_comb: -3962 of 8189 polygons
+[  352.9s]   visibility cull LONG_rafters: -382 of 2109 polygons
+[  359.1s]   visibility cull LONG_purlin_rings: -286 of 294 polygons
+[  361.3s]   visibility cull LONG_battens: -65 of 265 polygons
+[  403.4s]   visibility cull LONG_roof_shingles: -4231 of 44431 polygons
+[  407.4s]   visibility cull LONG_roof_starter: -341 of 2250 polygons
+[  425.3s]   visibility cull LONG_cone_soakers: -1394 of 1952 polygons
+[  426.1s]   visibility cull LONG_body_roof_cheek: -54 of 188 polygons
+[  426.1s] hidden-geometry cull: -35003 polygons on 20 objects
+[  426.1s] -- recenter
+[  426.1s] recentred by (+4.608, -0.006); plan bbox 17.77 x 8.56 m, height 7.64 m
+[  426.1s] -- guards
+[  426.5s]   clearance gate LONG body_wall_3: door head 2.22 m, eave lip over it 2.317 m at (-1.892, -2.906) on LONG_body_roof_rafters (rule >= 2.30 m, 25 stations): PASS
+[  427.9s]   seal probe [see-through] body_roof / round body: 6137 points, 41407 rays, 1069 grazing pass(es), 0 leak(s)
+[  427.9s]   seal probe: 41407 rays on 1 junction(s) in 1.5 s
+[  428.5s] composite decals: 99 anchors before the gate
+[  429.1s] decal anchor check (applied): checked 99, snapped 4, max_move 0.042, renormal 4, shrunk 12, no_surface 3, wrong_surface 0, excluded 0, occluded 1, footprint 18, duplicate 0, normal_off 1, kept 76
+[  429.1s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['LONG_round', 'LONG_round', '-', 'LONG_round', 'LONG_round', 'LONG_round', 'LONG_round', '-', 'LONG_round']
+[  429.1s]     DA_moss_003: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'LONG_round', 'LONG_round', 'LONG_round', 'LONG_body_', 'LONG_body_', '-']
+[  429.1s]     DA_lichen_001: footprint off the surface (n.n0 1.00) ['LONG_round', 'LONG_round', 'LONG_round', 'LONG_round', 'LONG_round', 'LONG_round', 'LONG_round', 'LONG_round', 'LONG_round']
+[  429.1s]     DA_moss_004: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'LONG_round', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_']
+[  429.1s]     DA_moss_006: footprint off the surface (n.n0 1.00) ['-', 'LONG_body_', 'LONG_body_', '-', 'LONG_body_', '-', 'LONG_body_', 'LONG_body_', '-']
+[  429.1s]     DA_damp_rise_009: footprint off the surface (n.n0 1.00) ['LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', '-', '-', '-']
+[  429.1s]     DA_damp_rise_011: footprint off the surface (n.n0 1.00) ['LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_']
+[  429.1s]     DA_damp_rise_013: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'LONG_body_', 'LONG_body_', 'LONG_body_', '-', '-', '-']
+[  429.1s]     DA_damp_rise_015: footprint off the surface (n.n0 1.00) ['LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_']
+[  429.1s]     DA_lichen_004: footprint off the surface (n.n0 1.00) ['LONG_body_', 'LONG_body_', '-', 'LONG_body_', 'LONG_body_', '-', 'LONG_body_', 'LONG_body_', '-']
+[  429.1s]     DA_crack_001: buried: occluded within 15 cm
+[  429.1s]     DA_water_streak_001: no surface within 6 cm
+[  429.1s]     DA_water_streak_003: no surface within 6 cm
+[  429.1s]     DA_crack_010: footprint off the surface (n.n0 1.00) ['-', 'LONG_body_', '-', '-', 'LONG_body_', '-', '-', 'LONG_body_', '-']
+[  429.1s]     DA_crack_011: footprint off the surface (n.n0 1.00) ['-', 'LONG_body_', '-', '-', 'LONG_body_', '-', '-', 'LONG_body_', '-']
+[  429.1s]     DA_water_streak_004: no surface within 6 cm
+[  429.1s]     DA_crack_013: footprint off the surface (n.n0 1.00) ['LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_']
+[  429.1s]     DA_crack_014: footprint off the surface (n.n0 1.00) ['LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_']
+[  429.1s]     DA_lichen_008: footprint off the surface (n.n0 1.00) ['LONG_body_', '-', '-', 'LONG_body_', 'LONG_body_', '-', '-', 'LONG_body_', 'LONG_body_']
+[  429.1s]     DA_lichen_009: footprint off the surface (n.n0 1.00) ['-', '-', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', 'LONG_body_', '-']
+[  429.1s]     DA_lichen_010: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'LONG_body_', 'LONG_body_', 'LONG_body_', '-', '-', '-']
+[  429.1s]     DA_moss_014: normal 0.85 off the footprint-mean surface normal
+[  429.1s]     DA_moss_031: footprint off the surface (shingles)
+[  429.1s] decal anchors: 76
+[  429.8s] uv grain (kit 1.10.0): 35 meshes, 1437 timber / shingle pieces (18 round, 463 sloped sheets), 58152 grain faces re-projected, 551 collapsed faces repaired
+[  430.1s]   walked tops (Mask B <= 0.04): body_wall_3 -> LONG_body_wall_dressed: 6 faces
+[  430.1s]   walked tops (Mask B <= 0.04): body_wall_3 -> LONG_body_wall_ironwork: 35 faces
+[  430.1s] objects 35 (instances 0, pooled meshes 0) triangles 479791
+Info: Saved as "v3_longhouse_roundend.blend"
+[  430.1s] saved C:\GitHubDesktop\git_test\blender_village\kit\baseline\v1r5_hash\v3_longhouse_roundend\v3_longhouse_roundend.blend 13.0 MB

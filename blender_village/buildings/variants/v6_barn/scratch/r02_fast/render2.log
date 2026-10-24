@@ -1,0 +1,38 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\v6_barn.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\builder_extra\bld_render_r02.py:22: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:846
++ ... st\shots2"; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\builder_extra\bld_render_r02.py:39: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_B_world"); world.use_nodes = True
+00:00.672  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\b03_west_gable_verge_roll.png'
+SHOT b03_west_gable_verge_roll
+00:08.938  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\s12_SE_corner_eave_verge.png'
+00:09.328  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\s12_SE_corner_eave_verge_red.png'
+SHOT s12_SE_corner_eave_verge
+00:13.328  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\s13_NW_corner_back.png'
+00:13.719  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\s13_NW_corner_back_red.png'
+SHOT s13_NW_corner_back
+00:17.735  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d02_kiln_back_thatch_W_from_ridge.png'
+00:18.141  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d02_kiln_back_thatch_W_from_ridge_red.png'
+SHOT d02_kiln_back_thatch_W_from_ridge
+00:22.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d03_kiln_back_thatch_E_from_ridge.png'
+00:22.563  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d03_kiln_back_thatch_E_from_ridge_red.png'
+SHOT d03_kiln_back_thatch_E_from_ridge
+00:26.719  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d05_eave_lip_into_kiln_W_low.png'
+00:27.125  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d05_eave_lip_into_kiln_W_low_red.png'
+SHOT d05_eave_lip_into_kiln_W_low
+00:31.235  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d06_eave_lip_into_kiln_E_low.png'
+00:31.610  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d06_eave_lip_into_kiln_E_low_red.png'
+SHOT d06_eave_lip_into_kiln_E_low
+00:35.735  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d09_SW_corner_eave_verge_lift.png'
+00:36.141  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\shots2\d09_SW_corner_eave_verge_lift_red.png'
+SHOT d09_SW_corner_eave_verge_lift

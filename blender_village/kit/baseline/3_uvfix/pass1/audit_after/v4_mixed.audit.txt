@@ -1,0 +1,16 @@
+﻿GRAIN M_timber             area    225.5  along  76.7%  across   0.8%  [of judged  98.7%; sheets   49.3]  (per piece: along  76.4%)  | roof    57.2: up  55.8%  down   4.4%  | m/UV 1.00
+GRAIN M_timber_weathered   area    118.5  along  68.0%  across   0.4%  [of judged  99.0%; sheets   37.1]  (per piece: along  68.0%)  | roof    15.4: up  37.7%  down   7.7%  | m/UV 1.00
+GRAIN M_roof_shingle       area    128.5  along  13.9%  across  17.1%  [of judged  42.1%; sheets   86.2]  (per piece: along  13.9%)  | roof    86.1: up  99.9%  down   0.0%  | m/UV 1.00
+GRAIN M_roof_shake         area     32.4  along  84.0%  across   2.3%  [of judged  84.0%; sheets    0.0]  (per piece: along  84.0%)  | roof    26.2: up 100.0%  down   0.0%  | m/UV 1.00
+COLLAPSED objects >= 1% area at ratio<0.2: 0 of 105; worst max 0.10%
+WALKED tops in door zones: area 4.554 m2, B max 0.039, area with B > 0.05: 0.000 m2  (pooled door hardware in the zones, not walked pieces: 13 objects, 0.0103 m2, B max 0.200)
+   V4H framed_door  V4H_door_frame                   faces     2 area   0.000 B max 0.039 mean 0.039 >0.05 0.000
+   V4H framed_door  V4H_door_leaf                    faces    11 area   0.020 B max 0.039 mean 0.039 >0.05 0.000
+   V4H framed_door  V4H_floor                        faces    48 area   1.105 B max 0.039 mean 0.039 >0.05 0.000
+   V4H framed_door  V4H_step_stone                   faces  2019 area   0.545 B max 0.039 mean 0.039 >0.05 0.000
+   V4H framed_door  V4H_threshold                    faces  2921 area   0.483 B max 0.039 mean 0.039 >0.05 0.000
+   V4M drum_door    V4M_door_iron                    faces    50 area   0.009 B max 0.039 mean 0.039 >0.05 0.000
+   V4M drum_door    V4M_door_leaf                    faces     5 area   0.009 B max 0.039 mean 0.039 >0.05 0.000
+   V4M drum_door    V4M_door_step                    faces   839 area   0.743 B max 0.039 mean 0.039 >0.05 0.000
+   V4M drum_door    V4M_door_surround                faces   404 area   0.657 B max 0.039 mean 0.039 >0.05 0.000
+   V4M drum_door    V4M_interior                     faces   106 area   0.982 B max 0.039 mean 0.039 >0.05 0.000

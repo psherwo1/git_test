@@ -1,0 +1,139 @@
+[    0.2s] -- _entrance_r8
+[    0.2s] -- round_stone_drum
+[    0.9s] plain rubble: 460 stones, 3 pinch-outs
+[    0.9s] drum rubble stones 570
+[    1.0s] threshold: 2 straight dressed stones 0.66 + 0.65 m, joint 0.012 m
+[    1.0s] interior: floor sill at y -1.66, ladder foot 1.30 m inside the door face, 10 rungs
+[    1.2s] door planks 6: short [1, 4], checks [1, 3, 4], split at the head 2, free-edge sag 5.1 mm
+[    1.7s] arcade piers: 66 coursed long-and-short dressed blocks in 10 piers
+[    1.8s] balusters 71 positions from 12 shared variants (5 profile families): eroded 8, chipped 4, stumps 3, plain 3, missing 2; lean +-1.0 deg
+[    1.8s] dentil corbels 40 placements from 6 shared variants
+[    3.2s] drum pins 1179, rejected 0 (plain-zone mortar before pins 19.2%)
+[    3.3s] WALL drum               visible mortar 9.6% (423964 cells), plain zone 9.7%, widest void 0.078 m at u 4.58 z 0.41, stones 1815
+[    3.3s]   pins per iteration [1054, 19, 1]
+[    3.7s] WALL arcade backs: mean visible mortar 13.2%, widest void 0.018 m
+[    5.0s] drum mortar skin: 6806 of 11780 cells hidden behind stone cover -> culled
+[    5.1s] wall-core backing z 2.84..4.45 at d -0.034: 860 of 1440 outer cells kept (openings holed)
+[    5.1s] -- drum_wall_core
+[    5.2s] wall core inner face: 60 quads
+[    5.2s] wall core ring z -0.05..4.22, 0.006 gap behind the skin: 5236 cells (186 x 34 grid), 352 arch-head quads, 13 openings cut
+[    5.2s] -- entrance_step
+[    5.2s] door step: top 0.079 m, 3 front facets
+[    5.2s] -- smock_tower
+[    5.2s] tower boards 160 pieces, 3 strongly cupped boards, 8 split ends
+[    5.3s] -- shake_apron
+[    5.4s] apron shakes 210
+[    5.4s]   seal junction registered: apron / smock tower (covering MILL_apron_shingles; z 5.10-6.30)
+[    5.4s] -- mill_cap
+[    5.4s] cap: side max pitch 45.8 deg (bell-cast to 25), end faces 56.2 deg; ridge 1.00 m long at z 12.88; valley x 0.48..0.79
+[    5.4s] valance boards 47 (4 sheer notches)
+[    5.5s] cap shingles 96 slivers culled 0
+[    5.5s] cap + hood shingles: slivers culled (< 5 cm wide after clamping) 17
+[    5.6s] cap shingles wholly under the cappings (never visible): 1 culled
+[    5.7s] CAP cappings: 12 hip pieces (0.56-0.64 m), max deviation from hip line 0.87 deg; bearing gap per station (board underside to highest shingle under it): median 0.003, 90% 0.019 m, 1% -0.039
+[    5.7s] -- fan_wheel
+[    5.8s] -- rear_tail_vane
+[    5.8s] king post at x' -0.76: roof 12.864 -> top 13.164 m (0.12 x 0.12 hewn, lead collar)
+[    5.9s] tail boom: rails x' -1.13..-6.08 at z 11.55 (droop 0.022), hanger at x' -1.66, braces to x' -3.24 / -3.26
+[    6.0s] tail vane: 14 boards over 2.65 m (x' -3.40..-6.05), height 1.40 -> 2.20 m, cracked 2, replaced 7
+[    6.0s] -- _props_step
+[    6.4s] prop 0: 342 rings x 38 sides (ring spacing 0.045 m), checks [(7.38, 0.32), (6.8, 0.7), (0.46, 0.56), (0.22, 0.4), ('butt', 0.25)], knots 4 (2 within 2.5 m of the foot)
+[    6.5s] prop foot 0 staple: span 0.200 m, 15 mm proud
+[    6.5s] prop foot 0 staple: span 0.205 m, 15 mm proud
+[    6.5s] prop foot 0: pad top 0.045 m, chock 42% sunk into the notch (height 0.225), seat 0.08, heel 0.18
+[    6.9s] prop 1: 339 rings x 37 sides (ring spacing 0.045 m), checks [(8.93, 0.31), (4.52, 0.77), (8.47, 0.43), (0.33, 0.63), (0.45, 0.7), ('butt', 0.18)], knots 5 (2 within 2.5 m of the foot)
+[    6.9s] prop foot 1 staple: span 0.208 m, 16 mm proud
+[    6.9s] prop foot 1 staple: span 0.217 m, 18 mm proud
+[    6.9s] prop foot 1: pad top 0.046 m, chock 41% sunk into the notch (height 0.225), seat 0.08, heel 0.18
+[    7.3s] prop 2: 290 rings x 38 sides (ring spacing 0.045 m), checks [(7.13, 0.56), (7.35, 0.36), (0.21, 0.76), (0.54, 0.45), ('butt', 0.21)], knots 5 (2 within 2.5 m of the foot)
+[    7.4s] prop foot 2 staple: span 0.218 m, 18 mm proud
+[    7.4s] prop foot 2 staple: span 0.197 m, 13 mm proud
+[    7.4s] prop foot 2: pad top 0.049 m, chock 42% sunk into the notch (height 0.225), seat 0.08, heel 0.18
+[    7.4s] -- _dump_parts
+[    7.4s] -- drum_finish
+[    7.5s] CLEARANCE rotor -> MILL_cap_frame           0.200 m
+[    7.5s] CLEARANCE rotor -> MILL_tower_frame         0.200 m
+[    7.5s] CLEARANCE rotor -> MILL_tower_iron          0.260 m
+[    7.5s] CLEARANCE rotor -> MILL_cap_shingles        0.300 m
+[    7.5s] CLEARANCE rotor -> MILL_cap_iron            0.340 m
+[    7.5s] CLEARANCE rotor -> MILL_tower_boards        0.620 m
+[    7.5s] CLEARANCE rotor -> MILL_prop_iron           1.500 m
+[    7.5s] CLEARANCE rotor -> MILL_props               1.760 m
+[    7.5s] CLEARANCE rotor -> MILL_tail_boom           2.120 m
+[    7.5s] CLEARANCE rotor -> MILL_tail_iron           2.160 m
+[    7.5s] CLEARANCE rotor -> MILL_apron_shingles      2.623 m
+[    7.5s] CLEARANCE rotor -> MILL_prop_anchors        9.900 m
+[    7.5s] CLEARANCE rotor -> MILL_tail_vane           9.900 m
+[    7.5s] lowest rotating point z = 8.433 m (apron top 6.00 m, ground 0)
+[    8.2s] ROTOR wind-wheel blades vs arms: min gap 0.060 m (PASS)
+[    8.2s] WHEEL r=2.50: blade width 0.832, pitch 0.982, gap 0.150 m
+[    8.2s] WHEEL r=3.90: blade width 1.175, pitch 1.532, gap 0.357 m
+[    8.2s] CLEARANCE CHECK wheel vs apron/props/tail >= 0.30 m: PASS
+[   10.0s] TAIL swept clearance at any cap yaw: tower_boards 0.256 m, tower_frame 0.053 m, tower_iron 9.900 m, props 9.900 m, prop_iron 9.900 m
+[   18.6s] MILL_base_stones             tris   389408  (degenerate faces removed 1182, on-ground faces culled 663, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.0s] MILL_base_mortar             tris    50112  (degenerate faces removed 50, on-ground faces culled 31, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.4s] MILL_base_dressed            tris    55686  (degenerate faces removed 32, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.4s] MILL_interior                tris     6544  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.5s] MILL_door_leaf               tris     9540  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.5s] MILL_door_iron               tris     2884  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.5s] MILL_door_step               tris     2231  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.6s] MILL_apron_rafters           tris    17664  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.7s] MILL_apron_shingles          tris    21840  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.8s] MILL_tower_boards            tris    29356  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.9s] MILL_tower_frame             tris    12514  (degenerate faces removed 8, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   19.9s] MILL_tower_iron              tris     1520  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.0s] MILL_cap_frame               tris    24512  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.2s] MILL_cap_shingles            tris    21016  (degenerate faces removed 69, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.2s] MILL_cap_iron                tris     3396  (degenerate faces removed 4, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.2s] MILL_windshaft               tris      320  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.2s] MILL_poll_end                tris      692  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.2s] MILL_rotor_iron              tris     4784  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.3s] MILL_wheel_rim               tris     5120  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.3s] MILL_wheel_blades            tris    21048  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.3s] MILL_wheel_spokes            tris     4000  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.8s] MILL_props                   tris    66721  (degenerate faces removed 4570, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.9s] MILL_prop_anchors            tris    10127  (degenerate faces removed 999, on-ground faces culled 990, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.9s] MILL_prop_iron               tris     4152  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.9s] MILL_wheel_arm_A             tris     1488  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.9s] MILL_wheel_arm_B             tris     1488  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   20.9s] MILL_wheel_arm_C             tris     1488  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   21.0s] MILL_wheel_arm_D             tris     1488  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   21.0s] MILL_tail_boom               tris     7920  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   21.0s] MILL_tail_vane               tris     5412  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   21.0s] MILL_tail_iron               tris     4152  (degenerate faces removed 0, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   21.2s] MILL_door_surround           tris    45907  (degenerate faces removed 642, on-ground faces culled 642, slivers alt<0.1mm 0, area<1e-8 0)
+[   22.3s] MILL_arcade_dressed          tris   188565  (degenerate faces removed 9, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   23.3s] MILL_arcade_backs            tris    74246  (degenerate faces removed 302, on-ground faces culled 0, slivers alt<0.1mm 0, area<1e-8 0)
+[   23.4s] MILL_wall_core               tris    10958  (degenerate faces removed 303, on-ground faces culled 215, slivers alt<0.1mm 0, area<1e-8 0)
+[   23.4s] OBJECTS 210 (175 linked duplicates of 24 pooled variant meshes: baluster_0 x5, baluster_1 x10, baluster_10 x3, baluster_11 x3, baluster_2 x6, baluster_3 x7, baluster_4 x7, baluster_5 x11, baluster_6 x5, baluster_7 x4, baluster_8 x4, baluster_9 x4, bolt_hex_0 x6, bolt_hex_1 x21, bolt_hex_2 x8, bolt_hex_3 x15, bolt_hex_4 x7, bolt_hex_5 x9, corbel_0 x8, corbel_1 x8, corbel_2 x4, corbel_3 x8, corbel_4 x6, corbel_5 x6)
+[   23.4s] -- drum_hidden_cull
+[   24.3s]   visibility: 1186247 tris, 347 viewpoints
+[   94.9s]   visibility cull MILL_arcade_dressed: -9723 of 94320 polygons
+[  139.5s]   visibility cull MILL_arcade_backs: -5342 of 37493 polygons
+[  169.2s]   visibility cull MILL_base_dressed: -3792 of 28773 polygons
+[  184.4s]   visibility cull MILL_cap_shingles: -1413 of 11112 polygons
+[  184.5s] hidden-geometry cull: -20270 polygons
+[  184.5s] -- guards
+[  185.3s]   clearance gate MILL drum_door: door head 2.31 m, eave lip over it 4.417 m at (0.525, -3.05) on MILL_apron_rafters (rule >= 2.31 m, 23 stations): PASS
+[  188.0s]   seal probe [see-through] apron / smock tower: 14753 points, 89591 rays, 424 grazing pass(es), 0 leak(s)
+[  188.0s]   seal probe: 89591 rays on 1 junction(s) in 2.7 s
+[  189.0s] decal anchors placed: 106  {'damp_rise': 14, 'moss': 11, 'lichen': 12, 'water_streak': 20, 'rust_stain': 9, 'soot': 4, 'crack': 22, 'grime': 2, 'repair_patch': 8, 'plaster_patch': 4}
+[  189.2s] wheel-end water streaks: 4 on the outer blade ends (tip radius 3.94 m from the shaft)
+[  190.3s]     decal anchor dropped: ('soot', [-0.0, -2.54, 2.79], 'footprint off the surface')
+[  190.3s]     decal anchor dropped: ('crack', [0.96, 2.37, 0.55], 'align 0.66 MILL_base_stones')
+[  190.3s]     decal anchor dropped: ('lichen', [2.37, -0.0, 2.94], 'duplicate')
+[  190.3s]     decal anchor dropped: ('water_streak', [-2.12, 5.47, 10.98], 'duplicate')
+[  190.3s] decal gate 1 (snap_anchors): 106 kept, 4 dropped of 110
+[  190.3s] decal gate 2 (anchor_validate): checked 106, snapped 0, max_move 2.457562461863554e-07, renormal 0, shrunk 1, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 0, duplicate 0, kept 106
+[  190.3s] decal gate 3 (audit, director test): 0 dropped, 0 failing after, 106 anchors {'damp_rise': 14, 'moss': 11, 'lichen': 11, 'water_streak': 23, 'rust_stain': 9, 'soot': 3, 'crack': 21, 'grime': 2, 'repair_patch': 8, 'plaster_patch': 4}
+[  191.4s] decal anchor check (applied): checked 106, snapped 0, max_move 0.000, renormal 0, shrunk 0, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 0, duplicate 0, kept 106
+[  191.4s] decal anchors: 106
+[  192.7s] uv grain (kit 1.10.0): 59 meshes, 1000 timber / shingle pieces (56 round, 104 sloped sheets), 124472 grain faces re-projected, 1805 collapsed faces repaired
+[  193.1s]   walked tops (Mask B <= 0.04): drum_door -> MILL_door_iron: 50 faces
+[  193.1s]   walked tops (Mask B <= 0.04): drum_door -> MILL_door_leaf: 30 faces
+[  193.1s]   walked tops (Mask B <= 0.04): drum_door -> MILL_door_step: 866 faces
+[  193.1s]   walked tops (Mask B <= 0.04): drum_door -> MILL_door_surround: 430 faces
+[  193.1s]   walked tops (Mask B <= 0.04): drum_door -> MILL_interior: 90 faces
+[  193.1s] objects 210 (instances 175, pooled meshes 24) triangles 1146243
+Info: Saved as "tower_windmill.blend"
+[  193.2s] saved C:\GitHubDesktop\git_test\blender_village\kit\baseline\v5r3_hash\tower_windmill\tower_windmill.blend 27.4 MB

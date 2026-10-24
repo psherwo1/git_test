@@ -1,0 +1,370 @@
+{
+  "triangles": 465041,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 31.4,
+  "est_hidden_triangles": 146197,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "NETC_walls_stones",
+      "est_triangles": 128816,
+      "est_hidden_triangles": 21043,
+      "hidden_pct_of_object": 16.3
+    },
+    {
+      "object": "NETC_store_wall_stones",
+      "est_triangles": 72197,
+      "est_hidden_triangles": 15055,
+      "hidden_pct_of_object": 20.9
+    },
+    {
+      "object": "NETC_roof_covering",
+      "est_triangles": 46562,
+      "est_hidden_triangles": 10347,
+      "hidden_pct_of_object": 22.2
+    },
+    {
+      "object": "NETC_lean_to_end1_stones",
+      "est_triangles": 25054,
+      "est_hidden_triangles": 9358,
+      "hidden_pct_of_object": 37.4
+    },
+    {
+      "object": "NETC_lean_to_end0_stones",
+      "est_triangles": 23775,
+      "est_hidden_triangles": 7905,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "NETC_roof_eave_roll",
+      "est_triangles": 21856,
+      "est_hidden_triangles": 6278,
+      "hidden_pct_of_object": 28.7
+    },
+    {
+      "object": "NETC_loft_back_boards",
+      "est_triangles": 5347,
+      "est_hidden_triangles": 5173,
+      "hidden_pct_of_object": 96.7
+    },
+    {
+      "object": "NETC_walls_frames",
+      "est_triangles": 10289,
+      "est_hidden_triangles": 5115,
+      "hidden_pct_of_object": 49.7
+    },
+    {
+      "object": "NETC_cap_collar",
+      "est_triangles": 9823,
+      "est_hidden_triangles": 4708,
+      "hidden_pct_of_object": 47.9
+    },
+    {
+      "object": "NETC_roof_deck",
+      "est_triangles": 4476,
+      "est_hidden_triangles": 4185,
+      "hidden_pct_of_object": 93.5
+    },
+    {
+      "object": "NETC_walls_mortar",
+      "est_triangles": 7382,
+      "est_hidden_triangles": 4010,
+      "hidden_pct_of_object": 54.3
+    },
+    {
+      "object": "NETC_loft_west_boards",
+      "est_triangles": 3836,
+      "est_hidden_triangles": 3836,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "NETC_roof_rafters",
+      "est_triangles": 5522,
+      "est_hidden_triangles": 3778,
+      "hidden_pct_of_object": 68.4
+    },
+    {
+      "object": "NETC_roof_shingles",
+      "est_triangles": 21043,
+      "est_hidden_triangles": 3545,
+      "hidden_pct_of_object": 16.9
+    },
+    {
+      "object": "NETC_loft_front_boards",
+      "est_triangles": 6103,
+      "est_hidden_triangles": 3255,
+      "hidden_pct_of_object": 53.3
+    },
+    {
+      "object": "NETC_store_wall_mortar",
+      "est_triangles": 6452,
+      "est_hidden_triangles": 3139,
+      "hidden_pct_of_object": 48.6
+    },
+    {
+      "object": "NETC_lean_to_flashing",
+      "est_triangles": 2964,
+      "est_hidden_triangles": 2964,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "NETC_lean_to_framing",
+      "est_triangles": 2732,
+      "est_hidden_triangles": 2441,
+      "hidden_pct_of_object": 89.4
+    },
+    {
+      "object": "NETC_walls_quoins",
+      "est_triangles": 4708,
+      "est_hidden_triangles": 2325,
+      "hidden_pct_of_object": 49.4
+    },
+    {
+      "object": "NETC_store_wall_frames",
+      "est_triangles": 4650,
+      "est_hidden_triangles": 2150,
+      "hidden_pct_of_object": 46.2
+    },
+    {
+      "object": "NETC_rafters",
+      "est_triangles": 3255,
+      "est_hidden_triangles": 2092,
+      "hidden_pct_of_object": 64.3
+    },
+    {
+      "object": "NETC_lean_to_deck",
+      "est_triangles": 2150,
+      "est_hidden_triangles": 2034,
+      "hidden_pct_of_object": 94.6
+    },
+    {
+      "object": "NETC_loft_east_boards",
+      "est_triangles": 3139,
+      "est_hidden_triangles": 1918,
+      "hidden_pct_of_object": 61.1
+    },
+    {
+      "object": "NETC_lean_to_end0_quoins",
+      "est_triangles": 3080,
+      "est_hidden_triangles": 1569,
+      "hidden_pct_of_object": 50.9
+    },
+    {
+      "object": "NETC_roof_wall_abutment",
+      "est_triangles": 2499,
+      "est_hidden_triangles": 1453,
+      "hidden_pct_of_object": 58.1
+    },
+    {
+      "object": "NETC_lean_to_eave_roll",
+      "est_triangles": 4534,
+      "est_hidden_triangles": 1395,
+      "hidden_pct_of_object": 30.8
+    },
+    {
+      "object": "NETC_roof_soffit_deck",
+      "est_triangles": 2441,
+      "est_hidden_triangles": 1395,
+      "hidden_pct_of_object": 57.1
+    },
+    {
+      "object": "NETC_lean_to_covering",
+      "est_triangles": 3545,
+      "est_hidden_triangles": 1336,
+      "hidden_pct_of_object": 37.7
+    },
+    {
+      "object": "NETC_roof_blocker",
+      "est_triangles": 1627,
+      "est_hidden_triangles": 1336,
+      "hidden_pct_of_object": 82.1
+    },
+    {
+      "object": "NETC_roof_eyebrow0_boards",
+      "est_triangles": 1104,
+      "est_hidden_triangles": 1104,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "NETC_roof_eyebrow0_frame",
+      "est_triangles": 1104,
+      "est_hidden_triangles": 1104,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "NETC_lean_to_end1_quoins",
+      "est_triangles": 2557,
+      "est_hidden_triangles": 930,
+      "hidden_pct_of_object": 36.4
+    },
+    {
+      "object": "NETC_loft_front_frame",
+      "est_triangles": 930,
+      "est_hidden_triangles": 697,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "NETC_roof_ridge",
+      "est_triangles": 2499,
+      "est_hidden_triangles": 697,
+      "hidden_pct_of_object": 27.9
+    },
+    {
+      "object": "NETC_roof_starter",
+      "est_triangles": 3487,
+      "est_hidden_triangles": 639,
+      "hidden_pct_of_object": 18.3
+    },
+    {
+      "object": "NETC_loft_back_frame",
+      "est_triangles": 755,
+      "est_hidden_triangles": 581,
+      "hidden_pct_of_object": 76.9
+    },
+    {
+      "object": "NETC_walls_dressed",
+      "est_triangles": 1569,
+      "est_hidden_triangles": 523,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "NETC_roof_eyebrow0_frames",
+      "est_triangles": 697,
+      "est_hidden_triangles": 523,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "NETC_apex_blocker",
+      "est_triangles": 813,
+      "est_hidden_triangles": 523,
+      "hidden_pct_of_object": 64.3
+    },
+    {
+      "object": "NETC_purlin_rings",
+      "est_triangles": 523,
+      "est_hidden_triangles": 523,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "NETC_lean_to_end0_mortar",
+      "est_triangles": 581,
+      "est_hidden_triangles": 406,
+      "hidden_pct_of_object": 70.0
+    },
+    {
+      "object": "NETC_roof_eyebrow0_blocker",
+      "est_triangles": 406,
+      "est_hidden_triangles": 348,
+      "hidden_pct_of_object": 85.7
+    },
+    {
+      "object": "NETC_lean_to_end1_mortar",
+      "est_triangles": 465,
+      "est_hidden_triangles": 348,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "NETC_battens",
+      "est_triangles": 523,
+      "est_hidden_triangles": 348,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "NETC_store_wall_dressed",
+      "est_triangles": 465,
+      "est_hidden_triangles": 290,
+      "hidden_pct_of_object": 62.5
+    },
+    {
+      "object": "NETC_loft_east_frame",
+      "est_triangles": 348,
+      "est_hidden_triangles": 232,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "NETC_loft_west_frame",
+      "est_triangles": 290,
+      "est_hidden_triangles": 232,
+      "hidden_pct_of_object": 80.0
+    },
+    {
+      "object": "NETC_lean_to_posts",
+      "est_triangles": 406,
+      "est_hidden_triangles": 174,
+      "hidden_pct_of_object": 42.9
+    },
+    {
+      "object": "NETC_roof_underlap",
+      "est_triangles": 1220,
+      "est_hidden_triangles": 174,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "NETC_loft_front_blocker",
+      "est_triangles": 174,
+      "est_hidden_triangles": 174,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "NETC_eave_fill",
+      "est_triangles": 1046,
+      "est_hidden_triangles": 116,
+      "hidden_pct_of_object": 11.1
+    },
+    {
+      "object": "NETC_store_wall_ironwork",
+      "est_triangles": 697,
+      "est_hidden_triangles": 116,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "NETC_walls_ironwork",
+      "est_triangles": 406,
+      "est_hidden_triangles": 58,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "NETC_loft_back_blocker",
+      "est_triangles": 116,
+      "est_hidden_triangles": 58,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "NETC_loft_east_blocker",
+      "est_triangles": 58,
+      "est_hidden_triangles": 58,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "NETC_loft_west_blocker",
+      "est_triangles": 116,
+      "est_hidden_triangles": 58,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "NETC_finial",
+      "est_triangles": 1511,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "NETC_lean_to_pads",
+      "est_triangles": 174,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "NETC_walls_reveals",
+      "est_triangles": 58,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "NETC_walls_blockers",
+      "est_triangles": 58,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

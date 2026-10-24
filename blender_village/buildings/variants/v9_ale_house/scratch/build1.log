@@ -1,0 +1,172 @@
+﻿[    0.1s]   dormer: window sill raised 0.30 -> 0.49 m (clears the host thatch)
+[    0.1s]   dormer: front y +2.65 (host local), sill-beam foot 3.36, floor 3.54, plate 4.70, roof wall_z 4.80, ridge 5.57 (top ~6.05), cheeks back to y +0.72
+[    0.7s] -- set_entrance
+[    0.7s] -- turret_attrs
+[    0.7s] -- path_stone_wall
+[   59.6s]   walls visible mortar 19.4% -> 7.4% after 1234 pinning stones
+[   59.6s]   ALEH_walls: stones 2346 (hero 221, pins 249)
+[   65.1s]   ALEH_walls_stones: 156789 verts, 137885 faces
+[   65.2s]   ALEH_walls_quoins: 4838 verts, 4720 faces
+[   84.7s]   ALEH_walls_mortar: 8973 verts, 7986 faces
+[   84.7s]   ALEH_walls: mortar cells 7986
+[   84.9s]   ALEH_walls_frames: 6564 verts, 6441 faces
+[   84.9s]   ALEH_walls_dressed: 1444 verts, 1398 faces
+[   84.9s]   ALEH_walls_ironwork: 280 verts, 266 faces
+[   84.9s]   ALEH_walls_reveals: 88 verts, 44 faces
+[   84.9s]   ALEH_walls_blockers: 88 verts, 55 faces
+[   84.9s] -- round_stone_body
+[   85.9s]   ALEH_turret visible mortar 17.9% -> 8.4% after 220 pinning stones
+[   85.9s]   ALEH_turret stones 486
+[   86.3s]   ALEH_turret_stones: 28129 verts, 23903 faces
+[   86.3s]   ALEH_turret_mortar: 2503 verts, 2321 faces
+[   86.4s]   ALEH_turret_frames: 1584 verts, 1560 faces
+[   86.4s]   ALEH_turret_dressed: 496 verts, 480 faces
+[   86.4s]   ALEH_turret_reveals: 32 verts, 16 faces
+[   86.4s]   ALEH_turret_blockers: 32 verts, 20 faces
+[   86.4s] -- path_timber_wall
+[   88.9s]   ALEH_hip_end_W_frame: 272 verts, 264 faces
+[   89.0s]   ALEH_hip_end_W_boards: 2420 verts, 2223 faces
+[   89.0s]   ALEH_hip_end_W_blocker: 66 verts, 64 faces
+[   89.0s]   ALEH_hip_end_W: timber wall (post_plank), 1 runs, 0 openings
+[   89.0s] -- path_timber_wall
+[   90.0s]   ALEH_hip_end_E_s_frame: 224 verts, 216 faces
+[   90.0s]   ALEH_hip_end_E_s_boards: 1064 verts, 972 faces
+[   90.0s]   ALEH_hip_end_E_s_blocker: 36 verts, 34 faces
+[   90.0s]   ALEH_hip_end_E_s: timber wall (post_plank), 1 runs, 0 openings
+[   90.0s] -- path_timber_wall
+[   90.9s]   ALEH_hip_end_E_n_frame: 224 verts, 216 faces
+[   90.9s]   ALEH_hip_end_E_n_boards: 826 verts, 753 faces
+[   90.9s]   ALEH_hip_end_E_n_blocker: 36 verts, 34 faces
+[   90.9s]   ALEH_hip_end_E_n: timber wall (post_plank), 1 runs, 0 openings
+[   90.9s] -- path_timber_wall
+[   92.3s]   ALEH_hip_end_S_frame: 224 verts, 216 faces
+[   92.3s]   ALEH_hip_end_S_boards: 1348 verts, 1233 faces
+[   92.3s]   ALEH_hip_end_S_blocker: 42 verts, 40 faces
+[   92.3s]   ALEH_hip_end_S: timber wall (post_plank), 1 runs, 0 openings
+[   92.3s] -- linear_roof
+[   92.4s]   ALEH_roof_deck: 4083 verts, 4078 faces
+[   92.5s]   ALEH_roof_rafters: 3091 verts, 2967 faces
+[   93.3s]   ALEH_roof_covering: 40211 verts, 35908 faces
+[   93.9s]   ALEH_roof_eave_roll: 15004 verts, 14395 faces
+[   93.9s]   ALEH_roof: 32 continuous thatch courses + eave rolls + verge faces + 2 eyebrow lip roll(s); round hips lo hi (centres -4.63 / +4.63, inset 1.37 m)
+[   93.9s]   ALEH_roof_ridge: 1670 verts, 1722 faces
+[   94.4s]   ALEH_roof_eyebrow0_frame: 394 verts, 393 faces
+[   94.4s]   ALEH_roof_eyebrow0_boards: 692 verts, 621 faces
+[   94.4s]   ALEH_roof_eyebrow0_blocker: 176 verts, 178 faces
+[   94.4s]   ALEH_roof_eyebrow0_frames: 528 verts, 532 faces
+[   94.4s]   ALEH_roof_eyebrow0_blockers: 8 verts, 5 faces
+[   94.4s]   ALEH_roof: eyebrow 0 at x -2.80 (side -1): front 1.65 m wide, sill 3.91, eave 4.82 (world z before recentre), lift 0.90 m over 2.20 m
+[   94.8s]   ALEH_roof_eyebrow1_frame: 394 verts, 393 faces
+[   94.8s]   ALEH_roof_eyebrow1_boards: 692 verts, 621 faces
+[   94.8s]   ALEH_roof_eyebrow1_blocker: 176 verts, 178 faces
+[   94.8s]   ALEH_roof_eyebrow1_frames: 528 verts, 532 faces
+[   94.8s]   ALEH_roof_eyebrow1_blockers: 8 verts, 5 faces
+[   94.8s]   ALEH_roof: eyebrow 1 at x 2.20 (side +1): front 1.65 m wide, sill 3.90, eave 4.80 (world z before recentre), lift 0.90 m over 2.20 m
+[   94.8s] -- linear_roof
+[   94.9s]   ALEH_wing_roof_deck: 648 verts, 613 faces
+[   94.9s]   wing_roof rafters: 5 tails skipped (they would run into another body)
+[   95.0s]   ALEH_wing_roof_rafters: 1247 verts, 1187 faces
+[   95.1s]   ALEH_wing_roof_covering: 13262 verts, 11729 faces
+[   95.4s]   ALEH_wing_roof_eave_roll: 5221 verts, 4916 faces
+[   95.4s]   ALEH_wing_roof: 22 continuous thatch courses + eave rolls + verge faces; round hips lo  (centres -7.81 / +0.00, inset 1.19 m)
+[   95.4s]   ALEH_wing_roof_ridge: 968 verts, 969 faces
+[   95.4s] -- roof_valley
+[  190.8s]   ALEH_wing_valley: 2030 verts, 2040 faces
+[  191.0s]   ALEH_wing_valley_soffit_0: 128 verts, 126 faces
+[  191.1s]   ALEH_wing_valley_soffit_0_roll: 1244 verts, 1265 faces
+[  191.1s]   wing_valley_soffit_0: corner roll r 0.25 at lip corner (+5.65, -3.45); straight eave rolls cut back (183 faces)
+[  191.2s]   ALEH_wing_valley_soffit_1: 128 verts, 126 faces
+[  191.3s]   ALEH_wing_valley_soffit_1_roll: 1244 verts, 1265 faces
+[  191.4s]   wing_valley_soffit_1: corner roll r 0.25 at lip corner (+0.35, -3.45); straight eave rolls cut back (167 faces)
+[  191.4s]   wing_valley: valley roll 161 stations, 8.10 m (z 3.17..5.45), wing y -2.40..+2.40; comb polygons dropped 0; ridge / comb closed at wing x -1.01 (1 parts); re-entrant corners closed (soffit fills, 536 rafter polygons dropped)
+[  191.4s] -- turret_abutment
+[  191.7s]   turret_abutment: trimmed at the wall face: deck 613->590, rafters 1134->1134, covering 11729->11642, eave_roll 4730->4676, ridge 969->969
+[  191.9s]   turret_abutment: run 0: 392 samples, azimuth 290.5..486.0 deg, z 2.96..4.10 (cone eave lip nan)
+[  192.0s]   ALEH_wing_roof_turret_abutment: 2904 verts, 2891 faces
+[  192.0s]   seal junction registered: wing_roof / round wall (covering ALEH_wing_roof_covering, ALEH_wing_roof_eave_roll, ALEH_wing_roof_ridge; z 2.60-4.40)
+[  192.0s] -- linear_roof
+[  192.0s]   ALEH_turret_roof_deck: 346 verts, 360 faces
+[  192.1s]   ALEH_turret_roof_rafters: 1008 verts, 972 faces
+[  192.4s]   ALEH_turret_roof_covering: 6002 verts, 5320 faces
+[  192.6s]   ALEH_turret_roof_eave_roll: 3766 verts, 3555 faces
+[  192.6s]   ALEH_turret_roof: 18 continuous thatch courses + eave rolls + verge faces; round hips lo hi (centres -0.41 / +0.41, inset 0.79 m)
+[  192.6s]   ALEH_turret_roof_ridge: 358 verts, 386 faces
+[  192.6s] -- gabled_dormer
+[  193.3s]   ALEH_dormer_walls_frame: 392 verts, 378 faces
+[  193.3s]   ALEH_dormer_walls_boards: 2168 verts, 1971 faces
+[  193.3s]   ALEH_dormer_walls_blocker: 116 verts, 116 faces
+[  193.3s]   ALEH_dormer_walls_frames: 472 verts, 478 faces
+[  193.3s]   ALEH_dormer_walls_blockers: 8 verts, 5 faces
+[  193.3s]   ALEH_dormer_walls: timber wall (board_batten), 3 runs, 1 openings
+[  193.3s]   ALEH_dormer_roof_deck: 561 verts, 513 faces
+[  193.3s]   ALEH_dormer_roof_rafters: 215 verts, 198 faces
+[  193.4s]   ALEH_dormer_roof_covering: 1154 verts, 1010 faces
+[  193.5s]   ALEH_dormer_roof_eave_roll: 1765 verts, 1668 faces
+[  193.5s]   ALEH_dormer_roof: 8 continuous thatch courses + eave rolls + verge faces
+[  193.5s]   ALEH_dormer_roof_ridge: 350 verts, 325 faces
+[  193.5s]   ALEH_dormer_roof_comb: 1955 verts, 1831 faces
+[  193.6s]   ALEH_dormer_roof_apex_cap_collar: 169 verts, 169 faces
+[  193.6s]   ALEH_dormer_roof_apex_finial: 721 verts, 721 faces
+[  193.6s]   ALEH_dormer_roof: apex finials on 1 gable(s), tips 6.97
+[  213.7s]   ALEH_dormer_valley: 782 verts, 792 faces
+[  213.7s]   dormer_valley: valley roll 57 stations, 3.28 m (z 4.94..5.88), wing y -0.83..+0.83; comb polygons dropped 535; ridge / comb closed at wing x +1.07 (2 parts)
+[  213.7s]   ALEH_dormer_foot_roll: 1010 verts, 1020 faces
+[  213.7s]   dormer: foot roll 76 stations, 2.99 m
+[  213.7s] -- porch
+[  213.7s]   ALEH_porch_deck: 286 verts, 274 faces
+[  213.7s]   porch rafters: 6 tails skipped (they would run into another body)
+[  213.7s]   ALEH_porch_rafters: 80 verts, 66 faces
+[  213.8s]   ALEH_porch_covering: 3426 verts, 2967 faces
+[  213.8s]   ALEH_porch: 61 shingle pieces
+[  213.8s]   ALEH_porch_verge: 72 verts, 66 faces
+[  213.8s]   ALEH_porch: 4 verge boards
+[  213.9s]   ALEH_porch: trimmed at the wall face: deck 274->252, rafters 66->66, covering 2967->2967, verge 66->66
+[  213.9s]   ALEH_porch_framing: 320 verts, 306 faces
+[  213.9s]   ALEH_porch: ledger, 4 common rafters, plate at 1.00 m out
+[  213.9s]   ALEH_porch_flashing: 741 verts, 728 faces
+[  213.9s]   ALEH_porch: flaunching 83 stations, roof at the face z 3.17..3.21, crease 3.28
+[  213.9s]   ALEH_porch: under the host eave: margin at the face -0.019 m (crease), at the host lip line 0.104 m (covering)
+python.exe : Traceback (most recent call last):
+At line:1 char:549
++ ... StartNew(); & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v9_ale_house\build_v9_ale_house.py", line 231, in 
+<module>
+    main()
+    ~~~~^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v9_ale_house\build_v9_ale_house.py", line 222, in 
+main
+    build_building(dict(
+    ~~~~~~~~~~~~~~^^^^^^
+        prefix="ALEH", collection="ALEH", building_id=BID, frame=PlanFrame,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        decal_meta=dict(dims=dict(DIM), datum=dict(ground_z=0.0, note="built on the plan, then recentred"))))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"C:\GitHubDesktop\git_test\blender_village\buildings\variants\v9_ale_house\..\..\..\kit\village_kit\assembly.py", line 
+158, in build_building
+    fn(g, **kw)
+    ~~^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v9_ale_house\..\..\..\kit\village_kit\components\p
+orch.py", line 41, in porch
+    rec = mono_roof(g, name, W, -hw, hw, depth, z_face, pitch_deg=pitch_deg, overhang=overhang,
+                    verge=(side, side), covering=covering, soft=soft, below=below, below_lift_max=below_lift_max,
+                    seed=seed, plate=None, **kw)
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v9_ale_house\..\..\..\kit\village_kit\components\l
+ean_to.py", line 345, in mono_roof
+    zb, th, C = _wall_junction(g, name, pre, W, T, roof.xa + 0.015, roof.xb - 0.015, fillet, apron, below, below_clear,
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               below_lift_max, below_roll, below_roll_near, register)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v9_ale_house\..\..\..\kit\village_kit\components\l
+ean_to.py", line 218, in _wall_junction
+    raise ValueError(f"mono_roof {name}: the add-on reaches the host's eave (margin face {m_face:.3f}, lip "
+                     f"{m_lip:.3f} m under the {below_clear:.2f} m clearance); lower z_face or the pitch")
+ValueError: mono_roof porch: the add-on reaches the host's eave (margin face -0.049, lip 0.074 m under the 0.03 m 
+clearance); lower z_face or the pitch

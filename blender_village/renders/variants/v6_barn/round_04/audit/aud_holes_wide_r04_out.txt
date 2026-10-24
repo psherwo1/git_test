@@ -1,0 +1,9 @@
+﻿00:02.250  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+POST HEAD W eye 1.7 m: rays 102600, rays into the interior 0; per viewpoint {'eye_-3_2': 0, 'eye_-3_4': 0, 'eye_-3_6': 0, 'eye_-2_2': 0, 'eye_-2_4': 0, 'eye_-2_6': 0, 'eye_+0_2': 0, 'eye_+0_4': 0, 'eye_+0_6': 0, 'eye_+2_2': 0, 'eye_+2_4': 0, 'eye_+2_6': 0, 'eye_+3_2': 0, 'eye_+3_4': 0, 'eye_+3_6': 0}
+POST HEAD W 6 m: rays 61560, rays into the interior 0; per viewpoint {'6m_-3_4': 0, '6m_-3_6': 0, '6m_-3_9': 0, '6m_+0_4': 0, '6m_+0_6': 0, '6m_+0_9': 0, '6m_+3_4': 0, '6m_+3_6': 0, '6m_+3_9': 0}
+POST HEAD E eye 1.7 m: rays 102600, rays into the interior 0; per viewpoint {'eye_-3_2': 0, 'eye_-3_4': 0, 'eye_-3_6': 0, 'eye_-2_2': 0, 'eye_-2_4': 0, 'eye_-2_6': 0, 'eye_+0_2': 0, 'eye_+0_4': 0, 'eye_+0_6': 0, 'eye_+2_2': 0, 'eye_+2_4': 0, 'eye_+2_6': 0, 'eye_+3_2': 0, 'eye_+3_4': 0, 'eye_+3_6': 0}
+POST HEAD E 6 m: rays 61560, rays into the interior 0; per viewpoint {'6m_-3_4': 0, '6m_-3_6': 0, '6m_-3_9': 0, '6m_+0_4': 0, '6m_+0_6': 0, '6m_+0_9': 0, '6m_+3_4': 0, '6m_+3_6': 0, '6m_+3_9': 0}
+DONE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

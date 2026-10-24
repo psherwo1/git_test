@@ -1,0 +1,39 @@
+﻿00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\v6_barn.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\builder_extra\bld_render_r02.py:22: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:855
++ ... uck\shots"; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\builder_extra\bld_render_r02.py:39: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_B_world"); world.use_nodes = True
+00:00.656  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.969  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\b01_cart_entry_front_eye.png'
+SHOT b01_cart_entry_front_eye
+00:08.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\b02_cart_entry_three_quarter.png'
+SHOT b02_cart_entry_three_quarter
+00:12.672  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\b05_side_elev_W_rake.png'
+00:13.047  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\b05_side_elev_W_rake_red.png'
+SHOT b05_side_elev_W_rake
+00:17.203  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s08_eave_lift_lookup.png'
+00:17.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s08_eave_lift_lookup_red.png'
+SHOT s08_eave_lift_lookup
+00:21.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s17_arch_tie_infill_close.png'
+00:22.094  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s17_arch_tie_infill_close_red.png'
+SHOT s17_arch_tie_infill_close
+00:26.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s18_post_pad_plinth_E.png'
+00:26.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s18_post_pad_plinth_E_red.png'
+SHOT s18_post_pad_plinth_E
+00:30.641  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s20_frame_end_wall_head_E.png'
+00:31.047  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s20_frame_end_wall_head_E_red.png'
+SHOT s20_frame_end_wall_head_E
+00:35.344  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s21_doors_from_inside_low.png'
+00:35.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\s21_doors_from_inside_low_red.png'
+SHOT s21_doors_from_inside_low
+00:39.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_cruck\shots\d14_thumb_SE_45m.png'
+SHOT d14_thumb_SE_45m

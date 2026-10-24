@@ -1,0 +1,16 @@
+﻿MAIN ATTIC: 72 points, 18000 rays, LEAKS 0
+WING ATTIC: 20 points, 5000 rays, LEAKS 0
+DORMER: 18 points, 3750 rays, LEAKS 0
+ROOMS: 60 points, 14750 rays, LEAKS 43
+    pinch near (1.5, -7.5, 1.0): 8 rays, aperture median 64 mm max 125 mm
+    pinch near (-1.5, 2.5, 1.0): 7 rays, aperture median 58 mm max 135 mm
+    pinch near (3.5, -5.5, 1.0): 7 rays, aperture median 65 mm max 130 mm
+    pinch near (-0.5, -5.5, 1.0): 4 rays, aperture median 53 mm max 123 mm
+    pinch near (3.0, 2.5, 1.0): 3 rays, aperture median 42 mm max 57 mm
+    pinch near (2.5, 2.5, 1.0): 2 rays, aperture median 68 mm max 106 mm
+    pinch near (-0.5, -5.5, 1.5): 2 rays, aperture median 54 mm max 77 mm
+    pinch near (1.5, -8.0, 1.5): 2 rays, aperture median 95 mm max 146 mm
+    pinch near (3.5, -5.5, 1.5): 2 rays, aperture median 68 mm max 107 mm
+    pinch near (-1.5, -2.5, 1.5): 1 rays, aperture median 56 mm max 56 mm
+    pinch near (-1.5, 2.5, 1.5): 1 rays, aperture median 43 mm max 43 mm
+    pinch near (-1.0, 2.5, 1.0): 1 rays, aperture median 56 mm max 56 mm

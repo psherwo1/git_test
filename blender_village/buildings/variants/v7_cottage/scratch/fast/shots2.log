@@ -1,0 +1,33 @@
+﻿00:00.594  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\v7_cottage_fast.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_01\builder_extra\b_render_r01.py:22: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:497
++ ... st\shots2'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_01\builder_extra\b_render_r01.py:47: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.750  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\v01_valley_W_from_SW_high.png'
+00:05.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\v01_valley_W_from_SW_high_red.png'
+SHOT v01_valley_W_from_SW_high
+00:10.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\v03_valley_W_corner_eye.png'
+00:10.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\v03_valley_W_corner_eye_red.png'
+SHOT v03_valley_W_corner_eye
+00:15.312  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\v05_valley_wing_ridge_top.png'
+00:15.750  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\v05_valley_wing_ridge_top_red.png'
+SHOT v05_valley_wing_ridge_top
+00:20.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\d02_dormer_oblique_W.png'
+00:20.609  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\d02_dormer_oblique_W_red.png'
+SHOT d02_dormer_oblique_W
+00:24.890  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\d05_dormer_from_above.png'
+00:25.344  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\d05_dormer_from_above_red.png'
+SHOT d05_dormer_from_above
+00:29.469  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\c02_chimney_head_close.png'
+00:29.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\shots2\c02_chimney_head_close_red.png'
+SHOT c02_chimney_head_close

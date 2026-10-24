@@ -1,0 +1,155 @@
+# kit changes: v3_longhouse_roundend (variant builder, round 1, 2026-10-16)
+
+New modules only. No existing kit file was edited, so no function used by a hero changed and the hero re-runs were
+not needed (kit edit rules).  All six modules follow the kit conventions: `component(g, ..., seed=...)`, metres, Z up,
+palette slots only, Mask through `core.Acc`, `geom.finalize` hygiene (strict clean, clip at -5 cm), seeded.
+
+## New modules (`kit/village_kit/components/`)
+
+| module | public API | what it is for |
+|---|---|---|
+| `linear_roof.py` | `GableRoof(x0, x1, half, wall_z, pitch_deg, overhang, verge, origin, yaw_deg, deck_t, thick, step, exposure, ridge_roll, name)`; `linear_roof(g, roof, covering="thatch" \| "shingle", clip=None, seed, comb=True, abut_cone=None)` | a straight gable roof over any rectangular body, any length / width / pitch / yaw. One spec object that walls, junctions and decals read (`surf`, `ref_z`, `under_z`, `top_z`, `to_world` ...). Builds the sarking deck (continuous backing, note 6), rafter tails under the eave and verge rafters, the covering (layered thatch: clumps 0.20-0.48 m with rounded bundle butts, a wavy butt line, a thick half-round eave nose and verge side faces; or the kit's chunky shingles from `SIZE_TABLE`), a thatch ridge roll with binding spars and a ridge comb of `comb_shake` riven shakes. `verge=(v0, 0)` leaves an end open where it abuts another body; `clip` / `abut_cone` drop what is inside that body. -> `<P>_<name>_deck / _rafters / _covering / _ridge / _comb` |
+| `roof_junction.py` | `cone_ref_z`, `cone_normal`, `inside_cone(g, center, depth)`, `abutment_curve(g, roof, center)`, `cone_abutment(g, roof, center, width, crown, mat="M_lead")`, `round_eave_fill(g, r_off, z_bot, center, skip, mat)` | the junction where a linear roof runs into a `RoundFrame` cone: the exact junction line (eave soffit -> eave nose -> slope -> ridge roll -> other slope -> nose -> soffit, solved analytically against the cone profile) and a continuous closed flashing along it whose two skirts are dressed down 9-12 cm into the thatch / shingles, so no course step or shingle butt can open a gap. `round_eave_fill`: the eave fill on a round STONE wall head (the hut's daub `build_eave_closure` hard-codes `HUT_` object names, so it cannot be reused under another prefix). |
+| `wall_openings.py` | `door_spec`, `window_spec`, `opening_rects`, `opening_cut`, `build_opening(g, spec, O, t, n, accs, rng)`, `opening_accs`, `finish_accs` | doors and windows for ANY masonry wall, placed by a local frame (point on the face, along-wall direction, outward normal). Door: dressed threshold slab, hewn posts, lintel bearing into the masonry, closed plank leaf (reuses `plank_doors.plank_leaf`), forged straps and latch. Window: projecting dressed sill with drip, deep heavy frame with cross mullion, timber lintel, mortar reveal, dark blocker room (note 6). Records each opening on `g.OPENINGS` for decals. |
+| `rubble_walls.py` | `RUBBLE_CFG`, `PathMap(path)`, `path_stone_wall(g, name, path, top, top_fn, openings, clip, seed, cfg, quoins, proj, hero_s)`, `round_stone_body(g, name, center, r_base, batter_deg, top, openings, clip, seed, cfg)` | coursed rubble walls along ANY plan polyline (straight runs, any corners) on the existing `stone_wall` layout / stone generator: stepped footing, solid dressed long-and-short quoins on every outside corner, a sloping (gable) top from `top_fn`, openings by path distance, a clip for the part inside another body, recessed mortar body. `round_stone_body`: the battered round rubble body (`stone_wall.round_stone_wall`) with openings by azimuth (exclusions follow each course's battered radius) and a clip. Both publish `g.WALL_FACES`. |
+| `ball_finial.py` | `ball_finial(g, ball_r, hat_r, hat_drop, lean_deg, center, seed)`, `cone_apex_z(g)` | the stone ball finial of a stone round end (art bible 1.5: the extension point the README names): `finial.lead_hat` fitted over the top shingles + a turned dressed-stone socket, collar and ball, ~1 deg lean. -> `<P>_cap_collar`, `<P>_finial` |
+| `composite.py` | `cone_roof(g, seed, structure_seeds)`, `set_entrance(g, xy)`, `inside_box(...)`, `inside_round(...)`, `footprint_views(g)`, `composite_hidden_cull(g)`, `recenter(g)`, `composite_decals(g, seed)`, `BACKING` | assembly helpers for buildings made of several bodies: the round frame's cone roof without the hut eave closure, the note-11 entrance zone at the real door, junction clips, a hidden-geometry cull with actor / crane / door views round the true (elongated) footprint that never culls backing surfaces, a recentre step (plan bbox -> origin; pooled duplicates move by matrix), and decal anchors for rubble walls, openings, thatch / shingle roofs and the cone. |
+
+## Reused unchanged
+`frame.RoundFrame`, `cone` (profile, `AGE_R10`), `conical_roof.build_rafters / build_purlins_battens / build_shingles /
+build_roof_blocker`, `round_wall.wall_plate`, `stone_wall.layout_wall / polygonize / rough_footing / fill_voids /
+lay_stones / lay_poly_stones / mortar_sheet / round_stone_wall`, `plank_doors.plank_leaf`, `finial.lead_hat`,
+`shingles.shingle_mesh / shake_mesh / SIZE_TABLE`, `geom.obox / beam / sweep / lathe_rz`, `decals.*`,
+`anchor_validate.validate_anchors` (through the spec's `decal_validate`), `assembly.build_building / KitParams`.
+
+## Round 2 (2026-10-16): module-level fixes from the director's round-1 review
+
+Only the round-1 v3 modules were edited (no hero, no other variant imports `linear_roof`, `roof_junction`,
+`ball_finial` or `composite`: checked by grep), plus `thatch.d_roll` reused unchanged.  Every change is a new
+function or a new keyword; the round-1 behaviour stays reachable through the keyword noted.
+
+| module | change | old behaviour via |
+|---|---|---|
+| `linear_roof.py` | `GableRoof.eave_roll()`, `.roll_top_o(u)`, `.roll_section()`: a D-section eave roll in slope coordinates (half-round nose 6 cm past the deck edge, underside 3.5 cm under the deck, crest 6 cm proud of the course butts, tail buried under the first course); `top_z` includes it once built. `linear_roof(..., thatch_style="courses")` (new default): continuous layered courses (`_layered_courses`: one sheet per course per slope, butt line drifting +-4.5 cm over 2-4 m, laid in 1.0-2.2 m bundle runs with +-1.8 cm set, <= 1.2 cm lift and a <= 9 mm soft crown), the eave roll swept with `thatch.d_roll` (long shallow bundles 0.9-1.6 m, binding 6-10 mm), ONE closed verge face per free gable (`_verge_faces`: a single tessellated polygon from the deck underside to the upper envelope of the roll and every course section, across both rakes and the ridge, plus a foot strip back under the deck end), ridge roll extended over the verge face. `abut_wall_in=0.10` (new): a roof abutting a cone is dropped only where it is under the cone AND inside the round wall head, so under the cone's oversailing eave the deck, roll and courses run on and die into the round wall (no pocket under the eave). | `thatch_style="clumps"`, `abut_wall_in=None` |
+| `roof_junction.py` | `section_meets_cone(g, roof, sg, u, o, center)` (new); `end_apron(acc, g, roof, sg, ...)` (new): a closed lead end-apron lying on the eave nose from just up-slope of the crest down the nose face, a band 0.20 m onto the roof + 0.12 m under the cone's starter course (0.32 m across) centred on the seam where the cone covering crosses the nose, smoothed seam line, nothing below the cone eave lip (g.Z_EAVE + 1 cm). `abutment_curve(..., ends="crest")` stops the sweep just above the eave-roll crest; `cone_abutment(..., end="apron")` (new default) = slope/ridge sweep + one end apron per eave. | `end="nose"` |
+| `ball_finial.py` | `apex_blocker(g, r_out, ...)` (new): closed plug under a cone apex, top 4 cm under the reference surface out to hat_r + 0.30 m (`<P>_apex_blocker`, BACKING). `ball_finial(..., hat_drop=None, hat_pitch_deg=44.0, blocker=True, clear=0.02)`: hat pitch from the art bible's 44 deg, apex = max(reference apex, top shingle near the axis) + 2 cm as `round_apex.turned_apex` does, drip fitted by `finial.lead_hat(cover=...)`. | `hat_drop=0.34, blocker=False, clear=0.025` |
+| `composite.py` | `cone_soffit(g, r_in, eave_s, gap, t, skip)` (new): v1 `tower_roof._roof_deck`'s closed boarded slab limited to the eave overhang (top face under the battens, soffit face, eave edge), from 10 cm above the lip to 7.5 cm inside the plate line (`<P>_roof_soffit_deck`, BACKING); `cone_roof(..., soffit=True, soffit_skip=None)` builds it. `LEAN_VIEWS` + `footprint_views(..., door=...)` + `composite_hidden_cull(..., views="lean", min_polys=0)`: 2 loop distances x 3 heights + 1 crane loop + 27 door views; roof coverings (`ROOF_PARTS`) are ray-tested from `ROOF_VIEWS` only (no knee-height loop, no door views), walls / openings / timbers from the full lean set (`extra_by_target`). 286 viewpoints for roofs vs 953 in round 1; full build 9 min 24 s at 100 % shared CPU load (round 1: 13-17 min). | `soffit=False`, `views="full"` |
+
+## Round 3 (2026-10-16): module-level fixes from the director's round-2 review
+
+Again only v3's own modules were edited (grep: no hero and no other variant imports `linear_roof`, `roof_junction`,
+`ball_finial` or `composite`); the shared `conical_roof.py`, `finial.py` and `thatch.py` are reused unchanged, so no
+hero re-run was needed.  Every change is a new function, a new method or a new keyword.
+
+| module | change | old behaviour via |
+|---|---|---|
+| `linear_roof.py` | `GableRoof.section_loop()`, `.section_columns()`, `.keep_out(P, lift, x_pad, under)`, `.top_depth(P)`, `.eave_zone(P)`, `.under_soffit(P)` (new): the roof as a SOLID (deck + courses + eave roll + ridge roll) in vertical columns, so any body that meets the roof can ask "is this point inside / under the roof, or over its eave band?". `_eave_rolls(..., end_caps=True)`: the roll keeps its back over the last 0.10 m of a free end (closed rounded end cap, `thatch.d_roll(keep_back_fn=...)`). `_verge_faces(..., roll_cover=0.012)`: the verge face's eave end now covers the roll's whole D section (1.2 cm inside the roll outline), so roll end and verge face meet with no slot. | `end_caps=False`, `roll_cover=None` |
+| `composite.py` | `mesh_islands(me)`, `drop_units(ob, inside, rule)` (new kit helpers: delete whole units -- connected islands -- or single faces that a keep-out marks; bmesh, attributes kept). `cone_keep_out(g, roofs, lift=0.02, rule="tuck", tuck=0.15)` (new): the cone yields to the linear roof(s) it meets, the mirror of `linear_roof(abut_cone=...)`: units wholly in the roof solid, and units with any vertex under the soffit / roll belly, in the eave band or > 15 cm under the roof top, are dropped whole (shingles, starters, under-laps, battens); rafter / purlin / soffit faces wholly inside are dropped. `cone_roof(..., abut_roof=None, abut_lift=0.02, abut_rule="tuck", abut_tuck=0.15)` runs it. | `abut_roof=None` |
+| `ball_finial.py` | `fine_hat(...)` (new): `finial.lead_hat`'s fitted hat re-lathed from a smoothed, finely subdivided profile (one quadratic curve for its 2-segment slope, 2.5 cm rings). `hat_underside(...)` (new): an 8 mm lead underside sheet under the hat. `hat_profile(HV)` (new). `hat_fit_units(g, hat_ob, hat_r, clear=0.01, reach=0.05)` (new): every vertex of every covering AND structure unit within hat_r + 5 cm is tested against the built hat's actual outer profile; units through it, or wholly under it, are dropped. The round-2 "creases" were the conical_roof rafter hub (r 0.39 m, top ~2 cm through a 44 deg hat at that radius; BVH overlap confirmed), not shingles: the hub is now dropped. `ball_finial(..., hat_seg=40, fit=False)`: fit=True uses all of the above. | `fit=False`, `hat_seg=40` |
+
+Recipe: `linear_roof` now runs before `cone_roof` (the cone needs the roof's eave-roll section for its keep-out);
+`cone_roof(..., abut_roof=ROOF)`; `ball_finial(..., hat_seg=96, fit=True)`.
+
+## Round 4 (2026-10-16): module-level fixes from the round-3 audit
+
+v3's own modules (`composite.py`, `roof_junction.py`; grep: no hero or other variant imports them) plus ONE shared
+module, `anchor_validate.py` (new optional keywords, default off). Because `anchor_validate` is imported by the heroes,
+the three hero builds were re-run to scratch (counts in the round-4 builder entry of the v3 director log). Every change is a
+new function or a new keyword whose default keeps the round-3 behaviour.
+
+| module | change | old behaviour via |
+|---|---|---|
+| `composite.py` | `cone_soakers(g, units_V, roofs, reach=0.30, lap=0.035, cell=0.02)` (new): ONE continuous closed lead soaker slab on the cone's reference surface under every covering unit the keep-out dropped within `reach` of the roof top, each footprint grown by `lap` (rasterised on an azimuth x slope grid, one quad per run). It closes the pit where both roofs yield (thatch clipped under the cone, cone units dropped inside the thatch solid). Output: `<P>_cone_soakers`. `cone_keep_out(..., soakers=False, soaker_reach=0.30)` runs it; `cone_roof(..., abut_soakers=False)`. | `soakers=False` |
+| `composite.py` | `roof_eave_planes(roof)` (new): the two vertical planes that bound a `GableRoof` solid at its eaves. `trim_units(ob, mark, planes, whole, mark_face)` (new kit helper): a unit that the keep-out would drop, and that crosses such a plane, is bisected on the plane instead of dropped; the inner part is deleted and the cut is capped (`holes_fill`, custom data copied). `cone_keep_out(..., trim=False)` and `cone_roof(..., abut_trim=False)`. | `trim=False` |
+| `composite.py` | `cone_soffit(..., cut=None)` + `_soffit_spans` / `_soffit_span_parts` (new): with `cut` (a body's keep-out), the soffit slab is built as whole azimuth spans that stop ON the keep-out boundary (refined per slope row by bisection). Each span is closed (top, soffit, eave edge and an end face at each cut end), so no single-sided sheet is left and no board reaches into the roof's zone. `cone_roof(..., soffit_cut=False)` passes the roof keep-out; `cone_keep_out(soffit_cut=True)` then leaves the slab alone. | `cut=None` / `soffit_cut=False` |
+| `composite.py` | `composite_decals(g, seed, door_lichen="jamb", south_moss=False, walk_gate=True)`: door lichen goes on the footing stones beside the jambs (not the threshold top); thatch moss goes on the north slope only; each door's trodden zone (`decal_gate.door_walk_zone`, reused unchanged) is published on `da.walk_zones`. | `door_lichen="threshold", south_moss=True, walk_gate=False` |
+| `roof_junction.py` | `cone_abutment(..., sweep_end="crest", taper=None, fit_kept=False, kept_lap=0.06, wb_max=0.55)`. `taper=m`: the sweep ends where the roof normal still follows the slope (the stations that twist over the roll plateau are dropped), its section closes over the last `m` metres, and a small domed ring 3 cm past each end caps it (no open or crumpled tip). `fit_kept`: the cone-side skirt is sized from the kept units (built, but not used by v3: it reads as a flap). `sweep_end="plane"` (built, not used): the sweep runs on to the roll crest. `abutment_curve(..., crest_over=0.015)` supports it. | `taper=None` |
+| `roof_junction.py` | `end_apron(..., w_in_kept=False, kept_lap=0.06, w_in_max=0.45, u_top=0.10)`. `w_in_kept`: the cone-side width per row comes from the cone units the keep-out KEPT (`kept_cover_points`, new): the apron runs `kept_lap` under or behind the first kept unit. `u_top`: the apron runs further up the roll tail (7 rows when > 0.10), so the sweep's closed end laps over it. | `w_in_kept=False, u_top=0.10` |
+| `anchor_validate.py` (shared) | `validate_anchors(..., walk_zones=None, walk_types=("lichen", "moss"), walk_up_dot=0.7)`: `walk_zones` is a list of `decal_gate.door_walk_zone` dicts, or `"da"` to read `da.walk_zones`. A lichen or moss anchor on an upward face (hit normal z >= 0.7) inside a zone (threshold, step or trodden ground) is rejected as `trodden`. | `walk_zones=None` |
+
+Recipe: `cone_roof(..., abut_trim=True, abut_soakers=True, soffit_cut=True)`,
+`cone_abutment(..., taper=0.12, apron=dict(w_in_kept=True, u_top=0.54))` and `DECAL_VALIDATE["walk_zones"] = "da"`.
+
+## Round 5 (2026-10-17, kit 1.10.1): module-level fixes from the round-4 sign-off audit
+
+Only v3's own modules were edited: `composite.py`, `linear_roof.py`, `roof_junction.py`. No other kit building
+imports them (grep: the only lazy imports are `ball_finial` -> `composite.drop_units`, `linear_roof` ->
+`roof_junction.inside_cone`, `eave._fill_band` (kind "fill", v3's `round_eave_fill` only) ->
+`roof_junction.cone_ref_z`, and `finish` dispatch for families "composite" / "plan", which only v3 uses). Every change
+is a new function or a new keyword whose default keeps the round-4 behaviour. The other six buildings were rebuilt to
+`kit/baseline/v3_r5_hash/` under the HASH RULE (results in the round-5 builder entry of the v3 director log).
+
+| module | change | old behaviour via |
+|---|---|---|
+| `composite.py` | `roof_cut_field(roofs, lift, off, rake_deg=None)` (new): the cut surface of a body yielding to a `GableRoof`, as a continuous scalar field (> 0 keep): over the roof solid's top (+ lift) or outside its eave plane; `rake_deg`: past the eave roll's crest the surface runs on down-and-out at that angle (the roll's top continued as a raking line). `trim_units_field(ob, mark, field, removed, min_keep)` (new kit helper): `trim_units` on a CURVED cut -- crossing edges split at the field's zero, faces split, the negative side deleted, the opening capped (material, smoothing, Mask colour and UVs copied; caps face down the gradient); units with less than `min_keep` of their vertices kept are left for the caller to drop whole. `_face_groups`, `_copy_corner_data` (helpers). | -- |
+| `composite.py` | `cone_keep_out(..., top_trim=False, top_min_keep=0.2, top_rake_deg=None)`, `cone_roof(..., abut_top_trim=False, abut_rake_deg=None, abut_min_keep=0.2)`: with `top_trim` the eave-band covering units (shingles, starters, under-laps, battens) are cut on `roof_cut_field` instead of dropped whole / cut on the vertical eave plane; with `rake_deg` the units in front of the eave roll's nose are cut on the raking line (units mostly under it dropped whole) and the soaker is laid over the whole cut region (a lead saddle in front of the roll). | `top_trim=False` |
+| `composite.py` | `trim_units(..., removed=None)` and `cone_soakers(..., always=())`: the removed part of every CUT unit is a soaker footprint too (round-4 soakers covered dropped units only, which left the d29 / d34 pocket beside a trimmed shingle). | `removed=None`, `always=()` |
+| `linear_roof.py` | `_ridge_roll(..., end_caps=None)` + `RIDGE_CAP`, `_ridge_centre`, `_ridge_cap_scale` (new): the ridge roll's free end runs 4.5 cm past the verge face and closes over the last 9 cm as a quarter ellipse (a rounded bundle end), instead of a flat faceted disc 3 cm past the face. `_verge_faces(..., ridge_cover=False)` + `_ridge_cover_top` (new): the verge face's ridge part covers the roll's full section (top 1.2 cm inside its outline), so there is no slot under the roll. `linear_roof(..., ridge_caps=False)` turns both on. | `ridge_caps=False` |
+| `linear_roof.py` | `_rafters(..., skip=None, verge_apex=False)`, `linear_roof(..., rafter_skip=None, verge_apex=False)`: `skip(P)` -> a rafter tail with any box corner marked is not built (the tails that butted into the round wall's face stones; v3 passes `composite.inside_round(..., depth=-0.10)`), the rng draw is still consumed; `verge_apex` runs the two verge rafters 3 cm past the ridge into a crossed (halved) apex, closing the pocket their short ends left under the deck. | `rafter_skip=None`, `verge_apex=False` |
+| `roof_junction.py` | `round_eave_fill(..., z_bot="wall")`: the masonry beam-fill starts 3 cm inside the top of the round stone body published on `g.WALL_FACES` -- the wall head carries the rafters with no timber plate. | `z_bot=None` |
+
+Recipe: `round_wall.wall_plate` is no longer called (the plate and its 28 pegs measured 100 % hidden: the hidden-tris
+rings at 1.4 x and 2.5 x the plan radius cannot see under a 0.72 m stone eave; with the soffit deleted outright the
+plate is still 96.8 % hidden, so `cone_soffit(r_in=...)` could not have fixed it), `round_eave_fill(z_bot="wall",
+r_off=-0.03)`, `linear_roof(..., rafter_skip=at_round, ridge_caps=True, verge_apex=True)`,
+`cone_roof(..., abut_top_trim=True, abut_rake_deg=60.0, abut_min_keep=0.05)`.
+
+Tried and removed again (not left in the kit): a timber cheek board standing on the cut eave plane (it sat behind the
+cut courses from every eye-level view, so it closed nothing that was seen).
+
+## Round 6 (2026-10-17, kit 1.10.1): module-level fixes from the round-5 audit
+
+Only `composite.py` (v3's own module) was edited. Every change is a new function or a new keyword whose default keeps
+the round-5 behaviour. No other kit building imports `composite` (round-5 grep, unchanged); the six other buildings
+were still rebuilt to `kit/baseline/v3_r6_hash/` under the HASH RULE (results in the round-6 builder entry).
+
+| module | change | old behaviour via |
+|---|---|---|
+| `composite.py` | `soaker_support(g, roofs, eave_s, margin, gap, clear)` (new): `(carry, seat)` for a cone that yields to `GableRoof`(s). carry: lead is kept only on / in a roof's solid (never under its lower outline, the eave-roll belly or deck underside) or, outside every roof's plan columns, over the cone's kept soffit (slope distance >= soffit `eave_s` + 4 cm, and the soffit point under it also outside the roof's columns) or the wall head. seat: the soffit top's depth there. | -- |
+| `composite.py` | `cone_soakers(..., carry=None, seat=None, smooth=0)` + `_soaker_cells`, `_outline_smooth` (new): cells carried by nothing are clipped; the slab is built one quad per cell (no long run quads, no T-junctions) with its outline traced and smoothed (Laplacian, in azimuth-m / slope-m node space); where seated, the sheet turns down (ramped over about 4 cells) and lies on the soffit boarding, so its free lower edge is a closed edge resting on the soffit. | all off |
+| `composite.py` | `drop_slivers(ob, field, mark, h, on, removed)` (new kit helper): after a field cut, drops the units left as thin slivers lying on the cut (a cap vertex and nothing more than `h` over the cut). | -- |
+| `composite.py` | `footprint_field(g, field, margin)`, `_cone_foot(g, P)` (new): a cone covering's footprint cut, `field(foot(P)) - margin`, where foot(P) is P's foot on the cone's reference surface. Units cut on it end on one surface square to the cone, along the line where the reference surface crosses the cut, whatever their height in the course stack. | -- |
+| `composite.py` | `cone_keep_out(..., top_sliver=0.0, soaker_carry=False, soaker_smooth=0, top_drop=(), top_footprint=0.0)`: wires the above in. `top_drop` names hidden-layer units, such as the under-laps, that are dropped whole where the cut touches them; cut, they were left as bare triangular tabs on the saddle. | defaults |
+| `composite.py` | `cone_roof(..., abut=None)`: a dict of further `cone_keep_out` keywords, merged over the flat `abut_*` ones. New keep-out options go through this sub-spec, so `cone_roof` stops growing flat keywords (round-4/5 hygiene note). | `abut=None` |
+| `composite.py` | `composite_decals(..., moss_normal="hit")`: `"slope"` projects linear-roof moss along the roof's slope normal. A ray hit on a course's flat top gave a straight-up normal on the 40 deg thatch (`DA_moss_005/007/009/012/014`). | `"hit"` |
+
+Recipe: `cone_roof(..., abut=dict(top_footprint=0.01, top_sliver=0.05, top_drop=("roof_underlap",),
+soaker_carry=True, soaker_smooth=4))`, `decals=partial(composite_decals, moss_normal="slope")`.
+
+Tried and removed again (not left in the kit): `cut_cheek_lead`, a closed lead cheek traced along the cut line over
+the cut course ends. It found kept units beside the traced line on only a few rows, so it built 4 short segments and
+covered nothing that was seen.
+
+UV determinism (round-5 note, not changed here): `uvgrain.regrain_mesh` sign-fixes the PCA major axis `L` (`_sign_fix`)
+but not the second axis `B1 = V[:, :, 1]`. Its sign is whatever the LAPACK build returns, and it sets U on timber
+pieces. Re-running `finish_uvs` on the round-5 file in the 5.1.2 module reproduces the delivered UV hashes exactly
+(twice), and flipping `B1` changes exactly `LONG_battens` / `LONG_rafters` / `LONG_round_wall_frames`. Those are the
+three objects that differ in the director's blender.exe 5.2 rebuild. The kit-wide fix is
+`B1 = _sign_fix(B1)` before the Gram-Schmidt step. It changes the UV hash of every building, heroes included, so it is
+left to the producer.
+
+## Round 8 (2026-10-17, kit 1.10.1): the client's redesign -- a gable roof abutting a round WALL
+
+Client direction (v3 log, 2026-10-17): raise the round end so the thatch runs into the drum's wall below the cone's
+eave; build the junction as a reusable kit module; bypass the eave-crossing machinery in the recipe. Only v3's own
+modules were edited (`roof_junction.py`, `rubble_walls.py`, `composite.py`; grep: no other kit building imports
+them -- `masonry.py` re-exports `rubble_walls` but no recipe calls `masonry_wall`). Every change is a new function
+or a new keyword whose default keeps the round-6 behaviour. The six other buildings were still rebuilt to
+`kit/baseline/v3_r8_hash/` under the HASH RULE (results in the round-8 builder entry of the v3 director log).
+
+| module | change | old behaviour via |
+|---|---|---|
+| `roof_junction.py` | `wall_abutment(g, roof, center, radius=None, parts=LINEAR_ROOF_PARTS, trace, fillet, lift, bury, end_aprons, apron, step_deg, name, min_clear, drop_near)` (new KIT COMPONENT): the cylinder version of `cone_abutment` that both kit reviews asked for. A `GableRoof` built by `linear_roof` runs INTO a round masonry wall that rises past its ridge: (1) `drop_near` drops the ridge comb's shakes within 15 cm of the face whole; (2) every roof part (deck, rafters, courses, eave rolls, ridge roll, comb) is TRIMMED 2-3 cm behind the battered face, behind the recessed mortar sheet (`junctions.clip_at_tower`); (3) the true roof-top / cylinder line is traced on the built covering (`junctions.trace_roof_on_tower`); (4) a lime-mortar flaunching fitted to the covering follows it eave to eave (`junctions.ride_fillet`); (5) a closed lead apron at each eave end (`junctions.wall_end_apron(closed_lip=True)`); (6) the junction is registered with the seal-probe guard. It raises if the roof's top at the wall is within `min_clear` (0.25 m) of the round frame's cone eave lip (the eaves would cross: that is `cone_abutment`'s case). The compound family's roof-into-tower pieces are reused unchanged on a single frame, so the round wall / roof junction now speaks one language in v3 and v4. `round_body_face(g, center)` and `LINEAR_ROOF_PARTS` (new helpers). | -- (new) |
+| `rubble_walls.py` | `round_stone_body(..., open_z=None)`: `"mid"` frames each opening on the battered face at its own mid height (an upper-storey window of a tall body sits on its face, not on the 1.2 m radius). | `open_z=None` |
+| `composite.py` | `inside_box(..., z_fn=None)`: only points under `z_fn(P)` count (the body interior under a roof deck), so a round wall rising past the roof keeps its stones above the deck. | `z_fn=None` |
+| `composite.py` | **Removed** the interrupted round-7 additions (never built; their junction no longer exists in v3): `cone_cut_cover`, `_cut_chains`, `_join_chains`, `_cover_sweep`, `_filter_max`, `_resample`, `drop_unsupported`, `region_soup`, `_covered_fn`, `_mesh_world`, `cone_soakers(covered, keep_lap)`, `cone_keep_out(soaker_lean)` and `g.CONE_CUT`. `composite.py` is back to its round-6 functions plus `inside_box(z_fn)`; the round 3-6 keep-out / saddle machinery stays in the kit for a design whose eaves do cross a cone. The round-7 file is in the repository's last commit (the working tree was clean when round 8 started) if anyone wants to resume it. | -- |
+
+Recipe: `KitParams(eave_z=6.00)` (was 2.30), `round_stone_body(r_base=3.70, batter_deg=1.5, open_z="mid", clip=inside_box(..., z_fn=deck underside))`, three upper-storey windows, `linear_roof(clip=inside_round(depth=0.10))` (no `abut_cone`), `wall_abutment(roof=ROOF)`, plain `cone_roof(seed=606)` (no `abut_roof` / `abut`), `round_eave_fill` without `skip`; `cone_abutment` and `cone_cut_cover` are no longer called.
+
+## Known limitations (for the producer's merge)
+- `path_stone_wall` has no batter (the quoins are solid boxes); `round_stone_body` battering is 2.5 deg.
+- `cone_abutment` handles a roof whose ridge is horizontal and meets the cone on its near end; a roof meeting a
+  round WALL (tower taller than the roof) is `wall_abutment` (round 8).
+- Hero buildings do not import any of these modules; no hero triangle count can move.
+- Round 2: `linear_roof` "courses" style is thatch only (the shingle covering is unchanged); `end_apron` reads the
+  `GableRoof.ROLL` section (a covering without a roll gets a nominal nose).

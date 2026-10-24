@@ -1,0 +1,92 @@
+﻿00:02.390  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+MESH objects 42 all objects 110
+triangles (evaluated) 213529
+materials 9 ['M_iron', 'M_lead', 'M_mortar', 'M_roof_shake', 'M_stone', 'M_stone_dressed', 'M_thatch', 'M_timber', 'M_timber_weathered'] outside palette: [] empty slots: []
+non-identity transforms ['BARN_pintle_001', 'BARN_pintle_002', 'BARN_pintle_003', 'BARN_pintle_004', 'BARN_pintle_005', 'BARN_pintle_006', 'BARN_pintle_007', 'BARN_pintle_008', 'BARN_pintle_009', 'BARN_pintle_010', 'BARN_pintle_011', 'BARN_pintle_012', 'BARN_pintle_013', 'BARN_pintle_014']
+Mask missing/bad []
+  BARN_barn_roof_apex_cap_collar     tris    668 bbox [-7.677, -0.264, 8.254] [7.793, 0.266, 8.429]
+  BARN_barn_roof_apex_finial         tris   2876 bbox [-7.483, -0.07, 8.381] [7.6, 0.071, 9.217]
+  BARN_barn_roof_comb                tris  10554 bbox [-7.36, -0.112, 7.513] [7.592, 0.138, 8.369]
+  BARN_barn_roof_covering            tris  57866 bbox [-7.432, -4.196, 2.801] [7.548, 4.185, 8.193]
+  BARN_barn_roof_deck                tris   9500 bbox [-7.392, -4.049, 2.575] [7.508, 4.051, 7.531]
+  BARN_barn_roof_eave_roll           tris  29638 bbox [-7.566, -4.395, 2.581] [7.682, 4.395, 7.807]
+  BARN_barn_roof_rafters             tris   2218 bbox [-7.377, -3.993, 2.469] [7.493, 3.995, 7.481]
+  BARN_barn_roof_ridge               tris   2912 bbox [-7.478, -0.376, 7.09] [7.593, 0.381, 8.206]
+  BARN_cart_doors_backing            tris    526 bbox [-1.792, -3.152, 0.0] [1.908, -3.132, 3.292]
+  BARN_cart_doors_ironwork           tris    444 bbox [-1.682, -3.25, 0.5] [1.798, -3.242, 1.31]
+  BARN_cart_doors_leaves             tris   1482 bbox [-1.789, -3.207, 0.015] [1.907, -3.17, 3.302]
+  BARN_cart_doors_ledges             tris    464 bbox [-1.682, -3.242, 0.447] [1.798, -3.207, 1.36]
+  BARN_cart_entry_blocker            tris   1264 bbox [-2.242, -3.369, 2.602] [2.358, -3.339, 4.088]
+  BARN_cart_entry_boards             tris    338 bbox [-2.224, -3.42, 2.517] [2.34, -3.378, 4.072]
+  BARN_cart_entry_frame              tris    854 bbox [-2.007, -3.519, 0.12] [2.128, -3.219, 4.062]
+  BARN_cart_entry_pads               tris    160 bbox [-2.072, -3.569, -0.05] [2.188, -3.149, 0.13]
+  BARN_hoist_frame                   tris    550 bbox [-8.043, -0.099, 5.463] [-6.491, 0.101, 6.296]
+  BARN_hoist_ironwork                tris    232 bbox [-7.962, -0.011, 5.712] [-7.841, 0.013, 6.083]
+  BARN_pintle_001                    tris    194 bbox [4.051, -3.565, 1.695] [4.156, -3.53, 1.82]
+  BARN_pintle_002                    tris    194 bbox [4.051, -3.565, 2.025] [4.156, -3.53, 2.15]
+  BARN_pintle_003                    tris    194 bbox [4.76, -3.565, 1.695] [4.865, -3.53, 1.82]
+  BARN_pintle_004                    tris    194 bbox [4.76, -3.565, 2.025] [4.865, -3.53, 2.15]
+  BARN_pintle_005                    tris    194 bbox [6.996, -1.891, 0.78] [7.031, -1.786, 0.905]
+  BARN_pintle_006                    tris    194 bbox [6.996, -1.892, 2.21] [7.031, -1.786, 2.335]
+  BARN_pintle_007                    tris    194 bbox [-7.099, 0.673, 3.225] [-7.064, 0.778, 3.35]
+  BARN_pintle_008                    tris    194 bbox [-7.099, 0.673, 4.705] [-7.064, 0.778, 4.83]
+  BARN_pintle_009                    tris    194 bbox [-7.099, -0.777, 3.225] [-7.065, -0.671, 3.35]
+  BARN_pintle_010                    tris    194 bbox [-7.099, -0.777, 4.705] [-7.065, -0.671, 4.83]
+  BARN_pintle_011                    tris    194 bbox [-4.749, -3.565, 1.695] [-4.644, -3.53, 1.82]
+  BARN_pintle_012                    tris    194 bbox [-4.749, -3.565, 2.025] [-4.644, -3.53, 2.15]
+  BARN_pintle_013                    tris    194 bbox [-4.04, -3.565, 1.695] [-3.935, -3.53, 1.82]
+  BARN_pintle_014                    tris    194 bbox [-4.04, -3.565, 2.025] [-3.935, -3.53, 2.15]
+  BARN_plinth_mortar                 tris    744 bbox [-6.942, -3.499, -0.05] [7.058, 3.5, 0.37]
+  BARN_plinth_quoins                 tris    614 bbox [-6.967, -3.524, -0.034] [7.083, 3.527, 0.344]
+  BARN_plinth_stones                 tris  44736 bbox [-7.113, -3.698, -0.05] [7.279, 3.7, 0.378]
+  BARN_walls_blocker                 tris   2016 bbox [-6.942, -3.499, 0.495] [7.058, 3.501, 7.223]
+  BARN_walls_blockers                tris     90 bbox [-6.812, -3.379, 0.528] [6.932, 3.381, 5.06]
+  BARN_walls_boards                  tris  22596 bbox [-7.044, -3.601, 0.498] [7.16, 3.577, 7.336]
+  BARN_walls_dressed                 tris    228 bbox [7.023, -2.059, -0.04] [8.043, -0.539, 0.52]
+  BARN_walls_frame                   tris   1498 bbox [-7.032, -3.589, 0.35] [7.148, 3.591, 3.52]
+  BARN_walls_frames                  tris  12515 bbox [-7.124, -3.589, 0.52] [7.142, 3.591, 5.02]
+  BARN_walls_ironwork                tris   3230 bbox [-7.127, -3.592, 0.8] [7.041, 1.214, 4.785]
+ground min z of all verts -0.05
+DECAL_ANCHORS empties 68 missing props [] json count 68 68
+anchor name sets equal True
+anchors with no surface within 20 cm behind: 0 []
+anchors with a surface within 5 cm in front (buried): 0 []
+  rust_stain     n=  1 z   2.03..  2.03 surfaces ['M_timber_weathered']
+  lichen         n=  5 z   0.22..  0.33 surfaces ['M_stone']
+  moss           n= 20 z   0.69..  5.76 surfaces ['M_thatch', 'M_timber_weathered']
+  damp_rise      n= 19 z   0.35..  0.69 surfaces ['M_timber', 'M_timber_weathered']
+  repair_patch   n=  7 z   1.57..  2.33 surfaces ['M_timber', 'M_timber_weathered']
+  grime          n=  7 z   1.43..  2.43 surfaces ['M_timber_weathered']
+  water_streak   n=  9 z   1.03..  3.13 surfaces ['M_timber', 'M_timber_weathered']
+anchor keys ['name', 'normal', 'position', 'probability', 'seed', 'size', 'surface', 'type', 'up']
+CART ENTRY centre x 0.058, frame front face y -3.519, pads bbox [-2.072, -3.569, -0.05] [2.188, -3.149, 0.13]
+  clear width at depth 0.02 (y -3.499): [(0.05, 3.5), (0.14, 3.595), (0.5, 3.596), (1.0, 3.598), (1.5, 3.599), (1.9, 3.6), (2.2, 3.413), (2.5, 3.053), (2.8, 2.506), (3.0, 1.965), (3.2, 1.054)]
+  clear width at depth 0.08 (y -3.439): [(0.05, 3.5), (0.14, 3.595), (0.5, 3.596), (1.0, 3.598), (1.5, 3.599), (1.9, 3.6), (2.2, 3.368), (2.5, 3.004), (2.8, 2.446), (3.0, 1.889), (3.2, 0.902)]
+  clear width at depth 0.14 (y -3.379): [(0.05, 3.5), (0.14, 3.595), (0.5, 3.596), (1.0, 3.598), (1.5, 3.599), (1.9, 3.6), (2.2, 3.368), (2.5, 3.004), (2.8, 2.446), (3.0, 1.889), (3.2, 0.902)]
+  clear width at depth 0.20 (y -3.319): [(0.05, 3.5), (0.14, 3.595), (0.5, 3.596), (1.0, 3.598), (1.5, 3.599), (1.9, 3.6), (2.2, 3.368), (2.5, 3.004), (2.8, 2.446), (3.0, 1.889), (3.2, 0.902)]
+  clear width at depth 0.26 (y -3.259): [(0.05, 3.5), (0.14, 3.595), (0.5, 3.596), (1.0, 3.598), (1.5, 3.599), (1.9, 3.6), (2.2, 3.368), (2.5, 3.004), (2.8, 2.446), (3.0, 1.889), (3.2, 0.902)]
+  head ray up at depth 0.05: (3.256, 'BARN_cart_entry_frame')
+  head ray up at depth 0.14: (3.256, 'BARN_cart_entry_frame')
+  head ray up at depth 0.24: (3.256, 'BARN_cart_entry_frame')
+  cart envelope 2.4 x 2.8 (rays along +y through the frame depth, non-door hits inside): 0
+  overhead over the cart doorway (out from the frame face, lowest hit over +-1.8 m): [(0.05, 3.788, 'BARN_barn_roof_deck'), (0.3, 3.748, 'BARN_barn_roof_deck'), (0.6, 3.803, 'BARN_barn_roof_eave_roll'), (1.0, 99, None), (1.5, 99, None)]
+  east doorway search: deepest at y -0.6 depth 2.076
+  east man door opening y -3.40..3.40 (width ~6.80)
+   head ray (inside the reveal): (3.008, 'BARN_walls_boards')
+   overhead outside the east door (x from ~the wall face): [(0.2, 0.353, 'BARN_walls_dressed'), (0.5, 99, None), (0.8, 99, None), (1.1, 99, None)]
+LEAF/PAD BARN_cart_doors_leaves: verts below 0.2 275, inside a pad 6, max depth 0.058 [-1.771, -3.207, 0.015] [1.885, -3.193, 0.029]
+LEAF/PAD BARN_cart_doors_backing: verts below 0.2 96, inside a pad 2, max depth 0.003 [-1.792, -3.152, 0.0] [1.908, -3.152, 0.0]
+LEAF/PAD BARN_cart_doors_ledges: verts below 0.2 0, inside a pad 0, max depth 0.000  
+LEAF/PAD BARN_cart_doors_ironwork: verts below 0.2 0, inside a pad 0, max depth 0.000  
+LEAVES bbox [-1.789, -3.207, 0.015] [1.907, -3.17, 3.302]
+BACKING bbox [-1.792, -3.152, 0.0] [1.908, -3.132, 3.292]
+POST -1: inner face x ~-1.744; post y -3.519..-3.219; leaves x-extent on this side -1.789..0.057
+POST +1: inner face x ~1.855; post y -3.519..-3.219; leaves x-extent on this side 0.060..1.907
+islands total 1287
+islands whose 2 cm-inflated AABB touches no other island (and not on the ground): 0
+   HOIST island BARN_hoist_frame centre [-7.45, -0.01, 6.17] nearest other surface 0.018 m
+   HOIST island BARN_hoist_frame centre [-7.9, 0.0, 5.95] nearest other surface 0.042 m
+DONE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

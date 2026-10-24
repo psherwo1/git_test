@@ -1,0 +1,262 @@
+{
+  "triangles": 213651,
+  "samples": 20000,
+  "viewpoints": 77,
+  "est_hidden_pct": 12.6,
+  "est_hidden_triangles": 26962,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "BARN_barn_roof_deck",
+      "est_triangles": 10009,
+      "est_hidden_triangles": 8994,
+      "hidden_pct_of_object": 89.9
+    },
+    {
+      "object": "BARN_walls_boards",
+      "est_triangles": 22689,
+      "est_hidden_triangles": 6259,
+      "hidden_pct_of_object": 27.6
+    },
+    {
+      "object": "BARN_walls_blocker",
+      "est_triangles": 2115,
+      "est_hidden_triangles": 1954,
+      "hidden_pct_of_object": 92.4
+    },
+    {
+      "object": "BARN_barn_roof_covering",
+      "est_triangles": 57365,
+      "est_hidden_triangles": 1292,
+      "hidden_pct_of_object": 2.3
+    },
+    {
+      "object": "BARN_cart_entry_blocker",
+      "est_triangles": 1228,
+      "est_hidden_triangles": 1185,
+      "hidden_pct_of_object": 96.5
+    },
+    {
+      "object": "BARN_barn_roof_eave_roll",
+      "est_triangles": 29825,
+      "est_hidden_triangles": 1057,
+      "hidden_pct_of_object": 3.5
+    },
+    {
+      "object": "BARN_plinth_stones",
+      "est_triangles": 44813,
+      "est_hidden_triangles": 886,
+      "hidden_pct_of_object": 2.0
+    },
+    {
+      "object": "BARN_walls_frames",
+      "est_triangles": 12445,
+      "est_hidden_triangles": 854,
+      "hidden_pct_of_object": 6.9
+    },
+    {
+      "object": "BARN_barn_roof_comb",
+      "est_triangles": 10415,
+      "est_hidden_triangles": 640,
+      "hidden_pct_of_object": 6.2
+    },
+    {
+      "object": "BARN_plinth_mortar",
+      "est_triangles": 630,
+      "est_hidden_triangles": 470,
+      "hidden_pct_of_object": 74.6
+    },
+    {
+      "object": "BARN_barn_roof_rafters",
+      "est_triangles": 2051,
+      "est_hidden_triangles": 299,
+      "hidden_pct_of_object": 14.6
+    },
+    {
+      "object": "BARN_walls_ironwork",
+      "est_triangles": 3129,
+      "est_hidden_triangles": 245,
+      "hidden_pct_of_object": 7.8
+    },
+    {
+      "object": "BARN_walls_frame",
+      "est_triangles": 1527,
+      "est_hidden_triangles": 245,
+      "hidden_pct_of_object": 16.1
+    },
+    {
+      "object": "BARN_cart_doors_leaves",
+      "est_triangles": 1463,
+      "est_hidden_triangles": 213,
+      "hidden_pct_of_object": 14.6
+    },
+    {
+      "object": "BARN_cart_doors_backing",
+      "est_triangles": 480,
+      "est_hidden_triangles": 192,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "BARN_pintle_006",
+      "est_triangles": 213,
+      "est_hidden_triangles": 160,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "BARN_pintle_012",
+      "est_triangles": 299,
+      "est_hidden_triangles": 149,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "BARN_pintle_005",
+      "est_triangles": 202,
+      "est_hidden_triangles": 149,
+      "hidden_pct_of_object": 73.7
+    },
+    {
+      "object": "BARN_pintle_007",
+      "est_triangles": 256,
+      "est_hidden_triangles": 149,
+      "hidden_pct_of_object": 58.3
+    },
+    {
+      "object": "BARN_hoist_ironwork",
+      "est_triangles": 352,
+      "est_hidden_triangles": 128,
+      "hidden_pct_of_object": 36.4
+    },
+    {
+      "object": "BARN_cart_entry_boards",
+      "est_triangles": 427,
+      "est_hidden_triangles": 128,
+      "hidden_pct_of_object": 30.0
+    },
+    {
+      "object": "BARN_walls_blockers",
+      "est_triangles": 117,
+      "est_hidden_triangles": 117,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "BARN_pintle_008",
+      "est_triangles": 170,
+      "est_hidden_triangles": 106,
+      "hidden_pct_of_object": 62.5
+    },
+    {
+      "object": "BARN_pintle_011",
+      "est_triangles": 202,
+      "est_hidden_triangles": 106,
+      "hidden_pct_of_object": 52.6
+    },
+    {
+      "object": "BARN_pintle_014",
+      "est_triangles": 224,
+      "est_hidden_triangles": 96,
+      "hidden_pct_of_object": 42.9
+    },
+    {
+      "object": "BARN_cart_entry_pads",
+      "est_triangles": 160,
+      "est_hidden_triangles": 96,
+      "hidden_pct_of_object": 60.0
+    },
+    {
+      "object": "BARN_pintle_004",
+      "est_triangles": 181,
+      "est_hidden_triangles": 96,
+      "hidden_pct_of_object": 52.9
+    },
+    {
+      "object": "BARN_pintle_013",
+      "est_triangles": 181,
+      "est_hidden_triangles": 85,
+      "hidden_pct_of_object": 47.1
+    },
+    {
+      "object": "BARN_cart_entry_frame",
+      "est_triangles": 779,
+      "est_hidden_triangles": 74,
+      "hidden_pct_of_object": 9.6
+    },
+    {
+      "object": "BARN_pintle_002",
+      "est_triangles": 267,
+      "est_hidden_triangles": 74,
+      "hidden_pct_of_object": 28.0
+    },
+    {
+      "object": "BARN_pintle_009",
+      "est_triangles": 170,
+      "est_hidden_triangles": 74,
+      "hidden_pct_of_object": 43.8
+    },
+    {
+      "object": "BARN_pintle_010",
+      "est_triangles": 170,
+      "est_hidden_triangles": 74,
+      "hidden_pct_of_object": 43.8
+    },
+    {
+      "object": "BARN_barn_roof_apex_finial",
+      "est_triangles": 2830,
+      "est_hidden_triangles": 64,
+      "hidden_pct_of_object": 2.3
+    },
+    {
+      "object": "BARN_pintle_001",
+      "est_triangles": 170,
+      "est_hidden_triangles": 64,
+      "hidden_pct_of_object": 37.5
+    },
+    {
+      "object": "BARN_pintle_003",
+      "est_triangles": 149,
+      "est_hidden_triangles": 42,
+      "hidden_pct_of_object": 28.6
+    },
+    {
+      "object": "BARN_cart_doors_ledges",
+      "est_triangles": 395,
+      "est_hidden_triangles": 42,
+      "hidden_pct_of_object": 10.8
+    },
+    {
+      "object": "BARN_hoist_frame",
+      "est_triangles": 630,
+      "est_hidden_triangles": 32,
+      "hidden_pct_of_object": 5.1
+    },
+    {
+      "object": "BARN_plinth_quoins",
+      "est_triangles": 576,
+      "est_hidden_triangles": 32,
+      "hidden_pct_of_object": 5.6
+    },
+    {
+      "object": "BARN_cart_doors_ironwork",
+      "est_triangles": 544,
+      "est_hidden_triangles": 10,
+      "hidden_pct_of_object": 2.0
+    },
+    {
+      "object": "BARN_barn_roof_ridge",
+      "est_triangles": 2969,
+      "est_hidden_triangles": 10,
+      "hidden_pct_of_object": 0.4
+    },
+    {
+      "object": "BARN_walls_dressed",
+      "est_triangles": 213,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "BARN_barn_roof_apex_cap_collar",
+      "est_triangles": 598,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

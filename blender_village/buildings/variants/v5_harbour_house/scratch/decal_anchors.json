@@ -1,0 +1,2771 @@
+{
+ "format": "village_kit decal anchors v1",
+ "building": "v5_harbour_house",
+ "units": "metres",
+ "space": "building-local: origin at the building base centre on the ground datum Z = 0",
+ "axes": "right-handed, Z up; the principal entrance faces -Y.  normal = outward surface normal (the empty's +Z; its -Z points into the surface); up = decal up direction in the surface plane (the empty's +Y); size = [width along right, height along up]",
+ "decal_types": [
+  "crack",
+  "damp_rise",
+  "moss",
+  "soot",
+  "water_streak",
+  "rust_stain",
+  "plaster_patch",
+  "repair_patch",
+  "lichen",
+  "grime"
+ ],
+ "count": 104,
+ "counts": {
+  "rust_stain": 20,
+  "lichen": 5,
+  "moss": 16,
+  "damp_rise": 31,
+  "repair_patch": 4,
+  "grime": 7,
+  "soot": 9,
+  "water_streak": 12
+ },
+ "anchors": [
+  {
+   "name": "DA_rust_stain_001",
+   "type": "rust_stain",
+   "position": [
+    -0.25,
+    -7.174,
+    0.65306
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.08,
+    0.2539
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 751483112
+  },
+  {
+   "name": "DA_rust_stain_002",
+   "type": "rust_stain",
+   "position": [
+    -0.25,
+    -7.174,
+    2.09335
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.08,
+    0.2533
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 779729940
+  },
+  {
+   "name": "DA_lichen_001",
+   "type": "lichen",
+   "position": [
+    -1.12014,
+    -7.24293,
+    0.23953
+   ],
+   "normal": [
+    -0.03606,
+    -0.99242,
+    -0.11747
+   ],
+   "up": [
+    -0.00427,
+    -0.11739,
+    0.99308
+   ],
+   "size": [
+    0.15,
+    0.1125
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 664250552
+  },
+  {
+   "name": "DA_rust_stain_003",
+   "type": "rust_stain",
+   "position": [
+    1.05,
+    1.744,
+    2.43219
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.08,
+    0.3756
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 368499776
+  },
+  {
+   "name": "DA_rust_stain_004",
+   "type": "rust_stain",
+   "position": [
+    0.35,
+    1.794,
+    4.45583
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.08,
+    0.3083
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 816103954
+  },
+  {
+   "name": "DA_lichen_002",
+   "type": "lichen",
+   "position": [
+    -2.86226,
+    -2.23132,
+    0.27308
+   ],
+   "normal": [
+    -0.56543,
+    -0.329,
+    0.75634
+   ],
+   "up": [
+    -0.55432,
+    -0.52745,
+    -0.64384
+   ],
+   "size": [
+    0.3048,
+    0.1829
+   ],
+   "surface": "M_stone",
+   "probability": 0.5,
+   "seed": 668599447
+  },
+  {
+   "name": "DA_moss_001",
+   "type": "moss",
+   "position": [
+    -2.94532,
+    -7.53,
+    5.90467
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.807,
+    0.6469
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 393037525
+  },
+  {
+   "name": "DA_moss_002",
+   "type": "moss",
+   "position": [
+    -1.46565,
+    -7.53,
+    7.79571
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.542,
+    0.6283
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 394208721
+  },
+  {
+   "name": "DA_moss_003",
+   "type": "moss",
+   "position": [
+    -2.94532,
+    -5.93,
+    5.90718
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.5345,
+    0.6598
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 597219693
+  },
+  {
+   "name": "DA_moss_004",
+   "type": "moss",
+   "position": [
+    -1.46565,
+    -5.93,
+    7.80986
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.711,
+    0.5948
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 10020649
+  },
+  {
+   "name": "DA_moss_005",
+   "type": "moss",
+   "position": [
+    -2.94532,
+    -4.33,
+    5.9129
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.5114,
+    0.4469
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 870535451
+  },
+  {
+   "name": "DA_moss_006",
+   "type": "moss",
+   "position": [
+    -1.46565,
+    -4.33,
+    7.80384
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.6474,
+    0.5823
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 112721978
+  },
+  {
+   "name": "DA_moss_007",
+   "type": "moss",
+   "position": [
+    -2.94532,
+    -2.73,
+    5.91625
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.5777,
+    0.5017
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 6604557
+  },
+  {
+   "name": "DA_moss_008",
+   "type": "moss",
+   "position": [
+    -1.46565,
+    -2.73,
+    7.80476
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.6727,
+    0.5362
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 66571815
+  },
+  {
+   "name": "DA_moss_009",
+   "type": "moss",
+   "position": [
+    -2.94532,
+    -1.13,
+    5.91021
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.7,
+    0.5906
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 562528869
+  },
+  {
+   "name": "DA_moss_010",
+   "type": "moss",
+   "position": [
+    -1.46565,
+    -1.13,
+    7.80444
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.7796,
+    0.4459
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 881827964
+  },
+  {
+   "name": "DA_moss_011",
+   "type": "moss",
+   "position": [
+    -2.94532,
+    0.47,
+    5.9078
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.553,
+    0.6881
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 1045042074
+  },
+  {
+   "name": "DA_moss_012",
+   "type": "moss",
+   "position": [
+    -1.46565,
+    0.47,
+    7.80838
+   ],
+   "normal": [
+    -0.78801,
+    0.0,
+    0.61566
+   ],
+   "up": [
+    0.61566,
+    -0.0,
+    0.78801
+   ],
+   "size": [
+    0.7403,
+    0.5745
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.75,
+   "seed": 707408062
+  },
+  {
+   "name": "DA_damp_rise_001",
+   "type": "damp_rise",
+   "position": [
+    -2.1,
+    -7.234,
+    0.66
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.9933,
+    0.3432
+   ],
+   "surface": "M_timber",
+   "probability": 0.55,
+   "seed": 107590486
+  },
+  {
+   "name": "DA_damp_rise_002",
+   "type": "damp_rise",
+   "position": [
+    1.1,
+    -7.204,
+    0.66
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.7597,
+    0.4323
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 46438474
+  },
+  {
+   "name": "DA_damp_rise_003",
+   "type": "damp_rise",
+   "position": [
+    2.774,
+    -5.73,
+    0.66
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.7478,
+    0.3542
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 903341553
+  },
+  {
+   "name": "DA_damp_rise_004",
+   "type": "damp_rise",
+   "position": [
+    2.774,
+    -4.13,
+    0.66
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.8677,
+    0.4116
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 810915141
+  },
+  {
+   "name": "DA_damp_rise_005",
+   "type": "damp_rise",
+   "position": [
+    2.774,
+    -2.53,
+    0.66
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.9812,
+    0.4303
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 658692581
+  },
+  {
+   "name": "DA_damp_rise_006",
+   "type": "damp_rise",
+   "position": [
+    2.774,
+    -0.93,
+    0.66
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.7777,
+    0.3094
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 884892422
+  },
+  {
+   "name": "DA_damp_rise_007",
+   "type": "damp_rise",
+   "position": [
+    2.774,
+    0.67,
+    0.66
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.7288,
+    0.4015
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 884405982
+  },
+  {
+   "name": "DA_damp_rise_008",
+   "type": "damp_rise",
+   "position": [
+    2.3,
+    1.744,
+    0.66
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.9811,
+    0.3785
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.85,
+   "seed": 906284142
+  },
+  {
+   "name": "DA_damp_rise_009",
+   "type": "damp_rise",
+   "position": [
+    -2.5,
+    1.744,
+    0.66
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.595,
+    0.3116
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.85,
+   "seed": 900212763
+  },
+  {
+   "name": "DA_damp_rise_010",
+   "type": "damp_rise",
+   "position": [
+    -2.774,
+    0.47,
+    0.66
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.8622,
+    0.4111
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 739234453
+  },
+  {
+   "name": "DA_damp_rise_011",
+   "type": "damp_rise",
+   "position": [
+    -2.774,
+    -1.13,
+    0.66
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.728,
+    0.3419
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 561215657
+  },
+  {
+   "name": "DA_damp_rise_012",
+   "type": "damp_rise",
+   "position": [
+    -2.774,
+    -2.73,
+    0.66
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.933,
+    0.3237
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 187324343
+  },
+  {
+   "name": "DA_damp_rise_013",
+   "type": "damp_rise",
+   "position": [
+    -2.774,
+    -4.33,
+    0.66
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.8837,
+    0.3736
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 880143207
+  },
+  {
+   "name": "DA_damp_rise_014",
+   "type": "damp_rise",
+   "position": [
+    -2.774,
+    -5.93,
+    0.66
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.7098,
+    0.4498
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.55,
+   "seed": 989194804
+  },
+  {
+   "name": "DA_repair_patch_001",
+   "type": "repair_patch",
+   "position": [
+    2.774,
+    -5.73,
+    2.14974
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.3215,
+    0.3901
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.35,
+   "seed": 604380216
+  },
+  {
+   "name": "DA_repair_patch_002",
+   "type": "repair_patch",
+   "position": [
+    2.80121,
+    -2.82847,
+    1.61665
+   ],
+   "normal": [
+    0.92388,
+    0.38269,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.4204,
+    0.334
+   ],
+   "surface": "M_timber",
+   "probability": 0.35,
+   "seed": 604215990
+  },
+  {
+   "name": "DA_repair_patch_003",
+   "type": "repair_patch",
+   "position": [
+    2.774,
+    0.07,
+    2.27838
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.5207,
+    0.4959
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.35,
+   "seed": 823451047
+  },
+  {
+   "name": "DA_repair_patch_004",
+   "type": "repair_patch",
+   "position": [
+    -2.774,
+    -2.53,
+    1.7762
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.4541,
+    0.4363
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.35,
+   "seed": 75697092
+  },
+  {
+   "name": "DA_grime_001",
+   "type": "grime",
+   "position": [
+    -2.774,
+    -5.43,
+    1.86108
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.5409,
+    0.3093
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 859007454
+  },
+  {
+   "name": "DA_soot_001",
+   "type": "soot",
+   "position": [
+    -1.75,
+    -7.204,
+    2.655
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.85,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 509584166
+  },
+  {
+   "name": "DA_water_streak_001",
+   "type": "water_streak",
+   "position": [
+    -1.75,
+    -7.204,
+    1.21082
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.44,
+    0.6784
+   ],
+   "surface": "M_timber",
+   "probability": 0.6,
+   "seed": 98118558
+  },
+  {
+   "name": "DA_grime_002",
+   "type": "grime",
+   "position": [
+    -1.05,
+    -7.204,
+    1.4
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.35,
+    0.9
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 730495932
+  },
+  {
+   "name": "DA_grime_003",
+   "type": "grime",
+   "position": [
+    1.05,
+    -7.204,
+    1.4
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.35,
+    0.9
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 317664037
+  },
+  {
+   "name": "DA_rust_stain_005",
+   "type": "rust_stain",
+   "position": [
+    -0.25,
+    -7.174,
+    1.48361
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.08,
+    0.3528
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 619789403
+  },
+  {
+   "name": "DA_soot_002",
+   "type": "soot",
+   "position": [
+    1.75,
+    -7.204,
+    2.655
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.85,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 548899381
+  },
+  {
+   "name": "DA_water_streak_002",
+   "type": "water_streak",
+   "position": [
+    1.75,
+    -7.204,
+    1.2386
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.44,
+    0.6228
+   ],
+   "surface": "M_timber",
+   "probability": 0.6,
+   "seed": 604464199
+  },
+  {
+   "name": "DA_soot_003",
+   "type": "soot",
+   "position": [
+    2.774,
+    -4.73,
+    2.655
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.85,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 294683654
+  },
+  {
+   "name": "DA_water_streak_003",
+   "type": "water_streak",
+   "position": [
+    2.774,
+    -4.73,
+    1.30905
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.33,
+    0.3614
+   ],
+   "surface": "M_timber",
+   "probability": 0.6,
+   "seed": 467242868
+  },
+  {
+   "name": "DA_soot_004",
+   "type": "soot",
+   "position": [
+    2.774,
+    -1.13,
+    2.655
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.85,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 721846154
+  },
+  {
+   "name": "DA_water_streak_004",
+   "type": "water_streak",
+   "position": [
+    2.774,
+    -1.13,
+    1.24326
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.44,
+    0.6135
+   ],
+   "surface": "M_timber",
+   "probability": 0.6,
+   "seed": 598699237
+  },
+  {
+   "name": "DA_grime_004",
+   "type": "grime",
+   "position": [
+    1.85,
+    1.744,
+    1.4
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.35,
+    0.9
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 173646014
+  },
+  {
+   "name": "DA_grime_005",
+   "type": "grime",
+   "position": [
+    -1.85,
+    1.744,
+    1.4
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.35,
+    0.9
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 891022820
+  },
+  {
+   "name": "DA_rust_stain_006",
+   "type": "rust_stain",
+   "position": [
+    1.05,
+    1.744,
+    0.70367
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.08,
+    0.3127
+   ],
+   "surface": "M_timber",
+   "probability": 0.7,
+   "seed": 97703378
+  },
+  {
+   "name": "DA_rust_stain_007",
+   "type": "rust_stain",
+   "position": [
+    1.05,
+    1.744,
+    1.48567
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.08,
+    0.3487
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 864186559
+  },
+  {
+   "name": "DA_soot_005",
+   "type": "soot",
+   "position": [
+    -2.774,
+    -0.33,
+    2.655
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.85,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 999746866
+  },
+  {
+   "name": "DA_water_streak_005",
+   "type": "water_streak",
+   "position": [
+    -2.77252,
+    -0.33,
+    1.2885
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.44,
+    0.523
+   ],
+   "surface": "M_timber",
+   "probability": 0.6,
+   "seed": 148496804
+  },
+  {
+   "name": "DA_soot_006",
+   "type": "soot",
+   "position": [
+    -2.774,
+    -3.73,
+    2.655
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.85,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 302426909
+  },
+  {
+   "name": "DA_water_streak_006",
+   "type": "water_streak",
+   "position": [
+    -2.774,
+    -3.73,
+    1.2574
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.44,
+    0.5852
+   ],
+   "surface": "M_timber",
+   "probability": 0.6,
+   "seed": 279466245
+  },
+  {
+   "name": "DA_soot_007",
+   "type": "soot",
+   "position": [
+    -1.2,
+    -7.764,
+    5.395
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.8,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 326041579
+  },
+  {
+   "name": "DA_water_streak_007",
+   "type": "water_streak",
+   "position": [
+    -1.2,
+    -7.764,
+    4.02233
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.4,
+    0.6353
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 450093371
+  },
+  {
+   "name": "DA_rust_stain_008",
+   "type": "rust_stain",
+   "position": [
+    -1.75,
+    -7.764,
+    4.35617
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2477
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 943491082
+  },
+  {
+   "name": "DA_rust_stain_009",
+   "type": "rust_stain",
+   "position": [
+    -0.65,
+    -7.786,
+    4.34231
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2754
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 824820821
+  },
+  {
+   "name": "DA_soot_008",
+   "type": "soot",
+   "position": [
+    1.2,
+    -7.764,
+    5.395
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.8,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 411276367
+  },
+  {
+   "name": "DA_water_streak_008",
+   "type": "water_streak",
+   "position": [
+    1.2,
+    -7.764,
+    4.06211
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.4,
+    0.5558
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 337024507
+  },
+  {
+   "name": "DA_rust_stain_010",
+   "type": "rust_stain",
+   "position": [
+    0.65,
+    -7.764,
+    4.35124
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2575
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 544703216
+  },
+  {
+   "name": "DA_rust_stain_011",
+   "type": "rust_stain",
+   "position": [
+    1.75,
+    -7.764,
+    4.32049
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.319
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 251976058
+  },
+  {
+   "name": "DA_water_streak_009",
+   "type": "water_streak",
+   "position": [
+    2.856,
+    -5.33,
+    4.04588
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.4,
+    0.5882
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 873864277
+  },
+  {
+   "name": "DA_rust_stain_012",
+   "type": "rust_stain",
+   "position": [
+    2.834,
+    -5.88,
+    4.3691
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2218
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 550274673
+  },
+  {
+   "name": "DA_rust_stain_013",
+   "type": "rust_stain",
+   "position": [
+    2.856,
+    -4.78,
+    4.36795
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2241
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 107103511
+  },
+  {
+   "name": "DA_water_streak_010",
+   "type": "water_streak",
+   "position": [
+    2.856,
+    -2.33,
+    4.04353
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.4,
+    0.5929
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 946168143
+  },
+  {
+   "name": "DA_rust_stain_014",
+   "type": "rust_stain",
+   "position": [
+    2.856,
+    -2.88,
+    4.36199
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.236
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 49948637
+  },
+  {
+   "name": "DA_rust_stain_015",
+   "type": "rust_stain",
+   "position": [
+    2.834,
+    -1.78,
+    4.36593
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2281
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 982335142
+  },
+  {
+   "name": "DA_soot_009",
+   "type": "soot",
+   "position": [
+    0.0,
+    1.804,
+    5.435
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    1.5,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 91663158
+  },
+  {
+   "name": "DA_grime_006",
+   "type": "grime",
+   "position": [
+    1.15153,
+    1.82487,
+    4.39
+   ],
+   "normal": [
+    0.38273,
+    0.92386,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.2625,
+    0.675
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 485396981
+  },
+  {
+   "name": "DA_grime_007",
+   "type": "grime",
+   "position": [
+    -1.15,
+    1.804,
+    4.39
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.35,
+    0.9
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 297561862
+  },
+  {
+   "name": "DA_rust_stain_016",
+   "type": "rust_stain",
+   "position": [
+    0.35,
+    1.794,
+    3.66093
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.08,
+    0.3781
+   ],
+   "surface": "M_timber",
+   "probability": 0.7,
+   "seed": 784936650
+  },
+  {
+   "name": "DA_water_streak_011",
+   "type": "water_streak",
+   "position": [
+    -2.856,
+    -0.93,
+    4.05772
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.4,
+    0.5646
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 263869620
+  },
+  {
+   "name": "DA_rust_stain_017",
+   "type": "rust_stain",
+   "position": [
+    -2.834,
+    -0.38,
+    4.34577
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2685
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 250666882
+  },
+  {
+   "name": "DA_rust_stain_018",
+   "type": "rust_stain",
+   "position": [
+    -2.856,
+    -1.48,
+    4.35111
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2578
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 741091402
+  },
+  {
+   "name": "DA_water_streak_012",
+   "type": "water_streak",
+   "position": [
+    -2.856,
+    -4.33,
+    3.99095
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.4,
+    0.6981
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 181452709
+  },
+  {
+   "name": "DA_rust_stain_019",
+   "type": "rust_stain",
+   "position": [
+    -2.834,
+    -3.78,
+    4.34214
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2757
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 699161422
+  },
+  {
+   "name": "DA_rust_stain_020",
+   "type": "rust_stain",
+   "position": [
+    -2.856,
+    -4.88,
+    4.37525
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.06,
+    0.2095
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 408159211
+  },
+  {
+   "name": "DA_damp_rise_015",
+   "type": "damp_rise",
+   "position": [
+    -2.53346,
+    2.64969,
+    -0.4742
+   ],
+   "normal": [
+    0.38557,
+    0.9225,
+    -0.01795
+   ],
+   "up": [
+    0.00692,
+    0.01657,
+    0.99984
+   ],
+   "size": [
+    0.1875,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.8,
+   "seed": 44340843
+  },
+  {
+   "name": "DA_moss_013",
+   "type": "moss",
+   "position": [
+    0.75164,
+    2.49912,
+    -0.46487
+   ],
+   "normal": [
+    -0.85573,
+    -0.5174,
+    -0.00509
+   ],
+   "up": [
+    -0.00436,
+    -0.00263,
+    0.99999
+   ],
+   "size": [
+    0.1875,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.8,
+   "seed": 196887844
+  },
+  {
+   "name": "DA_moss_014",
+   "type": "moss",
+   "position": [
+    0.73771,
+    4.03902,
+    -0.31294
+   ],
+   "normal": [
+    -0.99822,
+    0.05953,
+    0.00214
+   ],
+   "up": [
+    0.00213,
+    -0.00013,
+    1.0
+   ],
+   "size": [
+    0.1875,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.8,
+   "seed": 631368089
+  },
+  {
+   "name": "DA_damp_rise_016",
+   "type": "damp_rise",
+   "position": [
+    -2.51844,
+    5.474,
+    -0.63262
+   ],
+   "normal": [
+    0.41825,
+    -0.90824,
+    0.01249
+   ],
+   "up": [
+    -0.00522,
+    0.01134,
+    0.99992
+   ],
+   "size": [
+    0.1875,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.8,
+   "seed": 132765493
+  },
+  {
+   "name": "DA_damp_rise_017",
+   "type": "damp_rise",
+   "position": [
+    0.99191,
+    5.54902,
+    -0.57736
+   ],
+   "normal": [
+    0.78058,
+    -0.6249,
+    -0.01393
+   ],
+   "up": [
+    0.01087,
+    -0.00871,
+    0.9999
+   ],
+   "size": [
+    0.1875,
+    0.45
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.8,
+   "seed": 802908149
+  },
+  {
+   "name": "DA_damp_rise_018",
+   "type": "damp_rise",
+   "position": [
+    0.69306,
+    8.73938,
+    -0.39363
+   ],
+   "normal": [
+    0.68334,
+    0.7301,
+    9e-05
+   ],
+   "up": [
+    -6e-05,
+    -7e-05,
+    1.0
+   ],
+   "size": [
+    0.25,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.8,
+   "seed": 263549802
+  },
+  {
+   "name": "DA_damp_rise_019",
+   "type": "damp_rise",
+   "position": [
+    -2.7,
+    -8.934,
+    -1.06231
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.8653,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 1037621509
+  },
+  {
+   "name": "DA_lichen_003",
+   "type": "lichen",
+   "position": [
+    -2.7,
+    -8.81,
+    0.004
+   ],
+   "normal": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "size": [
+    0.3,
+    0.2
+   ],
+   "surface": "M_timber",
+   "probability": 0.5,
+   "seed": 639506930
+  },
+  {
+   "name": "DA_damp_rise_020",
+   "type": "damp_rise",
+   "position": [
+    -0.5,
+    -8.934,
+    -0.75028
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.9929,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 217010157
+  },
+  {
+   "name": "DA_damp_rise_021",
+   "type": "damp_rise",
+   "position": [
+    1.7,
+    -8.934,
+    -0.67485
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    1.0152,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 833052719
+  },
+  {
+   "name": "DA_damp_rise_022",
+   "type": "damp_rise",
+   "position": [
+    3.504,
+    -8.13,
+    -1.0757
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.908,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 47456967
+  },
+  {
+   "name": "DA_damp_rise_023",
+   "type": "damp_rise",
+   "position": [
+    3.504,
+    -5.93,
+    -0.90027
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    1.2061,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 941459521
+  },
+  {
+   "name": "DA_damp_rise_024",
+   "type": "damp_rise",
+   "position": [
+    3.504,
+    -3.73,
+    -0.88511
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    1.2518,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 355075144
+  },
+  {
+   "name": "DA_damp_rise_025",
+   "type": "damp_rise",
+   "position": [
+    3.504,
+    -1.53,
+    -1.32918
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.9552,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 326095831
+  },
+  {
+   "name": "DA_damp_rise_026",
+   "type": "damp_rise",
+   "position": [
+    3.504,
+    0.67,
+    -0.64036
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    1.0947,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 810415525
+  },
+  {
+   "name": "DA_moss_015",
+   "type": "moss",
+   "position": [
+    0.5,
+    2.224,
+    -0.80551
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.8583,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 452962676
+  },
+  {
+   "name": "DA_moss_016",
+   "type": "moss",
+   "position": [
+    -1.7,
+    2.224,
+    -0.76411
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    1.1697,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 714408240
+  },
+  {
+   "name": "DA_damp_rise_027",
+   "type": "damp_rise",
+   "position": [
+    -3.504,
+    1.42,
+    -1.06861
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    1.2763,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 230091366
+  },
+  {
+   "name": "DA_lichen_004",
+   "type": "lichen",
+   "position": [
+    -3.38,
+    1.42,
+    0.004
+   ],
+   "normal": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "size": [
+    0.3,
+    0.2
+   ],
+   "surface": "M_timber",
+   "probability": 0.5,
+   "seed": 385140807
+  },
+  {
+   "name": "DA_damp_rise_028",
+   "type": "damp_rise",
+   "position": [
+    -3.504,
+    -0.78,
+    -1.28188
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.8426,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 30948101
+  },
+  {
+   "name": "DA_damp_rise_029",
+   "type": "damp_rise",
+   "position": [
+    -3.504,
+    -2.98,
+    -0.71346
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.9543,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 451345568
+  },
+  {
+   "name": "DA_damp_rise_030",
+   "type": "damp_rise",
+   "position": [
+    -3.504,
+    -5.18,
+    -0.97075
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.9347,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 1146224
+  },
+  {
+   "name": "DA_damp_rise_031",
+   "type": "damp_rise",
+   "position": [
+    -3.504,
+    -7.38,
+    -1.36014
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "size": [
+    1.0353,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.75,
+   "seed": 345501819
+  },
+  {
+   "name": "DA_lichen_005",
+   "type": "lichen",
+   "position": [
+    -3.38,
+    -7.38,
+    0.004
+   ],
+   "normal": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "size": [
+    0.3,
+    0.2
+   ],
+   "surface": "M_timber",
+   "probability": 0.5,
+   "seed": 625155925
+  }
+ ],
+ "kit_params": {
+  "x": 2.8,
+  "y": 4.5,
+  "plinth": 0.32,
+  "h0": 2.73,
+  "h1": 2.5,
+  "jetty": 0.5,
+  "joist": 0.2,
+  "pitch": 52.0,
+  "overhang": 0.45,
+  "verge": 0.4,
+  "bed": -2.5,
+  "deck": 0.5
+ },
+ "datum": {
+  "quay_z": 0.0,
+  "bed_z": -2.5,
+  "floor_z": 0.5,
+  "deck_z": 0.5,
+  "note": "recentred: see build log shift"
+ },
+ "validation": {
+  "checked": 131,
+  "snapped": 26,
+  "max_move": 0.054,
+  "renormal": 0,
+  "shrunk": 9,
+  "no_surface": 12,
+  "wrong_surface": 4,
+  "excluded": 0,
+  "occluded": 0,
+  "footprint": 6,
+  "duplicate": 5,
+  "kept": 104
+ }
+}

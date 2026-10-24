@@ -1,0 +1,52 @@
+﻿00:00.547  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\a1_longhouse_addons.blend"
+POST verts below 0.40: 28 z min 0.1298 xy bbox [-1.694, 4.172] [-1.494, 4.372]
+POST foot verts 16 gap to the pad below: min None max None no pad below: 16
+PAD verts z max 0.14 pad xy bbox [-1.784, 4.092] [-1.404, 4.452]
+   sight-line ring at z 0.06: rays aimed at the post axis that hit something 35/36, pass clean 1/36
+   sight-line ring at z 0.07: rays aimed at the post axis that hit something 35/36, pass clean 1/36
+   sight-line ring at z 0.08: rays aimed at the post axis that hit something 35/36, pass clean 1/36
+   sight-line ring at z 0.09: rays aimed at the post axis that hit something 35/36, pass clean 1/36
+   sight-line ring at z 0.10: rays aimed at the post axis that hit something 35/36, pass clean 1/36
+   sight-line ring at z 0.11: rays aimed at the post axis that hit something 35/36, pass clean 1/36
+   sight-line ring at z 0.12: rays aimed at the post axis that hit something 35/36, pass clean 1/36
+   sight-line ring at z 0.13: rays aimed at the post axis that hit something 36/36, pass clean 0/36
+   sight-line ring at z 0.14: rays aimed at the post axis that hit something 36/36, pass clean 0/36
+   sight-line ring at z 0.15: rays aimed at the post axis that hit something 36/36, pass clean 0/36
+   sight-line ring at z 0.16: rays aimed at the post axis that hit something 36/36, pass clean 0/36
+   sight-line ring at z 0.17: rays aimed at the post axis that hit something 36/36, pass clean 0/36
+   sight-line ring at z 0.18: rays aimed at the post axis that hit something 36/36, pass clean 0/36
+   sight-line ring at z 0.19: rays aimed at the post axis that hit something 36/36, pass clean 0/36
+   sight-line ring at z 0.20: rays aimed at the post axis that hit something 36/36, pass clean 0/36
+   down the post axis (dx -0.05): [(0.14, 'lean_to_pads'), (0.1301, 'lean_to_posts')]
+   down the post axis (dx +0.00): [(0.14, 'lean_to_pads'), (0.13, 'lean_to_posts')]
+   down the post axis (dx +0.05): [(0.14, 'lean_to_pads'), (0.1299, 'lean_to_posts')]
+REACH A1L_body_gable_corner_nw_mortar      past N face    0.8 m  past S face      0 m
+REACH A1L_body_wall_head_mortar            past N face  0.085 m  past S face      0 m
+REACH A1L_body_wall_head_s_mortar          past N face      0 m  past S face  0.085 m
+REACH A1L_lean_to_covering                 past N face  0.031 m  past S face      0 m
+REACH A1L_lean_to_deck                     past N face  0.031 m  past S face      0 m
+REACH A1L_lean_to_eave_roll                past N face  0.031 m  past S face      0 m
+REACH A1L_lean_to_end0_mortar              past N face    0.1 m  past S face      0 m
+REACH A1L_lean_to_end0_quoins              past N face      0 m  past S face      0 m
+REACH A1L_lean_to_end0_stones              past N face  0.093 m  past S face      0 m
+REACH A1L_lean_to_end1_mortar              past N face    0.1 m  past S face      0 m
+REACH A1L_lean_to_end1_quoins              past N face      0 m  past S face      0 m
+REACH A1L_lean_to_end1_stones              past N face  0.094 m  past S face      0 m
+REACH A1L_lean_to_flashing                 past N face  0.036 m  past S face      0 m
+REACH A1L_lean_to_framing                  past N face  0.047 m  past S face      0 m
+REACH A1L_lean_to_pads                     past N face      0 m  past S face      0 m
+REACH A1L_lean_to_posts                    past N face      0 m  past S face      0 m
+REACH A1L_porch_arm0_frame                 past N face      0 m  past S face    0.2 m
+REACH A1L_porch_arm1_frame                 past N face      0 m  past S face    0.2 m
+REACH A1L_porch_beam                       past N face      0 m  past S face      0 m
+REACH A1L_porch_covering                   past N face      0 m  past S face   0.03 m
+REACH A1L_porch_deck                       past N face      0 m  past S face   0.03 m
+REACH A1L_porch_flashing                   past N face      0 m  past S face  0.035 m
+REACH A1L_porch_framing                    past N face      0 m  past S face  0.088 m
+REACH A1L_porch_rafters                    past N face      0 m  past S face   0.02 m
+REACH A1L_porch_verge                      past N face      0 m  past S face   0.03 m
+INNER S skin at arm0: first hit from the hollow at [-1.34, -2.925, 1.8] A1L_body_wall_mortar
+INNER S skin at arm1: first hit from the hollow at [-3.44, -2.926, 1.8] A1L_body_wall_mortar
+INNER N skin at ledger: first hit from the hollow at [-1.6, 2.242, 3.0] A1L_lean_to_framing
+INNER N skin W: first hit from the hollow at [-3.0, 2.268, 3.2] A1L_body_wall_mortar
+DONE

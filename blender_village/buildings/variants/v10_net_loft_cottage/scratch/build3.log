@@ -1,0 +1,150 @@
+﻿[    1.2s] -- set_entrance
+[    1.2s] -- round_stone_body
+[    2.7s]   NETC_store_wall visible mortar 15.4% -> 8.4% after 267 pinning stones
+[    2.7s]   NETC_store_wall stones 736
+[    3.6s]   NETC_store_wall_stones: 43277 verts, 36835 faces
+[    3.7s]   NETC_store_wall_mortar: 2928 verts, 2787 faces
+[    3.8s]   NETC_store_wall_frames: 2604 verts, 2568 faces
+[    3.8s]   NETC_store_wall_dressed: 204 verts, 198 faces
+[    3.8s]   NETC_store_wall_ironwork: 280 verts, 266 faces
+[    3.8s]   NETC_store_wall_reveals: 8 verts, 4 faces
+[    3.8s]   NETC_store_wall_blockers: 8 verts, 5 faces
+[    3.8s] -- path_stone_wall
+[   16.2s]   walls visible mortar 20.2% -> 6.4% after 513 pinning stones
+[   16.2s]   NETC_walls: stones 963 (hero 188, pins 108)
+[   19.9s]   NETC_walls_stones: 72941 verts, 65976 faces
+[   19.9s]   NETC_walls_quoins: 2624 verts, 2560 faces
+[   27.5s]   NETC_walls_mortar: 4133 verts, 3632 faces
+[   27.5s]   NETC_walls: mortar cells 3632
+[   27.6s]   NETC_walls_frames: 4584 verts, 4491 faces
+[   27.6s]   NETC_walls_dressed: 824 verts, 798 faces
+[   27.6s]   NETC_walls_ironwork: 280 verts, 266 faces
+[   27.6s]   NETC_walls_reveals: 48 verts, 24 faces
+[   27.6s]   NETC_walls_blockers: 48 verts, 30 faces
+[   27.6s] -- path_timber_wall
+[   29.9s]   NETC_loft_front_frame: 488 verts, 474 faces
+[   29.9s]   NETC_loft_front_boards: 3292 verts, 3015 faces
+[   29.9s]   NETC_loft_front_blocker: 90 verts, 88 faces
+[   29.9s]   NETC_loft_front: timber wall (post_plank), 1 runs, 0 openings
+[   29.9s] -- path_timber_wall
+[   32.1s]   NETC_loft_back_frame: 432 verts, 420 faces
+[   32.1s]   NETC_loft_back_boards: 2968 verts, 2718 faces
+[   32.1s]   NETC_loft_back_blocker: 84 verts, 82 faces
+[   32.1s]   NETC_loft_back: timber wall (post_plank), 1 runs, 0 openings
+[   32.1s] -- path_timber_wall
+[   33.8s]   NETC_loft_west_frame: 328 verts, 318 faces
+[   33.8s]   NETC_loft_west_boards: 2072 verts, 1902 faces
+[   33.8s]   NETC_loft_west_blocker: 60 verts, 58 faces
+[   33.8s]   NETC_loft_west: timber wall (post_plank), 1 runs, 0 openings
+[   33.8s] -- path_timber_wall
+[   35.2s]   NETC_loft_east_frame: 304 verts, 294 faces
+[   35.2s]   NETC_loft_east_boards: 1750 verts, 1608 faces
+[   35.2s]   NETC_loft_east_blocker: 54 verts, 52 faces
+[   35.2s]   NETC_loft_east: timber wall (post_plank), 1 runs, 0 openings
+[   35.2s] -- linear_roof
+[   35.3s]   NETC_roof_deck: 2322 verts, 2337 faces
+[   35.4s]   roof rafters: 4 tails skipped (they would run into another body)
+[   35.4s]   NETC_roof_rafters: 2464 verts, 2376 faces
+[   35.7s]   NETC_roof_covering: 25499 verts, 22913 faces
+[   36.0s]   NETC_roof_eave_roll: 11536 verts, 10963 faces
+[   36.0s]   NETC_roof: 26 continuous thatch courses + eave rolls + verge faces + 1 eyebrow lip roll(s); round hips lo hi (centres -2.74 / +2.74, inset 1.26 m)
+[   36.1s]   NETC_roof_ridge: 1152 verts, 1200 faces
+[   36.5s]   NETC_roof_eyebrow0_frame: 410 verts, 408 faces
+[   36.5s]   NETC_roof_eyebrow0_boards: 692 verts, 621 faces
+[   36.5s]   NETC_roof_eyebrow0_blocker: 198 verts, 200 faces
+[   36.5s]   NETC_roof_eyebrow0_frames: 528 verts, 532 faces
+[   36.5s]   NETC_roof_eyebrow0_blockers: 8 verts, 5 faces
+[   36.5s]   NETC_roof: eyebrow 0 at x -1.20 (side -1): front 1.88 m wide, sill 3.89, eave 4.79 (world z before recentre), lift 0.90 m over 2.50 m
+[   36.5s] -- wall_abutment
+[   36.7s]   wall_abutment: trimmed at the wall face: deck 2337->2335, rafters 2376->2376, covering 22913->22877, eave_roll 10963->10886, ridge 1200->1200
+[   36.8s]   wall_abutment: run 0: 173 samples, azimuth 194.0..280.0 deg, z 2.93..3.36 (cone eave lip 3.85)
+[   36.8s]   NETC_roof_wall_abutment: 1371 verts, 1358 faces
+[   36.8s]   seal junction registered: roof / round wall (covering NETC_roof_covering, NETC_roof_eave_roll, NETC_roof_ridge; z 2.59-3.66)
+[   36.8s] -- cone_roof
+[   36.9s]   NETC_rafters: 1978 verts, 1675 faces
+[   36.9s]   NETC_purlin_rings: 168 verts, 150 faces
+[   36.9s]   NETC_battens: 216 verts, 162 faces
+[   37.7s] shingles: 104 full-length (covered part visible): 36
+[   37.8s]   NETC_roof_shingles: 11850 verts, 10668 faces
+[   37.8s]   NETC_roof_starter: 1620 verts, 1404 faces
+[   38.9s] underlap strips: 104
+[   38.9s]   NETC_roof_underlap: 1248 verts, 624 faces
+[   39.0s]   NETC_roof_blocker: 845 verts, 768 faces
+[   39.0s]   NETC_roof_soffit_deck: 1440 verts, 1296 faces
+[   39.0s] -- ball_finial
+[   39.1s]   NETC_cap_collar: 5569 verts, 5473 faces
+[   39.1s]   hat fit: -126 covering polygons under / through the hat; worst clearance kept 0.020 m
+[   39.1s]   NETC_apex_blocker: 362 verts, 400 faces
+[   39.1s]   ball finial: hat r 0.62 pitch 44 deg, top shingle under the drip at 5.086, apex 5.458, hat top 5.508
+[   39.1s]   NETC_finial: 642 verts, 672 faces
+[   39.1s] -- round_eave_fill
+[   39.1s]   eave fill from the round wall head z 3.750 m (no wall plate)
+[   39.1s]   NETC_eave_fill: 721 verts, 480 faces
+[   39.1s] -- lean_to
+[   39.2s]   NETC_lean_to_deck: 1350 verts, 1348 faces
+[   39.2s]   NETC_lean_to_covering: 2831 verts, 2464 faces
+[   39.3s]   NETC_lean_to_eave_roll: 2986 verts, 2814 faces
+[   39.3s]   NETC_lean_to_framing: 1400 verts, 1310 faces
+[   39.3s]   NETC_lean_to: ROUNDED roof (note 19): 7 thatch courses round the contour (coat 0.22 + 0.08 m, 0.30 m courses), the village eave roll round the lip (D section 0.43 m deep, radius 0.16), hips reach 1.00 m along the wall (0.45 m past the end walls), 2.22 m out; ledger, 7 common + radial hip rafters, plate at 2.00 m out
+[   39.4s]   NETC_lean_to: trimmed at the wall face: deck 1348->1140, covering 2464->2303, eave_roll 2814->2660
+[   39.4s]   NETC_lean_to_flashing: 1252 verts, 1239 faces
+[   39.4s]   NETC_lean_to: flaunching 156 stations, roof at the face z 2.65..3.34, crease 3.41
+[   39.4s]   NETC_lean_to: under the host eave: margin at the face 0.246 m (crease), at the host lip line 0.197 m (covering)
+[   39.5s]   NETC_lean_to: host eave roll belly over the add-on: smallest gap 0.224 m at (-3.695, -0.577, 3.063) (rule >= 0.10 m)
+[   39.5s]   NETC_lean_to: host eave roll, lateral (nearest from the same vertices): 0.185 m at (-3.695, -0.577, 3.063) (rule >= 0.10 m)
+[   39.5s]   seal junction registered: lean_to / wall (covering NETC_lean_to_covering, NETC_lean_to_eave_roll; z 2.35-3.64)
+[   39.9s]   lean_to_end0 visible mortar 19.5% -> 8.3% after 88 pinning stones
+[   39.9s]   NETC_lean_to_end0: stones 212 (hero 4, pins 15)
+[   40.1s]   NETC_lean_to_end0_stones: 12911 verts, 11058 faces
+[   40.1s]   NETC_lean_to_end0_quoins: 1312 verts, 1280 faces
+[   40.3s]   NETC_lean_to_end0_mortar: 311 verts, 250 faces
+[   40.3s]   NETC_lean_to_end0: mortar cells 250
+[   40.3s]   NETC_lean_to_end0_mortar: 35 mortar vertices clamped under the deck
+[   40.4s]   NETC_lean_to_end0_stones: stone facing check: 212 stones, 6 turned inside out -> flipped (519 faces), 0 left
+[   40.8s]   lean_to_end1 visible mortar 20.7% -> 7.7% after 102 pinning stones
+[   40.8s]   NETC_lean_to_end1: stones 230 (hero 5, pins 29)
+[   41.0s]   NETC_lean_to_end1_stones: 13770 verts, 11781 faces
+[   41.1s]   NETC_lean_to_end1_quoins: 1394 verts, 1360 faces
+[   41.3s]   NETC_lean_to_end1_mortar: 297 verts, 239 faces
+[   41.3s]   NETC_lean_to_end1: mortar cells 239
+[   41.3s]   NETC_lean_to_end1_mortar: 34 mortar vertices clamped under the deck
+[   41.3s]   NETC_lean_to_end1_stones: stone facing check: 230 stones, 0 turned inside out -> flipped (0 faces), 0 left
+[   41.3s]   NETC_lean_to_posts: 320 verts, 306 faces
+[   41.3s]   NETC_lean_to_pads: 57 verts, 48 faces
+[   41.3s]   NETC_lean_to: 1 posts on dressed pads under the plate
+[   41.3s]   NETC_lean_to: open front 3.00 m wide, plate underside 2.047 m (ends) .. 2.173 m (middle), lowest knee-brace foot 1.893 m (rule plate >= 2.10, brace >= 1.95 m)
+python.exe : Traceback (most recent call last):
+At line:1 char:493
++ ... StartNew(); & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File 
+"C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\build_v10_net_loft_cottage.py", 
+line 191, in <module>
+    main()
+    ~~~~^^
+  File 
+"C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\build_v10_net_loft_cottage.py", 
+line 182, in main
+    build_building(dict(
+    ~~~~~~~~~~~~~~^^^^^^
+        prefix="NETC", collection="NETC", building_id=BID, frame=RoundFrame, params=DIM,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        decal_meta=dict(kit_params={k: v for k, v in DIM.items() if k != "cone_age"},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        main=dict(x=(X0, X1), y=(Y0, Y1), wall_z=WALL_Z, z_split=Z_SPLIT, pitch_deg=46.0))))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\..\..\..\kit\village_kit\asse
+mbly.py", line 158, in build_building
+    fn(g, **kw)
+    ~~^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\..\..\..\kit\village_kit\comp
+onents\lean_to.py", line 842, in lean_to
+    raise ClearanceError(f"lean_to {name}: the open front's headroom (art bible 7): " + "; ".join(bad)
+                         + ".  Raise z_face / the host's eave arch, flatten the pitch or shorten the brace drop.")
+village_kit.guards.ClearanceError: lean_to lean_to: the open front's headroom (art bible 7): plate underside 2.047 m < 
+2.10 m; knee-brace foot 1.893 m < 1.95 m.  Raise z_face / the host's eave arch, flatten the pitch or shorten the brace 
+drop.

@@ -1,0 +1,27 @@
+﻿python.exe : Traceback (most recent call last):
+At line:1 char:429
++ ... t=Get-Date; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe C: ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\GitHubDesktop\git_test\blender_village\kit\baseline\4_verify\rubble_store\build_rubble_store.py", line 34, 
+in <module>
+    build_building(dict(
+    ~~~~~~~~~~~~~~^^^^^^
+        prefix="STORE", collection="STORE", building_id="rubble_store", frame=PlanFrame,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        decals=building_decals,
+        ^^^^^^^^^^^^^^^^^^^^^^^
+        out=out, decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json")))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"C:\GitHubDesktop\git_test\blender_village\kit\baseline\4_verify\rubble_store\..\..\..\village_kit\assembly.py", line 
+158, in build_building
+    fn(g, **kw)
+    ~~^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\kit\baseline\4_verify\rubble_store\..\..\..\village_kit\components\li
+near_roof.py", line 756, in linear_roof
+    raise ValueError(f"unknown covering {covering!r}")
+ValueError: unknown covering 'shake'

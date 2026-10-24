@@ -1,0 +1,334 @@
+{
+  "triangles": 717226,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 14.1,
+  "est_hidden_triangles": 101128,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "A1L_body_wall_stones",
+      "est_triangles": 201809,
+      "est_hidden_triangles": 15510,
+      "hidden_pct_of_object": 7.7
+    },
+    {
+      "object": "A1L_lean_to_end1_stones",
+      "est_triangles": 23309,
+      "est_hidden_triangles": 9951,
+      "hidden_pct_of_object": 42.7
+    },
+    {
+      "object": "A1L_lean_to_end0_stones",
+      "est_triangles": 23220,
+      "est_hidden_triangles": 8337,
+      "hidden_pct_of_object": 35.9
+    },
+    {
+      "object": "A1L_body_roof_deck",
+      "est_triangles": 7172,
+      "est_hidden_triangles": 6723,
+      "hidden_pct_of_object": 93.8
+    },
+    {
+      "object": "A1L_round_wall_stones",
+      "est_triangles": 189795,
+      "est_hidden_triangles": 6455,
+      "hidden_pct_of_object": 3.4
+    },
+    {
+      "object": "A1L_cap_collar",
+      "est_triangles": 12730,
+      "est_hidden_triangles": 6455,
+      "hidden_pct_of_object": 50.7
+    },
+    {
+      "object": "A1L_body_wall_mortar",
+      "est_triangles": 8965,
+      "est_hidden_triangles": 5020,
+      "hidden_pct_of_object": 56.0
+    },
+    {
+      "object": "A1L_roof_shingles",
+      "est_triangles": 110632,
+      "est_hidden_triangles": 4034,
+      "hidden_pct_of_object": 3.6
+    },
+    {
+      "object": "A1L_body_wall_head_s_mortar",
+      "est_triangles": 3227,
+      "est_hidden_triangles": 3227,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "A1L_body_wall_head_mortar",
+      "est_triangles": 3048,
+      "est_hidden_triangles": 3048,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "A1L_lean_to_framing",
+      "est_triangles": 3586,
+      "est_hidden_triangles": 2868,
+      "hidden_pct_of_object": 80.0
+    },
+    {
+      "object": "A1L_lean_to_deck",
+      "est_triangles": 2779,
+      "est_hidden_triangles": 2779,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "A1L_porch_covering",
+      "est_triangles": 5737,
+      "est_hidden_triangles": 2330,
+      "hidden_pct_of_object": 40.6
+    },
+    {
+      "object": "A1L_roof_underlap",
+      "est_triangles": 6992,
+      "est_hidden_triangles": 2330,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "A1L_lean_to_covering",
+      "est_triangles": 4661,
+      "est_hidden_triangles": 1793,
+      "hidden_pct_of_object": 38.5
+    },
+    {
+      "object": "A1L_round_wall_mortar",
+      "est_triangles": 3586,
+      "est_hidden_triangles": 1434,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "A1L_lean_to_end0_quoins",
+      "est_triangles": 3317,
+      "est_hidden_triangles": 1344,
+      "hidden_pct_of_object": 40.5
+    },
+    {
+      "object": "A1L_roof_starter",
+      "est_triangles": 7082,
+      "est_hidden_triangles": 1255,
+      "hidden_pct_of_object": 17.7
+    },
+    {
+      "object": "A1L_lean_to_eave_roll",
+      "est_triangles": 5737,
+      "est_hidden_triangles": 1255,
+      "hidden_pct_of_object": 21.9
+    },
+    {
+      "object": "A1L_lean_to_end1_quoins",
+      "est_triangles": 2779,
+      "est_hidden_triangles": 1255,
+      "hidden_pct_of_object": 45.2
+    },
+    {
+      "object": "A1L_body_roof_wall_abutment",
+      "est_triangles": 4213,
+      "est_hidden_triangles": 1165,
+      "hidden_pct_of_object": 27.7
+    },
+    {
+      "object": "A1L_roof_blocker",
+      "est_triangles": 2151,
+      "est_hidden_triangles": 1165,
+      "hidden_pct_of_object": 54.2
+    },
+    {
+      "object": "A1L_lean_to_flashing",
+      "est_triangles": 2241,
+      "est_hidden_triangles": 1165,
+      "hidden_pct_of_object": 52.0
+    },
+    {
+      "object": "A1L_porch_flashing",
+      "est_triangles": 1344,
+      "est_hidden_triangles": 986,
+      "hidden_pct_of_object": 73.3
+    },
+    {
+      "object": "A1L_roof_soffit_deck",
+      "est_triangles": 2330,
+      "est_hidden_triangles": 986,
+      "hidden_pct_of_object": 42.3
+    },
+    {
+      "object": "A1L_body_wall_frames",
+      "est_triangles": 5468,
+      "est_hidden_triangles": 806,
+      "hidden_pct_of_object": 14.8
+    },
+    {
+      "object": "A1L_body_wall_quoins",
+      "est_triangles": 3137,
+      "est_hidden_triangles": 806,
+      "hidden_pct_of_object": 25.7
+    },
+    {
+      "object": "A1L_apex_blocker",
+      "est_triangles": 1165,
+      "est_hidden_triangles": 806,
+      "hidden_pct_of_object": 69.2
+    },
+    {
+      "object": "A1L_body_roof_eave_roll",
+      "est_triangles": 13896,
+      "est_hidden_triangles": 717,
+      "hidden_pct_of_object": 5.2
+    },
+    {
+      "object": "A1L_body_roof_covering",
+      "est_triangles": 25192,
+      "est_hidden_triangles": 627,
+      "hidden_pct_of_object": 2.5
+    },
+    {
+      "object": "A1L_rafters",
+      "est_triangles": 4572,
+      "est_hidden_triangles": 627,
+      "hidden_pct_of_object": 13.7
+    },
+    {
+      "object": "A1L_body_roof_comb",
+      "est_triangles": 6275,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 5.7
+    },
+    {
+      "object": "A1L_round_wall_frames",
+      "est_triangles": 2330,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 15.4
+    },
+    {
+      "object": "A1L_body_roof_rafters",
+      "est_triangles": 806,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 44.4
+    },
+    {
+      "object": "A1L_porch_framing",
+      "est_triangles": 896,
+      "est_hidden_triangles": 358,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "A1L_battens",
+      "est_triangles": 806,
+      "est_hidden_triangles": 268,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "A1L_porch_deck",
+      "est_triangles": 268,
+      "est_hidden_triangles": 268,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "A1L_lean_to_end0_mortar",
+      "est_triangles": 448,
+      "est_hidden_triangles": 268,
+      "hidden_pct_of_object": 60.0
+    },
+    {
+      "object": "A1L_lean_to_end1_mortar",
+      "est_triangles": 448,
+      "est_hidden_triangles": 268,
+      "hidden_pct_of_object": 60.0
+    },
+    {
+      "object": "A1L_lean_to_posts",
+      "est_triangles": 806,
+      "est_hidden_triangles": 179,
+      "hidden_pct_of_object": 22.2
+    },
+    {
+      "object": "A1L_body_wall_ironwork",
+      "est_triangles": 806,
+      "est_hidden_triangles": 179,
+      "hidden_pct_of_object": 22.2
+    },
+    {
+      "object": "A1L_porch_arm1_frame",
+      "est_triangles": 179,
+      "est_hidden_triangles": 179,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "A1L_body_wall_dressed",
+      "est_triangles": 896,
+      "est_hidden_triangles": 89,
+      "hidden_pct_of_object": 10.0
+    },
+    {
+      "object": "A1L_porch_rafters",
+      "est_triangles": 268,
+      "est_hidden_triangles": 89,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "A1L_porch_verge",
+      "est_triangles": 179,
+      "est_hidden_triangles": 89,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "A1L_porch_arm0_frame",
+      "est_triangles": 448,
+      "est_hidden_triangles": 89,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "A1L_eave_fill",
+      "est_triangles": 627,
+      "est_hidden_triangles": 89,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "A1L_round_wall_dressed",
+      "est_triangles": 627,
+      "est_hidden_triangles": 89,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "A1L_body_gable_corner_nw_mortar",
+      "est_triangles": 89,
+      "est_hidden_triangles": 89,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "A1L_round_wall_blockers",
+      "est_triangles": 89,
+      "est_hidden_triangles": 89,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "A1L_porch_beam",
+      "est_triangles": 89,
+      "est_hidden_triangles": 89,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "A1L_finial",
+      "est_triangles": 1255,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "A1L_body_roof_ridge",
+      "est_triangles": 2599,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "A1L_lean_to_pads",
+      "est_triangles": 89,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

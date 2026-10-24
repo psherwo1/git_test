@@ -1,0 +1,24 @@
+﻿00:00.532  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\v5_harbour_house_lookdev.blend"
+BOUNDS v5_harbour_house (-8.79, -8.59, -2.5) (8.79, 8.59, 13.44)
+python.exe : C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\scripts\village_shots.py:53: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\scripts\run_village.ps1:13 char:5
++     & $py -I "$w\scripts\village_shots.py" "$w\work\${id}_lookdev.ble ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  lm.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\scripts\village_shots.py:102: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+  wm.use_nodes = True
+ENTRANCE v5_harbour_house -Y: kit_entrances:hall_0 (0.0, -1.0, 0.0)
+SUN v5_harbour_house azimuth rotated 0 deg from r2 default (0.72, -0.69, 0.0)
+00:00.860  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+CAMERA v5_harbour_house hero (-22.17, -34.15, 15.07) -> (0.0, 0.0, 6.42) 35.0
+00:08.469  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v5_harbour_house\hero.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v5_harbour_house\hero.png
+CAMERA v5_harbour_house eye (13.98, -24.21, 1.65) -> (0.0, 0.0, 5.62) 28.0
+00:13.532  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v5_harbour_house\eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v5_harbour_house\eye.png

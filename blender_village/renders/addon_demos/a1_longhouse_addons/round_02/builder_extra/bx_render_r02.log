@@ -1,0 +1,58 @@
+﻿00:00.547  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\a1_longhouse_addons.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\b
+x_render_r02.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:413
++ ... der_extra'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\bx_render_r02.
+py:39: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_BX_world"); world.use_nodes = True
+00:00.735  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L01_leanto_NE_eye.png'
+00:05.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L01_leanto_NE_eye_red.png'
+SHOT L01_leanto_NE_eye
+00:10.204  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L02_leanto_front_square.png'
+00:10.657  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L02_leanto_front_square_red.png'
+SHOT L02_leanto_front_square
+00:15.079  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L03_leanto_junction_6m.png'
+00:15.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L03_leanto_junction_6m_red.png'
+SHOT L03_leanto_junction_6m
+00:19.954  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L04_leanto_W_verge_apron.png'
+00:20.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L04_leanto_W_verge_apron_red.png'
+SHOT L04_leanto_W_verge_apron
+00:24.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L05_leanto_E_verge_apron.png'
+00:25.360  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L05_leanto_E_verge_apron_red.png'
+SHOT L05_leanto_E_verge_apron
+00:29.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L06_leanto_inside_lookup.png'
+00:30.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L06_leanto_inside_lookup_red.png'
+SHOT L06_leanto_inside_lookup
+00:34.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L07_leanto_back_elev_12m.png'
+SHOT L07_leanto_back_elev_12m
+00:39.219  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L08_leanto_figure_headroom.png'
+SHOT L08_leanto_figure_headroom
+00:43.704  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\L09_leanto_front_eave_arch.png'
+SHOT L09_leanto_front_eave_arch
+00:48.188  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P07_porch_E_verge_vs_roll.png'
+00:48.657  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P07_porch_E_verge_vs_roll_red.png'
+SHOT P07_porch_E_verge_vs_roll
+00:53.125  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P01_porch_SW_eye.png'
+00:53.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P01_porch_SW_eye_red.png'
+SHOT P01_porch_SW_eye
+00:58.110  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P02_porch_square_eye.png'
+SHOT P02_porch_square_eye
+01:02.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P03_porch_lookup.png'
+01:03.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P03_porch_lookup_red.png'
+SHOT P03_porch_lookup
+01:07.407  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P04_porch_junction_side_high.png'
+01:07.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P04_porch_junction_side_high_red.png'
+SHOT P04_porch_junction_side_high
+01:12.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P05_porch_crane_6m.png'
+01:12.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P05_porch_crane_6m_red.png'
+SHOT P05_porch_crane_6m
+01:17.266  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P06_porch_bracket_E.png'
+01:17.719  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_02\builder_extra\P06_porch_bracket_E_red.png'
+SHOT P06_porch_bracket_E

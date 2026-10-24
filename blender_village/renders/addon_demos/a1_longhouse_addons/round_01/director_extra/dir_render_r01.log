@@ -1,0 +1,95 @@
+﻿00:04.984  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\a1_longhouse_addons.blend"
+blender.exe : C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra
+\dir_render_r01.py:29: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:420
++ ... tor_extra"; & "C:\Program Files\Blender Foundation\Blender 5.2\blende ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\dir_render_r0
+1.py:40: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\dir_render_r0
+1.py:70: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:05.187  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:09.594  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i01_shed_up_to_crease.png'
+00:10.016  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i01_shed_up_to_crease_red.png'
+BlenderMCP addon registered
+DEVICE GPU
+COUNT i01_shed_up_to_crease red red 0 yellow 0
+SHOT i01_shed_up_to_crease
+00:14.156  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i02_shed_W_endwall_head.png'
+00:14.594  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i02_shed_W_endwall_head_red.png'
+COUNT i02_shed_W_endwall_head red red 0 yellow 0
+SHOT i02_shed_W_endwall_head
+00:18.672  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i03_shed_E_endwall_head.png'
+00:19.078  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i03_shed_E_endwall_head_red.png'
+COUNT i03_shed_E_endwall_head red red 415 yellow 0
+SHOT i03_shed_E_endwall_head
+00:23.141  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i04_host_room_N_head_under_arch.png'
+00:23.547  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i04_host_room_N_head_under_arch_red.png'
+COUNT i04_host_room_N_head_under_arch red red 0 yellow 0
+SHOT i04_host_room_N_head_under_arch
+00:27.641  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i05_host_room_S_head_under_arch.png'
+00:28.047  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i05_host_room_S_head_under_arch_red.png'
+COUNT i05_host_room_S_head_under_arch red red 45 yellow 0
+SHOT i05_host_room_S_head_under_arch
+00:32.125  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i06_host_attic_N_lifted_eave.png'
+00:32.516  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i06_host_attic_N_lifted_eave_red.png'
+COUNT i06_host_attic_N_lifted_eave red red 1 yellow 0
+SHOT i06_host_attic_N_lifted_eave
+00:36.594  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i07_host_attic_S_lifted_eave.png'
+00:37.000  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i07_host_attic_S_lifted_eave_red.png'
+COUNT i07_host_attic_S_lifted_eave red red 533 yellow 0
+SHOT i07_host_attic_S_lifted_eave
+00:40.969  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i08_under_hood_up_to_crease.png'
+00:41.375  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\i08_under_hood_up_to_crease_red.png'
+COUNT i08_under_hood_up_to_crease red red 0 yellow 0
+SHOT i08_under_hood_up_to_crease
+00:45.578  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x01_leanto_W_rake_endwall.png'
+00:46.437  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x01_leanto_W_rake_endwall_void.png'
+COUNT x01_leanto_W_rake_endwall void red 0 yellow 2710
+SHOT x01_leanto_W_rake_endwall
+00:50.625  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x02_leanto_E_rake_endwall.png'
+00:51.500  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x02_leanto_E_rake_endwall_void.png'
+COUNT x02_leanto_E_rake_endwall void red 0 yellow 3386
+SHOT x02_leanto_E_rake_endwall
+00:55.656  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x03_leanto_crease_from_above.png'
+00:56.516  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x03_leanto_crease_from_above_void.png'
+COUNT x03_leanto_crease_from_above void red 0 yellow 4773
+SHOT x03_leanto_crease_from_above
+01:00.687  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x04_leanto_front_soffit.png'
+01:01.562  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x04_leanto_front_soffit_void.png'
+COUNT x04_leanto_front_soffit void red 94406 yellow 3235
+SHOT x04_leanto_front_soffit
+01:05.797  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x05_porch_E_verge_vs_thatch.png'
+01:06.703  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x05_porch_E_verge_vs_thatch_void.png'
+COUNT x05_porch_E_verge_vs_thatch void red 0 yellow 820
+SHOT x05_porch_E_verge_vs_thatch
+01:10.937  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x06_porch_W_verge_vs_thatch.png'
+01:11.812  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x06_porch_W_verge_vs_thatch_void.png'
+COUNT x06_porch_W_verge_vs_thatch void red 0 yellow 1011
+SHOT x06_porch_W_verge_vs_thatch
+01:16.078  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x07_porch_top_gap.png'
+01:16.953  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x07_porch_top_gap_void.png'
+COUNT x07_porch_top_gap void red 0 yellow 3282
+SHOT x07_porch_top_gap
+01:21.219  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x08_porch_W_brace_foot.png'
+01:22.094  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x08_porch_W_brace_foot_void.png'
+COUNT x08_porch_W_brace_foot void red 0 yellow 404
+SHOT x08_porch_W_brace_foot
+01:26.312  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x09_porch_actor_approach.png'
+SHOT x09_porch_actor_approach
+01:30.375  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x10_leanto_actor_approach.png'
+SHOT x10_leanto_actor_approach
+01:31.000  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x11_thumb_back_NE.png'
+SHOT x11_thumb_back_NE
+01:31.578  render           | Saved: 'C:\renders\addon_demos\a1_longhouse_addons\round_01\director_extra\x12_thumb_front_SW.png'
+SHOT x12_thumb_front_SW
+BlenderMCP addon unregistered
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

@@ -1,0 +1,27 @@
+﻿00:00.515  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v4_mixed\v4_mixed.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_one
+sided_r04.py:84: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:4 char:316
++ ... xed.blend"; & $py "$d\dir_render_onesided_r04.py" $v4 $d "a03_mill_do ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_onesided_r04.py:
+123: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w.use_nodes = True
+00:00.734  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:01.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\a03_mill_door_reentrant_onesided_red.png'
+DEVICE GPU
+WROTE a03_mill_door_reentrant
+00:01.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\a04_apron_cornice_smock_onesided_red.png'
+WROTE a04_apron_cornice_smock
+00:02.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\a05_cap_tail_boom_onesided_red.png'
+WROTE a05_cap_tail_boom
+00:02.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\a06_wheel_hub_cap_onesided_red.png'
+WROTE a06_wheel_hub_cap
+00:03.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\L04_drum_upper_band_arcade_onesided_red.png'
+WROTE L04_drum_upper_band_arcade
+00:04.047  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\m01_mill_door_into_interior_onesided_red.png'
+WROTE m01_mill_door_into_interior

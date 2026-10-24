@@ -1,0 +1,23 @@
+﻿00:00.547  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house_r05_accepted.blend"
+00:01.063  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+SURF HARB_roof_deck         inside-zone max 0.422 m; outside-zone max 0.0005 m at (-0.71, -4.11, 4.23); outside > 2 mm: 0 of 1648
+SURF HARB_roof_covering     inside-zone max 0.541 m; outside-zone max 0.0000 m at (6.18, 3.46, 2.98); outside > 2 mm: 0 of 75300
+SURF HARB_roof_comb         inside-zone max 0.000 m; outside-zone max 0.0000 m at (2.13, 3.47, 7.21); outside > 2 mm: 0 of 4609
+TRIS HARB_roof_comb: r05-only 2 (24.0 cm2), r06-only 0
+   gone centroid (1.734, -1.39, 6.689) area 12.04 cm2
+   gone centroid (1.718, -1.406, 6.684) area 11.95 cm2
+TRIS HARB_tower_stones: r05-only 20 (299.8 cm2), r06-only 0
+   gone centroid (0.215, -5.247, 5.752) area 49.20 cm2
+   gone centroid (-0.516, -4.191, 4.608) area 30.41 cm2
+   gone centroid (-0.541, -4.172, 4.589) area 29.98 cm2
+   gone centroid (-1.16, -3.841, 3.846) area 25.67 cm2
+   gone centroid (-0.232, -4.466, 4.919) area 24.95 cm2
+   gone centroid (-0.244, -4.444, 4.896) area 24.69 cm2
+   gone centroid (0.173, -5.176, 5.755) area 23.96 cm2
+   gone centroid (-1.131, -3.864, 3.86) area 23.78 cm2
+   gone centroid (-0.754, -4.062, 4.277) area 12.53 cm2
+   gone centroid (-0.797, -4.047, 4.276) area 12.43 cm2
+TRIS HARB_wing_roof_covering: r05-only 0 (0.0 cm2), r06-only 0
+TRIS HARB_hall_stones: r05-only 0 (0.0 cm2), r06-only 2
+   new  centroid (0.733, -5.785, 6.141) area 0.03 cm2
+   new  centroid (0.733, -5.784, 6.142) area 0.02 cm2

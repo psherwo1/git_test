@@ -1,0 +1,47 @@
+﻿00:00.563  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\v7_cottage.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dir_seal_r05.py:33: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:813
++ ... 001,3.183'; & $py -I "$o\dir_seal_r05.py" 'C:\GitHubDesktop\git_test\ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dir_seal_r05.py:44: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dir_seal_r05.py:85: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.719  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\i01_attic_to_W_valley.png'
+00:05.391  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\i01_attic_to_W_valley_red.png'
+DEVICE GPU
+COUNT i01_attic_to_W_valley red red 127 yellow 0
+SHOT i01_attic_to_W_valley
+00:09.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\i06_attic_to_E_hip_chimney.png'
+00:10.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\i06_attic_to_E_hip_chimney_red.png'
+COUNT i06_attic_to_E_hip_chimney red red 1 yellow 0
+SHOT i06_attic_to_E_hip_chimney
+00:14.688  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\di12_attic_to_E_gablet_low.png'
+00:15.094  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\di12_attic_to_E_gablet_low_red.png'
+COUNT di12_attic_to_E_gablet_low red red 0 yellow 0
+SHOT di12_attic_to_E_gablet_low
+00:19.579  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\di18_attic_to_E_stack_gablet_S.png'
+00:19.985  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\di18_attic_to_E_stack_gablet_S_red.png'
+COUNT di18_attic_to_E_stack_gablet_S red red 0 yellow 0
+SHOT di18_attic_to_E_stack_gablet_S
+00:24.485  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\di19_attic_to_E_stack_gablet_N.png'
+00:24.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\di19_attic_to_E_stack_gablet_N_red.png'
+COUNT di19_attic_to_E_stack_gablet_N red red 0 yellow 0
+SHOT di19_attic_to_E_stack_gablet_N
+00:29.360  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\dj18_attic_high_to_E_stack_gablet_S.png'
+00:29.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\dj18_attic_high_to_E_stack_gablet_S_red.png'
+COUNT dj18_attic_high_to_E_stack_gablet_S red red 0 yellow 0
+SHOT dj18_attic_high_to_E_stack_gablet_S
+00:34.266  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\dj19_attic_high_to_E_stack_gablet_N.png'
+00:34.672  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\seal\dj19_attic_high_to_E_stack_gablet_N_red.png'
+COUNT dj19_attic_high_to_E_stack_gablet_N red red 0 yellow 0
+SHOT dj19_attic_high_to_E_stack_gablet_N

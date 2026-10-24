@@ -1,0 +1,261 @@
+﻿00:00.532  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\v7_cottage.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\director_extra\dir_render_r04.py:31: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:379
++ ... 001,3.194'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\director_extra\dir_render_r04.py:42: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_04\director_extra\dir_render_r04.py:72: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.657  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.907  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i01_attic_to_W_valley.png'
+00:05.297  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i01_attic_to_W_valley_red.png'
+DEVICE GPU
+COUNT i01_attic_to_W_valley red red 79038 yellow 0
+SHOT i01_attic_to_W_valley
+00:09.422  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i02_attic_to_E_valley.png'
+00:09.813  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i02_attic_to_E_valley_red.png'
+COUNT i02_attic_to_E_valley red red 73944 yellow 0
+SHOT i02_attic_to_E_valley
+00:13.985  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i03_wing_attic_up_to_main.png'
+00:14.375  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i03_wing_attic_up_to_main_red.png'
+COUNT i03_wing_attic_up_to_main red red 6703 yellow 0
+SHOT i03_wing_attic_up_to_main
+00:18.532  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i04_attic_to_dormer.png'
+00:18.938  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i04_attic_to_dormer_red.png'
+COUNT i04_attic_to_dormer red red 987 yellow 0
+SHOT i04_attic_to_dormer
+00:23.110  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i06_attic_to_E_hip_chimney.png'
+00:23.485  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i06_attic_to_E_hip_chimney_red.png'
+COUNT i06_attic_to_E_hip_chimney red red 10 yellow 0
+SHOT i06_attic_to_E_hip_chimney
+00:27.641  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i07_room_W_inside_corner_head.png'
+00:28.032  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i07_room_W_inside_corner_head_red.png'
+COUNT i07_room_W_inside_corner_head red red 7 yellow 0
+SHOT i07_room_W_inside_corner_head
+00:32.250  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i08_room_E_inside_corner_head.png'
+00:32.657  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i08_room_E_inside_corner_head_red.png'
+COUNT i08_room_E_inside_corner_head red red 0 yellow 0
+SHOT i08_room_E_inside_corner_head
+00:36.813  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i09_attic_to_W_hip.png'
+00:37.219  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i09_attic_to_W_hip_red.png'
+COUNT i09_attic_to_W_hip red red 11704 yellow 0
+SHOT i09_attic_to_W_hip
+00:41.360  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i10_attic_to_eyebrow.png'
+00:41.735  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i10_attic_to_eyebrow_red.png'
+COUNT i10_attic_to_eyebrow red red 0 yellow 0
+SHOT i10_attic_to_eyebrow
+00:45.938  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i11_wing_attic_to_S_hip.png'
+00:46.329  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\i11_wing_attic_to_S_hip_red.png'
+COUNT i11_wing_attic_to_S_hip red red 200 yellow 0
+SHOT i11_wing_attic_to_S_hip
+00:50.532  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x04_dormer_mid_far.png'
+00:51.360  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x04_dormer_mid_far_void.png'
+COUNT x04_dormer_mid_far void red 238764 yellow 114
+SHOT x04_dormer_mid_far
+00:56.125  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x05_W_inside_corner_soffit.png'
+00:56.985  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x05_W_inside_corner_soffit_void.png'
+COUNT x05_W_inside_corner_soffit void red 0 yellow 34917
+SHOT x05_W_inside_corner_soffit
+01:01.469  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x06_E_inside_corner_soffit.png'
+01:02.157  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x06_E_inside_corner_soffit_void.png'
+COUNT x06_E_inside_corner_soffit void red 0 yellow 1006
+SHOT x06_E_inside_corner_soffit
+01:06.391  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x07_W_valley_foot_mid.png'
+01:07.094  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x07_W_valley_foot_mid_void.png'
+COUNT x07_W_valley_foot_mid void red 0 yellow 619
+SHOT x07_W_valley_foot_mid
+01:11.219  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x08_wing_ridge_notch.png'
+01:11.907  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x08_wing_ridge_notch_void.png'
+COUNT x08_wing_ridge_notch void red 0 yellow 1607
+SHOT x08_wing_ridge_notch
+01:16.250  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x13_door_eave_actor.png'
+SHOT x13_door_eave_actor
+01:16.860  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x14_thumb_SW.png'
+SHOT x14_thumb_SW
+01:17.438  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x15_thumb_NE.png'
+SHOT x15_thumb_NE
+01:21.469  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x17_E_valley_foot_mid.png'
+01:22.172  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x17_E_valley_foot_mid_void.png'
+COUNT x17_E_valley_foot_mid void red 0 yellow 22
+SHOT x17_E_valley_foot_mid
+01:26.188  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x19_dormer_hood_mid_eye.png'
+01:26.891  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x19_dormer_hood_mid_eye_void.png'
+COUNT x19_dormer_hood_mid_eye void red 365288 yellow 64
+SHOT x19_dormer_hood_mid_eye
+01:31.344  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x22_E_corner_eye_wide.png'
+01:32.094  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x22_E_corner_eye_wide_void.png'
+COUNT x22_E_corner_eye_wide void red 0 yellow 750
+SHOT x22_E_corner_eye_wide
+01:36.454  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x24_wing_ridge_arch_side.png'
+01:37.266  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\x24_wing_ridge_arch_side_void.png'
+COUNT x24_wing_ridge_arch_side void red 849 yellow 717
+SHOT x24_wing_ridge_arch_side
+01:41.563  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h01_E_hip_chimney_SE_eye.png'
+01:42.313  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h01_E_hip_chimney_SE_eye_void.png'
+COUNT h01_E_hip_chimney_SE_eye void red 447114 yellow 443
+SHOT h01_E_hip_chimney_SE_eye
+01:46.344  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h02_W_hip_SW.png'
+01:47.047  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h02_W_hip_SW_void.png'
+COUNT h02_W_hip_SW void red 441083 yellow 371
+SHOT h02_W_hip_SW
+01:51.360  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h03_W_hip_soffit_eye.png'
+01:52.063  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h03_W_hip_soffit_eye_void.png'
+COUNT h03_W_hip_soffit_eye void red 172564 yellow 20
+SHOT h03_W_hip_soffit_eye
+01:56.125  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h04_W_hip_apex_dome.png'
+01:56.844  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h04_W_hip_apex_dome_void.png'
+COUNT h04_W_hip_apex_dome void red 327487 yellow 0
+SHOT h04_W_hip_apex_dome
+02:01.094  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h05_wing_S_hip.png'
+02:01.797  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h05_wing_S_hip_void.png'
+COUNT h05_wing_S_hip void red 187463 yellow 33
+SHOT h05_wing_S_hip
+02:05.922  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h06_wing_S_hip_soffit_eye.png'
+02:06.625  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\h06_wing_S_hip_soffit_eye_void.png'
+COUNT h06_wing_S_hip_soffit_eye void red 343248 yellow 390
+SHOT h06_wing_S_hip_soffit_eye
+02:10.907  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\c01_chimney_ring_SE.png'
+02:11.672  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\c01_chimney_ring_SE_void.png'
+COUNT c01_chimney_ring_SE void red 221740 yellow 1
+SHOT c01_chimney_ring_SE
+02:16.125  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\c02_chimney_ring_N.png'
+02:16.844  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\c02_chimney_ring_N_void.png'
+COUNT c02_chimney_ring_N void red 163413 yellow 409
+SHOT c02_chimney_ring_N
+02:21.047  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\c03_chimney_base_under_hip.png'
+02:21.735  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\c03_chimney_base_under_hip_void.png'
+COUNT c03_chimney_base_under_hip void red 128739 yellow 115
+SHOT c03_chimney_base_under_hip
+02:25.813  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\e01_eyebrow_back_eye.png'
+02:26.516  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\e01_eyebrow_back_eye_void.png'
+COUNT e01_eyebrow_back_eye void red 147943 yellow 1599
+SHOT e01_eyebrow_back_eye
+02:30.719  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\e02_eyebrow_oblique_NW.png'
+02:31.454  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\e02_eyebrow_oblique_NW_void.png'
+COUNT e02_eyebrow_oblique_NW void red 0 yellow 0
+SHOT e02_eyebrow_oblique_NW
+02:35.797  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\e03_eyebrow_lip_end_E.png'
+02:36.594  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\e03_eyebrow_lip_end_E_void.png'
+COUNT e03_eyebrow_lip_end_E void red 0 yellow 2
+SHOT e03_eyebrow_lip_end_E
+02:40.766  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\e04_eyebrow_from_above.png'
+02:41.469  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\e04_eyebrow_from_above_void.png'
+COUNT e04_eyebrow_from_above void red 0 yellow 0
+SHOT e04_eyebrow_from_above
+02:46.016  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di05_dormer_back_from_attic_above.png'
+02:46.422  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di05_dormer_back_from_attic_above_red.png'
+COUNT di05_dormer_back_from_attic_above red red 0 yellow 0
+SHOT di05_dormer_back_from_attic_above
+02:51.172  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di12_attic_to_E_gablet_low.png'
+02:51.657  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di12_attic_to_E_gablet_low_red.png'
+COUNT di12_attic_to_E_gablet_low red red 14200 yellow 0
+SHOT di12_attic_to_E_gablet_low
+02:56.469  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di13_attic_to_W_gablet_low.png'
+02:56.891  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di13_attic_to_W_gablet_low_red.png'
+COUNT di13_attic_to_W_gablet_low red red 0 yellow 0
+SHOT di13_attic_to_W_gablet_low
+03:01.610  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di14_wing_attic_to_S_gablet_low.png'
+03:02.094  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di14_wing_attic_to_S_gablet_low_red.png'
+COUNT di14_wing_attic_to_S_gablet_low red red 20 yellow 0
+SHOT di14_wing_attic_to_S_gablet_low
+03:06.922  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di15_attic_to_eyebrow_side.png'
+03:07.391  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di15_attic_to_eyebrow_side_red.png'
+COUNT di15_attic_to_eyebrow_side red red 0 yellow 0
+SHOT di15_attic_to_eyebrow_side
+03:12.188  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di16_attic_ridge_to_E_dome_stack.png'
+03:12.672  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di16_attic_ridge_to_E_dome_stack_red.png'
+COUNT di16_attic_ridge_to_E_dome_stack red red 0 yellow 0
+SHOT di16_attic_ridge_to_E_dome_stack
+03:17.407  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di17_attic_to_wing_ridge_join.png'
+03:17.891  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\di17_attic_to_wing_ridge_join_red.png'
+COUNT di17_attic_to_wing_ridge_join red red 0 yellow 0
+SHOT di17_attic_to_wing_ridge_join
+03:22.188  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d01_ridge_knob_from_N.png'
+03:23.016  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d01_ridge_knob_from_N_void.png'
+COUNT d01_ridge_knob_from_N void red 322899 yellow 0
+SHOT d01_ridge_knob_from_N
+03:27.438  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d02_wing_ridge_join_above.png'
+03:28.297  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d02_wing_ridge_join_above_void.png'
+COUNT d02_wing_ridge_join_above void red 175543 yellow 227
+SHOT d02_wing_ridge_join_above
+03:33.094  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d03_W_corner_roll_eye_close.png'
+03:33.907  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d03_W_corner_roll_eye_close_void.png'
+COUNT d03_W_corner_roll_eye_close void red 0 yellow 21170
+SHOT d03_W_corner_roll_eye_close
+03:38.672  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d04_W_inside_corner_standing.png'
+03:39.516  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d04_W_inside_corner_standing_void.png'
+COUNT d04_W_inside_corner_standing void red 0 yellow 59813
+SHOT d04_W_inside_corner_standing
+03:44.032  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d05_dormer_back_oblique_W.png'
+03:44.875  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d05_dormer_back_oblique_W_void.png'
+COUNT d05_dormer_back_oblique_W void red 0 yellow 0
+SHOT d05_dormer_back_oblique_W
+03:49.375  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d06_dormer_back_oblique_E.png'
+03:50.266  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d06_dormer_back_oblique_E_void.png'
+COUNT d06_dormer_back_oblique_E void red 40901 yellow 13
+SHOT d06_dormer_back_oblique_E
+03:54.813  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d07_dormer_apex_close.png'
+03:55.641  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d07_dormer_apex_close_void.png'
+COUNT d07_dormer_apex_close void red 0 yellow 119
+SHOT d07_dormer_apex_close
+04:00.188  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d08_dormer_cheek_foot_E.png'
+04:01.047  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d08_dormer_cheek_foot_E_void.png'
+COUNT d08_dormer_cheek_foot_E void red 0 yellow 868
+SHOT d08_dormer_cheek_foot_E
+04:05.594  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d09_eyebrow_lip_W_foot.png'
+04:06.407  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d09_eyebrow_lip_W_foot_void.png'
+COUNT d09_eyebrow_lip_W_foot void red 0 yellow 0
+SHOT d09_eyebrow_lip_W_foot
+04:10.610  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d10_chimney_pot_head.png'
+04:11.313  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d10_chimney_pot_head_void.png'
+COUNT d10_chimney_pot_head void red 584463 yellow 2531
+SHOT d10_chimney_pot_head
+04:15.563  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d11_E_hip_nose_soffit_rafters.png'
+04:16.250  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d11_E_hip_nose_soffit_rafters_void.png'
+COUNT d11_E_hip_nose_soffit_rafters void red 171027 yellow 71
+SHOT d11_E_hip_nose_soffit_rafters
+04:20.329  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d12_wing_S_hip_SE_eye_wide.png'
+04:21.016  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d12_wing_S_hip_SE_eye_wide_void.png'
+COUNT d12_wing_S_hip_SE_eye_wide void red 415376 yellow 478
+SHOT d12_wing_S_hip_SE_eye_wide
+04:25.235  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d13_E_corner_roll_above.png'
+04:25.938  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d13_E_corner_roll_above_void.png'
+COUNT d13_E_corner_roll_above void red 0 yellow 28
+SHOT d13_E_corner_roll_above
+04:30.188  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d14_W_corner_roll_above.png'
+04:30.891  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d14_W_corner_roll_above_void.png'
+COUNT d14_W_corner_roll_above void red 0 yellow 335
+SHOT d14_W_corner_roll_above
+04:34.969  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d15_W_hip_apex_dome_N.png'
+04:35.688  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d15_W_hip_apex_dome_N_void.png'
+COUNT d15_W_hip_apex_dome_N void red 211089 yellow 573
+SHOT d15_W_hip_apex_dome_N
+04:39.829  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d16_E_hip_apex_and_stack.png'
+04:40.532  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d16_E_hip_apex_and_stack_void.png'
+COUNT d16_E_hip_apex_and_stack void red 55844 yellow 1251
+SHOT d16_E_hip_apex_and_stack
+04:45.110  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d17_eave_seam_under_wing.png'
+04:45.829  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d17_eave_seam_under_wing_void.png'
+COUNT d17_eave_seam_under_wing void red 0 yellow 0
+SHOT d17_eave_seam_under_wing
+04:50.204  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d18_W_valley_foot_eye.png'
+04:50.891  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d18_W_valley_foot_eye_void.png'
+COUNT d18_W_valley_foot_eye void red 0 yellow 17802
+SHOT d18_W_valley_foot_eye
+04:55.157  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d19_W_hip_gablet_eye.png'
+04:55.875  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d19_W_hip_gablet_eye_void.png'
+COUNT d19_W_hip_gablet_eye void red 96517 yellow 70
+SHOT d19_W_hip_gablet_eye
+04:59.969  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d20_N_hip_corner_NE_eye.png'
+05:00.672  render           | Saved: 'C:\renders\variants\v7_cottage\round_04\director_extra\d20_N_hip_corner_NE_eye_void.png'
+COUNT d20_N_hip_corner_NE_eye void red 195839 yellow 307
+SHOT d20_N_hip_corner_NE_eye

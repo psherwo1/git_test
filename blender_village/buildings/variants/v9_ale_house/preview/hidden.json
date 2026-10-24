@@ -1,0 +1,508 @@
+{
+  "triangles": 676075,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 34.3,
+  "est_hidden_triangles": 231893,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "ALEH_walls_stones",
+      "est_triangles": 268824,
+      "est_hidden_triangles": 63720,
+      "hidden_pct_of_object": 23.7
+    },
+    {
+      "object": "ALEH_roof_covering",
+      "est_triangles": 73945,
+      "est_hidden_triangles": 18423,
+      "hidden_pct_of_object": 24.9
+    },
+    {
+      "object": "ALEH_turret_stones",
+      "est_triangles": 55353,
+      "est_hidden_triangles": 16225,
+      "hidden_pct_of_object": 29.3
+    },
+    {
+      "object": "ALEH_chimney_stones",
+      "est_triangles": 20451,
+      "est_hidden_triangles": 12084,
+      "hidden_pct_of_object": 59.1
+    },
+    {
+      "object": "ALEH_walls_mortar",
+      "est_triangles": 15380,
+      "est_hidden_triangles": 9634,
+      "hidden_pct_of_object": 62.6
+    },
+    {
+      "object": "ALEH_roof_eave_roll",
+      "est_triangles": 27296,
+      "est_hidden_triangles": 8535,
+      "hidden_pct_of_object": 31.3
+    },
+    {
+      "object": "ALEH_roof_deck",
+      "est_triangles": 8704,
+      "est_hidden_triangles": 8450,
+      "hidden_pct_of_object": 97.1
+    },
+    {
+      "object": "ALEH_wing_roof_covering",
+      "est_triangles": 26197,
+      "est_hidden_triangles": 8028,
+      "hidden_pct_of_object": 30.6
+    },
+    {
+      "object": "ALEH_walls_frames",
+      "est_triangles": 13098,
+      "est_hidden_triangles": 7183,
+      "hidden_pct_of_object": 54.8
+    },
+    {
+      "object": "ALEH_walls_quoins",
+      "est_triangles": 10056,
+      "est_hidden_triangles": 5577,
+      "hidden_pct_of_object": 55.5
+    },
+    {
+      "object": "ALEH_chimney_base_stones",
+      "est_triangles": 25690,
+      "est_hidden_triangles": 4817,
+      "hidden_pct_of_object": 18.8
+    },
+    {
+      "object": "ALEH_wing_roof_turret_abutment",
+      "est_triangles": 4901,
+      "est_hidden_triangles": 4056,
+      "hidden_pct_of_object": 82.8
+    },
+    {
+      "object": "ALEH_turret_mortar",
+      "est_triangles": 6676,
+      "est_hidden_triangles": 3887,
+      "hidden_pct_of_object": 58.2
+    },
+    {
+      "object": "ALEH_turret_roof_covering",
+      "est_triangles": 11408,
+      "est_hidden_triangles": 3802,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "ALEH_dormer_walls_boards",
+      "est_triangles": 3802,
+      "est_hidden_triangles": 3633,
+      "hidden_pct_of_object": 95.6
+    },
+    {
+      "object": "ALEH_roof_rafters",
+      "est_triangles": 5577,
+      "est_hidden_triangles": 3295,
+      "hidden_pct_of_object": 59.1
+    },
+    {
+      "object": "ALEH_wing_roof_eave_roll",
+      "est_triangles": 9380,
+      "est_hidden_triangles": 3126,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "ALEH_turret_roof_eave_roll",
+      "est_triangles": 7436,
+      "est_hidden_triangles": 2873,
+      "hidden_pct_of_object": 38.6
+    },
+    {
+      "object": "ALEH_hip_end_W_boards",
+      "est_triangles": 3802,
+      "est_hidden_triangles": 2450,
+      "hidden_pct_of_object": 64.4
+    },
+    {
+      "object": "ALEH_turret_frames",
+      "est_triangles": 3295,
+      "est_hidden_triangles": 2281,
+      "hidden_pct_of_object": 69.2
+    },
+    {
+      "object": "ALEH_chimney_mortar",
+      "est_triangles": 3295,
+      "est_hidden_triangles": 2197,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "ALEH_chimney_base_mortar",
+      "est_triangles": 3802,
+      "est_hidden_triangles": 1943,
+      "hidden_pct_of_object": 51.1
+    },
+    {
+      "object": "ALEH_dormer_roof_comb",
+      "est_triangles": 2619,
+      "est_hidden_triangles": 1859,
+      "hidden_pct_of_object": 71.0
+    },
+    {
+      "object": "ALEH_hip_end_S_boards",
+      "est_triangles": 2197,
+      "est_hidden_triangles": 1859,
+      "hidden_pct_of_object": 84.6
+    },
+    {
+      "object": "ALEH_wing_roof_rafters",
+      "est_triangles": 3464,
+      "est_hidden_triangles": 1774,
+      "hidden_pct_of_object": 51.2
+    },
+    {
+      "object": "ALEH_roof_chimney_abutment",
+      "est_triangles": 3971,
+      "est_hidden_triangles": 1605,
+      "hidden_pct_of_object": 40.4
+    },
+    {
+      "object": "ALEH_turret_roof_rafters",
+      "est_triangles": 2028,
+      "est_hidden_triangles": 1521,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "ALEH_dormer_roof_deck",
+      "est_triangles": 1690,
+      "est_hidden_triangles": 1521,
+      "hidden_pct_of_object": 90.0
+    },
+    {
+      "object": "ALEH_hip_end_E_s_boards",
+      "est_triangles": 1943,
+      "est_hidden_triangles": 1436,
+      "hidden_pct_of_object": 73.9
+    },
+    {
+      "object": "ALEH_porch_flashing",
+      "est_triangles": 2028,
+      "est_hidden_triangles": 1352,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "ALEH_roof_eyebrow1_boards",
+      "est_triangles": 1521,
+      "est_hidden_triangles": 1267,
+      "hidden_pct_of_object": 83.3
+    },
+    {
+      "object": "ALEH_porch_covering",
+      "est_triangles": 4056,
+      "est_hidden_triangles": 1267,
+      "hidden_pct_of_object": 31.2
+    },
+    {
+      "object": "ALEH_wing_valley_soffit_1_roll",
+      "est_triangles": 2197,
+      "est_hidden_triangles": 1183,
+      "hidden_pct_of_object": 53.8
+    },
+    {
+      "object": "ALEH_walls_dressed",
+      "est_triangles": 2197,
+      "est_hidden_triangles": 1098,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "ALEH_wing_valley_soffit_0_roll",
+      "est_triangles": 2535,
+      "est_hidden_triangles": 1014,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "ALEH_dormer_roof_covering",
+      "est_triangles": 1690,
+      "est_hidden_triangles": 929,
+      "hidden_pct_of_object": 55.0
+    },
+    {
+      "object": "ALEH_hip_end_E_n_boards",
+      "est_triangles": 1521,
+      "est_hidden_triangles": 929,
+      "hidden_pct_of_object": 61.1
+    },
+    {
+      "object": "ALEH_dormer_foot_roll",
+      "est_triangles": 1436,
+      "est_hidden_triangles": 929,
+      "hidden_pct_of_object": 64.7
+    },
+    {
+      "object": "ALEH_dormer_roof_eave_roll",
+      "est_triangles": 3295,
+      "est_hidden_triangles": 845,
+      "hidden_pct_of_object": 25.6
+    },
+    {
+      "object": "ALEH_wing_roof_deck",
+      "est_triangles": 929,
+      "est_hidden_triangles": 845,
+      "hidden_pct_of_object": 90.9
+    },
+    {
+      "object": "ALEH_roof_eyebrow0_frame",
+      "est_triangles": 845,
+      "est_hidden_triangles": 845,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_roof_eyebrow1_frames",
+      "est_triangles": 929,
+      "est_hidden_triangles": 760,
+      "hidden_pct_of_object": 81.8
+    },
+    {
+      "object": "ALEH_dormer_walls_frames",
+      "est_triangles": 929,
+      "est_hidden_triangles": 760,
+      "hidden_pct_of_object": 81.8
+    },
+    {
+      "object": "ALEH_wing_valley",
+      "est_triangles": 3718,
+      "est_hidden_triangles": 760,
+      "hidden_pct_of_object": 20.5
+    },
+    {
+      "object": "ALEH_roof_eyebrow0_blocker",
+      "est_triangles": 760,
+      "est_hidden_triangles": 676,
+      "hidden_pct_of_object": 88.9
+    },
+    {
+      "object": "ALEH_roof_eyebrow1_frame",
+      "est_triangles": 760,
+      "est_hidden_triangles": 676,
+      "hidden_pct_of_object": 88.9
+    },
+    {
+      "object": "ALEH_roof_ridge",
+      "est_triangles": 2197,
+      "est_hidden_triangles": 591,
+      "hidden_pct_of_object": 26.9
+    },
+    {
+      "object": "ALEH_roof_eyebrow0_boards",
+      "est_triangles": 591,
+      "est_hidden_triangles": 591,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_porch_deck",
+      "est_triangles": 591,
+      "est_hidden_triangles": 591,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_turret_roof_deck",
+      "est_triangles": 760,
+      "est_hidden_triangles": 507,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "ALEH_wing_roof_ridge",
+      "est_triangles": 1774,
+      "est_hidden_triangles": 507,
+      "hidden_pct_of_object": 28.6
+    },
+    {
+      "object": "ALEH_dormer_walls_frame",
+      "est_triangles": 591,
+      "est_hidden_triangles": 507,
+      "hidden_pct_of_object": 85.7
+    },
+    {
+      "object": "ALEH_hip_end_W_frame",
+      "est_triangles": 676,
+      "est_hidden_triangles": 507,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "ALEH_hip_end_E_s_frame",
+      "est_triangles": 507,
+      "est_hidden_triangles": 507,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_roof_eyebrow0_frames",
+      "est_triangles": 760,
+      "est_hidden_triangles": 422,
+      "hidden_pct_of_object": 55.6
+    },
+    {
+      "object": "ALEH_chimney_weathering",
+      "est_triangles": 507,
+      "est_hidden_triangles": 422,
+      "hidden_pct_of_object": 83.3
+    },
+    {
+      "object": "ALEH_dormer_walls_blocker",
+      "est_triangles": 422,
+      "est_hidden_triangles": 422,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_dormer_valley",
+      "est_triangles": 1605,
+      "est_hidden_triangles": 253,
+      "hidden_pct_of_object": 15.8
+    },
+    {
+      "object": "ALEH_porch_framing",
+      "est_triangles": 507,
+      "est_hidden_triangles": 253,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "ALEH_hip_end_E_n_frame",
+      "est_triangles": 338,
+      "est_hidden_triangles": 253,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "ALEH_roof_eyebrow1_blocker",
+      "est_triangles": 253,
+      "est_hidden_triangles": 253,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_dormer_roof_ridge",
+      "est_triangles": 845,
+      "est_hidden_triangles": 169,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "ALEH_walls_blockers",
+      "est_triangles": 169,
+      "est_hidden_triangles": 169,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_turret_dressed",
+      "est_triangles": 760,
+      "est_hidden_triangles": 169,
+      "hidden_pct_of_object": 22.2
+    },
+    {
+      "object": "ALEH_hip_end_S_frame",
+      "est_triangles": 253,
+      "est_hidden_triangles": 169,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "ALEH_wing_valley_soffit_0",
+      "est_triangles": 169,
+      "est_hidden_triangles": 169,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_porch_arm1_frame",
+      "est_triangles": 253,
+      "est_hidden_triangles": 84,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "ALEH_hip_end_E_s_blocker",
+      "est_triangles": 84,
+      "est_hidden_triangles": 84,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_porch_verge",
+      "est_triangles": 169,
+      "est_hidden_triangles": 84,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "ALEH_hip_end_S_blocker",
+      "est_triangles": 84,
+      "est_hidden_triangles": 84,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_porch_arm0_frame",
+      "est_triangles": 422,
+      "est_hidden_triangles": 84,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "ALEH_wing_valley_soffit_1",
+      "est_triangles": 84,
+      "est_hidden_triangles": 84,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "ALEH_walls_reveals",
+      "est_triangles": 169,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_turret_roof_ridge",
+      "est_triangles": 422,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_walls_ironwork",
+      "est_triangles": 253,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_chimney_flue_blocker",
+      "est_triangles": 84,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_dormer_roof_apex_finial",
+      "est_triangles": 1014,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_chimney_cap",
+      "est_triangles": 507,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_porch_rafters",
+      "est_triangles": 84,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_dormer_roof_rafters",
+      "est_triangles": 84,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_dormer_roof_apex_cap_collar",
+      "est_triangles": 84,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_chimney_crown",
+      "est_triangles": 253,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "ALEH_porch_beam",
+      "est_triangles": 84,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

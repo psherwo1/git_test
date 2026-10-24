@@ -1,0 +1,4 @@
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\dir_lineup_r01.py:37: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  clay = bpy.data.materials.new("_clay"); clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\director_extra\dir_lineup_r01.py:49: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_w"); world.use_nodes = True; scn.world = world

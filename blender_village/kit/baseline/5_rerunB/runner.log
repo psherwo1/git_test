@@ -1,0 +1,7 @@
+﻿04:54:17 START hilltop_keep pid 28664
+04:54:17 START v3_longhouse_roundend pid 4192
+04:59:47 END v3_longhouse_roundend exit 0 in 330 s
+04:59:52 END hilltop_keep exit 0 in 335 s
+hilltop_keep build_s=335 exit=0 GEOM_HASH {"file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\5_rerunB\\hilltop_keep\\hilltop_keep.blend", "triangles": 1166874, "geometry": "3e2a219a5901afc5", "uv": "10326b66883e3031", "mask": "cacc4885b10b1370"}
+v3_longhouse_roundend build_s=330 exit=0 GEOM_HASH {"file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\5_rerunB\\v3_longhouse_roundend\\v3_longhouse_roundend.blend", "triangles": 483508, "geometry": "8a4e59687b3c7c4d", "uv": "efb1476453d0b099", "mask": "09cf636b725d14df"}
+DONE

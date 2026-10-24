@@ -1,0 +1,18 @@
+﻿00:00.562  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r04\a1_fast.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:111: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:399
++ ... \round_04'; & 'C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe'  ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:127: DeprecationWarning: 'World.use_nodes' is 
+expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.766  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.969  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\preview\hero.png'
+00:09.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\preview\side.png'
+00:13.094  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_04\preview\back.png'
+REVIEW_STATS {"objects": 57, "triangles": 806583, "bbox_min": [-8.8848237991333, -4.600543022155762, -0.05000000074505806], "bbox_max": [8.884822845458984, 4.600543022155762, 11.344298362731934], "size_m": [17.76964569091797, 9.201086044311523, 11.394298553466797], "materials": ["M_iron", "M_lead", "M_mortar", "M_roof_shake", "M_roof_shingle", "M_stone", "M_stone_dressed", "M_thatch", "M_timber", "M_timber_weathered"], "est_hidden_pct": 24.7, "est_hidden_triangles": 199125, "material_slot_count": 10, "mask_attribute_missing": []}

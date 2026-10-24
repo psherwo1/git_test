@@ -1,0 +1,33 @@
+00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house_r06_accepted.blend"
+00:01.031  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+SURF HARB_roof_deck         inside-zone max 0.400 m; outside-zone max 0.0000 m at (1.92, -1.13, 6.87); outside > 2 mm: 0 of 1648
+SURF HARB_roof_covering     inside-zone max 0.400 m; outside-zone max 0.0746 m at (-0.34, -4.39, 4.77); outside > 2 mm: 26 of 75292
+   outside 0.0746 m at (-0.34, -4.39, 4.77)
+   outside 0.0746 m at (0.11, -4.98, 5.35)
+   outside 0.0721 m at (-0.02, -4.65, 5.13)
+   outside 0.0676 m at (-0.92, -3.98, 4.15)
+   outside 0.0595 m at (-0.24, -4.39, 4.85)
+   outside 0.0547 m at (1.75, -3.21, 6.86)
+SURF HARB_roof_comb         inside-zone max 0.000 m; outside-zone max 0.1094 m at (1.81, -2.82, 6.82); outside > 2 mm: 8 of 4609
+   outside 0.1094 m at (1.81, -2.82, 6.82)
+   outside 0.1091 m at (1.81, -2.86, 6.83)
+   outside 0.0958 m at (1.81, -2.9, 6.83)
+   outside 0.0649 m at (1.81, -2.93, 6.83)
+   outside 0.0454 m at (1.76, -1.99, 6.76)
+   outside 0.0387 m at (1.76, -3.13, 6.8)
+TRIS HARB_roof_comb: r05-only 0 (0.0 cm2), r06-only 10
+   new  centroid (1.794, -3.101, 6.876) area 25.39 cm2
+   new  centroid (1.776, -3.115, 6.837) area 25.09 cm2
+   new  centroid (1.836, -2.944, 6.899) area 24.15 cm2
+   new  centroid (1.825, -2.961, 6.866) area 24.31 cm2
+   new  centroid (1.836, -2.876, 6.896) area 17.91 cm2
+   new  centroid (1.823, -2.887, 6.862) area 20.39 cm2
+TRIS HARB_tower_stones: r05-only 0 (0.0 cm2), r06-only 24
+   new  centroid (-0.609, -4.178, 5.203) area 0.73 cm2
+   new  centroid (-0.602, -4.168, 5.204) area 0.54 cm2
+   new  centroid (-0.063, -4.726, 5.402) area 35.89 cm2
+   new  centroid (-0.002, -4.803, 5.406) area 35.89 cm2
+   new  centroid (0.106, -4.996, 5.634) area 23.14 cm2
+   new  centroid (0.131, -5.023, 5.639) area 16.50 cm2
+TRIS HARB_wing_roof_covering: r05-only 0 (0.0 cm2), r06-only 0
+TRIS HARB_hall_stones: r05-only 0 (0.0 cm2), r06-only 0

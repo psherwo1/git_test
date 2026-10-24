@@ -1,0 +1,17 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\dir_re
+nder_r01.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:791
++ ... _log2.txt"; & $py -I "$d\dir_render_r01.py" -- "$b\variants\v5_harbou ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\dir_render_r01.py:4
+1: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_DIR_world"); world.use_nodes = True
+00:00.610  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.750  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d22_boat_door_head_band_oblique.png'
+DEVICE GPU
+SHOT d22_boat_door_head_band_oblique

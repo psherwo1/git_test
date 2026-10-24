@@ -1,0 +1,1078 @@
+{
+  "triangles": 1385232,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 12.2,
+  "est_hidden_triangles": 169344,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "V4M_base_stones",
+      "est_triangles": 316006,
+      "est_hidden_triangles": 18700,
+      "hidden_pct_of_object": 5.9
+    },
+    {
+      "object": "V4M_base_mortar",
+      "est_triangles": 44154,
+      "est_hidden_triangles": 17315,
+      "hidden_pct_of_object": 39.2
+    },
+    {
+      "object": "V4H_door_frame",
+      "est_triangles": 111511,
+      "est_hidden_triangles": 15064,
+      "hidden_pct_of_object": 13.5
+    },
+    {
+      "object": "V4H_daub",
+      "est_triangles": 176443,
+      "est_hidden_triangles": 13159,
+      "hidden_pct_of_object": 7.5
+    },
+    {
+      "object": "V4M_wall_core",
+      "est_triangles": 10042,
+      "est_hidden_triangles": 9177,
+      "hidden_pct_of_object": 91.4
+    },
+    {
+      "object": "V4M_cap_frame",
+      "est_triangles": 29263,
+      "est_hidden_triangles": 6926,
+      "hidden_pct_of_object": 23.7
+    },
+    {
+      "object": "V4M_door_surround",
+      "est_triangles": 44846,
+      "est_hidden_triangles": 6753,
+      "hidden_pct_of_object": 15.1
+    },
+    {
+      "object": "V4H_wattle_rods",
+      "est_triangles": 53504,
+      "est_hidden_triangles": 5714,
+      "hidden_pct_of_object": 10.7
+    },
+    {
+      "object": "V4M_tower_boards",
+      "est_triangles": 23375,
+      "est_hidden_triangles": 5021,
+      "hidden_pct_of_object": 21.5
+    },
+    {
+      "object": "V4H_daub_interior",
+      "est_triangles": 11081,
+      "est_hidden_triangles": 5021,
+      "hidden_pct_of_object": 45.3
+    },
+    {
+      "object": "V4H_roof_shingles",
+      "est_triangles": 67703,
+      "est_hidden_triangles": 4848,
+      "hidden_pct_of_object": 7.2
+    },
+    {
+      "object": "V4M_base_dressed",
+      "est_triangles": 31860,
+      "est_hidden_triangles": 4155,
+      "hidden_pct_of_object": 13.0
+    },
+    {
+      "object": "V4M_apron_rafters",
+      "est_triangles": 18700,
+      "est_hidden_triangles": 3982,
+      "hidden_pct_of_object": 21.3
+    },
+    {
+      "object": "V4M_interior",
+      "est_triangles": 4675,
+      "est_hidden_triangles": 3809,
+      "hidden_pct_of_object": 81.5
+    },
+    {
+      "object": "V4M_arcade_dressed",
+      "est_triangles": 87096,
+      "est_hidden_triangles": 3636,
+      "hidden_pct_of_object": 4.2
+    },
+    {
+      "object": "V4M_apron_shingles",
+      "est_triangles": 23202,
+      "est_hidden_triangles": 3636,
+      "hidden_pct_of_object": 15.7
+    },
+    {
+      "object": "V4M_door_leaf",
+      "est_triangles": 10908,
+      "est_hidden_triangles": 3463,
+      "hidden_pct_of_object": 31.7
+    },
+    {
+      "object": "V4M_tower_frame",
+      "est_triangles": 10908,
+      "est_hidden_triangles": 2597,
+      "hidden_pct_of_object": 23.8
+    },
+    {
+      "object": "V4H_door_leaf",
+      "est_triangles": 3116,
+      "est_hidden_triangles": 2597,
+      "hidden_pct_of_object": 83.3
+    },
+    {
+      "object": "V4J_abutment_posts",
+      "est_triangles": 2943,
+      "est_hidden_triangles": 2251,
+      "hidden_pct_of_object": 76.5
+    },
+    {
+      "object": "V4H_plinth_stones",
+      "est_triangles": 75668,
+      "est_hidden_triangles": 1904,
+      "hidden_pct_of_object": 2.5
+    },
+    {
+      "object": "V4M_cap_shingles",
+      "est_triangles": 14025,
+      "est_hidden_triangles": 1904,
+      "hidden_pct_of_object": 13.6
+    },
+    {
+      "object": "V4H_threshold",
+      "est_triangles": 20951,
+      "est_hidden_triangles": 1558,
+      "hidden_pct_of_object": 7.4
+    },
+    {
+      "object": "V4H_purlin_rings",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 1038,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_rafters",
+      "est_triangles": 3289,
+      "est_hidden_triangles": 1038,
+      "hidden_pct_of_object": 31.6
+    },
+    {
+      "object": "V4H_floor",
+      "est_triangles": 1904,
+      "est_hidden_triangles": 1038,
+      "hidden_pct_of_object": 54.5
+    },
+    {
+      "object": "V4J_abutment_pointing",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 1038,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_hearth",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 1038,
+      "hidden_pct_of_object": 85.7
+    },
+    {
+      "object": "V4M_tail_boom",
+      "est_triangles": 6060,
+      "est_hidden_triangles": 865,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "V4M_door_iron",
+      "est_triangles": 2251,
+      "est_hidden_triangles": 865,
+      "hidden_pct_of_object": 38.5
+    },
+    {
+      "object": "V4H_wall_plate",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 865,
+      "hidden_pct_of_object": 71.4
+    },
+    {
+      "object": "V4H_eave_closure",
+      "est_triangles": 2077,
+      "est_hidden_triangles": 865,
+      "hidden_pct_of_object": 41.7
+    },
+    {
+      "object": "V4H_roof_starter",
+      "est_triangles": 4155,
+      "est_hidden_triangles": 865,
+      "hidden_pct_of_object": 20.8
+    },
+    {
+      "object": "V4J_roof_tower_fillet",
+      "est_triangles": 2424,
+      "est_hidden_triangles": 865,
+      "hidden_pct_of_object": 35.7
+    },
+    {
+      "object": "V4M_wheel_blades",
+      "est_triangles": 21817,
+      "est_hidden_triangles": 692,
+      "hidden_pct_of_object": 3.2
+    },
+    {
+      "object": "V4H_roof_blocker",
+      "est_triangles": 2770,
+      "est_hidden_triangles": 692,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "V4H_posts",
+      "est_triangles": 17834,
+      "est_hidden_triangles": 692,
+      "hidden_pct_of_object": 3.9
+    },
+    {
+      "object": "V4H_battens",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 692,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "V4M_arcade_backs",
+      "est_triangles": 14718,
+      "est_hidden_triangles": 519,
+      "hidden_pct_of_object": 3.5
+    },
+    {
+      "object": "V4M_rotor_iron",
+      "est_triangles": 5194,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 6.7
+    },
+    {
+      "object": "V4M_cap_iron",
+      "est_triangles": 2943,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 11.8
+    },
+    {
+      "object": "V4H_plinth_chink_020",
+      "est_triangles": 346,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4M_baluster_020",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 28.6
+    },
+    {
+      "object": "V4M_corbel_070",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 28.6
+    },
+    {
+      "object": "V4M_tower_iron",
+      "est_triangles": 2251,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 15.4
+    },
+    {
+      "object": "V4M_tail_vane",
+      "est_triangles": 4328,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 8.0
+    },
+    {
+      "object": "V4M_corbel_060",
+      "est_triangles": 2077,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "V4M_wheel_arm_A",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "V4H_plinth_chink_011",
+      "est_triangles": 346,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_door_hinge_pintle_073",
+      "est_triangles": 346,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4M_baluster_013",
+      "est_triangles": 519,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "V4H_door_hinge_pintle_065",
+      "est_triangles": 346,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_door_clench_nail_060",
+      "est_triangles": 346,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_plinth_chink_019",
+      "est_triangles": 692,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "V4M_corbel_051",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 346,
+      "hidden_pct_of_object": 28.6
+    },
+    {
+      "object": "V4H_peg_032",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4M_corbel_065",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "V4M_corbel_053",
+      "est_triangles": 865,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "V4M_corbel_062",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "V4M_wheel_arm_B",
+      "est_triangles": 1731,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 10.0
+    },
+    {
+      "object": "V4M_baluster_003",
+      "est_triangles": 2077,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 8.3
+    },
+    {
+      "object": "V4M_corbel_061",
+      "est_triangles": 1558,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 11.1
+    },
+    {
+      "object": "V4M_corbel_054",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "V4M_wheel_rim",
+      "est_triangles": 6060,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 2.9
+    },
+    {
+      "object": "V4H_door_clench_nail_062",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4M_tail_iron",
+      "est_triangles": 3116,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 5.6
+    },
+    {
+      "object": "V4M_baluster_012",
+      "est_triangles": 346,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "V4M_corbel_076",
+      "est_triangles": 1558,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 11.1
+    },
+    {
+      "object": "V4M_corbel_074",
+      "est_triangles": 865,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "V4M_corbel_069",
+      "est_triangles": 519,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "V4M_wheel_arm_C",
+      "est_triangles": 1731,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 10.0
+    },
+    {
+      "object": "V4M_corbel_071",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "V4M_baluster_025",
+      "est_triangles": 519,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "V4H_door_clench_nail_052",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4M_windshaft",
+      "est_triangles": 346,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "V4M_baluster_011",
+      "est_triangles": 346,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "V4M_baluster_039",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "V4M_poll_end",
+      "est_triangles": 346,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "V4H_door_clench_nail_055",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4M_baluster_007",
+      "est_triangles": 692,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "V4M_baluster_002",
+      "est_triangles": 346,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "V4H_peg_026",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_door_ironwork",
+      "est_triangles": 346,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "V4H_plinth_chink_010",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_plinth_chink_005",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_plinth_chink_003",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_door_hinge_strap_071",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_door_clench_nail_056",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_peg_029",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_door_clench_nail_059",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_door_hinge_knuckle_072",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_peg_035",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_peg_036",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_peg_044",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_plinth_chink_013",
+      "est_triangles": 173,
+      "est_hidden_triangles": 173,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "V4H_step_stone",
+      "est_triangles": 5887,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_052",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_033",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_068",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_055",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_wheel_spokes",
+      "est_triangles": 3636,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_064",
+      "est_triangles": 865,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_cap_collar",
+      "est_triangles": 692,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_019",
+      "est_triangles": 346,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_wheel_arm_D",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_tail_bolt_127",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_072",
+      "est_triangles": 865,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_004",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_door_nail_076",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_035",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_032",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_wattle_stakes",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_066",
+      "est_triangles": 346,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_030",
+      "est_triangles": 346,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_047",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_031",
+      "est_triangles": 865,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_118",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_021",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_046",
+      "est_triangles": 346,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_009",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_door_step",
+      "est_triangles": 1385,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_050",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_014",
+      "est_triangles": 346,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_016",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_073",
+      "est_triangles": 1558,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_075",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_119",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_057",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_063",
+      "est_triangles": 1212,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_plinth_chink_008",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_006",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_008",
+      "est_triangles": 692,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_056",
+      "est_triangles": 692,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_finial",
+      "est_triangles": 3289,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_005",
+      "est_triangles": 346,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_067",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_110",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_042",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_105",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_092",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_015",
+      "est_triangles": 865,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_door_nail_074",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_018",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_049",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_door_panel_backing",
+      "est_triangles": 692,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_tail_bolt_137",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_029",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_041",
+      "est_triangles": 346,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_024",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_058",
+      "est_triangles": 1038,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_048",
+      "est_triangles": 865,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_010",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_026",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_001",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_045",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_043",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_plinth_chink_009",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_corbel_059",
+      "est_triangles": 865,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_022",
+      "est_triangles": 346,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_peg_046",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_044",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_017",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_038",
+      "est_triangles": 519,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_037",
+      "est_triangles": 346,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_peg_041",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_034",
+      "est_triangles": 692,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_tail_bolt_139",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_023",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_plinth_chink_007",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_103",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4H_peg_049",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_094",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_083",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_040",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_baluster_036",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_079",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_104",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "V4M_rotor_bolt_121",
+      "est_triangles": 173,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

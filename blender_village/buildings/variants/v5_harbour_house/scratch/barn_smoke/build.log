@@ -1,0 +1,34 @@
+﻿[    0.2s] -- masonry_wall
+[    0.4s]   plinth visible mortar 20.3% -> 1.7% after 144 pinning stones
+[    0.4s]   BARN_plinth: stones 174 (hero 30, pins 23)
+[    0.8s]   BARN_plinth_stones: 18525 verts, 17179 faces
+[    0.8s]   BARN_plinth_quoins: 246 verts, 240 faces
+[    0.8s]   BARN_plinth_mortar: 356 verts, 264 faces
+[    0.8s]   BARN_plinth: mortar cells 264
+[    0.8s] -- path_timber_wall
+[    1.5s]   timber boat walls_2: head rule clamp: effective clear head 2.765 m (clear height 2.285 m)
+[    2.5s]   timber boat walls_3: head rule trim: effective clear head 2.680 m (clear height 2.200 m)
+[    3.1s]   BARN_walls_frame: 1216 verts, 1182 faces
+[    3.2s]   BARN_walls_boards: 19754 verts, 17763 faces
+[    3.2s]   BARN_walls_blocker: 540 verts, 540 faces
+[    3.4s]   BARN_walls_frames: 10080 verts, 9941 faces
+[    3.4s]   BARN_walls_ironwork: 2672 verts, 2548 faces
+[    3.4s]   BARN_walls_blockers: 32 verts, 20 faces
+[    3.4s]   BARN_walls: timber wall (post_plank), 4 runs, 4 openings
+[    3.4s] -- linear_roof
+[    3.5s]   BARN_roof_deck: 2860 verts, 2806 faces
+[    3.5s]   BARN_roof_rafters: 1680 verts, 1620 faces
+[    4.6s]   BARN_roof_covering: 79950 verts, 68912 faces
+[    4.6s]   BARN_roof: 588 shingle pieces
+[    4.7s]   BARN_roof_comb: 6200 verts, 5952 faces
+[    4.7s]   BARN_roof_verge: 400 verts, 402 faces
+[    4.7s]   BARN_roof: 4 verge boards
+[    4.7s]   BARN_roof_apex_cap_collar: 338 verts, 338 faces
+[    4.7s]   BARN_roof_apex_finial: 1442 verts, 1442 faces
+[    4.7s]   BARN_roof: apex finials on 2 gable(s), tips 7.65, 7.66
+[    4.8s] -- composite_hidden_cull
+[    4.9s]   visibility: 271452 tris, 231 viewpoints
+[   15.0s]   visibility cull BARN_plinth_stones: -1041 of 17179 polygons
+[   15.4s]   visibility cull BARN_plinth_quoins: -73 of 240 polygons
+[   18.4s]   visibility cull BARN_walls_frame: -538 of 1182 polygons
+[   71.2s]   visibility cull BARN_walls_boards: -9177 of 17763 polygons

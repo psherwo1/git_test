@@ -1,0 +1,284 @@
+﻿[    0.1s]   dormer: window sill raised 0.30 -> 0.49 m (clears the host thatch)
+[    0.1s]   dormer: front y +2.65 (host local), sill-beam foot 3.36, floor 3.54, plate 4.70, roof wall_z 4.80, ridge 5.57 (top ~6.05), cheeks back to y +0.72
+[    0.7s] -- set_entrance
+[    0.7s] -- turret_attrs
+[    0.7s] -- path_stone_wall
+[   50.0s]   walls visible mortar 19.0% -> 7.3% after 1033 pinning stones
+[   50.0s]   ALEH_walls: stones 2068 (hero 180, pins 215)
+[   56.0s]   ALEH_walls_stones: 139056 verts, 122218 faces
+[   56.1s]   ALEH_walls_quoins: 4100 verts, 4000 faces
+[   77.3s]   ALEH_walls_mortar: 6046 verts, 5331 faces
+[   77.3s]   ALEH_walls: mortar cells 5331
+[   77.4s]   ALEH_walls_frames: 4980 verts, 4881 faces
+[   77.4s]   ALEH_walls_dressed: 948 verts, 918 faces
+[   77.4s]   ALEH_walls_ironwork: 280 verts, 266 faces
+[   77.4s]   ALEH_walls_reveals: 56 verts, 28 faces
+[   77.4s]   ALEH_walls_blockers: 56 verts, 35 faces
+[   77.4s] -- round_stone_body
+[   77.4s]   ALEH_turret visible mortar 22.1% -> 4.1% after 68 pinning stones
+[   77.4s]   ALEH_turret stones 106
+[   77.6s]   ALEH_turret_stones: 8407 verts, 7522 faces
+[   77.6s]   ALEH_turret_mortar: 2966 verts, 2826 faces
+[   77.6s] -- turret_cap
+[   77.6s]   ALEH_turret_cap: 48 verts, 1 faces
+[   77.6s] -- daub_walls
+[   77.9s]   ALEH_hip_end_W_posts: 7800 verts, 7573 faces
+[   78.2s]   ALEH_hip_end_W_daub: 13772 verts, 13191 faces
+[   78.2s]   ALEH_hip_end_W_wattle_rods: 3795 verts, 3021 faces
+[   78.3s]   ALEH_hip_end_W_inner_blocker: 2371 verts, 2100 faces
+[   78.3s]   hip_end_W: 4 bays, 5 posts, 1/1 patches, 0 windows, rods 29
+[   78.3s]   ALEH_hip_end_W_sill: 3272 verts, 3270 faces
+[   78.5s]   ALEH_hip_end_E_s_posts: 4656 verts, 4523 faces
+[   78.6s]   ALEH_hip_end_E_s_daub: 6231 verts, 5880 faces
+[   78.6s]   ALEH_hip_end_E_s_wattle_rods: 3101 verts, 2462 faces
+[   78.6s]   ALEH_hip_end_E_s_inner_blocker: 1024 verts, 845 faces
+[   78.6s]   hip_end_E_s: 2 bays, 3 posts, 1/1 patches, 0 windows, rods 23
+[   78.6s]   ALEH_hip_end_E_s_sill: 1512 verts, 1510 faces
+[   78.8s]   ALEH_hip_end_E_n_posts: 4536 verts, 4419 faces
+[   78.8s]   ALEH_hip_end_E_n_daub: 4200 verts, 3984 faces
+[   78.8s]   ALEH_hip_end_E_n_inner_blocker: 1024 verts, 845 faces
+[   78.8s]   hip_end_E_n: 2 bays, 3 posts, 0/0 patches, 0 windows, rods 0
+[   78.9s]   ALEH_hip_end_E_n_sill: 1512 verts, 1510 faces
+[   79.0s]   ALEH_wing_west_n_posts: 3144 verts, 3050 faces
+[   79.0s]   ALEH_wing_west_n_daub: 5438 verts, 5185 faces
+[   79.1s]   ALEH_wing_west_n_inner_blocker: 4483 verts, 4238 faces
+[   79.1s]   wing_west_n: 1 bays, 2 posts, 0/0 patches, 1 windows, rods 0
+[   79.1s]   ALEH_wing_west_n_win_frames: 396 verts, 390 faces
+[   79.1s]   ALEH_wing_west_n_win_dressed: 124 verts, 120 faces
+[   79.1s]   ALEH_wing_west_n_win_reveals: 8 verts, 4 faces
+[   79.1s]   ALEH_wing_west_n_win_blockers: 8 verts, 5 faces
+[   79.1s]   ALEH_wing_west_n_sill: 1052 verts, 1050 faces
+[   79.2s]   ALEH_wing_west_s_posts: 3084 verts, 2998 faces
+[   79.2s]   ALEH_wing_west_s_daub: 3168 verts, 3045 faces
+[   79.3s]   ALEH_wing_west_s_inner_blocker: 801 verts, 704 faces
+[   79.3s]   wing_west_s: 1 bays, 2 posts, 0/0 patches, 0 windows, rods 0
+[   79.3s]   ALEH_wing_west_s_sill: 1132 verts, 1130 faces
+[   79.8s]   ALEH_wing_south_east_posts: 12456 verts, 12096 faces
+[   80.4s]   ALEH_wing_south_east_daub: 27519 verts, 26177 faces
+[   80.5s]   ALEH_wing_south_east_wattle_rods: 7163 verts, 5684 faces
+[   80.5s]   ALEH_wing_south_east_inner_blocker: 13846 verts, 12996 faces
+[   80.5s]   wing_south_east: 7 bays, 8 posts, 2/2 patches, 3 windows, rods 56
+[   80.6s]   ALEH_wing_south_east_win_frames: 1188 verts, 1170 faces
+[   80.6s]   ALEH_wing_south_east_win_dressed: 372 verts, 360 faces
+[   80.6s]   ALEH_wing_south_east_win_reveals: 24 verts, 12 faces
+[   80.6s]   ALEH_wing_south_east_win_blockers: 24 verts, 15 faces
+[   80.6s]   ALEH_wing_south_east_sill: 5844 verts, 5840 faces
+[   80.7s]   ALEH_turret_daub_posts: 9252 verts, 8994 faces
+[   81.6s]   ALEH_turret_daub_daub: 44951 verts, 43295 faces
+[   81.6s]   ALEH_turret_daub_wattle_rods: 6254 verts, 4951 faces
+[   81.9s]   ALEH_turret_daub_inner_blocker: 31278 verts, 29874 faces
+[   81.9s]   turret_daub: 6 bays, 6 posts, 2/2 patches, 4 windows, rods 50
+[   81.9s]   ALEH_turret_daub_win_frames: 1584 verts, 1560 faces
+[   81.9s]   ALEH_turret_daub_win_dressed: 496 verts, 480 faces
+[   81.9s]   ALEH_turret_daub_win_reveals: 32 verts, 16 faces
+[   81.9s]   ALEH_turret_daub_win_blockers: 32 verts, 20 faces
+[   81.9s] -- linear_roof
+[   82.0s]   ALEH_roof_deck: 4083 verts, 4078 faces
+[   82.1s]   ALEH_roof_rafters: 3091 verts, 2967 faces
+[   82.6s]   ALEH_roof_covering: 40216 verts, 35913 faces
+[   83.0s]   ALEH_roof_eave_roll: 15010 verts, 14401 faces
+[   83.0s]   ALEH_roof: 32 continuous thatch courses + eave rolls + verge faces + 2 eyebrow lip roll(s); round hips lo hi (centres -4.63 / +4.63, inset 1.37 m)
+[   83.0s]   ALEH_roof_ridge: 1670 verts, 1722 faces
+[   83.4s]   ALEH_roof_eyebrow0_frame: 394 verts, 393 faces
+[   83.4s]   ALEH_roof_eyebrow0_boards: 692 verts, 621 faces
+[   83.4s]   ALEH_roof_eyebrow0_blocker: 176 verts, 178 faces
+[   83.4s]   ALEH_roof_eyebrow0_frames: 528 verts, 532 faces
+[   83.4s]   ALEH_roof_eyebrow0_blockers: 8 verts, 5 faces
+[   83.4s]   ALEH_roof: eyebrow 0 at x -2.80 (side -1): front 1.65 m wide, sill 3.91, eave 4.82 (world z before recentre), lift 0.90 m over 2.20 m
+[   83.7s]   ALEH_roof_eyebrow1_frame: 394 verts, 393 faces
+[   83.7s]   ALEH_roof_eyebrow1_boards: 692 verts, 621 faces
+[   83.7s]   ALEH_roof_eyebrow1_blocker: 176 verts, 178 faces
+[   83.8s]   ALEH_roof_eyebrow1_frames: 528 verts, 532 faces
+[   83.8s]   ALEH_roof_eyebrow1_blockers: 8 verts, 5 faces
+[   83.8s]   ALEH_roof: eyebrow 1 at x 2.20 (side +1): front 1.65 m wide, sill 3.90, eave 4.80 (world z before recentre), lift 0.90 m over 2.20 m
+[   83.8s] -- linear_roof
+[   83.8s]   ALEH_wing_roof_deck: 648 verts, 613 faces
+[   83.8s]   wing_roof rafters: 3 tails skipped (they would run into another body)
+[   83.8s]   ALEH_wing_roof_rafters: 1353 verts, 1290 faces
+[   84.0s]   ALEH_wing_roof_covering: 13708 verts, 12165 faces
+[   84.2s]   ALEH_wing_roof_eave_roll: 5558 verts, 5226 faces
+[   84.2s]   ALEH_wing_roof: 22 continuous thatch courses + eave rolls + verge faces; round hips lo  (centres -7.81 / +0.00, inset 1.19 m)
+[   84.2s]   ALEH_wing_roof_ridge: 968 verts, 969 faces
+[   84.2s] -- roof_valley
+[  151.5s]   ALEH_wing_valley: 2030 verts, 2040 faces
+[  151.5s]   ALEH_wing_valley_soffit_0: 128 verts, 126 faces
+[  151.6s]   ALEH_wing_valley_soffit_0_roll: 1244 verts, 1265 faces
+[  151.6s]   wing_valley_soffit_0: corner roll r 0.25 at lip corner (+5.65, -3.45); straight eave rolls cut back (184 faces)
+[  151.6s]   ALEH_wing_valley_soffit_1: 128 verts, 126 faces
+[  151.6s]   ALEH_wing_valley_soffit_1_roll: 1244 verts, 1265 faces
+[  151.7s]   wing_valley_soffit_1: corner roll r 0.25 at lip corner (+0.35, -3.45); straight eave rolls cut back (173 faces)
+[  151.7s]   wing_valley: valley roll 161 stations, 8.12 m (z 3.17..5.45), wing y -2.40..+2.40; comb polygons dropped 0; ridge / comb closed at wing x -1.01 (1 parts); re-entrant corners closed (soffit fills, 531 rafter polygons dropped)
+[  151.7s] -- turret_abutment
+[  151.7s]   turret_abutment: trimmed at the wall face: deck 613->610, rafters 1242->1242, covering 12165->12165, eave_roll 5039->5039, ridge 969->969
+[  151.8s]   turret_abutment: run 0: 247 samples, azimuth 330.5..453.5 deg, z 2.97..3.43 (cone eave lip nan)
+[  151.8s]   ALEH_wing_roof_turret_abutment: 1889 verts, 1876 faces
+[  151.8s]   seal junction registered: wing_roof / round wall (covering ALEH_wing_roof_covering, ALEH_wing_roof_eave_roll, ALEH_wing_roof_ridge; z 2.61-3.73)
+[  151.8s] -- linear_roof
+[  151.8s]   ALEH_turret_roof_deck: 346 verts, 360 faces
+[  151.8s]   ALEH_turret_roof_rafters: 1008 verts, 972 faces
+[  151.9s]   ALEH_turret_roof_covering: 6002 verts, 5320 faces
+[  152.0s]   ALEH_turret_roof_eave_roll: 3766 verts, 3555 faces
+[  152.0s]   ALEH_turret_roof: 18 continuous thatch courses + eave rolls + verge faces; round hips lo hi (centres -0.41 / +0.41, inset 0.79 m)
+[  152.0s]   ALEH_turret_roof_ridge: 358 verts, 386 faces
+[  152.0s] -- gabled_dormer
+[  152.4s]   ALEH_dormer_walls_frame: 392 verts, 378 faces
+[  152.5s]   ALEH_dormer_walls_boards: 2168 verts, 1971 faces
+[  152.5s]   ALEH_dormer_walls_blocker: 116 verts, 116 faces
+[  152.5s]   ALEH_dormer_walls_frames: 472 verts, 478 faces
+[  152.5s]   ALEH_dormer_walls_blockers: 8 verts, 5 faces
+[  152.5s]   ALEH_dormer_walls: timber wall (board_batten), 3 runs, 1 openings
+[  152.5s]   ALEH_dormer_roof_deck: 561 verts, 513 faces
+[  152.5s]   ALEH_dormer_roof_rafters: 215 verts, 198 faces
+[  152.5s]   ALEH_dormer_roof_covering: 1154 verts, 1010 faces
+[  152.6s]   ALEH_dormer_roof_eave_roll: 1765 verts, 1668 faces
+[  152.6s]   ALEH_dormer_roof: 8 continuous thatch courses + eave rolls + verge faces
+[  152.6s]   ALEH_dormer_roof_ridge: 350 verts, 325 faces
+[  152.7s]   ALEH_dormer_roof_comb: 1955 verts, 1831 faces
+[  152.7s]   ALEH_dormer_roof_apex_cap_collar: 169 verts, 169 faces
+[  152.7s]   ALEH_dormer_roof_apex_finial: 721 verts, 721 faces
+[  152.7s]   ALEH_dormer_roof: apex finials on 1 gable(s), tips 6.97
+[  158.8s]   ALEH_dormer_valley: 782 verts, 792 faces
+[  158.8s]   dormer_valley: valley roll 57 stations, 3.28 m (z 4.94..5.88), wing y -0.83..+0.83; comb polygons dropped 535; ridge / comb closed at wing x +1.07 (2 parts)
+[  158.9s]   ALEH_dormer_foot_roll: 1010 verts, 1020 faces
+[  158.9s]   dormer: foot roll 76 stations, 2.99 m
+[  158.9s] -- porch
+[  158.9s]   ALEH_porch_deck: 216 verts, 206 faces
+[  158.9s]   porch rafters: 6 tails skipped (they would run into another body)
+[  158.9s]   ALEH_porch_rafters: 80 verts, 66 faces
+[  158.9s]   ALEH_porch_covering: 2640 verts, 2305 faces
+[  158.9s]   ALEH_porch: 54 shingle pieces
+[  158.9s]   ALEH_porch_verge: 64 verts, 58 faces
+[  158.9s]   ALEH_porch: 4 verge boards
+[  158.9s]   ALEH_porch: trimmed at the wall face: deck 206->188, rafters 66->66, covering 2305->2305, verge 58->58
+[  159.0s]   ALEH_porch_framing: 248 verts, 236 faces
+[  159.0s]   ALEH_porch: ledger, 3 common rafters, plate at 0.95 m out
+[  159.0s]   ALEH_porch_flashing: 650 verts, 637 faces
+[  159.0s]   ALEH_porch: flaunching 70 stations, roof at the face z 3.12..3.15, crease 3.21
+[  159.0s]   ALEH_porch: under the host eave: margin at the face 0.402 m (crease), at the host lip line 0.675 m (covering)
+[  159.0s]   ALEH_porch: host eave roll belly over the add-on: smallest gap 0.660 m at (0.423, -6.869, 3.014) (rule >= 0.25 m)
+[  159.0s]   ALEH_porch: host eave roll, lateral (nearest from the same vertices): 0.410 m at (0.522, -4.7, 3.048) (rule >= 0.25 m)
+[  159.0s]   seal junction registered: porch / wall (covering ALEH_porch_covering, ALEH_porch_verge, ALEH_porch_eave_roll; z 2.82-3.45)
+[  159.0s]   ALEH_porch_beam: 80 verts, 74 faces
+[  159.0s]   ALEH_porch_arm0_frame: 224 verts, 216 faces
+[  159.0s]   ALEH_porch_arm0: hoist beam 1.07 m out at z 2.39
+[  159.0s]   ALEH_porch_arm1_frame: 224 verts, 216 faces
+[  159.0s]   ALEH_porch_arm1: hoist beam 1.07 m out at z 2.39
+[  159.0s]   ALEH_porch: porch 1.80 m between brackets, front beam underside 2.32 m, arm undersides 2.19 m, deck at the wall 3.04 m
+[  159.0s] -- chimney
+[  159.4s]   ALEH_chimney_base visible mortar 16.9% -> 8.7% after 157 pinning stones
+[  159.4s]   ALEH_chimney_base stones 243
+[  159.5s]   ALEH_chimney_base_stones: 14955 verts, 12845 faces
+[  159.6s]   ALEH_chimney_base_mortar: 1910 verts, 1810 faces
+[  160.3s]   ALEH_chimney visible mortar 17.2% -> 9.1% after 248 pinning stones
+[  160.3s]   ALEH_chimney stones 318
+[  160.4s]   ALEH_chimney_stones: 13362 verts, 10556 faces
+[  160.5s]   ALEH_chimney_mortar: 1593 verts, 1464 faces
+[  160.5s]   ALEH_chimney_weathering: 320 verts, 320 faces
+[  160.5s]   chimney: broad base r 1.05.. head 0.87 to z 3.00, weathered offset to the stack (r 0.64)
+[  160.6s]   chimney_abutment: trimmed at the wall face: deck 4078->4073, rafters 2484->2484, covering 35913->35342, eave_roll 14231->14231, ridge 1722->1722
+[  160.9s]   ring trace: 240 / 240 azimuths hit the roof top, z 4.58..6.03
+[  160.9s]   chimney_abutment: ring flaunching round the stack, 253 samples, z 4.58..6.03
+[  160.9s]   ALEH_roof_chimney_abutment: 1768 verts, 1766 faces
+[  160.9s]   seal junction registered: roof / stack ring (covering ALEH_roof_covering, ALEH_roof_eave_roll, ALEH_roof_ridge; z 4.28-6.33)
+[  160.9s]   ALEH_chimney_cap: 320 verts, 320 faces
+[  160.9s]   ALEH_chimney_flue_blocker: 49 verts, 48 faces
+[  160.9s]   ALEH_chimney_crown: 252 verts, 226 faces
+[  160.9s]   chimney: round stack r 0.72 -> 0.53 m (batter 1.5 deg), head 7.23, cap 7.38, crown pot to 7.84
+[  160.9s] -- orient_open_islands
+[  161.5s]   orient_open_islands ALEH_walls_stones: 3 inverted island(s) flipped, 537 single face(s)
+[  161.5s]   orient_open_islands ALEH_turret_stones: 2 inverted island(s) flipped, 63 single face(s)
+[  161.5s]   orient_open_islands ALEH_chimney_base_stones: 0 inverted island(s) flipped, 107 single face(s)
+[  161.6s]   orient_open_islands ALEH_chimney_stones: 1 inverted island(s) flipped, 187 single face(s)
+[  161.6s] -- orient_closed_slabs
+[  161.6s]   orient_closed_slabs ALEH_roof_deck: 23 inward face(s) flipped
+[  161.6s]   orient_closed_slabs ALEH_wing_roof_deck: 1 inward face(s) flipped
+[  161.6s]   orient_closed_slabs ALEH_turret_roof_deck: 0 inward face(s) flipped
+[  161.6s]   orient_closed_slabs ALEH_dormer_roof_deck: 0 inward face(s) flipped
+[  161.6s]   orient_closed_slabs ALEH_porch_deck: 0 inward face(s) flipped
+[  161.6s] -- recenter
+[  161.6s] recentred by (+0.001, +3.793); plan bbox 16.69 x 15.04 m, height 7.82 m
+[  161.6s] -- guards
+[  162.3s]   clearance gate ALEH walls_6: door head 2.09 m, eave lip over it 2.711 m at (0.051, -1.507) on ALEH_porch_framing (rule >= 2.30 m, 25 stations): PASS
+[  164.1s]   seal probe [see-through] wing_roof / round wall: 5771 points, 38832 rays, 33 grazing pass(es), 0 leak(s)
+[  165.0s]   seal probe [see-through] porch / wall: 4264 points, 30228 rays, 22 grazing pass(es), 0 leak(s)
+[  166.6s]   seal probe [see-through] roof / stack ring: 11509 points, 74036 rays, 1737 grazing pass(es), 0 leak(s)
+[  166.6s]   seal probe: 143096 rays on 3 junction(s) in 4.3 s
+[  167.6s] composite decals: 130 anchors before the gate
+[  168.4s] timber anchors: 4
+[  169.3s]   chimney decals: 5 anchors
+[  170.2s] decal anchor check (applied): checked 139, snapped 1, max_move 0.015, renormal 14, shrunk 17, no_surface 4, wrong_surface 6, excluded 20, occluded 3, footprint 34, duplicate 1, kept 71
+[  170.2s]     DA_damp_rise_001: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_damp_rise_002: footprint off the surface (n.n0 1.00) ['ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls']
+[  170.2s]     DA_moss_001: footprint off the surface (n.n0 1.00) ['-', 'ALEH_walls', 'ALEH_walls', '-', 'ALEH_walls', '-', 'ALEH_walls', 'ALEH_walls', '-']
+[  170.2s]     DA_moss_002: footprint off the surface (n.n0 1.00) ['ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls']
+[  170.2s]     DA_moss_003: footprint off the surface (n.n0 1.00) ['ALEH_walls', 'ALEH_walls', '-', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', '-', '-', '-']
+[  170.2s]     DA_damp_rise_003: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_damp_rise_004: footprint off the surface (n.n0 1.00) ['ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls']
+[  170.2s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls']
+[  170.2s]     DA_damp_rise_006: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_damp_rise_007: footprint off the surface (n.n0 1.00) ['-', 'ALEH_walls', 'ALEH_walls', '-', 'ALEH_walls', 'ALEH_walls', 'ALEH_turre', 'ALEH_turre', 'ALEH_walls']
+[  170.2s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['-', 'ALEH_walls', '-', '-', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls']
+[  170.2s]     DA_damp_rise_009: footprint off the surface (n.n0 1.00) ['ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', '-', '-', '-']
+[  170.2s]     DA_damp_rise_010: footprint off the surface (n.n0 1.00) ['ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls']
+[  170.2s]     DA_lichen_001: footprint off the surface (n.n0 1.00) ['-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-']
+[  170.2s]     DA_repair_patch_004: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_wing_']
+[  170.2s]     DA_damp_rise_011: footprint off the surface (n.n0 1.00) ['ALEH_turre', '-', '-', 'ALEH_turre', 'ALEH_turre', 'ALEH_turre', 'ALEH_turre', 'ALEH_turre', '-']
+[  170.2s]     DA_moss_004: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'ALEH_turre', 'ALEH_turre', 'ALEH_turre', 'ALEH_turre', 'ALEH_turre', '-']
+[  170.2s]     DA_moss_005: buried: occluded within 15 cm
+[  170.2s]     DA_lichen_004: footprint off the surface (n.n0 1.00) ['ALEH_walls', '-', '-', 'ALEH_turre', 'ALEH_walls', 'ALEH_turre', '-', '-', '-']
+[  170.2s]     DA_water_streak_001: on backing mesh ALEH_turret_mortar
+[  170.2s]     DA_water_streak_002: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_damp_rise_012: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'ALEH_chimn', 'ALEH_chimn', '-', '-', '-', '-']
+[  170.2s]     DA_damp_rise_013: footprint off the surface (n.n0 1.00) ['ALEH_chimn', 'ALEH_chimn', '-', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', '-', '-', '-']
+[  170.2s]     DA_damp_rise_014: on backing mesh ALEH_chimney_base_mortar
+[  170.2s]     DA_damp_rise_017: on backing mesh ALEH_chimney_base_mortar
+[  170.2s]     DA_damp_rise_018: on backing mesh ALEH_chimney_base_mortar
+[  170.2s]     DA_damp_rise_019: footprint off the surface (n.n0 1.00) ['ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn']
+[  170.2s]     DA_damp_rise_020: footprint off the surface (n.n0 0.75) ['-', '-', '-', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', '-', 'ALEH_chimn', 'ALEH_chimn']
+[  170.2s]     DA_lichen_005: on backing mesh ALEH_chimney_base_mortar
+[  170.2s]     DA_lichen_006: footprint off the surface (n.n0 1.00) ['ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls']
+[  170.2s]     DA_water_streak_004: no surface within 6 cm
+[  170.2s]     DA_water_streak_005: hit M_stone (ALEH_chimney_base_stones), declared M_mortar
+[  170.2s]     DA_repair_patch_007: on backing mesh ALEH_chimney_mortar
+[  170.2s]     DA_lichen_008: on backing mesh ALEH_chimney_mortar
+[  170.2s]     DA_water_streak_006: no surface within 6 cm
+[  170.2s]     DA_water_streak_007: no surface within 6 cm
+[  170.2s]     DA_water_streak_008: on backing mesh ALEH_chimney_mortar
+[  170.2s]     DA_water_streak_009: hit M_stone (ALEH_chimney_stones), declared M_mortar
+[  170.2s]     DA_water_streak_010: hit M_stone (ALEH_chimney_stones), declared M_mortar
+[  170.2s]     DA_water_streak_011: footprint off the surface (n.n0 1.00) ['ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn']
+[  170.2s]     DA_soot_001: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_water_streak_012: no surface within 6 cm
+[  170.2s]     DA_soot_002: footprint off the surface (n.n0 1.00) ['-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-']
+[  170.2s]     DA_water_streak_013: footprint off the surface (n.n0 1.00) ['ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls', 'ALEH_walls']
+[  170.2s]     DA_soot_003: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_water_streak_014: hit M_stone (ALEH_walls_stones), declared M_mortar
+[  170.2s]     DA_soot_004: footprint off the surface (n.n0 1.00) ['-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-']
+[  170.2s]     DA_water_streak_015: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_soot_005: footprint off the surface (n.n0 1.00) ['-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-']
+[  170.2s]     DA_crack_013: footprint off the surface (n.n0 1.00) ['ALEH_walls', 'ALEH_walls', '-', '-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-']
+[  170.2s]     DA_water_streak_016: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_soot_006: footprint off the surface (n.n0 1.00) ['ALEH_walls', 'ALEH_walls', '-', 'ALEH_walls', 'ALEH_walls', '-', 'ALEH_walls', 'ALEH_walls', '-']
+[  170.2s]     DA_water_streak_017: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_crack_018: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_rust_stain_001: footprint off the surface (n.n0 1.00) ['-', 'ALEH_walls', 'ALEH_walls', '-', 'ALEH_walls', 'ALEH_walls', '-', 'ALEH_walls', 'ALEH_walls']
+[  170.2s]     DA_grime_002: footprint off the surface (n.n0 1.00) ['-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-', '-', 'ALEH_walls', '-']
+[  170.2s]     DA_lichen_009: on backing mesh ALEH_walls_mortar
+[  170.2s]     DA_crack_021: on backing mesh ALEH_wing_south_east_win_reveals
+[  170.2s]     DA_water_streak_018: hit M_stone_dressed (ALEH_walls_quoins), declared M_stone
+[  170.2s]     DA_lichen_016: hit M_daub (ALEH_turret_daub_daub), declared M_mortar
+[  170.2s]     DA_moss_020: buried: occluded within 15 cm
+[  170.2s]     DA_moss_032: buried: occluded within 15 cm
+[  170.2s]     DA_moss_034: within 0.30 m of another moss
+[  170.2s]     DA_repair_patch_008: footprint off the surface (n.n0 1.00) ['ALEH_dorme', 'ALEH_dorme', 'ALEH_dorme', 'ALEH_dorme', 'ALEH_dorme', 'ALEH_dorme', 'ALEH_dorme', 'ALEH_dorme', 'ALEH_dorme']
+[  170.2s]     DA_soot_009: footprint off the surface (n.n0 1.00) ['ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', '-', 'ALEH_chimn', 'ALEH_chimn']
+[  170.2s]     DA_soot_010: footprint off the surface (n.n0 1.00) ['ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', '-', 'ALEH_chimn', 'ALEH_chimn', '-', '-', 'ALEH_chimn']
+[  170.2s]     DA_soot_011: footprint off the surface (n.n0 1.00) ['ALEH_chimn', 'ALEH_chimn', '-', 'ALEH_chimn', 'ALEH_chimn', '-', 'ALEH_chimn', 'ALEH_chimn', '-']
+[  170.2s]     DA_soot_012: footprint off the surface (n.n0 1.00) ['ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', 'ALEH_chimn', '-', '-', '-']
+[  170.2s] decal anchors: 71
+[  171.3s] uv grain (kit 1.10.0): 118 meshes, 458 timber / shingle pieces (44 round, 31 sloped sheets), 88654 grain faces re-projected, 1230 collapsed faces repaired
+[  171.7s]   walked tops (Mask B <= 0.04): walls_6 -> ALEH_walls_dressed: 9 faces
+[  171.7s]   walked tops (Mask B <= 0.04): walls_6 -> ALEH_walls_ironwork: 35 faces
+[  171.7s] objects 118 (instances 0, pooled meshes 0) triangles 1038301
+Info: Saved as "preview_r2.blend"
+[  171.8s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v9_ale_house\scratch\preview_r2.blend 23.7 MB

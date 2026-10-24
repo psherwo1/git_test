@@ -1,0 +1,4591 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\3_uvfix\\hilltop_keep\\hilltop_keep.blend",
+ "entrances": [
+  {
+   "name": "door",
+   "origin": [
+    0.35,
+    -3.99,
+    0.0
+   ],
+   "out": [
+    -0.0,
+    -1.0,
+    0.0
+   ],
+   "width": 1.05,
+   "head": 2.295
+  },
+  {
+   "name": "annex_door",
+   "origin": [
+    -5.05,
+    0.4,
+    0.0
+   ],
+   "out": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "width": 1.0,
+   "head": 2.2
+  }
+ ],
+ "grain": {
+  "M_timber": {
+   "area": 300.411,
+   "along_pct": 92.0,
+   "across_pct": 1.4,
+   "judged_area": 282.343,
+   "sheet_area": 18.053,
+   "along_of_judged_pct": 97.9,
+   "piece_along_pct": 92.0,
+   "piece_across_pct": 1.4,
+   "roofarea": 47.235,
+   "upslope_pct": 36.8,
+   "downslope_pct": 3.3,
+   "m_per_uv_median": 1.0
+  },
+  "M_roof_shingle": {
+   "area": 149.577,
+   "along_pct": 16.2,
+   "across_pct": 51.3,
+   "judged_area": 111.461,
+   "sheet_area": 38.116,
+   "along_of_judged_pct": 21.8,
+   "piece_along_pct": 16.2,
+   "piece_across_pct": 51.3,
+   "roofarea": 112.008,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.1,
+   "m_per_uv_median": 0.72
+  },
+  "M_timber_weathered": {
+   "area": 29.245,
+   "along_pct": 83.2,
+   "across_pct": 0.5,
+   "judged_area": 24.599,
+   "sheet_area": 4.642,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 83.2,
+   "piece_across_pct": 0.5,
+   "roofarea": 1.767,
+   "upslope_pct": 29.5,
+   "downslope_pct": 2.9,
+   "m_per_uv_median": 1.0
+  },
+  "M_roof_shake": {
+   "area": 98.744,
+   "along_pct": 62.8,
+   "across_pct": 0.4,
+   "judged_area": 63.303,
+   "sheet_area": 35.441,
+   "along_of_judged_pct": 97.9,
+   "piece_along_pct": 62.8,
+   "piece_across_pct": 0.4,
+   "roofarea": 80.032,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.99
+  },
+  "M_thatch": {
+   "area": 188.377,
+   "along_pct": 6.0,
+   "across_pct": 91.3,
+   "judged_area": 188.377,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 6.0,
+   "piece_along_pct": 6.0,
+   "piece_across_pct": 91.3,
+   "roofarea": 123.375,
+   "upslope_pct": 96.3,
+   "downslope_pct": 2.0,
+   "m_per_uv_median": 1.051
+  }
+ },
+ "grain_by_object": {
+  "KEEP_cap_deck|M_timber": {
+   "area": 17.677,
+   "along_pct": 99.7,
+   "across_pct": 0.0,
+   "judged_area": 17.677,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.7,
+   "piece_along_pct": 99.7,
+   "piece_across_pct": 0.0,
+   "roofarea": 8.804,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_cap_hips|M_roof_shingle": {
+   "area": 7.849,
+   "along_pct": 77.3,
+   "across_pct": 0.9,
+   "judged_area": 7.724,
+   "sheet_area": 0.124,
+   "along_of_judged_pct": 78.6,
+   "piece_along_pct": 77.3,
+   "piece_across_pct": 0.9,
+   "roofarea": 4.587,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.734
+  },
+  "KEEP_cap_shingles|M_roof_shingle": {
+   "area": 28.572,
+   "along_pct": 16.0,
+   "across_pct": 17.9,
+   "judged_area": 11.101,
+   "sheet_area": 17.471,
+   "along_of_judged_pct": 41.1,
+   "piece_along_pct": 16.0,
+   "piece_across_pct": 17.9,
+   "roofarea": 19.549,
+   "upslope_pct": 99.7,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 0.893
+  },
+  "KEEP_cap_structure|M_timber": {
+   "area": 29.061,
+   "along_pct": 96.7,
+   "across_pct": 2.7,
+   "judged_area": 29.061,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.7,
+   "piece_along_pct": 96.7,
+   "piece_across_pct": 2.7,
+   "roofarea": 1.658,
+   "upslope_pct": 19.3,
+   "downslope_pct": 13.2,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_door_leaf|M_timber": {
+   "area": 2.644,
+   "along_pct": 99.2,
+   "across_pct": 0.3,
+   "judged_area": 2.644,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.2,
+   "piece_along_pct": 99.2,
+   "piece_across_pct": 0.3,
+   "roofarea": 0.028,
+   "upslope_pct": 70.7,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_hall_eave_plate|M_timber": {
+   "area": 19.561,
+   "along_pct": 90.5,
+   "across_pct": 1.0,
+   "judged_area": 18.303,
+   "sheet_area": 1.258,
+   "along_of_judged_pct": 96.7,
+   "piece_along_pct": 90.5,
+   "piece_across_pct": 1.0,
+   "roofarea": 2.027,
+   "upslope_pct": 2.3,
+   "downslope_pct": 1.3,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_hall_knee_braces|M_timber": {
+   "area": 4.3,
+   "along_pct": 93.3,
+   "across_pct": 4.6,
+   "judged_area": 4.3,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 93.3,
+   "piece_along_pct": 93.3,
+   "piece_across_pct": 4.6,
+   "roofarea": 0.669,
+   "upslope_pct": 92.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.007
+  },
+  "KEEP_hall_posts|M_timber": {
+   "area": 13.548,
+   "along_pct": 99.1,
+   "across_pct": 0.6,
+   "judged_area": 13.548,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.1,
+   "piece_along_pct": 99.1,
+   "piece_across_pct": 0.6,
+   "roofarea": 0.225,
+   "upslope_pct": 74.1,
+   "downslope_pct": 2.7,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_hall_window_frames|M_timber": {
+   "area": 2.528,
+   "along_pct": 98.9,
+   "across_pct": 0.1,
+   "judged_area": 2.528,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 0.1,
+   "roofarea": 0.111,
+   "upslope_pct": 11.7,
+   "downslope_pct": 5.4,
+   "m_per_uv_median": 1.001
+  },
+  "KEEP_lantern_boards|M_timber": {
+   "area": 1.873,
+   "along_pct": 2.1,
+   "across_pct": 0.0,
+   "judged_area": 0.041,
+   "sheet_area": 1.832,
+   "along_of_judged_pct": 97.8,
+   "piece_along_pct": 2.1,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.036,
+   "upslope_pct": 15.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.002
+  },
+  "KEEP_lantern_boards|M_timber_weathered": {
+   "area": 13.69,
+   "along_pct": 91.4,
+   "across_pct": 0.4,
+   "judged_area": 12.618,
+   "sheet_area": 1.068,
+   "along_of_judged_pct": 99.1,
+   "piece_along_pct": 91.4,
+   "piece_across_pct": 0.4,
+   "roofarea": 0.323,
+   "upslope_pct": 81.1,
+   "downslope_pct": 1.1,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_lantern_frame|M_timber": {
+   "area": 22.208,
+   "along_pct": 49.2,
+   "across_pct": 0.1,
+   "judged_area": 10.992,
+   "sheet_area": 11.2,
+   "along_of_judged_pct": 99.4,
+   "piece_along_pct": 49.2,
+   "piece_across_pct": 0.1,
+   "roofarea": 0.758,
+   "upslope_pct": 5.5,
+   "downslope_pct": 2.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_001|M_timber": {
+   "area": 0.004,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_002|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_003|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_004|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_005|M_timber": {
+   "area": 0.004,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_006|M_timber": {
+   "area": 0.004,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_007|M_timber": {
+   "area": 0.004,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_008|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_009|M_timber": {
+   "area": 0.004,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_010|M_timber": {
+   "area": 0.004,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_011|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_012|M_timber": {
+   "area": 0.004,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_013|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_014|M_timber": {
+   "area": 0.004,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_015|M_timber": {
+   "area": 0.004,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_016|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_017|M_timber": {
+   "area": 0.004,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_018|M_timber": {
+   "area": 0.004,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_019|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_020|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_021|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_022|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_023|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_024|M_timber": {
+   "area": 0.004,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_025|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.0,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_026|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 51.1,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_027|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.0,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_028|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 49.4,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_029|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.0,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_030|M_timber": {
+   "area": 0.004,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 6.3,
+   "downslope_pct": 42.9,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_031|M_timber": {
+   "area": 0.004,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.0,
+   "upslope_pct": 0.0,
+   "downslope_pct": 100.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_032|M_timber": {
+   "area": 0.004,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_033|M_timber": {
+   "area": 0.004,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.002,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_034|M_timber": {
+   "area": 0.004,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.002,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_035|M_timber": {
+   "area": 0.004,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_036|M_timber": {
+   "area": 0.004,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_037|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_038|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_086|M_timber": {
+   "area": 0.002,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.001,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_087|M_timber": {
+   "area": 0.002,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_088|M_timber": {
+   "area": 0.002,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_089|M_timber": {
+   "area": 0.002,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_090|M_timber": {
+   "area": 0.002,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.001,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_091|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_092|M_timber": {
+   "area": 0.002,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_093|M_timber": {
+   "area": 0.002,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.001,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_094|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_095|M_timber": {
+   "area": 0.002,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_096|M_timber": {
+   "area": 0.002,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.001,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_097|M_timber": {
+   "area": 0.002,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.001,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_098|M_timber": {
+   "area": 0.003,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_099|M_timber": {
+   "area": 0.003,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_100|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_101|M_timber": {
+   "area": 0.003,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_102|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_103|M_timber": {
+   "area": 0.003,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_104|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_105|M_timber": {
+   "area": 0.003,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_106|M_timber": {
+   "area": 0.004,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_107|M_timber": {
+   "area": 0.004,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.004,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_peg_126|M_timber": {
+   "area": 0.002,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.643
+  },
+  "KEEP_peg_127|M_timber": {
+   "area": 0.002,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.643
+  },
+  "KEEP_peg_128|M_timber": {
+   "area": 0.002,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.643
+  },
+  "KEEP_peg_129|M_timber": {
+   "area": 0.002,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.643
+  },
+  "KEEP_peg_216|M_timber": {
+   "area": 0.006,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.006,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 6.3,
+   "downslope_pct": 42.9,
+   "m_per_uv_median": 1.143
+  },
+  "KEEP_peg_217|M_timber": {
+   "area": 0.006,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.006,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 47.7,
+   "downslope_pct": 45.5,
+   "m_per_uv_median": 1.143
+  },
+  "KEEP_peg_218|M_timber": {
+   "area": 0.006,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.006,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 49.4,
+   "m_per_uv_median": 1.143
+  },
+  "KEEP_peg_219|M_timber": {
+   "area": 0.006,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.006,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 47.7,
+   "downslope_pct": 45.5,
+   "m_per_uv_median": 1.143
+  },
+  "KEEP_peg_220|M_timber": {
+   "area": 0.006,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.006,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 47.7,
+   "downslope_pct": 45.5,
+   "m_per_uv_median": 1.143
+  },
+  "KEEP_peg_221|M_timber": {
+   "area": 0.006,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.006,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 49.4,
+   "m_per_uv_median": 1.143
+  },
+  "KEEP_peg_222|M_timber": {
+   "area": 0.006,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.006,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.001,
+   "upslope_pct": 40.4,
+   "downslope_pct": 43.7,
+   "m_per_uv_median": 1.143
+  },
+  "KEEP_peg_223|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_224|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_225|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_226|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_227|M_timber": {
+   "area": 0.002,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_228|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_229|M_timber": {
+   "area": 0.002,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_230|M_timber": {
+   "area": 0.002,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_231|M_timber": {
+   "area": 0.002,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.001,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_232|M_timber": {
+   "area": 0.002,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_233|M_timber": {
+   "area": 0.002,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_234|M_timber": {
+   "area": 0.002,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_235|M_timber": {
+   "area": 0.002,
+   "along_pct": 86.8,
+   "across_pct": 12.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.8,
+   "piece_along_pct": 86.8,
+   "piece_across_pct": 12.1,
+   "roofarea": 0.001,
+   "upslope_pct": 11.5,
+   "downslope_pct": 7.6,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_236|M_timber": {
+   "area": 0.002,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.001,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_237|M_timber": {
+   "area": 0.002,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_238|M_timber": {
+   "area": 0.002,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.002,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.714
+  },
+  "KEEP_peg_239|M_timber": {
+   "area": 0.003,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_240|M_timber": {
+   "area": 0.003,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_241|M_timber": {
+   "area": 0.003,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_242|M_timber": {
+   "area": 0.003,
+   "along_pct": 86.3,
+   "across_pct": 11.4,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 86.3,
+   "piece_along_pct": 86.3,
+   "piece_across_pct": 11.4,
+   "roofarea": 0.001,
+   "upslope_pct": 3.7,
+   "downslope_pct": 11.1,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_243|M_timber": {
+   "area": 0.003,
+   "along_pct": 97.4,
+   "across_pct": 0.0,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.4,
+   "piece_along_pct": 97.4,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.001,
+   "upslope_pct": 11.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_244|M_timber": {
+   "area": 0.003,
+   "along_pct": 85.2,
+   "across_pct": 1.2,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 85.2,
+   "piece_along_pct": 85.2,
+   "piece_across_pct": 1.2,
+   "roofarea": 0.001,
+   "upslope_pct": 9.1,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_245|M_timber": {
+   "area": 0.003,
+   "along_pct": 98.9,
+   "across_pct": 1.1,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 98.9,
+   "piece_across_pct": 1.1,
+   "roofarea": 0.001,
+   "upslope_pct": 4.7,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_peg_246|M_timber": {
+   "area": 0.003,
+   "along_pct": 87.1,
+   "across_pct": 11.8,
+   "judged_area": 0.003,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 87.1,
+   "piece_along_pct": 87.1,
+   "piece_across_pct": 11.8,
+   "roofarea": 0.001,
+   "upslope_pct": 0.0,
+   "downslope_pct": 7.8,
+   "m_per_uv_median": 0.786
+  },
+  "KEEP_ridge_comb_shake_130|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_131|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_132|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.017,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_133|M_roof_shake": {
+   "area": 0.06,
+   "along_pct": 94.9,
+   "across_pct": 3.5,
+   "judged_area": 0.06,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.9,
+   "piece_along_pct": 94.9,
+   "piece_across_pct": 3.5,
+   "roofarea": 0.022,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.957
+  },
+  "KEEP_ridge_comb_shake_134|M_roof_shake": {
+   "area": 0.095,
+   "along_pct": 96.0,
+   "across_pct": 0.8,
+   "judged_area": 0.095,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.0,
+   "piece_along_pct": 96.0,
+   "piece_across_pct": 0.8,
+   "roofarea": 0.044,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.973
+  },
+  "KEEP_ridge_comb_shake_135|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 98.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_136|M_roof_shake": {
+   "area": 0.06,
+   "along_pct": 94.9,
+   "across_pct": 3.5,
+   "judged_area": 0.06,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.9,
+   "piece_along_pct": 94.9,
+   "piece_across_pct": 3.5,
+   "roofarea": 0.022,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.957
+  },
+  "KEEP_ridge_comb_shake_137|M_roof_shake": {
+   "area": 0.091,
+   "along_pct": 96.8,
+   "across_pct": 1.8,
+   "judged_area": 0.091,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.8,
+   "piece_along_pct": 96.8,
+   "piece_across_pct": 1.8,
+   "roofarea": 0.038,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.984
+  },
+  "KEEP_ridge_comb_shake_138|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_139|M_roof_shake": {
+   "area": 0.06,
+   "along_pct": 94.9,
+   "across_pct": 3.5,
+   "judged_area": 0.06,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.9,
+   "piece_along_pct": 94.9,
+   "piece_across_pct": 3.5,
+   "roofarea": 0.021,
+   "upslope_pct": 99.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.957
+  },
+  "KEEP_ridge_comb_shake_140|M_roof_shake": {
+   "area": 0.096,
+   "along_pct": 97.2,
+   "across_pct": 1.9,
+   "judged_area": 0.096,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 1.9,
+   "roofarea": 0.035,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.985
+  },
+  "KEEP_ridge_comb_shake_141|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_142|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.7,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_143|M_roof_shake": {
+   "area": 0.095,
+   "along_pct": 96.0,
+   "across_pct": 0.8,
+   "judged_area": 0.095,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.0,
+   "piece_along_pct": 96.0,
+   "piece_across_pct": 0.8,
+   "roofarea": 0.033,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.973
+  },
+  "KEEP_ridge_comb_shake_144|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 99.5,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_145|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.017,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_146|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.2,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_147|M_roof_shake": {
+   "area": 0.056,
+   "along_pct": 92.8,
+   "across_pct": 4.0,
+   "judged_area": 0.056,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 92.8,
+   "piece_along_pct": 92.8,
+   "piece_across_pct": 4.0,
+   "roofarea": 0.02,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.943
+  },
+  "KEEP_ridge_comb_shake_148|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 98.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_149|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.2,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_150|M_roof_shake": {
+   "area": 0.056,
+   "along_pct": 92.8,
+   "across_pct": 4.0,
+   "judged_area": 0.056,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 92.8,
+   "piece_along_pct": 92.8,
+   "piece_across_pct": 4.0,
+   "roofarea": 0.02,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.943
+  },
+  "KEEP_ridge_comb_shake_151|M_roof_shake": {
+   "area": 0.095,
+   "along_pct": 96.0,
+   "across_pct": 0.8,
+   "judged_area": 0.095,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.0,
+   "piece_along_pct": 96.0,
+   "piece_across_pct": 0.8,
+   "roofarea": 0.045,
+   "upslope_pct": 99.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.973
+  },
+  "KEEP_ridge_comb_shake_152|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.7,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_153|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.023,
+   "upslope_pct": 99.2,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_154|M_roof_shake": {
+   "area": 0.056,
+   "along_pct": 92.8,
+   "across_pct": 4.0,
+   "judged_area": 0.056,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 92.8,
+   "piece_along_pct": 92.8,
+   "piece_across_pct": 4.0,
+   "roofarea": 0.019,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.943
+  },
+  "KEEP_ridge_comb_shake_155|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_156|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.017,
+   "upslope_pct": 99.7,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_157|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.019,
+   "upslope_pct": 99.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_158|M_roof_shake": {
+   "area": 0.056,
+   "along_pct": 92.8,
+   "across_pct": 4.0,
+   "judged_area": 0.056,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 92.8,
+   "piece_along_pct": 92.8,
+   "piece_across_pct": 4.0,
+   "roofarea": 0.019,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.943
+  },
+  "KEEP_ridge_comb_shake_159|M_roof_shake": {
+   "area": 0.066,
+   "along_pct": 95.6,
+   "across_pct": 3.4,
+   "judged_area": 0.066,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 95.6,
+   "piece_along_pct": 95.6,
+   "piece_across_pct": 3.4,
+   "roofarea": 0.021,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.936
+  },
+  "KEEP_ridge_comb_shake_160|M_roof_shake": {
+   "area": 0.091,
+   "along_pct": 96.8,
+   "across_pct": 1.8,
+   "judged_area": 0.091,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.8,
+   "piece_along_pct": 96.8,
+   "piece_across_pct": 1.8,
+   "roofarea": 0.036,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.984
+  },
+  "KEEP_ridge_comb_shake_161|M_roof_shake": {
+   "area": 0.075,
+   "along_pct": 97.2,
+   "across_pct": 2.3,
+   "judged_area": 0.075,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 2.3,
+   "roofarea": 0.029,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.961
+  },
+  "KEEP_ridge_comb_shake_162|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.0,
+   "downslope_pct": 0.4,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_163|M_roof_shake": {
+   "area": 0.095,
+   "along_pct": 96.0,
+   "across_pct": 0.8,
+   "judged_area": 0.095,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.0,
+   "piece_along_pct": 96.0,
+   "piece_across_pct": 0.8,
+   "roofarea": 0.035,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.973
+  },
+  "KEEP_ridge_comb_shake_164|M_roof_shake": {
+   "area": 0.066,
+   "along_pct": 95.6,
+   "across_pct": 3.4,
+   "judged_area": 0.066,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 95.6,
+   "piece_along_pct": 95.6,
+   "piece_across_pct": 3.4,
+   "roofarea": 0.024,
+   "upslope_pct": 99.5,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.936
+  },
+  "KEEP_ridge_comb_shake_165|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_166|M_roof_shake": {
+   "area": 0.091,
+   "along_pct": 96.8,
+   "across_pct": 1.8,
+   "judged_area": 0.091,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.8,
+   "piece_along_pct": 96.8,
+   "piece_across_pct": 1.8,
+   "roofarea": 0.043,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 0.984
+  },
+  "KEEP_ridge_comb_shake_167|M_roof_shake": {
+   "area": 0.06,
+   "along_pct": 94.9,
+   "across_pct": 3.5,
+   "judged_area": 0.06,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.9,
+   "piece_along_pct": 94.9,
+   "piece_across_pct": 3.5,
+   "roofarea": 0.021,
+   "upslope_pct": 99.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.957
+  },
+  "KEEP_ridge_comb_shake_168|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.017,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_169|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.017,
+   "upslope_pct": 99.7,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_170|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 99.5,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_171|M_roof_shake": {
+   "area": 0.06,
+   "along_pct": 94.9,
+   "across_pct": 3.5,
+   "judged_area": 0.06,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.9,
+   "piece_along_pct": 94.9,
+   "piece_across_pct": 3.5,
+   "roofarea": 0.022,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.957
+  },
+  "KEEP_ridge_comb_shake_172|M_roof_shake": {
+   "area": 0.06,
+   "along_pct": 94.9,
+   "across_pct": 3.5,
+   "judged_area": 0.06,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.9,
+   "piece_along_pct": 94.9,
+   "piece_across_pct": 3.5,
+   "roofarea": 0.022,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.957
+  },
+  "KEEP_ridge_comb_shake_173|M_roof_shake": {
+   "area": 0.06,
+   "along_pct": 94.9,
+   "across_pct": 3.5,
+   "judged_area": 0.06,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.9,
+   "piece_along_pct": 94.9,
+   "piece_across_pct": 3.5,
+   "roofarea": 0.022,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.957
+  },
+  "KEEP_ridge_comb_shake_174|M_roof_shake": {
+   "area": 0.096,
+   "along_pct": 97.2,
+   "across_pct": 1.9,
+   "judged_area": 0.096,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 1.9,
+   "roofarea": 0.033,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 0.985
+  },
+  "KEEP_ridge_comb_shake_175|M_roof_shake": {
+   "area": 0.066,
+   "along_pct": 95.6,
+   "across_pct": 3.4,
+   "judged_area": 0.066,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 95.6,
+   "piece_along_pct": 95.6,
+   "piece_across_pct": 3.4,
+   "roofarea": 0.023,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.936
+  },
+  "KEEP_ridge_comb_shake_176|M_roof_shake": {
+   "area": 0.095,
+   "along_pct": 96.0,
+   "across_pct": 0.8,
+   "judged_area": 0.095,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.0,
+   "piece_along_pct": 96.0,
+   "piece_across_pct": 0.8,
+   "roofarea": 0.045,
+   "upslope_pct": 96.3,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 0.973
+  },
+  "KEEP_ridge_comb_shake_177|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.4,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_178|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.041,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_179|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.3,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_180|M_roof_shake": {
+   "area": 0.096,
+   "along_pct": 97.2,
+   "across_pct": 1.9,
+   "judged_area": 0.096,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 1.9,
+   "roofarea": 0.033,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.985
+  },
+  "KEEP_ridge_comb_shake_181|M_roof_shake": {
+   "area": 0.095,
+   "along_pct": 96.0,
+   "across_pct": 0.8,
+   "judged_area": 0.095,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.0,
+   "piece_along_pct": 96.0,
+   "piece_across_pct": 0.8,
+   "roofarea": 0.033,
+   "upslope_pct": 97.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.973
+  },
+  "KEEP_ridge_comb_shake_182|M_roof_shake": {
+   "area": 0.091,
+   "along_pct": 96.8,
+   "across_pct": 1.8,
+   "judged_area": 0.091,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.8,
+   "piece_along_pct": 96.8,
+   "piece_across_pct": 1.8,
+   "roofarea": 0.037,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.984
+  },
+  "KEEP_ridge_comb_shake_183|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.7,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_184|M_roof_shake": {
+   "area": 0.091,
+   "along_pct": 96.8,
+   "across_pct": 1.8,
+   "judged_area": 0.091,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.8,
+   "piece_along_pct": 96.8,
+   "piece_across_pct": 1.8,
+   "roofarea": 0.037,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.984
+  },
+  "KEEP_ridge_comb_shake_185|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 99.5,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_186|M_roof_shake": {
+   "area": 0.06,
+   "along_pct": 94.9,
+   "across_pct": 3.5,
+   "judged_area": 0.06,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.9,
+   "piece_along_pct": 94.9,
+   "piece_across_pct": 3.5,
+   "roofarea": 0.022,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.957
+  },
+  "KEEP_ridge_comb_shake_187|M_roof_shake": {
+   "area": 0.075,
+   "along_pct": 97.2,
+   "across_pct": 2.3,
+   "judged_area": 0.075,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 2.3,
+   "roofarea": 0.027,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.961
+  },
+  "KEEP_ridge_comb_shake_188|M_roof_shake": {
+   "area": 0.056,
+   "along_pct": 92.8,
+   "across_pct": 4.0,
+   "judged_area": 0.056,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 92.8,
+   "piece_along_pct": 92.8,
+   "piece_across_pct": 4.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.7,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.943
+  },
+  "KEEP_ridge_comb_shake_189|M_roof_shake": {
+   "area": 0.056,
+   "along_pct": 92.8,
+   "across_pct": 4.0,
+   "judged_area": 0.056,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 92.8,
+   "piece_along_pct": 92.8,
+   "piece_across_pct": 4.0,
+   "roofarea": 0.019,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.943
+  },
+  "KEEP_ridge_comb_shake_190|M_roof_shake": {
+   "area": 0.096,
+   "along_pct": 97.2,
+   "across_pct": 1.9,
+   "judged_area": 0.096,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 1.9,
+   "roofarea": 0.033,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.985
+  },
+  "KEEP_ridge_comb_shake_191|M_roof_shake": {
+   "area": 0.091,
+   "along_pct": 96.8,
+   "across_pct": 1.8,
+   "judged_area": 0.091,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.8,
+   "piece_along_pct": 96.8,
+   "piece_across_pct": 1.8,
+   "roofarea": 0.036,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.984
+  },
+  "KEEP_ridge_comb_shake_192|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_193|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.042,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_194|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_195|M_roof_shake": {
+   "area": 0.066,
+   "along_pct": 95.6,
+   "across_pct": 3.4,
+   "judged_area": 0.066,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 95.6,
+   "piece_along_pct": 95.6,
+   "piece_across_pct": 3.4,
+   "roofarea": 0.023,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.936
+  },
+  "KEEP_ridge_comb_shake_196|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.3,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_197|M_roof_shake": {
+   "area": 0.056,
+   "along_pct": 92.8,
+   "across_pct": 4.0,
+   "judged_area": 0.056,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 92.8,
+   "piece_along_pct": 92.8,
+   "piece_across_pct": 4.0,
+   "roofarea": 0.02,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.943
+  },
+  "KEEP_ridge_comb_shake_198|M_roof_shake": {
+   "area": 0.066,
+   "along_pct": 95.6,
+   "across_pct": 3.4,
+   "judged_area": 0.066,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 95.6,
+   "piece_along_pct": 95.6,
+   "piece_across_pct": 3.4,
+   "roofarea": 0.022,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.936
+  },
+  "KEEP_ridge_comb_shake_199|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.023,
+   "upslope_pct": 99.2,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_200|M_roof_shake": {
+   "area": 0.091,
+   "along_pct": 96.8,
+   "across_pct": 1.8,
+   "judged_area": 0.091,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.8,
+   "piece_along_pct": 96.8,
+   "piece_across_pct": 1.8,
+   "roofarea": 0.037,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.984
+  },
+  "KEEP_ridge_comb_shake_201|M_roof_shake": {
+   "area": 0.06,
+   "along_pct": 94.9,
+   "across_pct": 3.5,
+   "judged_area": 0.06,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.9,
+   "piece_along_pct": 94.9,
+   "piece_across_pct": 3.5,
+   "roofarea": 0.022,
+   "upslope_pct": 99.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.957
+  },
+  "KEEP_ridge_comb_shake_202|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.024,
+   "upslope_pct": 97.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_203|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_204|M_roof_shake": {
+   "area": 0.056,
+   "along_pct": 92.8,
+   "across_pct": 4.0,
+   "judged_area": 0.056,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 92.8,
+   "piece_along_pct": 92.8,
+   "piece_across_pct": 4.0,
+   "roofarea": 0.019,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.943
+  },
+  "KEEP_ridge_comb_shake_205|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.023,
+   "upslope_pct": 99.4,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_206|M_roof_shake": {
+   "area": 0.066,
+   "along_pct": 95.6,
+   "across_pct": 3.4,
+   "judged_area": 0.066,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 95.6,
+   "piece_along_pct": 95.6,
+   "piece_across_pct": 3.4,
+   "roofarea": 0.024,
+   "upslope_pct": 99.5,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.936
+  },
+  "KEEP_ridge_comb_shake_207|M_roof_shake": {
+   "area": 0.096,
+   "along_pct": 97.2,
+   "across_pct": 1.9,
+   "judged_area": 0.096,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 1.9,
+   "roofarea": 0.033,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.985
+  },
+  "KEEP_ridge_comb_shake_208|M_roof_shake": {
+   "area": 0.096,
+   "along_pct": 97.2,
+   "across_pct": 1.9,
+   "judged_area": 0.096,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 1.9,
+   "roofarea": 0.033,
+   "upslope_pct": 99.8,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.985
+  },
+  "KEEP_ridge_comb_shake_209|M_roof_shake": {
+   "area": 0.095,
+   "along_pct": 96.0,
+   "across_pct": 0.8,
+   "judged_area": 0.095,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.0,
+   "piece_along_pct": 96.0,
+   "piece_across_pct": 0.8,
+   "roofarea": 0.034,
+   "upslope_pct": 97.9,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 0.973
+  },
+  "KEEP_ridge_comb_shake_210|M_roof_shake": {
+   "area": 0.109,
+   "along_pct": 96.5,
+   "across_pct": 2.7,
+   "judged_area": 0.109,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 96.5,
+   "piece_along_pct": 96.5,
+   "piece_across_pct": 2.7,
+   "roofarea": 0.04,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.977
+  },
+  "KEEP_ridge_comb_shake_211|M_roof_shake": {
+   "area": 0.075,
+   "along_pct": 97.2,
+   "across_pct": 2.3,
+   "judged_area": 0.075,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 2.3,
+   "roofarea": 0.028,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.961
+  },
+  "KEEP_ridge_comb_shake_212|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_213|M_roof_shake": {
+   "area": 0.049,
+   "along_pct": 94.0,
+   "across_pct": 5.0,
+   "judged_area": 0.049,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.0,
+   "piece_along_pct": 94.0,
+   "piece_across_pct": 5.0,
+   "roofarea": 0.018,
+   "upslope_pct": 99.7,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.923
+  },
+  "KEEP_ridge_comb_shake_214|M_roof_shake": {
+   "area": 0.096,
+   "along_pct": 97.2,
+   "across_pct": 1.9,
+   "judged_area": 0.096,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 1.9,
+   "roofarea": 0.035,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.985
+  },
+  "KEEP_ridge_comb_shake_215|M_roof_shake": {
+   "area": 0.096,
+   "along_pct": 97.2,
+   "across_pct": 1.9,
+   "judged_area": 0.096,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.2,
+   "piece_along_pct": 97.2,
+   "piece_across_pct": 1.9,
+   "roofarea": 0.045,
+   "upslope_pct": 99.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.985
+  },
+  "KEEP_roof_collar_shakes|M_roof_shake": {
+   "area": 92.464,
+   "along_pct": 60.5,
+   "across_pct": 0.3,
+   "judged_area": 57.023,
+   "sheet_area": 35.441,
+   "along_of_judged_pct": 98.2,
+   "piece_along_pct": 60.5,
+   "piece_across_pct": 0.3,
+   "roofarea": 77.683,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.997
+  },
+  "KEEP_roof_skirt_boards|M_roof_shingle": {
+   "area": 79.789,
+   "along_pct": 2.8,
+   "across_pct": 84.5,
+   "judged_area": 72.684,
+   "sheet_area": 7.105,
+   "along_of_judged_pct": 3.1,
+   "piece_along_pct": 2.8,
+   "piece_across_pct": 84.5,
+   "roofarea": 65.101,
+   "upslope_pct": 99.9,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.612
+  },
+  "KEEP_roof_skirt_deck|M_timber": {
+   "area": 38.476,
+   "along_pct": 99.3,
+   "across_pct": 0.7,
+   "judged_area": 38.476,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.3,
+   "piece_along_pct": 99.3,
+   "piece_across_pct": 0.7,
+   "roofarea": 18.969,
+   "upslope_pct": 0.3,
+   "downslope_pct": 0.5,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_roof_skirt_hips|M_roof_shingle": {
+   "area": 8.925,
+   "along_pct": 77.1,
+   "across_pct": 0.8,
+   "judged_area": 8.913,
+   "sheet_area": 0.012,
+   "along_of_judged_pct": 77.2,
+   "piece_along_pct": 77.1,
+   "piece_across_pct": 0.8,
+   "roofarea": 4.737,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.745
+  },
+  "KEEP_roof_skirt_structure|M_timber": {
+   "area": 99.096,
+   "along_pct": 97.6,
+   "across_pct": 1.8,
+   "judged_area": 99.096,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.6,
+   "piece_along_pct": 97.6,
+   "piece_across_pct": 1.8,
+   "roofarea": 5.287,
+   "upslope_pct": 10.6,
+   "downslope_pct": 13.8,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_turret_cap_deck|M_timber": {
+   "area": 12.1,
+   "along_pct": 99.3,
+   "across_pct": 0.1,
+   "judged_area": 12.1,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.3,
+   "piece_along_pct": 99.3,
+   "piece_across_pct": 0.1,
+   "roofarea": 6.053,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_turret_cap_hips|M_roof_shingle": {
+   "area": 5.394,
+   "along_pct": 65.3,
+   "across_pct": 0.5,
+   "judged_area": 5.337,
+   "sheet_area": 0.057,
+   "along_of_judged_pct": 66.0,
+   "piece_along_pct": 65.3,
+   "piece_across_pct": 0.5,
+   "roofarea": 3.171,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.764
+  },
+  "KEEP_turret_cap_shingles|M_roof_shingle": {
+   "area": 19.049,
+   "along_pct": 5.3,
+   "across_pct": 21.0,
+   "judged_area": 5.701,
+   "sheet_area": 13.347,
+   "along_of_judged_pct": 17.6,
+   "piece_along_pct": 5.3,
+   "piece_across_pct": 21.0,
+   "roofarea": 14.863,
+   "upslope_pct": 99.6,
+   "downslope_pct": 0.2,
+   "m_per_uv_median": 0.899
+  },
+  "KEEP_turret_cap_structure|M_timber": {
+   "area": 24.304,
+   "along_pct": 96.9,
+   "across_pct": 2.6,
+   "judged_area": 24.3,
+   "sheet_area": 0.004,
+   "along_of_judged_pct": 96.9,
+   "piece_along_pct": 96.9,
+   "piece_across_pct": 2.6,
+   "roofarea": 1.29,
+   "upslope_pct": 21.0,
+   "downslope_pct": 12.2,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_turret_drum|M_timber": {
+   "area": 6.874,
+   "along_pct": 43.4,
+   "across_pct": 0.8,
+   "judged_area": 3.116,
+   "sheet_area": 3.758,
+   "along_of_judged_pct": 95.8,
+   "piece_along_pct": 43.4,
+   "piece_across_pct": 0.8,
+   "roofarea": 0.984,
+   "upslope_pct": 37.3,
+   "downslope_pct": 29.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_turret_drum|M_timber_weathered": {
+   "area": 4.165,
+   "along_pct": 98.4,
+   "across_pct": 1.0,
+   "judged_area": 4.165,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 98.4,
+   "piece_along_pct": 98.4,
+   "piece_across_pct": 1.0,
+   "roofarea": 0.01,
+   "upslope_pct": 88.4,
+   "downslope_pct": 9.1,
+   "m_per_uv_median": 1.001
+  },
+  "KEEP_turret_drum_backing|M_timber_weathered": {
+   "area": 3.504,
+   "along_pct": 0.0,
+   "across_pct": 0.0,
+   "judged_area": 0.0,
+   "sheet_area": 3.504,
+   "along_of_judged_pct": 0.0,
+   "piece_along_pct": 0.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.0,
+   "upslope_pct": 0.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.001
+  },
+  "KEEP_wing_door|M_timber": {
+   "area": 3.813,
+   "along_pct": 97.5,
+   "across_pct": 0.5,
+   "judged_area": 3.813,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 97.5,
+   "piece_along_pct": 97.5,
+   "piece_across_pct": 0.5,
+   "roofarea": 0.132,
+   "upslope_pct": 4.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_wing_door|M_timber_weathered": {
+   "area": 4.978,
+   "along_pct": 98.3,
+   "across_pct": 0.2,
+   "judged_area": 4.909,
+   "sheet_area": 0.069,
+   "along_of_judged_pct": 99.7,
+   "piece_along_pct": 98.3,
+   "piece_across_pct": 0.2,
+   "roofarea": 0.05,
+   "upslope_pct": 0.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_wing_ridge_comb|M_timber_weathered": {
+   "area": 1.893,
+   "along_pct": 99.2,
+   "across_pct": 0.8,
+   "judged_area": 1.892,
+   "sheet_area": 0.001,
+   "along_of_judged_pct": 99.2,
+   "piece_along_pct": 99.2,
+   "piece_across_pct": 0.8,
+   "roofarea": 1.088,
+   "upslope_pct": 0.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_wing_roof_rolls|M_thatch": {
+   "area": 7.979,
+   "along_pct": 6.8,
+   "across_pct": 93.2,
+   "judged_area": 7.979,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 6.8,
+   "piece_along_pct": 6.8,
+   "piece_across_pct": 93.2,
+   "roofarea": 5.885,
+   "upslope_pct": 79.4,
+   "downslope_pct": 12.5,
+   "m_per_uv_median": 1.062
+  },
+  "KEEP_wing_roof_structure|M_timber_weathered": {
+   "area": 1.015,
+   "along_pct": 94.6,
+   "across_pct": 2.1,
+   "judged_area": 1.015,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 94.6,
+   "piece_along_pct": 94.6,
+   "piece_across_pct": 2.1,
+   "roofarea": 0.297,
+   "upslope_pct": 84.4,
+   "downslope_pct": 15.6,
+   "m_per_uv_median": 1.0
+  },
+  "KEEP_wing_roof_thatch|M_thatch": {
+   "area": 108.1,
+   "along_pct": 7.9,
+   "across_pct": 89.1,
+   "judged_area": 108.1,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 7.9,
+   "piece_along_pct": 7.9,
+   "piece_across_pct": 89.1,
+   "roofarea": 49.66,
+   "upslope_pct": 94.0,
+   "downslope_pct": 3.5,
+   "m_per_uv_median": 1.148
+  },
+  "KEEP_wing_roof_thatch_courses|M_thatch": {
+   "area": 72.298,
+   "along_pct": 3.1,
+   "across_pct": 94.4,
+   "judged_area": 72.298,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 3.1,
+   "piece_along_pct": 3.1,
+   "piece_across_pct": 94.4,
+   "roofarea": 67.83,
+   "upslope_pct": 99.5,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.015
+  },
+  "KEEP_wing_window|M_timber": {
+   "area": 2.025,
+   "along_pct": 93.8,
+   "across_pct": 6.1,
+   "judged_area": 2.025,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 93.8,
+   "piece_along_pct": 93.8,
+   "piece_across_pct": 6.1,
+   "roofarea": 0.099,
+   "upslope_pct": 26.5,
+   "downslope_pct": 8.2,
+   "m_per_uv_median": 1.001
+  }
+ },
+ "collapsed": {
+  "KEEP_cap_deck": {
+   "objects": [
+    "KEEP_cap_deck"
+   ],
+   "area": 17.677,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_cap_hips": {
+   "objects": [
+    "KEEP_cap_hips"
+   ],
+   "area": 7.849,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shingle": 0.0
+   }
+  },
+  "KEEP_cap_shingles": {
+   "objects": [
+    "KEEP_cap_shingles"
+   ],
+   "area": 28.572,
+   "lt02": 0.0014,
+   "lt03": 0.0302,
+   "pct02": 0.005,
+   "by_mat": {
+    "M_roof_shingle": 0.005
+   }
+  },
+  "KEEP_cap_structure": {
+   "objects": [
+    "KEEP_cap_structure"
+   ],
+   "area": 29.089,
+   "lt02": 0.0292,
+   "lt03": 0.0292,
+   "pct02": 0.1,
+   "by_mat": {
+    "M_timber": 0.1
+   }
+  },
+  "KEEP_cone_ledge_slabs": {
+   "objects": [
+    "KEEP_cone_ledge_slabs"
+   ],
+   "area": 14.16,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone": 0.0
+   }
+  },
+  "KEEP_cone_mortar": {
+   "objects": [
+    "KEEP_cone_mortar"
+   ],
+   "area": 45.727,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "KEEP_cone_stones": {
+   "objects": [
+    "KEEP_cone_stones"
+   ],
+   "area": 77.32,
+   "lt02": 0.0,
+   "lt03": 0.008,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone": 0.0
+   }
+  },
+  "KEEP_door_ironwork": {
+   "objects": [
+    "KEEP_door_ironwork"
+   ],
+   "area": 0.268,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_door_leaf": {
+   "objects": [
+    "KEEP_door_leaf"
+   ],
+   "area": 2.644,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_finial_main": {
+   "objects": [
+    "KEEP_finial_main"
+   ],
+   "area": 1.997,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0,
+    "M_lead": 0.0
+   }
+  },
+  "KEEP_finial_turret": {
+   "objects": [
+    "KEEP_finial_turret"
+   ],
+   "area": 1.54,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0,
+    "M_lead": 0.0
+   }
+  },
+  "KEEP_hall_dressed_joint_mortar": {
+   "objects": [
+    "KEEP_hall_dressed_joint_mortar"
+   ],
+   "area": 3.565,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "KEEP_hall_dressed_stones": {
+   "objects": [
+    "KEEP_hall_dressed_stones"
+   ],
+   "area": 21.253,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "KEEP_hall_eave_plate": {
+   "objects": [
+    "KEEP_hall_eave_plate"
+   ],
+   "area": 19.646,
+   "lt02": 0.1155,
+   "lt03": 0.1155,
+   "pct02": 0.588,
+   "by_mat": {
+    "M_timber": 0.588
+   }
+  },
+  "KEEP_hall_interior": {
+   "objects": [
+    "KEEP_hall_interior"
+   ],
+   "area": 109.733,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0,
+    "M_stone": 0.0
+   }
+  },
+  "KEEP_hall_knee_braces": {
+   "objects": [
+    "KEEP_hall_knee_braces"
+   ],
+   "area": 4.3,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_hall_post_bases": {
+   "objects": [
+    "KEEP_hall_post_bases"
+   ],
+   "area": 3.396,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "KEEP_hall_posts": {
+   "objects": [
+    "KEEP_hall_posts"
+   ],
+   "area": 13.548,
+   "lt02": 0.0,
+   "lt03": 0.0197,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_hall_wall_mortar": {
+   "objects": [
+    "KEEP_hall_wall_mortar"
+   ],
+   "area": 71.372,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "KEEP_hall_wall_stones": {
+   "objects": [
+    "KEEP_hall_wall_stones"
+   ],
+   "area": 95.997,
+   "lt02": 0.0005,
+   "lt03": 0.0099,
+   "pct02": 0.001,
+   "by_mat": {
+    "M_stone": 0.001
+   }
+  },
+  "KEEP_hall_window_frames": {
+   "objects": [
+    "KEEP_hall_window_frames"
+   ],
+   "area": 2.528,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_lantern_boards": {
+   "objects": [
+    "KEEP_lantern_boards"
+   ],
+   "area": 15.564,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "KEEP_lantern_frame": {
+   "objects": [
+    "KEEP_lantern_frame"
+   ],
+   "area": 22.239,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0,
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_nail_v01": {
+   "objects": [
+    "KEEP_nail_040",
+    "KEEP_nail_044",
+    "KEEP_nail_048",
+    "KEEP_nail_057",
+    "KEEP_nail_058",
+    "KEEP_nail_069",
+    "KEEP_nail_072",
+    "KEEP_nail_076",
+    "KEEP_nail_078",
+    "KEEP_nail_081",
+    "KEEP_nail_082",
+    "KEEP_nail_085",
+    "KEEP_nail_122"
+   ],
+   "area": 0.001,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_nail_v05": {
+   "objects": [
+    "KEEP_nail_041",
+    "KEEP_nail_050",
+    "KEEP_nail_053",
+    "KEEP_nail_063",
+    "KEEP_nail_067",
+    "KEEP_nail_073",
+    "KEEP_nail_074",
+    "KEEP_nail_083",
+    "KEEP_nail_109",
+    "KEEP_nail_114",
+    "KEEP_nail_115",
+    "KEEP_nail_120",
+    "KEEP_nail_121",
+    "KEEP_nail_123"
+   ],
+   "area": 0.001,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_nail_v04": {
+   "objects": [
+    "KEEP_nail_042",
+    "KEEP_nail_061",
+    "KEEP_nail_064",
+    "KEEP_nail_070",
+    "KEEP_nail_080",
+    "KEEP_nail_110",
+    "KEEP_nail_112"
+   ],
+   "area": 0.001,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_nail_v02": {
+   "objects": [
+    "KEEP_nail_043",
+    "KEEP_nail_052",
+    "KEEP_nail_055",
+    "KEEP_nail_056",
+    "KEEP_nail_059",
+    "KEEP_nail_065",
+    "KEEP_nail_066",
+    "KEEP_nail_077",
+    "KEEP_nail_084",
+    "KEEP_nail_118",
+    "KEEP_nail_124"
+   ],
+   "area": 0.001,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_nail_v03": {
+   "objects": [
+    "KEEP_nail_045",
+    "KEEP_nail_046",
+    "KEEP_nail_051",
+    "KEEP_nail_060",
+    "KEEP_nail_062",
+    "KEEP_nail_068",
+    "KEEP_nail_071",
+    "KEEP_nail_075",
+    "KEEP_nail_111",
+    "KEEP_nail_116"
+   ],
+   "area": 0.001,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_nail_v00": {
+   "objects": [
+    "KEEP_nail_049",
+    "KEEP_nail_079",
+    "KEEP_nail_108",
+    "KEEP_nail_117"
+   ],
+   "area": 0.001,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_peg_v03": {
+   "objects": [
+    "KEEP_peg_001",
+    "KEEP_peg_005",
+    "KEEP_peg_007",
+    "KEEP_peg_017",
+    "KEEP_peg_024",
+    "KEEP_peg_032",
+    "KEEP_peg_035",
+    "KEEP_peg_036",
+    "KEEP_peg_126",
+    "KEEP_peg_129",
+    "KEEP_peg_217",
+    "KEEP_peg_219",
+    "KEEP_peg_220",
+    "KEEP_peg_238",
+    "KEEP_peg_245"
+   ],
+   "area": 0.004,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_peg_v01": {
+   "objects": [
+    "KEEP_peg_002",
+    "KEEP_peg_004",
+    "KEEP_peg_011",
+    "KEEP_peg_026",
+    "KEEP_peg_027",
+    "KEEP_peg_088",
+    "KEEP_peg_089",
+    "KEEP_peg_099",
+    "KEEP_peg_107",
+    "KEEP_peg_227",
+    "KEEP_peg_229",
+    "KEEP_peg_237",
+    "KEEP_peg_246"
+   ],
+   "area": 0.004,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_peg_v00": {
+   "objects": [
+    "KEEP_peg_003",
+    "KEEP_peg_019",
+    "KEEP_peg_021",
+    "KEEP_peg_022",
+    "KEEP_peg_023",
+    "KEEP_peg_037",
+    "KEEP_peg_100",
+    "KEEP_peg_102",
+    "KEEP_peg_104",
+    "KEEP_peg_224",
+    "KEEP_peg_225",
+    "KEEP_peg_228",
+    "KEEP_peg_235"
+   ],
+   "area": 0.004,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_peg_v02": {
+   "objects": [
+    "KEEP_peg_006",
+    "KEEP_peg_009",
+    "KEEP_peg_010",
+    "KEEP_peg_012",
+    "KEEP_peg_014",
+    "KEEP_peg_030",
+    "KEEP_peg_033",
+    "KEEP_peg_087",
+    "KEEP_peg_092",
+    "KEEP_peg_095",
+    "KEEP_peg_098",
+    "KEEP_peg_101",
+    "KEEP_peg_127",
+    "KEEP_peg_128",
+    "KEEP_peg_216",
+    "KEEP_peg_230",
+    "KEEP_peg_232",
+    "KEEP_peg_233",
+    "KEEP_peg_234",
+    "KEEP_peg_239",
+    "KEEP_peg_244"
+   ],
+   "area": 0.004,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_peg_v05": {
+   "objects": [
+    "KEEP_peg_008",
+    "KEEP_peg_013",
+    "KEEP_peg_016",
+    "KEEP_peg_020",
+    "KEEP_peg_025",
+    "KEEP_peg_028",
+    "KEEP_peg_029",
+    "KEEP_peg_038",
+    "KEEP_peg_091",
+    "KEEP_peg_094",
+    "KEEP_peg_103",
+    "KEEP_peg_105",
+    "KEEP_peg_106",
+    "KEEP_peg_218",
+    "KEEP_peg_221",
+    "KEEP_peg_223",
+    "KEEP_peg_226",
+    "KEEP_peg_240",
+    "KEEP_peg_241",
+    "KEEP_peg_242"
+   ],
+   "area": 0.004,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_peg_v04": {
+   "objects": [
+    "KEEP_peg_015",
+    "KEEP_peg_018",
+    "KEEP_peg_031",
+    "KEEP_peg_034",
+    "KEEP_peg_086",
+    "KEEP_peg_090",
+    "KEEP_peg_093",
+    "KEEP_peg_096",
+    "KEEP_peg_097",
+    "KEEP_peg_222",
+    "KEEP_peg_231",
+    "KEEP_peg_236",
+    "KEEP_peg_243"
+   ],
+   "area": 0.004,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_pintle_v01": {
+   "objects": [
+    "KEEP_pintle_039",
+    "KEEP_pintle_113",
+    "KEEP_pintle_125"
+   ],
+   "area": 0.022,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_pintle_v02": {
+   "objects": [
+    "KEEP_pintle_047",
+    "KEEP_pintle_119"
+   ],
+   "area": 0.022,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_pintle_v00": {
+   "objects": [
+    "KEEP_pintle_054"
+   ],
+   "area": 0.022,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_comb_v08": {
+   "objects": [
+    "KEEP_ridge_comb_shake_130",
+    "KEEP_ridge_comb_shake_131",
+    "KEEP_ridge_comb_shake_138",
+    "KEEP_ridge_comb_shake_144",
+    "KEEP_ridge_comb_shake_165",
+    "KEEP_ridge_comb_shake_170",
+    "KEEP_ridge_comb_shake_178",
+    "KEEP_ridge_comb_shake_185",
+    "KEEP_ridge_comb_shake_192",
+    "KEEP_ridge_comb_shake_193",
+    "KEEP_ridge_comb_shake_194",
+    "KEEP_ridge_comb_shake_210"
+   ],
+   "area": 0.109,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_comb_v00": {
+   "objects": [
+    "KEEP_ridge_comb_shake_132",
+    "KEEP_ridge_comb_shake_135",
+    "KEEP_ridge_comb_shake_141",
+    "KEEP_ridge_comb_shake_142",
+    "KEEP_ridge_comb_shake_145",
+    "KEEP_ridge_comb_shake_146",
+    "KEEP_ridge_comb_shake_148",
+    "KEEP_ridge_comb_shake_149",
+    "KEEP_ridge_comb_shake_152",
+    "KEEP_ridge_comb_shake_153",
+    "KEEP_ridge_comb_shake_155",
+    "KEEP_ridge_comb_shake_156",
+    "KEEP_ridge_comb_shake_157",
+    "KEEP_ridge_comb_shake_162",
+    "KEEP_ridge_comb_shake_168",
+    "KEEP_ridge_comb_shake_169",
+    "KEEP_ridge_comb_shake_177",
+    "KEEP_ridge_comb_shake_179",
+    "KEEP_ridge_comb_shake_183",
+    "KEEP_ridge_comb_shake_196",
+    "KEEP_ridge_comb_shake_199",
+    "KEEP_ridge_comb_shake_202",
+    "KEEP_ridge_comb_shake_203",
+    "KEEP_ridge_comb_shake_205",
+    "KEEP_ridge_comb_shake_212",
+    "KEEP_ridge_comb_shake_213"
+   ],
+   "area": 0.049,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_comb_v02": {
+   "objects": [
+    "KEEP_ridge_comb_shake_133",
+    "KEEP_ridge_comb_shake_136",
+    "KEEP_ridge_comb_shake_139",
+    "KEEP_ridge_comb_shake_167",
+    "KEEP_ridge_comb_shake_171",
+    "KEEP_ridge_comb_shake_172",
+    "KEEP_ridge_comb_shake_173",
+    "KEEP_ridge_comb_shake_186",
+    "KEEP_ridge_comb_shake_201"
+   ],
+   "area": 0.06,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_comb_v06": {
+   "objects": [
+    "KEEP_ridge_comb_shake_134",
+    "KEEP_ridge_comb_shake_143",
+    "KEEP_ridge_comb_shake_151",
+    "KEEP_ridge_comb_shake_163",
+    "KEEP_ridge_comb_shake_176",
+    "KEEP_ridge_comb_shake_181",
+    "KEEP_ridge_comb_shake_209"
+   ],
+   "area": 0.095,
+   "lt02": 0.0,
+   "lt03": 0.0003,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_comb_v07": {
+   "objects": [
+    "KEEP_ridge_comb_shake_137",
+    "KEEP_ridge_comb_shake_160",
+    "KEEP_ridge_comb_shake_166",
+    "KEEP_ridge_comb_shake_182",
+    "KEEP_ridge_comb_shake_184",
+    "KEEP_ridge_comb_shake_191",
+    "KEEP_ridge_comb_shake_200"
+   ],
+   "area": 0.091,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_comb_v09": {
+   "objects": [
+    "KEEP_ridge_comb_shake_140",
+    "KEEP_ridge_comb_shake_174",
+    "KEEP_ridge_comb_shake_180",
+    "KEEP_ridge_comb_shake_190",
+    "KEEP_ridge_comb_shake_207",
+    "KEEP_ridge_comb_shake_208",
+    "KEEP_ridge_comb_shake_214",
+    "KEEP_ridge_comb_shake_215"
+   ],
+   "area": 0.096,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_comb_v01": {
+   "objects": [
+    "KEEP_ridge_comb_shake_147",
+    "KEEP_ridge_comb_shake_150",
+    "KEEP_ridge_comb_shake_154",
+    "KEEP_ridge_comb_shake_158",
+    "KEEP_ridge_comb_shake_188",
+    "KEEP_ridge_comb_shake_189",
+    "KEEP_ridge_comb_shake_197",
+    "KEEP_ridge_comb_shake_204"
+   ],
+   "area": 0.056,
+   "lt02": 0.0,
+   "lt03": 0.0001,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_comb_v03": {
+   "objects": [
+    "KEEP_ridge_comb_shake_159",
+    "KEEP_ridge_comb_shake_164",
+    "KEEP_ridge_comb_shake_175",
+    "KEEP_ridge_comb_shake_195",
+    "KEEP_ridge_comb_shake_198",
+    "KEEP_ridge_comb_shake_206"
+   ],
+   "area": 0.066,
+   "lt02": 0.0,
+   "lt03": 0.0001,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_comb_v04": {
+   "objects": [
+    "KEEP_ridge_comb_shake_161",
+    "KEEP_ridge_comb_shake_187",
+    "KEEP_ridge_comb_shake_211"
+   ],
+   "area": 0.075,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_roof_collar_shakes": {
+   "objects": [
+    "KEEP_roof_collar_shakes"
+   ],
+   "area": 92.464,
+   "lt02": 0.0,
+   "lt03": 0.011,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shake": 0.0
+   }
+  },
+  "KEEP_roof_skirt_boards": {
+   "objects": [
+    "KEEP_roof_skirt_boards"
+   ],
+   "area": 79.789,
+   "lt02": 0.0,
+   "lt03": 0.0003,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shingle": 0.0
+   }
+  },
+  "KEEP_roof_skirt_deck": {
+   "objects": [
+    "KEEP_roof_skirt_deck"
+   ],
+   "area": 38.476,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_roof_skirt_hips": {
+   "objects": [
+    "KEEP_roof_skirt_hips"
+   ],
+   "area": 8.925,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shingle": 0.0
+   }
+  },
+  "KEEP_roof_skirt_structure": {
+   "objects": [
+    "KEEP_roof_skirt_structure"
+   ],
+   "area": 99.096,
+   "lt02": 0.0013,
+   "lt03": 0.002,
+   "pct02": 0.001,
+   "by_mat": {
+    "M_timber": 0.001
+   }
+  },
+  "KEEP_threshold": {
+   "objects": [
+    "KEEP_threshold"
+   ],
+   "area": 1.986,
+   "lt02": 0.0,
+   "lt03": 0.0041,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone": 0.0,
+    "M_stone_dressed": 0.0
+   }
+  },
+  "KEEP_turret_cap_deck": {
+   "objects": [
+    "KEEP_turret_cap_deck"
+   ],
+   "area": 12.1,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "KEEP_turret_cap_hips": {
+   "objects": [
+    "KEEP_turret_cap_hips"
+   ],
+   "area": 5.394,
+   "lt02": 0.0,
+   "lt03": 0.0381,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shingle": 0.0
+   }
+  },
+  "KEEP_turret_cap_shingles": {
+   "objects": [
+    "KEEP_turret_cap_shingles"
+   ],
+   "area": 19.049,
+   "lt02": 0.0021,
+   "lt03": 0.0267,
+   "pct02": 0.011,
+   "by_mat": {
+    "M_roof_shingle": 0.011
+   }
+  },
+  "KEEP_turret_cap_structure": {
+   "objects": [
+    "KEEP_turret_cap_structure"
+   ],
+   "area": 24.323,
+   "lt02": 0.0382,
+   "lt03": 0.0394,
+   "pct02": 0.157,
+   "by_mat": {
+    "M_timber": 0.157
+   }
+  },
+  "KEEP_turret_corbel_collar": {
+   "objects": [
+    "KEEP_turret_corbel_collar"
+   ],
+   "area": 15.622,
+   "lt02": 0.0,
+   "lt03": 0.1853,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone": 0.0
+   }
+  },
+  "KEEP_turret_corbel_mortar": {
+   "objects": [
+    "KEEP_turret_corbel_mortar"
+   ],
+   "area": 10.089,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "KEEP_turret_drum": {
+   "objects": [
+    "KEEP_turret_drum"
+   ],
+   "area": 11.094,
+   "lt02": 0.0392,
+   "lt03": 0.056,
+   "pct02": 0.354,
+   "by_mat": {
+    "M_timber": 0.566,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "KEEP_turret_drum_backing": {
+   "objects": [
+    "KEEP_turret_drum_backing"
+   ],
+   "area": 3.504,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "KEEP_turret_mortar": {
+   "objects": [
+    "KEEP_turret_mortar"
+   ],
+   "area": 44.591,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "KEEP_turret_stones": {
+   "objects": [
+    "KEEP_turret_stones"
+   ],
+   "area": 61.332,
+   "lt02": 0.0008,
+   "lt03": 0.0209,
+   "pct02": 0.001,
+   "by_mat": {
+    "M_stone": 0.001
+   }
+  },
+  "KEEP_wing_door": {
+   "objects": [
+    "KEEP_wing_door"
+   ],
+   "area": 10.377,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0,
+    "M_timber": 0.0,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "KEEP_wing_door_ironwork": {
+   "objects": [
+    "KEEP_wing_door_ironwork"
+   ],
+   "area": 0.214,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "KEEP_wing_dressed_stones": {
+   "objects": [
+    "KEEP_wing_dressed_stones"
+   ],
+   "area": 6.73,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "KEEP_wing_fillet": {
+   "objects": [
+    "KEEP_wing_fillet"
+   ],
+   "area": 5.659,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "KEEP_wing_flashing": {
+   "objects": [
+    "KEEP_wing_flashing"
+   ],
+   "area": 6.177,
+   "lt02": 0.0,
+   "lt03": 0.007,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_lead": 0.0
+   }
+  },
+  "KEEP_wing_ridge_comb": {
+   "objects": [
+    "KEEP_wing_ridge_comb"
+   ],
+   "area": 1.893,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "KEEP_wing_roof_rolls": {
+   "objects": [
+    "KEEP_wing_roof_rolls"
+   ],
+   "area": 7.979,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_thatch": 0.0
+   }
+  },
+  "KEEP_wing_roof_structure": {
+   "objects": [
+    "KEEP_wing_roof_structure"
+   ],
+   "area": 1.015,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "KEEP_wing_roof_thatch": {
+   "objects": [
+    "KEEP_wing_roof_thatch"
+   ],
+   "area": 108.144,
+   "lt02": 0.1078,
+   "lt03": 0.1405,
+   "pct02": 0.1,
+   "by_mat": {
+    "M_thatch": 0.1
+   }
+  },
+  "KEEP_wing_roof_thatch_courses": {
+   "objects": [
+    "KEEP_wing_roof_thatch_courses"
+   ],
+   "area": 72.298,
+   "lt02": 0.0251,
+   "lt03": 0.5027,
+   "pct02": 0.035,
+   "by_mat": {
+    "M_thatch": 0.035
+   }
+  },
+  "KEEP_wing_wall_mortar": {
+   "objects": [
+    "KEEP_wing_wall_mortar"
+   ],
+   "area": 49.858,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_daub": 0.0,
+    "M_mortar": 0.0
+   }
+  },
+  "KEEP_wing_wall_stones": {
+   "objects": [
+    "KEEP_wing_wall_stones"
+   ],
+   "area": 38.059,
+   "lt02": 0.0003,
+   "lt03": 0.0068,
+   "pct02": 0.001,
+   "by_mat": {
+    "M_stone": 0.001
+   }
+  },
+  "KEEP_wing_window": {
+   "objects": [
+    "KEEP_wing_window"
+   ],
+   "area": 6.373,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0,
+    "M_stone_dressed": 0.0,
+    "M_timber": 0.0
+   }
+  }
+ },
+ "walked": [
+  {
+   "entrance": "door",
+   "object": "KEEP_door_ironwork",
+   "faces": 114,
+   "pooled": false,
+   "area": 0.0052,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_hall_dressed_joint_mortar",
+   "faces": 12,
+   "pooled": false,
+   "area": 0.0031,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_hall_dressed_stones",
+   "faces": 144,
+   "pooled": false,
+   "area": 0.1298,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_hall_interior",
+   "faces": 1,
+   "pooled": false,
+   "area": 0.5135,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_hall_wall_stones",
+   "faces": 34,
+   "pooled": false,
+   "area": 0.0211,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_040",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_041",
+   "faces": 2,
+   "pooled": true,
+   "area": 0.0,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_042",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_043",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_044",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_045",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_046",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_062",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_063",
+   "faces": 2,
+   "pooled": true,
+   "area": 0.0,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_064",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_065",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_070",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_071",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_072",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_073",
+   "faces": 2,
+   "pooled": true,
+   "area": 0.0,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_074",
+   "faces": 2,
+   "pooled": true,
+   "area": 0.0,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_075",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_076",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_nail_085",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "annex_door",
+   "object": "KEEP_nail_108",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "annex_door",
+   "object": "KEEP_nail_109",
+   "faces": 2,
+   "pooled": true,
+   "area": 0.0,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "annex_door",
+   "object": "KEEP_nail_110",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "annex_door",
+   "object": "KEEP_nail_111",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "annex_door",
+   "object": "KEEP_nail_112",
+   "faces": 4,
+   "pooled": true,
+   "area": 0.0001,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0001
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_pintle_039",
+   "faces": 14,
+   "pooled": true,
+   "area": 0.0023,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0023
+  },
+  {
+   "entrance": "annex_door",
+   "object": "KEEP_pintle_113",
+   "faces": 17,
+   "pooled": true,
+   "area": 0.0032,
+   "b_max": 0.2,
+   "b_mean": 0.2,
+   "area_over_005": 0.0032
+  },
+  {
+   "entrance": "door",
+   "object": "KEEP_threshold",
+   "faces": 281,
+   "pooled": false,
+   "area": 1.3208,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "annex_door",
+   "object": "KEEP_wing_door",
+   "faces": 30,
+   "pooled": false,
+   "area": 1.0416,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "annex_door",
+   "object": "KEEP_wing_door_ironwork",
+   "faces": 93,
+   "pooled": false,
+   "area": 0.0043,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "annex_door",
+   "object": "KEEP_wing_wall_mortar",
+   "faces": 1,
+   "pooled": false,
+   "area": 0.8325,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  }
+ ]
+}
