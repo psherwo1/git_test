@@ -420,3 +420,8 @@ Client's words: "these should be our last three building types for the village b
 - They must stay comparable in quality to the hero buildings (the client judged the round-2 previews substantially lower). The director grades against the heroes' level of modelled detail, texture read and composition.
 - Budget: 2 quality-lift rounds per design (rounds 3 and 4), on top of the 2 done. Further rounds need the client's OK.
 - Gate: wait for the textured lookdev renders (lookdev/renders_r2/) and compare with the heroes before the lift list is fixed.
+### Producer note 22: CLIENT DECISION - which designs are Unreal-ready (2026-10-23)
+
+Client: 'The ale house, smokehouse, cottage and long house are not import level quality as it stands. I don't want them in the scene. As it stands only the keep, the tiered house, the boathouse, and the wattle hut are at the right quality level.'
+- In the Unreal scene for now: hilltop_keep, v2_tiered_hall, v5_harbour_house (boathouse), wattle_roundhut, each with Nanite and the same look as the Blender lookdev. NOT in the scene: v9_ale_house, v8_byre_smokehouse, v7_cottage, v3_longhouse_roundend (v10 net-loft cottage was not named as ready either). They return after quality lifts (producer note 21 rounds still owed).
+
