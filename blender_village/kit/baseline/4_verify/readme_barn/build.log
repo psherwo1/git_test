@@ -1,0 +1,55 @@
+[    0.2s] -- masonry_wall
+[   35.6s]   walls visible mortar 19.8% -> 8.7% after 993 pinning stones
+[   35.6s]   BARN_walls: stones 2393 (hero 33, pins 240)
+[   37.7s]   BARN_walls_stones: 141626 verts, 120772 faces
+[   37.7s]   BARN_walls_quoins: 2624 verts, 2560 faces
+[   38.2s]   BARN_walls_mortar: 3830 verts, 3346 faces
+[   38.2s]   BARN_walls: mortar cells 3346
+[   38.2s]   BARN_walls_frames: 3000 verts, 2958 faces
+[   38.3s]   BARN_walls_dressed: 328 verts, 318 faces
+[   38.3s]   BARN_walls_ironwork: 280 verts, 266 faces
+[   38.3s]   BARN_walls_reveals: 16 verts, 8 faces
+[   38.3s]   BARN_walls_blockers: 16 verts, 10 faces
+[   38.3s] -- linear_roof
+[   38.3s]   BARN_roof_deck: 300 verts, 278 faces
+[   38.3s]   BARN_roof_rafters: 1792 verts, 1728 faces
+[   39.4s]   BARN_roof_covering: 88820 verts, 76530 faces
+[   39.4s]   BARN_roof: 659 shingle pieces
+[   39.5s]   BARN_roof_comb: 7000 verts, 6720 faces
+[   39.5s] -- hidden_cull
+[   39.8s]   visibility: 436874 tris, 236 viewpoints
+[  129.1s]   visibility cull BARN_walls_stones: -11607 of 120772 polygons
+[  133.0s]   visibility cull BARN_walls_quoins: -859 of 2560 polygons
+[  138.0s]   visibility cull BARN_walls_frames: -1119 of 2958 polygons
+[  138.5s]   visibility cull BARN_walls_dressed: -111 of 318 polygons
+[  138.8s]   visibility cull BARN_walls_ironwork: -46 of 266 polygons
+[  143.1s]   visibility cull BARN_roof_rafters: -679 of 1728 polygons
+[  226.9s]   visibility cull BARN_roof_covering: -14441 of 76530 polygons
+[  243.1s]   visibility cull BARN_roof_comb: -2803 of 6720 polygons
+[  243.1s] hidden-geometry cull: -31665 polygons on 8 objects
+[  243.1s] -- recenter
+[  243.1s] recentred by (+0.003, -0.001); plan bbox 9.85 x 7.06 m, height 6.19 m
+[  243.1s] -- guards
+[  243.4s]   clearance gate BARN walls_0: door head 2.22 m, eave lip over it 2.446 m at (-0.497, -3.301) on BARN_roof_rafters (rule >= 2.30 m, 25 stations): PASS
+[  243.7s] composite decals: 59 anchors before the gate
+[  244.0s] decal anchor check (applied): checked 59, snapped 2, max_move 0.038, renormal 0, shrunk 6, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 13, duplicate 0, kept 46
+[  244.0s]     DA_damp_rise_002: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', 'BARN_walls']
+[  244.0s]     DA_damp_rise_003: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', '-']
+[  244.0s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls']
+[  244.0s]     DA_damp_rise_012: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', '-']
+[  244.0s]     DA_repair_patch_001: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls']
+[  244.0s]     DA_lichen_002: footprint off the surface (n.n0 1.00) ['-', 'BARN_walls', 'BARN_walls', '-', 'BARN_walls', 'BARN_walls', '-', 'BARN_walls', 'BARN_walls']
+[  244.0s]     DA_rust_stain_001: footprint off the surface (n.n0 1.00) ['-', 'BARN_walls', 'BARN_walls', '-', 'BARN_walls', 'BARN_walls', '-', 'BARN_walls', 'BARN_walls']
+[  244.0s]     DA_grime_001: footprint off the surface (n.n0 1.00) ['-', 'BARN_walls', '-', '-', 'BARN_walls', '-', '-', 'BARN_walls', '-']
+[  244.0s]     DA_grime_002: footprint off the surface (n.n0 1.00) ['-', 'BARN_walls', '-', '-', 'BARN_walls', '-', '-', 'BARN_walls', '-']
+[  244.0s]     DA_crack_003: footprint off the surface (n.n0 1.00) ['BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls', 'BARN_walls']
+[  244.0s]     DA_soot_002: footprint off the surface (n.n0 1.00) ['-', 'BARN_walls', '-', '-', 'BARN_walls', '-', '-', 'BARN_walls', '-']
+[  244.0s]     DA_crack_004: footprint off the surface (n.n0 1.00) ['-', 'BARN_walls', '-', '-', 'BARN_walls', '-', '-', 'BARN_walls', '-']
+[  244.0s]     DA_lichen_008: footprint off the surface (n.n0 1.00) ['BARN_walls', '-', '-', 'BARN_walls', 'BARN_walls', 'BARN_walls', '-', '-', 'BARN_walls']
+[  244.0s] decal anchors: 46
+[  244.5s] uv grain (kit 1.10.0): 12 meshes, 892 timber / shingle pieces (0 round, 465 sloped sheets), 69182 grain faces re-projected, 495 collapsed faces repaired
+[  244.6s]   walked tops (Mask B <= 0.04): walls_0 -> BARN_walls_dressed: 6 faces
+[  244.6s]   walked tops (Mask B <= 0.04): walls_0 -> BARN_walls_ironwork: 35 faces
+[  244.6s] objects 12 (instances 0, pooled meshes 0) triangles 373425
+Info: Saved as "rubble_barn.blend"
+[  244.7s] saved C:\GitHubDesktop\git_test\blender_village\kit\baseline\4_verify\readme_barn\rubble_barn.blend 10.1 MB

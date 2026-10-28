@@ -1,0 +1,84 @@
+﻿[    1.3s] -- set_entrance
+[    1.3s] -- drystone_plinth
+[    8.7s] plinth kinds: {'slab': 6, 'block': 4, 'boulder': 4}
+[    8.7s] plinth stones: 14 two-high: 0 (0 %) fractured: 4
+[    9.2s]   NETC_plinth_stones: 34341 verts, 33948 faces
+[    9.4s] chinking: 13 of 39 candidate joints
+[    9.4s] -- round_daub_wall
+[   12.7s] rods: 349
+[   12.9s]   NETC_wattle_rods: 38256 verts, 30153 faces
+[   12.9s]   NETC_wattle_stakes: 130 verts, 88 faces
+[   12.9s]   NETC_door_panel_backing: 240 verts, 176 faces
+[   13.1s]   NETC_posts: 10966 verts, 10190 faces
+[   13.3s] plinth tops under the daub foot culled: 739
+[   13.3s]   daub bay 0: grid 114 x 247, cracks 3
+[   14.1s]   daub bay 0: clumps 1
+[   14.1s]   daub bay 1: grid 35 x 150, cracks 4
+[   14.3s]   daub bay 2: grid 109 x 192, cracks 3
+[   14.8s]   daub bay 2: clumps 1
+[   14.9s]   daub bay 3: grid 35 x 151, cracks 4
+[   14.9s]   daub bay 4: grid 36 x 151, cracks 4
+[   15.1s]   daub bay 5: grid 115 x 237, cracks 2
+[   15.7s]   daub bay 5: clumps 1
+[   15.7s]   daub bay 6: grid 111 x 196, cracks 3
+[   15.9s]   daub bay 6: clumps 1
+[   15.9s] daub cracks: 0 flakes: 4 intact coat T mean 0.0647 p5 0.0528 p95 0.0804
+[   17.1s]   NETC_daub: 85601 verts, 83436 faces
+[   17.2s]   NETC_daub_interior: 2480 verts, 2370 faces
+[   17.2s] -- wall_plate
+[   17.2s]   NETC_wall_plate: 704 verts, 680 faces
+[   17.2s] -- path_stone_wall
+[   27.5s]   walls visible mortar 21.3% -> 6.5% after 457 pinning stones
+[   27.5s]   NETC_walls: stones 890 (hero 169, pins 78)
+[   29.3s]   NETC_walls_stones: 68126 verts, 61608 faces
+[   29.4s]   NETC_walls_quoins: 2706 verts, 2640 faces
+[   37.6s]   NETC_walls_mortar: 4062 verts, 3561 faces
+[   37.6s]   NETC_walls: mortar cells 3561
+[   37.8s]   NETC_walls_frames: 4584 verts, 4500 faces
+[   37.8s]   NETC_walls_dressed: 824 verts, 798 faces
+[   37.8s]   NETC_walls_ironwork: 280 verts, 266 faces
+[   37.9s]   NETC_walls_reveals: 48 verts, 24 faces
+[   37.9s]   NETC_walls_blockers: 48 verts, 30 faces
+[   37.9s] -- path_timber_wall
+python.exe : Traceback (most recent call last):
+At line:1 char:455
++ ... _r2.blend"; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File 
+"C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\build_v10_net_loft_cottage.py", 
+line 213, in <module>
+    main()
+    ~~~~^^
+  File 
+"C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\build_v10_net_loft_cottage.py", 
+line 204, in main
+    build_building(dict(
+    ~~~~~~~~~~~~~~^^^^^^
+        prefix="NETC", collection="NETC", building_id=BID, frame=RoundFrame, params=DIM,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        decal_meta=dict(kit_params={k: v for k, v in DIM.items() if k not in ("cone_age", "wall_finish")},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        main=dict(x=(X0, X1), y=(Y0, Y1), wall_z=WALL_Z, z_split=Z_SPLIT, pitch_deg=46.0))))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\..\..\..\kit\village_kit\asse
+mbly.py", line 158, in build_building
+    fn(g, **kw)
+    ~~^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\..\..\..\kit\village_kit\comp
+onents\timber_walls.py", line 580, in path_timber_wall
+    _clad(accs, F, L, z_lo, zt_max, st, occ if st.get("daub") else corner_occ, blocks, rng,
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          lambda s, rake=rake: max(rake(s), top), rough=ro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\..\..\..\kit\village_kit\comp
+onents\timber_walls.py", line 617, in _clad
+    return _clad_daub(accs, F, L, z_lo, z_hi, st, occ, blocks, rng, rake)
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v10_net_loft_cottage\..\..\..\kit\village_kit\comp
+onents\timber_walls.py", line 752, in _clad_daub
+    z_, row = pz0 + 0.03, int(rng.randint(2))
+                              ^^^^^^^^^^^
+AttributeError: 'numpy.random._generator.Generator' object has no attribute 'randint'

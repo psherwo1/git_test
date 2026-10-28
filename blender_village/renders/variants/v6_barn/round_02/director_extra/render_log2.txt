@@ -1,0 +1,12 @@
+﻿00:01.672  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+00:01.781  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.719  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d35_W_apex_from_ground_eye.png'
+00:06.219  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d35_W_apex_from_ground_eye_void.png'
+DEVICE GPU
+SHOT d35_W_apex_from_ground_eye
+00:09.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d36_E_apex_from_ground_eye.png'
+00:10.360  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\d36_E_apex_from_ground_eye_void.png'
+SHOT d36_E_apex_from_ground_eye
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

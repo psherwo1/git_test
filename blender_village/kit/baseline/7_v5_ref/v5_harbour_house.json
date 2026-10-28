@@ -1,0 +1,459 @@
+{
+ "file": "buildings\\variants\\v5_harbour_house\\v5_harbour_house.blend",
+ "objects": {
+  "HARB_battens": {
+   "tris": 396,
+   "geometry": "d4c957adf92fa8cd",
+   "uv": "ab60217f74243b4b",
+   "mask": "4760f9b6784897bb"
+  },
+  "HARB_cap_collar": {
+   "tris": 10264,
+   "geometry": "80f7df4af38383c7",
+   "uv": "3d19e91159ffc6dc",
+   "mask": "accdaa36452ce9c9"
+  },
+  "HARB_eave_fill": {
+   "tris": 960,
+   "geometry": "84d5c8a79ff5dfd6",
+   "uv": "14df9a4207263124",
+   "mask": "712194c919d17b70"
+  },
+  "HARB_finial": {
+   "tris": 4992,
+   "geometry": "9e99e9d90383a8f5",
+   "uv": "a6d22252275dbe0e",
+   "mask": "1e873846edb388eb"
+  },
+  "HARB_hall_blockers": {
+   "tris": 40,
+   "geometry": "308c8f2e264c58f2",
+   "uv": "273d6b155f3d4e24",
+   "mask": "dd59ad7b90da048b"
+  },
+  "HARB_hall_dressed": {
+   "tris": 712,
+   "geometry": "8b63a4a1bd77b198",
+   "uv": "56f332d91e4bed97",
+   "mask": "dc73ec41ce82a658"
+  },
+  "HARB_hall_frames": {
+   "tris": 4496,
+   "geometry": "674cad7360d3aaca",
+   "uv": "c954c09233975411",
+   "mask": "fafc9248f1362b1d"
+  },
+  "HARB_hall_ironwork": {
+   "tris": 460,
+   "geometry": "d553be6788bf320d",
+   "uv": "a49f0a704bd03851",
+   "mask": "6f5b2ff4e69a0151"
+  },
+  "HARB_hall_mortar": {
+   "tris": 7298,
+   "geometry": "e257e24900c65d42",
+   "uv": "17f0858847e6f423",
+   "mask": "b8beab558c4bb90b"
+  },
+  "HARB_hall_quoins": {
+   "tris": 5980,
+   "geometry": "efc4a864e0f495e6",
+   "uv": "2228d14ba743f308",
+   "mask": "1940f4bdd69946b6"
+  },
+  "HARB_hall_reveals": {
+   "tris": 32,
+   "geometry": "1f2a4d0b37d4f64e",
+   "uv": "042b3a6e0f892804",
+   "mask": "d234745ee026f652"
+  },
+  "HARB_hall_stones": {
+   "tris": 190156,
+   "geometry": "29958a8244893541",
+   "uv": "bc5fc8c2000d6b1a",
+   "mask": "c55d2b9a61e1cdea"
+  },
+  "HARB_jetty_fascia": {
+   "tris": 312,
+   "geometry": "b86918566571834b",
+   "uv": "62d5bb2480640ef9",
+   "mask": "3633e9755ddf0b67"
+  },
+  "HARB_jetty_ironwork": {
+   "tris": 118,
+   "geometry": "1dffbc03d81e2538",
+   "uv": "8659ac6ed147e083",
+   "mask": "9bd1caa71e81a328"
+  },
+  "HARB_jetty_piles": {
+   "tris": 648,
+   "geometry": "7fb7014557d2d4e3",
+   "uv": "91b873850f16213f",
+   "mask": "55cd820cb1796333"
+  },
+  "HARB_jetty_planks": {
+   "tris": 1398,
+   "geometry": "3306510bb9385de1",
+   "uv": "c3eaba4f6dfebca5",
+   "mask": "0a6017312ea8d366"
+  },
+  "HARB_jetty_structure": {
+   "tris": 1678,
+   "geometry": "64ef91d8af4829a3",
+   "uv": "5039374ef3a3d1c9",
+   "mask": "6b7977db8d107885"
+  },
+  "HARB_ladder": {
+   "tris": 400,
+   "geometry": "b8bb9ae81d40afff",
+   "uv": "8edbcb932fbfa768",
+   "mask": "61c107fd9c47ac52"
+  },
+  "HARB_partition_blocker": {
+   "tris": 116,
+   "geometry": "42f1e4019fc0dcea",
+   "uv": "6d4aaaaf24fa244e",
+   "mask": "ab4faf403c0c97ad"
+  },
+  "HARB_partition_boards": {
+   "tris": 2600,
+   "geometry": "014dd1683faabe94",
+   "uv": "77f768ce97048621",
+   "mask": "39c0fbd4cdc7f6e8"
+  },
+  "HARB_partition_frame": {
+   "tris": 372,
+   "geometry": "d769bc391ba94f4e",
+   "uv": "f7d0306fa99a47d0",
+   "mask": "18783f6410a1d490"
+  },
+  "HARB_purlin_rings": {
+   "tris": 324,
+   "geometry": "768ceef058d06870",
+   "uv": "e545a5d073e208a1",
+   "mask": "529bf469350b9905"
+  },
+  "HARB_quay_backing_blocker": {
+   "tris": 532,
+   "geometry": "fdaa4e1257f4b16e",
+   "uv": "56cf4d9c7b066d31",
+   "mask": "d8c79dbf0fd5fb97"
+  },
+  "HARB_quay_core": {
+   "tris": 8282,
+   "geometry": "3484ad94341e1927",
+   "uv": "ed4e7aea82a37a70",
+   "mask": "2f1042496addbf0a"
+  },
+  "HARB_rafters": {
+   "tris": 2999,
+   "geometry": "01e2cd629a66dede",
+   "uv": "e95d24fc7c92df7b",
+   "mask": "60d6151625937ddb"
+  },
+  "HARB_roof_apex_cap_collar": {
+   "tris": 668,
+   "geometry": "435e535934690e79",
+   "uv": "622296cbc316a2fa",
+   "mask": "6fb2578e71ae564c"
+  },
+  "HARB_roof_apex_finial": {
+   "tris": 2876,
+   "geometry": "6c9da1bd19c3d326",
+   "uv": "38846b2f5e8426da",
+   "mask": "0498e8ae979b581c"
+  },
+  "HARB_roof_blocker": {
+   "tris": 2048,
+   "geometry": "7da1ef93c7597b55",
+   "uv": "01b293a042bac1d3",
+   "mask": "ef7bd50546eef5d9"
+  },
+  "HARB_roof_comb": {
+   "tris": 6876,
+   "geometry": "3bfce7f0c01ebdba",
+   "uv": "7d3dc534b1af4cb9",
+   "mask": "49863ee019a2e8dd"
+  },
+  "HARB_roof_covering": {
+   "tris": 155019,
+   "geometry": "ce2a90da89d2e577",
+   "uv": "c7c200a0d55e3038",
+   "mask": "be8fde41d389b833"
+  },
+  "HARB_roof_deck": {
+   "tris": 6490,
+   "geometry": "afa46581467c73c2",
+   "uv": "8088fee9ce305ed3",
+   "mask": "34bfd943e4e4f73c"
+  },
+  "HARB_roof_eyebrow0_blocker": {
+   "tris": 512,
+   "geometry": "2499490d619c1fc1",
+   "uv": "6c757f1e1e1d4b74",
+   "mask": "72071961e4926666"
+  },
+  "HARB_roof_eyebrow0_blockers": {
+   "tris": 10,
+   "geometry": "6d330c34a9b4908c",
+   "uv": "3a3e0593f683329e",
+   "mask": "7551cd15bd1520dc"
+  },
+  "HARB_roof_eyebrow0_boards": {
+   "tris": 1164,
+   "geometry": "69cfa7d57064651e",
+   "uv": "11ce2888772abfb9",
+   "mask": "bc82e42ad9576362"
+  },
+  "HARB_roof_eyebrow0_frame": {
+   "tris": 90,
+   "geometry": "2b8d9af33c34e56b",
+   "uv": "73f940ee3cd55739",
+   "mask": "7ccdebc07b55850f"
+  },
+  "HARB_roof_eyebrow0_frames": {
+   "tris": 500,
+   "geometry": "e9a31d75dba246b5",
+   "uv": "681aeb091549d426",
+   "mask": "0bddc67141b8eee7"
+  },
+  "HARB_roof_rafters": {
+   "tris": 1810,
+   "geometry": "de972b38801ecc58",
+   "uv": "321e741b5a97cab1",
+   "mask": "a65891745424d901"
+  },
+  "HARB_roof_shingles": {
+   "tris": 45306,
+   "geometry": "13a7e331687cf575",
+   "uv": "30a8e3d31280082a",
+   "mask": "e53ea66212153283"
+  },
+  "HARB_roof_soffit_deck": {
+   "tris": 2592,
+   "geometry": "dcb3e151a4b62e81",
+   "uv": "e7a3682ed88f428f",
+   "mask": "c1e42f5172d3eb49"
+  },
+  "HARB_roof_starter": {
+   "tris": 4094,
+   "geometry": "d526fb59cf1ce91b",
+   "uv": "31f16d245ec921ae",
+   "mask": "0cb6d7d53be86487"
+  },
+  "HARB_roof_underlap": {
+   "tris": 2820,
+   "geometry": "54a29df17e2531f2",
+   "uv": "dd38f14b49098f01",
+   "mask": "74c7eaaa1d89e1ac"
+  },
+  "HARB_roof_verge": {
+   "tris": 890,
+   "geometry": "4854ee5581f4b84e",
+   "uv": "796b3e5a65baf5b5",
+   "mask": "aa1e7b5a08c41993"
+  },
+  "HARB_roof_wall_abutment": {
+   "tris": 3366,
+   "geometry": "5512fb3648c39381",
+   "uv": "8fdc7f05c7258465",
+   "mask": "6f7619965a377ded"
+  },
+  "HARB_tower_blockers": {
+   "tris": 30,
+   "geometry": "02be7d03b37df82f",
+   "uv": "cbd02094a8de7f1b",
+   "mask": "ab2289d66200d2db"
+  },
+  "HARB_tower_dressed": {
+   "tris": 518,
+   "geometry": "07550e56b1db5bcf",
+   "uv": "989df02e08434d87",
+   "mask": "b5e2d9fa3c8a5588"
+  },
+  "HARB_tower_frames": {
+   "tris": 1236,
+   "geometry": "c3b3717a557ae458",
+   "uv": "ef558110f0a40a30",
+   "mask": "84a20869d522b3d3"
+  },
+  "HARB_tower_mortar": {
+   "tris": 4350,
+   "geometry": "5be5609be36fa388",
+   "uv": "14ae1ce06556a3d5",
+   "mask": "80484804eac11b6b"
+  },
+  "HARB_tower_reveals": {
+   "tris": 24,
+   "geometry": "fc28dd644b72e680",
+   "uv": "c336bed3360b0e10",
+   "mask": "9670432d8ce6440a"
+  },
+  "HARB_tower_stones": {
+   "tris": 80788,
+   "geometry": "2fb17d1041c8e201",
+   "uv": "ba77ede91097016e",
+   "mask": "def177484d9f5d35"
+  },
+  "HARB_tower_top_backing": {
+   "tris": 192,
+   "geometry": "57c3a3d6a14a2d1b",
+   "uv": "85aa0c06103ae644",
+   "mask": "6759d3863d9a1322"
+  },
+  "HARB_tower_top_blockers": {
+   "tris": 40,
+   "geometry": "91caebaec5a64078",
+   "uv": "8f82a8d41100a77e",
+   "mask": "9a02822ca98915a3"
+  },
+  "HARB_tower_top_boards": {
+   "tris": 3636,
+   "geometry": "ca15daac2631a583",
+   "uv": "eb5b9dac47819bf4",
+   "mask": "78fc21fedc49fa88"
+  },
+  "HARB_tower_top_frames": {
+   "tris": 980,
+   "geometry": "9ea08300b8479f59",
+   "uv": "59ad08f9cc84e807",
+   "mask": "0570e2be51ab012f"
+  },
+  "HARB_tower_top_ring": {
+   "tris": 2234,
+   "geometry": "73c52ce171544119",
+   "uv": "cda4ddfca5b41cee",
+   "mask": "c89f757bf805b521"
+  },
+  "HARB_water_gable_blocker": {
+   "tris": 3956,
+   "geometry": "344e14d259c46200",
+   "uv": "84baa227b3678c68",
+   "mask": "f4d128c8dc8a3c2a"
+  },
+  "HARB_water_gable_boards": {
+   "tris": 1214,
+   "geometry": "ad9a0877189d0a71",
+   "uv": "1f5fd0c9bb26b03b",
+   "mask": "e01ee06ab7795bb0"
+  },
+  "HARB_water_gable_frame": {
+   "tris": 1652,
+   "geometry": "d40ea0df69bb4f92",
+   "uv": "5edbca50fca64e8c",
+   "mask": "89c33e74ff2d9b64"
+  },
+  "HARB_water_gable_pads": {
+   "tris": 894,
+   "geometry": "7cd23b54d022ce59",
+   "uv": "7cb56eab3949b45e",
+   "mask": "981d14b771e4fa92"
+  },
+  "HARB_water_gable_respond_blocker": {
+   "tris": 216,
+   "geometry": "3a73cd150e726bab",
+   "uv": "c3ac511cc7b32217",
+   "mask": "47fdeb84b68918a3"
+  },
+  "HARB_wing_blockers": {
+   "tris": 20,
+   "geometry": "02aaa425e026ef04",
+   "uv": "47ea58f8ef0bc274",
+   "mask": "0973f2874cf382f9"
+  },
+  "HARB_wing_dressed": {
+   "tris": 390,
+   "geometry": "398984c98ce5df0f",
+   "uv": "f0ce97e14da42c1d",
+   "mask": "3eda1508284bd016"
+  },
+  "HARB_wing_frames": {
+   "tris": 3702,
+   "geometry": "5aacaa02529c1dfe",
+   "uv": "5b00ba6215b7cf90",
+   "mask": "50944bf4f8b16eb3"
+  },
+  "HARB_wing_ironwork": {
+   "tris": 462,
+   "geometry": "89cf3644c8d5e629",
+   "uv": "6d96c481d15ba72a",
+   "mask": "997500965a3ffe35"
+  },
+  "HARB_wing_mortar": {
+   "tris": 3634,
+   "geometry": "b40a4f7f01b64c42",
+   "uv": "1ac88636c816be0b",
+   "mask": "b2e8e9a163fadf52"
+  },
+  "HARB_wing_quoins": {
+   "tris": 2336,
+   "geometry": "696caa5e56384faf",
+   "uv": "9a014faf3018796a",
+   "mask": "e6edd3b7340887a5"
+  },
+  "HARB_wing_reveals": {
+   "tris": 16,
+   "geometry": "3806e3929af0b731",
+   "uv": "61ccaa6eac4508c8",
+   "mask": "e16b7a4903174737"
+  },
+  "HARB_wing_roof_apex_cap_collar": {
+   "tris": 334,
+   "geometry": "e596afd8641e3d16",
+   "uv": "b02d19b309d62ca7",
+   "mask": "925b347511aa039d"
+  },
+  "HARB_wing_roof_apex_finial": {
+   "tris": 1438,
+   "geometry": "b14405a45846950f",
+   "uv": "a0cb4827ce948ecc",
+   "mask": "0472a3afa8d34816"
+  },
+  "HARB_wing_roof_comb": {
+   "tris": 2738,
+   "geometry": "e3e3f90fd48c8543",
+   "uv": "5b1beb5d10a9d970",
+   "mask": "0f3aed9fc4a0cdae"
+  },
+  "HARB_wing_roof_covering": {
+   "tris": 41521,
+   "geometry": "e4d7a86a9e0e48a9",
+   "uv": "93a043128dc856e6",
+   "mask": "f06d591270621d0d"
+  },
+  "HARB_wing_roof_deck": {
+   "tris": 2196,
+   "geometry": "b3b70521a7e367fd",
+   "uv": "e3efd5f3256c1db3",
+   "mask": "94733a292124792b"
+  },
+  "HARB_wing_roof_rafters": {
+   "tris": 980,
+   "geometry": "1d7eebcefac820f8",
+   "uv": "ae8e19dcf8a13183",
+   "mask": "14f5aac350bac8ef"
+  },
+  "HARB_wing_roof_verge": {
+   "tris": 254,
+   "geometry": "3ef4c43cf5945f0d",
+   "uv": "5d61f3b200ac4aff",
+   "mask": "6aac191a19fc9143"
+  },
+  "HARB_wing_roof_wing_abutment": {
+   "tris": 4248,
+   "geometry": "1c5b41d1f0925b9a",
+   "uv": "2df123faec2d4816",
+   "mask": "be6e004e91760255"
+  },
+  "HARB_wing_stones": {
+   "tris": 65527,
+   "geometry": "56395e714f4fd920",
+   "uv": "13d6684c60f05f1a",
+   "mask": "5e1f8be0062739f6"
+  }
+ },
+ "triangles": 714452,
+ "geometry": "c3d3a5343572dc73",
+ "uv": "010c14c06ec9eb50",
+ "mask": "e23665ef913e5991"
+}

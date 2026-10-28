@@ -1,0 +1,21 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\v7_cottage.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:111: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:348
++ ... er_village; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:127: DeprecationWarning: 'World.use_nodes' is 
+expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.625  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.719  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\hero.png'
+00:08.484  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\front.png'
+00:12.219  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\side.png'
+00:16.016  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\back.png'
+00:19.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\aerial.png'
+00:23.969  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\actor_closeup.png'
+REVIEW_STATS {"objects": 53, "triangles": 438617, "bbox_min": [-6.102634429931641, -6.097803115844727, -0.05000000074505806], "bbox_max": [6.102634429931641, 6.097803115844727, 8.382418632507324], "size_m": [12.205268859863281, 12.195606231689453, 8.432418823242188], "materials": ["M_iron", "M_lead", "M_mortar", "M_roof_shake", "M_stone", "M_stone_dressed", "M_thatch", "M_timber", "M_timber_weathered"], "est_hidden_pct": 12.1, "est_hidden_triangles": 52963, "material_slot_count": 9, "mask_attribute_missing": []}

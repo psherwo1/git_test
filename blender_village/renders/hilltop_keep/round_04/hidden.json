@@ -1,0 +1,1342 @@
+{
+  "triangles": 1313720,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 13.5,
+  "est_hidden_triangles": 177023,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "KEEP_hall_wall_stones",
+      "est_triangles": 219719,
+      "est_hidden_triangles": 28080,
+      "hidden_pct_of_object": 12.8
+    },
+    {
+      "object": "KEEP_wing_wall_stones",
+      "est_triangles": 99350,
+      "est_hidden_triangles": 20691,
+      "hidden_pct_of_object": 20.8
+    },
+    {
+      "object": "KEEP_wing_roof_thatch",
+      "est_triangles": 80465,
+      "est_hidden_triangles": 16093,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "KEEP_turret_stones",
+      "est_triangles": 86869,
+      "est_hidden_triangles": 11987,
+      "hidden_pct_of_object": 13.8
+    },
+    {
+      "object": "KEEP_wing_roof_thatch_courses",
+      "est_triangles": 74225,
+      "est_hidden_triangles": 10345,
+      "hidden_pct_of_object": 13.9
+    },
+    {
+      "object": "KEEP_cone_stones",
+      "est_triangles": 202148,
+      "est_hidden_triangles": 8867,
+      "hidden_pct_of_object": 4.4
+    },
+    {
+      "object": "KEEP_roof_collar_shakes",
+      "est_triangles": 60102,
+      "est_hidden_triangles": 5419,
+      "hidden_pct_of_object": 9.0
+    },
+    {
+      "object": "KEEP_hall_dressed_stones",
+      "est_triangles": 56489,
+      "est_hidden_triangles": 5254,
+      "hidden_pct_of_object": 9.3
+    },
+    {
+      "object": "KEEP_turret_corbel_collar",
+      "est_triangles": 13958,
+      "est_hidden_triangles": 4926,
+      "hidden_pct_of_object": 35.3
+    },
+    {
+      "object": "KEEP_wing_door",
+      "est_triangles": 17406,
+      "est_hidden_triangles": 4598,
+      "hidden_pct_of_object": 26.4
+    },
+    {
+      "object": "KEEP_roof_skirt_structure",
+      "est_triangles": 16257,
+      "est_hidden_triangles": 4598,
+      "hidden_pct_of_object": 28.3
+    },
+    {
+      "object": "KEEP_wing_flashing",
+      "est_triangles": 9196,
+      "est_hidden_triangles": 3941,
+      "hidden_pct_of_object": 42.9
+    },
+    {
+      "object": "KEEP_turret_cap_structure",
+      "est_triangles": 17078,
+      "est_hidden_triangles": 3776,
+      "hidden_pct_of_object": 22.1
+    },
+    {
+      "object": "KEEP_turret_drum",
+      "est_triangles": 6075,
+      "est_hidden_triangles": 3612,
+      "hidden_pct_of_object": 59.5
+    },
+    {
+      "object": "KEEP_roof_skirt_boards",
+      "est_triangles": 35306,
+      "est_hidden_triangles": 3120,
+      "hidden_pct_of_object": 8.8
+    },
+    {
+      "object": "KEEP_cap_structure",
+      "est_triangles": 19377,
+      "est_hidden_triangles": 2955,
+      "hidden_pct_of_object": 15.3
+    },
+    {
+      "object": "KEEP_wing_dressed_stones",
+      "est_triangles": 21840,
+      "est_hidden_triangles": 2791,
+      "hidden_pct_of_object": 12.8
+    },
+    {
+      "object": "KEEP_cap_shingles",
+      "est_triangles": 45487,
+      "est_hidden_triangles": 1806,
+      "hidden_pct_of_object": 4.0
+    },
+    {
+      "object": "KEEP_turret_cap_shingles",
+      "est_triangles": 35963,
+      "est_hidden_triangles": 1642,
+      "hidden_pct_of_object": 4.6
+    },
+    {
+      "object": "KEEP_turret_mortar",
+      "est_triangles": 4598,
+      "est_hidden_triangles": 1642,
+      "hidden_pct_of_object": 35.7
+    },
+    {
+      "object": "KEEP_cone_ledge_slabs",
+      "est_triangles": 6404,
+      "est_hidden_triangles": 1477,
+      "hidden_pct_of_object": 23.1
+    },
+    {
+      "object": "KEEP_hall_eave_plate",
+      "est_triangles": 7389,
+      "est_hidden_triangles": 1477,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "KEEP_wing_wall_mortar",
+      "est_triangles": 3284,
+      "est_hidden_triangles": 1149,
+      "hidden_pct_of_object": 35.0
+    },
+    {
+      "object": "KEEP_cap_hips",
+      "est_triangles": 13465,
+      "est_hidden_triangles": 1149,
+      "hidden_pct_of_object": 8.5
+    },
+    {
+      "object": "KEEP_turret_cap_hips",
+      "est_triangles": 12480,
+      "est_hidden_triangles": 985,
+      "hidden_pct_of_object": 7.9
+    },
+    {
+      "object": "KEEP_door_ironwork",
+      "est_triangles": 3284,
+      "est_hidden_triangles": 985,
+      "hidden_pct_of_object": 30.0
+    },
+    {
+      "object": "KEEP_wing_roof_structure",
+      "est_triangles": 1313,
+      "est_hidden_triangles": 985,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "KEEP_door_leaf",
+      "est_triangles": 10345,
+      "est_hidden_triangles": 821,
+      "hidden_pct_of_object": 7.9
+    },
+    {
+      "object": "KEEP_boulder_011",
+      "est_triangles": 1149,
+      "est_hidden_triangles": 821,
+      "hidden_pct_of_object": 71.4
+    },
+    {
+      "object": "KEEP_hall_post_bases",
+      "est_triangles": 4598,
+      "est_hidden_triangles": 656,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "KEEP_hall_dressed_joint_mortar",
+      "est_triangles": 985,
+      "est_hidden_triangles": 656,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_012",
+      "est_triangles": 656,
+      "est_hidden_triangles": 492,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "KEEP_hall_posts",
+      "est_triangles": 28244,
+      "est_hidden_triangles": 492,
+      "hidden_pct_of_object": 1.7
+    },
+    {
+      "object": "KEEP_hall_wall_mortar",
+      "est_triangles": 4269,
+      "est_hidden_triangles": 492,
+      "hidden_pct_of_object": 11.5
+    },
+    {
+      "object": "KEEP_rubble_023",
+      "est_triangles": 1149,
+      "est_hidden_triangles": 492,
+      "hidden_pct_of_object": 42.9
+    },
+    {
+      "object": "KEEP_rubble_058",
+      "est_triangles": 492,
+      "est_hidden_triangles": 492,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_threshold",
+      "est_triangles": 821,
+      "est_hidden_triangles": 492,
+      "hidden_pct_of_object": 60.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_020",
+      "est_triangles": 492,
+      "est_hidden_triangles": 492,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_027",
+      "est_triangles": 492,
+      "est_hidden_triangles": 492,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_roof_skirt_hips",
+      "est_triangles": 5747,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 5.7
+    },
+    {
+      "object": "KEEP_turret_corbel_mortar",
+      "est_triangles": 1642,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "KEEP_wing_door_ironwork",
+      "est_triangles": 1642,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "KEEP_pintle_002",
+      "est_triangles": 328,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_028",
+      "est_triangles": 656,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_boulder_012",
+      "est_triangles": 656,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_rubble_064",
+      "est_triangles": 492,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_rubble_036",
+      "est_triangles": 492,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_pintle_005",
+      "est_triangles": 492,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_peg_086",
+      "est_triangles": 328,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_006",
+      "est_triangles": 492,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_boulder_001",
+      "est_triangles": 492,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_rubble_048",
+      "est_triangles": 328,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_050",
+      "est_triangles": 328,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_054",
+      "est_triangles": 328,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_009",
+      "est_triangles": 328,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_050",
+      "est_triangles": 492,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_064",
+      "est_triangles": 492,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_hall_interior",
+      "est_triangles": 492,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_wing_roof_rolls",
+      "est_triangles": 10181,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 1.6
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_036",
+      "est_triangles": 656,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "KEEP_boulder_002",
+      "est_triangles": 492,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "KEEP_boulder_007",
+      "est_triangles": 492,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "KEEP_lantern_boards",
+      "est_triangles": 4433,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 3.7
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_060",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_061",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_090",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_027",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_056",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_047",
+      "est_triangles": 492,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_044",
+      "est_triangles": 492,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "KEEP_cone_mortar",
+      "est_triangles": 2627,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 6.2
+    },
+    {
+      "object": "KEEP_hall_knee_braces",
+      "est_triangles": 821,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_049",
+      "est_triangles": 985,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "KEEP_rubble_042",
+      "est_triangles": 492,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "KEEP_peg_088",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_boulder_010",
+      "est_triangles": 656,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_037",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_013",
+      "est_triangles": 492,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "KEEP_rubble_012",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_pintle_001",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_004",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_028",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_rubble_026",
+      "est_triangles": 1313,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 12.5
+    },
+    {
+      "object": "KEEP_wing_window",
+      "est_triangles": 1149,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "KEEP_peg_006",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_008",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_lantern_frame",
+      "est_triangles": 1642,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 10.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_066",
+      "est_triangles": 492,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_033",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_040",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_041",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_peg_005",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_021",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_peg_051",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_045",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_rubble_020",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_boulder_005",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_005",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_rubble_039",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_045",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_peg_094",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_037",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_053",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_014",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_022",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_peg_026",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_056",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_041",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_hall_window_frames",
+      "est_triangles": 328,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_peg_052",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_029",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_066",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_rubble_055",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_001",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_061",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_084",
+      "est_triangles": 164,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_025",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_wing_ridge_comb",
+      "est_triangles": 3776,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_008",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_062",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_finial_turret",
+      "est_triangles": 1313,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_067",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_003",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_011",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_054",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_017",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_boulder_003",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_015",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_062",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_022",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_044",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_011",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_007",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_042",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_063",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_017",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_071",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_073",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_010",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_finial_main",
+      "est_triangles": 1806,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_016",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_041",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_058",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_016",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_049",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_034",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_057",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_059",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_031",
+      "est_triangles": 821,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_060",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_023",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_033",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_089",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_029",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_055",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_055",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_013",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_059",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_001",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_011",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_025",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_014",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_030",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_052",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_002",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_039",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_022",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_051",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_019",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_023",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_032",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_018",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_boulder_009",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_009",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_boulder_013",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_063",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_017",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_003",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_061",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_005",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_boulder_004",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_007",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_075",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_053",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_boulder_008",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_040",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_010",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_034",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_030",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_059",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_038",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_022",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_029",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_028",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_057",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_032",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_004",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_044",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_059",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_031",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_003",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_053",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_034",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_014",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_024",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_027",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_065",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_046",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_002",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_065",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_047",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_018",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_nail_038",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_019",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_082",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_043",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_047",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_043",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_027",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_rubble_002",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_boulder_006",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_053",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

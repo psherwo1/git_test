@@ -1,0 +1,33 @@
+﻿00:01.921  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+rays 34720 misses 156
+misses by (yaw, pitch): {(-50, -30): 100, (50, -30): 56}
+z range of missed targets 4.83 5.03
+misses whose target is UNDER a roof part (up-ray hits HARB_roof_* within 4 m): 0
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.6), np.float64(5.03), None, None, 'HARB_roof_covering', 0.161)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.56), np.float64(5.03), None, None, 'HARB_roof_covering', 0.164)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.52), np.float64(5.03), None, None, 'HARB_roof_covering', 0.166)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.48), np.float64(5.03), None, None, 'HARB_roof_covering', 0.168)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.44), np.float64(4.99), None, None, 'HARB_roof_covering', 0.129)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.44), np.float64(5.03), None, None, 'HARB_roof_covering', 0.169)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.4), np.float64(4.99), None, None, 'HARB_roof_covering', 0.129)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.4), np.float64(5.03), None, None, 'HARB_roof_covering', 0.169)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.36), np.float64(4.99), None, None, 'HARB_roof_covering', 0.129)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.36), np.float64(5.03), None, None, 'HARB_roof_covering', 0.169)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.32), np.float64(4.99), None, None, 'HARB_roof_covering', 0.127)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.32), np.float64(5.03), None, None, 'HARB_roof_covering', 0.167)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.28), np.float64(4.99), None, None, 'HARB_roof_covering', 0.125)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.28), np.float64(5.03), None, None, 'HARB_roof_covering', 0.165)
+   sample miss (yaw, pitch, y, z, up-hit, up-dist, down-hit, down-dist) (-50, -30, np.float64(-1.24), np.float64(4.99), None, None, 'HARB_roof_covering', 0.121)
+   roof top at x -0.80 y -2.60: z 4.182 (HARB_roof_covering)
+   roof top at x -0.80 y -2.30: z 4.292 (HARB_roof_covering)
+   roof top at x -0.80 y -2.00: z 4.621 (HARB_roof_covering)
+   roof top at x -0.80 y -1.70: z 4.871 (HARB_roof_covering)
+   roof top at x -0.80 y -1.37: z 4.861 (HARB_roof_covering)
+   roof top at x -0.80 y -1.00: z 4.843 (HARB_roof_covering)
+   roof top at x -0.80 y -0.70: z 4.532 (HARB_roof_covering)
+   roof top at x -0.80 y -0.40: z 4.186 (HARB_roof_covering)
+   roof top at x -0.80 y -0.14: z 4.142 (HARB_roof_covering)
+DONE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

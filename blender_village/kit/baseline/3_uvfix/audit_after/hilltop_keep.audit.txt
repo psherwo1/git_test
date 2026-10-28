@@ -1,0 +1,16 @@
+﻿GRAIN M_timber             area    300.3  along  92.3%  across   1.4%  [of judged  98.2%; sheets   18.1]  (per piece: along  92.3%)  | roof    47.2: up  36.9%  down   3.4%  | m/UV 1.00
+GRAIN M_timber_weathered   area     29.2  along  83.2%  across   0.5%  [of judged  99.0%; sheets    4.6]  (per piece: along  83.2%)  | roof     1.8: up  29.5%  down   2.9%  | m/UV 1.00
+GRAIN M_roof_shingle       area    149.6  along  16.2%  across  51.3%  [of judged  21.8%; sheets   38.1]  (per piece: along  16.2%)  | roof   112.0: up  99.8%  down   0.1%  | m/UV 0.72
+GRAIN M_roof_shake         area     98.7  along  62.8%  across   0.4%  [of judged  97.9%; sheets   35.4]  (per piece: along  62.8%)  | roof    80.0: up 100.0%  down   0.0%  | m/UV 0.99
+GRAIN M_thatch             area    188.4  along   6.0%  across  91.3%  [of judged   6.0%; sheets    0.0]  (per piece: along   6.0%)  | roof   123.4: up  96.3%  down   2.0%  | m/UV 1.05
+COLLAPSED objects >= 1% area at ratio<0.2: 0 of 76; worst max 0.47%
+WALKED tops in door zones: area 3.872 m2, B max 0.039, area with B > 0.05: 0.000 m2  (pooled door hardware in the zones, not walked pieces: 26 objects, 0.0073 m2, B max 0.200)
+   door             KEEP_door_ironwork               faces   114 area   0.005 B max 0.039 mean 0.039 >0.05 0.000
+   door             KEEP_hall_dressed_joint_mortar   faces    12 area   0.003 B max 0.039 mean 0.039 >0.05 0.000
+   door             KEEP_hall_dressed_stones         faces   144 area   0.130 B max 0.039 mean 0.039 >0.05 0.000
+   door             KEEP_hall_interior               faces     1 area   0.513 B max 0.039 mean 0.039 >0.05 0.000
+   door             KEEP_hall_wall_stones            faces    34 area   0.021 B max 0.039 mean 0.039 >0.05 0.000
+   door             KEEP_threshold                   faces   281 area   1.321 B max 0.039 mean 0.039 >0.05 0.000
+   annex_door       KEEP_wing_door                   faces    30 area   1.042 B max 0.039 mean 0.039 >0.05 0.000
+   annex_door       KEEP_wing_door_ironwork          faces    93 area   0.004 B max 0.039 mean 0.039 >0.05 0.000
+   annex_door       KEEP_wing_wall_mortar            faces     1 area   0.833 B max 0.039 mean 0.039 >0.05 0.000

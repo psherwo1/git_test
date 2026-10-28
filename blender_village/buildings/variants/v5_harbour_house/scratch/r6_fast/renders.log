@@ -1,0 +1,30 @@
+﻿00:00.563  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\v5_harbour_house.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\closeups_r6.py:27: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:1309
++ ... cd scratch; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\closeups_r6.py:43: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w.use_nodes = True
+00:00.719  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.032  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_eye.png'
+00:05.454  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_eye_red.png'
+wrote r6_brow_eye
+00:09.469  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_ref4.png'
+wrote r6_brow_ref4
+00:13.610  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_graze.png'
+00:14.032  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_graze_red.png'
+wrote r6_brow_graze
+00:18.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_close.png'
+00:18.657  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_close_red.png'
+wrote r6_brow_close
+00:22.829  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_crane.png'
+00:23.219  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_crane_red.png'
+wrote r6_brow_crane
+00:27.157  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\r6_fast\renders\r6_brow_thumb45.png'
+wrote r6_brow_thumb45

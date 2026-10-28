@@ -1,0 +1,292 @@
+{
+  "triangles": 1475381,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 34.7,
+  "est_hidden_triangles": 512510,
+  "est_below_ground_pct": 0.3,
+  "objects": [
+    {
+      "object": "KEEP_hall_wall_stones",
+      "est_triangles": 200651,
+      "est_hidden_triangles": 47949,
+      "hidden_pct_of_object": 23.9
+    },
+    {
+      "object": "KEEP_wing_roof_thatch",
+      "est_triangles": 111944,
+      "est_hidden_triangles": 43523,
+      "hidden_pct_of_object": 38.9
+    },
+    {
+      "object": "KEEP_cone_stones",
+      "est_triangles": 127804,
+      "est_hidden_triangles": 40757,
+      "hidden_pct_of_object": 31.9
+    },
+    {
+      "object": "KEEP_wing_roof_thatch_courses",
+      "est_triangles": 111022,
+      "est_hidden_triangles": 30798,
+      "hidden_pct_of_object": 27.7
+    },
+    {
+      "object": "KEEP_turret_stones",
+      "est_triangles": 86309,
+      "est_hidden_triangles": 30798,
+      "hidden_pct_of_object": 35.7
+    },
+    {
+      "object": "KEEP_cap_structure",
+      "est_triangles": 42970,
+      "est_hidden_triangles": 27478,
+      "hidden_pct_of_object": 63.9
+    },
+    {
+      "object": "KEEP_roof_skirt_structure",
+      "est_triangles": 39466,
+      "est_hidden_triangles": 27478,
+      "hidden_pct_of_object": 69.6
+    },
+    {
+      "object": "KEEP_roof_skirt_boards",
+      "est_triangles": 55511,
+      "est_hidden_triangles": 24528,
+      "hidden_pct_of_object": 44.2
+    },
+    {
+      "object": "KEEP_cap_shingles",
+      "est_triangles": 62150,
+      "est_hidden_triangles": 21946,
+      "hidden_pct_of_object": 35.3
+    },
+    {
+      "object": "KEEP_wing_wall_stones",
+      "est_triangles": 80961,
+      "est_hidden_triangles": 20286,
+      "hidden_pct_of_object": 25.1
+    },
+    {
+      "object": "KEEP_turret_cap_shingles",
+      "est_triangles": 42601,
+      "est_hidden_triangles": 19364,
+      "hidden_pct_of_object": 45.5
+    },
+    {
+      "object": "KEEP_hall_wall_mortar",
+      "est_triangles": 30060,
+      "est_hidden_triangles": 18626,
+      "hidden_pct_of_object": 62.0
+    },
+    {
+      "object": "KEEP_roof_collar_shakes",
+      "est_triangles": 71187,
+      "est_hidden_triangles": 16229,
+      "hidden_pct_of_object": 22.8
+    },
+    {
+      "object": "KEEP_turret_cap_structure",
+      "est_triangles": 27294,
+      "est_hidden_triangles": 15675,
+      "hidden_pct_of_object": 57.4
+    },
+    {
+      "object": "KEEP_hall_posts",
+      "est_triangles": 39835,
+      "est_hidden_triangles": 12540,
+      "hidden_pct_of_object": 31.5
+    },
+    {
+      "object": "KEEP_hall_eave_plate",
+      "est_triangles": 16782,
+      "est_hidden_triangles": 10512,
+      "hidden_pct_of_object": 62.6
+    },
+    {
+      "object": "KEEP_wing_door",
+      "est_triangles": 20655,
+      "est_hidden_triangles": 8667,
+      "hidden_pct_of_object": 42.0
+    },
+    {
+      "object": "KEEP_turret_drum",
+      "est_triangles": 10512,
+      "est_hidden_triangles": 8114,
+      "hidden_pct_of_object": 77.2
+    },
+    {
+      "object": "KEEP_wing_wall_mortar",
+      "est_triangles": 11434,
+      "est_hidden_triangles": 7561,
+      "hidden_pct_of_object": 66.1
+    },
+    {
+      "object": "KEEP_wing_flashing",
+      "est_triangles": 13831,
+      "est_hidden_triangles": 6639,
+      "hidden_pct_of_object": 48.0
+    },
+    {
+      "object": "KEEP_hall_interior",
+      "est_triangles": 7192,
+      "est_hidden_triangles": 5348,
+      "hidden_pct_of_object": 74.4
+    },
+    {
+      "object": "KEEP_door_leaf",
+      "est_triangles": 15491,
+      "est_hidden_triangles": 5163,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "KEEP_cone_ledge_slabs",
+      "est_triangles": 10696,
+      "est_hidden_triangles": 5163,
+      "hidden_pct_of_object": 48.3
+    },
+    {
+      "object": "KEEP_wing_dressed_stones",
+      "est_triangles": 22499,
+      "est_hidden_triangles": 4979,
+      "hidden_pct_of_object": 22.1
+    },
+    {
+      "object": "KEEP_wing_roof_rolls",
+      "est_triangles": 16598,
+      "est_hidden_triangles": 4610,
+      "hidden_pct_of_object": 27.8
+    },
+    {
+      "object": "KEEP_turret_mortar",
+      "est_triangles": 9589,
+      "est_hidden_triangles": 4426,
+      "hidden_pct_of_object": 46.2
+    },
+    {
+      "object": "KEEP_wing_roof_structure",
+      "est_triangles": 4426,
+      "est_hidden_triangles": 4426,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_turret_corbel_collar",
+      "est_triangles": 20286,
+      "est_hidden_triangles": 4241,
+      "hidden_pct_of_object": 20.9
+    },
+    {
+      "object": "KEEP_lantern_boards",
+      "est_triangles": 8667,
+      "est_hidden_triangles": 4057,
+      "hidden_pct_of_object": 46.8
+    },
+    {
+      "object": "KEEP_hall_post_bases",
+      "est_triangles": 7192,
+      "est_hidden_triangles": 4057,
+      "hidden_pct_of_object": 56.4
+    },
+    {
+      "object": "KEEP_hall_dressed_stones",
+      "est_triangles": 51822,
+      "est_hidden_triangles": 3872,
+      "hidden_pct_of_object": 7.5
+    },
+    {
+      "object": "KEEP_cap_hips",
+      "est_triangles": 15860,
+      "est_hidden_triangles": 3688,
+      "hidden_pct_of_object": 23.3
+    },
+    {
+      "object": "KEEP_cone_mortar",
+      "est_triangles": 9958,
+      "est_hidden_triangles": 3688,
+      "hidden_pct_of_object": 37.0
+    },
+    {
+      "object": "KEEP_wing_ridge_comb",
+      "est_triangles": 19917,
+      "est_hidden_triangles": 3504,
+      "hidden_pct_of_object": 17.6
+    },
+    {
+      "object": "KEEP_roof_skirt_hips",
+      "est_triangles": 8483,
+      "est_hidden_triangles": 2397,
+      "hidden_pct_of_object": 28.3
+    },
+    {
+      "object": "KEEP_lantern_frame",
+      "est_triangles": 4426,
+      "est_hidden_triangles": 2028,
+      "hidden_pct_of_object": 45.8
+    },
+    {
+      "object": "KEEP_turret_cap_hips",
+      "est_triangles": 10880,
+      "est_hidden_triangles": 1475,
+      "hidden_pct_of_object": 13.6
+    },
+    {
+      "object": "KEEP_ground_rubble",
+      "est_triangles": 8667,
+      "est_hidden_triangles": 1290,
+      "hidden_pct_of_object": 14.9
+    },
+    {
+      "object": "KEEP_hall_window_frames",
+      "est_triangles": 2213,
+      "est_hidden_triangles": 1290,
+      "hidden_pct_of_object": 58.3
+    },
+    {
+      "object": "KEEP_door_ironwork",
+      "est_triangles": 4979,
+      "est_hidden_triangles": 1106,
+      "hidden_pct_of_object": 22.2
+    },
+    {
+      "object": "KEEP_hall_knee_braces",
+      "est_triangles": 3872,
+      "est_hidden_triangles": 553,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "KEEP_wing_door_ironwork",
+      "est_triangles": 2213,
+      "est_hidden_triangles": 553,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "KEEP_wing_window",
+      "est_triangles": 553,
+      "est_hidden_triangles": 553,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_hall_dressed_joint_mortar",
+      "est_triangles": 737,
+      "est_hidden_triangles": 368,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "KEEP_threshold",
+      "est_triangles": 737,
+      "est_hidden_triangles": 184,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "KEEP_finial_main",
+      "est_triangles": 2213,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_finial_turret",
+      "est_triangles": 2213,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

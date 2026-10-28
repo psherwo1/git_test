@@ -1,0 +1,21 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v4_mixed\v4_mixed.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_one
+sided_r04.py:84: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:4 char:542
++ ... _log2.txt"; & $py "$d\dir_render_onesided_r04.py" $v4 $d "L05_smock_a ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_onesided_r04.py:
+123: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w.use_nodes = True
+00:00.719  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:01.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\a03_mill_door_reentrant_seethrough_red.png'
+DEVICE GPU
+WROTE a03_mill_door_reentrant
+00:01.860  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\L05_smock_apron_cap_mid_seethrough_red.png'
+WROTE L05_smock_apron_cap_mid
+00:02.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\m01_mill_door_into_interior_seethrough_red.png'
+WROTE m01_mill_door_into_interior

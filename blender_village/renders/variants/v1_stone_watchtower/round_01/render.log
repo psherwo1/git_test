@@ -1,0 +1,13 @@
+00:03.062  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v1_stone_watchtower\v1_stone_watchtower.blend"
+C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:111: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:127: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:03.734  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:20.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v1_stone_watchtower\round_01\hero.png'
+00:34.969  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v1_stone_watchtower\round_01\front.png'
+00:49.859  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v1_stone_watchtower\round_01\side.png'
+01:04.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v1_stone_watchtower\round_01\back.png'
+01:19.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v1_stone_watchtower\round_01\aerial.png'
+01:32.812  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v1_stone_watchtower\round_01\actor_closeup.png'
+REVIEW_STATS {"objects": 141, "triangles": 1138244, "bbox_min": [-3.2100231647491455, -3.180959701538086, -0.004999999888241291], "bbox_max": [3.225618839263916, 3.18168306350708, 15.251959800720215], "size_m": [6.435642242431641, 6.362642765045166, 15.256959915161133], "materials": ["M_iron", "M_lead", "M_mortar", "M_roof_shingle", "M_stone", "M_stone_dressed", "M_timber", "M_timber_weathered"], "est_hidden_pct": 12.6, "est_hidden_triangles": 142991, "material_slot_count": 8, "mask_attribute_missing": []}

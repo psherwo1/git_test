@@ -1,0 +1,220 @@
+[    0.2s] -- declare_bodies
+[    0.2s] -- stone_body
+[   17.8s]   HALL_hall visible mortar 14.7% -> 9.7% after 542 pinning stones
+[   19.4s]   HALL_hall_stones: 92400 verts, 79654 faces
+[   20.0s]   HALL_hall_quoins: 37312 verts, 34232 faces
+[   20.0s]   hall: 1468 rubble stones on 8 straight facets, 88 quoins in 11 quoin courses
+[   20.0s]   HALL_hall_mortar: 3623 verts, 3001 faces
+[   20.0s]   hall: 1468 stones, mortar cells 3001
+[   20.0s]     door at 270 deg: frame z -10.00..2.54
+[   20.0s]     window at 225 deg: frame z 0.96..2.38
+[   20.0s]     window at 315 deg: frame z 0.96..2.38
+[   20.0s]     window at 180 deg: frame z 1.15..2.20
+[   20.0s]     window at 45 deg: frame z 1.15..2.20
+[   20.0s]     window at 90 deg: frame z 1.15..2.38
+[   20.0s] -- stone_body
+[   25.5s]   HALL_tur_e visible mortar 14.7% -> 11.5% after 389 pinning stones
+[   25.5s]   HALL_tur_e stones 1248
+[   26.3s]   HALL_tur_e_stones: 58518 verts, 47493 faces
+[   26.3s]   (empty) HALL_tur_e_mortar
+[   26.4s]   HALL_tur_e_mortar: 2886 verts, 2582 faces
+[   26.4s]   tur_e: 1248 stones, mortar cells 2582
+[   26.4s]   HALL_tur_e_coping: 686 verts, 616 faces
+[   26.4s] -- stone_body
+[   27.7s]   HALL_tur_nw visible mortar 16.4% -> 11.5% after 247 pinning stones
+[   27.7s]   HALL_tur_nw stones 646
+[   28.1s]   HALL_tur_nw_stones: 32485 verts, 26788 faces
+[   28.1s]   (empty) HALL_tur_nw_mortar
+[   28.2s]   HALL_tur_nw_mortar: 1658 verts, 1454 faces
+[   28.2s]   tur_nw: 646 stones, mortar cells 1454
+[   28.2s]   HALL_tur_nw_coping: 539 verts, 484 faces
+[   28.2s] -- framed_openings
+[   28.2s]   HALL_openings_frame: 2552 verts, 2576 faces
+[   28.3s]   HALL_openings_leaf: 1176 verts, 1134 faces
+[   28.3s]   HALL_openings_iron: 216 verts, 210 faces
+[   28.3s]   HALL_openings_sill: 480 verts, 465 faces
+[   28.3s]   HALL_openings_backing: 336 verts, 324 faces
+[   28.3s] -- bell_tier
+[   29.1s]   HALL_skirt1 shingles 912
+[   29.2s]   HALL_skirt1_deck: 2338 verts, 2288 faces
+[   32.8s]   HALL_skirt1_shingles: 98554 verts, 85371 faces
+[   32.9s]   HALL_skirt1_hips: 12480 verts, 12240 faces
+[   33.3s]   HALL_skirt1_structure: 25240 verts, 23102 faces
+[   33.4s]   HALL_skirt1_deck_lap: 12000 verts, 11792 faces
+[   33.6s]   skirt1: dropped 10810 faces inside ['drum', 'tur_e', 'tur_nw']
+[   33.7s]   HALL_skirt1_band: 256 verts, 256 faces
+[   33.7s]   skirt1: lip p 6.10 z 3.08, wall p 4.85 plate 3.62, apex 6.49
+[   33.7s] -- stone_body
+[   37.0s]   HALL_drum visible mortar 13.7% -> 11.6% after 300 pinning stones
+[   37.0s]   HALL_drum stones 1101
+[   37.5s]   HALL_drum_stones: 44413 verts, 34617 faces
+[   37.5s]   (empty) HALL_drum_mortar
+[   37.6s]   HALL_drum_mortar: 2072 verts, 1762 faces
+[   37.6s]   drum: 1101 stones, mortar cells 1762
+[   37.6s] -- roof_flashing
+[   37.7s]   HALL_skirt1_drum_flashing: 6016 verts, 6016 faces
+[   37.7s]   flashing skirt1/drum: 376/376 stations, 1 run(s)
+[   37.7s] -- roof_flashing
+[   37.7s]   HALL_skirt1_tur_e_flashing: 1680 verts, 1666 faces
+[   37.7s]   flashing skirt1/tur_e: 105/166 stations, 1 run(s)
+[   37.7s] -- roof_flashing
+[   37.7s]   HALL_skirt1_tur_nw_flashing: 1568 verts, 1580 faces
+[   37.7s]   flashing skirt1/tur_nw: 98/132 stations, 1 run(s)
+[   37.7s] -- bell_tier
+[   37.9s]   HALL_skirt2_rafters: 2890 verts, 2429 faces
+[   37.9s]   HALL_skirt2_purlin_rings: 392 verts, 350 faces
+[   37.9s]   HALL_skirt2_battens: 424 verts, 318 faces
+[   40.0s] shingles: 414 full-length (covered part visible): 11
+[   40.1s]   HALL_skirt2_roof_shingles: 41860 verts, 35518 faces
+[   40.1s]   HALL_skirt2_roof_starter: 3240 verts, 2808 faces
+[   43.6s] underlap strips: 409
+[   43.6s]   HALL_skirt2_roof_underlap: 4908 verts, 2454 faces
+[   43.6s]   HALL_skirt2_roof_deck: 4205 verts, 3744 faces
+[   43.9s]   HALL_skirt2_eave_closure: 720 verts, 480 faces
+[   43.9s]   HALL_skirt2_wall_plate: 1328 verts, 1292 faces
+[   44.0s]   skirt2: dropped 635 faces inside ['lantern']
+[   44.0s]   roof clearance skirt2 over skirt1: min clear 2.69 m at (-3.35, 1.40) over 6728 plan samples (rule >= 0.50 m)
+[   44.0s]   skirt2 (round): wall head r 3.00 z 8.30, plate 8.29..8.49 on r 2.90 (rafters clear the head by 0.146), eave r 3.80 z 7.91, pitch 47, 24 rafters, 11 courses
+[   44.0s] -- board_belt
+[   44.0s]   HALL_lantern_boards: 1976 verts, 1710 faces
+[   44.0s]   HALL_lantern_backing: 129 verts, 128 faces
+[   44.0s]   HALL_lantern_ring: 896 verts, 864 faces
+[   44.0s] -- roof_flashing
+[   44.1s]   HALL_skirt2_lantern_flashing: 2912 verts, 2912 faces
+[   44.1s]   flashing skirt2/lantern: 182/182 stations, 1 run(s)
+[   44.1s] -- bell_tier
+[   44.2s]   HALL_cap_rafters: 1978 verts, 1675 faces
+[   44.3s]   HALL_cap_purlin_rings: 168 verts, 150 faces
+[   44.3s]   HALL_cap_battens: 264 verts, 198 faces
+[   45.8s] shingles: 302 full-length (covered part visible): 7
+[   45.8s]   HALL_cap_roof_shingles: 30450 verts, 25742 faces
+[   45.8s]   HALL_cap_roof_starter: 1860 verts, 1612 faces
+[   48.4s] underlap strips: 299
+[   48.4s]   HALL_cap_roof_underlap: 3588 verts, 1794 faces
+[   48.5s]   HALL_cap_roof_deck: 4205 verts, 3744 faces
+[   48.7s]   HALL_cap_eave_closure: 720 verts, 480 faces
+[   48.7s]   HALL_cap_wall_plate: 696 verts, 672 faces
+[   48.7s]   roof clearance cap over skirt2: min clear 1.60 m at (-2.20, -0.00) over 3452 plan samples (rule >= 0.50 m)
+[   48.7s]   cap (round): wall head r 1.60 z 12.40, plate 12.39..12.59 on r 1.48 (rafters clear the head by 0.065), eave r 2.20 z 11.37, pitch 70, 16 rafters, 16 courses
+[   48.7s] -- tier_finial
+[   48.7s]   HALL_cap_cap_collar: 5154 verts, 5210 faces
+[   48.7s]   HALL_cap_finial: 2502 verts, 2640 faces
+[   48.7s] collar drip 16.139 fascia top 16.204 lower top 16.686 upper top 16.986 spindle top 17.369 tip 18.509
+[   48.7s]   cap finial tip ~18.51 m
+[   48.7s] -- board_belt
+[   48.8s]   HALL_tur_e_belt_boards: 1612 verts, 1395 faces
+[   48.8s]   HALL_tur_e_belt_backing: 129 verts, 128 faces
+[   48.8s]   HALL_tur_e_belt_ring: 896 verts, 864 faces
+[   48.8s] -- bell_tier
+[   48.9s]   HALL_tur_e_cap_rafters: 1978 verts, 1675 faces
+[   49.0s]   HALL_tur_e_cap_purlin_rings: 168 verts, 150 faces
+[   49.0s]   HALL_tur_e_cap_battens: 248 verts, 186 faces
+[   50.0s] shingles: 200 full-length (covered part visible): 7
+[   50.1s]   HALL_tur_e_cap_roof_shingles: 20090 verts, 17094 faces
+[   50.1s]   HALL_tur_e_cap_roof_starter: 1560 verts, 1352 faces
+[   51.8s] underlap strips: 197
+[   51.8s]   HALL_tur_e_cap_roof_underlap: 2364 verts, 1182 faces
+[   51.8s]   HALL_tur_e_cap_roof_deck: 4205 verts, 3744 faces
+[   52.0s]   HALL_tur_e_cap_eave_closure: 720 verts, 480 faces
+[   52.0s]   HALL_tur_e_cap_wall_plate: 600 verts, 576 faces
+[   52.0s]   roof clearance tur_e_cap over skirt1: min clear 3.80 m at (3.68, -0.42) over 1225 plan samples (rule >= 0.50 m)
+[   52.0s]   roof clearance tur_e_cap over skirt2: min clear 0.70 m at (3.68, -0.42) over 57 plan samples (rule >= 0.50 m)
+[   52.0s]   tur_e_cap (round): wall head r 1.37 z 9.45, plate 9.44..9.64 on r 1.25 (rafters clear the head by 0.062), eave r 1.82 z 8.87, pitch 70, 16 rafters, 13 courses
+[   52.0s] -- tier_finial
+[   52.0s]   HALL_tur_e_cap_cap_collar: 5154 verts, 5210 faces
+[   52.1s]   HALL_tur_e_cap_finial: 2502 verts, 2640 faces
+[   52.1s] collar drip 12.709 fascia top 12.774 lower top 13.120 upper top 13.420 spindle top 13.803 tip 14.563
+[   52.1s]   tur_e_cap finial tip ~14.56 m
+[   52.1s] -- board_belt
+[   52.1s]   HALL_tur_nw_belt_boards: 1300 verts, 1125 faces
+[   52.1s]   HALL_tur_nw_belt_backing: 129 verts, 128 faces
+[   52.1s]   HALL_tur_nw_belt_ring: 896 verts, 864 faces
+[   52.1s] -- bell_tier
+[   52.2s]   HALL_tur_nw_cap_rafters: 1978 verts, 1675 faces
+[   52.3s]   HALL_tur_nw_cap_purlin_rings: 168 verts, 150 faces
+[   52.3s]   HALL_tur_nw_cap_battens: 200 verts, 150 faces
+[   53.0s] shingles: 144 full-length (covered part visible): 0
+[   53.1s]   HALL_tur_nw_cap_roof_shingles: 14410 verts, 12238 faces
+[   53.1s]   HALL_tur_nw_cap_roof_starter: 1320 verts, 1144 faces
+[   54.3s] underlap strips: 144
+[   54.3s]   HALL_tur_nw_cap_roof_underlap: 1728 verts, 864 faces
+[   54.3s]   HALL_tur_nw_cap_roof_deck: 4205 verts, 3744 faces
+[   54.5s]   HALL_tur_nw_cap_eave_closure: 720 verts, 480 faces
+[   54.6s]   HALL_tur_nw_cap_wall_plate: 488 verts, 464 faces
+[   54.6s]   roof clearance tur_nw_cap over skirt1: min clear 1.03 m at (-2.84, 2.51) over 1169 plan samples (rule >= 0.50 m)
+[   54.6s]   roof clearance skirt2 over tur_nw_cap: min clear 1.67 m at (-2.70, 2.66) over 8 plan samples (rule >= 0.50 m)
+[   54.6s]   tur_nw_cap (round): wall head r 1.09 z 6.62, plate 6.61..6.81 on r 0.97 (rafters clear the head by 0.061), eave r 1.54 z 6.01, pitch 70, 16 rafters, 10 courses
+[   54.6s] -- tier_finial
+[   54.6s]   HALL_tur_nw_cap_cap_collar: 5154 verts, 5210 faces
+[   54.6s]   HALL_tur_nw_cap_finial: 2502 verts, 2640 faces
+[   54.6s] collar drip 9.101 fascia top 9.166 lower top 9.513 upper top 9.813 spindle top 10.196 tip 10.861
+[   54.6s]   tur_nw_cap finial tip ~10.86 m
+[   54.6s] -- tier_hidden_cull
+[   54.6s]   hidden-geometry cull: 109 building views (+ the review views), per object 51-109, 5 workers
+[   55.5s]   visibility: 1094606 tris, 77 viewpoints
+[  107.2s]   visibility cull HALL_hall_stones: -9143 of 79654 polygons
+[  120.5s]   visibility cull HALL_hall_quoins: -2415 of 34232 polygons
+[  143.4s]   visibility cull HALL_tur_e_stones: -5115 of 47493 polygons
+[  158.5s]   visibility cull HALL_tur_nw_stones: -3603 of 26788 polygons
+[  163.9s]   visibility cull HALL_openings_frame: -1387 of 2576 polygons
+[  166.6s]   visibility cull HALL_openings_leaf: -694 of 1134 polygons
+[  167.4s]   visibility cull HALL_openings_sill: -200 of 465 polygons
+[  248.4s]   visibility cull HALL_skirt1_shingles: -12672 of 78440 polygons
+[  258.7s]   visibility cull HALL_skirt1_hips: -1396 of 12240 polygons
+[  311.3s]   visibility cull HALL_skirt1_structure: -11591 of 21295 polygons
+[  339.2s]   visibility cull HALL_drum_stones: -4570 of 34617 polygons
+[  343.2s]   visibility cull HALL_skirt2_rafters: -570 of 2002 polygons
+[  345.0s]   visibility cull HALL_skirt2_purlin_rings: -317 of 350 polygons
+[  345.7s]   visibility cull HALL_skirt2_battens: -85 of 318 polygons
+[  367.1s]   visibility cull HALL_skirt2_roof_shingles: -2945 of 35330 polygons
+[  369.8s]   visibility cull HALL_skirt2_roof_starter: -312 of 2808 polygons
+[  374.2s]   visibility cull HALL_skirt2_wall_plate: -955 of 1292 polygons
+[  381.5s]   visibility cull HALL_lantern_boards: -1430 of 1710 polygons
+[  384.2s]   visibility cull HALL_lantern_ring: -498 of 864 polygons
+[  388.2s]   visibility cull HALL_cap_rafters: -720 of 1675 polygons
+[  388.8s]   visibility cull HALL_cap_purlin_rings: -134 of 150 polygons
+[  389.0s]   visibility cull HALL_cap_battens: -9 of 198 polygons
+[  396.5s]   visibility cull HALL_cap_roof_shingles: -728 of 25742 polygons
+[  397.5s]   visibility cull HALL_cap_roof_starter: -66 of 1612 polygons
+[  401.0s]   visibility cull HALL_cap_wall_plate: -621 of 672 polygons
+[  404.5s]   visibility cull HALL_tur_e_belt_boards: -1143 of 1395 polygons
+[  406.1s]   visibility cull HALL_tur_e_belt_ring: -488 of 864 polygons
+[  408.8s]   visibility cull HALL_tur_e_cap_rafters: -768 of 1675 polygons
+[  409.3s]   visibility cull HALL_tur_e_cap_purlin_rings: -131 of 150 polygons
+[  409.5s]   visibility cull HALL_tur_e_cap_battens: -37 of 186 polygons
+[  413.3s]   visibility cull HALL_tur_e_cap_roof_shingles: -585 of 17094 polygons
+[  413.9s]   visibility cull HALL_tur_e_cap_roof_starter: -70 of 1352 polygons
+[  415.6s]   visibility cull HALL_tur_e_cap_wall_plate: -504 of 576 polygons
+[  418.4s]   visibility cull HALL_tur_nw_belt_boards: -935 of 1125 polygons
+[  420.2s]   visibility cull HALL_tur_nw_belt_ring: -512 of 864 polygons
+[  422.8s]   visibility cull HALL_tur_nw_cap_rafters: -785 of 1675 polygons
+[  423.2s]   visibility cull HALL_tur_nw_cap_purlin_rings: -114 of 150 polygons
+[  423.4s]   visibility cull HALL_tur_nw_cap_battens: -25 of 150 polygons
+[  426.0s]   visibility cull HALL_tur_nw_cap_roof_shingles: -358 of 12238 polygons
+[  426.6s]   visibility cull HALL_tur_nw_cap_roof_starter: -78 of 1144 polygons
+[  428.0s]   visibility cull HALL_tur_nw_cap_wall_plate: -417 of 464 polygons
+[  428.0s]   hidden-geometry cull: -69126 polygons on 41 objects in 373 s
+[  433.7s]   seal probe [see-through] skirt1 / drum: 72801 points, 444582 rays, 2213 grazing pass(es), 0 leak(s)
+[  435.1s]   seal probe [see-through] skirt1 / tur_e: 23336 points, 144470 rays, 324 grazing pass(es), 0 leak(s)
+[  436.5s]   seal probe [see-through] skirt1 / tur_nw: 21666 points, 134265 rays, 245 grazing pass(es), 0 leak(s)
+[  438.7s]   seal probe [see-through] skirt2 / lantern: 39584 points, 227604 rays, 205 grazing pass(es), 0 leak(s)
+[  438.7s]   seal probe: 950921 rays on 4 junction passes in 10.7 s
+[  438.7s] -- guards
+[  439.3s]   clearance gate HALL hall_door: door head 2.20 m, eave lip over it 3.188 m at (-0.5, -5.81) on HALL_skirt1_deck_lap (rule >= 2.30 m, 25 stations): PASS
+[  440.1s]   tier decals: 94 anchors placed {'damp_rise': 18, 'moss': 20, 'lichen': 10, 'repair_patch': 6, 'soot': 1, 'rust_stain': 2, 'crack': 12, 'water_streak': 25}, 60 wall anchors on macro normals
+[  441.0s] decal anchor check (applied): checked 94, snapped 1, max_move 0.029, renormal 0, shrunk 5, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 11, duplicate 0, kept 83
+[  441.0s]     DA_damp_rise_006: footprint off the surface (n.n0 1.00) ['HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', '-', '-', '-']
+[  441.0s]     DA_damp_rise_008: footprint off the surface (n.n0 1.00) ['HALL_hall_', '-', '-', 'HALL_hall_', 'HALL_hall_', '-', 'HALL_hall_', 'HALL_hall_', '-']
+[  441.0s]     DA_damp_rise_010: footprint off the surface (n.n0 1.00) ['-', '-', '-', '-', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_']
+[  441.0s]     DA_lichen_004: footprint off the surface (n.n0 1.00) ['HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_']
+[  441.0s]     DA_damp_rise_012: footprint off the surface (n.n0 1.00) ['HALL_tur_e', 'HALL_tur_e', 'HALL_tur_e', '-', 'HALL_tur_e', 'HALL_tur_e', '-', 'HALL_tur_e', '-']
+[  441.0s]     DA_damp_rise_014: footprint off the surface (n.n0 1.00) ['-', 'HALL_hall_', '-', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_']
+[  441.0s]     DA_lichen_005: footprint off the surface (n.n0 1.00) ['HALL_tur_e', 'HALL_tur_e', 'HALL_tur_e', 'HALL_tur_e', 'HALL_tur_e', 'HALL_tur_e', 'HALL_tur_e', 'HALL_tur_e', 'HALL_tur_e']
+[  441.0s]     DA_damp_rise_015: footprint off the surface (n.n0 1.00) ['HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_']
+[  441.0s]     DA_damp_rise_016: footprint off the surface (n.n0 0.38) ['-', '-', '-', 'HALL_tur_n', 'HALL_tur_n', 'HALL_tur_n', '-', '-', '-']
+[  441.0s]     DA_lichen_007: footprint off the surface (n.n0 1.00) ['-', 'HALL_tur_n', '-', '-', 'HALL_tur_n', '-', '-', 'HALL_tur_n', '-']
+[  441.0s]     DA_soot_001: footprint off the surface (n.n0 1.00) ['HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_', 'HALL_hall_']
+[  441.0s] decal anchors: 83
+[  441.0s] objects 165 (instances 88, pooled meshes 10) triangles 954925
+Info: Saved as "v2_tiered_hall.blend"
+[  441.1s] saved C:\GitHubDesktop\git_test\blender_village\kit\baseline\2_guardrails\v2_tiered_hall\v2_tiered_hall.blend 23.0 MB

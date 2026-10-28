@@ -1,0 +1,17 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house_r07_accepted.blend"
+00:00.984  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+SURF HARB_roof_deck         inside-zone max 0.185 m; outside-zone max 0.0000 m at (1.92, -1.14, 6.87); outside > 2 mm: 0 of 1648
+SURF HARB_roof_covering     inside-zone max 0.227 m; outside-zone max 0.0695 m at (-0.12, -4.64, 5.04); outside > 2 mm: 8 of 75300
+   outside 0.0695 m at (-0.12, -4.64, 5.04)
+   outside 0.0612 m at (-0.12, -4.65, 5.05)
+   outside 0.0595 m at (-0.7, -4.08, 4.32)
+   outside 0.0435 m at (-0.81, -4.05, 4.23)
+   outside 0.0210 m at (-1.04, -3.94, 4.0)
+   outside 0.0192 m at (-0.76, -4.08, 4.27)
+SURF HARB_roof_comb         inside-zone max 0.000 m; outside-zone max 0.0000 m at (2.13, 3.47, 7.21); outside > 2 mm: 0 of 4609
+TRIS HARB_roof_comb: r05-only 0 (0.0 cm2), r06-only 0
+TRIS HARB_tower_stones: r05-only 0 (0.0 cm2), r06-only 0
+TRIS HARB_wing_roof_covering: r05-only 0 (0.0 cm2), r06-only 2
+   new  centroid (-2.881, -3.889, 2.675) area 2.32 cm2
+   new  centroid (-2.88, -3.879, 2.674) area 2.37 cm2
+TRIS HARB_hall_stones: r05-only 0 (0.0 cm2), r06-only 0

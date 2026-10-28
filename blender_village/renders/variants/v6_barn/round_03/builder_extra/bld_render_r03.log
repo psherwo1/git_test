@@ -1,0 +1,63 @@
+﻿00:00.484  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\bld_render_r03.py:25: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:977
++ ... TEXITCODE"; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\bld_render_r03.py:35: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void = bpy.data.materials.new("_D_void"); void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\bld_render_r03.py:53: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_D_world"); world.use_nodes = True
+00:00.609  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.953  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\b01_cart_entry_front_eye.png'
+DEVICE GPU
+SHOT b01_cart_entry_front_eye
+00:08.953  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\b02_cart_entry_three_quarter.png'
+SHOT b02_cart_entry_three_quarter
+00:13.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d25_arch_springing_W.png'
+00:13.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d25_arch_springing_W_void.png'
+SHOT d25_arch_springing_W
+00:17.750  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d24_cart_doors_threshold_pads.png'
+00:18.281  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d24_cart_doors_threshold_pads_void.png'
+SHOT d24_cart_doors_threshold_pads
+00:22.391  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\s18_post_pad_plinth_E.png'
+00:22.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\s18_post_pad_plinth_E_void.png'
+SHOT s18_post_pad_plinth_E
+00:27.016  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\s19_post_pad_plinth_W.png'
+00:27.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\s19_post_pad_plinth_W_void.png'
+SHOT s19_post_pad_plinth_W
+00:31.672  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\b07_pad_close_W.png'
+00:32.188  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\b07_pad_close_W_void.png'
+SHOT b07_pad_close_W
+00:36.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d27_W_apex_knot.png'
+00:36.688  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d27_W_apex_knot_void.png'
+SHOT d27_W_apex_knot
+00:40.609  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d28_E_apex_knot.png'
+00:41.109  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d28_E_apex_knot_void.png'
+SHOT d28_E_apex_knot
+00:44.938  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d35_W_apex_from_ground_eye.png'
+00:45.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d35_W_apex_from_ground_eye_void.png'
+SHOT d35_W_apex_from_ground_eye
+00:49.234  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d36_E_apex_from_ground_eye.png'
+00:49.750  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d36_E_apex_from_ground_eye_void.png'
+SHOT d36_E_apex_from_ground_eye
+00:53.781  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\s10_W_apex_finial_verge.png'
+00:54.313  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\s10_W_apex_finial_verge_void.png'
+SHOT s10_W_apex_finial_verge
+00:58.109  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\b05_side_elev_W_rake.png'
+00:58.641  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\b05_side_elev_W_rake_void.png'
+SHOT b05_side_elev_W_rake
+01:02.656  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\b08_W_apex_above_oblique.png'
+01:03.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\b08_W_apex_above_oblique_void.png'
+SHOT b08_W_apex_above_oblique
+01:03.750  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d13_thumb_SW_45m.png'
+SHOT d13_thumb_SW_45m
+01:04.313  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\d14_thumb_SE_45m.png'
+SHOT d14_thumb_SE_45m

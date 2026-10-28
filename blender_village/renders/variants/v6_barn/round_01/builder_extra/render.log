@@ -1,0 +1,67 @@
+﻿00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\bld_render_r01.py:22: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:398
++ ... der_extra'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\bld_render_r01.py:39: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_B_world"); world.use_nodes = True
+00:00.687  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:07.219  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\b01_kiln_round_element.png'
+SHOT b01_kiln_round_element
+00:13.562  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\b02_cart_doors_eye.png'
+SHOT b02_cart_doors_eye
+00:19.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\b03_west_gable_roof_hoist.png'
+SHOT b03_west_gable_roof_hoist
+00:26.047  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\b04_ref4_three_quarter_high.png'
+SHOT b04_ref4_three_quarter_high
+00:32.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s01_kiln_thatch_junction_W.png'
+00:33.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s01_kiln_thatch_junction_W_red.png'
+SHOT s01_kiln_thatch_junction_W
+00:39.516  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s02_kiln_thatch_junction_E.png'
+00:39.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s02_kiln_thatch_junction_E_red.png'
+SHOT s02_kiln_thatch_junction_E
+00:44.062  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s03_kiln_from_ridge_above.png'
+00:44.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s03_kiln_from_ridge_above_red.png'
+SHOT s03_kiln_from_ridge_above
+00:48.625  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s04_wall_end_into_kiln_W.png'
+00:49.016  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s04_wall_end_into_kiln_W_red.png'
+SHOT s04_wall_end_into_kiln_W
+00:53.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s05_wall_end_into_kiln_E.png'
+00:53.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s05_wall_end_into_kiln_E_red.png'
+SHOT s05_wall_end_into_kiln_E
+00:57.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s06_cart_pad_plinth_W.png'
+00:58.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s06_cart_pad_plinth_W_red.png'
+SHOT s06_cart_pad_plinth_W
+01:02.516  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s07_cart_pad_plinth_E.png'
+01:02.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s07_cart_pad_plinth_E_red.png'
+SHOT s07_cart_pad_plinth_E
+01:07.109  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s08_eave_lift_lookup.png'
+01:07.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s08_eave_lift_lookup_red.png'
+SHOT s08_eave_lift_lookup
+01:11.516  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s09_ridge_comb_close.png'
+01:11.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s09_ridge_comb_close_red.png'
+SHOT s09_ridge_comb_close
+01:15.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s10_W_apex_finial_verge.png'
+01:16.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s10_W_apex_finial_verge_red.png'
+SHOT s10_W_apex_finial_verge
+01:20.344  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s11_hoist_close.png'
+01:20.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s11_hoist_close_red.png'
+SHOT s11_hoist_close
+01:24.797  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s12_SE_corner_eave_verge.png'
+01:25.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s12_SE_corner_eave_verge_red.png'
+SHOT s12_SE_corner_eave_verge
+01:29.219  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s13_NW_corner_back.png'
+01:29.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s13_NW_corner_back_red.png'
+SHOT s13_NW_corner_back
+01:33.562  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s14_kiln_cone_eave_over_thatch.png'
+01:33.937  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s14_kiln_cone_eave_over_thatch_red.png'
+SHOT s14_kiln_cone_eave_over_thatch
+01:37.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_01\builder_extra\s15_E_gable_man_door.png'
+SHOT s15_E_gable_man_door

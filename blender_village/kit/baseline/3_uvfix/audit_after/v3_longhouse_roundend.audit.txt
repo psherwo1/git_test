@@ -1,0 +1,9 @@
+﻿GRAIN M_timber             area     40.8  along  97.6%  across   1.0%  [of judged  98.1%; sheets    0.0]  (per piece: along  97.6%)  | roof     1.2: up  32.2%  down   5.4%  | m/UV 1.00
+GRAIN M_timber_weathered   area    356.0  along  68.1%  across   0.0%  [of judged 100.0%; sheets  113.4]  (per piece: along  68.1%)  | roof   120.9: up  11.2%  down   3.0%  | m/UV 1.00
+GRAIN M_roof_shingle       area    129.9  along  29.1%  across   2.9%  [of judged  86.1%; sheets   86.0]  (per piece: along  29.1%)  | roof   110.2: up 100.0%  down   0.0%  | m/UV 1.00
+GRAIN M_roof_shake         area     13.0  along  85.8%  across   0.9%  [of judged  97.5%; sheets    1.6]  (per piece: along  85.8%)  | roof     6.6: up 100.0%  down   0.0%  | m/UV 0.99
+GRAIN M_thatch             area    177.2  along   1.9%  across  97.5%  [of judged   1.9%; sheets    0.0]  (per piece: along   1.9%)  | roof   113.9: up  55.0%  down  43.7%  | m/UV 1.09
+COLLAPSED objects >= 1% area at ratio<0.2: 0 of 40; worst max 0.01%
+WALKED tops in door zones: area 0.923 m2, B max 0.039, area with B > 0.05: 0.000 m2  (pooled door hardware in the zones, not walked pieces: 0 objects, 0.0000 m2, B max 0.000)
+   body_wall_3      LONG_body_wall_dressed           faces     6 area   0.917 B max 0.039 mean 0.039 >0.05 0.000
+   body_wall_3      LONG_body_wall_ironwork          faces    35 area   0.006 B max 0.039 mean 0.039 >0.05 0.000

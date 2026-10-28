@@ -1,0 +1,4 @@
+﻿RED r8_brow_close_red.png                            total       0 enclosed     0 
+RED r8_brow_crane_red.png                            total       0 enclosed     0 
+RED r8_brow_eye_red.png                              total  137522 enclosed   195 x 37-938 y(from top) 60-196
+RED r8_brow_graze_red.png                            total   74210 enclosed    14 x 259-1262 y(from top) 37-433

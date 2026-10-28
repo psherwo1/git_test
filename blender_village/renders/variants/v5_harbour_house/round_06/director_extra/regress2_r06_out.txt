@@ -1,0 +1,31 @@
+﻿SURF HARB_roof_deck         inside-zone max 0.743 m; outside-zone max 0.0005 m at (-0.71, -4.11, 4.23); outside > 2 mm: 0 of 1648
+SURF HARB_roof_covering     inside-zone max 0.768 m; outside-zone max 0.0000 m at (6.18, 3.46, 2.98); outside > 2 mm: 0 of 75266
+SURF HARB_roof_comb         inside-zone max 0.000 m; outside-zone max 0.0000 m at (2.13, 3.47, 7.21); outside > 2 mm: 0 of 4601
+TRIS HARB_roof_comb: r05-only 12 (249.3 cm2), r06-only 0
+   gone centroid (1.794, -3.101, 6.876) area 25.39 cm2
+   gone centroid (1.776, -3.115, 6.837) area 25.09 cm2
+   gone centroid (1.825, -2.849, 6.859) area 24.78 cm2
+   gone centroid (1.825, -2.961, 6.866) area 24.31 cm2
+   gone centroid (1.836, -2.944, 6.899) area 24.15 cm2
+   gone centroid (1.837, -2.835, 6.892) area 24.13 cm2
+   gone centroid (1.823, -2.887, 6.862) area 20.39 cm2
+   gone centroid (1.781, -1.951, 6.808) area 20.08 cm2
+   gone centroid (1.768, -1.968, 6.784) area 19.05 cm2
+   gone centroid (1.836, -2.876, 6.896) area 17.91 cm2
+TRIS HARB_tower_stones: r05-only 44 (661.9 cm2), r06-only 0
+   gone centroid (0.261, -5.445, 6.142) area 50.99 cm2
+   gone centroid (0.215, -5.247, 5.752) area 49.20 cm2
+   gone centroid (0.223, -5.347, 6.124) area 37.23 cm2
+   gone centroid (-0.002, -4.803, 5.406) area 35.89 cm2
+   gone centroid (-0.063, -4.726, 5.402) area 35.89 cm2
+   gone centroid (0.13, -5.075, 5.977) area 33.20 cm2
+   gone centroid (-0.516, -4.191, 4.608) area 30.41 cm2
+   gone centroid (-0.541, -4.172, 4.589) area 29.98 cm2
+   gone centroid (-1.16, -3.841, 3.846) area 25.67 cm2
+   gone centroid (-0.232, -4.466, 4.919) area 24.95 cm2
+TRIS HARB_wing_roof_covering: r05-only 2 (4.7 cm2), r06-only 0
+   gone centroid (-2.88, -3.879, 2.674) area 2.37 cm2
+   gone centroid (-2.881, -3.889, 2.675) area 2.32 cm2
+TRIS HARB_hall_stones: r05-only 0 (0.0 cm2), r06-only 2
+   new  centroid (0.733, -5.785, 6.141) area 0.03 cm2
+   new  centroid (0.733, -5.784, 6.142) area 0.02 cm2

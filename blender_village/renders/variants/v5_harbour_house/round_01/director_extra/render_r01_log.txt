@@ -1,0 +1,71 @@
+﻿00:00.515  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\dir_re
+nder_r01.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:468
++ ... tor_extra"; & $py -I "$d\dir_render_r01.py" -- "C:\GitHubDesktop\git_ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\dir_render_r01.py:4
+1: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_DIR_world"); world.use_nodes = True
+00:00.625  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.593  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d01_land_gable_door_eye.png'
+DEVICE GPU
+SHOT d01_land_gable_door_eye
+00:08.562  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d02_sw_corner_ground_eye.png'
+00:08.937  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d02_sw_corner_ground_eye_red.png'
+SHOT d02_sw_corner_ground_eye
+00:12.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d03_sw_jetty_corner_lookup.png'
+00:13.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d03_sw_jetty_corner_lookup_red.png'
+SHOT d03_sw_jetty_corner_lookup
+00:17.343  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d04_jetty_soffit_lookup.png'
+00:17.718  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d04_jetty_soffit_lookup_red.png'
+SHOT d04_jetty_soffit_lookup
+00:21.593  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d05_east_eave_lookup.png'
+00:21.984  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d05_east_eave_lookup_red.png'
+SHOT d05_east_eave_lookup
+00:26.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d06_verge_foot_sw.png'
+00:26.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d06_verge_foot_sw_red.png'
+SHOT d06_verge_foot_sw
+00:30.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d07_apex_horns_land.png'
+00:30.468  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d07_apex_horns_land_red.png'
+SHOT d07_apex_horns_land
+00:34.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d08_apex_horns_water.png'
+00:34.531  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d08_apex_horns_water_red.png'
+SHOT d08_apex_horns_water
+00:38.390  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d09_water_gable_boat_door_deck.png'
+SHOT d09_water_gable_boat_door_deck
+00:42.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d10_deck_sill_junction.png'
+00:42.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d10_deck_sill_junction_red.png'
+SHOT d10_deck_sill_junction
+00:46.593  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d11_deck_underside_waterlevel.png'
+SHOT d11_deck_underside_waterlevel
+00:50.531  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d12_jetty_finger_end_ladder.png'
+SHOT d12_jetty_finger_end_ladder
+00:54.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d13_east_wall_eye.png'
+00:54.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d13_east_wall_eye_red.png'
+SHOT d13_east_wall_eye
+00:58.781  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d14_ne_corner_band_rim.png'
+00:59.140  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d14_ne_corner_band_rim_red.png'
+SHOT d14_ne_corner_band_rim
+01:03.078  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d15_window_shutter_close.png'
+01:03.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d15_window_shutter_close_red.png'
+SHOT d15_window_shutter_close
+01:07.437  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d16_door_steps_close.png'
+SHOT d16_door_steps_close
+01:11.312  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d17_upper_loading_door.png'
+01:11.687  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d17_upper_loading_door_red.png'
+SHOT d17_upper_loading_door
+01:15.562  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d18_crane_roof_ne.png'
+01:15.937  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d18_crane_roof_ne_red.png'
+SHOT d18_crane_roof_ne
+01:19.734  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d19_thumbnail_45m.png'
+SHOT d19_thumbnail_45m
+01:23.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d20_gable_verge_underside_sw.png'
+01:23.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d20_gable_verge_underside_sw_red.png'
+SHOT d20_gable_verge_underside_sw
+01:27.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\d21_nw_corner_plinth_crib.png'
+SHOT d21_nw_corner_plinth_crib

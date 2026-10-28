@@ -1,0 +1,17 @@
+﻿[
+    {
+        "id":  "hilltop_keep",
+        "secs":  340,
+        "code":  0
+    },
+    {
+        "id":  "tower_windmill",
+        "secs":  195,
+        "code":  0
+    },
+    {
+        "id":  "wattle_roundhut",
+        "secs":  465,
+        "code":  0
+    }
+]

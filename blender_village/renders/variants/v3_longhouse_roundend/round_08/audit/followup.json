@@ -1,0 +1,93 @@
+{
+ "LONG_body_roof_covering": {
+  "n": 75,
+  "verts_visible": 60,
+  "max_cams": 35,
+  "bbox": [
+   [
+    1.022,
+    2.027,
+    3.379
+   ],
+   [
+    1.619,
+    2.487,
+    3.766
+   ]
+  ]
+ },
+ "LONG_body_roof_ridge": {
+  "n": 47,
+  "verts_visible": 34,
+  "max_cams": 31,
+  "bbox": [
+   [
+    0.466,
+    -0.34,
+    5.183
+   ],
+   [
+    0.976,
+    0.32,
+    5.561
+   ]
+  ]
+ },
+ "LONG_purlin_rings": {
+  "n": 4,
+  "verts_visible": 4,
+  "max_cams": 6,
+  "bbox": [
+   [
+    2.413,
+    2.405,
+    6.823
+   ],
+   [
+    2.585,
+    2.551,
+    6.834
+   ]
+  ]
+ },
+ "LONG_body_wall_stones_deep>5cm": {
+  "n": 111,
+  "visible": 108
+ },
+ "LONG_body_wall_mortar_deep>5cm": {
+  "n": 30,
+  "visible": 30
+ },
+ "lowz_leaks": {
+  "rays": 409550,
+  "leaks": 0,
+  "examples": []
+ },
+ "door_overhead_min": [
+  [
+   2.317,
+   -0.2,
+   0.3,
+   "LONG_body_roof_rafters"
+  ],
+  [
+   2.317,
+   0.5,
+   0.3,
+   "LONG_body_roof_rafters"
+  ],
+  [
+   2.513,
+   -0.5,
+   0.3,
+   "LONG_body_roof_deck"
+  ],
+  [
+   2.513,
+   -0.4,
+   0.3,
+   "LONG_body_roof_deck"
+  ]
+ ],
+ "door_approach_blocked": []
+}

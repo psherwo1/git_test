@@ -1,0 +1,12 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\v6_barn_lookdev.blend"
+BOUNDS v6_barn (-8.04, -4.39, -0.05) (8.04, 4.39, 9.22)
+ENTRANCE v6_barn -Y: BARN_cart_doors_leaves (0.0, -1.0, 0.0)
+SUN v6_barn azimuth rotated 0 deg from r2 default (0.72, -0.69, 0.0)
+00:00.578  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+CAMERA v6_barn hero (-14.97, -23.05, 10.43) -> (0.0, 0.0, 4.58) 35.0
+00:06.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v6_barn\hero.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v6_barn\hero.png
+CAMERA v6_barn eye (10.83, -18.75, 1.7) -> (0.0, 0.0, 3.87) 28.0
+00:10.735  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v6_barn\eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v6_barn\eye.png

@@ -1,0 +1,42 @@
+﻿PLACED v3_longhouse_roundend.blend x 0.0 w 17.77 d 8.56 top 11.34
+PLACED v5_harbour_house.blend x 21.77 w 17.59 d 17.17 top 13.44
+PLACED v6_barn.blend x 43.36 w 16.09 d 8.79 top 9.22
+PLACED wattle_roundhut.blend x 63.45 w 8.37 d 8.78 top 8.73
+00:02.328  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:08.938  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\L01_lineup_front_ortho.png'
+SHOT L01
+00:15.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\L02_lineup_three_quarter.png'
+SHOT L02
+00:22.485  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\L03_lineup_aerial.png'
+SHOT L03
+00:23.110  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\T0_SW_v3_longhouse_roundend.png'
+SHOT T v3_longhouse_roundend SW
+00:23.735  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\T0_SE_v3_longhouse_roundend.png'
+SHOT T v3_longhouse_roundend SE
+00:24.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\T1_SW_v5_harbour_house.png'
+SHOT T v5_harbour_house SW
+00:25.031  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\T1_SE_v5_harbour_house.png'
+SHOT T v5_harbour_house SE
+00:25.610  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\T2_SW_v6_barn.png'
+SHOT T v6_barn SW
+00:26.188  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\T2_SE_v6_barn.png'
+SHOT T v6_barn SE
+00:26.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\T3_SW_wattle_roundhut.png'
+SHOT T wattle_roundhut SW
+00:27.516  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\T3_SE_wattle_roundhut.png'
+SHOT T wattle_roundhut SE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit
+TILE T0_SW_v3_longhouse_roundend.png 320 180
+TILE T1_SW_v5_harbour_house.png 320 180
+TILE T2_SW_v6_barn.png 320 180
+TILE T3_SW_wattle_roundhut.png 320 180
+TILE T0_SE_v3_longhouse_roundend.png 320 180
+TILE T1_SE_v5_harbour_house.png 320 180
+TILE T2_SE_v6_barn.png 320 180
+TILE T3_SE_wattle_roundhut.png 320 180
+MONTAGE C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\T_thumb_montage_v3_v5_v6_hut.png 1298 366
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

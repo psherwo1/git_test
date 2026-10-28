@@ -1,0 +1,1558 @@
+{
+  "triangles": 3818354,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 18.2,
+  "est_hidden_triangles": 694463,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "HUT_daub",
+      "est_triangles": 688735,
+      "est_hidden_triangles": 66821,
+      "hidden_pct_of_object": 9.7
+    },
+    {
+      "object": "HUT_plinth_stones",
+      "est_triangles": 165621,
+      "est_hidden_triangles": 48206,
+      "hidden_pct_of_object": 29.1
+    },
+    {
+      "object": "MILL_base_stones",
+      "est_triangles": 399972,
+      "est_hidden_triangles": 42001,
+      "hidden_pct_of_object": 10.5
+    },
+    {
+      "object": "KEEP_hall_wall_stones",
+      "est_triangles": 231487,
+      "est_hidden_triangles": 28637,
+      "hidden_pct_of_object": 12.4
+    },
+    {
+      "object": "MILL_arcade_dressed",
+      "est_triangles": 176121,
+      "est_hidden_triangles": 28160,
+      "hidden_pct_of_object": 16.0
+    },
+    {
+      "object": "KEEP_wing_roof_thatch",
+      "est_triangles": 89731,
+      "est_hidden_triangles": 27683,
+      "hidden_pct_of_object": 30.9
+    },
+    {
+      "object": "HUT_door_frame",
+      "est_triangles": 114073,
+      "est_hidden_triangles": 21955,
+      "hidden_pct_of_object": 19.2
+    },
+    {
+      "object": "HUT_wattle_rods",
+      "est_triangles": 71594,
+      "est_hidden_triangles": 21955,
+      "hidden_pct_of_object": 30.7
+    },
+    {
+      "object": "HUT_roof_shingles",
+      "est_triangles": 130778,
+      "est_hidden_triangles": 21000,
+      "hidden_pct_of_object": 16.1
+    },
+    {
+      "object": "KEEP_wing_roof_thatch_courses",
+      "est_triangles": 111209,
+      "est_hidden_triangles": 18137,
+      "hidden_pct_of_object": 16.3
+    },
+    {
+      "object": "MILL_arcade_backs",
+      "est_triangles": 67775,
+      "est_hidden_triangles": 16705,
+      "hidden_pct_of_object": 24.6
+    },
+    {
+      "object": "KEEP_wing_wall_stones",
+      "est_triangles": 92595,
+      "est_hidden_triangles": 15273,
+      "hidden_pct_of_object": 16.5
+    },
+    {
+      "object": "HUT_threshold",
+      "est_triangles": 31978,
+      "est_hidden_triangles": 15273,
+      "hidden_pct_of_object": 47.8
+    },
+    {
+      "object": "KEEP_cone_stones",
+      "est_triangles": 153211,
+      "est_hidden_triangles": 13841,
+      "hidden_pct_of_object": 9.0
+    },
+    {
+      "object": "MILL_base_mortar",
+      "est_triangles": 42956,
+      "est_hidden_triangles": 12886,
+      "hidden_pct_of_object": 30.0
+    },
+    {
+      "object": "MILL_cap_shingles",
+      "est_triangles": 50115,
+      "est_hidden_triangles": 10500,
+      "hidden_pct_of_object": 21.0
+    },
+    {
+      "object": "HUT_posts",
+      "est_triangles": 37228,
+      "est_hidden_triangles": 10500,
+      "hidden_pct_of_object": 28.2
+    },
+    {
+      "object": "KEEP_roof_skirt_structure",
+      "est_triangles": 16705,
+      "est_hidden_triangles": 10500,
+      "hidden_pct_of_object": 62.9
+    },
+    {
+      "object": "MILL_cap_frame",
+      "est_triangles": 22432,
+      "est_hidden_triangles": 8114,
+      "hidden_pct_of_object": 36.2
+    },
+    {
+      "object": "MILL_tower_boards",
+      "est_triangles": 36751,
+      "est_hidden_triangles": 7636,
+      "hidden_pct_of_object": 20.8
+    },
+    {
+      "object": "HUT_daub_interior",
+      "est_triangles": 11455,
+      "est_hidden_triangles": 7636,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_turret_stones",
+      "est_triangles": 89731,
+      "est_hidden_triangles": 6682,
+      "hidden_pct_of_object": 7.4
+    },
+    {
+      "object": "KEEP_cap_structure",
+      "est_triangles": 16705,
+      "est_hidden_triangles": 6204,
+      "hidden_pct_of_object": 37.1
+    },
+    {
+      "object": "MILL_base_dressed",
+      "est_triangles": 50593,
+      "est_hidden_triangles": 6204,
+      "hidden_pct_of_object": 12.3
+    },
+    {
+      "object": "KEEP_hall_wall_mortar",
+      "est_triangles": 9545,
+      "est_hidden_triangles": 6204,
+      "hidden_pct_of_object": 65.0
+    },
+    {
+      "object": "KEEP_roof_collar_shakes",
+      "est_triangles": 53934,
+      "est_hidden_triangles": 5727,
+      "hidden_pct_of_object": 10.6
+    },
+    {
+      "object": "KEEP_hall_eave_plate",
+      "est_triangles": 9068,
+      "est_hidden_triangles": 5727,
+      "hidden_pct_of_object": 63.2
+    },
+    {
+      "object": "KEEP_wing_wall_mortar",
+      "est_triangles": 9545,
+      "est_hidden_triangles": 5250,
+      "hidden_pct_of_object": 55.0
+    },
+    {
+      "object": "MILL_door_surround",
+      "est_triangles": 46297,
+      "est_hidden_triangles": 4772,
+      "hidden_pct_of_object": 10.3
+    },
+    {
+      "object": "MILL_apron_rafters",
+      "est_triangles": 14318,
+      "est_hidden_triangles": 4772,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "MILL_apron_shingles",
+      "est_triangles": 59661,
+      "est_hidden_triangles": 4772,
+      "hidden_pct_of_object": 8.0
+    },
+    {
+      "object": "KEEP_turret_corbel_collar",
+      "est_triangles": 16228,
+      "est_hidden_triangles": 4772,
+      "hidden_pct_of_object": 29.4
+    },
+    {
+      "object": "MILL_door_leaf",
+      "est_triangles": 8591,
+      "est_hidden_triangles": 4772,
+      "hidden_pct_of_object": 55.6
+    },
+    {
+      "object": "KEEP_cone_ledge_slabs",
+      "est_triangles": 10023,
+      "est_hidden_triangles": 4295,
+      "hidden_pct_of_object": 42.9
+    },
+    {
+      "object": "KEEP_turret_cap_shingles",
+      "est_triangles": 36274,
+      "est_hidden_triangles": 4295,
+      "hidden_pct_of_object": 11.8
+    },
+    {
+      "object": "KEEP_hall_dressed_stones",
+      "est_triangles": 51070,
+      "est_hidden_triangles": 3818,
+      "hidden_pct_of_object": 7.5
+    },
+    {
+      "object": "KEEP_wing_door",
+      "est_triangles": 14318,
+      "est_hidden_triangles": 3818,
+      "hidden_pct_of_object": 26.7
+    },
+    {
+      "object": "MILL_interior",
+      "est_triangles": 5727,
+      "est_hidden_triangles": 3818,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "MILL_prop_anchors",
+      "est_triangles": 12886,
+      "est_hidden_triangles": 3341,
+      "hidden_pct_of_object": 25.9
+    },
+    {
+      "object": "KEEP_wing_dressed_stones",
+      "est_triangles": 31501,
+      "est_hidden_triangles": 3341,
+      "hidden_pct_of_object": 10.6
+    },
+    {
+      "object": "KEEP_turret_cap_structure",
+      "est_triangles": 18614,
+      "est_hidden_triangles": 3341,
+      "hidden_pct_of_object": 17.9
+    },
+    {
+      "object": "HUT_floor",
+      "est_triangles": 3818,
+      "est_hidden_triangles": 3341,
+      "hidden_pct_of_object": 87.5
+    },
+    {
+      "object": "HUT_roof_starter",
+      "est_triangles": 7636,
+      "est_hidden_triangles": 2863,
+      "hidden_pct_of_object": 37.5
+    },
+    {
+      "object": "KEEP_roof_skirt_deck",
+      "est_triangles": 2863,
+      "est_hidden_triangles": 2863,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_wing_fillet",
+      "est_triangles": 3818,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "MILL_door_iron",
+      "est_triangles": 3341,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 57.1
+    },
+    {
+      "object": "KEEP_cap_shingles",
+      "est_triangles": 42479,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 4.5
+    },
+    {
+      "object": "MILL_baluster_066",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_leaf",
+      "est_triangles": 3341,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 57.1
+    },
+    {
+      "object": "HUT_hearth",
+      "est_triangles": 2386,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 80.0
+    },
+    {
+      "object": "KEEP_turret_drum",
+      "est_triangles": 3341,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 57.1
+    },
+    {
+      "object": "KEEP_turret_corbel_mortar",
+      "est_triangles": 3818,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "MILL_corbel_028",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_wing_roof_structure",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 1909,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_hall_posts",
+      "est_triangles": 26728,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 5.4
+    },
+    {
+      "object": "MILL_props",
+      "est_triangles": 60616,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 2.4
+    },
+    {
+      "object": "KEEP_roof_skirt_boards",
+      "est_triangles": 35797,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 4.0
+    },
+    {
+      "object": "MILL_tail_boom",
+      "est_triangles": 8591,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "KEEP_hall_interior",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_028",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_006",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_014",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_roof_skirt_hips",
+      "est_triangles": 7159,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "MILL_cap_iron",
+      "est_triangles": 7159,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "HUT_wall_plate",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "MILL_baluster_010",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_wing_flashing",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_036",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_cap_deck",
+      "est_triangles": 3341,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 42.9
+    },
+    {
+      "object": "MILL_corbel_033",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_wattle_stakes",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 75.0
+    },
+    {
+      "object": "KEEP_turret_mortar",
+      "est_triangles": 2386,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 60.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_019",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 1431,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_tower_frame",
+      "est_triangles": 8114,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 11.8
+    },
+    {
+      "object": "MILL_baluster_018",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_tail_iron",
+      "est_triangles": 7159,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 13.3
+    },
+    {
+      "object": "KEEP_cone_mortar",
+      "est_triangles": 2863,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "KEEP_peg_060",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_rafters",
+      "est_triangles": 4772,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "KEEP_cap_hips",
+      "est_triangles": 11455,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 8.3
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_033",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_019",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_door_ironwork",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "MILL_prop_iron",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_020",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "MILL_baluster_009",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_051",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_038",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_battens",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_034",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_000",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_075",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_051",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_037",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_006",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_065",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_035",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_062",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_004",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_048",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_072",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_052",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_034",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_041",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_007",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_022",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_050",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_031",
+      "est_triangles": 954,
+      "est_hidden_triangles": 954,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_turret_cap_hips",
+      "est_triangles": 9068,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 5.3
+    },
+    {
+      "object": "HUT_peg_069",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_wheel_arm_B",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "KEEP_door_leaf",
+      "est_triangles": 13841,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 3.4
+    },
+    {
+      "object": "KEEP_nail_038",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_wheel_blades",
+      "est_triangles": 27205,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 1.8
+    },
+    {
+      "object": "HUT_peg_045",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_rotor_bolt_022",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_cap_collar",
+      "est_triangles": 10500,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 4.5
+    },
+    {
+      "object": "KEEP_wing_window",
+      "est_triangles": 954,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "MILL_corbel_007",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_wheel_arm_C",
+      "est_triangles": 2863,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "KEEP_peg_004",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_rotor_bolt_024",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_059",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_tower_iron",
+      "est_triangles": 2386,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 20.0
+    },
+    {
+      "object": "HUT_plinth_chink_022",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_rotor_bolt_045",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_066",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_002",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_068",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_rotor_iron",
+      "est_triangles": 3341,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 14.3
+    },
+    {
+      "object": "MILL_corbel_008",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_tail_bolt_008",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_016",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_070",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_rotor_bolt_007",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_nail_054",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_021",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_015",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_003",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_037",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_012",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_threshold",
+      "est_triangles": 954,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "MILL_corbel_029",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_042",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_041",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_026",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_005",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_nail_016",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_rotor_bolt_026",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_003",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_069",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_040",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_nail_058",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_049",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_021",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_024",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_064",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_038",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_rotor_bolt_040",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_060",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_001",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_ironwork",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_016",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_tail_bolt_017",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_055",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_002",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_023",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_nail_018",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_057",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_034",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_010",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_076",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_094",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_046",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_016",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_047",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_032",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_067",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_009",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_031",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_014",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_006",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_027",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_pintle_001",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_024",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_063",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_017",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_nail_013",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_042",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_nail_023",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_082",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_030",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_040",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_029",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_067",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_044",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_nail_099",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_058",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_018",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_rotor_bolt_001",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_027",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_057",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_peg_013",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_000",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_015",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_033",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_hinge_pintle_086",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_017",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_036",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_030",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_007",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_020",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_010",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_009",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_039",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_006",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_011",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_062",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_corbel_019",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_017",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_057",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_nail_017",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_028",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_baluster_047",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_052",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_013",
+      "est_triangles": 477,
+      "est_hidden_triangles": 477,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "MILL_poll_end",
+      "est_triangles": 954,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_wheel_spokes",
+      "est_triangles": 4295,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_wing_ridge_comb",
+      "est_triangles": 3341,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_wheel_rim",
+      "est_triangles": 5250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_tail_vane",
+      "est_triangles": 7636,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_wing_roof_rolls",
+      "est_triangles": 11455,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_step_stone",
+      "est_triangles": 4295,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_hall_post_bases",
+      "est_triangles": 5250,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_lantern_boards",
+      "est_triangles": 4295,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_roof_blocker",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_door_step",
+      "est_triangles": 954,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_turret_cap_deck",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_finial_turret",
+      "est_triangles": 2386,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_finial",
+      "est_triangles": 3341,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_lantern_frame",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_hall_knee_braces",
+      "est_triangles": 954,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_061",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_wheel_arm_D",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_004",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_peg_001",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_eave_closure",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_hall_dressed_joint_mortar",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_hall_window_frames",
+      "est_triangles": 954,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_045",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_wing_door_ironwork",
+      "est_triangles": 1909,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_029",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "MILL_wheel_arm_A",
+      "est_triangles": 1431,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_032",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_078",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_finial_main",
+      "est_triangles": 954,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_056",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "KEEP_ridge_comb_shake_037",
+      "est_triangles": 477,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

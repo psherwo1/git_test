@@ -1,0 +1,2 @@
+C:\GitHubDesktop\git_test\blender_village\lookdev\scripts\apply_lookdev.py:734: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  gmat.use_nodes = True

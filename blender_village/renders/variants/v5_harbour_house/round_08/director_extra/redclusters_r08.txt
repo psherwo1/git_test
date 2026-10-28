@@ -1,0 +1,3 @@
+﻿CLUSTERS x24_W_eave_lookup_red.png 3 [(61, 976, 981, 27, 47), (4, 384, 385, 33, 35), (4, 329, 329, 1, 4)]
+CLUSTERS f04_roll_down_slope_from_ridge_side_red.png 4 [(1, 1080, 1080, 370, 370), (1, 932, 932, 355, 355), (1, 759, 759, 291, 291), (1, 699, 699, 271, 271)]
+CLUSTERS e04_brow_oblique_from_S_red.png 1 [(1, 208, 208, 54, 54)]

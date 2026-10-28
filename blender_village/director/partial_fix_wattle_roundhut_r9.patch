@@ -1,0 +1,471 @@
+diff --git a/blender_village/kit/village_kit/components/cone.py b/blender_village/kit/village_kit/components/cone.py
+index 949a6c4..4a18240 100644
+--- a/blender_village/kit/village_kit/components/cone.py
++++ b/blender_village/kit/village_kit/components/cone.py
+@@ -37,6 +37,13 @@ between every pair of rafters (sin^1.5 across the bay, its own amplitude per bay
+ `sag_eave_fade` slope metres and out under the collar), and the finial's ~1 deg lean (components.finial)."""
+ 
+ 
++AGE_R9 = dict(rigid_sag=True, rigid_tilt_deg=1.5, underlap=0.08)
++"""kit 1.2.0 (director r8 #2): opt-in keys for the cone age pass.  rigid_sag: each shingle takes the sag as a
++rigid offset (evaluated at its centre, translated along the cone normal, tilted <= rigid_tilt_deg), so the per-vertex
++shear no longer opens the side joints; underlap: a strip of the shingle below (this half-width, m) is kept under
++every side joint of the course above, as a separate never-culled object <PREFIX>_roof_underlap."""
++
++
+ def age_defaults(**kw):
+     d = dict(AGE_DEFAULTS)
+     d.update(kw)
+@@ -89,8 +96,9 @@ def sag_at(g, theta, s):
+     return g._sag_amp[k] * along * np.clip(span / 0.8, 0.0, 1.0) * np.sin(np.pi * u) ** 1.5 * env
+ 
+ 
+-def surf(g, theta, s):
+-    """theta: math angle (x=cos, y=sin). s: slope distance from the eave."""
++def surf(g, theta, s, sag=True):
++    """theta: math angle (x=cos, y=sin). s: slope distance from the eave.  sag=False: without the age-pass sag
++    between the rafters (kit 1.2.0: the shingles take the sag as a rigid per-shingle offset, see conical_roof)."""
+     theta, s = np.broadcast_arrays(np.asarray(theta, float), np.asarray(s, float))
+     R = np.interp(s, g.PS, g.PR)
+     Z = np.interp(s, g.PS, g.PZ)
+@@ -101,7 +109,7 @@ def surf(g, theta, s):
+     a0 = g.PA[0]
+     R = R - ext * math.cos(a0)
+     Z = Z + ext * math.sin(a0) + wave_z(theta, g) * fade
+-    if getattr(g, "cone_age", None):
++    if sag and getattr(g, "cone_age", None):
+         sg = sag_at(g, theta, s)
+         al = np.interp(s, g.PS, g.PA)
+         R = R - sg * np.sin(al)
+@@ -109,11 +117,11 @@ def surf(g, theta, s):
+     return np.stack([R * np.cos(theta), R * np.sin(theta), Z], -1)
+ 
+ 
+-def surf_frame(g, theta, s):
+-    P = surf(g, theta, s)
++def surf_frame(g, theta, s, sag=True):
++    P = surf(g, theta, s, sag)
+     eps_s, eps_t = 2e-3, 2e-4
+-    ts = nrm(surf(g, theta, s + eps_s) - surf(g, theta, s - eps_s))
+-    tt = nrm(surf(g, theta + eps_t, s) - surf(g, theta - eps_t, s))
++    ts = nrm(surf(g, theta, s + eps_s, sag) - surf(g, theta, s - eps_s, sag))
++    tt = nrm(surf(g, theta + eps_t, s, sag) - surf(g, theta - eps_t, s, sag))
+     n = nrm(np.cross(tt, ts))
+     return P, ts, tt, n
+ 
+diff --git a/blender_village/kit/village_kit/components/conical_roof.py b/blender_village/kit/village_kit/components/conical_roof.py
+index 7f50530..026f456 100644
+--- a/blender_village/kit/village_kit/components/conical_roof.py
++++ b/blender_village/kit/village_kit/components/conical_roof.py
+@@ -18,7 +18,7 @@ from ..core import log
+ 
+ from ..core import chamfer_path, frame_R, grid_quads, lathe, n2, nrm, open_tube, rbox, ring_noise, tube, xf
+ from ..shingles import SH_VARIANTS, shingle_mesh
+-from .cone import az2th, rafter_center, s_at_r, surf, surf_frame
++from .cone import az2th, rafter_center, s_at_r, sag_at, surf, surf_frame
+ from .frame import interior_visible
+ 
+ 
+@@ -216,6 +216,10 @@ def build_shingles(g, coll, seed=606):
+     B_WEDGE = 0.066
+     OV = 0.065
+ 
++    age = getattr(g, "cone_age", None) or {}
++    rigid = bool(age.get("rigid_sag")) and bool(age.get("sag"))
++    tilt_max = math.radians(age.get("rigid_tilt_deg", 1.5))
++
+     def place(acc_, th_c, s_b, W, L, var, phi, lift, curl, base_fn, ys=None, closed=True, wear_=None):
+         Pl, F, uv = shingle_mesh(W, L, var, curl=curl, ys=ys, bottom=closed, head=closed)
+         x, y, z = Pl[:, 0], Pl[:, 1], Pl[:, 2]
+@@ -225,11 +229,19 @@ def build_shingles(g, coll, seed=606):
+         v = np.clip(y / 0.72, 0, 1)
+         ss = s_b + yr
+         th = np.full_like(ss, th_c)
+-        P0, ts, tt, n = surf_frame(g, th, ss)
+-        rb = float(np.hypot(*surf(g, th_c, s_b)[:2]))
++        P0, ts, tt, n = surf_frame(g, th, ss, sag=not rigid)
++        rb = float(np.hypot(*surf(g, th_c, s_b, sag=not rigid)[:2]))
+         rcur = np.hypot(P0[:, 0], P0[:, 1])
+         xr = xr * np.clip(rcur / rb, 0.3, 1.0)
+         off = base_fn(v) + z + lift * (1 - v)
++        if rigid:
++            # director r8 #2: the sag as a RIGID per-shingle offset (no shear, joint widths kept): evaluated at the
++            # centre of the exposed part, translated along the cone normal, tilted about the shingle axis <= 1.5 deg
++            s_c = s_b + 0.5 * min(L, g.SH_EXPOSE)
++            dth = 0.5 * W / max(rb, 0.2)
++            sg_c, sg_l, sg_r = (float(sag_at(g, t_, s_c)) for t_ in (th_c, th_c - dth, th_c + dth))
++            tilt = float(np.clip(math.atan2(sg_r - sg_l, max(W, 0.05)), -tilt_max, tilt_max))
++            off = off - (sg_c + math.tan(tilt) * xr)
+         V = P0 + tt * xr[:, None] + n * off[:, None]
+         acc_.add(V, F, "M_roof_shingle", uv, smooth=True, wear=wear_)
+ 
+diff --git a/blender_village/kit/village_kit/components/daub.py b/blender_village/kit/village_kit/components/daub.py
+index 880635c..fc2dc4a 100644
+--- a/blender_village/kit/village_kit/components/daub.py
++++ b/blender_village/kit/village_kit/components/daub.py
+@@ -20,6 +20,119 @@ from .frame import bay_s, wall_floor
+ from .wattle import arc_path, line_path, rope_panel, weave_panel
+ 
+ 
++WALL_FINISH_R9 = dict(
++    daub_relief=True,       # note 11 per-vertex: entrance-zone palm dents >= 1 cm kept + sparse 2-2.5 cm hand lumps
++    grid=(0.025, 0.016),    # intact-coat grid (m): outside / inside the entrance zone
++    lumps_per_m2=(2.0, 3.0), lump_amp=(0.020, 0.025), lump_sigma=(0.045, 0.08),
++    dents_per_m2=6.0, dent_amp=(0.010, 0.015), dent_r=(0.035, 0.06),
++    sag=(0.011, 0.004),     # sag belly 1.1-1.5 cm
++    flakes=False,           # director r7 #2: clinging flakes read as leaves -> deleted
++    foot_bites=6,           # director r7 #3: at most 6 splash bites round the hut, 0-1 per bay, not adjacent
++    bite_len=(0.20, 0.40), bite_h=(0.02, 0.04), bite_backing=-0.006,
++    patch_style="r9",       # director r7 #1: leaning broken sides, chamfered corners, varied edge face
++)
++"""kit 1.2.0: the wall-finish switches (RoundFrame(wall_finish=...)); an empty dict keeps the 1.0.0 behaviour."""
++
++
++def wall_finish_r9(**kw):
++    d = dict(WALL_FINISH_R9)
++    d.update(kw)
++    return d
++
++
++def _wf(g):
++    return getattr(g, "wall_finish", None) or {}
++
++
++def stepped_margin(g, rs, xa, xb, z0, levels=(-1, 1), run=(0.05, 0.30), min_pair=0.12):
++    """director r7 #1: a margin along the rod rows from xa to xb -- runs of 5-30 cm, each 1 or 2 rows (at random)
++    above / below the last; an up-step and a down-step are never closer than min_pair (no merlons / crenels);
++    the steps are short diagonals.  Returns (k, 2) points (s, z)."""
++    pts = [(xa, z0 + rs.uniform(-0.004, 0.004))]
++    x = xa
++    lv = 0
++    last_dir, last_x = 0, -9.0
++    while True:
++        L = rs.uniform(*run)
++        if x + L > xb - 0.04:
++            break
++        x += L
++        d = int(rs.choice([-1, 1]))
++        if last_dir and d != last_dir and x - last_x < min_pair:
++            d = last_dir
++        step = d * int(rs.choice([1, 2]))
++        nl = int(np.clip(lv + step, levels[0], levels[1]))
++        if nl == lv:
++            nl = int(np.clip(lv - step, levels[0], levels[1]))
++            d = -d
++        jog = rs.uniform(0.006, 0.02)
++        pts.append((x, z0 + lv * g.ROD_ROW_P + rs.uniform(-0.004, 0.004)))
++        pts.append((x + jog, z0 + nl * g.ROD_ROW_P + rs.uniform(-0.004, 0.004)))
++        x += jog
++        lv = nl
++        last_dir, last_x = d, x
++    pts.append((xb, z0 + lv * g.ROD_ROW_P + rs.uniform(-0.004, 0.004)))
++    return np.array(pts, float)
++
++
++def fracture_patch_r9(g, c_s, c_z, h_s, h_z, seed):
++    """director r7 #1: outline of a fallen-out patch that reads as a ragged break, not a vent -- the two sides
++    lean 8-25 deg off vertical in opposite senses and are each broken into 2-3 segments; the acute corners are
++    chamfered (>= 2 obtuse corners, at most one near 90 deg); top and bottom margins step 1-2 rod rows over
++    5-30 cm runs with no up / down pair closer than 12 cm.  Returns a CCW polygon (s, z)."""
++    rs = np.random.RandomState(seed + 900)
++    zb, zt = c_z - h_z, c_z + h_z
++    H = zt - zb
++    sgn = rs.choice([-1, 1])
++    lean_l = math.radians(rs.uniform(8, 25)) * sgn
++    lean_r = math.radians(rs.uniform(8, 25)) * sgn * -1      # opposite sense: the sides are never parallel
++    xl0 = c_s - h_s * rs.uniform(0.92, 1.05)
++    xr0 = c_s + h_s * rs.uniform(0.92, 1.05)
++
++    def side(x_mid, lean):
++        n = int(rs.randint(2, 4))
++        zs = np.sort(np.r_[zb, zb + H * np.sort(rs.uniform(0.25, 0.75, n - 1)), zt])
++        xs = [0.0]
++        for k in range(n):
++            a = lean + math.radians(rs.uniform(-9, 9))
++            xs.append(xs[-1] + math.tan(a) * (zs[k + 1] - zs[k]))
++        xs = np.array(xs)
++        xs = xs - xs.mean() + x_mid
++        return np.stack([xs, zs], -1)                 # bottom -> top
++    L = side(xl0, lean_l)
++    R = side(xr0, lean_r)
++    bot = stepped_margin(g, rs, L[0, 0], R[0, 0], zb, levels=(-1, 1))
++    top = stepped_margin(g, rs, L[-1, 0], R[-1, 0], zt, levels=(-1, 1))
++
++    def chamfer(P, i, leg):
++        """cut corner i of polyline-closed P with legs `leg` along both edges."""
++        n = len(P)
++        a, b, c = P[i - 1], P[i], P[(i + 1) % n]
++        u = (a - b) / max(np.linalg.norm(a - b), 1e-9)
++        v = (c - b) / max(np.linalg.norm(c - b), 1e-9)
++        la = min(leg, 0.45 * np.linalg.norm(a - b))
++        lc = min(leg, 0.45 * np.linalg.norm(c - b))
++        return np.vstack([P[:i], [b + u * la, b + v * lc], P[i + 1:]])
++    # CCW: bottom (L->R), right side up, top (R->L), left side down
++    P = np.vstack([bot, R[1:-1], top[::-1], L[::-1][1:-1]])
++    keep = np.r_[True, np.hypot(*(np.diff(P, axis=0).T)) > 1e-4]
++    P = P[keep]
++    # chamfer the acute principal corners (interior angle < 88 deg) and one more at random
++    corners = [0, len(bot) - 1, len(bot) + len(R) - 2, len(bot) + len(R) - 2 + len(top) - 1]
++    ang = []
++    for i in corners:
++        a, b, c = P[i - 1], P[i], P[(i + 1) % len(P)]
++        u, v = a - b, c - b
++        ang.append(math.degrees(math.acos(np.clip(np.dot(u, v) / max(np.linalg.norm(u) * np.linalg.norm(v), 1e-9), -1, 1))))
++    cut = [i for i, a_ in zip(corners, ang) if a_ < 88.0]
++    rest = [i for i in corners if i not in cut]
++    if len(cut) < 2 and rest:
++        cut.append(rest[int(rs.randint(len(rest)))])
++    for i in sorted(cut, reverse=True):
++        P = chamfer(P, i, rs.uniform(0.05, 0.10))
++    return P if _poly_area(P) > 0 else P[::-1]
++
++
+ def CLUMP_BAYS(g):
+     """bays with exposed wattle (clinging daub clumps wrap their rods)."""
+     return sorted({len(g.POST_AZ) - 2} | {p[0] for p in g.DAUB_PATCHES})
+@@ -248,7 +361,7 @@ def coat_floor(g, s):
+     return np.interp(np.mod(np.asarray(s, float), 2 * np.pi * g.R_WALL), g.FOOT["s"], g.FOOT["z"])
+ 
+ 
+-def low_margin(g, bay, seed, n_bites=(1, 2), bite_len=(0.10, 0.26), bite_h=(0.03, 0.065), bed=0.03):
++def low_margin(g, bay, seed, n_bites=(1, 2), bite_len=(0.10, 0.26), bite_h=(0.03, 0.065), bed=0.03, shoulder=6):
+     """director r6 #5: the coat foot is BEDDED onto the stone tops (it runs `bed` into the stone, pressed
+     into the joints) along >= 70 % of the bay; the bottom rod row shows only in 1-2 splash-eroded bites,
+     each 10-26 cm long and 3-6.5 cm tall (flat-ish crown, ragged), placed at random along the bay (no
+@@ -257,7 +370,8 @@ def low_margin(g, bay, seed, n_bites=(1, 2), bite_len=(0.10, 0.26), bite_h=(0.03
+     rs = np.random.RandomState(seed)
+     nb_ = n_bites[0] + int(rs.rand() < 0.45) * (n_bites[1] - n_bites[0])
+     Ls = rs.uniform(*bite_len, nb_)
+-    Ls *= min(1.0, 0.27 * (bs1 - bs0 - 0.2) / Ls.sum())        # bedded along >= ~70 % of the bay
++    if nb_ > 0:
++        Ls *= min(1.0, 0.27 * (bs1 - bs0 - 0.2) / Ls.sum())    # bedded along >= ~70 % of the bay
+     bites = []
+     for k in range(nb_):
+         L = max(Ls[k], bite_len[0])
+@@ -275,7 +389,7 @@ def low_margin(g, bay, seed, n_bites=(1, 2), bite_len=(0.10, 0.26), bite_h=(0.03
+             u = (s - c_) / (L / 2)
+             # flat-ish crown with ragged, steep-ish shoulders (splash-eroded scallop), slightly skewed
+             u = np.where(u > 0, u * (1 + sk), u * (1 - sk * 0.5))
+-            prof = np.clip(1 - np.abs(u) ** 6, 0, 1) ** 0.3
++            prof = np.clip(1 - np.abs(u) ** shoulder, 0, 1) ** 0.3
+             hh = h_ * prof * (1 + 0.15 * n2(s * 40.0, c_, seed + 3)) + 0.003 * n2(s * 70.0, c_, seed + 4)
+             out = np.where(prof > 0.02, np.maximum(out, fl + hh), out)
+         return out
+@@ -305,19 +419,38 @@ def make_daub_fields(g):
+         if kind == "low":
+             patches.setdefault(bay, []).append(daub_hole(g, cs, cz, hs, hz, seed, floor=partial(wall_floor, g)))
+         else:
+-            P = fracture_patch(g, cs, cz, hs, hz, seed)
++            P = (fracture_patch_r9 if _wf(g).get("patch_style") == "r9" else fracture_patch)(g, cs, cz, hs, hz, seed)
+ 
+             def hf(s, z, _P=P, _sd=seed):
+                 s = np.asarray(s, float)
+                 z = np.asarray(z, float)
+                 return -poly_sdf(s, z, _P) + 0.003 * n2(s * 30.0, z * 30.0, _sd + 6)
+             patches.setdefault(bay, []).append(hf)
++    wf = _wf(g)
++    bite_bays = None
++    if wf.get("foot_bites") is not None:
++        # director r7 #3: at most N bites round the hut, 0-1 per bay, never in two adjacent bays
++        rsb = np.random.RandomState(9590)
++        cand = [b for b in range(nb) if b != door_bay and not any(p[0] == b and p[1] == "low" for p in g.DAUB_PATCHES)]
++        bite_bays = set()
++        for b in rsb.permutation(cand):
++            if len(bite_bays) >= int(wf["foot_bites"]):
++                break
++            if (b - 1) % nb in bite_bays or (b + 1) % nb in bite_bays:
++                continue
++            bite_bays.add(int(b))
++        g.BITE_BAYS = sorted(bite_bays)
+     for bay in range(nb):
+         if bay == door_bay:
+             g.DAUB_BAYS[bay] = door_field
+             g.DAUB_PARTS[bay] = (None, door_field)
+             continue
+-        lm = low_margin(g, bay, 9500 + 13 * bay)
++        if bite_bays is None:
++            lm = low_margin(g, bay, 9500 + 13 * bay)
++        else:
++            nbt = 1 if bay in bite_bays else 0
++            lm = low_margin(g, bay, 9500 + 13 * bay, n_bites=(nbt, nbt), bite_len=wf.get("bite_len", (0.20, 0.40)),
++                            bite_h=wf.get("bite_h", (0.02, 0.04)), shoulder=12)
+         holes = patches.get(bay, [])
+ 
+         def pfield(s, z, _holes=holes):
+@@ -419,6 +552,12 @@ def build_daub(g, coll):
+     k_fine = 0.0 if rule else 1.0
+     if rule:
+         H_S, H_Z, H_CR = 0.03, 0.03, 0.02
++    # kit 1.2.0 (wall_finish, director r8 #1): the note-11 entrance exception is applied PER FEATURE / VERTEX
++    # (g.detail.scale_v), not building-wide -- palm dents >= 1 cm are kept within the entrance zone; every bay gets
++    # sparse hand-applied lumps of 2-2.5 cm (>= 2 cm: kept anywhere), so no bay reads as a flat board
++    wf = _wf(g)
++    relief9 = bool(rule and wf.get("daub_relief"))
++    H_S0 = H_S
+     n_cr = 0
+     n_fl = 0
+     stat_T = []
+@@ -436,6 +575,13 @@ def build_daub(g, coll):
+         zz_live = Zc[live]
+         cs0, cs1 = max(s0, ss_live.min() - 0.03), min(s1, ss_live.max() + 0.03)
+         cz0, cz1 = max(zlo, zz_live.min() - 0.03), min(zhi, zz_live.max() + 0.03)
++        if relief9:
++            # grid: finer where the entrance zone keeps the 7-12 cm palm dents
++            ssb = np.linspace(cs0, cs1, 9)
++            Pb = np.stack([np.sin(ssb / g.R_WALL) * g.R_WALL, -np.cos(ssb / g.R_WALL) * g.R_WALL,
++                           np.full(ssb.shape, 1.2)], -1)
++            ent_bay = bool(g.detail.in_entrance_v(Pb).mean() > 0.3)
++            H_S = H_Z = wf.get("grid", (0.025, 0.016))[1 if ent_bay else 0]
+         # ---- shrinkage cracks first (their boxes are refined): random-walk polylines in intact coat
+         cracks = []
+         ncr = rng.randint(2, 5)
+@@ -546,7 +692,13 @@ def build_daub(g, coll):
+             left = dl < dr
+             rf = np.where(left, np.interp(Z_, zs_l, rf_l), np.interp(Z_, zs_r, rf_r)) - g.R_WALL
+             return np.minimum(dl, dr), rf, np.where(left, 0.0, 1.0)
+-        f = field(S, Z)
++        cut_field = field
++        if wf.get("bite_backing") is not None and lm_ is not None:
++            zfl_c = partial(coat_floor, g)
++
++            def cut_field(S_, Z_, _f=field):      # the backing under a bite is kept down to the stone top
++                return np.maximum(_f(S_, Z_), np.minimum(np.asarray(Z_, float) - zfl_c(S_), f_pat(S_, Z_)))
++        f = cut_field(S, Z)
+         dfl0, _, _ = post_d(S, Z)
+         # director r4 #5c: the sheet's cut boundary (where it is dropped behind the rods) is snapped onto
+         # the smooth field contour -- no grid stair-steps along any daub margin
+@@ -572,7 +724,7 @@ def build_daub(g, coll):
+         if mv.any():
+             S = S.copy()
+             Z = Z.copy()
+-            S[mv], Z[mv] = snap(field, mv, 0.03, 4)
++            S[mv], Z[mv] = snap(cut_field, mv, 0.03, 4)
+         # director r6 #1/#3: a CRISP outer arris on every fracture margin -- the grid vertices nearest the
+         # patch / break contour are snapped onto it, so the coat face turns into the fracture face on an
+         # edge loop (no 1-cell soft chamfer, no pillowed lip)
+@@ -616,6 +768,26 @@ def build_daub(g, coll):
+             dabs += rng.uniform(0.002, 0.005) * lip * m
+         dabs -= 0.003
+         dabs *= k_fine
++        lumps = np.zeros(S.shape)
++        if relief9:
++            rl = np.random.RandomState(7700 + bay)
++            area_ = (cs1 - cs0) * (cz1 - cz0)
++            for _ in range(int(round(area_ * rl.uniform(*wf.get("lumps_per_m2", (2.0, 3.0)))))):
++                c_s = rl.uniform(cs0, cs1)
++                c_z = rl.uniform(cz0 + 0.1, cz1 - 0.1)
++                sg_ = rl.uniform(*wf.get("lump_sigma", (0.045, 0.08)))
++                el = rl.uniform(1.0, 1.6)                       # pressed on wider than tall
++                A_ = rl.uniform(*wf.get("lump_amp", (0.020, 0.025)))
++                a_c = c_s / g.R_WALL
++                A_ *= float(g.detail.scale_v(A_, np.array([math.sin(a_c) * g.R_WALL, -math.cos(a_c) * g.R_WALL, c_z])))
++                ds_ = (S - c_s) / (sg_ * el)
++                dz_ = (Z - c_z) / sg_
++                r2 = ds_ ** 2 + dz_ ** 2
++                m = r2 < 9.0
++                if not m.any() or A_ == 0.0:
++                    continue
++                # a slightly sharper lower lip where the handful was pushed upward
++                lumps += A_ * np.where(dz_ < 0, np.exp(-0.5 * r2 * 1.5), np.exp(-0.5 * r2)) * m
+         # ---- palm-press dents (director r3 #5c): round 7-12 cm dents 0.8-1.8 cm deep with a slight
+         # squeezed-up rim; they break the long undulations (no strokes, no folds)
+         smear = np.zeros(S.shape)
+@@ -632,11 +804,31 @@ def build_daub(g, coll):
+             A_ = rng.uniform(0.006, 0.012)
+             rr_ = np.sqrt(r2)
+             smear += k_fine * A_ * (-np.exp(-r2 * 1.3) + 0.12 * np.exp(-((rr_ - 1.1) / 0.35) ** 2)) * m
++        if relief9:
++            # entrance exception: palm-press dents 1.0-1.5 cm deep, 7-12 cm across, ~6 per m2, squeezed-up rims,
++            # each kept only where g.detail keeps relief of its depth (inside the entrance zone)
++            rd = np.random.RandomState(7800 + bay)
++            for _ in range(int(area * wf.get("dents_per_m2", 6.0))):
++                c_s = rd.uniform(cs0, cs1)
++                c_z = rd.uniform(cz0, cz1)
++                R_ = rd.uniform(*wf.get("dent_r", (0.035, 0.06)))
++                el = rd.uniform(0.8, 1.25)
++                A_ = rd.uniform(*wf.get("dent_amp", (0.010, 0.015)))
++                a_c = c_s / g.R_WALL
++                if g.detail.scale_v(A_, np.array([math.sin(a_c) * g.R_WALL, -math.cos(a_c) * g.R_WALL, c_z])) < 0.5:
++                    continue
++                r2 = ((S - c_s) / (R_ * el)) ** 2 + ((Z - c_z) * el / R_) ** 2
++                m = r2 < 6.0
++                if not m.any():
++                    continue
++                rr_ = np.sqrt(r2)
++                smear += A_ * (-np.exp(-r2 * 1.3) + 0.15 * np.exp(-((rr_ - 1.1) / 0.35) ** 2)) * m
+         fine = k_fine * (0.0035 * n2(S * 9, Z * 9, bay + 40) + 0.0012 * n2(S * 30, Z * 30, bay + 41)
+                 + 0.0005 * n2(S * 80, Z * 80, bay + 42))
+         # ---- slight sag (a soft belly where the wet coat slumped, 0.5-1.0 m up; director r6 #4: <= 1.5 cm)
+         z_sag = 0.62 + 0.3 * ((bay * 0.618) % 1.0)
+-        sag = (0.008 + 0.004 * n2(S * 1.3, np.full(S.shape, 0.5), 4540 + bay)) * np.exp(-((Z - z_sag) / 0.28) ** 2)
++        sa0, sa1 = wf.get("sag", (0.008, 0.004)) if relief9 else (0.008, 0.004)
++        sag = (sa0 + sa1 * n2(S * 1.3, np.full(S.shape, 0.5), 4540 + bay)) * np.exp(-((Z - z_sag) / 0.28) ** 2)
+         sag = sag * (1 - smoothstep(0.42, 0.62, np.abs(Z - z_sag) / 0.6))
+         # ---- weathered foot: splash-pitted over the bottom ~25 cm; where it is bedded on the stones a
+         # rough fillet squeezed out onto the stone tops and into the joints (director r6 #5)
+@@ -645,7 +837,12 @@ def build_daub(g, coll):
+         foot_n = np.clip(n2(S * 14.0, Z * 30.0, 4541 + bay) * 1.4 + 0.3, 0, 1)
+         bedded = smoothstep(0.012, 0.028, fl_ - (Z - zfl))        # the foot here reaches the stone
+         fillet = (0.009 + 0.004 * n2(S * 25.0, np.full(S.shape, 1.7), 4544 + bay)) * (1 - smoothstep(-0.01, 0.045, Z - zfl)) * bedded
++        if relief9:      # lumps / dents fade into the post slits and toward the fracture margins (constant edge)
++            fade_ = smoothstep(0.03, 0.14, dfl) * smoothstep(0.04, 0.14, fp) * smoothstep(0.03, 0.12, fl_)
++            lumps = lumps * fade_
++            smear = smear * fade_
+         T_full = (g.COAT_R_NOM + bulge * (0.3 + 0.7 * smoothstep(-0.02, 0.16, dfl)) + ridge + smear + fine + dabs + sag
++                  + lumps
+                   - k_fine * foot * (0.004 + 0.006 * foot_n)
+                   + k_fine * foot * (0.004 * n2(S * 22.0, Z * 45.0, 4542 + bay) - 0.004 * np.clip(n2(S * 35, Z * 55, 4543 + bay) * 2 - 0.6, 0, 1))
+                   + fillet)
+@@ -670,11 +867,17 @@ def build_daub(g, coll):
+         grit = k_fine * (0.005 * n2(S * 70.0, Z * 70.0, 4570 + bay) + 0.002 * n2(S * 160.0, Z * 160.0, 4571 + bay))
+         fpg = fp + grit * np.clip(-fp / 0.006, 0, 1)
+         w_e = 0.024 + 0.02 * Fm
++        if wf.get("patch_style") == "r9":        # director r7 #1: the visible edge face varies 1.5-5 cm
++            w_e = 0.015 + 0.035 * smoothstep(-0.55, 0.55, n2(S * 4.5, Z * 4.5, 4580 + bay))
+         tpe = np.clip(1 + fpg / w_e, 0, 1)
+         e_pat = (1 - Fm) * tpe + Fm * smoothstep(0.0, 1.0, tpe)
+         edge = np.minimum(e_low, e_pat)
+         pit = k_fine * 0.004 * np.clip(n2(S * 25, Z * 25, bay + 77), 0, 1) * (1 - smoothstep(0.04, 0.16, f))
+-        T = -0.036 + (T_full + 0.036 - pit) * edge + crack_d * edge
++        base = -0.036
++        if wf.get("bite_backing") is not None and lm_ is not None:
++            # director r7 #3: a bite shows rods against a mid-grey coat (<= 4 cm behind the rod fronts), no black slot
++            base = np.where((fl_ < 0.03) & (fp > 0.05), float(wf["bite_backing"]), -0.036)
++        T = base + (T_full - base - pit) * edge + crack_d * edge
+         # tuck into the posts at the very ends of the sheet, and back under the plate at the top
+         T = T - 0.04 * (1 - smoothstep(-0.05, -0.012, dfl)) * edge
+         T = T - 0.032 * smoothstep(zhi - 0.09, zhi, Z)
+@@ -690,7 +893,7 @@ def build_daub(g, coll):
+         stat_T.append(T_full[(fp > 0.15) & (fl_ > 0.3) & (dfl > 0.12)])
+         # ---- director r6 #2: clinging daub = flat torn FLAKES of coat lying on the rods' front face
+         # (8-15 x 5-10 cm, 1-2 cm thick, 4-7 straight breaks), within 8 cm of the main break
+-        if 1000 + bay * 17 in g.ROD_STORE:
++        if 1000 + bay * 17 in g.ROD_STORE and wf.get("flakes", True):
+             n_fl += daub_flakes(g, acc, bay, field, g.ROD_STORE[1000 + bay * 17], rng, s0, s1,
+                                 3 if bay == len(g.POST_AZ) - 2 else 2)
+     tt = np.concatenate(stat_T)
+diff --git a/blender_village/kit/village_kit/components/frame.py b/blender_village/kit/village_kit/components/frame.py
+index 4bfa1fe..c54a438 100644
+--- a/blender_village/kit/village_kit/components/frame.py
++++ b/blender_village/kit/village_kit/components/frame.py
+@@ -133,6 +133,7 @@ class RoundFrame(Building):
+       detail_rule   producer note 11 detail-scale rule (core.DetailRule, entrance at the door frame); False =
+                     phase-1 behaviour (all sub-2 cm relief modelled)
+       hygiene       Nanite clean-up (core.nanite_clean) on every mesh
++      wall_finish   dict of optional daub / wattle finish switches (components.daub.wall_finish_r9()); {} = 1.0.0
+     Everything else (front plane of the door frame, plinth face, floor edge, eave shadow heights, the doorway
+     window of full-length shingles...) is derived from these, so a different radius / wall height builds a
+     consistent hut.  The derived values reproduce the signed-off hut exactly at radius 3.50, eave_z 2.395.
+@@ -141,8 +142,11 @@ class RoundFrame(Building):
+     def __init__(self, prefix="HUT", radius=3.50, eave_z=2.395, overhang=0.63, pitch_deg=51.0, n_posts=None,
+                  n_raft=None, door_post_az_deg=None, finial_tip=None, collar_r=0.745, collar_pitch_deg=53.0,
+                  plinth_top=0.33, n_courses=None, sh_expose=0.318, daub_patches=None, cone_age=None,
+-                 detail_rule=True, hygiene=True):
++                 detail_rule=True, hygiene=True, wall_finish=None):
+         super().__init__(prefix)
++        # kit 1.2.0 (additive): optional wall-finish switches of the wattle-and-daub components; None / {} keeps
++        # the 1.0.0 behaviour.  See components.daub.WALL_FINISH_R9 for the keys.
++        self.wall_finish = dict(wall_finish or {})
+         R = float(radius)
+         self.k_r = R / R_REF
+         self.Z_MIN = -0.045                   # lowest point (buried footing skirt); nothing deeper than 5 cm

@@ -1,0 +1,146 @@
+﻿[    0.4s] -- set_entrance
+[    0.4s] -- path_stone_wall
+[   22.7s]   walls visible mortar 19.4% -> 7.2% after 787 pinning stones
+[   22.7s]   BYRE_walls: stones 1496 (hero 179, pins 161)
+[   26.7s]   BYRE_walls_stones: 104071 verts, 92322 faces
+[   26.8s]   BYRE_walls_quoins: 2706 verts, 2640 faces
+[   34.8s]   BYRE_walls_mortar: 4563 verts, 3952 faces
+[   34.8s]   BYRE_walls: mortar cells 3952
+[   34.9s]   BYRE_walls_frames: 4188 verts, 4119 faces
+[   35.0s]   BYRE_walls_dressed: 700 verts, 678 faces
+[   35.0s]   BYRE_walls_ironwork: 280 verts, 266 faces
+[   35.0s]   BYRE_walls_reveals: 40 verts, 20 faces
+[   35.0s]   BYRE_walls_blockers: 40 verts, 25 faces
+[   35.0s] -- path_timber_wall
+[   36.2s]   BYRE_hip_end_W_frame: 248 verts, 240 faces
+[   36.3s]   BYRE_hip_end_W_boards: 1878 verts, 1722 faces
+[   36.3s]   BYRE_hip_end_W_blocker: 54 verts, 52 faces
+[   36.3s]   BYRE_hip_end_W: timber wall (post_plank), 1 runs, 0 openings
+[   36.3s] -- path_timber_wall
+[   36.8s]   BYRE_hip_end_E_s_frame: 224 verts, 216 faces
+[   36.8s]   BYRE_hip_end_E_s_boards: 664 verts, 603 faces
+[   36.8s]   BYRE_hip_end_E_s_blocker: 30 verts, 28 faces
+[   36.8s]   BYRE_hip_end_E_s: timber wall (post_plank), 1 runs, 0 openings
+[   36.8s] -- path_timber_wall
+[   37.3s]   BYRE_hip_end_E_n_frame: 224 verts, 216 faces
+[   37.3s]   BYRE_hip_end_E_n_boards: 654 verts, 594 faces
+[   37.3s]   BYRE_hip_end_E_n_blocker: 30 verts, 28 faces
+[   37.3s]   BYRE_hip_end_E_n: timber wall (post_plank), 1 runs, 0 openings
+[   37.3s] -- linear_roof
+[   37.4s]   BYRE_roof_deck: 2595 verts, 2603 faces
+[   37.5s]   BYRE_roof_rafters: 3360 verts, 3240 faces
+[   37.9s]   BYRE_roof_covering: 32249 verts, 29000 faces
+[   38.4s]   BYRE_roof_eave_roll: 14601 verts, 13920 faces
+[   38.4s]   BYRE_roof: 26 continuous thatch courses + eave rolls + verge faces + 1 eyebrow lip roll(s); round hips lo hi (centres -4.74 / +4.74, inset 1.26 m)
+[   38.4s]   BYRE_roof_ridge: 1586 verts, 1626 faces
+[   38.9s]   BYRE_roof_eyebrow0_frame: 410 verts, 408 faces
+[   38.9s]   BYRE_roof_eyebrow0_boards: 692 verts, 621 faces
+[   38.9s]   BYRE_roof_eyebrow0_blocker: 192 verts, 194 faces
+[   38.9s]   BYRE_roof_eyebrow0_frames: 528 verts, 532 faces
+[   38.9s]   BYRE_roof_eyebrow0_blockers: 8 verts, 5 faces
+[   38.9s]   BYRE_roof: eyebrow 0 at x 1.80 (side -1): front 1.87 m wide, sill 3.44, eave 4.34 (world z before recentre), lift 0.90 m over 2.50 m
+[   38.9s] -- chimney
+[   39.2s]   BYRE_chimney_base visible mortar 16.3% -> 8.2% after 144 pinning stones
+[   39.2s]   BYRE_chimney_base stones 227
+[   39.5s]   BYRE_chimney_base_stones: 13384 verts, 11427 faces
+[   39.5s]   BYRE_chimney_base_mortar: 1922 verts, 1822 faces
+[   40.3s]   BYRE_chimney visible mortar 17.1% -> 9.6% after 200 pinning stones
+[   40.3s]   BYRE_chimney stones 254
+[   40.4s]   BYRE_chimney_stones: 10794 verts, 8548 faces
+[   40.4s]   BYRE_chimney_mortar: 1458 verts, 1332 faces
+[   40.4s]   BYRE_chimney_weathering: 320 verts, 320 faces
+[   40.4s]   chimney: broad base r 1.00.. head 0.82 to z 2.90, weathered offset to the stack (r 0.64)
+[   40.6s]   chimney_abutment: trimmed at the wall face: deck 2603->2593, rafters 3240->3172, covering 29000->28417, eave_roll 13920->13920, ridge 1626->1626
+[   41.0s]   ring trace: 240 / 240 azimuths hit the roof top, z 3.60..5.11
+[   41.0s]   chimney_abutment: ring flaunching round the stack, 253 samples, z 3.60..5.11
+[   41.0s]   BYRE_roof_chimney_abutment: 1768 verts, 1766 faces
+[   41.0s]   seal junction registered: roof / stack ring (covering BYRE_roof_covering, BYRE_roof_eave_roll, BYRE_roof_ridge; z 3.30-5.41)
+[   41.1s]   BYRE_chimney_cap: 320 verts, 320 faces
+[   41.1s]   BYRE_chimney_flue_blocker: 49 verts, 48 faces
+[   41.1s]   BYRE_chimney_crown: 252 verts, 226 faces
+[   41.1s]   chimney: round stack r 0.72 -> 0.56 m (batter 1.5 deg), head 6.21, cap 6.36, crown pot to 6.82
+[   41.1s] -- orient_open_islands
+[   41.6s]   orient_open_islands BYRE_walls_stones: 7 inverted island(s) flipped, 392 single face(s)
+[   41.7s]   orient_open_islands BYRE_chimney_base_stones: 0 inverted island(s) flipped, 102 single face(s)
+[   41.7s]   orient_open_islands BYRE_chimney_stones: 0 inverted island(s) flipped, 123 single face(s)
+[   41.7s] -- orient_closed_slabs
+[   41.7s]   orient_closed_slabs BYRE_roof_deck: 13 inward face(s) flipped
+[   41.7s] -- lean_to
+[   41.7s]   BYRE_lean_to_deck: 1440 verts, 1438 faces
+[   41.8s]   BYRE_lean_to_covering: 2589 verts, 2256 faces
+[   41.9s]   BYRE_lean_to_eave_roll: 2986 verts, 2814 faces
+[   41.9s]   BYRE_lean_to_framing: 1528 verts, 1432 faces
+[   41.9s]   BYRE_lean_to: ROUNDED roof (note 19): 6 thatch courses round the contour (coat 0.22 + 0.08 m, 0.30 m courses), the village eave roll round the lip (D section 0.43 m deep, radius 0.16), hips reach 1.00 m along the wall (0.45 m past the end walls), 1.92 m out; ledger, 8 common + radial hip rafters, plate at 1.80 m out
+[   42.0s]   BYRE_lean_to: trimmed at the wall face: deck 1438->1213, covering 2256->2088, eave_roll 2814->2660
+[   42.0s]   BYRE_lean_to_flashing: 1392 verts, 1379 faces
+[   42.0s]   BYRE_lean_to: flaunching 176 stations, roof at the face z 2.34..2.86, crease 2.94
+[   42.1s]   BYRE_lean_to: under the host eave: margin at the face 0.264 m (crease), at the host lip line 0.094 m (covering)
+[   42.1s]   BYRE_lean_to: host eave roll belly over the add-on: smallest gap 0.137 m at (1.456, 2.925, 2.323) (rule >= 0.10 m)
+[   42.1s]   BYRE_lean_to: host eave roll, lateral (nearest from the same vertices): 0.118 m at (1.456, 2.925, 2.323) (rule >= 0.10 m)
+[   42.1s]   seal junction registered: lean_to / wall (covering BYRE_lean_to_covering, BYRE_lean_to_eave_roll; z 2.04-3.16)
+[   42.5s]   lean_to_end0 visible mortar 20.4% -> 7.3% after 78 pinning stones
+[   42.5s]   BYRE_lean_to_end0: stones 175 (hero 4, pins 21)
+[   42.6s]   BYRE_lean_to_end0_stones: 10588 verts, 9073 faces
+[   42.6s]   BYRE_lean_to_end0_quoins: 1148 verts, 1120 faces
+[   42.8s]   BYRE_lean_to_end0_mortar: 248 verts, 196 faces
+[   42.8s]   BYRE_lean_to_end0: mortar cells 196
+[   42.8s]   BYRE_lean_to_end0_mortar: 28 mortar vertices clamped under the deck
+[   42.8s]   BYRE_lean_to_end0_stones: stone facing check: 175 stones, 3 turned inside out -> flipped (762 faces), 0 left
+[   43.2s]   lean_to_end1 visible mortar 20.5% -> 8.1% after 71 pinning stones
+[   43.2s]   BYRE_lean_to_end1: stones 172 (hero 4, pins 12)
+[   43.3s]   BYRE_lean_to_end1_stones: 10487 verts, 8985 faces
+[   43.3s]   BYRE_lean_to_end1_quoins: 1148 verts, 1120 faces
+[   43.5s]   BYRE_lean_to_end1_mortar: 247 verts, 195 faces
+[   43.5s]   BYRE_lean_to_end1: mortar cells 195
+[   43.5s]   BYRE_lean_to_end1_mortar: 30 mortar vertices clamped under the deck
+[   43.5s]   BYRE_lean_to_end1_stones: stone facing check: 172 stones, 0 turned inside out -> flipped (0 faces), 0 left
+[   43.5s]   BYRE_lean_to_posts: 640 verts, 612 faces
+[   43.5s]   BYRE_lean_to_pads: 114 verts, 96 faces
+[   43.5s]   BYRE_lean_to: 2 posts on dressed pads under the plate
+[   43.5s]   BYRE_lean_to: open front 3.60 m wide, plate underside 1.705 m (ends) .. 1.845 m (middle), lowest knee-brace foot 1.625 m (rule plate >= 1.70, brace >= 1.55 m)
+[   43.5s] -- recenter
+[   43.5s] recentred by (-0.000, -0.644); plan bbox 15.91 x 7.75 m, height 6.80 m
+[   43.5s] -- guards
+[   43.9s]   clearance gate BYRE walls_3: door head 2.19 m, eave lip over it 2.057 m at (-1.75, -3.594) on BYRE_roof_eave_roll (rule >= 2.30 m, 25 stations): FAIL
+[   43.9s]   clearance gate BYRE lean_to_front: door head 1.71 m, eave lip over it 2.034 m at (0.55, 3.776) on BYRE_lean_to_eave_roll (rule >= 2.30 m, 25 stations): FAIL
+python.exe : Traceback (most recent call last):
+At line:2 char:65
++ ... iew.blend"; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\build_v8_byre_smokehouse.py", 
+line 148, in <module>
+    main()
+    ~~~~^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\build_v8_byre_smokehouse.py", 
+line 139, in main
+    build_building(dict(
+    ~~~~~~~~~~~~~~^^^^^^
+        prefix="BYRE", collection="BYRE", building_id=BID, frame=PlanFrame,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        decal_meta=dict(dims=dict(DIM), datum=dict(ground_z=0.0, note="built on the plan, then recentred"))))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\..\..\..\kit\village_kit\assemb
+ly.py", line 162, in build_building
+    guards.after_steps(g, opt, entrances=spec.get("entrances"))
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\..\..\..\kit\village_kit\guards.py", 
+line 430, in after_steps
+    entrance_clearance(g, entrances=entrances)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\..\..\..\kit\village_kit\guards.py", 
+line 230, in entrance_clearance
+    raise ClearanceError(
+    ...<3 lines>...
+        + ".  Raise the eave / shorten the overhang over the door, or lower the door head.")
+village_kit.guards.ClearanceError: BYRE: entrance clearance (art bible 7: every eave lip directly over a doorway >= 
+2.30 m and above the door head): walls_3 lip 2.057 m < 2.30 m at (-1.75, -3.594) on BYRE_roof_eave_roll; lean_to_front 
+lip 2.034 m < 2.30 m at (0.55, 3.776) on BYRE_lean_to_eave_roll.  Raise the eave / shorten the overhang over the door, 
+or lower the door head.

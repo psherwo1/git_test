@@ -1,0 +1,31 @@
+﻿00:00.532  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\v6_barn_fast.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\bld_render_r03.py:25: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:4 char:349
++ ... TEXITCODE"; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\bld_render_r03.py:35: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void = bpy.data.materials.new("_D_void"); void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_03\builder_extra\bld_render_r03.py:53: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_D_world"); world.use_nodes = True
+00:00.641  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.047  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots3\d24_cart_doors_threshold_pads.png'
+00:05.610  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots3\d24_cart_doors_threshold_pads_void.png'
+DEVICE GPU
+SHOT d24_cart_doors_threshold_pads
+00:09.719  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots3\s18_post_pad_plinth_E.png'
+00:10.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots3\s18_post_pad_plinth_E_void.png'
+SHOT s18_post_pad_plinth_E
+00:14.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots3\s19_post_pad_plinth_W.png'
+00:15.016  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots3\s19_post_pad_plinth_W_void.png'
+SHOT s19_post_pad_plinth_W
+00:19.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots3\b07_pad_close_W.png'
+00:19.735  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r03_fast\shots3\b07_pad_close_W_void.png'
+SHOT b07_pad_close_W

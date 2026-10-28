@@ -1,0 +1,159 @@
+[    0.1s] GUARD OPT-OUT KEEP: seal_probe at junction 'shake collar / stone cone' -- signed-off hero, geometry frozen in kit 1.9.0: 3 of ~126k probe rays thread the shake collar's jagged comb (sub-pixel); queued for the keep family's next round
+[    0.2s] -- oct_hall_walls
+[    9.9s]   hall visible mortar 18.6% -> 7.9% after 854 pinning stones
+[    9.9s]   hall stones: 1626
+[   10.0s]   hall hero stones 700 (non-rectangular 344), other 713, pins 213
+[   15.3s]   KEEP_hall_wall_stones: 148873 verts, 138422 faces
+[   15.6s]   KEEP_hall_dressed_stones: 31875 verts, 30086 faces
+[   15.6s]   KEEP_hall_dressed_joint_mortar: 544 verts, 504 faces
+[   15.6s]   hall mortar cells 3604
+[   15.7s]   KEEP_hall_wall_mortar: 4035 verts, 3604 faces
+[   15.7s]   KEEP_hall_interior: 100 verts, 54 faces
+[   15.7s] -- oct_hall_frame
+[   15.8s]   KEEP_hall_post_bases: 3456 verts, 3342 faces
+[   16.0s]   KEEP_hall_posts: 15632 verts, 15239 faces
+[   16.0s]   KEEP_hall_knee_braces: 1344 verts, 1272 faces
+[   16.0s]   KEEP_hall_eave_plate: 6314 verts, 5194 faces
+[   16.0s] -- arched_door
+[   16.2s]   KEEP_door_leaf: 7315 verts, 7323 faces
+[   16.2s]   KEEP_door_ironwork: 1477 verts, 1451 faces
+[   16.2s] -- hall_windows
+[   16.2s]   KEEP_hall_window_frames: 1008 verts, 972 faces
+[   16.2s] -- door_threshold
+[   16.2s]   KEEP_threshold: 784 verts, 732 faces
+[   16.2s] -- skirt_roof
+[   16.3s]   skirt boards 357
+[   16.4s]   KEEP_roof_skirt_deck: 998 verts, 872 faces
+[   16.9s]   KEEP_roof_skirt_boards: 22456 verts, 17864 faces
+[   17.0s]   KEEP_roof_skirt_hips: 4784 verts, 4692 faces
+[   17.1s]   KEEP_roof_skirt_structure: 12500 verts, 11114 faces
+[   17.1s] -- shake_collar
+[   17.1s]   collar shakes split: 10
+[   17.1s]   collar shakes 260
+[   17.4s]   KEEP_roof_collar_shakes: 38574 verts, 33984 faces
+[   17.5s]   KEEP_cone_ledge_slabs: 4428 verts, 4320 faces
+[   17.5s]   seal junction registered: shake collar / stone cone (covering KEEP_roof_collar_shakes; z 4.40-6.32)
+[   17.5s] -- stone_cone
+[   19.4s]   cone visible mortar 15.5% -> 10.8% after 229 pinning stones
+[   19.4s]   cone stones: 1776
+[   20.6s]   KEEP_cone_stones: 89266 verts, 71260 faces
+[   20.6s]   KEEP_cone_mortar: 1728 verts, 1656 faces
+[   20.6s] -- lantern
+[   20.7s]   KEEP_lantern_boards: 3668 verts, 3364 faces
+[   20.7s]   KEEP_lantern_frame: 2304 verts, 2222 faces
+[   20.7s] -- cone_cap
+[   20.9s]   KEEP_cap shingles 166
+[   21.0s]   KEEP_cap_deck: 1232 verts, 1168 faces
+[   21.4s]   KEEP_cap_shingles: 15947 verts, 14273 faces
+[   21.5s]   KEEP_cap_hips: 7808 verts, 7776 faces
+[   21.6s]   KEEP_cap_structure: 12488 verts, 11318 faces
+[   21.6s]   KEEP_finial_main: 1010 verts, 1010 faces
+[   21.6s] -- annex_walls
+[   25.0s]   wing visible mortar 20.6% -> 7.9% after 498 pinning stones
+[   25.0s]   wing stones 693
+[   25.0s]   wing hero stones 237, other 367, pins 89
+[   26.7s]   KEEP_wing_wall_stones: 58773 verts, 54407 faces
+[   26.8s]   KEEP_wing_dressed_stones: 12894 verts, 12092 faces
+[   26.9s]   wing mortar cells 1918
+[   26.9s]   KEEP_wing_wall_mortar: 2528 verts, 2080 faces
+[   26.9s] -- plank_door
+[   27.1s]   KEEP_wing_door: 9340 verts, 9232 faces
+[   27.1s]   KEEP_wing_door_ironwork: 946 verts, 922 faces
+[   27.1s]   (empty) KEEP_wing_window
+[   27.1s] -- annex_window
+[   27.1s]   (empty) KEEP_wing_door
+[   27.1s]   (empty) KEEP_wing_door_ironwork
+[   27.1s]   KEEP_wing_window: 568 verts, 551 faces
+[   27.1s] -- thatch_wing_roof
+[   27.3s]   thatch: 12 courses, 17449 quads
+[   27.5s]   KEEP_wing_roof_thatch_courses: 20802 verts, 17449 faces
+[   27.5s]   thatch core: top cells 2476/4199, underside 1413
+[   27.9s]   eave fringe tufts 569
+[   28.2s]   KEEP_wing_roof_thatch: 31786 verts, 29750 faces
+[   28.2s] -- ridge_comb
+[   28.3s]   ridge comb shakes 86
+[   28.3s]   KEEP_wing_ridge_comb: 2112 verts, 2102 faces
+[   28.3s]   KEEP_wing_roof_rolls: 1113 verts, 1002 faces
+[   28.3s] -- thatch_junctions
+[   28.3s]   KEEP_wing_roof_structure: 756 verts, 666 faces
+[   29.1s]   valley apron facet 3: 39 stations
+[   29.1s]   valley apron facet 3: 15 stations
+[   29.2s]   valley apron facet 4: 35 stations
+[   29.6s]   KEEP_wing_flashing: 1490 verts, 1476 faces
+[   29.6s]   KEEP_wing_fillet: 2052 verts, 2044 faces
+[   29.6s]   seal junction registered: wing thatch / turret (covering KEEP_wing_roof_thatch, KEEP_wing_roof_thatch_courses, KEEP_wing_roof_rolls; z 2.00-6.45)
+[   29.6s]   seal junction registered: wing thatch / hall (covering KEEP_wing_roof_thatch, KEEP_wing_roof_thatch_courses, KEEP_wing_roof_rolls; z 2.00-4.05)
+[   29.6s] -- side_turret
+[   33.8s]   KEEP_turret visible mortar 17.6% -> 11.0% after 559 pinning stones
+[   33.8s]   KEEP_turret stones 1140
+[   34.5s]   KEEP_turret_stones: 60575 verts, 50368 faces
+[   34.5s]   KEEP_turret_mortar: 2046 verts, 1826 faces
+[   34.5s]   cushion stones: 16 lower + 17 upper, 4 pinning stones
+[   34.7s]   KEEP_turret_corbel_collar: 12897 verts, 12236 faces
+[   34.7s]   KEEP_turret_corbel_mortar: 1439 verts, 1260 faces
+[   34.7s]   KEEP_turret_drum_backing: 96 verts, 48 faces
+[   34.8s]   KEEP_turret_drum: 3320 verts, 2721 faces
+[   34.9s]   KEEP_turret_cap shingles 114
+[   34.9s]   KEEP_turret_cap_deck: 1008 verts, 944 faces
+[   35.2s]   KEEP_turret_cap_shingles: 11062 verts, 9978 faces
+[   35.3s]   KEEP_turret_cap_hips: 7808 verts, 7776 faces
+[   35.4s]   KEEP_turret_cap_structure: 12208 verts, 11044 faces
+[   35.4s]   KEEP_finial_turret: 1010 verts, 1010 faces
+[   35.4s] -- oct_hidden_cull
+[   36.3s]   visibility: 1276186 tris, 220 viewpoints
+[   62.7s]   visibility cull KEEP_roof_collar_shakes: -4656 of 33984 polygons
+[   81.1s]   visibility cull KEEP_cap_structure: -3954 of 11318 polygons
+[   99.5s]   visibility cull KEEP_turret_cap_structure: -4044 of 11044 polygons
+[  105.4s]   visibility cull KEEP_turret_drum: -1330 of 2721 polygons
+[  121.3s]   visibility cull KEEP_cap_shingles: -3138 of 14273 polygons
+[  132.8s]   visibility cull KEEP_turret_cap_shingles: -2480 of 9978 polygons
+[  140.2s]   visibility cull KEEP_roof_skirt_boards: -1064 of 17864 polygons
+[  152.1s]   visibility cull KEEP_roof_skirt_structure: -2420 of 11114 polygons
+[  158.8s]   visibility cull KEEP_hall_eave_plate: -1682 of 5194 polygons
+[  170.9s]   visibility cull KEEP_cap_hips: -2722 of 7776 polygons
+[  183.1s]   visibility cull KEEP_turret_cap_hips: -2860 of 7776 polygons
+[  187.3s]   visibility cull KEEP_roof_skirt_hips: -820 of 4692 polygons
+[  191.8s]   visibility cull KEEP_lantern_boards: -986 of 3364 polygons
+[  196.4s]   visibility cull KEEP_lantern_frame: -1037 of 2222 polygons
+[  201.8s]   visibility cull KEEP_cone_ledge_slabs: -1019 of 4320 polygons
+[  202.2s]   visibility cull KEEP_wing_roof_structure: -118 of 666 polygons
+[  211.0s]   visibility cull KEEP_hall_posts: -2109 of 15239 polygons
+[  217.0s]   visibility cull KEEP_hall_post_bases: -1439 of 3342 polygons
+[  219.2s]   visibility cull KEEP_hall_knee_braces: -591 of 1272 polygons
+[  228.1s]   visibility cull KEEP_door_leaf: -2174 of 7323 polygons
+[  238.1s]   visibility cull KEEP_wing_door: -2214 of 9232 polygons
+[  238.6s]   visibility cull KEEP_wing_window: -143 of 551 polygons
+[  239.1s]   visibility cull KEEP_threshold: -118 of 732 polygons
+[  241.1s]   visibility cull KEEP_hall_window_frames: -599 of 972 polygons
+[  242.8s]   visibility cull KEEP_wing_ridge_comb: -387 of 2102 polygons
+[  263.5s]   visibility cull KEEP_turret_stones: -4028 of 50368 polygons
+[  284.7s]   visibility cull KEEP_wing_wall_stones: -4510 of 54407 polygons
+[  295.2s]   visibility cull KEEP_turret_corbel_collar: -2368 of 12236 polygons
+[  295.2s]   hidden-geometry cull: -55010 polygons
+[  295.2s] -- guards
+[  296.0s]   clearance gate KEEP door: door head 2.29 m, eave lip over it 3.711 m at (0.875, -4.94) on KEEP_roof_skirt_structure (rule >= 2.30 m, 25 stations): PASS
+[  296.0s]   clearance gate KEEP annex_door: door head 2.20 m, eave lip over it 2.396 m at (-4.55, -0.05) on KEEP_wing_roof_thatch (rule >= 2.30 m, 25 stations): PASS
+[  298.5s]   seal probe [see-through] wing thatch / turret: 11462 points, 65502 rays, 170 grazing pass(es), 0 leak(s)
+[  299.4s]   seal probe [see-through] wing thatch / hall: 1939 points, 10615 rays, 0 grazing pass(es), 0 leak(s)
+[  299.4s]   seal probe: 76117 rays on 2 junction(s) in 3.4 s
+[  300.5s]     decal anchor dropped: ('damp_rise', [-1.9, -0.65, 0.26], 'interior/blocker KEEP_hall_interior')
+[  300.5s]     decal anchor dropped: ('damp_rise', [-0.94, -4.19, 0.24], 'duplicate')
+[  300.5s]     decal anchor dropped: ('damp_rise', [-9.39, 0.4, 0.35], 'duplicate')
+[  300.5s]     decal anchor dropped: ('rust_stain', [-0.04, -3.69, 0.78], 'duplicate')
+[  300.5s]   decal anchors: 120 generated, 4 rejected by the plausibility gate
+[  300.5s]   decal anchors: 116 ({'damp_rise': 19, 'moss': 25, 'lichen': 16, 'water_streak': 13, 'soot': 6, 'rust_stain': 9, 'crack': 18, 'grime': 6, 'repair_patch': 4})
+[  301.5s] decal anchor check (applied): checked 116, snapped 0, max_move 0.000, renormal 0, shrunk 0, no_surface 0, wrong_surface 0, excluded 0, occluded 0, footprint 0, duplicate 0, kept 116
+[  301.5s] decal anchors: 116
+[  302.8s] uv grain (kit 1.10.0): 76 meshes, 2061 timber / shingle pieces (90 round, 266 sloped sheets), 143467 grain faces re-projected, 6359 collapsed faces repaired
+[  303.3s]   walked tops (Mask B <= 0.04): door -> KEEP_door_ironwork: 114 faces
+[  303.3s]   walked tops (Mask B <= 0.04): door -> KEEP_hall_dressed_joint_mortar: 12 faces
+[  303.3s]   walked tops (Mask B <= 0.04): door -> KEEP_hall_dressed_stones: 144 faces
+[  303.3s]   walked tops (Mask B <= 0.04): door -> KEEP_hall_interior: 1 faces
+[  303.3s]   walked tops (Mask B <= 0.04): door -> KEEP_hall_wall_stones: 34 faces
+[  303.3s]   walked tops (Mask B <= 0.04): door -> KEEP_threshold: 281 faces
+[  303.3s]   walked tops (Mask B <= 0.04): annex_door -> KEEP_wing_door: 30 faces
+[  303.3s]   walked tops (Mask B <= 0.04): annex_door -> KEEP_wing_door_ironwork: 93 faces
+[  303.3s]   walked tops (Mask B <= 0.04): annex_door -> KEEP_wing_wall_mortar: 1 faces
+[  303.3s] objects 298 (instances 246, pooled meshes 24) triangles 1166874
+Info: Saved as "hilltop_keep.blend"
+[  303.4s] saved C:\GitHubDesktop\git_test\blender_village\kit\baseline\v5r2_hash\hilltop_keep\hilltop_keep.blend 30.4 MB

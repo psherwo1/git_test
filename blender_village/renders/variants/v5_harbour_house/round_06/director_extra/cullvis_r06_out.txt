@@ -1,0 +1,11 @@
+﻿CULLVIS HARB_roof_comb: lost 12, visible 0
+   VISIBLE HARB_tower_stones at (-0.609,-4.178,5.203) from 1 dirs
+   VISIBLE HARB_tower_stones at (-0.602,-4.168,5.204) from 1 dirs
+   VISIBLE HARB_tower_stones at (0.163,-5.129,5.977) from 1 dirs
+   VISIBLE HARB_tower_stones at (-0.037,-4.807,6.746) from 1 dirs
+   VISIBLE HARB_tower_stones at (-0.024,-4.800,6.747) from 3 dirs
+   VISIBLE HARB_tower_stones at (-0.122,-4.640,5.565) from 1 dirs
+CULLVIS HARB_tower_stones: lost 44, visible 6
+   VISIBLE HARB_wing_roof_covering at (-2.881,-3.889,2.675) from 3 dirs
+   VISIBLE HARB_wing_roof_covering at (-2.880,-3.879,2.674) from 6 dirs
+CULLVIS HARB_wing_roof_covering: lost 2, visible 2

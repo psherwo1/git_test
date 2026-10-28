@@ -1,0 +1,48 @@
+﻿GRAIN M_timber             area    336.4  along  10.5%  across  42.7%  [of judged  18.1%; sheets  140.5]  (per piece: along  10.5%)  | roof   119.9: up  97.8%  down   0.8%  | m/UV 1.00
+GRAIN M_timber_weathered   area    390.9  along   2.7%  across  13.7%  [of judged  14.4%; sheets  317.0]  (per piece: along   2.7%)  | roof   152.0: up  83.4%  down   8.8%  | m/UV 1.08
+GRAIN M_roof_shingle       area    487.2  along  13.8%  across   8.9%  [of judged  54.6%; sheets  364.1]  (per piece: along  13.8%)  | roof   364.4: up  90.5%  down   2.0%  | m/UV 1.01
+COLLAPSED objects >= 1% area at ratio<0.2: 40 of 87; worst max 90.59%
+   HALL_cap_wall_plate                       90.59%  {'M_timber': 90.588}
+   HALL_tur_e_cap_wall_plate                 85.56%  {'M_timber': 85.564}
+   HALL_skirt2_wall_plate                    74.97%  {'M_timber': 74.971}
+   HALL_tur_nw_cap_wall_plate                70.57%  {'M_timber': 70.572}
+   HALL_tur_nw_cap_finial                    24.42%  {'M_iron': 10.733, 'M_lead': 31.614, 'M_timber': 15.418}
+   HALL_tur_e_cap_finial                     23.86%  {'M_iron': 9.586, 'M_lead': 31.614, 'M_timber': 15.418}
+   HALL_cap_finial                           21.88%  {'M_iron': 6.718, 'M_lead': 31.614, 'M_timber': 15.418}
+   HALL_openings_sill                        18.07%  {'M_stone_dressed': 18.065}
+   HALL_cap_purlin_rings                     16.76%  {'M_timber': 16.762}
+   HALL_skirt1_hips                          12.98%  {'M_roof_shingle': 12.978}
+   HALL_peg_v02                              12.45%  {'M_timber': 12.449}
+   HALL_peg_v04                              11.58%  {'M_timber': 11.577}
+   HALL_peg_v05                              11.37%  {'M_timber': 11.366}
+   HALL_peg_v03                              11.27%  {'M_timber': 11.268}
+   HALL_peg_v01                              10.62%  {'M_timber': 10.619}
+   HALL_tur_e_cap_purlin_rings               10.29%  {'M_timber': 10.285}
+   HALL_tur_nw_cap_cap_collar                 9.60%  {'M_lead': 9.596}
+   HALL_tur_e_cap_cap_collar                  9.60%  {'M_lead': 9.596}
+   HALL_peg_v00                               9.39%  {'M_timber': 9.394}
+   HALL_skirt1_structure                      9.31%  {'M_timber': 9.309}
+   HALL_skirt2_purlin_rings                   8.73%  {'M_timber': 8.735}
+   HALL_cap_cap_collar                        8.37%  {'M_lead': 8.37}
+   HALL_skirt2_roof_shingles                  6.79%  {'M_roof_shingle': 6.794}
+   HALL_tur_nw_cap_purlin_rings               6.54%  {'M_timber': 6.535}
+   HALL_tur_nw_cap_roof_shingles              6.30%  {'M_roof_shingle': 6.304}
+   HALL_tur_e_cap_roof_shingles               6.04%  {'M_roof_shingle': 6.036}
+   HALL_cap_roof_shingles                     6.00%  {'M_roof_shingle': 6.001}
+   HALL_openings_frame                        5.73%  {'M_timber': 5.73}
+   HALL_skirt1_shingles                       5.09%  {'M_roof_shingle': 5.091}
+   HALL_cap_roof_starter                      4.62%  {'M_roof_shingle': 4.615}
+   HALL_tur_nw_cap_roof_starter               4.58%  {'M_roof_shingle': 4.578}
+   HALL_skirt2_roof_starter                   4.31%  {'M_roof_shingle': 4.309}
+   HALL_tur_e_cap_roof_starter                4.15%  {'M_roof_shingle': 4.152}
+   HALL_openings_backing                      4.06%  {'M_timber_weathered': 4.064}
+   HALL_skirt2_rafters                        3.16%  {'M_timber': 3.157}
+   HALL_tur_nw_cap_rafters                    3.15%  {'M_timber': 3.155}
+   HALL_tur_e_cap_rafters                     2.70%  {'M_timber': 2.698}
+   HALL_cap_rafters                           2.41%  {'M_timber': 2.414}
+   HALL_skirt1_deck_lap                       1.10%  {'M_timber': 1.097}
+   HALL_skirt1_deck                           1.06%  {'M_timber': 1.06}
+WALKED tops in door zones: area 0.955 m2, B max 0.851, area with B > 0.05: 0.955 m2  (pooled door hardware in the zones, not walked pieces: 3 objects, 0.0003 m2, B max 0.200)
+   hall_door        HALL_nail_004                    faces     4 area   0.000 B max 0.200 mean 0.200 >0.05 0.000
+   hall_door        HALL_openings_iron               faces    15 area   0.005 B max 0.498 mean 0.473 >0.05 0.005
+   hall_door        HALL_openings_sill               faces     6 area   0.950 B max 0.851 mean 0.842 >0.05 0.950

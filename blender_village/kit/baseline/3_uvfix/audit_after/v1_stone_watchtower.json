@@ -1,0 +1,698 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\3_uvfix\\v1_stone_watchtower\\v1_stone_watchtower.blend",
+ "entrances": [
+  {
+   "name": "drum_door",
+   "origin": [
+    0.0,
+    -2.48,
+    0.0
+   ],
+   "out": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "width": 1.05,
+   "head": 2.315
+  }
+ ],
+ "grain": {
+  "M_timber_weathered": {
+   "area": 268.825,
+   "along_pct": 33.1,
+   "across_pct": 0.0,
+   "judged_area": 89.078,
+   "sheet_area": 178.502,
+   "along_of_judged_pct": 99.8,
+   "piece_along_pct": 33.1,
+   "piece_across_pct": 0.0,
+   "roofarea": 71.301,
+   "upslope_pct": 97.4,
+   "downslope_pct": 0.5,
+   "m_per_uv_median": 1.0
+  },
+  "M_timber": {
+   "area": 218.502,
+   "along_pct": 51.1,
+   "across_pct": 0.6,
+   "judged_area": 112.892,
+   "sheet_area": 103.777,
+   "along_of_judged_pct": 98.9,
+   "piece_along_pct": 51.1,
+   "piece_across_pct": 0.6,
+   "roofarea": 11.055,
+   "upslope_pct": 39.8,
+   "downslope_pct": 5.8,
+   "m_per_uv_median": 1.005
+  },
+  "M_roof_shingle": {
+   "area": 95.984,
+   "along_pct": 4.3,
+   "across_pct": 12.8,
+   "judged_area": 18.843,
+   "sheet_area": 77.141,
+   "along_of_judged_pct": 22.1,
+   "piece_along_pct": 4.3,
+   "piece_across_pct": 12.8,
+   "roofarea": 77.113,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.967
+  }
+ },
+ "grain_by_object": {
+  "WATCH_cabin_boards|M_timber_weathered": {
+   "area": 53.696,
+   "along_pct": 97.7,
+   "across_pct": 0.1,
+   "judged_area": 52.535,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.9,
+   "piece_along_pct": 97.7,
+   "piece_across_pct": 0.1,
+   "roofarea": 0.697,
+   "upslope_pct": 73.1,
+   "downslope_pct": 22.2,
+   "m_per_uv_median": 1.049
+  },
+  "WATCH_cabin_ceiling|M_timber": {
+   "area": 50.247,
+   "along_pct": 0.0,
+   "across_pct": 0.0,
+   "judged_area": 0.0,
+   "sheet_area": 50.247,
+   "along_of_judged_pct": 0.0,
+   "piece_along_pct": 0.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.244,
+   "upslope_pct": 12.5,
+   "downslope_pct": 37.5,
+   "m_per_uv_median": 1.049
+  },
+  "WATCH_cabin_floor|M_timber": {
+   "area": 64.084,
+   "along_pct": 72.6,
+   "across_pct": 0.2,
+   "judged_area": 46.603,
+   "sheet_area": 16.6,
+   "along_of_judged_pct": 99.8,
+   "piece_along_pct": 72.6,
+   "piece_across_pct": 0.2,
+   "roofarea": 2.817,
+   "upslope_pct": 0.9,
+   "downslope_pct": 0.9,
+   "m_per_uv_median": 1.047
+  },
+  "WATCH_cabin_floor|M_timber_weathered": {
+   "area": 59.196,
+   "along_pct": 0.0,
+   "across_pct": 0.0,
+   "judged_area": 0.0,
+   "sheet_area": 59.196,
+   "along_of_judged_pct": 0.0,
+   "piece_along_pct": 0.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.33,
+   "upslope_pct": 12.5,
+   "downslope_pct": 37.5,
+   "m_per_uv_median": 1.0
+  },
+  "WATCH_cabin_frame|M_timber": {
+   "area": 77.496,
+   "along_pct": 61.1,
+   "across_pct": 0.1,
+   "judged_area": 47.426,
+   "sheet_area": 29.132,
+   "along_of_judged_pct": 99.8,
+   "piece_along_pct": 61.1,
+   "piece_across_pct": 0.1,
+   "roofarea": 3.248,
+   "upslope_pct": 16.8,
+   "downslope_pct": 13.5,
+   "m_per_uv_median": 1.049
+  },
+  "WATCH_cabin_frame|M_timber_weathered": {
+   "area": 7.654,
+   "along_pct": 99.8,
+   "across_pct": 0.0,
+   "judged_area": 7.641,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 99.8,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.744,
+   "upslope_pct": 1.6,
+   "downslope_pct": 1.6,
+   "m_per_uv_median": 1.049
+  },
+  "WATCH_cabin_hips|M_timber_weathered": {
+   "area": 17.764,
+   "along_pct": 100.0,
+   "across_pct": 0.0,
+   "judged_area": 17.764,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 100.0,
+   "piece_along_pct": 100.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 8.571,
+   "upslope_pct": 94.2,
+   "downslope_pct": 0.3,
+   "m_per_uv_median": 1.0
+  },
+  "WATCH_cabin_roof_deck|M_timber_weathered": {
+   "area": 119.306,
+   "along_pct": 0.0,
+   "across_pct": 0.0,
+   "judged_area": 0.0,
+   "sheet_area": 119.306,
+   "along_of_judged_pct": 0.0,
+   "piece_along_pct": 0.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 59.374,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.938
+  },
+  "WATCH_cabin_roof_frame|M_timber": {
+   "area": 15.777,
+   "along_pct": 93.4,
+   "across_pct": 6.6,
+   "judged_area": 15.777,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 93.4,
+   "piece_along_pct": 93.4,
+   "piece_across_pct": 6.6,
+   "roofarea": 3.972,
+   "upslope_pct": 83.5,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.005
+  },
+  "WATCH_cabin_shingles|M_roof_shingle": {
+   "area": 95.984,
+   "along_pct": 4.3,
+   "across_pct": 12.8,
+   "judged_area": 18.843,
+   "sheet_area": 77.141,
+   "along_of_judged_pct": 22.1,
+   "piece_along_pct": 4.3,
+   "piece_across_pct": 12.8,
+   "roofarea": 77.113,
+   "upslope_pct": 100.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 0.967
+  },
+  "WATCH_cabin_struts|M_timber_weathered": {
+   "area": 4.646,
+   "along_pct": 98.0,
+   "across_pct": 0.5,
+   "judged_area": 4.578,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.5,
+   "piece_along_pct": 98.0,
+   "piece_across_pct": 0.5,
+   "roofarea": 1.386,
+   "upslope_pct": 96.2,
+   "downslope_pct": 3.4,
+   "m_per_uv_median": 1.049
+  },
+  "WATCH_ceiling|M_timber": {
+   "area": 7.799,
+   "along_pct": 0.0,
+   "across_pct": 0.0,
+   "judged_area": 0.0,
+   "sheet_area": 7.799,
+   "along_of_judged_pct": 0.0,
+   "piece_along_pct": 0.0,
+   "piece_across_pct": 0.0,
+   "roofarea": 0.0,
+   "upslope_pct": 0.0,
+   "downslope_pct": 0.0,
+   "m_per_uv_median": 1.0
+  },
+  "WATCH_door_leaf|M_timber_weathered": {
+   "area": 6.563,
+   "along_pct": 99.3,
+   "across_pct": 0.5,
+   "judged_area": 6.56,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.3,
+   "piece_along_pct": 99.3,
+   "piece_across_pct": 0.5,
+   "roofarea": 0.199,
+   "upslope_pct": 45.5,
+   "downslope_pct": 3.2,
+   "m_per_uv_median": 1.0
+  },
+  "WATCH_interior|M_timber": {
+   "area": 3.098,
+   "along_pct": 99.0,
+   "across_pct": 0.6,
+   "judged_area": 3.085,
+   "sheet_area": 0.0,
+   "along_of_judged_pct": 99.4,
+   "piece_along_pct": 99.0,
+   "piece_across_pct": 0.6,
+   "roofarea": 0.774,
+   "upslope_pct": 61.8,
+   "downslope_pct": 11.5,
+   "m_per_uv_median": 1.0
+  }
+ },
+ "collapsed": {
+  "WATCH_base_dressed": {
+   "objects": [
+    "WATCH_base_dressed"
+   ],
+   "area": 33.225,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "WATCH_base_mortar": {
+   "objects": [
+    "WATCH_base_mortar"
+   ],
+   "area": 41.204,
+   "lt02": 0.0,
+   "lt03": 0.0037,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "WATCH_base_stones": {
+   "objects": [
+    "WATCH_base_stones"
+   ],
+   "area": 162.585,
+   "lt02": 0.0968,
+   "lt03": 0.1574,
+   "pct02": 0.06,
+   "by_mat": {
+    "M_stone": 0.06
+   }
+  },
+  "WATCH_cabin_bed": {
+   "objects": [
+    "WATCH_cabin_bed"
+   ],
+   "area": 18.672,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  },
+  "WATCH_cabin_boards": {
+   "objects": [
+    "WATCH_cabin_boards"
+   ],
+   "area": 53.696,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "WATCH_cabin_ceiling": {
+   "objects": [
+    "WATCH_cabin_ceiling"
+   ],
+   "area": 50.247,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "WATCH_cabin_corbels": {
+   "objects": [
+    "WATCH_cabin_corbels"
+   ],
+   "area": 1.65,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "WATCH_cabin_finial": {
+   "objects": [
+    "WATCH_cabin_finial"
+   ],
+   "area": 0.357,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "WATCH_cabin_floor": {
+   "objects": [
+    "WATCH_cabin_floor"
+   ],
+   "area": 123.281,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "WATCH_cabin_frame": {
+   "objects": [
+    "WATCH_cabin_frame"
+   ],
+   "area": 85.15,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0,
+    "M_timber_weathered": 0.0
+   }
+  },
+  "WATCH_cabin_hips": {
+   "objects": [
+    "WATCH_cabin_hips"
+   ],
+   "area": 17.764,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "WATCH_cabin_lead": {
+   "objects": [
+    "WATCH_cabin_lead"
+   ],
+   "area": 2.328,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_lead": 0.0
+   }
+  },
+  "WATCH_cabin_roof_deck": {
+   "objects": [
+    "WATCH_cabin_roof_deck"
+   ],
+   "area": 119.306,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "WATCH_cabin_roof_frame": {
+   "objects": [
+    "WATCH_cabin_roof_frame"
+   ],
+   "area": 15.777,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "WATCH_cabin_shingles": {
+   "objects": [
+    "WATCH_cabin_shingles"
+   ],
+   "area": 95.984,
+   "lt02": 0.0,
+   "lt03": 0.0013,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_roof_shingle": 0.0
+   }
+  },
+  "WATCH_cabin_struts": {
+   "objects": [
+    "WATCH_cabin_struts"
+   ],
+   "area": 4.646,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "WATCH_ceiling": {
+   "objects": [
+    "WATCH_ceiling"
+   ],
+   "area": 7.799,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber": 0.0
+   }
+  },
+  "WATCH_corbel_v00": {
+   "objects": [
+    "WATCH_corbel_001",
+    "WATCH_corbel_014",
+    "WATCH_corbel_020",
+    "WATCH_corbel_025",
+    "WATCH_corbel_026",
+    "WATCH_corbel_031"
+   ],
+   "area": 0.088,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "WATCH_corbel_v05": {
+   "objects": [
+    "WATCH_corbel_002",
+    "WATCH_corbel_003",
+    "WATCH_corbel_008",
+    "WATCH_corbel_009",
+    "WATCH_corbel_015",
+    "WATCH_corbel_021",
+    "WATCH_corbel_027",
+    "WATCH_corbel_032"
+   ],
+   "area": 0.094,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "WATCH_corbel_v03": {
+   "objects": [
+    "WATCH_corbel_004",
+    "WATCH_corbel_005",
+    "WATCH_corbel_010",
+    "WATCH_corbel_016",
+    "WATCH_corbel_017",
+    "WATCH_corbel_022",
+    "WATCH_corbel_023",
+    "WATCH_corbel_028",
+    "WATCH_corbel_029",
+    "WATCH_corbel_034"
+   ],
+   "area": 0.089,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "WATCH_corbel_v01": {
+   "objects": [
+    "WATCH_corbel_006",
+    "WATCH_corbel_007",
+    "WATCH_corbel_013",
+    "WATCH_corbel_018",
+    "WATCH_corbel_019"
+   ],
+   "area": 0.088,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "WATCH_corbel_v02": {
+   "objects": [
+    "WATCH_corbel_011",
+    "WATCH_corbel_012",
+    "WATCH_corbel_024",
+    "WATCH_corbel_030",
+    "WATCH_corbel_035",
+    "WATCH_corbel_036"
+   ],
+   "area": 0.088,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "WATCH_corbel_v04": {
+   "objects": [
+    "WATCH_corbel_033"
+   ],
+   "area": 0.09,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "WATCH_door_iron": {
+   "objects": [
+    "WATCH_door_iron"
+   ],
+   "area": 0.37,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_iron": 0.0
+   }
+  },
+  "WATCH_door_leaf": {
+   "objects": [
+    "WATCH_door_leaf"
+   ],
+   "area": 6.563,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_timber_weathered": 0.0
+   }
+  },
+  "WATCH_door_step": {
+   "objects": [
+    "WATCH_door_step"
+   ],
+   "area": 1.044,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone": 0.0
+   }
+  },
+  "WATCH_door_surround": {
+   "objects": [
+    "WATCH_door_surround"
+   ],
+   "area": 9.387,
+   "lt02": 0.0,
+   "lt03": 0.0001,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_stone_dressed": 0.0
+   }
+  },
+  "WATCH_interior": {
+   "objects": [
+    "WATCH_interior"
+   ],
+   "area": 27.952,
+   "lt02": 0.0,
+   "lt03": 0.0025,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0,
+    "M_stone": 0.0,
+    "M_timber": 0.0
+   }
+  },
+  "WATCH_wall_core": {
+   "objects": [
+    "WATCH_wall_core"
+   ],
+   "area": 142.627,
+   "lt02": 0.0,
+   "lt03": 0.0,
+   "pct02": 0.0,
+   "by_mat": {
+    "M_mortar": 0.0
+   }
+  }
+ },
+ "walked": [
+  {
+   "entrance": "drum_door",
+   "object": "WATCH_door_iron",
+   "faces": 50,
+   "pooled": false,
+   "area": 0.0091,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "drum_door",
+   "object": "WATCH_door_leaf",
+   "faces": 30,
+   "pooled": false,
+   "area": 0.0477,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "drum_door",
+   "object": "WATCH_door_step",
+   "faces": 866,
+   "pooled": false,
+   "area": 0.7596,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "drum_door",
+   "object": "WATCH_door_surround",
+   "faces": 292,
+   "pooled": false,
+   "area": 0.6971,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  },
+  {
+   "entrance": "drum_door",
+   "object": "WATCH_interior",
+   "faces": 88,
+   "pooled": false,
+   "area": 0.9388,
+   "b_max": 0.0392,
+   "b_mean": 0.0392,
+   "area_over_005": 0.0
+  }
+ ]
+}

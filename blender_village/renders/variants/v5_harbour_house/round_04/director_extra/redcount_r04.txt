@@ -1,0 +1,31 @@
+﻿RED x04_tower_hall_gable_junction_red.png            total       0 enclosed     0 
+RED x05_tower_wing_S_junction_red.png                total       0 enclosed     0 
+RED x07_main_roof_tower_land_red.png                 total   12253 enclosed     0 
+RED x08_main_roof_tower_west_red.png                 total       0 enclosed     0 
+RED x09_wing_roof_tower_S_red.png                    total   53019 enclosed    36 x 97-111 y(from top) 147-252
+RED x10_wing_roof_tower_N_nook_red.png               total       0 enclosed     0 
+RED x12_tower_top_foot_ring_red.png                  total   14461 enclosed     0 
+RED x16_tie_bearing_E_pier_red.png                   total    1667 enclosed     0 
+RED x19_slip_interior_red.png                        total       6 enclosed     6 x 586-761 y(from top) 512-513
+RED x21_apex_water_finial_blades_red.png             total  242682 enclosed     6 x 309-1173 y(from top) 276-478
+RED x22_E_eave_corner_water_red.png                  total   67437 enclosed     3 x 34-307 y(from top) 53-336
+RED x23_E_eave_lookup_red.png                        total  132056 enclosed    81 x 99-1276 y(from top) 2-163
+RED x24_W_eave_lookup_red.png                        total   62601 enclosed    85 x 329-981 y(from top) 1-136
+RED x25_land_verge_apex_red.png                      total  404762 enclosed  7252 x 418-541 y(from top) 218-514
+RED x26_wing_free_gable_red.png                      total  330097 enclosed     2 x 857-858 y(from top) 158-159
+RED x27_quay_W_end_pier_red.png                      total  287306 enclosed    74 x 24-952 y(from top) 243-692
+RED x28_quay_E_end_jetty_red.png                     total  375520 enclosed  8347 x 880-1256 y(from top) 206-713
+RED x30_jetty_deck_to_quay_red.png                   total  432993 enclosed     0 
+RED y01_slip_mouth_water_level_nowater_red.png       total  163319 enclosed     0 
+RED y06_E_post_foot_close_red.png                    total   21051 enclosed     0 
+RED y07_W_post_foot_close_red.png                    total   22627 enclosed     0 
+RED y09_post_to_slipwall_gap_red.png                 total  221496 enclosed  3354 x 58-363 y(from top) 630-718
+RED y11_E_corner_diag_nowater_red.png                total   20629 enclosed     0 
+RED y12_W_corner_diag_nowater_red.png                total   20375 enclosed     0 
+RED z01_W_arris_column_graze_nowater_red.png         total  212348 enclosed 17912 x 54-254 y(from top) 189-530
+RED z02_NE_eave_verge_corner_red.png                 total  118648 enclosed     8 x 137-504 y(from top) 44-304
+RED z03_SE_eave_verge_corner_land_red.png            total  176976 enclosed     3 x 517-1217 y(from top) 3-464
+RED z05_E_soffit_midlength_red.png                   total  302091 enclosed     0 
+RED z07_W_tie_end_verge_triangle_red.png             total    1299 enclosed     0 
+RED z08_roof_wing_tower_from_above_red.png           total   21270 enclosed     0 
+RED z09_NW_eave_verge_corner_water_red.png           total  101329 enclosed    25 x 430-1013 y(from top) 18-283

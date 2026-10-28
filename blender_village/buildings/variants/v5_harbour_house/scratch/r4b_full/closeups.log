@@ -1,0 +1,30 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\closeups_r4.py:24: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:1052
++ ... e\scratch'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\scratch\closeups_r4.py:31: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w.use_nodes = True
+00:00.656  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:03.203  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_04\builder_extra\r4_slip_mouth.png'
+00:05.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_04\builder_extra\r4_corner_W.png'
+00:07.812  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_04\builder_extra\r4_corner_E.png'
+00:10.015  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_04\builder_extra\r4_gable.png'
+00:12.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_04\builder_extra\r4_pier_W_out.png'
+00:14.672  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_04\builder_extra\r4_pier_W_in.png'
+00:16.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_04\builder_extra\r4_pier_E_out.png'
+00:19.125  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_04\builder_extra\r4_roof_ne.png'
+wrote r4_slip_mouth
+wrote r4_corner_W
+wrote r4_corner_E
+wrote r4_gable
+wrote r4_pier_W_out
+wrote r4_pier_W_in
+wrote r4_pier_E_out
+wrote r4_roof_ne

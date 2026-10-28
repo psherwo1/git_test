@@ -1,0 +1,23 @@
+﻿PLACED hilltop_keep.blend x 0.0 w 16.41 d 10.6 top 14.0
+PLACED wattle_roundhut.blend x 20.41 w 8.37 d 8.78 top 8.73
+PLACED v3_longhouse_roundend.blend x 32.78 w 17.77 d 8.56 top 11.34
+PLACED v5_harbour_house.blend x 54.55 w 7.2 d 18.06 top 9.91
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\dir_li
+neup_r01.py:36: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:526
++ ... buildings"; & $py -I "$d\dir_lineup_r01.py" -- $d "$b\hilltop_keep\hi ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay = bpy.data.materials.new("_clay"); clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\dir_lineup_r01.py:4
+8: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_w"); world.use_nodes = True; scn.world = world
+00:01.344  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:08.094  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\L01_lineup_front_ortho.png'
+SHOT L01
+00:14.813  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\L02_lineup_three_quarter.png'
+SHOT L02
+00:22.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v5_harbour_house\round_01\director_extra\L03_lineup_aerial.png'
+SHOT L03

@@ -1,0 +1,62 @@
+﻿00:00.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v4_mixed\v4_mixed.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_r04.py:75: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:610
++ ... r_log.txt"; & $py "$d\dir_render_r04.py" "C:\GitHubDesktop\git_test\b ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\dir_render_r04.py:87: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w.use_nodes = True
+00:00.734  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:01.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\r01_eave_end_front_eye_seethrough_red.png'
+DEVICE GPU
+WROTE r01_eave_end_front_eye
+00:01.906  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\r02b_eave_end_front_lookup_seethrough_red.png'
+WROTE r02b_eave_end_front_lookup
+00:02.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\r03_eave_end_back_eye_seethrough_red.png'
+WROTE r03_eave_end_back_eye
+00:02.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\r04_eave_end_back_lookup_seethrough_red.png'
+WROTE r04_eave_end_back_lookup
+00:03.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\r07_fillet_crane_front_seethrough_red.png'
+WROTE r07_fillet_crane_front
+00:03.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\r08_fillet_crane_back_seethrough_red.png'
+WROTE r08_fillet_crane_back
+00:04.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\r10_fillet_mid_front_seethrough_red.png'
+WROTE r10_fillet_mid_front
+00:04.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\w01b_abutment_front_eye_seethrough_red.png'
+WROTE w01b_abutment_front_eye
+00:05.391  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\w02_abutment_back_eye_seethrough_red.png'
+WROTE w02_abutment_back_eye
+00:05.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\a07_house_eave_closure_west_seethrough_red.png'
+WROTE a07_house_eave_closure_west
+00:06.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h01_wall_head_west_4m_seethrough_red.png'
+WROTE h01_wall_head_west_4m
+00:06.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h02_wall_head_sw_4m_seethrough_red.png'
+WROTE h02_wall_head_sw_4m
+00:07.391  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h03_wall_head_nw_4m_seethrough_red.png'
+WROTE h03_wall_head_nw_4m
+00:07.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h04_wall_head_west_close_seethrough_red.png'
+WROTE h04_wall_head_west_close
+00:08.391  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h05_wall_head_north_4m_seethrough_red.png'
+WROTE h05_wall_head_north_4m
+00:08.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h06_wall_head_reentrant_back_seethrough_red.png'
+WROTE h06_wall_head_reentrant_back
+00:09.391  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\h07_wall_head_south_west_4m_seethrough_red.png'
+WROTE h07_wall_head_south_west_4m
+00:09.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\d01_door_head_lookup_seethrough_red.png'
+WROTE d01_door_head_lookup
+00:10.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\d02_door_head_cheek_west_seethrough_red.png'
+WROTE d02_door_head_cheek_west
+00:10.859  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\d03_door_head_cheek_east_seethrough_red.png'
+WROTE d03_door_head_cheek_east
+00:11.328  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\L02_drum_east_eye_2m_seethrough_red.png'
+WROTE L02_drum_east_eye_2m
+00:11.797  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\L04_drum_upper_band_arcade_seethrough_red.png'
+WROTE L04_drum_upper_band_arcade
+00:12.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v4_mixed\round_04\director_extra\L05_smock_apron_cap_mid_seethrough_red.png'
+WROTE L05_smock_apron_cap_mid

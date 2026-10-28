@@ -1,0 +1,292 @@
+{
+  "triangles": 437617,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 11.9,
+  "est_hidden_triangles": 52295,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "COTT_walls_stones",
+      "est_triangles": 240689,
+      "est_hidden_triangles": 21443,
+      "hidden_pct_of_object": 8.9
+    },
+    {
+      "object": "COTT_walls_mortar",
+      "est_triangles": 12253,
+      "est_hidden_triangles": 7111,
+      "hidden_pct_of_object": 58.0
+    },
+    {
+      "object": "COTT_roof_deck",
+      "est_triangles": 7165,
+      "est_hidden_triangles": 6345,
+      "hidden_pct_of_object": 88.5
+    },
+    {
+      "object": "COTT_wing_roof_deck",
+      "est_triangles": 3336,
+      "est_hidden_triangles": 3172,
+      "hidden_pct_of_object": 95.1
+    },
+    {
+      "object": "COTT_roof_chimney_abutment",
+      "est_triangles": 6345,
+      "est_hidden_triangles": 2789,
+      "hidden_pct_of_object": 44.0
+    },
+    {
+      "object": "COTT_chimney_base_mortar",
+      "est_triangles": 3336,
+      "est_hidden_triangles": 1586,
+      "hidden_pct_of_object": 47.5
+    },
+    {
+      "object": "COTT_chimney_base_stones",
+      "est_triangles": 29101,
+      "est_hidden_triangles": 1476,
+      "hidden_pct_of_object": 5.1
+    },
+    {
+      "object": "COTT_chimney_mortar",
+      "est_triangles": 2242,
+      "est_hidden_triangles": 1422,
+      "hidden_pct_of_object": 63.4
+    },
+    {
+      "object": "COTT_walls_frames",
+      "est_triangles": 6236,
+      "est_hidden_triangles": 1148,
+      "hidden_pct_of_object": 18.4
+    },
+    {
+      "object": "COTT_roof_covering",
+      "est_triangles": 27351,
+      "est_hidden_triangles": 929,
+      "hidden_pct_of_object": 3.4
+    },
+    {
+      "object": "COTT_walls_quoins",
+      "est_triangles": 6181,
+      "est_hidden_triangles": 601,
+      "hidden_pct_of_object": 9.7
+    },
+    {
+      "object": "COTT_dormer_roof_deck",
+      "est_triangles": 656,
+      "est_hidden_triangles": 601,
+      "hidden_pct_of_object": 91.7
+    },
+    {
+      "object": "COTT_chimney_stones",
+      "est_triangles": 10721,
+      "est_hidden_triangles": 547,
+      "hidden_pct_of_object": 5.1
+    },
+    {
+      "object": "COTT_roof_eave_roll",
+      "est_triangles": 17996,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 1.8
+    },
+    {
+      "object": "COTT_dormer_walls_blocker",
+      "est_triangles": 328,
+      "est_hidden_triangles": 328,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "COTT_roof_comb",
+      "est_triangles": 7330,
+      "est_hidden_triangles": 273,
+      "hidden_pct_of_object": 3.7
+    },
+    {
+      "object": "COTT_dormer_roof_comb",
+      "est_triangles": 1258,
+      "est_hidden_triangles": 273,
+      "hidden_pct_of_object": 21.7
+    },
+    {
+      "object": "COTT_wing_roof_covering",
+      "est_triangles": 14714,
+      "est_hidden_triangles": 218,
+      "hidden_pct_of_object": 1.5
+    },
+    {
+      "object": "COTT_roof_rafters",
+      "est_triangles": 1586,
+      "est_hidden_triangles": 218,
+      "hidden_pct_of_object": 13.8
+    },
+    {
+      "object": "COTT_wing_roof_rafters",
+      "est_triangles": 1203,
+      "est_hidden_triangles": 218,
+      "hidden_pct_of_object": 18.2
+    },
+    {
+      "object": "COTT_wing_roof_comb",
+      "est_triangles": 3993,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 4.1
+    },
+    {
+      "object": "COTT_walls_ironwork",
+      "est_triangles": 765,
+      "est_hidden_triangles": 164,
+      "hidden_pct_of_object": 21.4
+    },
+    {
+      "object": "COTT_wing_roof_ridge",
+      "est_triangles": 1476,
+      "est_hidden_triangles": 109,
+      "hidden_pct_of_object": 7.4
+    },
+    {
+      "object": "COTT_dormer_roof_covering",
+      "est_triangles": 1148,
+      "est_hidden_triangles": 109,
+      "hidden_pct_of_object": 9.5
+    },
+    {
+      "object": "COTT_walls_dressed",
+      "est_triangles": 1094,
+      "est_hidden_triangles": 109,
+      "hidden_pct_of_object": 10.0
+    },
+    {
+      "object": "COTT_wing_valley",
+      "est_triangles": 3938,
+      "est_hidden_triangles": 109,
+      "hidden_pct_of_object": 2.8
+    },
+    {
+      "object": "COTT_dormer_roof_eave_roll",
+      "est_triangles": 2570,
+      "est_hidden_triangles": 109,
+      "hidden_pct_of_object": 4.3
+    },
+    {
+      "object": "COTT_dormer_valley",
+      "est_triangles": 1422,
+      "est_hidden_triangles": 54,
+      "hidden_pct_of_object": 3.8
+    },
+    {
+      "object": "COTT_wing_roof_eave_roll",
+      "est_triangles": 9463,
+      "est_hidden_triangles": 54,
+      "hidden_pct_of_object": 0.6
+    },
+    {
+      "object": "COTT_dormer_foot_roll",
+      "est_triangles": 1148,
+      "est_hidden_triangles": 54,
+      "hidden_pct_of_object": 4.8
+    },
+    {
+      "object": "COTT_wing_roof_apex_finial",
+      "est_triangles": 1258,
+      "est_hidden_triangles": 54,
+      "hidden_pct_of_object": 4.3
+    },
+    {
+      "object": "COTT_dormer_walls_boards",
+      "est_triangles": 492,
+      "est_hidden_triangles": 54,
+      "hidden_pct_of_object": 11.1
+    },
+    {
+      "object": "COTT_walls_blockers",
+      "est_triangles": 54,
+      "est_hidden_triangles": 54,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "COTT_dormer_walls_frame",
+      "est_triangles": 109,
+      "est_hidden_triangles": 54,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "COTT_dormer_roof_apex_cap_collar",
+      "est_triangles": 382,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_dormer_roof_apex_finial",
+      "est_triangles": 1312,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_roof_ridge",
+      "est_triangles": 2133,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_chimney_weathering",
+      "est_triangles": 273,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_roof_apex_finial",
+      "est_triangles": 1531,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_dormer_roof_ridge",
+      "est_triangles": 492,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_chimney_crown",
+      "est_triangles": 820,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_chimney_cap",
+      "est_triangles": 656,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_dormer_walls_frames",
+      "est_triangles": 328,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_roof_apex_cap_collar",
+      "est_triangles": 437,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_wing_roof_apex_cap_collar",
+      "est_triangles": 164,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_dormer_roof_rafters",
+      "est_triangles": 54,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "COTT_dormer_walls_blockers",
+      "est_triangles": 54,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

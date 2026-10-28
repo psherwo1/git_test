@@ -1,0 +1,16 @@
+﻿blender.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\dir_render_r02.py:25: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:474
++ ... tor_extra"; & $b -b --factory-startup --python "$d\dir_render_r02.py" ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\dir_render_r02.py:35: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void = bpy.data.materials.new("_D_void"); void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\director_extra\dir_render_r02.py:53: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_D_world"); world.use_nodes = True

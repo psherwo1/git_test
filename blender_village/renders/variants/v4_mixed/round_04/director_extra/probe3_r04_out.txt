@@ -1,0 +1,3 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v4_mixed\v4_mixed.blend"
+DOORWAY house: 19380 rays, escape 14 {'below floor -> terrain': 14}, back-face first hits 106 {'V4H_daub': 88, 'V4H_wattle_rods': 11, 'V4H_wattle_stakes': 4, 'V4H_daub_interior': 2, 'V4H_plinth_stones': 1}
+DOORWAY mill: 19380 rays, escape 199 {'up -> sky': 64, 'below floor -> terrain': 135}, back-face first hits 79 {'V4M_wall_core': 63, 'V4M_base_mortar': 11, 'V4M_door_surround': 3, 'V4M_base_stones': 2}

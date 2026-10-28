@@ -1,0 +1,12 @@
+﻿00:00.828  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\v3_longhouse_roundend_lookdev.blend"
+BOUNDS v3_longhouse_roundend (-8.89, -4.28, -0.05) (8.89, 4.28, 11.34)
+ENTRANCE v3_longhouse_roundend -Y: kit_entrances:body_wall_3 (0.0, -1.0, 0.0)
+SUN v3_longhouse_roundend azimuth rotated 0 deg from r2 default (0.72, -0.69, 0.0)
+00:01.125  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+CAMERA v3_longhouse_roundend hero (-16.96, -26.12, 12.27) -> (0.0, 0.0, 5.65) 35.0
+00:09.203  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v3_longhouse_roundend\hero.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v3_longhouse_roundend\hero.png
+CAMERA v3_longhouse_roundend eye (12.89, -22.33, 1.7) -> (0.0, 0.0, 4.76) 28.0
+00:13.219  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v3_longhouse_roundend\eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\renders\v3_longhouse_roundend\eye.png

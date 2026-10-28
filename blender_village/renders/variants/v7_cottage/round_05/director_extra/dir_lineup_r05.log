@@ -1,0 +1,45 @@
+﻿PLACED v3_longhouse_roundend.blend x 0.0 w 17.77 d 8.56 top 11.34
+PLACED v5_harbour_house.blend x 21.77 w 17.59 d 17.17 top 13.44
+PLACED v6_barn.blend x 43.36 w 16.09 d 8.79 top 9.22
+PLACED v7_cottage.blend x 63.45 w 15.33 d 13.36 top 7.85
+PLACED wattle_roundhut.blend x 82.77 w 8.37 d 8.78 top 8.73
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dir_lineup_r05.py:37: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:869
++ ... up_r05.py"; & $py -I "$o\dir_lineup_r05.py" "$o\lineup" "$b\buildings ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay = bpy.data.materials.new("_clay"); clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dir_lineup_r05.py:49: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_w"); world.use_nodes = True; scn.world = world
+00:01.375  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:08.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\L01_lineup_front_ortho.png'
+SHOT L01
+00:14.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\L02_lineup_three_quarter.png'
+SHOT L02
+00:21.625  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\L03_lineup_aerial.png'
+SHOT L03
+00:22.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T0_SW_v3_longhouse_roundend.png'
+SHOT T v3_longhouse_roundend SW
+00:22.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T0_SE_v3_longhouse_roundend.png'
+SHOT T v3_longhouse_roundend SE
+00:23.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T1_SW_v5_harbour_house.png'
+SHOT T v5_harbour_house SW
+00:24.235  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T1_SE_v5_harbour_house.png'
+SHOT T v5_harbour_house SE
+00:24.828  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T2_SW_v6_barn.png'
+SHOT T v6_barn SW
+00:25.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T2_SE_v6_barn.png'
+SHOT T v6_barn SE
+00:26.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T3_SW_v7_cottage.png'
+SHOT T v7_cottage SW
+00:26.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T3_SE_v7_cottage.png'
+SHOT T v7_cottage SE
+00:27.266  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T4_SW_wattle_roundhut.png'
+SHOT T wattle_roundhut SW
+00:27.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\lineup\T4_SE_wattle_roundhut.png'
+SHOT T wattle_roundhut SE

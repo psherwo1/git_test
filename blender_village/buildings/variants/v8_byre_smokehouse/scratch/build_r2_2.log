@@ -1,0 +1,158 @@
+﻿[    0.4s] -- set_entrance
+[    0.4s] -- path_stone_wall
+[   17.7s]   walls visible mortar 19.2% -> 7.2% after 768 pinning stones
+[   17.7s]   BYRE_walls: stones 1479 (hero 172, pins 141)
+[   20.5s]   BYRE_walls_stones: 103531 verts, 91834 faces
+[   20.5s]   BYRE_walls_quoins: 2706 verts, 2640 faces
+[   27.6s]   BYRE_walls_mortar: 4635 verts, 4017 faces
+[   27.6s]   BYRE_walls: mortar cells 4017
+[   27.7s]   BYRE_walls_frames: 4188 verts, 4119 faces
+[   27.7s]   BYRE_walls_dressed: 700 verts, 678 faces
+[   27.7s]   BYRE_walls_ironwork: 280 verts, 266 faces
+[   27.7s]   BYRE_walls_reveals: 40 verts, 20 faces
+[   27.7s]   BYRE_walls_blockers: 40 verts, 25 faces
+[   27.7s] -- path_daub_wall
+[   27.7s]   BYRE_hip_end_W_sill: 80 verts, 78 faces
+[   27.8s]   BYRE_hip_end_W_daub: 5388 verts, 5380 faces
+[   27.8s]   BYRE_hip_end_W_backing: 386 verts, 378 faces
+[   27.8s]   BYRE_hip_end_W_posts: 400 verts, 390 faces
+[   27.8s]   BYRE_hip_end_W: daub wall, 5 posts, 4 bays, 5380 coat quads, 0 fallen-out patches, 0 rods, on a sill
+[   27.8s] -- path_daub_wall
+[   27.8s]   BYRE_hip_end_E_s_sill: 80 verts, 78 faces
+[   27.9s]   BYRE_hip_end_E_s_daub: 2252 verts, 2248 faces
+[   27.9s]   BYRE_hip_end_E_s_backing: 168 verts, 164 faces
+[   27.9s]   BYRE_hip_end_E_s_posts: 240 verts, 234 faces
+[   27.9s]   BYRE_hip_end_E_s: daub wall, 3 posts, 2 bays, 2248 coat quads, 0 fallen-out patches, 0 rods, on a sill
+[   27.9s] -- path_daub_wall
+[   27.9s]   BYRE_hip_end_E_n_sill: 80 verts, 78 faces
+[   27.9s]   BYRE_hip_end_E_n_daub: 2218 verts, 2214 faces
+[   27.9s]   BYRE_hip_end_E_n_backing: 168 verts, 164 faces
+[   27.9s]   BYRE_hip_end_E_n_posts: 240 verts, 234 faces
+[   27.9s]   BYRE_hip_end_E_n: daub wall, 3 posts, 2 bays, 2214 coat quads, 0 fallen-out patches, 0 rods, on a sill
+[   27.9s] -- linear_roof
+[   27.9s]   BYRE_roof_deck: 2595 verts, 2603 faces
+[   28.1s]   BYRE_roof_rafters: 3360 verts, 3240 faces
+[   28.4s]   BYRE_roof_covering: 32249 verts, 29000 faces
+[   28.7s]   BYRE_roof_eave_roll: 14661 verts, 13977 faces
+[   28.7s]   BYRE_roof: 26 continuous thatch courses + eave rolls + verge faces + 1 eyebrow lip roll(s); round hips lo hi (centres -4.74 / +4.74, inset 1.26 m)
+[   28.7s]   BYRE_roof_ridge: 1586 verts, 1626 faces
+[   29.1s]   BYRE_roof_eyebrow0_frame: 410 verts, 408 faces
+[   29.1s]   BYRE_roof_eyebrow0_boards: 692 verts, 621 faces
+[   29.1s]   BYRE_roof_eyebrow0_blocker: 192 verts, 194 faces
+[   29.1s]   BYRE_roof_eyebrow0_frames: 528 verts, 532 faces
+[   29.1s]   BYRE_roof_eyebrow0_blockers: 8 verts, 5 faces
+[   29.1s]   BYRE_roof: eyebrow 0 at x 1.80 (side -1): front 1.87 m wide, sill 3.44, eave 4.34 (world z before recentre), lift 0.90 m over 2.50 m
+[   29.1s] -- chimney
+[   29.5s]   BYRE_chimney_base visible mortar 16.3% -> 8.2% after 144 pinning stones
+[   29.5s]   BYRE_chimney_base stones 227
+[   29.6s]   BYRE_chimney_base_stones: 13384 verts, 11427 faces
+[   29.7s]   BYRE_chimney_base_mortar: 1922 verts, 1822 faces
+[   30.3s]   BYRE_chimney visible mortar 17.1% -> 9.6% after 200 pinning stones
+[   30.3s]   BYRE_chimney stones 254
+[   30.4s]   BYRE_chimney_stones: 10794 verts, 8548 faces
+[   30.4s]   BYRE_chimney_mortar: 1458 verts, 1332 faces
+[   30.4s]   BYRE_chimney_weathering: 320 verts, 320 faces
+[   30.4s]   chimney: broad base r 1.00.. head 0.82 to z 2.90, weathered offset to the stack (r 0.64)
+[   30.5s]   chimney_abutment: trimmed at the wall face: deck 2603->2593, rafters 3240->3172, covering 29000->28417, eave_roll 13977->13977, ridge 1626->1626
+[   30.9s]   ring trace: 240 / 240 azimuths hit the roof top, z 3.60..5.11
+[   30.9s]   chimney_abutment: ring flaunching round the stack, 253 samples, z 3.60..5.11
+[   30.9s]   BYRE_roof_chimney_abutment: 1768 verts, 1766 faces
+[   30.9s]   seal junction registered: roof / stack ring (covering BYRE_roof_covering, BYRE_roof_eave_roll, BYRE_roof_ridge; z 3.30-5.41)
+[   30.9s]   BYRE_chimney_cap: 320 verts, 320 faces
+[   30.9s]   BYRE_chimney_flue_blocker: 49 verts, 48 faces
+[   30.9s]   BYRE_chimney_crown: 252 verts, 226 faces
+[   30.9s]   chimney: round stack r 0.72 -> 0.56 m (batter 1.5 deg), head 6.21, cap 6.36, crown pot to 6.82
+[   30.9s] -- orient_open_islands
+[   31.3s]   orient_open_islands BYRE_walls_stones: 7 inverted island(s) flipped, 385 single face(s)
+[   31.3s]   orient_open_islands BYRE_chimney_base_stones: 0 inverted island(s) flipped, 102 single face(s)
+[   31.4s]   orient_open_islands BYRE_chimney_stones: 0 inverted island(s) flipped, 123 single face(s)
+[   31.4s] -- orient_closed_slabs
+[   31.4s]   orient_closed_slabs BYRE_roof_deck: 13 inward face(s) flipped
+[   31.4s] -- lean_to
+[   31.4s]   BYRE_lean_to_deck: 1440 verts, 1438 faces
+[   31.4s]   BYRE_lean_to_covering: 2589 verts, 2256 faces
+[   31.5s]   BYRE_lean_to_eave_roll: 2986 verts, 2814 faces
+[   31.5s]   BYRE_lean_to_framing: 1376 verts, 1286 faces
+[   31.5s]   BYRE_lean_to: ROUNDED roof (note 19): 6 thatch courses round the contour (coat 0.22 + 0.08 m, 0.30 m courses), the village eave roll round the lip (D section 0.43 m deep, radius 0.16), hips reach 1.00 m along the wall (0.45 m past the end walls), 1.92 m out; ledger, 8 common + radial hip rafters, plate at 1.80 m out
+[   31.6s]   BYRE_lean_to: trimmed at the wall face: deck 1438->1213, covering 2256->2088, eave_roll 2814->2660
+[   31.7s]   BYRE_lean_to_flashing: 1392 verts, 1379 faces
+[   31.7s]   BYRE_lean_to: flaunching 176 stations, roof at the face z 2.34..2.86, crease 2.94
+[   31.7s]   BYRE_lean_to: under the host eave: margin at the face 0.264 m (crease), at the host lip line 0.094 m (covering)
+[   31.7s]   BYRE_lean_to: host eave roll belly over the add-on: smallest gap 0.137 m at (1.456, 2.925, 2.323) (rule >= 0.10 m)
+[   31.7s]   BYRE_lean_to: host eave roll, lateral (nearest from the same vertices): 0.118 m at (1.456, 2.925, 2.323) (rule >= 0.10 m)
+[   31.7s]   seal junction registered: lean_to / wall (covering BYRE_lean_to_covering, BYRE_lean_to_eave_roll; z 2.04-3.16)
+[   31.7s] -- apse
+APSE max eave rho 0.832
+[   31.8s]   apse_plinth visible mortar 13.8% -> 1.2% after 57 pinning stones
+[   31.8s]   BYRE_apse_plinth: stones 150 (hero 46, pins 8)
+[   32.2s]   BYRE_apse_plinth_stones: 16184 verts, 15116 faces
+[   32.2s]   BYRE_apse_plinth_mortar: 192 verts, 138 faces
+[   32.2s]   BYRE_apse_plinth: mortar cells 138
+[   32.3s]   BYRE_apse_plinth_stones: stone facing check: 150 stones, 2 turned inside out -> flipped (229 faces), 0 left
+[   32.4s]   BYRE_apse_daub_daub: 8522 verts, 8516 faces
+[   32.4s]   BYRE_apse_daub_backing: 616 verts, 606 faces
+[   32.4s]   BYRE_apse_daub_posts: 320 verts, 312 faces
+[   32.6s]   BYRE_apse_daub_wattle: 8220 verts, 6591 faces
+[   32.6s]   BYRE_apse_daub: daub wall, 4 posts, 5 bays, 8516 coat quads, 2 fallen-out patches, 49 rods, bedded on the plinth
+[   32.6s] -- recenter
+[   32.6s] recentred by (-0.000, -0.644); plan bbox 15.91 x 7.75 m, height 6.80 m
+[   32.6s] -- guards
+[   32.9s]   clearance gate BYRE walls_3: door head 2.19 m, eave lip over it 2.418 m at (-1.75, -3.594) on BYRE_roof_eave_roll (rule >= 2.30 m, 25 stations): PASS
+[   34.6s]   seal probe [see-through] roof / stack ring: 11402 points, 73039 rays, 1798 grazing pass(es), 0 leak(s)
+[   35.9s]   seal probe [see-through] lean_to / wall: 12167 points, 85905 rays, 0 grazing pass(es), 0 leak(s)
+[   35.9s]   seal probe: 158944 rays on 2 junction(s) in 3.0 s
+[   36.3s] composite decals: 96 anchors before the gate
+[   36.7s] timber anchors: 0
+[   37.1s]   chimney decals: 5 anchors
+[   37.5s] decal anchor check (applied): checked 101, snapped 1, max_move 0.013, renormal 4, shrunk 13, no_surface 2, wrong_surface 3, excluded 12, occluded 1, footprint 26, duplicate 0, kept 57
+[   37.5s]     DA_damp_rise_001: footprint off the surface (n.n0 1.00) ['BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', '-', '-', '-']
+[   37.5s]     DA_damp_rise_002: footprint off the surface (n.n0 1.00) ['BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls']
+[   37.5s]     DA_moss_001: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', '-', '-', '-']
+[   37.5s]     DA_moss_003: on backing mesh BYRE_walls_mortar
+[   37.5s]     DA_damp_rise_003: on backing mesh BYRE_walls_mortar
+[   37.5s]     DA_damp_rise_004: buried: occluded within 15 cm
+[   37.5s]     DA_damp_rise_005: footprint off the surface (n.n0 1.00) ['BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', '-', '-', '-']
+[   37.5s]     DA_damp_rise_006: on backing mesh BYRE_walls_mortar
+[   37.5s]     DA_damp_rise_007: footprint off the surface (n.n0 1.00) ['BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls']
+[   37.5s]     DA_damp_rise_008: on backing mesh BYRE_walls_mortar
+[   37.5s]     DA_damp_rise_009: footprint off the surface (n.n0 1.00) ['BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', '-', '-', 'BYRE_walls']
+[   37.5s]     DA_repair_patch_002: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls']
+[   37.5s]     DA_repair_patch_003: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', '-', '-', 'BYRE_walls']
+[   37.5s]     DA_damp_rise_010: on backing mesh BYRE_chimney_base_mortar
+[   37.5s]     DA_damp_rise_012: footprint off the surface (n.n0 1.00) ['BYRE_chimn', '-', '-', 'BYRE_chimn', 'BYRE_chimn', '-', 'BYRE_chimn', 'BYRE_chimn', '-']
+[   37.5s]     DA_damp_rise_013: footprint off the surface (n.n0 1.00) ['BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', '-', '-']
+[   37.5s]     DA_damp_rise_015: footprint off the surface (n.n0 1.00) ['BYRE_chimn', '-', '-', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', '-', '-', '-']
+[   37.5s]     DA_moss_004: on backing mesh BYRE_chimney_base_mortar
+[   37.5s]     DA_damp_rise_016: footprint off the surface (n.n0 0.82) ['-', '-', '-', '-', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn']
+[   37.5s]     DA_repair_patch_004: on backing mesh BYRE_chimney_base_mortar
+[   37.5s]     DA_repair_patch_006: on backing mesh BYRE_roof_chimney_abutment
+[   37.5s]     DA_repair_patch_007: on backing mesh BYRE_chimney_mortar
+[   37.5s]     DA_lichen_006: footprint off the surface (n.n0 1.00) ['BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_chimn', '-', '-', '-']
+[   37.5s]     DA_water_streak_001: hit M_stone (BYRE_chimney_stones), declared M_mortar
+[   37.5s]     DA_water_streak_002: no surface within 6 cm
+[   37.5s]     DA_water_streak_004: no surface within 6 cm
+[   37.5s]     DA_water_streak_005: footprint off the surface (n.n0 0.77) ['BYRE_roof_', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_roof_', 'BYRE_chimn', 'BYRE_chimn', 'BYRE_roof_', 'BYRE_chimn', 'BYRE_chimn']
+[   37.5s]     DA_water_streak_006: hit M_stone (BYRE_chimney_stones), declared M_mortar
+[   37.5s]     DA_damp_rise_017: footprint off the surface (n.n0 1.00) ['BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_']
+[   37.5s]     DA_moss_006: footprint off the surface (n.n0 1.00) ['BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_']
+[   37.5s]     DA_damp_rise_018: on backing mesh BYRE_apse_plinth_mortar
+[   37.5s]     DA_damp_rise_019: footprint off the surface (n.n0 1.00) ['BYRE_apse_', 'BYRE_apse_', '-', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_']
+[   37.5s]     DA_crack_002: footprint off the surface (n.n0 1.00) ['BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls']
+[   37.5s]     DA_water_streak_008: footprint off the surface (n.n0 1.00) ['BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls']
+[   37.5s]     DA_crack_006: on backing mesh BYRE_walls_mortar
+[   37.5s]     DA_crack_008: footprint off the surface (n.n0 1.00) ['BYRE_walls', 'BYRE_walls', '-', 'BYRE_walls', 'BYRE_walls', '-', 'BYRE_walls', 'BYRE_walls', '-']
+[   37.5s]     DA_rust_stain_001: footprint off the surface (n.n0 1.00) ['-', 'BYRE_walls', 'BYRE_walls', '-', 'BYRE_walls', 'BYRE_walls', '-', 'BYRE_walls', 'BYRE_walls']
+[   37.5s]     DA_grime_001: on backing mesh BYRE_walls_mortar
+[   37.5s]     DA_grime_002: footprint off the surface (n.n0 1.00) ['-', 'BYRE_walls', '-', '-', 'BYRE_walls', '-', '-', 'BYRE_walls', '-']
+[   37.5s]     DA_water_streak_010: hit M_stone (BYRE_walls_stones), declared M_mortar
+[   37.5s]     DA_crack_012: footprint off the surface (n.n0 1.00) ['BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', '-', 'BYRE_walls', 'BYRE_walls', '-']
+[   37.5s]     DA_lichen_010: footprint off the surface (n.n0 1.00) ['-', '-', '-', 'BYRE_walls', 'BYRE_walls', 'BYRE_walls', '-', '-', 'BYRE_walls']
+[   37.5s]     DA_lichen_014: footprint off the surface (n.n0 1.00) ['-', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', 'BYRE_apse_', '-', 'BYRE_apse_', '-', '-']
+[   37.5s]     DA_soot_001: footprint off the surface (n.n0 1.00) ['-', 'BYRE_chimn', 'BYRE_chimn', '-', 'BYRE_chimn', '-', '-', 'BYRE_chimn', 'BYRE_chimn']
+[   37.5s] decal anchors: 57
+[   37.9s] uv grain (kit 1.10.0): 50 meshes, 167 timber / shingle pieces (24 round, 0 sloped sheets), 16014 grain faces re-projected, 557 collapsed faces repaired
+[   38.1s]   walked tops (Mask B <= 0.04): walls_3 -> BYRE_walls_dressed: 9 faces
+[   38.1s]   walked tops (Mask B <= 0.04): walls_3 -> BYRE_walls_ironwork: 39 faces
+[   38.1s] objects 50 (instances 0, pooled meshes 0) triangles 458601
+Info: Saved as "r2.blend"
+[   38.2s] saved C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\scratch\r2.blend 11.3 MB

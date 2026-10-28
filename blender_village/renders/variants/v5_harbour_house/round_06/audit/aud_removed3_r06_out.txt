@@ -1,0 +1,27 @@
+﻿00:01.860  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house_r05_accepted.blend"
+00:02.141  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v5_harbour_house\v5_harbour_house.blend"
+BlenderMCP addon registered
+HARB_roof_covering       tri at [-0.202, -4.135, 4.862] area  25.78 cm2 width  4.95 cm longest edge  10.4 cm | rays deeper in r06: 3 -> [('HARB_roof_deck', 0.2, 'dir', (-0.7, 0.54, -0.46), 'origin z', -2.1), ('HARB_roof_deck', 0.166, 'dir', (-0.83, 0.26, -0.5), 'origin z', -2.6), ('HARB_roof_deck', 0.256, 'dir', (-0.72, 0.41, -0.55), 'origin z', -3.4)]
+HARB_roof_covering       tri at [-0.221, -4.16, 4.85] area  25.82 cm2 width  4.95 cm longest edge  10.4 cm | rays deeper in r06: 2 -> [('HARB_roof_deck', 0.217, 'dir', (-0.7, 0.54, -0.46), 'origin z', -2.1), ('HARB_roof_deck', 0.278, 'dir', (-0.72, 0.41, -0.55), 'origin z', -3.5)]
+HARB_roof_covering       tri at [-0.198, -3.789, 4.834] area   4.00 cm2 width  1.17 cm longest edge   6.8 cm | rays deeper in r06: 1 -> [('HARB_roof_deck', 0.157, 'dir', (-0.83, 0.26, -0.5), 'origin z', -2.6)]
+HARB_roof_covering       tri at [-0.219, -3.791, 4.822] area   4.43 cm2 width  1.30 cm longest edge   6.8 cm | rays deeper in r06: 3 -> [('HARB_roof_deck', 0.141, 'dir', (-0.89, 0.08, -0.44), 'origin z', -1.8), ('HARB_roof_deck', 0.18, 'dir', (-0.83, 0.26, -0.5), 'origin z', -2.6), ('HARB_roof_deck', 0.26, 'dir', (-0.8, 0.14, -0.59), 'origin z', -4.0)]
+HARB_roof_covering       tri at [0.251, -3.91, 5.335] area  34.26 cm2 width  5.51 cm longest edge  12.4 cm | rays deeper in r06: 1 -> [('HARB_roof_deck', 0.237, 'dir', (-0.8, 0.14, -0.59), 'origin z', -3.5)]
+HARB_roof_covering       tri at [0.234, -3.943, 5.323] area  34.31 cm2 width  5.51 cm longest edge  12.4 cm | rays deeper in r06: 3 -> [('HARB_roof_deck', 0.169, 'dir', (-0.83, 0.26, -0.5), 'origin z', -2.1), ('HARB_roof_deck', 0.265, 'dir', (-0.72, 0.41, -0.55), 'origin z', -3.0), ('HARB_roof_deck', 0.247, 'dir', (-0.8, 0.14, -0.59), 'origin z', -3.5)]
+HARB_roof_covering       tri at [0.484, -4.492, 5.658] area  27.48 cm2 width  4.97 cm longest edge  11.1 cm | rays deeper in r06: 2 -> [('HARB_roof_deck', 0.174, 'dir', (-0.7, 0.54, -0.46), 'origin z', -1.3), ('HARB_roof_deck', 0.221, 'dir', (-0.72, 0.41, -0.55), 'origin z', -2.6)]
+HARB_roof_covering       tri at [0.466, -4.518, 5.647] area  27.54 cm2 width  4.98 cm longest edge  11.1 cm | rays deeper in r06: 2 -> [('HARB_roof_deck', 0.186, 'dir', (-0.7, 0.54, -0.46), 'origin z', -1.3), ('HARB_roof_deck', 0.236, 'dir', (-0.72, 0.41, -0.55), 'origin z', -2.7)]
+HARB_roof_covering       tri at [0.938, -3.73, 6.067] area  33.35 cm2 width  5.46 cm longest edge  12.2 cm | rays deeper in r06: 1 -> [('HARB_roof_deck', 0.245, 'dir', (-0.8, 0.14, -0.59), 'origin z', -2.7)]
+HARB_roof_covering       tri at [0.92, -3.762, 6.055] area  33.38 cm2 width  5.47 cm longest edge  12.2 cm | rays deeper in r06: 2 -> [('HARB_roof_deck', 0.179, 'dir', (-0.83, 0.26, -0.5), 'origin z', -1.4), ('HARB_roof_deck', 0.261, 'dir', (-0.8, 0.14, -0.59), 'origin z', -2.8)]
+HARB_roof_covering       tri at [1.678, -3.209, 6.809] area   3.27 cm2 width  0.96 cm longest edge   6.8 cm | rays deeper in r06: 1 -> [('HARB_roof_deck', 0.155, 'dir', (-0.85, -0.04, -0.53), 'origin z', -1.2)]
+HARB_roof_covering       tri at [1.658, -3.211, 6.797] area   3.63 cm2 width  1.07 cm longest edge   6.8 cm | rays deeper in r06: 1 -> [('HARB_roof_deck', 0.178, 'dir', (-0.85, -0.04, -0.53), 'origin z', -1.2)]
+HARB_roof_covering       tri at [1.731, -3.209, 6.852] area   2.93 cm2 width  0.86 cm longest edge   6.8 cm | rays deeper in r06: 1 -> [('HARB_roof_covering', 0.425, 'dir', (0.7, -0.12, 0.71), 'origin z', 17.5)]
+HARB_roof_covering       tri at [1.633, -1.259, 6.688] area  24.62 cm2 width  4.93 cm longest edge  10.0 cm | rays deeper in r06: 1 -> [('HARB_roof_comb', 0.162, 'dir', (-0.7, 0.54, -0.46), 'origin z', -0.3)]
+HARB_tower_stones        tri at [-1.131, -3.864, 3.86] area  23.78 cm2 width  3.86 cm longest edge  12.3 cm | rays deeper in r06: 1 -> [('HARB_tower_mortar', 0.05, 'dir', (-0.66, 0.66, -0.37), 'origin z', -1.8)]
+HARB_tower_stones        tri at [0.163, -5.129, 5.977] area  23.08 cm2 width  2.43 cm longest edge  19.0 cm | rays deeper in r06: 1 -> [('HARB_tower_mortar', 0.033, 'dir', (-0.25, 0.97, -0.02), 'origin z', 5.7)]
+HARB_wing_roof_covering  tri at [-2.881, -3.889, 2.675] area   2.32 cm2 width  1.51 cm longest edge   3.1 cm | rays deeper in r06: 13 -> [('HARB_wing_roof_covering', 0.02, 'dir', (0.05, 0.97, -0.22), 'origin z', -0.6), ('HARB_wing_roof_covering', 0.026, 'dir', (-0.95, 0.0, -0.3), 'origin z', -1.8), ('HARB_wing_roof_covering', 0.026, 'dir', (-0.91, 0.2, -0.35), 'origin z', -2.6), ('HARB_wing_roof_wing_abutment', 0.025, 'dir', (-0.89, 0.08, -0.44), 'origin z', -4.0)]
+HARB_wing_roof_covering  tri at [-2.88, -3.879, 2.674] area   2.37 cm2 width  1.54 cm longest edge   3.1 cm | rays deeper in r06: 13 -> [('HARB_wing_stones', 1.048, 'dir', (0.5, 0.36, 0.79), 'origin z', 14.5), ('HARB_wing_stones', 1.447, 'dir', (0.63, 0.27, 0.73), 'origin z', 13.6), ('HARB_wing_roof_covering', 0.022, 'dir', (0.26, 0.9, 0.34), 'origin z', 7.8), ('HARB_wing_roof_covering', 0.032, 'dir', (0.05, 0.97, -0.22), 'origin z', -0.6)]
+widest dropped-and-reachable triangle with a deeper r06 hit: 5.51 cm
+DONE
+BlenderMCP addon unregistered
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

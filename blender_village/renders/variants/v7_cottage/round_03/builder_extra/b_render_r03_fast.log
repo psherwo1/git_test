@@ -1,0 +1,67 @@
+﻿00:00.625  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\v7_cottage_fast.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\b_render_r03.py:28: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:581
++ ... ast.blend'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\b_render_r03.py:39: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\b_render_r03.py:69: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.797  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.359  render           | Saved: 'C:\round_03\builder_extra\fast\i07_room_W_inside_corner_head.png'
+00:05.812  render           | Saved: 'C:\round_03\builder_extra\fast\i07_room_W_inside_corner_head_red.png'
+DEVICE GPU
+COUNT i07_room_W_inside_corner_head red red 1 yellow 0
+SHOT i07_room_W_inside_corner_head
+00:10.297  render           | Saved: 'C:\round_03\builder_extra\fast\i08_room_E_inside_corner_head.png'
+00:10.797  render           | Saved: 'C:\round_03\builder_extra\fast\i08_room_E_inside_corner_head_red.png'
+COUNT i08_room_E_inside_corner_head red red 0 yellow 0
+SHOT i08_room_E_inside_corner_head
+00:15.203  render           | Saved: 'C:\round_03\builder_extra\fast\x04_dormer_mid_far.png'
+00:16.140  render           | Saved: 'C:\round_03\builder_extra\fast\x04_dormer_mid_far_void.png'
+COUNT x04_dormer_mid_far void red 196338 yellow 311
+SHOT x04_dormer_mid_far
+00:20.843  render           | Saved: 'C:\round_03\builder_extra\fast\x05_W_inside_corner_soffit.png'
+00:21.750  render           | Saved: 'C:\round_03\builder_extra\fast\x05_W_inside_corner_soffit_void.png'
+COUNT x05_W_inside_corner_soffit void red 0 yellow 37030
+SHOT x05_W_inside_corner_soffit
+00:26.312  render           | Saved: 'C:\round_03\builder_extra\fast\x06_E_inside_corner_soffit.png'
+00:27.234  render           | Saved: 'C:\round_03\builder_extra\fast\x06_E_inside_corner_soffit_void.png'
+COUNT x06_E_inside_corner_soffit void red 0 yellow 9288
+SHOT x06_E_inside_corner_soffit
+00:31.781  render           | Saved: 'C:\round_03\builder_extra\fast\x07_W_valley_foot_mid.png'
+00:32.718  render           | Saved: 'C:\round_03\builder_extra\fast\x07_W_valley_foot_mid_void.png'
+COUNT x07_W_valley_foot_mid void red 0 yellow 1284
+SHOT x07_W_valley_foot_mid
+00:37.140  render           | Saved: 'C:\round_03\builder_extra\fast\x08_wing_ridge_notch.png'
+00:37.937  render           | Saved: 'C:\round_03\builder_extra\fast\x08_wing_ridge_notch_void.png'
+COUNT x08_wing_ridge_notch void red 0 yellow 1832
+SHOT x08_wing_ridge_notch
+00:42.156  render           | Saved: 'C:\round_03\builder_extra\fast\x17_E_valley_foot_mid.png'
+00:42.937  render           | Saved: 'C:\round_03\builder_extra\fast\x17_E_valley_foot_mid_void.png'
+COUNT x17_E_valley_foot_mid void red 0 yellow 1997
+SHOT x17_E_valley_foot_mid
+00:47.359  render           | Saved: 'C:\round_03\builder_extra\fast\x18_W_valley_foot_eye.png'
+00:48.140  render           | Saved: 'C:\round_03\builder_extra\fast\x18_W_valley_foot_eye_void.png'
+COUNT x18_W_valley_foot_eye void red 0 yellow 8676
+SHOT x18_W_valley_foot_eye
+00:52.218  render           | Saved: 'C:\round_03\builder_extra\fast\x19_dormer_hood_mid_eye.png'
+00:53.015  render           | Saved: 'C:\round_03\builder_extra\fast\x19_dormer_hood_mid_eye_void.png'
+COUNT x19_dormer_hood_mid_eye void red 305977 yellow 334
+SHOT x19_dormer_hood_mid_eye
+00:57.312  render           | Saved: 'C:\round_03\builder_extra\fast\x22_E_corner_eye_wide.png'
+00:58.093  render           | Saved: 'C:\round_03\builder_extra\fast\x22_E_corner_eye_wide_void.png'
+COUNT x22_E_corner_eye_wide void red 14647 yellow 5123
+SHOT x22_E_corner_eye_wide
+01:02.531  render           | Saved: 'C:\round_03\builder_extra\fast\x23_W_corner_knot_close.png'
+01:03.312  render           | Saved: 'C:\round_03\builder_extra\fast\x23_W_corner_knot_close_void.png'
+COUNT x23_W_corner_knot_close void red 0 yellow 71759
+SHOT x23_W_corner_knot_close

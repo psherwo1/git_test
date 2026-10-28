@@ -1,0 +1,189 @@
+﻿00:02.672  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\a1_longhouse_addons.blend"
+MESH objects 58 all objects 166
+triangles (evaluated) 717226 cap 1,000,000: PASS
+materials 10 ['M_iron', 'M_lead', 'M_mortar', 'M_roof_shake', 'M_roof_shingle', 'M_stone', 'M_stone_dressed', 'M_thatch', 'M_timber', 'M_timber_weathered'] outside palette: [] empty slots: []
+non-identity transforms []
+Mask missing/bad []
+  A1L_apex_blocker                     tris     720 bbox [3.686, -1.248, 9.495] [5.526, 0.592, 10.618]
+  A1L_battens                          tris     612 bbox [0.394, -4.519, 5.93] [8.831, 3.893, 7.54]
+  A1L_body_gable_corner_nw_mortar      tris     124 bbox [-8.359, 1.472, 2.3] [-8.309, 2.222, 3.448]
+  A1L_body_roof_comb                   tris    6854 bbox [-8.764, -0.68, 5.095] [0.799, 0.044, 5.708]
+  A1L_body_roof_covering               tris   25995 bbox [-8.834, -3.625, 2.43] [2.513, 2.969, 5.525]
+  A1L_body_roof_deck                   tris    6776 bbox [-8.794, -3.378, 2.406] [2.684, 2.722, 4.992]
+  A1L_body_roof_eave_roll              tris   12591 bbox [-8.885, -3.64, 2.413] [3.157, 2.983, 4.465]
+  A1L_body_roof_rafters                tris     754 bbox [-8.779, -3.351, 2.296] [1.193, 2.695, 4.974]
+  A1L_body_roof_ridge                  tris    2088 bbox [-8.879, -0.698, 5.174] [1.085, 0.042, 5.561]
+  A1L_body_roof_wall_abutment          tris    3968 bbox [0.928, -3.759, 2.606] [3.255, 3.115, 5.663]
+  A1L_body_wall_blockers               tris      40 bbox [-6.669, -2.598, 0.5] [1.006, 1.942, 2.2]
+  A1L_body_wall_dressed                tris     684 bbox [-6.419, -3.188, -0.04] [0.756, 2.342, 1.22]
+  A1L_body_wall_frames                 tris    4512 bbox [-6.499, -2.953, 0.115] [0.836, 2.284, 2.46]
+  A1L_body_wall_head_mortar            tris    3324 bbox [-8.344, 2.187, 2.527] [2.046, 2.237, 3.83]
+  A1L_body_wall_head_s_mortar          tris    3324 bbox [-8.344, -2.893, 2.527] [2.006, -2.843, 3.714]
+  A1L_body_wall_ironwork               tris     460 bbox [-2.874, -2.876, 0.406] [-1.934, -2.858, 1.914]
+  A1L_body_wall_mortar                 tris    8524 bbox [-8.394, -2.927, -0.05] [2.3, 2.272, 4.929]
+  A1L_body_wall_quoins                 tris    2090 bbox [-8.423, -2.958, -0.034] [-7.863, 2.297, 2.778]
+  A1L_body_wall_reveals                tris      32 bbox [-6.303, -2.938, 1.17] [0.64, 2.282, 1.93]
+  A1L_body_wall_stones                 tris  200172 bbox [-8.597, -3.122, -0.05] [2.284, 2.467, 4.882]
+  A1L_cap_collar                       tris   12862 bbox [3.961, -0.973, 10.102] [5.251, 0.317, 10.728]
+  A1L_eave_fill                        tris     960 bbox [1.075, -3.86, 6.286] [8.136, 3.202, 6.807]
+  A1L_finial                           tris    1280 bbox [4.375, -0.581, 10.678] [4.84, -0.086, 11.344]
+  A1L_lean_to_covering                 tris    4714 bbox [-3.967, 2.241, 2.561] [0.768, 4.245, 3.504]
+  A1L_lean_to_deck                     tris    2330 bbox [-4.043, 2.241, 2.383] [0.854, 4.492, 3.245]
+  A1L_lean_to_eave_roll                tris    5434 bbox [-4.153, 2.241, 2.367] [0.962, 4.601, 2.981]
+  A1L_lean_to_end0_mortar              tris     414 bbox [-3.593, 2.172, -0.05] [-3.194, 4.272, 3.076]
+  A1L_lean_to_end0_quoins              tris    2880 bbox [-3.695, 3.752, -0.034] [-3.081, 4.302, 2.547]
+  A1L_lean_to_end0_stones              tris   24554 bbox [-3.795, 2.179, -0.05] [-3.012, 4.294, 3.077]
+  A1L_lean_to_end1_mortar              tris     412 bbox [0.007, 2.172, -0.05] [0.406, 4.272, 3.071]
+  A1L_lean_to_end1_quoins              tris    2720 bbox [-0.115, 3.748, -0.034] [0.502, 4.303, 2.536]
+  A1L_lean_to_end1_stones              tris   23915 bbox [-0.168, 2.178, -0.05] [0.576, 4.293, 3.056]
+  A1L_lean_to_flashing                 tris    2582 bbox [-4.149, 2.236, 2.547] [0.951, 2.384, 3.58]
+  A1L_lean_to_framing                  tris    2756 bbox [-4.029, 2.225, 2.12] [0.84, 4.476, 3.209]
+  A1L_lean_to_pads                     tris      96 bbox [-1.784, 4.092, -0.05] [-1.404, 4.452, 0.1]
+  A1L_lean_to_posts                    tris     628 bbox [-2.104, 4.172, 0.13] [-1.084, 4.372, 2.383]
+  A1L_porch_arm0_frame                 tris     440 bbox [-1.424, -4.048, 1.29] [-1.264, -2.728, 2.37]
+  A1L_porch_arm1_frame                 tris     440 bbox [-3.524, -4.048, 1.289] [-3.364, -2.728, 2.369]
+  A1L_porch_beam                       tris     188 bbox [-3.621, -4.008, 2.353] [-1.168, -3.848, 2.65]
+  A1L_porch_covering                   tris    6232 bbox [-3.641, -4.226, 2.703] [-1.119, -2.898, 3.271]
+  A1L_porch_deck                       tris     504 bbox [-3.644, -4.178, 2.642] [-1.144, -2.898, 3.154]
+  A1L_porch_flashing                   tris    1462 bbox [-3.739, -3.04, 2.938] [-1.039, -2.893, 3.316]
+  A1L_porch_framing                    tris     620 bbox [-3.623, -4.126, 2.591] [-1.165, -2.84, 3.083]
+  A1L_porch_rafters                    tris     132 bbox [-3.629, -4.159, 2.503] [-1.159, -2.908, 3.116]
+  A1L_porch_verge                      tris     132 bbox [-3.694, -4.256, 2.651] [-1.094, -2.898, 3.245]
+  A1L_purlin_rings                     tris       6 bbox [2.41, 1.936, 6.823] [6.937, 2.341, 6.865]
+  A1L_rafters                          tris    4854 bbox [0.492, -4.406, 5.893] [8.752, 3.814, 9.889]
+  A1L_roof_blocker                     tris    2176 bbox [1.199, -3.722, 6.608] [8.036, 2.598, 10.059]
+  A1L_roof_shingles                    tris  110270 bbox [0.327, -4.601, 5.99] [8.885, 3.957, 10.13]
+  A1L_roof_soffit_deck                 tris    2592 bbox [0.507, -4.407, 5.997] [8.727, 3.783, 6.941]
+  A1L_roof_starter                     tris    6540 bbox [0.365, -4.554, 5.965] [8.846, 3.921, 6.4]
+  A1L_roof_underlap                    tris    7320 bbox [0.388, -4.525, 5.983] [8.819, 3.896, 10.086]
+  A1L_round_wall_blockers              tris      50 bbox [4.226, -3.655, 0.45] [7.893, 3.006, 4.65]
+  A1L_round_wall_dressed               tris     866 bbox [4.653, -4.015, 1.015] [8.283, 3.343, 3.62]
+  A1L_round_wall_frames                tris    2024 bbox [4.564, -3.968, 1.12] [8.228, 3.302, 4.54]
+  A1L_round_wall_mortar                tris    5068 bbox [1.036, -4.024, -0.05] [8.302, 3.368, 6.336]
+  A1L_round_wall_reveals               tris      40 bbox [4.769, -3.941, 1.12] [8.22, 3.263, 4.38]
+  A1L_round_wall_stones                tris  193089 bbox [0.996, -4.211, -0.05] [8.443, 3.525, 6.35]
+min z of all verts -0.05
+DECAL_ANCHORS empties 108 missing props [] json count 108 108
+anchor name sets equal True
+anchors with no surface within 20 cm behind: 0 []
+anchors with a surface within 5 cm in front (buried): 0 []
+anchor surfaces (object behind): {'A1L_body_wall_stones': 34, 'A1L_round_wall_stones': 26, 'A1L_roof_shingles': 14, 'A1L_body_roof_covering': 12, 'A1L_round_wall_mortar': 4, 'A1L_lean_to_end1_stones': 4, 'A1L_lean_to_covering': 4, 'A1L_body_wall_mortar': 3, 'A1L_lean_to_end0_stones': 2, 'A1L_body_wall_frames': 2, 'A1L_lean_to_end0_mortar': 1, 'A1L_lean_to_end0_quoins': 1, 'A1L_porch_covering': 1}
+  damp_rise      n= 17 z   0.29..  0.32 surfaces ['M_mortar', 'M_stone', 'M_stone_dressed']
+  repair_patch   n=  6 z   1.63..  5.02 surfaces ['M_mortar', 'M_stone']
+  lichen         n= 13 z   0.11..  3.53 surfaces ['M_mortar', 'M_stone']
+  soot           n=  8 z   2.21..  4.81 surfaces ['M_stone']
+  crack          n= 23 z   0.97..  4.64 surfaces ['M_mortar', 'M_stone']
+  water_streak   n=  6 z   0.58..  3.11 surfaces ['M_stone']
+  rust_stain     n=  2 z   0.24..  1.68 surfaces ['M_timber_weathered']
+  grime          n=  2 z   1.00..  1.00 surfaces ['M_stone']
+  moss           n= 31 z   2.92..  7.91 surfaces ['M_roof_shingle', 'M_thatch']
+anchors over the lean-to footprint: 12 [('damp_rise', 'M_mortar'), ('damp_rise', 'M_stone'), ('damp_rise', 'M_stone_dressed'), ('lichen', 'M_stone'), ('moss', 'M_thatch'), ('repair_patch', 'M_stone')]
+    DA_damp_rise_014 [-3.194, 2.772, 0.32] [1.0, -0.0, -0.0]
+    DA_damp_rise_015 [-3.394, 4.301, 0.32] [0.0, 1.0, -0.0]
+    DA_repair_patch_005 [-3.166, 3.172, 1.993] [1.0, -0.01, -0.09]
+    DA_damp_rise_016 [0.423, 2.772, 0.32] [1.0, 0.02, 0.01]
+    DA_damp_rise_017 [-0.007, 2.772, 0.32] [-1.0, -0.06, 0.01]
+    DA_repair_patch_006 [0.44, 3.172, 1.633] [0.99, -0.02, -0.1]
+    DA_lichen_012 [-3.132, 3.372, 0.232] [0.57, 0.06, 0.82]
+    DA_lichen_013 [0.47, 3.372, 0.114] [0.98, 0.03, 0.19]
+anchor keys ['name', 'normal', 'position', 'probability', 'seed', 'size', 'surface', 'type', 'up']
+WALL N wall: inner face at [-4.5, 2.266, 1.5] (A1L_body_wall_mortar), outer face at [-4.5, 2.309, 1.5] (A1L_body_wall_stones)
+WALL S wall: inner face at [-4.5, -2.923, 1.5] (A1L_body_wall_mortar), outer face at [-4.5, -2.957, 1.5] (A1L_body_wall_stones)
+WALL gable: inner face at [-8.391, 0.0, 1.5] (A1L_body_wall_mortar), outer face at [-8.433, 0.0, 1.5] (A1L_body_wall_stones)
+WALL S wall W: inner face at [-6.5, -1.408, 1.0] (A1L_body_wall_blockers), outer face at [-6.5, -2.954, 1.0] (A1L_body_wall_stones)
+WALL round E: inner face at [8.262, -0.328, 1.5] (A1L_round_wall_mortar), outer face at [8.262, -0.328, 1.5] (A1L_round_wall_mortar)
+WALL round N: inner face at [4.606, 3.329, 1.5] (A1L_round_wall_mortar), outer face at [4.606, 3.329, 1.5] (A1L_round_wall_mortar)
+WALL round SE: inner face at [6.132, -1.854, 1.0] (A1L_round_wall_blockers), outer face at [7.22, -2.942, 1.0] (A1L_round_wall_stones)
+HOST FRONT DOOR (x -2.394, S face y -2.928): lowest overhead per row out from the face (rays up from z 0.3)
+   out 0.05: lowest 2.724 A1L_porch_framing; lowest not host wall 2.724 A1L_porch_framing
+   out 0.15: lowest 2.888 A1L_porch_framing; lowest not host wall 2.888 A1L_porch_framing
+   out 0.30: lowest 2.856 A1L_porch_framing; lowest not host wall 2.856 A1L_porch_framing
+   out 0.50: lowest 2.813 A1L_porch_framing; lowest not host wall 2.813 A1L_porch_framing
+   out 0.70: lowest 2.770 A1L_porch_framing; lowest not host wall 2.770 A1L_porch_framing
+   out 0.90: lowest 2.727 A1L_porch_framing; lowest not host wall 2.727 A1L_porch_framing
+   out 1.00: lowest 2.423 A1L_porch_beam; lowest not host wall 2.423 A1L_porch_beam
+   out 1.10: lowest 2.684 A1L_porch_framing; lowest not host wall 2.684 A1L_porch_framing
+   out 1.20: lowest 2.765 A1L_porch_deck; lowest not host wall 2.765 A1L_porch_deck
+   out 1.35: lowest 99.000 None; lowest not host wall 99.000 None
+   out 1.50: lowest 99.000 None; lowest not host wall 99.000 None
+   door head ray in the reveal (+0.05 m in): (2.22, 'A1L_body_wall_frames')
+   door head ray in the reveal (+0.2 m in): (3.7, 'A1L_body_roof_deck')
+   door head ray in the reveal (+0.35 m in): (3.704, 'A1L_body_roof_deck')
+   no deep rays
+   anything in the 1.0 x 2.25 m approach path to the door (2 m out to the face): 21
+LEAN-TO OPEN FRONT (x -3.594..0.406, front y 4.272): lowest overhead per row (rays up from z 0.3)
+   y LF-0.60: lowest 0.341 A1L_lean_to_end1_stones   profile [2.59, 2.77, 2.81, 2.83, 2.69, 2.83, 2.8, 2.76, 0.34]
+   y LF-0.30: lowest 1.471 A1L_lean_to_end1_quoins   profile [2.49, 2.68, 2.71, 2.74, 2.59, 2.74, 2.71, 2.67, 1.47]
+   y LF-0.15: lowest 0.538 A1L_lean_to_end0_quoins   profile [0.54, 2.63, 2.67, 2.69, 2.55, 2.69, 2.66, 2.62, 0.55]
+   y LF+0.00: lowest 0.538 A1L_lean_to_end0_quoins   profile [0.54, 2.26, 2.3, 2.27, 2.33, 2.27, 2.3, 2.25, 0.55]
+   y LF+0.10: lowest 2.323 A1L_lean_to_posts   profile [2.36, 2.51, 2.55, 2.57, 2.32, 2.57, 2.54, 2.5, 2.35]
+   y LF+0.25: lowest 2.527 A1L_lean_to_eave_roll   profile [2.54, 2.56, 2.59, 2.62, 2.63, 2.61, 2.58, 2.55, 2.53]
+   y LF+0.40: lowest 99.000 None   profile []
+   y LF+0.55: lowest 99.000 None   profile []
+   y LF+0.70: lowest 99.000 None   profile []
+   open bays at z 1.2: [(np.float64(-3.074), np.float64(-1.694), np.float64(1.38)), (np.float64(-1.484), np.float64(-0.024), np.float64(1.46))]
+add-on objects ['A1L_lean_to_covering', 'A1L_lean_to_deck', 'A1L_lean_to_eave_roll', 'A1L_lean_to_end0_mortar', 'A1L_lean_to_end0_quoins', 'A1L_lean_to_end0_stones', 'A1L_lean_to_end1_mortar', 'A1L_lean_to_end1_quoins', 'A1L_lean_to_end1_stones', 'A1L_lean_to_flashing', 'A1L_lean_to_framing', 'A1L_lean_to_pads', 'A1L_lean_to_posts', 'A1L_porch_arm0_frame', 'A1L_porch_arm1_frame', 'A1L_porch_beam', 'A1L_porch_covering', 'A1L_porch_deck', 'A1L_porch_flashing', 'A1L_porch_framing', 'A1L_porch_rafters', 'A1L_porch_verge']
+seal objects ['A1L_body_gable_corner_nw_mortar', 'A1L_body_wall_head_mortar', 'A1L_body_wall_head_s_mortar']
+   ROOM A1L_lean_to_covering: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_deck: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_eave_roll: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_end0_mortar: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_end0_quoins: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_end0_stones: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_end1_mortar: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_end1_quoins: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_end1_stones: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_flashing: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_framing: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_pads: none inside the room (inset 0.25)
+   ROOM A1L_lean_to_posts: none inside the room (inset 0.25)
+   ROOM A1L_porch_arm0_frame: none inside the room (inset 0.25)
+   ROOM A1L_porch_arm1_frame: none inside the room (inset 0.25)
+   ROOM A1L_porch_beam: none inside the room (inset 0.25)
+   ROOM A1L_porch_covering: none inside the room (inset 0.25)
+   ROOM A1L_porch_deck: none inside the room (inset 0.25)
+   ROOM A1L_porch_flashing: none inside the room (inset 0.25)
+   ROOM A1L_porch_framing: none inside the room (inset 0.25)
+   ROOM A1L_porch_rafters: none inside the room (inset 0.25)
+   ROOM A1L_porch_verge: none inside the room (inset 0.25)
+   ROOM A1L_body_gable_corner_nw_mortar: none inside the room (inset 0.25)
+   ROOM A1L_body_wall_head_mortar: none inside the room (inset 0.25)
+   ROOM A1L_body_wall_head_s_mortar: none inside the room (inset 0.25)
+   SEAL A1L_body_gable_corner_nw_mortar: bbox [-8.359, 1.472, 2.3] [-8.309, 2.222, 3.448]; verts outside N face (y>2.272) 0, outside S face (y<-2.928) 0, outside gable (x<-8.394) 0
+   SEAL A1L_body_wall_head_mortar: bbox [-8.344, 2.187, 2.527] [2.046, 2.237, 3.83]; verts outside N face (y>2.272) 0, outside S face (y<-2.928) 0, outside gable (x<-8.394) 0
+   SEAL A1L_body_wall_head_s_mortar: bbox [-8.344, -2.893, 2.527] [2.006, -2.843, 3.714]; verts outside N face (y>2.272) 0, outside S face (y<-2.928) 0, outside gable (x<-8.394) 0
+LEAN-TO first hit from above (2 cm grid): {'A1L_lean_to_covering': 13468, 'GROUND': 10985, 'A1L_body_roof_covering': 9732, 'A1L_body_roof_eave_roll': 5342, 'A1L_lean_to_eave_roll': 5247, 'A1L_roof_shingles': 46}
+   framing / deck seen from above: {}
+PORCH first hit from above (2 cm grid): {'A1L_body_roof_covering': 4366, 'A1L_porch_covering': 3624, 'A1L_body_roof_eave_roll': 3154, 'GROUND': 2472, 'A1L_porch_verge': 144}
+   framing / deck seen from above: {}
+islands total 6719
+islands whose 2 cm-inflated AABB touches no other island (and not on the ground): 0
+   FLOAT A1L_lean_to_covering: islands 7, islands > 2 cm from any other island: 0; worst [(0.019, [-1.59, 2.53, 3.26], 379), (0.014, [-1.6, 3.68, 2.81], 414), (0.014, [-1.6, 3.44, 2.91], 414)]
+   FLOAT A1L_lean_to_deck: islands 1, islands > 2 cm from any other island: 0; worst [(0.013, [-1.63, 3.11, 2.82], 412)]
+   FLOAT A1L_lean_to_eave_roll: islands 1, islands > 2 cm from any other island: 0; worst [(0.001, [-1.59, 3.81, 2.67], 412)]
+   FLOAT A1L_lean_to_end0_mortar: islands 1, islands > 2 cm from any other island: 0; worst [(0.011, [-3.37, 3.34, 1.93], 262)]
+   FLOAT A1L_lean_to_end0_quoins: islands 18, islands > 2 cm from any other island: 0; worst [(0.018, [-3.38, 4.14, 0.1], 82), (0.017, [-3.42, 4.16, 0.37], 82), (0.017, [-3.35, 4.15, 1.83], 82)]
+   FLOAT A1L_lean_to_end0_stones: islands 243, islands > 2 cm from any other island: 0; worst [(0.019, [-3.19, 2.29, 2.97], 57), (0.016, [-3.73, 2.87, 0.12], 355), (0.016, [-3.71, 2.34, 0.07], 247)]
+   FLOAT A1L_lean_to_end1_mortar: islands 1, islands > 2 cm from any other island: 0; worst [(0.01, [0.19, 3.33, 1.92], 261)]
+   FLOAT A1L_lean_to_end1_quoins: islands 17, islands > 2 cm from any other island: 0; worst [(0.018, [0.12, 4.05, 2.09], 82), (0.017, [0.28, 4.03, 0.69], 82), (0.017, [0.17, 4.14, 2.26], 82)]
+   FLOAT A1L_lean_to_end1_stones: islands 232, islands > 2 cm from any other island: 0; worst [(0.019, [0.01, 2.87, 2.91], 57), (0.016, [0.41, 3.48, 0.76], 57), (0.016, [0.01, 3.58, 1.51], 57)]
+   FLOAT A1L_lean_to_flashing: islands 5, islands > 2 cm from any other island: 0; worst [(0.016, [0.88, 2.3, 2.74], 60), (0.013, [0.88, 2.32, 2.56], 20), (0.009, [-4.07, 2.3, 2.74], 60)]
+   FLOAT A1L_lean_to_framing: islands 15, islands > 2 cm from any other island: 0; worst [(0.015, [-3.5, 3.13, 2.68], 80), (0.014, [0.32, 3.13, 2.67], 80), (0.012, [-3.09, 3.35, 2.74], 96)]
+   FLOAT A1L_lean_to_pads: islands 1, islands > 2 cm from any other island: 1; worst [(0.03, [-1.59, 4.27, 0.05], 57)]
+   FLOAT A1L_lean_to_posts: islands 3, islands > 2 cm from any other island: 0; worst [(0.017, [-1.59, 4.27, 1.24], 80), (0.012, [-1.35, 4.27, 2.22], 120), (0.004, [-1.84, 4.27, 2.22], 120)]
+   FLOAT A1L_porch_arm0_frame: islands 2, islands > 2 cm from any other island: 0; worst [(0.016, [-1.34, -3.18, 1.81], 120), (0.014, [-1.34, -3.39, 2.27], 104)]
+   FLOAT A1L_porch_arm1_frame: islands 2, islands > 2 cm from any other island: 0; worst [(0.018, [-3.44, -3.18, 1.81], 120), (0.014, [-3.44, -3.39, 2.27], 104)]
+   FLOAT A1L_porch_beam: islands 1, islands > 2 cm from any other island: 0; worst [(0.012, [-2.39, -3.93, 2.5], 96)]
+   FLOAT A1L_porch_covering: islands 31, islands > 2 cm from any other island: 0; worst [(0.02, [-1.86, -3.11, 3.13], 100), (0.019, [-2.61, -3.95, 2.91], 140), (0.019, [-3.24, -3.95, 2.84], 140)]
+   FLOAT A1L_porch_deck: islands 1, islands > 2 cm from any other island: 0; worst [(0.005, [-2.39, -3.56, 2.88], 264)]
+   FLOAT A1L_porch_flashing: islands 5, islands > 2 cm from any other island: 0; worst [(0.02, [-1.11, -2.98, 2.95], 20), (0.019, [-3.66, -2.95, 3.13], 60), (0.006, [-1.11, -2.95, 3.14], 60)]
+   FLOAT A1L_porch_framing: islands 5, islands > 2 cm from any other island: 0; worst [(0.019, [-3.1, -3.48, 2.84], 56), (0.017, [-2.63, -3.48, 2.88], 56), (0.016, [-2.16, -3.48, 2.88], 56)]
+   FLOAT A1L_porch_rafters: islands 2, islands > 2 cm from any other island: 0; worst [(0.018, [-3.57, -3.76, 2.71], 40), (0.016, [-1.21, -3.76, 2.71], 40)]
+   FLOAT A1L_porch_verge: islands 2, islands > 2 cm from any other island: 0; worst [(0.014, [-1.12, -3.51, 2.92], 36), (0.014, [-3.67, -3.51, 2.92], 36)]
+   FLOAT A1L_body_gable_corner_nw_mortar: islands 1, islands > 2 cm from any other island: 0; worst [(0.018, [-8.33, 1.85, 2.72], 64)]
+   FLOAT A1L_body_wall_head_mortar: islands 1, islands > 2 cm from any other island: 0; worst [(0.015, [-3.17, 2.21, 3.16], 416)]
+   FLOAT A1L_body_wall_head_s_mortar: islands 1, islands > 2 cm from any other island: 0; worst [(0.017, [-3.17, -2.87, 3.0], 416)]
+DONE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

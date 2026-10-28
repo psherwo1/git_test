@@ -1,0 +1,21 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\scratch\r2.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:111: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:530
++ ... mokehouse'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\tools\render_review.py:127: DeprecationWarning: 'World.use_nodes' is 
+expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.641  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.875  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\hero.png'
+00:08.859  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\front.png'
+00:12.813  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\side.png'
+00:16.859  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\back.png'
+00:21.016  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\aerial.png'
+00:25.500  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\actor_closeup.png'
+REVIEW_STATS {"objects": 50, "triangles": 458601, "bbox_min": [-7.955198287963867, -3.8750998973846436, -0.05000000074505806], "bbox_max": [7.955198287963867, 3.8750998973846436, 6.801901817321777], "size_m": [15.910396575927734, 7.750199794769287, 6.851902008056641], "materials": ["M_daub", "M_iron", "M_lead", "M_mortar", "M_stone", "M_stone_dressed", "M_thatch", "M_timber", "M_timber_weathered", "M_wattle"], "est_hidden_pct": 43.0, "est_hidden_triangles": 197141, "material_slot_count": 10, "mask_attribute_missing": []}

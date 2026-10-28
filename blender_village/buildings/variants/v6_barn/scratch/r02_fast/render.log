@@ -1,0 +1,41 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\scratch\r02_fast\v6_barn.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\builder_extra\bld_render_r02.py:22: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:404
++ ... ast\shots"; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m = bpy.data.materials.new(name); m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v6_barn\round_02\builder_extra\bld_render_r02.py:39: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world = bpy.data.worlds.new("_B_world"); world.use_nodes = True
+00:00.688  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.750  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\b01_kiln_squat_front_eye.png'
+SHOT b01_kiln_squat_front_eye
+00:08.844  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\b02_cart_doors_eye.png'
+SHOT b02_cart_doors_eye
+00:12.688  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\b03_west_gable_verge_roll.png'
+SHOT b03_west_gable_verge_roll
+00:16.438  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\b05_side_elev_W_rake.png'
+00:16.828  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\b05_side_elev_W_rake_red.png'
+SHOT b05_side_elev_W_rake
+00:20.969  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\s08_eave_lift_lookup.png'
+00:21.360  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\s08_eave_lift_lookup_red.png'
+SHOT s08_eave_lift_lookup
+00:25.297  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\s09_ridge_comb_close.png'
+00:25.672  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\s09_ridge_comb_close_red.png'
+SHOT s09_ridge_comb_close
+00:29.672  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\s12_SE_corner_eave_verge.png'
+00:30.063  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\s12_SE_corner_eave_verge_red.png'
+SHOT s12_SE_corner_eave_verge
+00:34.125  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\d09_SW_corner_eave_verge_lift.png'
+00:34.500  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\d09_SW_corner_eave_verge_lift_red.png'
+SHOT d09_SW_corner_eave_verge_lift
+00:38.282  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\d10_ridge_skyline_E_half.png'
+00:38.703  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\d10_ridge_skyline_E_half_red.png'
+SHOT d10_ridge_skyline_E_half
+00:42.500  render           | Saved: 'C:\buildings\variants\v6_barn\scratch\r02_fast\shots\d14_thumb_SE_45m.png'
+SHOT d14_thumb_SE_45m

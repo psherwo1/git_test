@@ -1,0 +1,3 @@
+﻿CULLDIFF c01_cull_wing_nook_NE_red.png r05 red 40845 r06 red 40845 differing px 0 []
+CULLDIFF c02_cull_tower_E_high_red.png r05 red 232050 r06 red 231686 differing px 364 [(1264, 530), (1270, 530), (1259, 529), (1260, 529), (1262, 529), (1263, 529), (1264, 529), (1265, 529)]
+CULLDIFF c03_cull_tower_from_N_red.png r05 red 2937 r06 red 2937 differing px 0 []

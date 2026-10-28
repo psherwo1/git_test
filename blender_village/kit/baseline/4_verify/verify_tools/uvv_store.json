@@ -1,0 +1,241 @@
+{
+ "file": "C:\\GitHubDesktop\\git_test\\blender_village\\kit\\baseline\\4_verify\\rubble_store\\rubble_store.blend",
+ "entrances": [
+  {
+   "name": "walls_0",
+   "origin": [
+    -1.19933,
+    -2.30104,
+    0.0
+   ],
+   "out": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "width": 1.0,
+   "head": 2.22
+  }
+ ],
+ "grain": {
+  "M_timber": {
+   "area": 11.397172858158953,
+   "judge": 11.397172858158953,
+   "along": 11.144382723479161,
+   "across": 0.14062663707973455,
+   "roof": 0.6380362299852296,
+   "up": 0.5089355631162048,
+   "down": 0.008421671356082397,
+   "per_obj": {
+    "STORE_walls_frames": [
+     3.697,
+     3.697,
+     3.681,
+     0.15,
+     0.021
+    ],
+    "STORE_roof_rafters": [
+     7.7,
+     7.7,
+     7.464,
+     0.488,
+     0.488
+    ]
+   },
+   "scale": 1.04237045776335,
+   "along_pct_of_slot": 97.78199262373366,
+   "along_pct_of_judged": 97.78199262373366,
+   "across_pct_of_judged": 1.2338729861332534,
+   "unjudged_area": 0.0,
+   "up_pct": 79.76593478523728,
+   "down_pct": 1.3199362293701342
+  },
+  "M_timber_weathered": {
+   "area": 139.33761144609963,
+   "judge": 9.59214649004853,
+   "along": 9.540627754466575,
+   "across": 0.03897924485860001,
+   "roof": 60.062439859188466,
+   "up": 60.000359946860385,
+   "down": 0.042134258500041065,
+   "per_obj": {
+    "STORE_walls_frames": [
+     2.476,
+     2.476,
+     2.458,
+     0.0,
+     0.0
+    ],
+    "STORE_walls_blockers": [
+     9.368,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "STORE_roof_deck": [
+     120.378,
+     0.0,
+     0.0,
+     59.646,
+     59.646
+    ],
+    "STORE_roof_rafters": [
+     6.571,
+     6.571,
+     6.564,
+     0.312,
+     0.312
+    ],
+    "STORE_roof_ridge": [
+     0.545,
+     0.545,
+     0.518,
+     0.104,
+     0.042
+    ]
+   },
+   "scale": 1.0,
+   "along_pct_of_slot": 6.847130258262826,
+   "along_pct_of_judged": 99.46290712266119,
+   "across_pct_of_judged": 0.40636623824541696,
+   "unjudged_area": 129.7454649560511,
+   "up_pct": 99.89664104143353,
+   "down_pct": 0.07015076077299127
+  },
+  "M_thatch": {
+   "area": 127.58957152671573,
+   "judge": 127.58957152671573,
+   "along": 0.43601091674769477,
+   "across": 126.5367308022647,
+   "roof": 77.72652049103722,
+   "up": 49.051433902013834,
+   "down": 28.601556570880668,
+   "per_obj": {
+    "STORE_roof_covering": [
+     99.775,
+     99.775,
+     0.0,
+     66.636,
+     42.094
+    ],
+    "STORE_roof_eave_roll": [
+     14.91,
+     14.91,
+     0.436,
+     4.68,
+     2.748
+    ],
+    "STORE_roof_ridge": [
+     12.904,
+     12.904,
+     0.0,
+     6.411,
+     4.209
+    ]
+   },
+   "scale": 1.1058619157742893,
+   "along_pct_of_slot": 0.341729274211411,
+   "along_pct_of_judged": 0.341729274211411,
+   "across_pct_of_judged": 99.17482227438111,
+   "unjudged_area": 0.0,
+   "up_pct": 63.107718693865934,
+   "down_pct": 36.79768036725478
+  },
+  "M_roof_shake": {
+   "area": 8.755602469558589,
+   "judge": 6.308946037366791,
+   "along": 6.16466901272268,
+   "across": 0.05171687972590047,
+   "roof": 4.196630092229203,
+   "up": 4.196630092229203,
+   "down": 0.0,
+   "per_obj": {
+    "STORE_roof_comb": [
+     8.756,
+     6.309,
+     6.165,
+     4.197,
+     4.197
+    ]
+   },
+   "scale": 0.9802803891678215,
+   "along_pct_of_slot": 70.40827897515851,
+   "along_pct_of_judged": 97.71313585835757,
+   "across_pct_of_judged": 0.8197388188072996,
+   "unjudged_area": 2.446656432191798,
+   "up_pct": 100.0,
+   "down_pct": 0.0
+  }
+ },
+ "collapsed": {
+  "objects_ge_1pct": 0,
+  "worst": [
+   [
+    "STORE_walls_stones",
+    0.004
+   ],
+   [
+    "STORE_walls_reveals",
+    0.0
+   ],
+   [
+    "STORE_walls_quoins",
+    0.0
+   ],
+   [
+    "STORE_walls_mortar",
+    0.0
+   ],
+   [
+    "STORE_walls_ironwork",
+    0.0
+   ]
+  ],
+  "objects_ge_1pct_wholeface": 0,
+  "worst_wholeface": [
+   [
+    "STORE_walls_stones",
+    0.0
+   ],
+   [
+    "STORE_walls_reveals",
+    0.0
+   ],
+   [
+    "STORE_walls_quoins",
+    0.0
+   ]
+  ]
+ },
+ "walk": [
+  {
+   "name": "walls_0",
+   "area": 0.9251437734842164,
+   "faces": 50,
+   "b_max": 0.20863689482212067,
+   "bad_area": 0.0025413489071372253,
+   "bad": [
+    [
+     "STORE_walls_ironwork",
+     0.0025,
+     0.209,
+     1.149,
+     1.15
+    ]
+   ],
+   "objs": {
+    "STORE_walls_dressed": {
+     "area": 0.917,
+     "b_max": 0.003,
+     "z_max": 0.12
+    },
+    "STORE_walls_ironwork": {
+     "area": 0.0082,
+     "b_max": 0.2086,
+     "z_max": 1.15
+    }
+   }
+  }
+ ]
+}

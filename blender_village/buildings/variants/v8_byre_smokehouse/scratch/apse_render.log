@@ -1,0 +1,44 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\scratch\r2.blend"
+python.exe : C:\Users\parke\AppData\Local\Temp\claude\C--GitHubDesktop-git-test-blender-village\03f38854-baaa-44de-99c6
+-7c7286cf14b9\scratchpad\apse_views.py:15: DeprecationWarning: 'Material.use_nodes' is expected to be removed in 
+Blender 6.0
+At line:1 char:785
++ ...  {$_.Line}; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\Users\parke\... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\Users\parke\AppData\Local\Temp\claude\C--GitHubDesktop-git-test-blender-village\03f38854-baaa-44de-99c6-7c7286cf14b9
+\scratchpad\apse_views.py:23: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  gm = bpy.data.materials.new("g"); gm.use_nodes = True
+C:\Users\parke\AppData\Local\Temp\claude\C--GitHubDesktop-git-test-blender-village\03f38854-baaa-44de-99c6-7c7286cf14b9
+\scratchpad\apse_views.py:28: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w = bpy.data.worlds.new("w"); w.use_nodes = True
+00:00.625  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.813  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\apse_front_colour.png'
+00:08.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\apse_left_colour.png'
+00:15.407  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\apse_right_colour.png'
+00:20.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\east_end_colour.png'
+00:00.844  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\scratch\r2.blend"
+python.exe : C:\Users\parke\AppData\Local\Temp\claude\C--GitHubDesktop-git-test-blender-village\03f38854-baaa-44de-99c6
+-7c7286cf14b9\scratchpad\apse_views.py:10: DeprecationWarning: 'Material.use_nodes' is expected to be removed in 
+Blender 6.0
+At line:1 char:949
++ ... render.log; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\Users\parke\... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  clay = bpy.data.materials.new("c"); clay.use_nodes = True
+C:\Users\parke\AppData\Local\Temp\claude\C--GitHubDesktop-git-test-blender-village\03f38854-baaa-44de-99c6-7c7286cf14b9
+\scratchpad\apse_views.py:23: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  gm = bpy.data.materials.new("g"); gm.use_nodes = True
+C:\Users\parke\AppData\Local\Temp\claude\C--GitHubDesktop-git-test-blender-village\03f38854-baaa-44de-99c6-7c7286cf14b9
+\scratchpad\apse_views.py:28: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w = bpy.data.worlds.new("w"); w.use_nodes = True
+00:00.969  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:08.657  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\apse_front_clay.png'
+00:12.563  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\apse_left_clay.png'
+00:16.532  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\apse_right_clay.png'
+00:20.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\preview_r2\east_end_clay.png'

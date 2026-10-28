@@ -1,0 +1,7 @@
+﻿00:01.031  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\vignette2\vignette2.blend"
+00:02.078  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:07.625  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\vignette2\renders\preview_street.png'
+RENDERED street seconds 5.5
+00:12.766  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\vignette2\renders\preview_aerial.png'
+RENDERED aerial seconds 5.1
+ALL DONE

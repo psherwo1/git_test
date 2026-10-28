@@ -1,0 +1,514 @@
+{
+  "triangles": 662300,
+  "samples": 8000,
+  "viewpoints": 77,
+  "est_hidden_pct": 6.6,
+  "est_hidden_triangles": 43877,
+  "est_below_ground_pct": 0.0,
+  "objects": [
+    {
+      "object": "HUT_wattle_rods",
+      "est_triangles": 58861,
+      "est_hidden_triangles": 6954,
+      "hidden_pct_of_object": 11.8
+    },
+    {
+      "object": "HUT_daub",
+      "est_triangles": 208127,
+      "est_hidden_triangles": 5463,
+      "hidden_pct_of_object": 2.6
+    },
+    {
+      "object": "HUT_daub_interior",
+      "est_triangles": 13328,
+      "est_hidden_triangles": 5215,
+      "hidden_pct_of_object": 39.1
+    },
+    {
+      "object": "HUT_roof_shingles",
+      "est_triangles": 81545,
+      "est_hidden_triangles": 4801,
+      "hidden_pct_of_object": 5.9
+    },
+    {
+      "object": "HUT_door_frame",
+      "est_triangles": 103153,
+      "est_hidden_triangles": 3642,
+      "hidden_pct_of_object": 3.5
+    },
+    {
+      "object": "HUT_plinth_stones",
+      "est_triangles": 94957,
+      "est_hidden_triangles": 1904,
+      "hidden_pct_of_object": 2.0
+    },
+    {
+      "object": "HUT_door_leaf",
+      "est_triangles": 3394,
+      "est_hidden_triangles": 1821,
+      "hidden_pct_of_object": 53.7
+    },
+    {
+      "object": "HUT_posts",
+      "est_triangles": 25746,
+      "est_hidden_triangles": 1738,
+      "hidden_pct_of_object": 6.8
+    },
+    {
+      "object": "HUT_threshold",
+      "est_triangles": 20696,
+      "est_hidden_triangles": 1572,
+      "hidden_pct_of_object": 7.6
+    },
+    {
+      "object": "HUT_floor",
+      "est_triangles": 3145,
+      "est_hidden_triangles": 1407,
+      "hidden_pct_of_object": 44.7
+    },
+    {
+      "object": "HUT_wall_plate",
+      "est_triangles": 2731,
+      "est_hidden_triangles": 827,
+      "hidden_pct_of_object": 30.3
+    },
+    {
+      "object": "HUT_hearth",
+      "est_triangles": 1572,
+      "est_hidden_triangles": 745,
+      "hidden_pct_of_object": 47.4
+    },
+    {
+      "object": "HUT_cap_collar",
+      "est_triangles": 9768,
+      "est_hidden_triangles": 579,
+      "hidden_pct_of_object": 5.9
+    },
+    {
+      "object": "HUT_roof_starter",
+      "est_triangles": 4304,
+      "est_hidden_triangles": 413,
+      "hidden_pct_of_object": 9.6
+    },
+    {
+      "object": "HUT_rafters",
+      "est_triangles": 5960,
+      "est_hidden_triangles": 413,
+      "hidden_pct_of_object": 6.9
+    },
+    {
+      "object": "HUT_roof_blocker",
+      "est_triangles": 1986,
+      "est_hidden_triangles": 331,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "HUT_door_clench_nail_064",
+      "est_triangles": 331,
+      "est_hidden_triangles": 331,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_battens",
+      "est_triangles": 579,
+      "est_hidden_triangles": 248,
+      "hidden_pct_of_object": 42.9
+    },
+    {
+      "object": "HUT_door_clench_nail_071",
+      "est_triangles": 248,
+      "est_hidden_triangles": 248,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_clench_nail_068",
+      "est_triangles": 248,
+      "est_hidden_triangles": 248,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_clench_nail_072",
+      "est_triangles": 248,
+      "est_hidden_triangles": 248,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_clench_nail_070",
+      "est_triangles": 248,
+      "est_hidden_triangles": 248,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_wattle_stakes",
+      "est_triangles": 165,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_hinge_knuckle_074",
+      "est_triangles": 165,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_039",
+      "est_triangles": 165,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_hinge_pintle_075",
+      "est_triangles": 165,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_034",
+      "est_triangles": 165,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_purlin_rings",
+      "est_triangles": 413,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 40.0
+    },
+    {
+      "object": "HUT_door_clench_nail_063",
+      "est_triangles": 165,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_031",
+      "est_triangles": 248,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "HUT_peg_028",
+      "est_triangles": 165,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_035",
+      "est_triangles": 248,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 66.7
+    },
+    {
+      "object": "HUT_plinth_chink_024",
+      "est_triangles": 165,
+      "est_hidden_triangles": 165,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_eave_closure",
+      "est_triangles": 1159,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 7.1
+    },
+    {
+      "object": "HUT_step_stone",
+      "est_triangles": 5795,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 1.4
+    },
+    {
+      "object": "HUT_peg_044",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_010",
+      "est_triangles": 496,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 16.7
+    },
+    {
+      "object": "HUT_plinth_chink_026",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_006",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_plinth_chink_025",
+      "est_triangles": 248,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "HUT_plinth_chink_022",
+      "est_triangles": 331,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 25.0
+    },
+    {
+      "object": "HUT_peg_052",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_peg_042",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_019",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_004",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_peg_040",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_023",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_door_hinge_pintle_083",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_020",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_door_hinge_strap_081",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_057",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_037",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_clench_nail_065",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_nail_079",
+      "est_triangles": 248,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 33.3
+    },
+    {
+      "object": "HUT_plinth_chink_018",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_peg_045",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_door_clench_nail_069",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_016",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_door_nail_077",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_002",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_door_clench_nail_066",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_030",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_peg_051",
+      "est_triangles": 165,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 50.0
+    },
+    {
+      "object": "HUT_peg_047",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_peg_029",
+      "est_triangles": 82,
+      "est_hidden_triangles": 82,
+      "hidden_pct_of_object": 100.0
+    },
+    {
+      "object": "HUT_plinth_chink_014",
+      "est_triangles": 165,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_door_nail_084",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_finial",
+      "est_triangles": 5215,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_peg_027",
+      "est_triangles": 165,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_door_nail_086",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_door_nail_078",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_door_panel_backing",
+      "est_triangles": 331,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_plinth_chink_012",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_peg_032",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_plinth_chink_005",
+      "est_triangles": 331,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_door_ironwork",
+      "est_triangles": 331,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_door_nail_076",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_door_nail_087",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_plinth_chink_003",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_peg_058",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_plinth_chink_013",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_plinth_chink_015",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_plinth_chink_017",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    },
+    {
+      "object": "HUT_plinth_chink_007",
+      "est_triangles": 82,
+      "est_hidden_triangles": 0,
+      "hidden_pct_of_object": 0.0
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+﻿00:00.640  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\v7_ring_stack.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\director_extra\dir_render_r02.py:28: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:642
++ ... final.log"; & $py -I "$d\dir_render_r02.py" "$b\scratch\fast\v7_ring_ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\director_extra\dir_render_r02.py:39: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\director_extra\dir_render_r02.py:69: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.812  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.390  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\director_extra\ri10_attic_to_ring_stack_low.png'
+00:06.125  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\director_extra\ri10_attic_to_ring_stack_low_red.png'
+DEVICE GPU
+COUNT ri10_attic_to_ring_stack_low red red 0 yellow 0
+SHOT ri10_attic_to_ring_stack_low
+00:12.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\director_extra\rx26_ring_stack_SW_from_ridge.png'
+00:13.234  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_02\director_extra\rx26_ring_stack_SW_from_ridge_void.png'
+COUNT rx26_ring_stack_SW_from_ridge void red 430279 yellow 20
+SHOT rx26_ring_stack_SW_from_ridge

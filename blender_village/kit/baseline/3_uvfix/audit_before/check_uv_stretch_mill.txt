@@ -1,0 +1,3 @@
+﻿MILL_cap_shingles faces 9699 area 13.96 area with UV/3D ratio<0.3: 0.57 [((-0.21, 0.4, 0.89), 0.094), ((0.54, 0.7, -0.46), 0.084), ((-0.23, 0.68, 0.69), 0.146), ((-0.94, 0.14, -0.29), 0.244), ((-0.91, 0.06, -0.4), 0.12)]
+MILL_apron_shingles faces 10920 area 39.69 area with UV/3D ratio<0.3: 0 []
+MILL_door_step faces 1165 area 1.04 area with UV/3D ratio<0.3: 0.0 [((0.03, 0.81, 0.58), 0.108)]

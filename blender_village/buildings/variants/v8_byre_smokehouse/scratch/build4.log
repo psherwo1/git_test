@@ -1,0 +1,121 @@
+﻿[    0.3s] -- set_entrance
+[    0.3s] -- path_stone_wall
+[   18.8s]   walls visible mortar 19.4% -> 7.2% after 787 pinning stones
+[   18.8s]   BYRE_walls: stones 1496 (hero 179, pins 161)
+[   21.7s]   BYRE_walls_stones: 104071 verts, 92322 faces
+[   21.7s]   BYRE_walls_quoins: 2706 verts, 2640 faces
+[   28.0s]   BYRE_walls_mortar: 4563 verts, 3952 faces
+[   28.0s]   BYRE_walls: mortar cells 3952
+[   28.1s]   BYRE_walls_frames: 4188 verts, 4119 faces
+[   28.1s]   BYRE_walls_dressed: 700 verts, 678 faces
+[   28.1s]   BYRE_walls_ironwork: 280 verts, 266 faces
+[   28.1s]   BYRE_walls_reveals: 40 verts, 20 faces
+[   28.1s]   BYRE_walls_blockers: 40 verts, 25 faces
+[   28.1s] -- path_timber_wall
+[   29.2s]   BYRE_hip_end_W_frame: 248 verts, 240 faces
+[   29.3s]   BYRE_hip_end_W_boards: 1878 verts, 1722 faces
+[   29.3s]   BYRE_hip_end_W_blocker: 54 verts, 52 faces
+[   29.3s]   BYRE_hip_end_W: timber wall (post_plank), 1 runs, 0 openings
+[   29.3s] -- path_timber_wall
+[   29.6s]   BYRE_hip_end_E_s_frame: 224 verts, 216 faces
+[   29.6s]   BYRE_hip_end_E_s_boards: 664 verts, 603 faces
+[   29.7s]   BYRE_hip_end_E_s_blocker: 30 verts, 28 faces
+[   29.7s]   BYRE_hip_end_E_s: timber wall (post_plank), 1 runs, 0 openings
+[   29.7s] -- path_timber_wall
+[   30.0s]   BYRE_hip_end_E_n_frame: 224 verts, 216 faces
+[   30.0s]   BYRE_hip_end_E_n_boards: 654 verts, 594 faces
+[   30.0s]   BYRE_hip_end_E_n_blocker: 30 verts, 28 faces
+[   30.0s]   BYRE_hip_end_E_n: timber wall (post_plank), 1 runs, 0 openings
+[   30.0s] -- linear_roof
+[   30.1s]   BYRE_roof_deck: 2595 verts, 2603 faces
+[   30.2s]   BYRE_roof_rafters: 3360 verts, 3240 faces
+[   30.5s]   BYRE_roof_covering: 32249 verts, 29000 faces
+[   30.8s]   BYRE_roof_eave_roll: 14601 verts, 13920 faces
+[   30.8s]   BYRE_roof: 26 continuous thatch courses + eave rolls + verge faces + 1 eyebrow lip roll(s); round hips lo hi (centres -4.74 / +4.74, inset 1.26 m)
+[   30.9s]   BYRE_roof_ridge: 1586 verts, 1626 faces
+[   31.2s]   BYRE_roof_eyebrow0_frame: 410 verts, 408 faces
+[   31.2s]   BYRE_roof_eyebrow0_boards: 692 verts, 621 faces
+[   31.2s]   BYRE_roof_eyebrow0_blocker: 192 verts, 194 faces
+[   31.2s]   BYRE_roof_eyebrow0_frames: 528 verts, 532 faces
+[   31.2s]   BYRE_roof_eyebrow0_blockers: 8 verts, 5 faces
+[   31.2s]   BYRE_roof: eyebrow 0 at x 1.80 (side -1): front 1.87 m wide, sill 3.44, eave 4.34 (world z before recentre), lift 0.90 m over 2.50 m
+[   31.2s] -- chimney
+[   31.5s]   BYRE_chimney_base visible mortar 16.3% -> 8.2% after 144 pinning stones
+[   31.5s]   BYRE_chimney_base stones 227
+[   31.7s]   BYRE_chimney_base_stones: 13384 verts, 11427 faces
+[   31.7s]   BYRE_chimney_base_mortar: 1922 verts, 1822 faces
+[   32.4s]   BYRE_chimney visible mortar 17.1% -> 9.6% after 200 pinning stones
+[   32.4s]   BYRE_chimney stones 254
+[   32.5s]   BYRE_chimney_stones: 10794 verts, 8548 faces
+[   32.5s]   BYRE_chimney_mortar: 1458 verts, 1332 faces
+[   32.5s]   BYRE_chimney_weathering: 320 verts, 320 faces
+[   32.5s]   chimney: broad base r 1.00.. head 0.82 to z 2.90, weathered offset to the stack (r 0.64)
+[   32.7s]   chimney_abutment: trimmed at the wall face: deck 2603->2593, rafters 3240->3172, covering 29000->28417, eave_roll 13920->13920, ridge 1626->1626
+[   33.0s]   ring trace: 240 / 240 azimuths hit the roof top, z 3.60..5.11
+[   33.0s]   chimney_abutment: ring flaunching round the stack, 253 samples, z 3.60..5.11
+[   33.0s]   BYRE_roof_chimney_abutment: 1768 verts, 1766 faces
+[   33.0s]   seal junction registered: roof / stack ring (covering BYRE_roof_covering, BYRE_roof_eave_roll, BYRE_roof_ridge; z 3.30-5.41)
+[   33.0s]   BYRE_chimney_cap: 320 verts, 320 faces
+[   33.0s]   BYRE_chimney_flue_blocker: 49 verts, 48 faces
+[   33.0s]   BYRE_chimney_crown: 252 verts, 226 faces
+[   33.0s]   chimney: round stack r 0.72 -> 0.56 m (batter 1.5 deg), head 6.21, cap 6.36, crown pot to 6.82
+[   33.0s] -- orient_open_islands
+[   33.5s]   orient_open_islands BYRE_walls_stones: 7 inverted island(s) flipped, 392 single face(s)
+[   33.5s]   orient_open_islands BYRE_chimney_base_stones: 0 inverted island(s) flipped, 102 single face(s)
+[   33.6s]   orient_open_islands BYRE_chimney_stones: 0 inverted island(s) flipped, 123 single face(s)
+[   33.6s] -- orient_closed_slabs
+[   33.6s]   orient_closed_slabs BYRE_roof_deck: 13 inward face(s) flipped
+[   33.6s] -- lean_to
+[   33.6s]   BYRE_lean_to_deck: 1440 verts, 1438 faces
+[   33.6s]   BYRE_lean_to_covering: 2592 verts, 2256 faces
+[   33.7s]   BYRE_lean_to_eave_roll: 3046 verts, 2871 faces
+[   33.7s]   BYRE_lean_to_framing: 1528 verts, 1432 faces
+[   33.7s]   BYRE_lean_to: ROUNDED roof (note 19): 6 thatch courses round the contour (coat 0.22 + 0.08 m, 0.30 m courses), the village eave roll round the lip (D section 0.43 m deep, radius 0.16), hips reach 1.00 m along the wall (0.45 m past the end walls), 2.02 m out; ledger, 8 common + radial hip rafters, plate at 1.80 m out
+[   33.8s]   BYRE_lean_to: trimmed at the wall face: deck 1438->1213, covering 2256->2153, eave_roll 2871->2717
+[   33.9s]   BYRE_lean_to_flashing: 1392 verts, 1379 faces
+[   33.9s]   BYRE_lean_to: flaunching 176 stations, roof at the face z 2.44..2.94, crease 3.01
+[   33.9s]   BYRE_lean_to: under the host eave: margin at the face 0.157 m (crease), at the host lip line 0.007 m (covering)
+python.exe : Traceback (most recent call last):
+At line:2 char:65
++ ... iew.blend"; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\build_v8_byre_smokehouse.py", 
+line 148, in <module>
+    main()
+    ~~~~^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\build_v8_byre_smokehouse.py", 
+line 139, in main
+    build_building(dict(
+    ~~~~~~~~~~~~~~^^^^^^
+        prefix="BYRE", collection="BYRE", building_id=BID, frame=PlanFrame,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        decal_json=os.path.join(os.path.dirname(out), "decal_anchors.json"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        decal_meta=dict(dims=dict(DIM), datum=dict(ground_z=0.0, note="built on the plan, then recentred"))))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\..\..\..\kit\village_kit\assemb
+ly.py", line 158, in build_building
+    fn(g, **kw)
+    ~~^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\..\..\..\kit\village_kit\compon
+ents\lean_to.py", line 755, in lean_to
+    rec = round_lean_roof(g, name, W, s0, s1, depth, z_face, pitch_deg=pitch_deg, overhang=overhang,
+                          below=below, seed=seed, rafters=rafters, end_t=end_t, **dict(round_kw or {}), **kw)
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\..\..\..\kit\village_kit\compon
+ents\lean_to.py", line 661, in round_lean_roof
+    zb, th, C = _wall_junction(g, name, pre, W, T, S.x_lo + 0.015, S.x_hi - 0.015, fillet, apron, below, below_clear,
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               below_lift_max, below_roll, below_roll_near, register, trim_ends=True,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               reg_parts=("covering", "eave_roll") if n_roll else ("covering",))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v8_byre_smokehouse\..\..\..\kit\village_kit\compon
+ents\lean_to.py", line 218, in _wall_junction
+    raise ValueError(f"mono_roof {name}: the add-on reaches the host's eave (margin face {m_face:.3f}, lip "
+                     f"{m_lip:.3f} m under the {below_clear:.2f} m clearance); lower z_face or the pitch")
+ValueError: mono_roof lean_to: the add-on reaches the host's eave (margin face 0.077, lip -0.073 m under the 0.08 m 
+clearance); lower z_face or the pitch

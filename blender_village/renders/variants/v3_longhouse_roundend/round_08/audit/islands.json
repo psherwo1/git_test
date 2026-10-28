@@ -1,0 +1,80 @@
+{
+ "LONG_body_roof_covering": {
+  "n_verts": 10,
+  "verts_seen": 5,
+  "bbox": [
+   [
+    1.022,
+    2.168,
+    3.515
+   ],
+   [
+    1.619,
+    2.24,
+    3.577
+   ]
+  ],
+  "first_hits": {
+   "LONG_body_wall_frames": 10,
+   "LONG_body_roof_covering": 371,
+   "LONG_body_roof_eave_roll": 135,
+   "LONG_body_wall_stones": 19,
+   "LONG_round_wall_stones": 78,
+   "LONG_round_wall_mortar": 22,
+   "LONG_body_roof_wall_abutment": 24,
+   "LONG_body_wall_mortar": 1
+  }
+ },
+ "LONG_body_roof_ridge": {
+  "n_verts": 36,
+  "verts_seen": 22,
+  "bbox": [
+   [
+    0.652,
+    -0.376,
+    5.371
+   ],
+   [
+    0.664,
+    0.363,
+    5.561
+   ]
+  ],
+  "first_hits": {
+   "LONG_body_roof_ridge": 1494,
+   "LONG_round_wall_stones": 296,
+   "LONG_body_roof_eave_roll": 46,
+   "LONG_body_roof_covering": 153,
+   "LONG_body_roof_comb": 225,
+   "LONG_round_wall_mortar": 20,
+   "LONG_body_roof_wall_abutment": 31
+  }
+ },
+ "LONG_purlin_rings": {
+  "n_verts": 4,
+  "verts_seen": 0,
+  "bbox": [
+   [
+    2.413,
+    2.405,
+    6.823
+   ],
+   [
+    2.585,
+    2.551,
+    6.834
+   ]
+  ],
+  "first_hits": {
+   "LONG_body_roof_eave_roll": 16,
+   "LONG_roof_shingles": 171,
+   "LONG_body_roof_wall_abutment": 4,
+   "LONG_round_wall_stones": 45,
+   "LONG_round_wall_mortar": 4,
+   "LONG_battens": 3,
+   "LONG_eave_fill": 18,
+   "LONG_rafters": 1,
+   "LONG_roof_soffit_deck": 2
+  }
+ }
+}

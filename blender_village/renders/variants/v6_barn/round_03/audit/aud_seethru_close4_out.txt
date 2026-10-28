@@ -1,0 +1,17 @@
+﻿00:02.531  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v6_barn\v6_barn.blend"
+SHOT E_post_head_eye_6m_out         rays  230400 LEAK  730 VOID    0 {}
+     leak entry clusters (0.1 m): [(2.4, -3.5, 3.6, 198), (2.3, -3.5, 3.6, 148), (2.5, -3.5, 3.6, 118), (2.3, -3.5, 3.7, 59), (2.2, -3.5, 3.7, 58), (2.1, -3.5, 3.7, 51), (2.6, -3.5, 3.6, 34), (2.0, -3.5, 3.7, 28)]
+     leak first-hit clusters (0.2 m): [('BARN_barn_roof_deck', 5.0, 1.6, 5.2, 281), ('BARN_barn_roof_deck', 5.2, 1.6, 5.2, 137), ('BARN_barn_roof_deck', 4.8, 1.6, 5.2, 59), ('BARN_barn_roof_deck', 4.6, 1.4, 5.4, 58), ('BARN_barn_roof_deck', 5.4, 1.6, 5.2, 55), ('BARN_barn_roof_deck', 4.4, 1.4, 5.4, 49), ('BARN_barn_roof_deck', 4.8, 1.4, 5.4, 37), ('BARN_barn_roof_deck', 4.2, 1.4, 5.4, 36), ('BARN_barn_roof_deck', 4.8, 1.6, 5.4, 10), ('BARN_barn_roof_deck', 5.0, 1.6, 5.4, 4)]
+     void clusters (0.1 m): []
+SHOT W_post_head_eye_6m_out         rays  230400 LEAK  493 VOID    0 {}
+     leak entry clusters (0.1 m): [(-2.2, -3.5, 3.6, 132), (-2.3, -3.5, 3.6, 99), (-2.2, -3.5, 3.7, 76), (-2.0, -3.5, 3.7, 50), (-2.1, -3.5, 3.7, 44), (-1.8, -3.5, 3.8, 26), (-1.9, -3.5, 3.8, 26), (-2.3, -3.5, 3.7, 26)]
+     leak first-hit clusters (0.2 m): [('BARN_barn_roof_deck', -4.8, 1.6, 5.2, 196), ('BARN_barn_roof_deck', -5.0, 1.6, 5.2, 82), ('BARN_barn_roof_deck', -4.4, 1.4, 5.4, 51), ('BARN_barn_roof_deck', -4.6, 1.4, 5.4, 44), ('BARN_barn_roof_deck', -4.2, 1.4, 5.4, 39), ('BARN_barn_roof_deck', -4.8, 1.4, 5.4, 38), ('BARN_barn_roof_deck', -4.0, 1.4, 5.4, 30), ('BARN_barn_roof_deck', -3.8, 1.4, 5.4, 8), ('BARN_barn_roof_deck', -4.8, 1.6, 5.4, 4), ('BARN_barn_roof_deck', -4.8, 1.4, 5.2, 1)]
+     void clusters (0.1 m): []
+SHOT E_post_head_eye_4m_out         rays  230400 LEAK  714 VOID    0 {}
+     leak entry clusters (0.1 m): [(2.4, -3.5, 3.6, 383), (2.5, -3.5, 3.6, 158), (2.3, -3.5, 3.7, 65), (2.2, -3.5, 3.7, 47), (2.3, -3.5, 3.6, 37), (2.6, -3.5, 3.6, 10), (2.4, -3.5, 3.5, 6), (2.0, -3.5, 3.7, 4)]
+     leak first-hit clusters (0.2 m): [('BARN_barn_roof_deck', 2.6, 0.8, 6.0, 288), ('BARN_barn_roof_deck', 2.4, 0.8, 6.0, 156), ('BARN_barn_roof_deck', 2.8, 0.8, 6.0, 143), ('BARN_barn_roof_deck', 2.2, 0.8, 6.0, 60), ('BARN_barn_roof_deck', 2.6, 1.0, 6.0, 15), ('BARN_barn_roof_deck', 3.0, 0.8, 6.0, 13), ('BARN_barn_roof_deck', 2.0, 0.8, 6.0, 9), ('BARN_barn_roof_deck', 2.4, 1.0, 6.0, 9), ('BARN_barn_roof_deck', 2.6, 1.0, 5.8, 7), ('BARN_barn_roof_deck', 2.4, 1.0, 5.8, 6)]
+     void clusters (0.1 m): []
+DONE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

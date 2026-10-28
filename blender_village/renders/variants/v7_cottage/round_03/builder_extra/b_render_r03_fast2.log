@@ -1,0 +1,59 @@
+﻿00:00.547  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\scratch\fast\v7_cottage_fast.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\b_render_r03.py:28: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:1068
++ ... tra\fast2'; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\b_render_r03.py:39: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\b_render_r03.py:69: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.703  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\i07_room_W_inside_corner_head.png'
+00:05.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\i07_room_W_inside_corner_head_red.png'
+DEVICE GPU
+COUNT i07_room_W_inside_corner_head red red 1 yellow 0
+SHOT i07_room_W_inside_corner_head
+00:10.219  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\i08_room_E_inside_corner_head.png'
+00:10.641  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\i08_room_E_inside_corner_head_red.png'
+COUNT i08_room_E_inside_corner_head red red 0 yellow 0
+SHOT i08_room_E_inside_corner_head
+00:15.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x05_W_inside_corner_soffit.png'
+00:16.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x05_W_inside_corner_soffit_void.png'
+COUNT x05_W_inside_corner_soffit void red 46 yellow 810
+SHOT x05_W_inside_corner_soffit
+00:20.953  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x06_E_inside_corner_soffit.png'
+00:21.860  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x06_E_inside_corner_soffit_void.png'
+COUNT x06_E_inside_corner_soffit void red 0 yellow 1056
+SHOT x06_E_inside_corner_soffit
+00:26.469  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x07_W_valley_foot_mid.png'
+00:27.344  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x07_W_valley_foot_mid_void.png'
+COUNT x07_W_valley_foot_mid void red 0 yellow 498
+SHOT x07_W_valley_foot_mid
+00:31.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x08_wing_ridge_notch.png'
+00:32.797  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x08_wing_ridge_notch_void.png'
+COUNT x08_wing_ridge_notch void red 0 yellow 1875
+SHOT x08_wing_ridge_notch
+00:37.360  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x17_E_valley_foot_mid.png'
+00:38.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x17_E_valley_foot_mid_void.png'
+COUNT x17_E_valley_foot_mid void red 0 yellow 113
+SHOT x17_E_valley_foot_mid
+00:42.953  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x18_W_valley_foot_eye.png'
+00:43.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x18_W_valley_foot_eye_void.png'
+COUNT x18_W_valley_foot_eye void red 0 yellow 470
+SHOT x18_W_valley_foot_eye
+00:48.453  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x22_E_corner_eye_wide.png'
+00:49.375  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x22_E_corner_eye_wide_void.png'
+COUNT x22_E_corner_eye_wide void red 14647 yellow 2737
+SHOT x22_E_corner_eye_wide
+00:54.156  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x23_W_corner_knot_close.png'
+00:55.047  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_03\builder_extra\fast2\x23_W_corner_knot_close_void.png'
+COUNT x23_W_corner_knot_close void red 0 yellow 73
+SHOT x23_W_corner_knot_close

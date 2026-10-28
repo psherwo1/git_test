@@ -1,0 +1,52 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast\a1_fast.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_03\builder_extra\b
+x_render_r03.py:29: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:1 char:715
++ ... st_rr.log"; & C:\GitHubDesktop\git_test\.bpyenv\Scripts\python.exe -I ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_03\builder_extra\bx_render_r03.
+py:40: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\addon_demos\a1_longhouse_addons\round_03\builder_extra\bx_render_r03.
+py:72: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.703  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:04.922  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\i01_shed_up_to_crease.png'
+00:05.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\i01_shed_up_to_crease_red.png'
+DEVICE GPU
+COUNT i01_shed_up_to_crease red red 0 yellow 0
+SHOT i01_shed_up_to_crease
+00:09.438  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\i02_shed_W_endwall_head.png'
+00:09.844  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\i02_shed_W_endwall_head_red.png'
+COUNT i02_shed_W_endwall_head red red 18040 yellow 0
+SHOT i02_shed_W_endwall_head
+00:13.985  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\i06_host_attic_N_lifted_eave.png'
+00:14.406  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\i06_host_attic_N_lifted_eave_red.png'
+COUNT i06_host_attic_N_lifted_eave red red 0 yellow 0
+SHOT i06_host_attic_N_lifted_eave
+00:18.594  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\x01_leanto_W_rake_endwall.png'
+00:19.703  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\x01_leanto_W_rake_endwall_void.png'
+COUNT x01_leanto_W_rake_endwall void red 0 yellow 0
+SHOT x01_leanto_W_rake_endwall
+00:24.031  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\x02_leanto_E_rake_endwall.png'
+00:25.000  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\x02_leanto_E_rake_endwall_void.png'
+COUNT x02_leanto_E_rake_endwall void red 0 yellow 1
+SHOT x02_leanto_E_rake_endwall
+00:29.266  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\x03_leanto_crease_from_above.png'
+00:30.281  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\x03_leanto_crease_from_above_void.png'
+COUNT x03_leanto_crease_from_above void red 0 yellow 0
+SHOT x03_leanto_crease_from_above
+00:34.531  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\x13_leanto_W_verge_vs_roll.png'
+00:35.547  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\x13_leanto_W_verge_vs_roll_void.png'
+COUNT x13_leanto_W_verge_vs_roll void red 0 yellow 0
+SHOT x13_leanto_W_verge_vs_roll
+00:39.860  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\x16_leanto_figure_under_brace.png'
+SHOT x16_leanto_figure_under_brace
+00:44.125  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\z01_leanto_E_endwall_host_corner.png'
+00:45.125  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r03\fast_bx2\z01_leanto_E_endwall_host_corner_void.png'
+COUNT z01_leanto_E_endwall_host_corner void red 0 yellow 4
+SHOT z01_leanto_E_endwall_host_corner

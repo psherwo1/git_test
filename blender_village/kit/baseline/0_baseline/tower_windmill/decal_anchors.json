@@ -1,0 +1,2860 @@
+{
+ "format": "village_kit decal anchors v1",
+ "building": "tower_windmill",
+ "units": "metres",
+ "space": "building-local: origin at the building base centre on the ground datum Z = 0",
+ "axes": "right-handed, Z up; the principal entrance faces -Y.  normal = outward surface normal (the empty's +Z; its -Z points into the surface); up = decal up direction in the surface plane (the empty's +Y); size = [width along right, height along up]",
+ "decal_types": [
+  "crack",
+  "damp_rise",
+  "moss",
+  "soot",
+  "water_streak",
+  "rust_stain",
+  "plaster_patch",
+  "repair_patch",
+  "lichen",
+  "grime"
+ ],
+ "count": 106,
+ "counts": {
+  "damp_rise": 14,
+  "moss": 11,
+  "lichen": 11,
+  "water_streak": 23,
+  "rust_stain": 9,
+  "soot": 3,
+  "crack": 21,
+  "grime": 2,
+  "repair_patch": 8,
+  "plaster_patch": 4
+ },
+ "anchors": [
+  {
+   "name": "DA_damp_rise_001",
+   "type": "damp_rise",
+   "position": [
+    1.14916,
+    -2.32478,
+    0.46016
+   ],
+   "normal": [
+    0.44313,
+    -0.89646,
+    0.0
+   ],
+   "up": [
+    -0.00042,
+    -0.00021,
+    1.0
+   ],
+   "size": [
+    0.8551,
+    0.5053
+   ],
+   "surface": "M_stone",
+   "probability": 0.75,
+   "seed": 223516727
+  },
+  {
+   "name": "DA_damp_rise_002",
+   "type": "damp_rise",
+   "position": [
+    1.8819,
+    -1.79825,
+    0.45992
+   ],
+   "normal": [
+    0.72299,
+    -0.69086,
+    0.0
+   ],
+   "up": [
+    -7e-05,
+    -7e-05,
+    1.0
+   ],
+   "size": [
+    0.8733,
+    0.595
+   ],
+   "surface": "M_stone",
+   "probability": 0.75,
+   "seed": 663293871
+  },
+  {
+   "name": "DA_damp_rise_003",
+   "type": "damp_rise",
+   "position": [
+    2.60031,
+    -0.16807,
+    0.46012
+   ],
+   "normal": [
+    0.99792,
+    -0.0645,
+    0.0
+   ],
+   "up": [
+    2e-05,
+    0.00026,
+    1.0
+   ],
+   "size": [
+    1.0035,
+    0.6224
+   ],
+   "surface": "M_stone",
+   "probability": 0.75,
+   "seed": 878232584
+  },
+  {
+   "name": "DA_damp_rise_004",
+   "type": "damp_rise",
+   "position": [
+    2.50594,
+    0.73286,
+    0.46005
+   ],
+   "normal": [
+    0.9598,
+    0.28069,
+    0.0
+   ],
+   "up": [
+    -4e-05,
+    0.00014,
+    1.0
+   ],
+   "size": [
+    0.7862,
+    0.4685
+   ],
+   "surface": "M_stone",
+   "probability": 0.872,
+   "seed": 336510178
+  },
+  {
+   "name": "DA_damp_rise_005",
+   "type": "damp_rise",
+   "position": [
+    2.08686,
+    1.53325,
+    0.46005
+   ],
+   "normal": [
+    0.80587,
+    0.59209,
+    0.0
+   ],
+   "up": [
+    0.00022,
+    -0.0003,
+    1.0
+   ],
+   "size": [
+    1.0151,
+    0.5776
+   ],
+   "surface": "M_stone",
+   "probability": 1.0,
+   "seed": 966756918
+  },
+  {
+   "name": "DA_damp_rise_006",
+   "type": "damp_rise",
+   "position": [
+    1.44101,
+    2.16105,
+    0.45986
+   ],
+   "normal": [
+    0.55478,
+    0.83199,
+    0.0
+   ],
+   "up": [
+    -0.00055,
+    0.00037,
+    1.0
+   ],
+   "size": [
+    0.9314,
+    0.4593
+   ],
+   "surface": "M_stone",
+   "probability": 1.0,
+   "seed": 393899524
+  },
+  {
+   "name": "DA_damp_rise_007",
+   "type": "damp_rise",
+   "position": [
+    0.6121,
+    2.51114,
+    0.46021
+   ],
+   "normal": [
+    0.23682,
+    0.97155,
+    0.0
+   ],
+   "up": [
+    -0.00087,
+    0.00021,
+    1.0
+   ],
+   "size": [
+    1.01,
+    0.5333
+   ],
+   "surface": "M_stone",
+   "probability": 1.0,
+   "seed": 421294204
+  },
+  {
+   "name": "DA_damp_rise_008",
+   "type": "damp_rise",
+   "position": [
+    -0.28494,
+    2.58047,
+    0.45989
+   ],
+   "normal": [
+    -0.10976,
+    0.99396,
+    0.0
+   ],
+   "up": [
+    0.00044,
+    5e-05,
+    1.0
+   ],
+   "size": [
+    1.0394,
+    0.52
+   ],
+   "surface": "M_stone",
+   "probability": 1.0,
+   "seed": 522029574
+  },
+  {
+   "name": "DA_damp_rise_009",
+   "type": "damp_rise",
+   "position": [
+    -1.13702,
+    2.27431,
+    0.48762
+   ],
+   "normal": [
+    -0.44312,
+    0.89646,
+    0.0
+   ],
+   "up": [
+    -0.00021,
+    -0.0001,
+    1.0
+   ],
+   "size": [
+    0.9379,
+    0.6156
+   ],
+   "surface": "M_mortar",
+   "probability": 1.0,
+   "seed": 993541484
+  },
+  {
+   "name": "DA_damp_rise_010",
+   "type": "damp_rise",
+   "position": [
+    -2.37792,
+    1.04377,
+    0.46014
+   ],
+   "normal": [
+    -0.91567,
+    0.40193,
+    0.0
+   ],
+   "up": [
+    -0.00019,
+    -0.00044,
+    1.0
+   ],
+   "size": [
+    1.1004,
+    0.447
+   ],
+   "surface": "M_stone",
+   "probability": 0.936,
+   "seed": 854535743
+  },
+  {
+   "name": "DA_damp_rise_011",
+   "type": "damp_rise",
+   "position": [
+    -2.57497,
+    0.1664,
+    0.4603
+   ],
+   "normal": [
+    -0.99792,
+    0.06449,
+    0.0
+   ],
+   "up": [
+    -0.0,
+    -6e-05,
+    1.0
+   ],
+   "size": [
+    0.7674,
+    0.451
+   ],
+   "surface": "M_stone",
+   "probability": 0.779,
+   "seed": 958044508
+  },
+  {
+   "name": "DA_damp_rise_012",
+   "type": "damp_rise",
+   "position": [
+    -2.48729,
+    -0.72751,
+    0.46013
+   ],
+   "normal": [
+    -0.95979,
+    -0.28073,
+    0.0
+   ],
+   "up": [
+    -0.00013,
+    0.00043,
+    1.0
+   ],
+   "size": [
+    0.9971,
+    0.597
+   ],
+   "surface": "M_stone",
+   "probability": 0.75,
+   "seed": 979773644
+  },
+  {
+   "name": "DA_damp_rise_013",
+   "type": "damp_rise",
+   "position": [
+    -2.08729,
+    -1.5335,
+    0.46009
+   ],
+   "normal": [
+    -0.80588,
+    -0.59207,
+    0.0
+   ],
+   "up": [
+    -0.00027,
+    0.00037,
+    1.0
+   ],
+   "size": [
+    0.8448,
+    0.5847
+   ],
+   "surface": "M_stone",
+   "probability": 0.75,
+   "seed": 26286236
+  },
+  {
+   "name": "DA_damp_rise_014",
+   "type": "damp_rise",
+   "position": [
+    -1.43407,
+    -2.15058,
+    0.4599
+   ],
+   "normal": [
+    -0.55479,
+    -0.83199,
+    0.0
+   ],
+   "up": [
+    0.00025,
+    -0.00017,
+    1.0
+   ],
+   "size": [
+    0.9419,
+    0.6433
+   ],
+   "surface": "M_stone",
+   "probability": 0.75,
+   "seed": 202074493
+  },
+  {
+   "name": "DA_moss_001",
+   "type": "moss",
+   "position": [
+    2.17825,
+    1.53908,
+    0.2078
+   ],
+   "normal": [
+    0.81919,
+    0.57353,
+    0.0
+   ],
+   "up": [
+    -0.00059,
+    0.00084,
+    1.0
+   ],
+   "size": [
+    0.5377,
+    0.2424
+   ],
+   "surface": "M_stone",
+   "probability": 0.794,
+   "seed": 560479916
+  },
+  {
+   "name": "DA_moss_002",
+   "type": "moss",
+   "position": [
+    1.19899,
+    2.36373,
+    0.19155
+   ],
+   "normal": [
+    0.46167,
+    0.88705,
+    0.0
+   ],
+   "up": [
+    0.00065,
+    -0.00034,
+    1.0
+   ],
+   "size": [
+    0.6191,
+    0.2517
+   ],
+   "surface": "M_stone",
+   "probability": 0.928,
+   "seed": 915380730
+  },
+  {
+   "name": "DA_moss_003",
+   "type": "moss",
+   "position": [
+    -0.0115,
+    2.65916,
+    0.20782
+   ],
+   "normal": [
+    -1e-05,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.00013,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.5808,
+    0.2639
+   ],
+   "surface": "M_stone",
+   "probability": 0.96,
+   "seed": 497017340
+  },
+  {
+   "name": "DA_moss_004",
+   "type": "moss",
+   "position": [
+    -1.26226,
+    2.36464,
+    0.19173
+   ],
+   "normal": [
+    -0.46177,
+    0.887,
+    0.0
+   ],
+   "up": [
+    0.00086,
+    0.00045,
+    1.0
+   ],
+   "size": [
+    0.5254,
+    0.295
+   ],
+   "surface": "M_stone",
+   "probability": 0.916,
+   "seed": 121659696
+  },
+  {
+   "name": "DA_lichen_001",
+   "type": "lichen",
+   "position": [
+    -2.52226,
+    0.31541,
+    2.92195
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -0.99227,
+    0.12413,
+    0.0
+   ],
+   "size": [
+    0.252,
+    0.1008
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.531,
+   "seed": 835803822
+  },
+  {
+   "name": "DA_lichen_002",
+   "type": "lichen",
+   "position": [
+    2.54178,
+    0.02546,
+    2.92417
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.99995,
+    0.00996,
+    0.0
+   ],
+   "size": [
+    0.1977,
+    0.0791
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.503,
+   "seed": 761951556
+  },
+  {
+   "name": "DA_lichen_003",
+   "type": "lichen",
+   "position": [
+    -2.5063,
+    -0.42401,
+    2.92557
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -0.986,
+    -0.16672,
+    0.0
+   ],
+   "size": [
+    0.2736,
+    0.1094
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.5,
+   "seed": 753196106
+  },
+  {
+   "name": "DA_lichen_004",
+   "type": "lichen",
+   "position": [
+    1.46879,
+    -2.08876,
+    2.92657
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.58407,
+    -0.81171,
+    0.0
+   ],
+   "size": [
+    0.2497,
+    0.0999
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.5,
+   "seed": 602463727
+  },
+  {
+   "name": "DA_lichen_005",
+   "type": "lichen",
+   "position": [
+    -2.41242,
+    -0.80097,
+    2.92131
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -0.94905,
+    -0.31513,
+    0.0
+   ],
+   "size": [
+    0.2863,
+    0.1145
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.5,
+   "seed": 241318821
+  },
+  {
+   "name": "DA_lichen_006",
+   "type": "lichen",
+   "position": [
+    0.73295,
+    -2.25573,
+    2.93515
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.30906,
+    -0.95104,
+    0.0
+   ],
+   "size": [
+    0.4344,
+    0.1955
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.5,
+   "seed": 402553399
+  },
+  {
+   "name": "DA_lichen_007",
+   "type": "lichen",
+   "position": [
+    0.73291,
+    2.25572,
+    2.93443
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.30897,
+    0.95107,
+    0.0
+   ],
+   "size": [
+    0.461,
+    0.2075
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.738,
+   "seed": 356892187
+  },
+  {
+   "name": "DA_lichen_008",
+   "type": "lichen",
+   "position": [
+    -1.91882,
+    1.39412,
+    2.92691
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -0.80899,
+    0.58782,
+    0.0
+   ],
+   "size": [
+    0.3771,
+    0.1697
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.647,
+   "seed": 141319202
+  },
+  {
+   "name": "DA_lichen_009",
+   "type": "lichen",
+   "position": [
+    -1.91882,
+    -1.39412,
+    2.92939
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -0.80899,
+    -0.58782,
+    0.0
+   ],
+   "size": [
+    0.3001,
+    0.135
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.5,
+   "seed": 206545927
+  },
+  {
+   "name": "DA_lichen_010",
+   "type": "lichen",
+   "position": [
+    2.42673,
+    -0.87092,
+    1.29123
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.93855,
+    -0.34515,
+    0.0
+   ],
+   "size": [
+    0.233,
+    0.0799
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.5,
+   "seed": 669870349
+  },
+  {
+   "name": "DA_lichen_011",
+   "type": "lichen",
+   "position": [
+    -1.98233,
+    1.64848,
+    1.29106
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -0.76745,
+    0.64111,
+    0.0
+   ],
+   "size": [
+    0.2472,
+    0.0848
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.661,
+   "seed": 23629072
+  },
+  {
+   "name": "DA_water_streak_001",
+   "type": "water_streak",
+   "position": [
+    2.43713,
+    -0.88646,
+    0.69602
+   ],
+   "normal": [
+    0.93977,
+    -0.34182,
+    0.0
+   ],
+   "up": [
+    -0.00018,
+    -0.00049,
+    1.0
+   ],
+   "size": [
+    0.16,
+    0.908
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 998598091
+  },
+  {
+   "name": "DA_water_streak_002",
+   "type": "water_streak",
+   "position": [
+    -1.97775,
+    1.64453,
+    0.87732
+   ],
+   "normal": [
+    -0.76605,
+    0.64278,
+    0.0
+   ],
+   "up": [
+    2e-05,
+    2e-05,
+    1.0
+   ],
+   "size": [
+    0.16,
+    0.6012
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 826743251
+  },
+  {
+   "name": "DA_water_streak_003",
+   "type": "water_streak",
+   "position": [
+    2.00553,
+    -1.44283,
+    2.67808
+   ],
+   "normal": [
+    0.80903,
+    -0.58776,
+    0.0
+   ],
+   "up": [
+    -0.00014,
+    -0.0002,
+    1.0
+   ],
+   "size": [
+    0.1875,
+    0.2548
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.6,
+   "seed": 700913054
+  },
+  {
+   "name": "DA_water_streak_004",
+   "type": "water_streak",
+   "position": [
+    2.10659,
+    1.51881,
+    2.73191
+   ],
+   "normal": [
+    0.80841,
+    0.58861,
+    0.0
+   ],
+   "up": [
+    0.01414,
+    -0.01942,
+    0.99971
+   ],
+   "size": [
+    0.1875,
+    0.2478
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.6,
+   "seed": 352099671
+  },
+  {
+   "name": "DA_water_streak_005",
+   "type": "water_streak",
+   "position": [
+    -0.78742,
+    2.34906,
+    2.68212
+   ],
+   "normal": [
+    -0.30903,
+    0.95105,
+    0.0
+   ],
+   "up": [
+    8e-05,
+    2e-05,
+    1.0
+   ],
+   "size": [
+    0.25,
+    0.3872
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.6,
+   "seed": 396408558
+  },
+  {
+   "name": "DA_water_streak_006",
+   "type": "water_streak",
+   "position": [
+    -2.47577,
+    0.0001,
+    2.68308
+   ],
+   "normal": [
+    -1.0,
+    4e-05,
+    0.0
+   ],
+   "up": [
+    -0.0,
+    -0.0004,
+    1.0
+   ],
+   "size": [
+    0.25,
+    0.2743
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.6,
+   "seed": 936486698
+  },
+  {
+   "name": "DA_water_streak_007",
+   "type": "water_streak",
+   "position": [
+    -0.76276,
+    -2.34673,
+    2.69936
+   ],
+   "normal": [
+    -0.30911,
+    -0.95103,
+    0.0
+   ],
+   "up": [
+    0.00216,
+    -0.0007,
+    1.0
+   ],
+   "size": [
+    0.25,
+    0.3455
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.6,
+   "seed": 273461967
+  },
+  {
+   "name": "DA_water_streak_008",
+   "type": "water_streak",
+   "position": [
+    0.275,
+    2.46099,
+    3.92068
+   ],
+   "normal": [
+    0.12219,
+    0.99251,
+    0.0
+   ],
+   "up": [
+    -0.00456,
+    0.00056,
+    0.99999
+   ],
+   "size": [
+    0.099,
+    0.4852
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 81902342
+  },
+  {
+   "name": "DA_water_streak_009",
+   "type": "water_streak",
+   "position": [
+    -0.61314,
+    -2.10562,
+    3.89111
+   ],
+   "normal": [
+    -0.26742,
+    -0.96358,
+    0.0
+   ],
+   "up": [
+    0.0001,
+    -3e-05,
+    1.0
+   ],
+   "size": [
+    0.0743,
+    0.3691
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 578580762
+  },
+  {
+   "name": "DA_water_streak_010",
+   "type": "water_streak",
+   "position": [
+    -2.37436,
+    0.66844,
+    3.86946
+   ],
+   "normal": [
+    -0.96258,
+    0.27099,
+    0.0
+   ],
+   "up": [
+    0.00047,
+    0.00166,
+    1.0
+   ],
+   "size": [
+    0.135,
+    0.725
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 472947207
+  },
+  {
+   "name": "DA_water_streak_011",
+   "type": "water_streak",
+   "position": [
+    -2.45459,
+    0.28927,
+    4.05549
+   ],
+   "normal": [
+    -0.99813,
+    0.06109,
+    0.0
+   ],
+   "up": [
+    0.00022,
+    0.00357,
+    0.99999
+   ],
+   "size": [
+    0.099,
+    0.4622
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.6,
+   "seed": 595079083
+  },
+  {
+   "name": "DA_water_streak_012",
+   "type": "water_streak",
+   "position": [
+    0.28305,
+    -2.45597,
+    3.91814
+   ],
+   "normal": [
+    0.11449,
+    -0.99342,
+    0.0
+   ],
+   "up": [
+    -0.00047,
+    -5e-05,
+    1.0
+   ],
+   "size": [
+    0.099,
+    0.4753
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 393261308
+  },
+  {
+   "name": "DA_water_streak_013",
+   "type": "water_streak",
+   "position": [
+    -0.48393,
+    2.422,
+    4.06383
+   ],
+   "normal": [
+    -0.23238,
+    0.97263,
+    0.0
+   ],
+   "up": [
+    -0.00631,
+    -0.00151,
+    0.99998
+   ],
+   "size": [
+    0.099,
+    0.4239
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.6,
+   "seed": 750873225
+  },
+  {
+   "name": "DA_water_streak_014",
+   "type": "water_streak",
+   "position": [
+    2.34814,
+    -0.75337,
+    3.89013
+   ],
+   "normal": [
+    0.95219,
+    -0.3055,
+    0.0
+   ],
+   "up": [
+    -9e-05,
+    -0.00027,
+    1.0
+   ],
+   "size": [
+    0.099,
+    0.5061
+   ],
+   "surface": "M_stone",
+   "probability": 0.6,
+   "seed": 677610869
+  },
+  {
+   "name": "DA_water_streak_015",
+   "type": "water_streak",
+   "position": [
+    0.0273,
+    -1.07621,
+    10.55651
+   ],
+   "normal": [
+    -0.01539,
+    -0.99244,
+    0.12173
+   ],
+   "up": [
+    0.00189,
+    0.12171,
+    0.99256
+   ],
+   "size": [
+    0.2,
+    0.8811
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 398479499
+  },
+  {
+   "name": "DA_water_streak_016",
+   "type": "water_streak",
+   "position": [
+    1.05273,
+    0.11623,
+    10.5131
+   ],
+   "normal": [
+    0.94059,
+    0.32128,
+    0.1099
+   ],
+   "up": [
+    -0.104,
+    -0.03552,
+    0.99394
+   ],
+   "size": [
+    0.2,
+    1.0072
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 329130642
+  },
+  {
+   "name": "DA_water_streak_017",
+   "type": "water_streak",
+   "position": [
+    -0.70365,
+    0.90009,
+    10.43652
+   ],
+   "normal": [
+    -0.69036,
+    0.71645,
+    0.10052
+   ],
+   "up": [
+    0.06975,
+    -0.07238,
+    0.99494
+   ],
+   "size": [
+    0.2,
+    1.0966
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 480811730
+  },
+  {
+   "name": "DA_water_streak_018",
+   "type": "water_streak",
+   "position": [
+    -0.91838,
+    -0.6843,
+    10.44796
+   ],
+   "normal": [
+    -0.76021,
+    -0.64131,
+    0.10395
+   ],
+   "up": [
+    0.07946,
+    0.06703,
+    0.99458
+   ],
+   "size": [
+    0.2,
+    1.0854
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 442275739
+  },
+  {
+   "name": "DA_water_streak_019",
+   "type": "water_streak",
+   "position": [
+    -2.14682,
+    5.45653,
+    10.89143
+   ],
+   "normal": [
+    -0.94826,
+    -0.31732,
+    -0.01065
+   ],
+   "up": [
+    -0.0101,
+    -0.00338,
+    0.99994
+   ],
+   "size": [
+    0.14,
+    0.8059
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.6,
+   "seed": 101705956
+  },
+  {
+   "name": "DA_rust_stain_001",
+   "type": "rust_stain",
+   "position": [
+    -0.41155,
+    -2.12814,
+    0.27833
+   ],
+   "normal": [
+    -0.20242,
+    -0.9793,
+    0.0
+   ],
+   "up": [
+    0.00318,
+    -0.00066,
+    0.99999
+   ],
+   "size": [
+    0.044,
+    0.1599
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 517728472
+  },
+  {
+   "name": "DA_rust_stain_002",
+   "type": "rust_stain",
+   "position": [
+    -0.41425,
+    -2.12612,
+    0.96121
+   ],
+   "normal": [
+    -0.20169,
+    -0.97945,
+    0.0
+   ],
+   "up": [
+    0.00209,
+    -0.00043,
+    1.0
+   ],
+   "size": [
+    0.08,
+    0.4184
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 893739671
+  },
+  {
+   "name": "DA_rust_stain_003",
+   "type": "rust_stain",
+   "position": [
+    -0.41424,
+    -2.12894,
+    1.58306
+   ],
+   "normal": [
+    -0.20124,
+    -0.97954,
+    0.0
+   ],
+   "up": [
+    -0.00515,
+    0.00106,
+    0.99999
+   ],
+   "size": [
+    0.08,
+    0.3788
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 974276777
+  },
+  {
+   "name": "DA_rust_stain_004",
+   "type": "rust_stain",
+   "position": [
+    -0.66958,
+    0.99522,
+    9.99469
+   ],
+   "normal": [
+    -0.71612,
+    0.69089,
+    0.09925
+   ],
+   "up": [
+    0.07143,
+    -0.06891,
+    0.99506
+   ],
+   "size": [
+    0.07,
+    0.4363
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 100285573
+  },
+  {
+   "name": "DA_rust_stain_005",
+   "type": "rust_stain",
+   "position": [
+    -0.98643,
+    0.67564,
+    10.02849
+   ],
+   "normal": [
+    -0.71806,
+    0.68771,
+    0.10697
+   ],
+   "up": [
+    0.07725,
+    -0.07399,
+    0.99426
+   ],
+   "size": [
+    0.07,
+    0.3645
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 522725070
+  },
+  {
+   "name": "DA_rust_stain_006",
+   "type": "rust_stain",
+   "position": [
+    -1.17971,
+    0.26256,
+    9.97101
+   ],
+   "normal": [
+    -0.99496,
+    -0.02309,
+    0.09753
+   ],
+   "up": [
+    0.09751,
+    0.00226,
+    0.99523
+   ],
+   "size": [
+    0.07,
+    0.4789
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 394776202
+  },
+  {
+   "name": "DA_rust_stain_007",
+   "type": "rust_stain",
+   "position": [
+    -1.17776,
+    -0.18625,
+    10.0467
+   ],
+   "normal": [
+    -0.99495,
+    0.02587,
+    0.09703
+   ],
+   "up": [
+    0.097,
+    -0.00252,
+    0.99528
+   ],
+   "size": [
+    0.07,
+    0.3295
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 939946056
+  },
+  {
+   "name": "DA_rust_stain_008",
+   "type": "rust_stain",
+   "position": [
+    -1.00822,
+    -0.64168,
+    10.03233
+   ],
+   "normal": [
+    -0.68254,
+    -0.72453,
+    0.09589
+   ],
+   "up": [
+    0.06575,
+    0.0698,
+    0.99539
+   ],
+   "size": [
+    0.0525,
+    0.2919
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 149966363
+  },
+  {
+   "name": "DA_rust_stain_009",
+   "type": "rust_stain",
+   "position": [
+    -0.70643,
+    -0.93575,
+    9.97258
+   ],
+   "normal": [
+    -0.69961,
+    -0.70631,
+    0.10804
+   ],
+   "up": [
+    0.07603,
+    0.07676,
+    0.99415
+   ],
+   "size": [
+    0.07,
+    0.4917
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.7,
+   "seed": 319020247
+  },
+  {
+   "name": "DA_soot_001",
+   "type": "soot",
+   "position": [
+    2.36258,
+    -0.88933,
+    2.24056
+   ],
+   "normal": [
+    0.9397,
+    -0.34201,
+    0.0
+   ],
+   "up": [
+    -0.00143,
+    -0.00393,
+    0.99999
+   ],
+   "size": [
+    0.45,
+    0.4
+   ],
+   "surface": "M_stone",
+   "probability": 0.3,
+   "seed": 204082333
+  },
+  {
+   "name": "DA_soot_002",
+   "type": "soot",
+   "position": [
+    -1.9392,
+    1.62705,
+    2.25033
+   ],
+   "normal": [
+    -0.76607,
+    0.64276,
+    0.0
+   ],
+   "up": [
+    0.00133,
+    0.00158,
+    1.0
+   ],
+   "size": [
+    0.45,
+    0.4
+   ],
+   "surface": "M_stone",
+   "probability": 0.3,
+   "seed": 104528127
+  },
+  {
+   "name": "DA_soot_003",
+   "type": "soot",
+   "position": [
+    -0.0318,
+    -1.20741,
+    9.29373
+   ],
+   "normal": [
+    0.01487,
+    -0.99298,
+    0.11734
+   ],
+   "up": [
+    -0.00176,
+    0.11732,
+    0.99309
+   ],
+   "size": [
+    0.6,
+    0.35
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.35,
+   "seed": 763645517
+  },
+  {
+   "name": "DA_crack_001",
+   "type": "crack",
+   "position": [
+    -0.72616,
+    -2.40846,
+    1.79015
+   ],
+   "normal": [
+    -0.28867,
+    -0.95743,
+    0.0
+   ],
+   "up": [
+    6e-05,
+    -2e-05,
+    1.0
+   ],
+   "size": [
+    0.2225,
+    0.5058
+   ],
+   "surface": "M_mortar",
+   "probability": 0.55,
+   "seed": 752187374
+  },
+  {
+   "name": "DA_crack_002",
+   "type": "crack",
+   "position": [
+    0.72616,
+    -2.40846,
+    1.79015
+   ],
+   "normal": [
+    0.28867,
+    -0.95743,
+    0.0
+   ],
+   "up": [
+    -6e-05,
+    -2e-05,
+    1.0
+   ],
+   "size": [
+    0.2128,
+    0.4837
+   ],
+   "surface": "M_mortar",
+   "probability": 0.55,
+   "seed": 582222822
+  },
+  {
+   "name": "DA_crack_003",
+   "type": "crack",
+   "position": [
+    1e-05,
+    -2.59762,
+    2.46502
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    -1e-05,
+    -0.0,
+    1.0
+   ],
+   "size": [
+    0.1497,
+    0.3403
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.55,
+   "seed": 1051866033
+  },
+  {
+   "name": "DA_crack_004",
+   "type": "crack",
+   "position": [
+    -0.8764,
+    -2.39248,
+    0.54967
+   ],
+   "normal": [
+    -0.34396,
+    -0.93898,
+    0.0
+   ],
+   "up": [
+    -0.0007,
+    0.00025,
+    1.0
+   ],
+   "size": [
+    0.2693,
+    0.6121
+   ],
+   "surface": "M_mortar",
+   "probability": 0.55,
+   "seed": 179748756
+  },
+  {
+   "name": "DA_crack_005",
+   "type": "crack",
+   "position": [
+    2.20065,
+    -1.24943,
+    1.95003
+   ],
+   "normal": [
+    0.86962,
+    -0.49373,
+    0.0
+   ],
+   "up": [
+    0.00075,
+    0.00133,
+    1.0
+   ],
+   "size": [
+    0.2169,
+    0.4821
+   ],
+   "surface": "M_stone",
+   "probability": 0.55,
+   "seed": 547264502
+  },
+  {
+   "name": "DA_crack_006",
+   "type": "crack",
+   "position": [
+    2.47579,
+    -0.45379,
+    1.95101
+   ],
+   "normal": [
+    0.98361,
+    -0.18029,
+    0.0
+   ],
+   "up": [
+    0.00337,
+    0.01841,
+    0.99982
+   ],
+   "size": [
+    0.1564,
+    0.3476
+   ],
+   "surface": "M_stone",
+   "probability": 0.55,
+   "seed": 45493069
+  },
+  {
+   "name": "DA_crack_007",
+   "type": "crack",
+   "position": [
+    -1.63599,
+    1.9219,
+    1.94938
+   ],
+   "normal": [
+    -0.6482,
+    0.76147,
+    0.0
+   ],
+   "up": [
+    0.00046,
+    0.00039,
+    1.0
+   ],
+   "size": [
+    0.1713,
+    0.3807
+   ],
+   "surface": "M_stone",
+   "probability": 0.55,
+   "seed": 419813637
+  },
+  {
+   "name": "DA_crack_008",
+   "type": "crack",
+   "position": [
+    -2.17848,
+    1.27889,
+    1.95156
+   ],
+   "normal": [
+    -0.86238,
+    0.50627,
+    0.0
+   ],
+   "up": [
+    0.00218,
+    0.00371,
+    0.99999
+   ],
+   "size": [
+    0.1613,
+    0.3584
+   ],
+   "surface": "M_stone",
+   "probability": 0.55,
+   "seed": 266958107
+  },
+  {
+   "name": "DA_crack_009",
+   "type": "crack",
+   "position": [
+    -2.26344,
+    1.02723,
+    3.67038
+   ],
+   "normal": [
+    -0.90867,
+    0.41752,
+    0.0
+   ],
+   "up": [
+    -0.00184,
+    -0.004,
+    0.99999
+   ],
+   "size": [
+    0.2124,
+    0.4778
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.55,
+   "seed": 332370594
+  },
+  {
+   "name": "DA_crack_010",
+   "type": "crack",
+   "position": [
+    -1.99828,
+    1.45186,
+    4.1202
+   ],
+   "normal": [
+    -0.80901,
+    0.58779,
+    0.0
+   ],
+   "up": [
+    -0.00016,
+    -0.00022,
+    1.0
+   ],
+   "size": [
+    0.108,
+    0.243
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.55,
+   "seed": 621147239
+  },
+  {
+   "name": "DA_crack_011",
+   "type": "crack",
+   "position": [
+    -1.20768,
+    2.17275,
+    3.67053
+   ],
+   "normal": [
+    -0.48982,
+    0.87182,
+    0.0
+   ],
+   "up": [
+    -0.00359,
+    -0.00202,
+    0.99999
+   ],
+   "size": [
+    0.181,
+    0.4072
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.55,
+   "seed": 585438602
+  },
+  {
+   "name": "DA_crack_012",
+   "type": "crack",
+   "position": [
+    -0.76327,
+    2.34902,
+    4.12017
+   ],
+   "normal": [
+    -0.30902,
+    0.95105,
+    0.0
+   ],
+   "up": [
+    0.00021,
+    7e-05,
+    1.0
+   ],
+   "size": [
+    0.1341,
+    0.3017
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.55,
+   "seed": 203483288
+  },
+  {
+   "name": "DA_crack_013",
+   "type": "crack",
+   "position": [
+    1.24021,
+    -2.15102,
+    3.65354
+   ],
+   "normal": [
+    0.48974,
+    -0.87187,
+    0.0
+   ],
+   "up": [
+    0.01131,
+    0.00635,
+    0.99992
+   ],
+   "size": [
+    0.1744,
+    0.3924
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.55,
+   "seed": 878848478
+  },
+  {
+   "name": "DA_crack_014",
+   "type": "crack",
+   "position": [
+    0.76322,
+    -2.34901,
+    4.12017
+   ],
+   "normal": [
+    0.30901,
+    -0.95106,
+    0.0
+   ],
+   "up": [
+    0.00021,
+    7e-05,
+    1.0
+   ],
+   "size": [
+    0.1255,
+    0.2823
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.55,
+   "seed": 250029351
+  },
+  {
+   "name": "DA_crack_015",
+   "type": "crack",
+   "position": [
+    2.42883,
+    0.51466,
+    3.65389
+   ],
+   "normal": [
+    0.98054,
+    0.19634,
+    0.0
+   ],
+   "up": [
+    -0.00086,
+    0.0043,
+    0.99999
+   ],
+   "size": [
+    0.1696,
+    0.3815
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.55,
+   "seed": 268508032
+  },
+  {
+   "name": "DA_crack_016",
+   "type": "crack",
+   "position": [
+    2.46949,
+    -1e-05,
+    4.12015
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    9e-05,
+    1.0
+   ],
+   "size": [
+    0.1183,
+    0.2661
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.55,
+   "seed": 424553145
+  },
+  {
+   "name": "DA_crack_017",
+   "type": "crack",
+   "position": [
+    -2.5649,
+    -0.35633,
+    0.55977
+   ],
+   "normal": [
+    -0.9919,
+    -0.12704,
+    0.0
+   ],
+   "up": [
+    -0.0014,
+    0.0109,
+    0.99994
+   ],
+   "size": [
+    0.2488,
+    0.597
+   ],
+   "surface": "M_stone",
+   "probability": 0.55,
+   "seed": 246958885
+  },
+  {
+   "name": "DA_crack_018",
+   "type": "crack",
+   "position": [
+    -2.16224,
+    -1.42354,
+    0.54968
+   ],
+   "normal": [
+    -0.83524,
+    -0.54989,
+    0.0
+   ],
+   "up": [
+    -0.00441,
+    0.0067,
+    0.99997
+   ],
+   "size": [
+    0.2974,
+    0.7139
+   ],
+   "surface": "M_stone",
+   "probability": 0.55,
+   "seed": 118598632
+  },
+  {
+   "name": "DA_crack_019",
+   "type": "crack",
+   "position": [
+    2.56229,
+    -0.05566,
+    0.54904
+   ],
+   "normal": [
+    0.99976,
+    -0.02172,
+    0.0
+   ],
+   "up": [
+    -0.0001,
+    -0.00479,
+    0.99999
+   ],
+   "size": [
+    0.1545,
+    0.3708
+   ],
+   "surface": "M_stone",
+   "probability": 0.55,
+   "seed": 1024904975
+  },
+  {
+   "name": "DA_crack_020",
+   "type": "crack",
+   "position": [
+    0.52065,
+    2.45937,
+    2.35053
+   ],
+   "normal": [
+    0.20711,
+    0.97832,
+    0.0
+   ],
+   "up": [
+    -0.01868,
+    0.00395,
+    0.99982
+   ],
+   "size": [
+    0.1909,
+    0.4295
+   ],
+   "surface": "M_stone",
+   "probability": 0.55,
+   "seed": 64365440
+  },
+  {
+   "name": "DA_crack_021",
+   "type": "crack",
+   "position": [
+    2.33531,
+    -0.94978,
+    2.35006
+   ],
+   "normal": [
+    0.92632,
+    -0.37674,
+    0.0
+   ],
+   "up": [
+    -0.0002,
+    -0.00049,
+    1.0
+   ],
+   "size": [
+    0.1823,
+    0.4101
+   ],
+   "surface": "M_stone",
+   "probability": 0.55,
+   "seed": 34493582
+  },
+  {
+   "name": "DA_grime_001",
+   "type": "grime",
+   "position": [
+    -0.60592,
+    -2.52474,
+    1.15001
+   ],
+   "normal": [
+    -0.23337,
+    -0.97239,
+    0.0
+   ],
+   "up": [
+    -1e-05,
+    0.0,
+    1.0
+   ],
+   "size": [
+    0.1838,
+    0.4594
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.6,
+   "seed": 333736173
+  },
+  {
+   "name": "DA_grime_002",
+   "type": "grime",
+   "position": [
+    0.60593,
+    -2.52494,
+    1.04998
+   ],
+   "normal": [
+    0.23335,
+    -0.97239,
+    0.0
+   ],
+   "up": [
+    -0.0,
+    -0.0,
+    1.0
+   ],
+   "size": [
+    0.191,
+    0.4776
+   ],
+   "surface": "M_stone_dressed",
+   "probability": 0.6,
+   "seed": 223794640
+  },
+  {
+   "name": "DA_moss_005",
+   "type": "moss",
+   "position": [
+    0.67259,
+    2.41141,
+    5.26632
+   ],
+   "normal": [
+    0.15158,
+    0.59085,
+    0.79241
+   ],
+   "up": [
+    0.22238,
+    0.76074,
+    -0.60978
+   ],
+   "size": [
+    0.5716,
+    0.4287
+   ],
+   "surface": "M_roof_shake",
+   "probability": 0.889,
+   "seed": 128179269
+  },
+  {
+   "name": "DA_moss_006",
+   "type": "moss",
+   "position": [
+    1.3701,
+    2.09551,
+    5.27976
+   ],
+   "normal": [
+    0.31892,
+    0.51924,
+    0.79289
+   ],
+   "up": [
+    0.4451,
+    0.65653,
+    -0.60898
+   ],
+   "size": [
+    0.7119,
+    0.5339
+   ],
+   "surface": "M_roof_shake",
+   "probability": 0.851,
+   "seed": 279893567
+  },
+  {
+   "name": "DA_moss_007",
+   "type": "moss",
+   "position": [
+    -0.25533,
+    2.54121,
+    5.22484
+   ],
+   "normal": [
+    -0.04506,
+    0.61499,
+    0.78724
+   ],
+   "up": [
+    -0.09171,
+    0.78217,
+    -0.61628
+   ],
+   "size": [
+    0.5374,
+    0.4031
+   ],
+   "surface": "M_roof_shake",
+   "probability": 0.898,
+   "seed": 106500474
+  },
+  {
+   "name": "DA_moss_008",
+   "type": "moss",
+   "position": [
+    -1.46392,
+    2.17512,
+    5.19445
+   ],
+   "normal": [
+    -0.40607,
+    0.46349,
+    0.78758
+   ],
+   "up": [
+    -0.39175,
+    0.69034,
+    -0.60824
+   ],
+   "size": [
+    0.4552,
+    0.3414
+   ],
+   "surface": "M_roof_shake",
+   "probability": 0.849,
+   "seed": 231534229
+  },
+  {
+   "name": "DA_moss_009",
+   "type": "moss",
+   "position": [
+    0.59703,
+    1.18621,
+    11.93362
+   ],
+   "normal": [
+    0.61191,
+    0.23303,
+    0.75582
+   ],
+   "up": [
+    0.18447,
+    0.88721,
+    -0.42288
+   ],
+   "size": [
+    0.6402,
+    0.5122
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.866,
+   "seed": 664209841
+  },
+  {
+   "name": "DA_moss_010",
+   "type": "moss",
+   "position": [
+    0.81612,
+    0.59732,
+    11.95171
+   ],
+   "normal": [
+    0.53904,
+    0.26374,
+    0.79992
+   ],
+   "up": [
+    0.60511,
+    0.53936,
+    -0.5856
+   ],
+   "size": [
+    0.5514,
+    0.4411
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.777,
+   "seed": 834704228
+  },
+  {
+   "name": "DA_moss_011",
+   "type": "moss",
+   "position": [
+    1.04091,
+    0.00856,
+    11.95105
+   ],
+   "normal": [
+    0.65498,
+    0.24663,
+    0.71427
+   ],
+   "up": [
+    0.75491,
+    -0.17187,
+    -0.6329
+   ],
+   "size": [
+    0.4828,
+    0.3863
+   ],
+   "surface": "M_roof_shingle",
+   "probability": 0.61,
+   "seed": 860560030
+  },
+  {
+   "name": "DA_repair_patch_001",
+   "type": "repair_patch",
+   "position": [
+    -0.37262,
+    2.51232,
+    1.7853
+   ],
+   "normal": [
+    -0.14671,
+    0.98918,
+    0.0
+   ],
+   "up": [
+    -0.00052,
+    -8e-05,
+    1.0
+   ],
+   "size": [
+    0.4251,
+    0.4506
+   ],
+   "surface": "M_stone",
+   "probability": 0.35,
+   "seed": 552276915
+  },
+  {
+   "name": "DA_repair_patch_002",
+   "type": "repair_patch",
+   "position": [
+    -2.41921,
+    -0.85777,
+    1.27997
+   ],
+   "normal": [
+    -0.94251,
+    -0.33418,
+    0.0
+   ],
+   "up": [
+    -0.00126,
+    0.00355,
+    0.99999
+   ],
+   "size": [
+    0.3417,
+    0.3181
+   ],
+   "surface": "M_stone",
+   "probability": 0.35,
+   "seed": 807779885
+  },
+  {
+   "name": "DA_repair_patch_003",
+   "type": "repair_patch",
+   "position": [
+    1.65189,
+    -1.94178,
+    1.79757
+   ],
+   "normal": [
+    0.64796,
+    -0.76167,
+    0.0
+   ],
+   "up": [
+    0.05811,
+    0.04944,
+    0.99709
+   ],
+   "size": [
+    0.4947,
+    0.4181
+   ],
+   "surface": "M_stone",
+   "probability": 0.35,
+   "seed": 661224893
+  },
+  {
+   "name": "DA_repair_patch_004",
+   "type": "repair_patch",
+   "position": [
+    1.70151,
+    1.87602,
+    1.95805
+   ],
+   "normal": [
+    0.67182,
+    0.74072,
+    0.0
+   ],
+   "up": [
+    -0.0097,
+    0.00879,
+    0.99991
+   ],
+   "size": [
+    0.5555,
+    0.4197
+   ],
+   "surface": "M_stone",
+   "probability": 0.35,
+   "seed": 725279593
+  },
+  {
+   "name": "DA_repair_patch_005",
+   "type": "repair_patch",
+   "position": [
+    -2.54683,
+    -0.00031,
+    1.47497
+   ],
+   "normal": [
+    -1.0,
+    -0.00012,
+    0.0
+   ],
+   "up": [
+    -0.0,
+    3e-05,
+    1.0
+   ],
+   "size": [
+    0.5909,
+    0.367
+   ],
+   "surface": "M_stone",
+   "probability": 0.35,
+   "seed": 142491164
+  },
+  {
+   "name": "DA_plaster_patch_001",
+   "type": "plaster_patch",
+   "position": [
+    -1.68787,
+    -1.93174,
+    1.21379
+   ],
+   "normal": [
+    -0.65797,
+    -0.75304,
+    0.0
+   ],
+   "up": [
+    0.00022,
+    -0.00019,
+    1.0
+   ],
+   "size": [
+    0.3795,
+    0.5835
+   ],
+   "surface": "M_stone",
+   "probability": 0.45,
+   "seed": 189466494
+  },
+  {
+   "name": "DA_plaster_patch_002",
+   "type": "plaster_patch",
+   "position": [
+    -2.08816,
+    -1.43959,
+    1.84251
+   ],
+   "normal": [
+    -0.82331,
+    -0.56759,
+    0.0
+   ],
+   "up": [
+    -0.00132,
+    0.00191,
+    1.0
+   ],
+   "size": [
+    0.3778,
+    0.3194
+   ],
+   "surface": "M_stone",
+   "probability": 0.45,
+   "seed": 618606274
+  },
+  {
+   "name": "DA_plaster_patch_003",
+   "type": "plaster_patch",
+   "position": [
+    -1.31537,
+    -2.16506,
+    1.6893
+   ],
+   "normal": [
+    -0.51923,
+    -0.85464,
+    0.0
+   ],
+   "up": [
+    -0.00163,
+    0.00099,
+    1.0
+   ],
+   "size": [
+    0.3338,
+    0.5981
+   ],
+   "surface": "M_stone",
+   "probability": 0.45,
+   "seed": 902110630
+  },
+  {
+   "name": "DA_repair_patch_006",
+   "type": "repair_patch",
+   "position": [
+    0.71894,
+    -1.00743,
+    9.01405
+   ],
+   "normal": [
+    0.69603,
+    -0.70795,
+    0.11976
+   ],
+   "up": [
+    -0.08396,
+    0.0854,
+    0.9928
+   ],
+   "size": [
+    0.25,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.35,
+   "seed": 260433166
+  },
+  {
+   "name": "DA_repair_patch_007",
+   "type": "repair_patch",
+   "position": [
+    -1.3475,
+    -0.13129,
+    8.31529
+   ],
+   "normal": [
+    -0.99481,
+    0.00294,
+    0.1017
+   ],
+   "up": [
+    0.1017,
+    -0.0003,
+    0.99481
+   ],
+   "size": [
+    0.25,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.35,
+   "seed": 1045324112
+  },
+  {
+   "name": "DA_repair_patch_008",
+   "type": "repair_patch",
+   "position": [
+    -0.88365,
+    -0.96898,
+    8.58958
+   ],
+   "normal": [
+    -0.70057,
+    -0.70635,
+    0.10136
+   ],
+   "up": [
+    0.07137,
+    0.07196,
+    0.99485
+   ],
+   "size": [
+    0.25,
+    0.6
+   ],
+   "surface": "M_timber_weathered",
+   "probability": 0.35,
+   "seed": 1027451213
+  },
+  {
+   "name": "DA_plaster_patch_004",
+   "type": "plaster_patch",
+   "position": [
+    0.66754,
+    -1.96286,
+    1.19986
+   ],
+   "normal": [
+    -0.99904,
+    0.02665,
+    -0.03465
+   ],
+   "up": [
+    -0.03464,
+    0.00092,
+    0.9994
+   ],
+   "size": [
+    0.4,
+    0.5
+   ],
+   "surface": "M_mortar",
+   "probability": 0.5,
+   "seed": 766774945
+  },
+  {
+   "name": "DA_water_streak_020",
+   "type": "water_streak",
+   "position": [
+    -2.65997,
+    -2.86001,
+    10.90523
+   ],
+   "normal": [
+    -0.23468,
+    0.9057,
+    -0.35302
+   ],
+   "up": [
+    -0.84775,
+    -0.3684,
+    -0.38158
+   ],
+   "size": [
+    0.12,
+    0.4735
+   ],
+   "surface": "M_timber",
+   "probability": 0.55,
+   "seed": 620841317
+  },
+  {
+   "name": "DA_water_streak_021",
+   "type": "water_streak",
+   "position": [
+    2.04766,
+    -1.40672,
+    8.93593
+   ],
+   "normal": [
+    0.1765,
+    -0.98303,
+    0.05004
+   ],
+   "up": [
+    0.41185,
+    0.02758,
+    -0.91084
+   ],
+   "size": [
+    0.12,
+    0.452
+   ],
+   "surface": "M_timber",
+   "probability": 0.55,
+   "seed": 162320826
+  },
+  {
+   "name": "DA_water_streak_022",
+   "type": "water_streak",
+   "position": [
+    3.63095,
+    -0.05239,
+    13.75416
+   ],
+   "normal": [
+    0.43829,
+    -0.8982,
+    -0.03367
+   ],
+   "up": [
+    0.83437,
+    0.39263,
+    0.38686
+   ],
+   "size": [
+    0.09,
+    0.3801
+   ],
+   "surface": "M_timber",
+   "probability": 0.55,
+   "seed": 881602250
+  },
+  {
+   "name": "DA_water_streak_023",
+   "type": "water_streak",
+   "position": [
+    -1.00323,
+    -1.50335,
+    15.72447
+   ],
+   "normal": [
+    0.53596,
+    -0.80829,
+    0.24374
+   ],
+   "up": [
+    -0.41374,
+    0.00019,
+    0.9104
+   ],
+   "size": [
+    0.12,
+    0.4196
+   ],
+   "surface": "M_timber",
+   "probability": 0.55,
+   "seed": 34174223
+  }
+ ],
+ "kit_params": {
+  "drum": {
+   "r_base": 2.6,
+   "r_top": 2.45,
+   "height": 4.62,
+   "zones": {
+    "band": [
+     2.55,
+     2.65,
+     2.82,
+     2.92
+    ]
+   },
+   "windows": [
+    70,
+    -130
+   ],
+   "door": {
+    "width": 1.05,
+    "spring": 1.65,
+    "reveal": 0.3
+   },
+   "arcade": {
+    "n": 10,
+    "clear_w": 0.72,
+    "clear_h": 1.08,
+    "z_sill": 2.92,
+    "az0": 18.0
+   }
+  },
+  "core": {},
+  "step": {},
+  "tower": {
+   "af_bottom": 3.1,
+   "af_top": 1.9,
+   "z0": 5.95,
+   "z1": 11.45
+  },
+  "apron": {
+   "r_eave": 3.17,
+   "z_eave": 4.62,
+   "r_top": 1.6,
+   "z_top": 6.0,
+   "courses": 3
+  },
+  "cap": {
+   "length": 2.76,
+   "width": 2.56,
+   "rise": 1.18,
+   "ridge_len": 1.0,
+   "yaw": 21.0
+  },
+  "wheel": {
+   "r_in": 1.35,
+   "r_rim": 3.2,
+   "r_tip": 3.9,
+   "n_blades": 16,
+   "pitch": 13.0,
+   "hub_d": 1.95
+  },
+  "tail": {},
+  "props": {}
+ },
+ "validation": {
+  "gates": "decal_gate.snap_anchors + anchor_validate.validate_anchors + decal_gate.audit_anchors",
+  "placed": 110,
+  "kept": 106,
+  "audit": "ray from +0.25 m along -Z: |offset| <= 0.015 m, dot >= 0.85, front face, surface == material hit",
+  "audit_failures": 0
+ }
+}

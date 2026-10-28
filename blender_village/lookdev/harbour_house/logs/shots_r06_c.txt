@@ -1,0 +1,6 @@
+﻿00:00.515  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\work\hh_r06_lookdev.blend"
+hid LD_ground at z -2.514
+00:00.656  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+DEVICE GPU
+00:07.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\c_water_gable_jetty_eye.png'
+RENDERED C:\GitHubDesktop\git_test\blender_village\lookdev\harbour_house\renders\r06\c_water_gable_jetty_eye.png

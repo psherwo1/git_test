@@ -1,0 +1,27 @@
+﻿00:00.500  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\hilltop_keep_src.blend"
+python.exe : C:\GitHubDesktop\git_test\blender_village\lookdev\scripts\apply_lookdev.py:788: DeprecationWarning: 
+'Material.use_nodes' is expected to be removed in Blender 6.0
+At C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\scripts\run_village.ps1:11 char:9
++         & $py -I "$root\scripts\apply_lookdev.py" "$w\work\${id}_src. ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  gmat.use_nodes = True
+00:00.859  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+look r2 | bark PROXY (rough_wood)
+hidden objects: 116 []
+building bounds (-11.1, -5.3, -0.05) (5.3, 5.3, 14.0)
+rebuilt palette materials: ['M_daub', 'M_iron', 'M_lead', 'M_mortar', 'M_roof_shake', 'M_roof_shingle', 'M_stone', 'M_stone_dressed', 'M_thatch', 'M_timber', 'M_timber_weathered']
+sky type MULTIPLE_SCATTERING
+devices [('NVIDIA GeForce RTX 3060', 'CUDA', False), ('AMD Ryzen 5 5600X 6-Core Processor', 'CPU', False), ('NVIDIA GeForce RTX 3060', 'OPTIX', True)]
+door: KEEP_door_leaf (0.35, -3.67, 1.22)
+camera hero (-19.97, -26.06, 12.47)
+camera front (-2.9, -35.21, 10.05)
+camera entrance_closeup (1.25, -8.19, 1.7)
+camera roof_detail (-0.8, -10.5, 8.6)
+camera thatch_closeup (-11.2, -3.4, 2.7)
+Info: Saved as "hilltop_keep_lookdev.blend"
+Info: Total files 26 | Changed 26 | Failed 0
+Info: Saved "hilltop_keep_lookdev.blend"
+saved C:\GitHubDesktop\git_test\blender_village\lookdev\village_r2\work\hilltop_keep_lookdev.blend

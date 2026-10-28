@@ -1,0 +1,35 @@
+﻿00:00.516  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\variants\v7_cottage\v7_cottage.blend"
+python.exe : 
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dir_render_r05.py:33: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+At line:8 char:399
++ ... 001,3.183'; & $py -I "$o\dir_render_r05.py" 'C:\GitHubDesktop\git_tes ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\GitHubDeskto... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  m.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dir_render_r05.py:44: 
+DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  void.use_nodes = True
+C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dir_render_r05.py:74: 
+DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+00:00.656  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+00:05.250  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dj18_attic_high_to_E_stack_gablet_S.png'
+00:05.641  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dj18_attic_high_to_E_stack_gablet_S_red.png'
+DEVICE GPU
+COUNT dj18_attic_high_to_E_stack_gablet_S red red 45392 yellow 0
+SHOT dj18_attic_high_to_E_stack_gablet_S
+00:10.172  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dj19_attic_high_to_E_stack_gablet_N.png'
+00:10.578  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dj19_attic_high_to_E_stack_gablet_N_red.png'
+COUNT dj19_attic_high_to_E_stack_gablet_N red red 35367 yellow 0
+SHOT dj19_attic_high_to_E_stack_gablet_N
+00:15.016  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dj20_attic_high_to_W_corner_wallhead.png'
+00:15.422  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dj20_attic_high_to_W_corner_wallhead_red.png'
+COUNT dj20_attic_high_to_W_corner_wallhead red red 91674 yellow 0
+SHOT dj20_attic_high_to_W_corner_wallhead
+00:19.891  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dj21_attic_high_to_E_corner_wallhead.png'
+00:20.297  render           | Saved: 'C:\GitHubDesktop\git_test\blender_village\renders\variants\v7_cottage\round_05\director_extra\dj21_attic_high_to_E_corner_wallhead_red.png'
+COUNT dj21_attic_high_to_E_corner_wallhead red red 72245 yellow 0
+SHOT dj21_attic_high_to_E_corner_wallhead

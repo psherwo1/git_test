@@ -1,0 +1,4 @@
+﻿RED i15 2 [(94, 248), (1, 168)]
+00:00.656  blend            | Read blend: "C:\GitHubDesktop\git_test\blender_village\buildings\addon_demos\a1_longhouse_addons\scratch\r04\a1_fast.blend"
+PICK i15 94 248 A1L_body_wall_mortar#526@(-8.388, 1.966, 2.452)B -> SKY
+PICK i15 1 168 A1L_body_wall_mortar#526@(-8.391, 1.767, 2.75)B -> SKY
