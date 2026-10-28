@@ -1,0 +1,10 @@
+{
+ "width_samples": 500,
+ "height_samples": 500,
+ "metres_per_sample": 5,
+ "map_size_m": 2500,
+ "pixel_to_metres": "metres = pixel16/65535 * 389.0",
+ "min_m": 0.0,
+ "max_m": 389.0,
+ "origin": "top-left of image is map x=0,y=0; +y runs down the image (south)"
+}

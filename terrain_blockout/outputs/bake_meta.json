@@ -1,0 +1,42 @@
+{
+  "map_width_m": 2500.0,
+  "map_height_m": 2500.0,
+  "min_height_m": 0.0,
+  "max_height_m": 389.0,
+  "pixel_size_m": 1.2394645513138325,
+  "pixel_size_m_note": "pixel_size_m is for the 2017 px PNG (the UE import). The EXR value is under exports.exr.",
+  "encoding": "value_normalised = (height_m - min_height_m) / (max_height_m - min_height_m); height_m = value * (max - min) + min",
+  "same_scale_as_source": "min/max equal the source heightmap scale (metres = pixel16/65535*389.0)",
+  "blockout_actual_height_range_m": [
+    0.0,
+    369.0605283742825
+  ],
+  "water_level_m": 0.0,
+  "orientation": "row 0 = map y 0 (north, top). Column 0 = map x 0 (west). No flip needed.",
+  "sampling": "pixel centres at (i + 0.5) * map_width_m / pixels",
+  "exports": {
+    "exr": {
+      "file": "valley_blockout_height_2048.exr",
+      "pixels": 2048,
+      "bit_depth": 32,
+      "channels": "RGB (R=G=B)",
+      "pixel_size_m": 1.220703125,
+      "colour_space": "linear / Non-Color, no view transform"
+    },
+    "png": {
+      "file": "valley_blockout_height_2017_16bit.png",
+      "pixels": 2017,
+      "bit_depth": 16,
+      "channels": "grayscale",
+      "pixel_size_m": 1.2394645513138325,
+      "vertex_spacing_if_corner_aligned_m": 1.2400793650793651,
+      "vertex_spacing_note": "if imported as a 2017-vertex landscape (2016 quads) spanning the full map, spacing is map_width/2016"
+    }
+  },
+  "smoothing": {
+    "method": "lake-masked Gaussian, then bilinear sample at 25 m mesh vertices",
+    "sigma_m": 15.0,
+    "mesh_spacing_m": 25.0
+  },
+  "produced_by": "run_pipeline.py (numpy). NOT a Blender render; see REPORT.md"
+}

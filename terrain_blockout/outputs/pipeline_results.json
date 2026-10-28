@@ -1,0 +1,154 @@
+{
+  "water": {
+    "level_m": 0.0,
+    "lakes": [
+      {
+        "name": "West Lake",
+        "water_level_m": 0.0,
+        "area_m2": 461275.0,
+        "area_ha": 46.1275,
+        "centroid_xy_m": [
+          612.1658717684679,
+          1054.0421928350768
+        ],
+        "bbox_xy_m": [
+          125,
+          480,
+          1120,
+          1715
+        ]
+      },
+      {
+        "name": "East Lake",
+        "water_level_m": 0.0,
+        "area_m2": 305825.0,
+        "area_ha": 30.5825,
+        "centroid_xy_m": [
+          1763.1699092618328,
+          1704.4635412409057
+        ],
+        "bbox_xy_m": [
+          1165,
+          1260,
+          2135,
+          1990
+        ]
+      }
+    ],
+    "river_and_shore_px": 289,
+    "river_and_shore_m2": 7225.0,
+    "water_body_m2": 774325.0,
+    "valley_map_polygon_m2": 763249.0,
+    "other_flat_patches_note": "flat patches at 1.2, 2.8 and 2.9 m exist (meadows/town flats); not water"
+  },
+  "bake_meta": {
+    "map_width_m": 2500.0,
+    "map_height_m": 2500.0,
+    "min_height_m": 0.0,
+    "max_height_m": 389.0,
+    "pixel_size_m": 1.2394645513138325,
+    "pixel_size_m_note": "pixel_size_m is for the 2017 px PNG (the UE import). The EXR value is under exports.exr.",
+    "encoding": "value_normalised = (height_m - min_height_m) / (max_height_m - min_height_m); height_m = value * (max - min) + min",
+    "same_scale_as_source": "min/max equal the source heightmap scale (metres = pixel16/65535*389.0)",
+    "blockout_actual_height_range_m": [
+      0.0,
+      369.0605283742825
+    ],
+    "water_level_m": 0.0,
+    "orientation": "row 0 = map y 0 (north, top). Column 0 = map x 0 (west). No flip needed.",
+    "sampling": "pixel centres at (i + 0.5) * map_width_m / pixels",
+    "exports": {
+      "exr": {
+        "file": "valley_blockout_height_2048.exr",
+        "pixels": 2048,
+        "bit_depth": 32,
+        "channels": "RGB (R=G=B)",
+        "pixel_size_m": 1.220703125,
+        "colour_space": "linear / Non-Color, no view transform"
+      },
+      "png": {
+        "file": "valley_blockout_height_2017_16bit.png",
+        "pixels": 2017,
+        "bit_depth": 16,
+        "channels": "grayscale",
+        "pixel_size_m": 1.2394645513138325,
+        "vertex_spacing_if_corner_aligned_m": 1.2400793650793651,
+        "vertex_spacing_note": "if imported as a 2017-vertex landscape (2016 quads) spanning the full map, spacing is map_width/2016"
+      }
+    },
+    "smoothing": {
+      "method": "lake-masked Gaussian, then bilinear sample at 25 m mesh vertices",
+      "sigma_m": 15.0,
+      "mesh_spacing_m": 25.0
+    },
+    "produced_by": "run_pipeline.py (numpy). NOT a Blender render; see REPORT.md"
+  },
+  "checks": [
+    {
+      "name": "waterfall base",
+      "x": 542,
+      "y": 1932,
+      "expected_m": 12.9,
+      "source_m": 12.898405432211796,
+      "blockout_m": 54.8185395993953,
+      "exr_m": 53.570403441786766,
+      "png_m": 54.53182530403137,
+      "diff_exr_m": 40.67040344178677,
+      "diff_png_m": 41.63182530403137,
+      "pass": false
+    },
+    {
+      "name": "terrace hamlet",
+      "x": 337,
+      "y": 1882,
+      "expected_m": 195.6,
+      "source_m": 195.5001754787518,
+      "blockout_m": 195.70800550910786,
+      "exr_m": 195.68864089250565,
+      "png_m": 195.72573882341385,
+      "diff_exr_m": 0.08864089250565144,
+      "diff_png_m": 0.12573882341385456,
+      "pass": true
+    },
+    {
+      "name": "North town",
+      "x": 737,
+      "y": 537,
+      "expected_m": 5.6,
+      "source_m": 5.597421225299458,
+      "blockout_m": 5.630188498286113,
+      "exr_m": 5.653302608989179,
+      "png_m": 5.6092926524579525,
+      "diff_exr_m": 0.05330260898917949,
+      "diff_png_m": 0.009292652457952855,
+      "pass": true
+    },
+    {
+      "name": "East town",
+      "x": 1737,
+      "y": 1417,
+      "expected_m": 3.0,
+      "source_m": 2.9975585564965286,
+      "blockout_m": 3.1155815890976575,
+      "exr_m": 3.1329488856717944,
+      "png_m": 3.1044023176655173,
+      "diff_exr_m": 0.13294888567179441,
+      "diff_png_m": 0.10440231766551733,
+      "pass": true
+    }
+  ],
+  "stats": {
+    "source_min_m": 0.0,
+    "source_max_m": 389.0,
+    "playable_area_max_source_m": 202.100740062562,
+    "playable_area_max_smoothed_m": 200.76396368529618,
+    "playable_area_km2": 4.2466,
+    "blockout_min_m": 0.0,
+    "blockout_max_m": 369.2075559078611,
+    "bake_vs_source_rms_m": 7.411051545725616,
+    "bake_vs_source_p95_abs_m": 15.733310168579214,
+    "bake_vs_source_max_abs_m": 98.5588288762694,
+    "lake_vertices": 1225,
+    "mesh_vertices": 10201
+  }
+}
